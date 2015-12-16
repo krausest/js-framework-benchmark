@@ -1,0 +1,1053 @@
+Using ChromeDriver directly...
+[launcher] Running 1 instances of WebDriver
+Started
+
+*********************************************************
+************* Testing time for |page load & create 1000 rows|react| *************
+*********************************************************
+
+BENCHMARK page load & create 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           6124.05 |              20.28 |           49684.70 |              36.95 |              14.66 |             503.80 |             115.86 |             537.93
+           9278.68 |              19.32 |           41752.86 |              32.85 |               9.42 |             365.64 |              91.00 |             398.49
+           9876.52 |              17.89 |           40182.07 |              26.84 |               9.14 |             357.20 |              89.28 |             384.04
+           9718.69 |              18.17 |           40632.14 |              30.39 |              11.25 |             357.32 |              90.15 |             387.71
+           9733.62 |              17.29 |           41208.24 |              30.19 |              11.03 |             362.94 |              90.52 |             393.13
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       9776.27+-0% |          17.79+-2% |       40674.15+-1% |          29.14+-5% |          10.47+-9% |         359.15+-0% |          89.98+-0% |         388.29+-0%
+[32m.[0m
+*********************************************************
+************* Testing time for |create 1000 rows|react| *************
+*********************************************************
+
+BENCHMARK create 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          12542.74 |              20.46 |           38531.98 |              25.60 |               4.37 |             428.17 |             117.71 |             453.77
+           2270.58 |              23.20 |           31530.21 |              22.35 |               0.00 |             351.19 |              89.61 |             373.53
+            182.34 |              20.48 |           31554.16 |              26.17 |               0.00 |             305.54 |              91.04 |             331.72
+          19271.13 |              18.86 |           31536.43 |              20.84 |               0.00 |             272.67 |              85.24 |             293.52
+          18441.66 |              20.88 |           31550.35 |              21.69 |               0.00 |             279.39 |              85.27 |             301.08
+          18626.12 |              19.40 |           31535.71 |              25.51 |               0.00 |             276.92 |              85.35 |             302.43
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      18779.64+-1% |          19.71+-4% |       31540.83+-0% |          22.68+-8% |               0.00 |         276.33+-1% |          85.29+-0% |         299.01+-1%
+[32m.[0m
+*********************************************************
+************* Testing time for |update 1000 rows|react| *************
+*********************************************************
+
+BENCHMARK update 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          11491.79 |              27.61 |           12815.95 |               7.37 |               0.00 |             134.83 |              88.73 |             142.20
+          12011.87 |              31.66 |           12581.50 |               7.13 |               0.00 |             134.39 |              91.07 |             141.52
+          14178.22 |              32.53 |           12648.08 |               5.56 |               0.00 |             126.77 |              90.24 |             132.32
+          10976.26 |              32.88 |           12645.95 |               5.87 |               0.00 |             132.23 |              95.55 |             138.10
+          10966.54 |              31.20 |           12528.02 |               6.63 |               0.00 |             136.81 |              98.22 |             143.44
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+     12040.34+-12% |          32.20+-2% |       12607.35+-0% |           6.02+-7% |               0.00 |         131.94+-3% |          94.67+-3% |         137.96+-3%
+[32m.[0m
+*********************************************************
+************* Testing time for |partial update|react| *************
+*********************************************************
+
+BENCHMARK partial update
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           2664.96 |              17.72 |               0.00 |               0.00 |               0.00 |              18.95 |               9.88 |              18.95
+           2755.09 |              18.88 |               0.00 |               0.00 |               0.00 |              18.94 |               8.34 |              18.94
+           2758.49 |              22.01 |               0.00 |               0.00 |               0.00 |              18.19 |               8.84 |              18.19
+           2717.50 |              22.07 |               0.00 |               0.00 |               0.00 |              18.34 |               8.48 |              18.34
+           2706.70 |              21.57 |               0.00 |               0.00 |               0.00 |              17.82 |               8.59 |              17.82
+           2723.87 |              20.59 |               0.00 |               0.00 |               0.00 |              16.89 |               8.61 |              16.89
+           2833.01 |              24.36 |               0.00 |               0.00 |               0.00 |              19.65 |               8.17 |              19.65
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       2754.53+-2% |          22.17+-7% |               0.00 |               0.00 |               0.00 |          18.12+-6% |           8.46+-2% |          18.12+-6%
+[32m.[0m
+*********************************************************
+************* Testing time for |select 10 rows|react| *************
+*********************************************************
+
+BENCHMARK select 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          14182.88 |              17.00 |          563632.64 |              13.41 |               0.21 |              62.28 |              59.18 |              62.28
+          16073.02 |              16.69 |          563573.29 |              14.58 |               0.24 |              69.95 |              45.71 |              69.95
+          15562.67 |              19.61 |          563454.66 |              13.66 |               0.26 |              62.43 |              51.94 |              62.43
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      15272.86+-5% |          17.77+-7% |      563553.53+-0% |          13.88+-3% |           0.24+-7% |          64.89+-5% |         52.28+-10% |          64.89+-5%
+[32m.[0m
+*********************************************************
+************* Testing time for |10 x add 10 rows|react| *************
+*********************************************************
+
+BENCHMARK 10 x add 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           4168.55 |               7.90 |            2861.62 |               7.47 |               0.06 |              67.49 |              54.40 |              70.29
+           3128.49 |               7.75 |            3757.78 |               5.97 |               0.03 |              62.58 |              35.24 |              62.58
+           4534.62 |               8.39 |            2417.63 |               2.92 |               0.02 |              63.85 |              34.29 |              63.85
+           4207.70 |              12.41 |            2811.00 |               3.18 |               0.02 |              60.19 |              32.50 |              60.19
+           3611.74 |              10.44 |            3239.21 |               4.04 |               0.04 |              56.99 |              31.37 |              56.99
+           3261.49 |               9.05 |            3762.64 |               4.18 |               0.03 |              62.44 |              31.64 |              62.44
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      3693.65+-10% |         10.63+-12% |       3270.95+-11% |          3.80+-11% |          0.03+-24% |          59.87+-3% |          31.83+-1% |          59.87+-3%
+[32m.[0m
+*********************************************************
+************* Testing time for |remove 10 rows|react| *************
+*********************************************************
+
+BENCHMARK remove 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          10996.22 |              17.67 |          565107.14 |              14.23 |               0.16 |              85.30 |             507.24 |              85.30
+          15372.61 |              20.59 |          562218.06 |              14.06 |               0.18 |              83.12 |             560.78 |              83.12
+          11673.06 |              16.41 |          565719.03 |              14.22 |               0.17 |              83.40 |             552.02 |              83.40
+          12560.86 |              17.97 |          565032.26 |              13.66 |               0.17 |              91.85 |             550.52 |              91.85
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+     13202.18+-11% |          18.33+-9% |      564323.12+-0% |          13.98+-1% |           0.17+-2% |          86.12+-4% |         554.44+-0% |          86.12+-4%
+[32m.[0m
+*********************************************************
+************* Testing time for |page load & create 1000 rows|ractive| *************
+*********************************************************
+
+BENCHMARK page load & create 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           1379.18 |              31.00 |           22529.73 |              41.25 |               8.43 |             438.15 |             101.09 |             476.18
+            934.86 |              41.74 |           24778.70 |              52.94 |              23.11 |             420.04 |              88.91 |             472.98
+            796.08 |              40.92 |           25796.44 |              47.19 |              16.83 |             397.27 |              89.90 |             444.47
+            814.35 |              38.40 |           27188.43 |              47.49 |              18.11 |             394.04 |              89.56 |             441.54
+            803.80 |              37.88 |           26541.94 |              48.05 |              17.68 |             394.33 |              94.36 |             442.38
+            800.23 |              38.88 |           25920.29 |              43.41 |              18.19 |             389.87 |              90.60 |             433.28
+            810.10 |              41.10 |           26317.21 |              53.75 |              23.56 |             402.97 |              90.16 |             456.72
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+        804.71+-0% |          39.29+-3% |       26259.81+-0% |          48.40+-8% |         19.81+-13% |         395.72+-1% |          91.71+-2% |         444.13+-2%
+[32m.[0m
+*********************************************************
+************* Testing time for |create 1000 rows|ractive| *************
+*********************************************************
+
+BENCHMARK create 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           1035.05 |              27.74 |           19302.32 |              39.33 |               0.08 |             421.93 |              93.88 |             461.25
+            128.22 |              31.59 |           22149.67 |              34.12 |               0.00 |             367.14 |              87.01 |             401.26
+             60.29 |              30.20 |           22151.40 |              37.78 |               0.00 |             351.37 |              89.00 |             389.15
+           3005.52 |              41.84 |           22258.55 |              37.00 |               0.00 |             335.88 |              92.16 |             372.87
+           2218.32 |              37.52 |           22170.01 |              36.85 |               0.00 |             322.17 |              90.25 |             359.02
+           2492.75 |              38.29 |           22230.43 |              32.42 |               0.00 |             319.55 |              86.95 |             351.97
+           2061.59 |              36.05 |           22198.16 |              32.28 |               0.00 |             330.77 |              93.05 |             363.05
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       2257.55+-7% |          37.29+-2% |       22199.53+-0% |          33.85+-6% |               0.00 |         324.16+-1% |          90.08+-2% |         358.02+-1%
+[32m.[0m
+*********************************************************
+************* Testing time for |update 1000 rows|ractive| *************
+*********************************************************
+
+BENCHMARK update 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           3991.42 |              31.42 |               0.00 |               0.00 |               0.00 |              45.42 |              43.40 |              45.42
+           4186.12 |              36.66 |               0.00 |               0.00 |               0.00 |              51.79 |              40.74 |              51.79
+           4188.58 |              34.74 |               0.00 |               0.00 |               0.00 |              51.90 |              39.37 |              51.90
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       4122.04+-2% |          34.28+-6% |               0.00 |               0.00 |               0.00 |          49.70+-6% |          41.17+-4% |          49.70+-6%
+[32m.[0m
+*********************************************************
+************* Testing time for |partial update|ractive| *************
+*********************************************************
+
+BENCHMARK partial update
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           3878.21 |              27.70 |               0.00 |               0.00 |               0.00 |              46.73 |               5.82 |              46.73
+           3815.22 |              48.10 |               0.00 |               0.00 |               0.00 |              46.40 |               7.37 |              46.40
+           4023.78 |              45.80 |               0.00 |               0.00 |               0.00 |              46.48 |               7.15 |              46.48
+           4123.49 |              45.29 |               0.00 |               0.00 |               0.00 |              46.65 |               6.06 |              46.65
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       3987.50+-3% |          46.40+-2% |               0.00 |               0.00 |               0.00 |          46.51+-0% |           6.86+-8% |          46.51+-0%
+[32m.[0m
+*********************************************************
+************* Testing time for |select 10 rows|ractive| *************
+*********************************************************
+
+BENCHMARK select 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          13384.38 |              31.11 |          567552.02 |              21.28 |               0.12 |              96.46 |              71.40 |              96.46
+          13089.98 |              47.13 |          567689.14 |              16.74 |               0.12 |              94.56 |              63.80 |              94.56
+          13489.01 |              43.05 |          567402.50 |              17.32 |               0.11 |              96.47 |              69.24 |              96.47
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      13321.12+-1% |         40.43+-16% |      567547.89+-0% |         18.45+-10% |           0.12+-5% |          95.83+-0% |          68.15+-4% |          95.83+-0%
+[32m.[0m
+*********************************************************
+************* Testing time for |10 x add 10 rows|ractive| *************
+*********************************************************
+
+BENCHMARK 10 x add 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           3546.02 |              11.09 |            3704.53 |               7.85 |               0.05 |              95.18 |              34.32 |              95.18
+           4297.46 |              11.74 |            2779.10 |               8.05 |               0.04 |              85.96 |              30.36 |              85.96
+           2964.51 |              11.22 |            4217.07 |               8.72 |               0.03 |              88.97 |              32.24 |              88.97
+           2856.15 |              12.63 |            4247.10 |               9.23 |               0.04 |              80.36 |              33.61 |              80.36
+           2368.15 |              12.68 |            2267.04 |               5.14 |               0.03 |              82.09 |              34.65 |              82.09
+           3905.80 |              11.79 |            3249.70 |               3.56 |               0.03 |              77.44 |              32.40 |              77.44
+           2869.85 |              11.96 |            4326.58 |               7.75 |               0.03 |              78.27 |              33.95 |              78.27
+           4355.38 |              15.25 |            2729.34 |               3.73 |               0.02 |              75.68 |              34.63 |              75.68
+           4446.29 |              12.24 |            2751.48 |               6.01 |               0.02 |              80.97 |              33.39 |              80.97
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      3890.50+-18% |         13.15+-11% |       3269.14+-22% |          5.83+-28% |          0.02+-35% |          78.31+-2% |          33.99+-1% |          78.31+-2%
+[32m.[0m
+*********************************************************
+************* Testing time for |remove 10 rows|ractive| *************
+*********************************************************
+
+BENCHMARK remove 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          20990.65 |              38.90 |          829077.70 |              64.76 |               0.14 |            1873.91 |             606.45 |            1899.08
+          21511.57 |              48.94 |          828921.06 |              53.52 |               0.17 |            1920.30 |             614.34 |            1945.07
+          16980.23 |              48.12 |          818853.10 |              50.38 |               0.16 |            1885.56 |             606.15 |            1906.39
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+     19827.48+-10% |         45.32+-10% |      825617.29+-0% |         56.22+-10% |           0.15+-9% |        1893.26+-1% |         608.98+-0% |        1916.84+-1%
+[32m.[0m
+*********************************************************
+************* Testing time for |page load & create 1000 rows|mithril| *************
+*********************************************************
+
+BENCHMARK page load & create 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           3647.24 |              13.68 |           25914.81 |              26.30 |              10.32 |             197.46 |             123.80 |             222.93
+           5722.59 |              17.57 |           22572.34 |              15.32 |               0.00 |             154.93 |              95.02 |             170.25
+           5904.58 |              25.15 |           22243.92 |              14.40 |               0.00 |             159.05 |              89.91 |             173.45
+           6231.48 |              22.31 |           22244.98 |              15.02 |               0.00 |             158.23 |              93.68 |             173.25
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       5952.89+-3% |         21.67+-14% |       22353.75+-0% |          14.91+-2% |               0.00 |         157.40+-1% |          92.87+-2% |         172.31+-0%
+[32m.[0m
+*********************************************************
+************* Testing time for |create 1000 rows|mithril| *************
+*********************************************************
+
+BENCHMARK create 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+             42.24 |               9.53 |           20990.50 |              14.67 |               0.00 |             175.82 |             115.81 |             190.49
+           2900.38 |              14.97 |           23344.08 |              14.02 |               0.00 |             165.44 |              89.16 |             179.46
+           3245.40 |              15.95 |           23100.13 |              14.28 |               0.00 |             152.85 |              84.71 |             167.13
+           3246.98 |              15.39 |           23112.34 |              15.46 |               0.00 |             153.72 |              83.66 |             169.18
+           3229.85 |              15.73 |           23103.26 |              18.35 |               0.00 |             153.19 |              86.05 |             171.54
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       3240.74+-0% |          15.69+-1% |       23105.24+-0% |         16.03+-10% |               0.00 |         153.25+-0% |          84.81+-1% |         169.28+-1%
+[32m.[0m
+*********************************************************
+************* Testing time for |update 1000 rows|mithril| *************
+*********************************************************
+
+BENCHMARK update 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          10493.62 |              16.09 |           30231.06 |               3.96 |               0.00 |             149.92 |              92.87 |             153.88
+          10738.20 |              16.25 |           30022.94 |               3.69 |               0.00 |             151.39 |              90.22 |             155.08
+          10733.74 |              16.37 |           30022.88 |               3.75 |               0.00 |             161.69 |              94.47 |             165.43
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      10655.19+-1% |          16.24+-0% |       30092.29+-0% |           3.80+-3% |               0.00 |         154.33+-3% |          92.52+-1% |         158.13+-3%
+[32m.[0m
+*********************************************************
+************* Testing time for |partial update|mithril| *************
+*********************************************************
+
+BENCHMARK partial update
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+            840.39 |              12.01 |           29761.98 |               5.39 |               0.00 |              90.56 |               8.96 |              95.95
+           9163.88 |              13.86 |           30312.95 |               4.16 |               0.00 |              79.24 |             108.26 |              83.40
+           9367.29 |              14.34 |           30286.97 |               4.99 |               0.00 |              79.82 |              17.39 |              84.81
+           9322.66 |              13.99 |           30319.09 |               4.45 |               0.00 |              79.95 |              16.17 |              84.40
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       9284.61+-0% |          14.06+-1% |       30306.34+-0% |           4.53+-7% |               0.00 |          79.67+-0% |         47.27+-91% |          84.20+-0%
+[32m.[0m
+*********************************************************
+************* Testing time for |select 10 rows|mithril| *************
+*********************************************************
+
+BENCHMARK select 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          16744.62 |              15.37 |          939988.98 |              55.84 |              18.47 |             765.79 |              57.94 |             797.90
+          18616.18 |              16.30 |          938613.59 |              43.16 |               8.96 |             756.68 |              60.72 |             779.21
+          18586.93 |              15.63 |          938712.03 |              44.31 |               9.61 |             759.48 |              58.45 |             782.29
+          18623.64 |              16.64 |          938768.50 |              42.18 |               8.78 |             772.00 |              55.53 |             793.59
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      18608.92+-0% |          16.19+-2% |      938698.04+-0% |          43.22+-2% |           9.12+-3% |         762.72+-0% |          58.24+-3% |         785.03+-0%
+[32m.[0m
+*********************************************************
+************* Testing time for |10 x add 10 rows|mithril| *************
+*********************************************************
+
+BENCHMARK 10 x add 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           3039.78 |               5.55 |           20955.42 |               7.52 |               0.10 |              81.19 |              73.65 |              84.88
+           1954.10 |               5.75 |           14439.99 |               5.77 |               0.06 |              74.47 |              49.02 |              76.08
+           4905.84 |               5.96 |           18904.10 |               6.83 |               0.02 |              76.49 |              49.92 |              77.61
+           5846.17 |               6.67 |           17961.78 |               5.79 |               0.04 |              71.19 |              51.29 |              71.19
+          12502.23 |               6.49 |           11302.58 |               4.58 |               0.03 |              75.65 |              55.39 |              75.65
+          12499.12 |               6.99 |           11304.02 |               3.07 |               0.01 |              74.25 |              55.02 |              74.25
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+     10282.51+-30% |           6.72+-3% |      13522.79+-23% |          4.48+-24% |          0.03+-42% |          73.70+-2% |          53.90+-3% |          73.70+-2%
+[32m.[0m
+*********************************************************
+************* Testing time for |remove 10 rows|mithril| *************
+*********************************************************
+
+BENCHMARK remove 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          13981.60 |              15.20 |          939318.97 |              63.58 |              17.05 |             776.29 |             573.95 |             822.51
+            996.94 |              18.26 |          939030.60 |              67.88 |              23.71 |             762.97 |             634.29 |             809.08
+          11479.14 |              19.16 |          941929.53 |              68.47 |              21.50 |             803.85 |             623.35 |             854.66
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      8819.23+-63% |          17.54+-9% |      940093.03+-0% |          66.64+-3% |         20.75+-13% |         781.04+-2% |         610.53+-4% |         828.75+-2%
+[32m.[0m
+*********************************************************
+************* Testing time for |page load & create 1000 rows|angular| *************
+*********************************************************
+
+BENCHMARK page load & create 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+             75.10 |              27.79 |           27328.87 |              33.15 |               4.06 |             316.15 |             113.03 |             348.41
+           1544.62 |              30.97 |           33418.20 |              49.29 |              27.25 |             341.52 |              98.95 |             390.97
+           1531.69 |              30.13 |           33890.06 |              47.43 |              25.20 |             317.85 |              97.46 |             365.41
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      1050.47+-65% |          29.63+-4% |       31545.71+-9% |         43.29+-16% |         18.84+-55% |         325.17+-3% |         103.14+-6% |         368.26+-4%
+[32m.[0m
+*********************************************************
+************* Testing time for |create 1000 rows|angular| *************
+*********************************************************
+
+BENCHMARK create 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+             36.14 |              24.73 |           24614.74 |              28.56 |               0.00 |             288.90 |              96.48 |             317.62
+           1794.18 |              27.73 |           19951.48 |              20.59 |               0.00 |             271.77 |              96.45 |             292.47
+           1779.72 |              28.89 |           19966.74 |              20.34 |               0.00 |             243.50 |              94.55 |             263.95
+           1657.41 |              29.49 |           20021.65 |              24.62 |               0.00 |             249.59 |              92.88 |             274.33
+           1617.00 |              30.01 |           20022.82 |              19.60 |               0.00 |             252.53 |              91.58 |             272.24
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       1684.71+-4% |          29.46+-1% |       20003.74+-0% |         21.52+-10% |               0.00 |         248.54+-1% |          93.00+-1% |         270.18+-1%
+[32m.[0m
+*********************************************************
+************* Testing time for |update 1000 rows|angular| *************
+*********************************************************
+
+BENCHMARK update 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          16948.97 |              37.75 |           33138.26 |              25.87 |               0.00 |             303.24 |              98.91 |             330.15
+          16879.60 |              39.74 |           33053.56 |              21.88 |               0.00 |             305.10 |              97.62 |             328.22
+          16893.58 |              38.43 |           32973.94 |              22.73 |               0.00 |             296.35 |              97.77 |             320.13
+          17852.82 |              39.73 |           32069.18 |              29.09 |               0.00 |             301.31 |              98.08 |             331.60
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      17208.67+-2% |          39.30+-1% |       32698.89+-1% |         24.57+-13% |               0.00 |         300.92+-1% |          97.82+-0% |         326.65+-1%
+[32m.[0m
+*********************************************************
+************* Testing time for |partial update|angular| *************
+*********************************************************
+
+BENCHMARK partial update
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           3100.59 |              24.70 |               0.00 |               0.00 |               0.00 |              11.09 |               6.56 |              11.87
+           3208.22 |              25.07 |               0.00 |               0.00 |               0.00 |               9.93 |              15.42 |              10.70
+           3176.15 |              26.59 |               0.00 |               0.00 |               0.00 |              10.40 |               7.82 |              11.18
+           3228.77 |              26.31 |               0.00 |               0.00 |               0.00 |              10.00 |               6.49 |              10.71
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       3204.38+-0% |          25.99+-2% |               0.00 |               0.00 |               0.00 |          10.11+-2% |          9.91+-39% |          10.86+-2%
+[32m.[0m
+*********************************************************
+************* Testing time for |select 10 rows|angular| *************
+*********************************************************
+
+BENCHMARK select 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          13076.08 |              26.65 |          567853.90 |              11.08 |               0.21 |              50.04 |              46.56 |              50.91
+          14345.84 |              27.14 |          568033.56 |              10.87 |               0.21 |              51.55 |              49.92 |              52.24
+           5570.87 |              43.55 |          577220.76 |              37.07 |              21.79 |              51.10 |              51.89 |              52.18
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+     10997.60+-35% |         32.45+-24% |      571036.07+-0% |         19.67+-62% |         7.41+-137% |          50.90+-1% |          49.46+-4% |          51.78+-1%
+[32m.[0m
+*********************************************************
+************* Testing time for |10 x add 10 rows|angular| *************
+*********************************************************
+
+BENCHMARK 10 x add 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           2727.62 |              10.70 |            4473.31 |               4.07 |               0.04 |              65.99 |              56.03 |              69.41
+           4201.90 |              12.26 |            2849.46 |               2.25 |               0.02 |              63.75 |              51.39 |              65.59
+           3187.88 |              13.73 |            3934.64 |               4.42 |               0.05 |              64.59 |              52.94 |              66.68
+           2618.82 |              11.98 |            4511.62 |               4.30 |               0.04 |              58.59 |              57.32 |              60.64
+           7047.63 |              19.54 |               0.00 |               0.00 |               0.00 |              63.21 |              50.19 |              64.83
+           7054.63 |              15.69 |               0.00 |               0.00 |               0.00 |              57.05 |              53.08 |              59.10
+           7104.94 |              13.59 |               0.00 |               0.00 |               0.00 |              58.65 |              51.95 |              60.40
+           7094.97 |              15.87 |               0.00 |               0.00 |               0.00 |              57.23 |              53.38 |              59.21
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       7084.85+-0% |          15.05+-6% |               0.00 |               0.00 |               0.00 |          57.65+-1% |          52.80+-1% |          59.57+-0%
+[32m.[0m
+*********************************************************
+************* Testing time for |remove 10 rows|angular| *************
+*********************************************************
+
+BENCHMARK remove 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          12500.45 |              24.65 |          566399.52 |              11.50 |               0.27 |              69.45 |             679.89 |              70.50
+          13090.56 |              27.15 |          567311.78 |              11.68 |               0.25 |              68.86 |             711.59 |              69.83
+          10407.11 |              27.40 |          569912.62 |              11.49 |               0.24 |              66.76 |             672.14 |              68.10
+          13480.71 |              28.64 |          566919.46 |              11.52 |               0.25 |              66.86 |             690.01 |              67.64
+          13467.26 |              22.41 |          566812.41 |              11.27 |               0.23 |              63.90 |             685.02 |              64.80
+          13523.66 |              28.48 |          566934.81 |              11.61 |               0.26 |              69.55 |             689.21 |              70.47
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      13490.55+-0% |         26.51+-10% |      566888.89+-0% |          11.47+-1% |           0.25+-5% |          66.77+-3% |         688.08+-0% |          67.64+-3%
+[32m.[0m
+*********************************************************
+************* Testing time for |page load & create 1000 rows|angular2| *************
+*********************************************************
+
+BENCHMARK page load & create 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           2839.77 |              36.03 |           35700.78 |              23.06 |               6.47 |             392.36 |               5.25 |             409.01
+           3188.23 |              41.56 |           30216.74 |              23.60 |              19.15 |             280.53 |              98.21 |             304.10
+           4634.90 |              39.19 |           29307.89 |              16.27 |              13.94 |             254.78 |               4.69 |             270.92
+           4489.16 |              44.80 |           29556.18 |              14.80 |              11.47 |             263.28 |              94.02 |             277.96
+           4615.86 |              38.76 |           29519.64 |              14.49 |              11.63 |             248.64 |               5.07 |             262.98
+           4240.05 |              41.11 |           29511.45 |              12.26 |               9.87 |             247.06 |               4.83 |             259.16
+           4676.87 |              38.60 |           29587.62 |              13.51 |              11.65 |             266.15 |               5.15 |             279.54
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       4510.93+-4% |          39.49+-2% |       29539.57+-0% |          13.42+-6% |          11.05+-7% |         253.95+-3% |           5.02+-2% |         267.23+-3%
+[32m.[0m
+*********************************************************
+************* Testing time for |create 1000 rows|angular2| *************
+*********************************************************
+
+BENCHMARK create 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           1343.90 |              24.06 |            3887.55 |               6.86 |               0.00 |             118.04 |              98.14 |             124.90
+           1213.02 |              36.75 |               0.00 |               0.00 |               0.00 |             111.99 |              89.40 |             111.99
+           1513.68 |              34.65 |               0.00 |               0.00 |               0.00 |             106.22 |              87.83 |             106.22
+           1391.58 |              34.68 |               0.00 |               0.00 |               0.00 |             103.48 |              88.31 |             103.48
+           1133.02 |              37.44 |               0.00 |               0.00 |               0.00 |             112.18 |              89.94 |             112.18
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      1346.10+-11% |          35.59+-3% |               0.00 |               0.00 |               0.00 |         107.29+-3% |          88.69+-1% |         107.29+-3%
+[32m.[0m
+*********************************************************
+************* Testing time for |update 1000 rows|angular2| *************
+*********************************************************
+
+BENCHMARK update 1000 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           2602.22 |              23.08 |               0.00 |               0.00 |               0.00 |              40.54 |              91.00 |              40.54
+           2789.38 |              25.13 |               0.00 |               0.00 |               0.00 |              45.70 |              92.65 |              45.70
+           2774.37 |              32.97 |               0.00 |               0.00 |               0.00 |              43.07 |              89.50 |              43.07
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       2721.99+-3% |         27.06+-15% |               0.00 |               0.00 |               0.00 |          43.10+-4% |          91.05+-1% |          43.10+-4%
+[32m.[0m
+*********************************************************
+************* Testing time for |partial update|angular2| *************
+*********************************************************
+
+BENCHMARK partial update
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           1009.58 |              24.02 |               0.00 |               0.00 |               0.00 |               1.81 |               8.45 |               1.81
+           1083.07 |              27.67 |               0.00 |               0.00 |               0.00 |               1.69 |               7.91 |               1.69
+           1081.12 |              31.97 |               0.00 |               0.00 |               0.00 |               1.79 |               8.09 |               1.79
+           1013.82 |              34.62 |               0.00 |               0.00 |               0.00 |               1.43 |               7.91 |               1.43
+           1079.16 |              36.27 |               0.00 |               0.00 |               0.00 |               1.75 |              20.14 |               1.75
+           1047.55 |              27.80 |               0.00 |               0.00 |               0.00 |               1.60 |              16.69 |               1.60
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       1046.84+-2% |         32.90+-11% |               0.00 |               0.00 |               0.00 |           1.59+-8% |         14.91+-34% |           1.59+-8%
+[32m.[0m
+*********************************************************
+************* Testing time for |select 10 rows|angular2| *************
+*********************************************************
+
+BENCHMARK select 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           3413.38 |              24.85 |          566739.90 |              21.02 |               7.96 |              25.23 |             160.25 |              25.23
+          16608.18 |              21.21 |          557002.33 |              27.87 |               9.44 |              26.79 |             160.93 |              26.79
+           5085.64 |              24.74 |          568152.08 |              26.69 |              11.58 |              26.48 |             166.53 |              26.48
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      8369.07+-70% |          23.60+-7% |      563964.77+-0% |         25.19+-11% |          9.66+-15% |          26.17+-2% |         162.57+-1% |          26.17+-2%
+[32m.[0m
+*********************************************************
+************* Testing time for |10 x add 10 rows|angular2| *************
+*********************************************************
+
+BENCHMARK 10 x add 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+           3958.74 |              18.33 |               0.00 |               0.00 |               0.00 |              45.92 |              50.22 |              45.92
+           3898.33 |              28.90 |               0.00 |               0.00 |               0.00 |              43.25 |              51.65 |              43.25
+           3978.84 |              30.30 |               0.00 |               0.00 |               0.00 |              42.29 |              48.55 |              42.29
+           4149.79 |              25.49 |               0.00 |               0.00 |               0.00 |              57.21 |              51.92 |              57.21
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+       4008.99+-2% |          28.23+-7% |               0.00 |               0.00 |               0.00 |         47.58+-14% |          50.71+-3% |         47.58+-14%
+[32m.[0m
+*********************************************************
+************* Testing time for |remove 10 rows|angular2| *************
+*********************************************************
+
+BENCHMARK remove 10 rows
+Description:
+- forceGc: true
+- regressionSlopeMetric: scriptTime
+- sampleSize: 3
+- userAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.41 Safari/537.36
+Metrics:
+- forcedGcAmount: forced gc amount in kbytes
+- forcedGcTime: forced gc time in ms
+- gcAmount: gc amount in kbytes
+- gcTime: gc time in ms
+- majorGcTime: time of major gcs in ms
+- pureScriptTime: script execution time in ms, without gc nor render
+- renderTime: render time in ms
+- scriptTime: script execution time in ms, including gc and render
+
+    forcedGcAmount |       forcedGcTime |           gcAmount |             gcTime |        majorGcTime |     pureScriptTime |         renderTime |         scriptTime
+------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------ | ------------------
+          11483.96 |              23.46 |          559834.62 |              23.99 |               8.36 |             323.50 |             950.82 |             328.57
+          14542.29 |              22.06 |          560822.22 |              31.91 |              12.44 |             335.97 |            1007.94 |             346.85
+           6837.15 |              22.68 |          568098.05 |              29.03 |               9.69 |             323.79 |             965.30 |             327.72
+          21353.14 |              23.95 |          553557.54 |              35.13 |              10.61 |             322.32 |             933.81 |             326.10
+          18535.42 |              23.87 |          556211.76 |              32.01 |              10.12 |             316.32 |             923.04 |             320.40
+          17598.90 |              25.89 |          557476.63 |              27.76 |              11.43 |             338.17 |             932.61 |             342.03
+================== | ================== | ================== | ================== | ================== | ================== | ================== | ==================
+      19162.49+-8% |          24.57+-3% |      555748.64+-0% |          31.64+-9% |          10.72+-5% |         325.60+-2% |         929.82+-0% |         329.51+-2%
+[32m.[0m
+
+
+35 specs, 0 failures
+Finished in 359.847 seconds
+[launcher] 0 instance(s) of WebDriver still running
+[launcher] chrome #1 passed

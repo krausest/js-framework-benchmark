@@ -25,3 +25,10 @@ build/Release
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
+
+.idea
+.DS_Store
+*/dist/
+angular2/app/app.js
+angular2/app/app.js.map
+tests/results/completed/

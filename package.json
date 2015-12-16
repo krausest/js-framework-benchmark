@@ -1,0 +1,29 @@
+{
+  "name": "js-framework-benchmark",
+  "version": "1.0.0",
+  "description": "Simple Benchmark for Javascript client side rendering",
+  "scripts": {
+    "postinstall": "cd angular && npm install && cd .. && cd angular2 && npm install && cd .. && cd mithril && npm install && cd .. && cd ractive && npm install && cd .. && cd react && npm install && cd .. && cd tests && npm install",
+    "build": "cd angular && npm run build-prod && cd .. && cd angular2 && npm run build-prod && cd .. && cd mithril && npm run build-prod && cd .. && cd ractive && npm run build-prod && cd .. && cd react && npm run build-prod",
+    "start": "http-server -c-1 ."
+  },
+  "keywords": [
+    "benchmark",
+    "javascript",
+    "frontend",
+    "client",
+    "react",
+    "angular",
+    "mithril"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "author": "Stefan Krause",
+  "license": "ISC",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "dependencies": {
+    "http-server": "^0.8.5"
+  }
+}

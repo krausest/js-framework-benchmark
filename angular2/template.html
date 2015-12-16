@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>Angular 2</h1>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-primary btn-block" id="add" (click)="add()" ref="text">Add 10 rows</button>
+                <button type="button" class="btn btn-primary btn-block" id="run" (click)="run()" ref="text">Create 1000 rows</button>
+                <button type="button" class="btn btn-primary btn-block" id="update" (click)="update()">Update every 10th row</button>
+                <h3 id="duration"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;</h3>
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover table-striped test-data">
+        <tr [class.danger]="item.id === selected" *ngFor="#item of data">
+            <td class="col-md-1">{{item.id}}</td>
+            <td class="col-md-4">
+                <a href="#" (click)="select(item, $event)">{{item.label}}</a>
+            </td>
+            <td class="col-md-1"><a href="#" (click)="delete(item, $event)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+            <td class="col-md-6"></td>
+        </tr>
+    </table>
+</div>
