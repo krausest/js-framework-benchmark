@@ -45,3 +45,5 @@ Open [http://localhost:8080/tests/chart.html](http://localhost:8080/tests/chart.
 * partial update: Clicks on the "Update every 10th row". Appends a dot to the text of every 10th row and keeps the other rows unchanged.
 * select 10 rows: Measures the time to click the first ten rows one after the other. Each row is highlighted when clicked.
 * remove 10 rows: Measures the time to remove the first ten rows one after the other.
+
+A test showing the durations on my machine can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/tests/chart.html)
