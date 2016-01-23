@@ -25,10 +25,18 @@ build/Release
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
+jspm_packages
+bower_components
 
 .idea
 .DS_Store
+*.iml
 */dist/
 angular2/app/app.js
 angular2/app/app.js.map
 tests/results/completed/
+target/
+webdriver-java/chromedriver
+
+tests-browser-perf/
+tests-protractor-perf/

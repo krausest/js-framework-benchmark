@@ -1,5 +1,25 @@
 import {bootstrap}    from 'angular2/platform/browser'
-import {Component, View} from 'angular2/core';
+import {Component, View, enableProdMode, AfterViewChecked} from 'angular2/core';
+
+enableProdMode();
+
+var startTime;
+var lastMeasure;
+var startMeasure = function(name) {
+    startTime = performance.now();
+    lastMeasure = name;
+}
+var stopMeasure = function() {
+    var last = lastMeasure;
+    if (lastMeasure) {
+        window.setTimeout(function () {
+            lastMeasure = null;
+            var stop = performance.now();
+            console.log(lastMeasure+" took "+(stop-startTime));
+            //document.getElementById("duration").innerHTML = Math.round(stop - startTime) + " ms ("  + Math.round(duration) + " ms)" ;
+        }, 0);
+    }
+}
 
 @Component({
     selector: 'my-app'
@@ -7,10 +27,9 @@ import {Component, View} from 'angular2/core';
 @View({
     templateUrl: 'template.html'
 })
-class MyAppComponent {
+class MyAppComponent implements AfterViewChecked {
     data: Array<any> = [];
     selected: string = undefined;
-    start: number = 0;
     id: number = 1;
 
     constructor() {
@@ -26,12 +45,11 @@ class MyAppComponent {
         }
         return data;
     }
+    public ngAfterViewChecked() {
+        stopMeasure();
+    }
 
     printDuration() {
-        setTimeout(() => {
-            let duration = Math.round(performance.now()-this.start);
-            document.getElementById("duration").innerHTML = duration + " ms";
-        });
     }
 
     _random(max: number) {
@@ -39,14 +57,14 @@ class MyAppComponent {
     }
 
     select(item, event) {
-        this.start = performance.now();
+        startMeasure("select");
         event.preventDefault();
         this.selected = item.id;
         this.printDuration();
     }
 
     delete(item, event) {
-        this.start = performance.now();
+        startMeasure("delete");
         event.preventDefault();
         const idx = this.data.findIndex(d => d.id===item.id);
         this.data.splice(idx, 1);
@@ -54,22 +72,26 @@ class MyAppComponent {
     }
 
     run(event) {
-        this.start = performance.now();
+        startMeasure("run");
         this.data = this.buildData();
         this.printDuration();
     }
 
     add(event) {
-        this.start = performance.now();
+        startMeasure("add");
         this.data = this.data.concat(this.buildData(10));
         this.printDuration();
     }
 
     update(event) {
-        this.start = performance.now();
+        startMeasure("update");
+        /* For angular 2 this appears to be way faster */
         for (let i=0;i<this.data.length;i+=10) {
             this.data[i].label += '.';
         }
+        /*for (let i=0;i<this.data.length;i+=10) {
+            this.data[i] = {id: this.data[i].id, label: this.data[i].label +'.'};
+        }*/
         this.printDuration();
     }
 

@@ -11,7 +11,6 @@ export class Store {
         this.id = 1;
 	}
     buildData(count = 1000) {
-        console.log("buildData ",count);
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
         var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
         var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
@@ -27,7 +26,6 @@ export class Store {
     }
     delete(id) {
         const idx = this.data.findIndex(d => d.id==id);
-        console.log("delete idx ",idx);
         this.data = this.data.filter((e,i) => i!=idx);
         return this;
     }
@@ -36,7 +34,6 @@ export class Store {
         this.selected = undefined;
     }
     add() {
-        console.log("add ",this.data.length);
         this.data = this.data.concat(this.buildData(10));
         this.selected = undefined;
     }

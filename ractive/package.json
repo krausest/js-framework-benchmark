@@ -24,7 +24,6 @@
     "webpack": "^1.7.2"
   },
   "dependencies": {
-    "bootstrap": "^3.3.6",
     "ractive": "^0.7.3"
   }
 }

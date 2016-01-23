@@ -8,7 +8,7 @@ var
     hexToRgba = require('hex-rgba');
 
 /* Regex conditions for picking data */
-var benchRegex = RegExp(/^\*{13} Testing time for (\|.*\|.*\|) \*{13}$/gm),
+var benchRegex = RegExp(/^\*{13} Testing time for (\|.*\|.*\|\d*) \*{13}$/gm),
   preDataRegex = RegExp(/^[={18} \|]+$/gm),
   dataRegex = RegExp(/(\s+(\d+\.\d+(\+\-\d+\%)?)(?: \|)?)+/gm),
   dataFailureStop = RegExp(/^\*{57}/gm);
@@ -52,8 +52,10 @@ function chart() {
           let m = match[1].split('|');
           curMode = m[1];
           framework = m[2];
+          var iterations = parseFloat(m[3]);
           recorder[curMode] = recorder[curMode] || {};
-          recorder[curMode][framework] = {};
+          recorder[curMode][framework] = {iterations: iterations};
+          console.log("*",curMode, framework,  recorder[curMode][framework].iterations);
         }
         // matching line before data
         else if (line.match(preDataRegex)) {
@@ -62,7 +64,7 @@ function chart() {
         // recording data
         else if (recordData) {
             var res = trimResults(line);
-            recorder[curMode][framework] = res;
+            recorder[curMode][framework].data = res;
           prepareRecord = false;
           recordData = false;
         }
@@ -70,7 +72,7 @@ function chart() {
 
       // print rows of data from recorder
       rl.on('close', function () {
-          var colors = ["#006495", "#004C70", "#0093D1", "#F2635F", "#F4D00C", "#E0A025"];
+          var colors = ["#00AAA0", "#8ED2C9", "#44B3C2", "#F1A94E", "#E45641", "#5D4C46", "#7B8D8E", "#F2EDD8", "#462066"];
           var data = {labels:[], datasets: []};
           var firstTest = Object.keys(recorder)[0];
 
@@ -80,7 +82,10 @@ function chart() {
 
               Object.keys(recorder[firstTest]).forEach(function (framework, fidx) {
                   // var dataRow = [];
-                  var totalTime = parseFloat(recorder[test][framework][measure.script]);
+                  var totalTime = parseFloat(recorder[test][framework].data[measure.script])/recorder[test][framework].iterations;
+                  var scriptTime = parseFloat(recorder[test][framework].data[measure.pureScript])/recorder[test][framework].iterations;
+                  var renderTime = parseFloat(recorder[test][framework].data[measure.render])/recorder[test][framework].iterations;
+                  console.log(test, framework,  recorder[test][framework].iterations);
 
                   if (!data.datasets[fidx]) {
                       data.datasets[fidx] = {
@@ -92,7 +97,7 @@ function chart() {
                           data: []
                       };
                   }
-                  data.datasets[fidx].data[tidx] = totalTime;
+                  data.datasets[fidx].data[tidx] = scriptTime+renderTime;
               });
           });
           var resultData = "var data = "+JSON.stringify(data)+";";
@@ -102,10 +107,86 @@ function chart() {
     }))
 }
 
+
+function tables() {
+    vinyl.src(input)
+        .pipe(map(function (file, cb) {
+            var recorder = {
+            };
+            var rl = readline.createInterface({
+                input: fs.createReadStream(file.path, 'utf8')
+            });
+
+            var prepareRecord = false,
+                recordData = false,
+                curMode = undefined,
+                framework = undefined;
+
+            function nextMode() {
+                if (prepareRecord) {
+                    recorder[curMode].push('error');
+                }
+                prepareRecord = true;
+                recordData = false;
+            }
+
+            rl.on('line', function (line) {
+                if (line.match(benchRegex)) {
+                    var match = benchRegex.exec(line);
+                    nextMode();
+                    let m = match[1].split('|');
+                    curMode = m[1];
+                    framework = m[2];
+                    var iterations = parseFloat(m[3]);
+                    recorder[curMode] = recorder[curMode] || {};
+                    recorder[curMode][framework] = {iterations: iterations};
+                    console.log("*",curMode, framework,  recorder[curMode][framework].iterations);
+                }
+                // matching line before data
+                else if (line.match(preDataRegex)) {
+                    recordData = true;
+                }
+                // recording data
+                else if (recordData) {
+                    var res = trimResults(line);
+                    recorder[curMode][framework].data = res;
+                    prepareRecord = false;
+                    recordData = false;
+                }
+            });
+
+            // print rows of data from recorder
+            rl.on('close', function () {
+                var firstTest = Object.keys(recorder)[0];
+
+                var resultData =  getSpaces("Framework")+"Framework"+";" + getSpaces("scriptTime")+"scriptTime"+";" + getSpaces("pureScriptTime")+"pureScriptTime"+";" + getSpaces("renderTime")+"renderTime"+";";
+
+                Object.keys(recorder).forEach(function(test, tidx) {
+
+                    resultData += "\n"+test+"\n";
+
+                    Object.keys(recorder[firstTest]).forEach(function (framework, fidx) {
+                        // var dataRow = [];
+                        var totalTime = parseFloat(recorder[test][framework].data[measure.script])/recorder[test][framework].iterations;
+                        var scriptTime = parseFloat(recorder[test][framework].data[measure.pureScript])/recorder[test][framework].iterations;
+                        var renderTime = parseFloat(recorder[test][framework].data[measure.render])/recorder[test][framework].iterations;
+                        console.log(test, framework,  recorder[test][framework].iterations);
+                        resultData += framework+getSpaces(framework);
+                        resultData += ";"+getSpaces(totalTime)+totalTime.toFixed(2);
+                        resultData += ";"+getSpaces(scriptTime)+scriptTime.toFixed(2);
+                        resultData += ";"+getSpaces(renderTime)+renderTime.toFixed(2)+"\n";
+                    });
+                });
+                fs.writeFile("table_result.txt", resultData, "utf-8");
+            });
+            cb(null, file);
+        }))
+}
+
 // adjust spaces in output
 function getSpaces(obj) {
     if (typeof obj === "number") {
-        return ' '.repeat(16 - obj.toString().length);
+        return getSpaces(obj.toFixed(2));
     } else {
         return ' '.repeat(16 - obj.length);
     }
@@ -137,3 +218,4 @@ function mapScriptData(item) {
 }
 
 chart();
+tables();

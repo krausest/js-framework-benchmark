@@ -1,0 +1,28 @@
+<template>
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-8">
+          <h1>Aurelia</h1>
+        </div>
+        <div class="col-md-4">
+          <button type="button" class="btn btn-primary btn-block" id="add" click.trigger="add()">Add 10 rows</button>
+          <button type="button" class="btn btn-primary btn-block" id="run" click.trigger="run()">Create 1000 rows</button>
+          <button type="button" class="btn btn-primary btn-block" id="update" click.trigger="update()">Update every 10th row</button>
+          <h3 id="duration"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;</h3>
+        </div>
+      </div>
+    </div>
+    <table class="table table-hover table-striped test-data">
+        <tr repeat.for="item of rows" class="${ item.id === selected ? 'danger' : ''}">
+        <td class="col-md-1">${item.id}</td>
+        <td class="col-md-4">
+          <a click.trigger="select(item)">${item.label}</a>
+        </td>
+        <td class="col-md-1"><a click.trigger="remove(item)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+        <td class="col-md-6"></td>
+      </tr>
+    </table>
+  </div>
+
+</template>

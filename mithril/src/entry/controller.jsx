@@ -6,21 +6,35 @@
 
 var m = require('mithril')
 var Store = require('./store');
-let startTime = 0;
+
+var startTime;
+var lastMeasure;
+var startMeasure = function(name) {
+    startTime = performance.now();
+    lastMeasure = name;
+}
+var stopMeasure = function() {
+    var last = lastMeasure;
+    if (lastMeasure) {
+        window.setTimeout(function () {
+            lastMeasure = null;
+            var stop = performance.now();
+            var duration = 0;
+            console.log(lastMeasure+" took "+(stop-startTime));
+            ////document.getElementById("duration").innerHTML = Math.round(stop - startTime) + " ms ("  + Math.round(duration) + " ms)" ;
+        }, 0);
+    }
+}
 
 var Row = {
     controller: function(props) {
         return {
             click: function() {
                 const id = props.id;
-                startTime = performance.now();
-                console.log("clicked on ",id);
                 props.onclick(id);
             },
             remove: function() {
                 const id = props.id;
-                startTime = performance.now();
-                console.log("delete ",id);
                 props.onremove(id);
             },
         }
@@ -43,27 +57,27 @@ var Controller = {
             data: function() { return Store.data;},
             selected: function() { return Store.selected;},
             run: function() {
-                console.log('time run');
-                console.time('run');
-                startTime = performance.now();
+                startMeasure("run")
                 Store.run();
-                console.timeEnd('run');
             },
             add: function() {
-                startTime = performance.now();
+                startMeasure("add")
                 Store.add();
             },
             update: function() {
-                startTime = performance.now();
+                startMeasure("update")
                 Store.update();
             },
-            select: function(id) { Store.select(id); },
-            remove: function(id) { Store.remove(id); },
+            select: function(id) {
+                startMeasure("select");
+                Store.select(id);
+            },
+            remove: function(id) {
+                startMeasure("delete")
+                Store.remove(id);
+            },
             done: function() {
-                console.time('duration');
-                let duration = Math.round(performance.now() - startTime) + " ms";
-                document.getElementById("duration").innerHTML = duration;
-                console.timeEnd('duration');
+                stopMeasure();
             }
         }
     },

@@ -15,7 +15,6 @@ var Store = {
     id : 1,
     remove: function(id) {
         const idx = this.data.findIndex(d => d.id==id);
-        console.log("delete idx ",idx);
         this.data.splice(idx, 1);
     },
     buildData: function(count = 1000) {
@@ -32,14 +31,12 @@ var Store = {
         this.selected = undefined;
     },
     update : function(mod=10) {
-        this.data = this.data.map((data, index) => {
-            if (index % mod ==0) {
-                return Object.assign({}, data, {label: data.label+"."});
-            } else {
-                return data;
-            }
-        });
-        this.selected = undefined;
+        for (let i=0;i<this.data.length;i+=10) {
+            this.data[i].label += '.';
+        }
+        /*for (let i=0;i<this.data.length;i+=10) {
+            this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label +'.'});
+        }*/
     },
     add : function() {
         this.data = [].concat(this.data, this.buildData(10));

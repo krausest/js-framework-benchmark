@@ -5,10 +5,27 @@ require('babel-core/lib/babel/polyfill');
 const Ractive = require('ractive');
 Ractive.DEBUG = /unminified/.test(function(){/*unminified*/});
 
+var startTime;
+var lastMeasure;
+var startMeasure = function(name) {
+    startTime = performance.now();
+    lastMeasure = name;
+}
+var stopMeasure = function() {
+    var last = lastMeasure;
+    if (lastMeasure) {
+        window.setTimeout(function () {
+            lastMeasure = null;
+            var stop = performance.now();
+            console.log(lastMeasure+" took "+(stop-startTime));
+            //document.getElementById("duration").innerHTML = Math.round(stop - startTime) + " ms ("  + Math.round(duration) + " ms)" ;
+        }, 0);
+    }
+}
+
 class DataStore {
     constructor() {
         this.data = [];
-        this.date = performance.now();
         this.selected = undefined;
         this.id = 1;
     }
@@ -25,65 +42,59 @@ class DataStore {
         return Math.round(Math.random() * 1000) % max;
     }
     select(id) {
-        this.date = performance.now();
         this.selected = id;
     }
     update() {
-        this.date = performance.now();
         for (let i=0;i<this.data.length;i+=10) {
             this.data[i].label += '.';
         }
     }
     delete(id) {
-        this.date = performance.now();
         const idx = this.data.findIndex(d => d.id==id);
         this.data.splice(idx, 1);
     }
     run() {
-        this.date = performance.now();
         this.data = this.buildData();
     }
     add() {
-        this.date = performance.now();
         this.data = this.data.concat(this.buildData(10));
     }
 }
 
 const store = new DataStore();
 
-var timeOut = function() {
-    window.setTimeout(e => {
-        document.getElementById("duration").innerHTML = Math.round(performance.now() - store.date) + " ms";
-    }, 8);
-}
 
 var ractive = new Ractive({
     oninit : function(options) {
         const that = this;
         this.on( 'run', function ( event) {
-            timeOut();
+            startMeasure("run");
             store.run();
             this.set("store", store);
+            stopMeasure();
         });
         this.on( 'add', function ( event) {
-            timeOut();
+            startMeasure("add");
             store.add();
             this.set("store", store);
+            stopMeasure();
         });
        this.on( 'partialUpdate', function ( event) {
-           timeOut();
+           startMeasure("update");
             store.update();
             this.set("store", store);
+           stopMeasure();
         });
         this.on('select', function (event, id) {
+            startMeasure("rselect");
             store.select(id);
             that.set("selected", store.selected);
-            timeOut();
-            console.log("selected ",id);
+            stopMeasure();
         });
         this.on('delete', function (event, id) {
+            startMeasure("timeout");
             store.delete(id);
-            timeOut();
+            stopMeasure();
         });
     },
     el: "#main",

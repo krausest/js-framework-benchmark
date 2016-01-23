@@ -1,6 +1,21 @@
+var startTime;
+var lastMeasure;
+var startMeasure = function(name) {
+    //console.timeStamp(name);
+    startTime = performance.now();
+    lastMeasure = name;
+}
+var stopMeasure = function() {
+    window.setTimeout(function() {
+        var stop = performance.now();
+        var duration = 0;
+        console.log(lastMeasure+" took "+(stop-startTime));
+        //document.getElementById("duration").innerHTML = Math.round(stop - startTime) + " ms ("  + Math.round(duration) + " ms)" ;
+    }, 0);
+}
+
 export default class HomeController {
     constructor($scope) {
-        console.log("$scope",$scope);
         this.$scope = $scope;
         this.start = 0;
         this.data = [];
@@ -18,31 +33,32 @@ export default class HomeController {
         return data;
     }
     printDuration() {
-        this.$scope.$$postDigest(function() {
-            let duration = Math.round(performance.now()-this.start);
-            document.getElementById("duration").innerHTML = duration + " ms";
-        }.bind(this));
+        stopMeasure();
     }
     _random(max) {
         return Math.round(Math.random() * 1000) % max;
     }
     add() {
+        startMeasure("add");
         this.start = performance.now();
         this.data = this.data.concat(this.buildData(10));
         this.printDuration();
     }
     select(item) {
+        startMeasure("select");
         this.start = performance.now();
         this.selected = item.id;
         this.printDuration();
     }
     del(item) {
+        startMeasure("delete");
         this.start = performance.now();
         const idx = this.data.findIndex(d => d.id===item.id);
         this.data.splice(idx, 1);
         this.printDuration();
     }
     update() {
+        startMeasure("update");
         this.start = performance.now();
         for (let i=0;i<this.data.length;i+=10) {
             this.data[i].label += '.';
@@ -50,6 +66,7 @@ export default class HomeController {
         this.printDuration();
     }
     run() {
+        startMeasure("run");
         this.start = performance.now();
         this.data = this.buildData();
         this.printDuration();

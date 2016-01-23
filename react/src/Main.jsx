@@ -5,7 +5,25 @@ var ReactDOM = require('react-dom');
 const {Row} = require('./Row');
 const {Store} = require('./Store');
 
-console.log("Row", Row);
+var startTime;
+var lastMeasure;
+var startMeasure = function(name) {
+    //console.timeStamp(name);
+    startTime = performance.now();
+    lastMeasure = name;
+}
+var stopMeasure = function() {
+    var last = lastMeasure;
+    if (lastMeasure) {
+        window.setTimeout(function () {
+            lastMeasure = null;
+            var stop = performance.now();
+            var duration = 0;
+            console.log(last+" took "+(stop-startTime));
+            //document.getElementById("duration").innerHTML = Math.round(stop - startTime) + " ms ("  + Math.round(duration) + " ms)" ;
+        }, 0);
+    }
+}
 
 export class Main extends React.Component{
     constructor(props) {
@@ -19,10 +37,7 @@ export class Main extends React.Component{
         this.start = 0;
     }
     printDuration() {
-        document.getElementById("duration").innerHTML = Math.round(performance.now() - this.start) + " ms";
-/*      console.log("updated "+window.rowsUpdated+" mounted "+window.rowsMounted)
-        window.rowsUpdated = 0;
-        window.rowsMounted = 0; */
+        stopMeasure();
     }
     componentDidUpdate() {
         this.printDuration();
@@ -31,29 +46,27 @@ export class Main extends React.Component{
         this.printDuration();
     }
     run() {
-        this.start = performance.now();
+        startMeasure("run");
         this.state.store.run();
         this.setState({store: this.state.store});
     }
     add() {
-        this.start = performance.now();
-        console.log("add");
+        startMeasure("add");
         this.state.store.add();
         this.setState({store: this.state.store});
     }
     update() {
-        this.start = performance.now();
+        startMeasure("update");
         this.state.store.update();
         this.setState({store: this.state.store});
     }
     select(id) {
-        this.start = performance.now();
-        console.log("select ",id)
+        startMeasure("select");
         this.state.store.select(id);
         this.setState({store: this.state.store});
     }
     delete(id) {
-        this.start = performance.now();
+        startMeasure("delete");
         this.state.store.delete(id);
         this.setState({store: this.state.store});
     }
@@ -71,7 +84,7 @@ export class Main extends React.Component{
                         <button type="button" className="btn btn-primary btn-block" id="add" onClick={this.add}>Add 10 rows</button>
                         <button type="button" className="btn btn-primary btn-block" id="run" onClick={this.run}>Create 1000 rows</button>
                         <button type="button" className="btn btn-primary btn-block" id="update" onClick={this.update}>Update every 10th row</button>
-                        <h3 id="duration"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;</h3>
+                        <h3 id="duration"><span className="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;</h3>
                     </div>
                 </div>
             </div>

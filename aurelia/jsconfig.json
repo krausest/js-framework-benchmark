@@ -1,0 +1,7 @@
+{
+	"compilerOptions":{
+		"target": "ES6",
+		"module": "system",
+		"experimentalDecorators": true
+	}
+}

@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Simple Benchmark for Javascript client side rendering",
   "scripts": {
-    "postinstall": "cd angular && npm install && cd .. && cd angular2 && npm install && cd .. && cd mithril && npm install && cd .. && cd ractive && npm install && cd .. && cd react && npm install && cd .. && cd tests && npm install",
-    "build": "cd angular && npm run build-prod && cd .. && cd angular2 && npm run build-prod && cd .. && cd mithril && npm run build-prod && cd .. && cd ractive && npm run build-prod && cd .. && cd react && npm run build-prod",
+    "postinstall": "cd angular && npm install && cd .. && cd angular2 && npm install && cd .. && cd aurelia && npm install && cd .. && cd ember && npm install && cd .. && cd mithril && npm install && cd .. && cd ractive && npm install && cd .. && cd react && npm install && cd .. && cd vidom && npm install && cd .. && cd vue && npm install && cd ..  && cd tests && npm install",
+    "build": "cd angular && npm run build-prod && cd .. && cd angular2 && npm run build-prod && cd .. && cd aurelia && npm run build-prod && cd .. && cd ember && npm run build-prod && cd .. && cd mithril && npm run build-prod && cd .. && cd ractive && npm run build-prod && cd .. && cd react && npm run build-prod && cd .. && cd vidom && npm run build-prod&& cd ..  && cd vue && npm run build-prod",
     "start": "http-server -c-1 ."
   },
   "keywords": [

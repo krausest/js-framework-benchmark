@@ -3,13 +3,13 @@ var benchpress = require('benchpress'),
     await = require('asyncawait/await');
 
 // fix for memory leak issue
-require('events').EventEmitter.prototype._maxListeners = 50;
+require('events').EventEmitter.prototype._maxListeners = 200;
 
 var TEST = {
-    SAMPLE_SIZE: 3, // number of times the test runs
+    SAMPLE_SIZE: 5, // number of times the test runs
     ADDRESS: 'http://localhost:8080/',
-    TIMEOUT_INTERVAL_VAR: 1500000, // increase this if you're getting a timeout error
-    FRAMEWORKS: ["react", "ractive", "mithril", "angular", "angular2"] // identical to URL
+    TIMEOUT_INTERVAL_VAR: 15000000, // increase this if you're getting a timeout error
+    FRAMEWORKS: ["aurelia"] //["angular", "angular2","aurelia", "ember/dist", "mithril", "ractive", "react",  "vidom", "vue" ] // identical to URL
 };
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = TEST.TIMEOUT_INTERVAL_VAR;
@@ -22,7 +22,11 @@ var runner = new benchpress.Runner([
     benchpress.bind(benchpress.Options.FORCE_GC).toValue(true)
 ]);
 
-const IGNORE_SYNCHRONIZATION = true;
+//const IGNORE_SYNCHRONIZATION = true;
+
+function ignoreSynchronization(framework) {
+    return "angular" !== framework; // && "aurelia" !== framework;
+}
 
 afterEach(async(function () {
     await(global.browser.quit());
@@ -33,16 +37,18 @@ describe('Performance Tests', function () {
     function testLoad(framework) {
         var id = 'page load & create 1000 rows';
         it('time for ' + id, async(function (done) {
-            browser.ignoreSynchronization = IGNORE_SYNCHRONIZATION;
+            browser.ignoreSynchronization = ignoreSynchronization(framework);
+            browser.get(TEST.ADDRESS + framework + "/");
+
             runner.sample({
                 id: id,
-                prepare: async(function () {
+                prepare: function () {
                     // FIXME: Without browser.get here the first execute will often return a duration of 0ms.
-                    await(browser.get(TEST.ADDRESS + framework + "/"));
-                }),
+                    //return await(browser.get(TEST.ADDRESS + framework + "/"));
+                },
                 execute: async(function () {
-                    await(browser.get(TEST.ADDRESS + framework + "/"));
-                    return await($('#run').click());
+                    var p = new Date().getTime();
+                    $('#run').click();
                 })
             }).then(done, done.fail);
             addTitle(id, framework);
@@ -50,13 +56,16 @@ describe('Performance Tests', function () {
     }
 
     function testRun(framework) {
-        var id = 'create 1000 rows';
+        var id = 'run';
         it('time for ' + id, async(function (done) {
-            browser.ignoreSynchronization = IGNORE_SYNCHRONIZATION;
+            browser.ignoreSynchronization = ignoreSynchronization(framework);
             runner.sample({
                 id: id,
                 prepare: async(function () {
-                    await(browser.get(TEST.ADDRESS + framework + "/"));
+                    browser.get(TEST.ADDRESS + framework + "/");
+                    browser.driver.wait(function() {
+                        return browser.driver.isElementPresent(by.id('run'));
+                    });
                 }),
                 execute: async(function () {
                     return await($('#run').click());
@@ -66,20 +75,23 @@ describe('Performance Tests', function () {
         }));
     }
 
-    function testRun10(framework) {
-        var id = 'update 1000 rows';
+    function testRunHot(framework) {
+        var id = 'runHot';
         it('time for ' + id, async(function (done) {
-            browser.ignoreSynchronization = IGNORE_SYNCHRONIZATION;
+            browser.ignoreSynchronization = ignoreSynchronization(framework);
             runner.sample({
                 id: id,
                 prepare: async(function () {
-                    await(browser.get(TEST.ADDRESS + framework + "/"));
-                    for (var i=0;i<5;i++) {
-                        await($('#run').click());
+                    browser.get(TEST.ADDRESS + framework + "/");
+                    browser.driver.wait(function() {
+                        return browser.driver.isElementPresent(by.id('run'));
+                    });
+                    for (var i=0;i<10;i++) {
+                        $('#run').click();
                     }
                 }),
                 execute: async(function () {
-                    return await($('#run').click());
+                    return $('#run').click();
                 })
             }).then(done, done.fail);
             addTitle(id, framework);
@@ -87,37 +99,43 @@ describe('Performance Tests', function () {
     }
 
     function testAdd10x10(framework) {
-        var id = '10 x add 10 rows';
+        var id = 'add 10 rows';
         it('time for ' + id, async(function (done) {
-            browser.ignoreSynchronization = IGNORE_SYNCHRONIZATION;
+            browser.ignoreSynchronization = ignoreSynchronization(framework);
             runner.sample({
                 id: id,
                 prepare: async(function () {
-                    await(browser.get(TEST.ADDRESS + framework + "/"));
+                    browser.get(TEST.ADDRESS + framework + "/");
+                    browser.driver.wait(function() {
+                        return browser.driver.isElementPresent(by.id('run'));
+                    });
                 }),
                 execute: async(function () {
                     for (var i = 0; i < 10; i++) {
-                        await($('#add').click());
+                        $('#add').click();
                     }
                     return;
                 })
             }).then(done, done.fail);
-            addTitle(id, framework);
+            addTitle(id, framework, 10);
         }));
     }
 
     function testUpdate(framework) {
         var id = 'partial update';
         it('time for ' + id, async(function (done) {
-            browser.ignoreSynchronization = IGNORE_SYNCHRONIZATION;
+            browser.ignoreSynchronization = ignoreSynchronization(framework);
             runner.sample({
                 id: id,
                 prepare: async(function () {
-                    await(browser.get(TEST.ADDRESS + framework + "/"));
-                    return await($('#run').click());
+                    browser.get(TEST.ADDRESS + framework + "/");
+                    browser.driver.wait(function() {
+                        return browser.driver.isElementPresent(by.id('run'));
+                    });
+                    browser.driver.findElement(by.id('run')).click();
                 }),
                 execute: async(function () {
-                    return await($('#update').click());
+                    $('#update').click();
                 })
             }).then(done, done.fail);
             addTitle(id, framework);
@@ -125,64 +143,82 @@ describe('Performance Tests', function () {
     }
 
     function testClick(framework) {
-        var id = 'select 10 rows';
-        var num_iterations = 10;
+        var id = 'select row';
         it('time for ' + id, async(function (done) {
-            browser.ignoreSynchronization = IGNORE_SYNCHRONIZATION;
+            browser.ignoreSynchronization = ignoreSynchronization(framework);
             runner.sample({
                 id: id,
                 prepare: async(function () {
-                    await(browser.get(TEST.ADDRESS + framework + "/"));
-                    return await($('#run').click());
+                    browser.get(TEST.ADDRESS + framework + "/");
+                    browser.driver.wait(function() {
+                        return browser.driver.isElementPresent(by.id('run'));
+                    });
+                    $('#run').click();
+                    browser.driver.wait(function() {
+                        return browser.driver.isElementPresent(by.tagName('tr'));
+                    });
+                    //var els = element.all(by.tagName('tr'));
+                    //els.get(0).all(by.tagName('a')).get(0).click();
+                    //els.get(1).all(by.tagName('a')).get(0).click();
+                    //els.get(2).all(by.tagName('a')).get(0).click();
                 }),
                 execute: async(function () {
                     var els = element.all(by.tagName('tr'));
-                    for (i = 0; i < num_iterations; i++) {
-                        await(els.get(i).all(by.tagName('a')).get(0).click());
-                    }
-                    return;
+                    els.get(0).all(by.tagName('a')).get(0).click();
                 })
             }).then(done, done.fail);
-            addTitle(id, framework);
+            addTitle(id, framework, 1);
         }));
     }
 
-    function testRemove10(framework) {
-        var id = 'remove 10 rows';
-        var num_iterations = 10;
+    function testRemove(framework) {
+        var id = 'remove row';
         it('time for ' + id, async(function (done) {
-            browser.ignoreSynchronization = IGNORE_SYNCHRONIZATION;
+            browser.ignoreSynchronization = ignoreSynchronization(framework);
             runner.sample({
                 id: id,
                 prepare: async(function () {
-                    await(browser.get(TEST.ADDRESS + framework + "/"));
-                    return await($('#run').click());
+                    browser.get(TEST.ADDRESS + framework + "/");
+                    browser.driver.wait(function() {
+                        return browser.driver.isElementPresent(by.id('run'));
+                    });
+                    element(by.id('run')).click();
+                    browser.driver.wait(function() {
+                        return browser.driver.isElementPresent(by.tagName('tr'));
+                    });
+                    var elements = element.all(by.tagName('tr'));
+                    for (j=8;j>=5;j--) {
+                        var elements = element.all(by.tagName('tr'));
+                        elements.get(j).all(by.tagName('a')).get(1).click();
+                    }
                 }),
                 execute: async(function () {
-                    for (i = 0; i < num_iterations; i++) {
-                        await(element.all(by.tagName('tr')).first().all(by.tagName('a')).get(1).click());
-                    }
+                    var elements = element.all(by.tagName('tr'));
+                    elements.get(0).all(by.tagName('a')).get(1).click();
                     return;
                 })
             }).then(done, done.fail);
-            addTitle(id, framework);
+            addTitle(id, framework, 1);
         }));
     }
 
 
-    function addTitle(message, framework) {
+    function addTitle(message, framework, count) {
+        count = count || 1;
         console.log('\n*********************************************************');
-        console.log('************* Testing time for |' + message + '|' + framework+'| *************');
+        console.log('************* Testing time for |' + message + '|' + framework+'|'+count+' *************');
         console.log('*********************************************************\n');
     }
 
     TEST.FRAMEWORKS.forEach(function (framework) {
-        testLoad(framework);
-        testRun(framework);
-        testRun10(framework);
-        testUpdate(framework);
+        // Currently not used, no surprises here
+        //testAdd10x10(framework);
+        //testLoad(framework);
+
+        //testRun(framework);
+        //testRunHot(framework);
+        //testUpdate(framework);
         testClick(framework);
-        testAdd10x10(framework);
-        testRemove10(framework);
+        //testRemove(framework);
     })
 });

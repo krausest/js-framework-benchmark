@@ -25,8 +25,7 @@
     "webpack": "^1.7.2"
   },
   "dependencies": {
-    "bootstrap": "^3.3.6",
     "jsx-loader": "^0.13.2",
-    "mithril": "^0.2.0"
+    "mithril": "^0.2.2-rc.1"
   }
 }
