@@ -1,0 +1,18 @@
+{
+  "name": "js-framework-benchmark-angular-testrunner",
+  "version": "1.0.0",
+  "description": "Simple Benchmark for Javascript client side rendering",
+  "scripts": {
+    "postinstall": "mvn package && webdriver-manager update",
+    "selenium": "mvn package exec:java"
+  },
+  "author": "Stefan Krause",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "webdriver-manager": "^8.0.0"
+  }
+}

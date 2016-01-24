@@ -377,7 +377,7 @@ public class App {
     }
 
     public static void main(String[] argv) throws Exception {
-        System.setProperty("webdriver.chrome.driver", "./chromedriver");
+        System.setProperty("webdriver.chrome.driver", "node_modules/webdriver-manager/selenium/chromedriver");
         App test = new App();
         test.runTests();
     }
