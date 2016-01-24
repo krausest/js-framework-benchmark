@@ -4,9 +4,7 @@ This is a simple benchmark for several javascript frameworks. The benchmarks cre
 
 This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations.
 
-It's also uses the work of ShMcK [Framework-Performance-Tests-with-Meteor](https://github.com/ShMcK/Framework-Performance-Tests-with-Meteor) who put Protractor and BenchPress wonderfully to work.
-
-Thanks to both for their great work.
+Thanks for the great work.
 
 ## Prerequsites
 
@@ -56,6 +54,8 @@ which runs the seleniums tests
 Open [http://localhost:8080/webdriver-java/chart.html](http://localhost:8080/webdriver-java/chart.html) for the results
 
 ## Execute the benchmarks with protractor and benchpress [deprecated]
+
+This uses the work of ShMcK [Framework-Performance-Tests-with-Meteor](https://github.com/ShMcK/Framework-Performance-Tests-with-Meteor) who put Protractor and BenchPress wonderfully to work.
 
 `npm start`
 
