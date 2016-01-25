@@ -53,6 +53,8 @@ which runs the seleniums tests
 
 Open [http://localhost:8080/webdriver-java/chart.html](http://localhost:8080/webdriver-java/chart.html) for the results
 
+A test showing the durations on my machine can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-java/chart.html)
+
 ## Execute the benchmarks with protractor and benchpress [deprecated]
 
 This uses the work of ShMcK [Framework-Performance-Tests-with-Meteor](https://github.com/ShMcK/Framework-Performance-Tests-with-Meteor) who put Protractor and BenchPress wonderfully to work.
@@ -66,4 +68,3 @@ open a new shell in the tests directory
 
 Open [http://localhost:8080/tests/chart.html](http://localhost:8080/tests/chart.html) for the results
 
-A test showing the durations on my machine can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-java/chart.html)
