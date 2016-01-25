@@ -66,4 +66,4 @@ open a new shell in the tests directory
 
 Open [http://localhost:8080/tests/chart.html](http://localhost:8080/tests/chart.html) for the results
 
-A test showing the durations on my machine can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/tests/chart.html)
+A test showing the durations on my machine can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-java/chart.html)

@@ -25,7 +25,50 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class App {
 
-    public final static int REPEAT_RUN = 5;
+    public static final int WARMUP_COUNT = 5;
+    private final static int REPEAT_RUN = 5;
+    private final static String frameworks[] = {"angular", "angular2","aurelia", "ember/dist", "mithril", "ractive", "react",  "vidom", "vue"};
+    private final static Bench[] benches = new Bench[] {new BenchRun(), new BenchRunHot(), new BenchUpdate(), new BenchSelect(), new BenchRemove()};
+
+    private static class PLogEntry {
+        private final String name;
+        private final long ts;
+        private final long duration;
+        private final String message;
+
+        public PLogEntry(String name, long ts, long duration, String message) {
+            this.name = name;
+            this.ts = ts;
+            this.duration = duration;
+            this.message = message;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public long getTs() {
+            return ts;
+        }
+
+        public long getDuration() {
+            return duration;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        @Override
+        public String toString() {
+            return "PLogEntry{" +
+                    "name='" + name + '\'' +
+                    ", ts=" + ts +
+                    ", duration=" + duration +
+                    ", message='" + message + '\'' +
+                    '}';
+        }
+    }
 
     public interface Bench {
         void init(WebDriver driver, String framework);
@@ -55,7 +98,7 @@ public class App {
             driver.get("localhost:8080/" + framework + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
             WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-            for (int i=0;i<5;i++) {
+            for (int i = 0; i< WARMUP_COUNT; i++) {
                 driver.findElement(By.id("run")).click();
                 element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
             }
@@ -77,7 +120,7 @@ public class App {
             WebDriverWait wait = new WebDriverWait(driver, 10);
             WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
             element.click();
-            for (int i=0;i<5;i++) {
+            for (int i = 0; i< WARMUP_COUNT; i++) {
                 driver.findElement(By.id("update")).click();
                 element = wait.until(ExpectedConditions.elementToBeClickable(By.id("update")));
             }
@@ -98,7 +141,7 @@ public class App {
             WebDriverWait wait = new WebDriverWait(driver, 10);
             WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
             element.click();
-            for (int i=0;i<5;i++) {
+            for (int i = 0; i< WARMUP_COUNT; i++) {
                 element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tbody/tr["+(i+1)+"]/td[2]/a")));
                 element.click();
             }
@@ -120,7 +163,7 @@ public class App {
             WebDriverWait wait = new WebDriverWait(driver, 10);
             WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
             element.click();
-            for (int i=8;i>=3;i--) {
+            for (int i=3+WARMUP_COUNT;i>=3;i--) {
                 element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tbody/tr["+i+"]/td[3]/a")));
                 element.click();
             }
@@ -140,9 +183,6 @@ public class App {
 
         DesiredCapabilities cap = setUp();
 
-
-        String frameworks[] = {"angular", "angular2","aurelia", "ember/dist", "mithril", "ractive", "react",  "vidom", "vue"};
-        Bench[] benches = new Bench[] {new BenchRun(), new BenchRunHot(), new BenchUpdate(), new BenchSelect(), new BenchRemove()};
         int length = REPEAT_RUN;
         Table<String, String, DoubleSummaryStatistics> results = HashBasedTable.create();
 
@@ -230,7 +270,7 @@ public class App {
         logPrefs.enable(LogType.BROWSER, Level.ALL);
         cap.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
 
-        Map<String, Object> perfLogPrefs = new HashMap<String, Object>();
+        Map<String, Object> perfLogPrefs = new HashMap<>();
         perfLogPrefs.put("traceCategories", "browser,devtools.timeline,devtools"); // comma-separated trace categories
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("perfLoggingPrefs", perfLogPrefs);
@@ -295,13 +335,12 @@ public class App {
         // First TimerFire
         Optional<PLogEntry> evtTimer = filtered.stream().filter(pe -> "TimerFire".equals(pe.getName())).filter(pe -> pe.ts > tsEvent).findFirst();
         long tsEventFire = evtTimer.map(pe -> pe.ts).orElse(0L);
-        // First Paint afer TimerFire
+        // First Paint after TimerFire only for Aurelia
         long tsAfter = isAurelia ? tsEventFire : tsEvent;
         Optional<PLogEntry> lastPaint = filtered.stream().filter(pe -> "Paint".equals(pe.getName())).
                 filter(pe -> pe.ts > tsAfter).findFirst();
-//        Optional<PLogEntry> lastPaint = filtered.stream().filter(pe -> "Paint".equals(pe.getName())).reduce((a, b) -> b);
 
-        if (print) System.out.println("************************ filtered");
+        if (print) System.out.println("************************ filtered events");
         filtered.forEach(e -> System.out.println(e));
         if (evt.isPresent() && lastPaint.isPresent()) {
             if (print) System.out.println("Duration "+(lastPaint.get().ts + lastPaint.get().duration - evt.get().ts)/1000.0);
@@ -309,46 +348,6 @@ public class App {
         }
         return null;
 
-    }
-
-    private static class PLogEntry {
-        private final String name;
-        private final long ts;
-        private final long duration;
-        private final String message;
-
-        public PLogEntry(String name, long ts, long duration, String message) {
-            this.name = name;
-            this.ts = ts;
-            this.duration = duration;
-            this.message = message;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public long getTs() {
-            return ts;
-        }
-
-        public long getDuration() {
-            return duration;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        @Override
-        public String toString() {
-            return "PLogEntry{" +
-                    "name='" + name + '\'' +
-                    ", ts=" + ts +
-                    ", duration=" + duration +
-                    ", message='" + message + '\'' +
-                    '}';
-        }
     }
 
     List<PLogEntry> submitPerformanceResult(List<LogEntry> perfLogEntries, boolean print)
@@ -368,9 +367,7 @@ public class App {
                         (long)getAsLong(obj, "message.params.ts"),
                         (long)getAsLong(obj, "message.params.dur"),
                         entry.getMessage()));
-                    ;
             }
-//            System.out.println(entry);
         }
 
         return filtered;
