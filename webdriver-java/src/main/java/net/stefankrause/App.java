@@ -336,7 +336,7 @@ public class App {
 
         Logs logs = driver.manage().logs();
         if (print) System.out.println("Log types: " + logs.getAvailableLogTypes());
-        List<PLogEntry> filtered = submitPerformanceResult(logs.get(LogType.PERFORMANCE).getAll(), print);
+        List<PLogEntry> filtered = submitPerformanceResult(logs.get(LogType.PERFORMANCE).getAll(), false);
 
         Optional<PLogEntry> evt = filtered.stream().filter(pe -> "EventDispatch".equals(pe.getName())).findFirst();
         long tsEvent = evt.map(pe -> pe.ts).orElse(0L);
