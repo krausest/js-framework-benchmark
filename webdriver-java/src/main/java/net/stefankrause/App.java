@@ -26,7 +26,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class App {
 
     public static final int WARMUP_COUNT = 5;
-    private final static int REPEAT_RUN = 5;
+    private final static int REPEAT_RUN = 12;
+    private final static int DROP_WORST_COUNT = 2;
     private final static String frameworks[] = {"angular", "angular2","aurelia", "ember/dist", "mithril", "ractive", "react",  "vidom", "vue"};
     private final static Bench[] benches = new Bench[] {new BenchRun(), new BenchRunHot(), new BenchUpdate(), new BenchSelect(), new BenchRemove()};
 
@@ -216,6 +217,13 @@ public class App {
                             lastWait = data[i];
                         }
                     }
+                    System.out.println("before "+Arrays.toString(data));
+                    if (DROP_WORST_COUNT>0) {
+                        Arrays.sort(data);
+                        data = Arrays.copyOf(data, data.length-DROP_WORST_COUNT);
+                        System.out.println("after "+Arrays.toString(data));
+                        System.out.println(Arrays.toString(data));
+                    }
                     DoubleSummaryStatistics stats = DoubleStream.of(data).summaryStatistics();
                     results.put(framework, bench.getName(), stats);
                 } finally {
@@ -341,7 +349,7 @@ public class App {
                 filter(pe -> pe.ts > tsAfter).findFirst();
 
         if (print) System.out.println("************************ filtered events");
-        filtered.forEach(e -> System.out.println(e));
+        if (print) filtered.forEach(e -> System.out.println(e));
         if (evt.isPresent() && lastPaint.isPresent()) {
             if (print) System.out.println("Duration "+(lastPaint.get().ts + lastPaint.get().duration - evt.get().ts)/1000.0);
             return (lastPaint.get().ts + lastPaint.get().duration - evt.get().ts)/1000.0;
