@@ -1,12 +1,13 @@
 'use strict';
+/** @jsx preact.h */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
+var preact = require('preact');
+var { render, h, Component } = preact;
 
 window.rowsUpdated = 0;
 window.rowsMounted = 0;
 
-export class Row extends React.Component {
+export class Row extends Component {
 	constructor(props) {
 		super(props);
 		this.onDelete = this.onDelete.bind(this);

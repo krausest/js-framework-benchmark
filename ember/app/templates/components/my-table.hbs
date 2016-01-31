@@ -13,7 +13,7 @@
 </div>
 <table class="table table-hover table-striped test-data">
     <tbody>
-    {{#each items as |item|}}
+    {{#each items key="identifier" as |item|}}
         <!-- (item.identifier == homeController.selected) -->
         {{#my-row item=item}}{{/my-row}}
     {{/each}}

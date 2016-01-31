@@ -31,10 +31,12 @@ var startMeasure = function(name) {
     lastMeasure = name;
 }
 var stopMeasure = function() {
+    console.timeStamp("stopmMeasure");
     window.setTimeout(function() {
         var stop = performance.now();
         var duration = 0;
         console.log(lastMeasure+" took "+(stop-startTime));
+        console.timeStamp("in setTimeout");
         //document.getElementById("duration").innerHTML = Math.round(stop - startTime) + " ms ("  + Math.round(duration) + " ms)" ;
     }, 0);
 }

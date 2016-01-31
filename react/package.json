@@ -29,7 +29,7 @@
     "babel-core": "^6.3.15",
     "babel-loader": "^6.2.0",
     "jsx-loader": "^0.13.2",
-    "react": "^0.14.3",
-    "react-dom": "^0.14.3"
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7"
   }
 }

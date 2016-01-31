@@ -17,7 +17,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "angular2": "2.0.0-beta.1",
+    "angular2": "2.0.0-beta.2",
     "systemjs": "0.19.6",
     "es6-promise": "^3.0.2",
     "es6-shim": "^0.33.3",
@@ -26,8 +26,8 @@
     "zone.js": "0.5.10"
   },
   "devDependencies": {
-    "live-server": "^0.8.1",
-    "typescript": "^1.6.2",
-    "http-server": "^0.8.5"
+    "concurrently": "^1.0.0",
+    "lite-server": "^1.3.4",
+    "typescript": "^1.7.5"
   }
 }

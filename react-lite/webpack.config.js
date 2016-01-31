@@ -17,7 +17,7 @@ var loaders = [
 	}
 ];
 var extensions = [
-	'', '.js', '.jsx', '.es6.js'
+	'', '.js', '.jsx', '.es6.js', '.msx'
 ];
 
 module.exports = [{
@@ -30,7 +30,8 @@ module.exports = [{
 	},
 	output: {
 		path: './dist',
-		filename: '[name].js'
+		filename: '[name].js',
+		sourceMapFilename: "[file].map",
 	},
 	resolve: {
 		extensions: extensions,
@@ -39,8 +40,8 @@ module.exports = [{
 			__dirname + '/src'
 		],
 		alias: {
-			"react": __dirname+"/node_modules/react/dist/react.min.js",
-			"react-dom": __dirname+"/node_modules/react-dom/dist/react-dom.min.js"
-		}
+				'react': 'react-lite',
+				'react-dom': 'react-lite'
+			}
 	}
 }];

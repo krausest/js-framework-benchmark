@@ -1,6 +1,5 @@
 'use strict';
 require("babel-plugin-syntax-jsx")
-require("babel-plugin-inferno")
 
 var cache = {};
 var loaders = [

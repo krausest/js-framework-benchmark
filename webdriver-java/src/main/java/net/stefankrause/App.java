@@ -28,7 +28,7 @@ public class App {
     public static final int WARMUP_COUNT = 5;
     private final static int REPEAT_RUN = 12;
     private final static int DROP_WORST_COUNT = 2;
-    private final static String frameworks[] = {"angular", "angular2","aurelia", "ember/dist", "mithril", "ractive", "react",  "vidom", "vue"};
+    private final static String frameworks[] = {"angular", "angular2","aurelia", "ember/dist", "mithril", "preact", "ractive", "react", "react-lite", "vidom", "vue"};
     private final static Bench[] benches = new Bench[] {new BenchRun(), new BenchRunHot(), new BenchUpdate(), new BenchSelect(), new BenchRemove()};
 
     private static class PLogEntry {
@@ -252,7 +252,7 @@ public class App {
     }
 
     private String createChartData(int idx, String framework, Bench[] benches, Table<String, String, DoubleSummaryStatistics> results) {
-        int colors[] = {0x00AAA0, 0x8ED2C9, 0x44B3C2, 0xF1A94E, 0xE45641, 0x5D4C46, 0x7B8D8E, 0xF4D00C, 0x462066 };
+        int colors[] = {0x00AAA0, 0x8ED2C9, 0x44B3C2, 0xF1A94E, 0xE45641, 0x7CE8BF, 0x5D4C46, 0x7B8D8E, 0xA9FFB7, 0xF4D00C, 0x462066 };
         int r = (colors[idx % colors.length] >> 16) & 0xff;
         int g = (colors[idx % colors.length] >> 8) & 0xff;
         int b = (colors[idx % colors.length]) & 0xff;
@@ -277,11 +277,13 @@ public class App {
         logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
         logPrefs.enable(LogType.BROWSER, Level.ALL);
         cap.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
-
         Map<String, Object> perfLogPrefs = new HashMap<>();
         perfLogPrefs.put("traceCategories", "browser,devtools.timeline,devtools"); // comma-separated trace categories
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("perfLoggingPrefs", perfLogPrefs);
+        options.setBinary("/Applications/Chromium.app/Contents/MacOS/Chromium");
+//        options.setBinary("/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary");
+//        options.setBinary("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
         cap.setCapability(ChromeOptions.CAPABILITY, options);
 
         return cap;
@@ -338,15 +340,18 @@ public class App {
         if (print) System.out.println("Log types: " + logs.getAvailableLogTypes());
         List<PLogEntry> filtered = submitPerformanceResult(logs.get(LogType.PERFORMANCE).getAll(), false);
 
+        // Chrome 49 reports a Paint very short after the Event Dispatch which I can't find in the timeline
+        //   it also seems to have a performance regression that can be seen in the timeline
+        //   we're using the last paint event to fix measurement
         Optional<PLogEntry> evt = filtered.stream().filter(pe -> "EventDispatch".equals(pe.getName())).findFirst();
-        long tsEvent = evt.map(pe -> pe.ts).orElse(0L);
+        long tsEvent = evt.map(pe -> pe.ts+pe.duration).orElse(0L);
         // First TimerFire
         Optional<PLogEntry> evtTimer = filtered.stream().filter(pe -> "TimerFire".equals(pe.getName())).filter(pe -> pe.ts > tsEvent).findFirst();
-        long tsEventFire = evtTimer.map(pe -> pe.ts).orElse(0L);
+        long tsEventFire = evtTimer.map(pe -> pe.ts+pe.duration).orElse(0L);
         // First Paint after TimerFire only for Aurelia
         long tsAfter = isAurelia ? tsEventFire : tsEvent;
         Optional<PLogEntry> lastPaint = filtered.stream().filter(pe -> "Paint".equals(pe.getName())).
-                filter(pe -> pe.ts > tsAfter).findFirst();
+                filter(pe -> pe.ts > tsAfter).reduce((p1,p2) -> p2);
 
         if (print) System.out.println("************************ filtered events");
         if (print) filtered.forEach(e -> System.out.println(e));
