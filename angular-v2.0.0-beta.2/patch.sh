@@ -1,0 +1,1 @@
+find ./node_modules/angular2 -type f -exec sed -i '' 's/observable\/fromPromise/observable\/PromiseObservable/g' {} +

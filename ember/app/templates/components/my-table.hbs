@@ -4,9 +4,14 @@
             <h1>Ember</h1>
         </div>
         <div class="col-md-4">
-            <button type="button" class="btn btn-primary btn-block" id="add" {{action 'add'}}>Add 10 rows</button>
+            <button type="button" class="btn btn-primary btn-block" id="add" {{action 'add'}}>Add 1000 rows</button>
             <button type="button" class="btn btn-primary btn-block" id="run" {{action 'create'}}>Create 1000 rows</button>
             <button type="button" class="btn btn-primary btn-block" id="update" {{action 'update'}}>Update every 10th row</button>
+            <button type="button" class="btn btn-primary btn-block" id="hideall" {{action 'hideAll'}}>HideAll</button>
+			<button type="button" class="btn btn-primary btn-block" id="showall" {{action 'showAll'}}>ShowAll</button>
+			<button type="button" class="btn btn-primary btn-block" id="runlots" {{action 'runLots'}}>Create lots of rows</button>
+			<button type="button" class="btn btn-primary btn-block" id="clear" {{action 'clear'}}>Clear</button>
+			<button type="button" class="btn btn-primary btn-block" id="swaprows" {{action 'swapRows'}}>Swap Rows</button>
             <h3 id="duration"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;</h3>
         </div>
     </div>

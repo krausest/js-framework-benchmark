@@ -4,36 +4,18 @@ function _random(max) {
   return Math.round(Math.random()*1000)%max;
 }
 
+var startTime;
 var lastMeasure;
 var startMeasure = function(name) {
-  //console.timeStamp(name);
-  window.performance.mark('mark_start_'+name);
-  lastMeasure = name;
-};
+    startTime = performance.now();
+    lastMeasure = name;
+}
 var stopMeasure = function() {
-  var last = lastMeasure;
-  if (lastMeasure) {
-    window.setTimeout(function () {
-      lastMeasure = null;
-      var duration = 0;
-      window.performance.mark('mark_end_' + last);
-      window.performance.measure('measure_' + last, 'mark_start_' + last, 'mark_end_' + last);
-      var items = window.performance.getEntriesByType('measure');
-      for (var i = 0; i < items.length; ++i) {
-        var req = items[i];
-        duration = req.duration;
-        console.log(req.name + ' took ' + req.duration + 'ms');
-      }
-      window.performance.clearMeasures();
-
-      //var t = window.performance.timing,
-      //    complete = t.domComplete - t.domLoading,
-      //    loadEventEnd = t.loadEventEnd - t.domLoading;
-      //console.log(complete, loadEventEnd);
-      //document.getElementById("duration").innerHTML = Math.round(stop - startTime) + " ms ("  + Math.round(duration) + " ms)" ;
+    window.setTimeout(function() {
+        var stop = performance.now();
+        console.log(lastMeasure+" took "+(stop-startTime));
     }, 0);
-  }
-};
+}
 
 export default Ember.Service.extend({
   data: [],
@@ -58,7 +40,7 @@ export default Ember.Service.extend({
   updateData(mod = 10) {
     var data = this.data.map(function(data, i) {
       if (i%mod === 0) {
-        return Object.assign({}, data, {label: data.label + '.'});
+        return Object.assign({}, data, {label: data.label + ' !!!'});
       } else {
         return data;
       }
@@ -67,9 +49,7 @@ export default Ember.Service.extend({
   },
   remove(id) {
     startMeasure("delete");
-    const idx = this.data.findIndex(d => d.identifier===id);
-    //console.log("delete idx ",idx);
-    this.set('data', this.data.filter((e,i) => i!==idx));
+    this.set('data', this.data.filter((d,i) => d.identifier!==id));
     this.set('selected', undefined);
     stopMeasure();
   },
@@ -81,8 +61,7 @@ export default Ember.Service.extend({
   },
   add() {
     startMeasure("add");
-    var newData = this.data.concat(this.buildData(10));
-    this.set('data', newData);
+    this.set('data', this.data.concat(this.buildData(1000)));
     this.set('selected', undefined);
     stopMeasure();
   },
@@ -94,8 +73,52 @@ export default Ember.Service.extend({
   },
   select(id) {
     startMeasure("select");
-    //console.log("select", id);
     this.set('selected', id);
     stopMeasure();
+  },
+  hideAll() {
+	startMeasure("hideAll");
+	this.backup = this.data;
+    this.set('data', []);
+    this.set('selected', undefined);
+	stopMeasure();
+  },
+  showAll() {
+	startMeasure("showAll");
+    this.set('data', this.backup);
+    this.set('selected', undefined);
+	this.backup = null;
+	stopMeasure();
+  },
+  runLots() {
+	startMeasure("runLots");
+    this.set('data', this.buildData(10000));
+    this.set('selected', undefined);
+	stopMeasure();
+  },
+  clear() {
+	startMeasure("clear");
+    this.set('data', []);
+    this.set('selected', undefined);
+	stopMeasure();
+  },
+  swapRows() {
+  	startMeasure("swapRows");
+    if(this.data.length > 10) {
+	  let d4 = this.data[4];
+	  let d9 = this.data[9];
+	  
+	  var data = this.data.map(function(data, i) {
+	    if(i === 4) {
+	    	return d9;
+	    }
+	    else if(i === 9) {
+	    	return d4;
+	    }
+	    return data;
+	  });
+	  this.set('data', data);
+	}
+	stopMeasure();
   }
 });

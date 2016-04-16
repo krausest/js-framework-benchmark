@@ -11,7 +11,7 @@
   "scripts": {
     "postinstall": "jspm install -y",
     "build-dev": "gulp bundle",
-    "build-prod": "gulp bundle"
+    "build-prod": "./node_modules/.bin/gulp bundle"
   },
   "devDependencies": {
     "aurelia-bundler": "^0.1.9",

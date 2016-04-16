@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Simple Benchmark for Javascript client side rendering",
   "scripts": {
-    "postinstall": "cd angular && npm install && cd .. && cd angular2 && npm install && cd .. && cd aurelia && npm install && cd .. && cd ember && npm install && cd .. && cd mithril && npm install && cd .. && cd preact && npm install && cd .. && cd ractive && npm install && cd .. && cd react-lite && npm install && cd .. && cd react && npm install && cd .. && cd vidom && npm install && cd .. && cd vue && npm install && cd ..  && cd webdriver-java && npm install",
-    "build": "cd angular && npm run build-prod && cd .. && cd angular2 && npm run build-prod && cd .. && cd aurelia && npm run build-prod && cd .. && cd ember && npm run build-prod && cd .. && cd mithril && npm run build-prod && cd .. && cd preact && npm run build-prod && cd .. && cd ractive && npm run build-prod && cd .. && cd react-lite && npm run build-prod && cd .. && cd react && npm run build-prod && cd .. && cd vidom && npm run build-prod&& cd ..  && cd vue && npm run build-prod",
+    "postinstall": "cd angular-v1.5.3 && npm install && cd .. && cd angular-v2.0.0-beta.2 && npm install && cd .. && cd angular-v2.0.0-beta.15 && npm install && cd .. && cd aurelia && npm install && cd .. && cd ember && npm install && cd .. && cd mithril-v0.2.3 && npm install && cd .. && cd plastiq-v1.28.0 && npm install && cd .. && cd preact-v2.8.3 && npm install && cd .. && cd ractive-v0.7.3 && npm install && cd .. && cd react-lite-v0.0.18 && npm install && cd .. && cd react-lite-v0.15.9 && npm install && cd .. && cd react-v0.14.8 && npm install && cd .. && cd riot-v2.3.18 && npm install && cd .. && cd vidom-v0.1.7 && npm install && cd .. && cd vue-v1.0.21 && npm install && cd ..",
+    "build": "cd angular-v1.5.3 && npm run build-prod && cd .. && cd angular-v2.0.0-beta.2 && npm run build-prod && cd .. && cd angular-v2.0.0-beta.15 && npm run build-prod && cd .. && cd aurelia && npm run build-prod && cd .. && cd ember && npm run build-prod && cd .. && cd mithril-v0.2.3 && npm run build-prod && cd .. && cd plastiq-v1.28.0 && npm run build-prod && cd .. && cd preact-v2.8.3 && npm run build-prod && cd .. && cd ractive-v0.7.3 && npm run build-prod && cd .. && cd react-lite-v0.0.18 && npm run build-prod && cd .. && cd react-lite-v0.15.9 && npm run build-prod && cd .. && cd react-v0.14.8 && npm run build-prod && cd .. && cd riot-v2.3.18 && npm run build-prod && cd .. && cd vidom-v0.1.7 && npm run build-prod && cd .. && cd vue-v1.0.21 && npm run build-prod && cd ..",
     "start": "http-server -c-1 .",
     "selenium": "cd webdriver-java && npm run selenium"
   },
@@ -19,11 +19,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/krausest/js-framework-benchmark.git"
+    "url": "https://github.com/daiyam/js-framework-benchmark.git"
   },
   "author": "Stefan Krause",
   "license": "ISC",
-  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "homepage": "https://github.com/daiyam/js-framework-benchmark",
   "dependencies": {
     "http-server": "^0.8.5"
   }

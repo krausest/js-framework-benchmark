@@ -40,3 +40,10 @@ webdriver-java/chromedriver
 
 tests-browser-perf/
 tests-protractor-perf/
+
+angular-v2.0.0-beta.15/app/app.js
+angular-v2.0.0-beta.15/app/app.js.map
+angular-v2.0.0-beta.15/app/main.js
+angular-v2.0.0-beta.15/app/main.js.map
+angular-v2.0.0-beta.2/app/app.js
+angular-v2.0.0-beta.2/app/app.js.map
