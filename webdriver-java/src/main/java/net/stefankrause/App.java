@@ -37,20 +37,20 @@ public class App {
     private final static int DROP_WORST_SERIE_RUN = 0;
     
     private final static String frameworks[] = {
-    	//"angular-v1.5.3",
-    	//"angular-v2.0.0-beta.2",
-    	//"angular-v2.0.0-beta.15",
-    	//"aurelia",
-    	//"ember/dist",
-    	//"mithril-v0.2.3",
-    	//"plastiq-v1.28.0",
-    	//"preact-v2.8.3",
-    	//"ractive-v0.7.3",
-    	//"react-v0.14.8",
-    	//"react-lite-v0.0.18",
+    	"angular-v1.5.3",
+    	"angular-v2.0.0-beta.2",
+    	"angular-v2.0.0-beta.15",
+    	"aurelia",
+    	"ember/dist",
+    	"mithril-v0.2.3",
+    	"plastiq-v1.28.0",
+    	"preact-v2.8.3",
+    	"ractive-v0.7.3",
+    	"react-v0.14.8",
+    	"react-lite-v0.0.18",
     	"react-lite-v0.15.9",
-    	//"vidom-v0.1.7",
-    	//"vue-v1.0.21"
+    	"vidom-v0.1.7",
+    	"vue-v1.0.21"
     };
     
     private final static Bench[] benches = new Bench[] {
