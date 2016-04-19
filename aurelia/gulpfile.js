@@ -39,5 +39,11 @@ var config = {
 };
 
 gulp.task('bundle', function() {
+	var fs = require('fs');
+	var dir = 'dist';
+	if(!fs.existsSync(dir)) {
+		fs.mkdirSync(dir);
+	}
+	
     return bundle(config);
 });

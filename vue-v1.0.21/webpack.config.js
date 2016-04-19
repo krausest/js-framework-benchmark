@@ -1,15 +1,22 @@
 'use strict';
-require("babel-plugin-syntax-jsx")
 
 var cache = {};
 var loaders = [
 	{
 		test: /\.jsx$/,
-		loader: 'babel-loader'
+		loader: 'jsx-loader!babel-loader',
+		exclude: /node_modules/,
+		query: {
+          presets: ['es2015']
+        }
 	},
 	{
 		test: /\.es6\.js$/,
-		loader: 'babel-loader'
+		loader: 'babel-loader',
+		exclude: /node_modules/,
+		query: {
+          presets: ['es2015', 'stage-0']
+        }
 	},
 	{
 		test: /\.css$/,

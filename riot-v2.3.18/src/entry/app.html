@@ -9,7 +9,7 @@
 				<div class="col-md-4">
 					<button type="button" class="btn btn-primary btn-block" id="add" onclick={add} ref="text">Add 1000 rows</button>
 					<button type="button" class="btn btn-primary btn-block" id="run" onclick={run} ref="text">Create 1000 rows</button>
-					<button type="button" class="btn btn-primary btn-block" id="btn-update" onclick={update}>Update every 10th row</button>
+					<button type="button" class="btn btn-primary btn-block" id="_update" onclick={_update}>Update every 10th row</button>
 					<h3 id="duration"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;</h3>
 				</div>
 			</div>
@@ -31,6 +31,11 @@
 	'use strict';
 	add() {
 		this.opts.add();
+		this.update();
+	};
+	
+	_update() {
+		this.opts.update();
 		this.update();
 	};
 	</script>
