@@ -6,12 +6,6 @@ This work is derived from a benchmark that Richard Ayotte published on https://g
 
 Thanks for the great work.
 
-## Changes
-
-- more test cases
-- add versioning for testing mulitple versions of the same platform
-- tweaking on test runs (allows to re-runs all the cases/platforms)
-
 ## Prerequsites
 
 Have *node.js* installed. If you want to do yourself a favour use nvm for that. The benchmark has been tested with node 5.1+.
@@ -70,7 +64,3 @@ which runs the seleniums tests
 Open [http://localhost:8080/webdriver-java/chart.html](http://localhost:8080/webdriver-java/chart.html) for the results
 
 A test showing the durations on my machine can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-java/chart.html)
-
-## Results
-
-[See the results](https://output.jsbin.com/lohibu/)

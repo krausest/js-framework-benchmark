@@ -19,11 +19,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/daiyam/js-framework-benchmark.git"
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "author": "Stefan Krause",
   "license": "ISC",
-  "homepage": "https://github.com/daiyam/js-framework-benchmark",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
   "dependencies": {
     "http-server": "^0.8.5"
   }
