@@ -8,7 +8,8 @@ Thanks for the great work.
 
 ## Prerequsites
 
-Have node.js installed. If you want to do yourself a favour use nvm for that. The benchmark has been tested with node 5.1+.
+Have *node.js* installed. If you want to do yourself a favour use nvm for that. The benchmark has been tested with node 5.1+.
+You will also need *mvn* for *selenium*.
 
 ## Building
 
@@ -41,6 +42,15 @@ Most actions will try to measure the duration and print it to the console. Depen
 * partial update: Time to update the text of every 10th row. A few iterations to warmup the javascript engine are performed before measuring.
 * select row: Duration to highlight a row in response to a click on the row. A few iterations to warmup the javascript engine are performed before measuring.
 * remove row: Duration to remove a row. A few iterations to warmup the javascript engine are performed before measuring.
+* hide all: Time for hiding all the rows
+* show all: Timne for showing all the rows (after being hidden)
+* create lots of rows: Time for creating a table lots a rows (currently 10.000).
+* add 1000 rows after lots of rows: Time for adding 1000 rows on a table of add 1000 rows after lots of rows.
+* clear rows: Time to clear the table filled with 10.000 rows
+* clear rows a 2nd time: Time to clear the table filled with 10.000 rows. But warmed up with only one iteration.
+* select row on big list: Time to select a row on a 10K table.
+* swap rows: Time to swap 2 rows (1K table).
+* recycle rows: Time to create 1000 rows after clearing a 1K table.
 
 ## Execute the benchmarks with selenium
 
@@ -54,17 +64,3 @@ which runs the seleniums tests
 Open [http://localhost:8080/webdriver-java/chart.html](http://localhost:8080/webdriver-java/chart.html) for the results
 
 A test showing the durations on my machine can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-java/chart.html)
-
-## Execute the benchmarks with protractor and benchpress [deprecated]
-
-This uses the work of ShMcK [Framework-Performance-Tests-with-Meteor](https://github.com/ShMcK/Framework-Performance-Tests-with-Meteor) who put Protractor and BenchPress wonderfully to work.
-
-`npm start`
-
-`cd tests`
-`npm run webdriver-manager`
-open a new shell in the tests directory
-`npm run protractor`
-
-Open [http://localhost:8080/tests/chart.html](http://localhost:8080/tests/chart.html) for the results
-

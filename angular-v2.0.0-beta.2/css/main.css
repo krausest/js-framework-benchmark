@@ -1,0 +1,15 @@
+body {
+    padding: 0;
+    margin: 0;
+    overflow-y: scroll;
+}
+#duration {
+    padding-top: 0px;
+}
+.jumbotron {
+    padding-top:10px;
+    padding-bottom:10px;
+}
+.test-data a {
+    display: block;
+}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
@@ -25,12 +26,52 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class App {
 
-    public static final int WARMUP_COUNT = 5;
-    private final static int REPEAT_RUN = 12;
-    private final static int DROP_WORST_COUNT = 2;
-    private final static String frameworks[] = {"angular", "angular2","aurelia", "ember/dist", "mithril", "preact", "ractive", "react", "react-lite", "vidom", "vue"};
-    private final static Bench[] benches = new Bench[] {new BenchRun(), new BenchRunHot(), new BenchUpdate(), new BenchSelect(), new BenchRemove()};
+        
+    private final static String BINARY = "/Applications/Chromium.app/Contents/MacOS/Chromium";
+    //private final static String BINARY = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+    //private final static String BINARY = "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary";
+    private final static int REPEAT_SERIE = 2;
+    private final static int REPEAT_RUN = 6;
+    private final static int WARMUP_COUNT = 5;
+    private final static int DROP_WORST_RUN = 1;
+    private final static int DROP_WORST_SERIE_RUN = 0;
+    
+    private final static String frameworks[] = {
+    	"angular-v1.5.3",
+    	"angular-v2.0.0-beta.2",
+    	"angular-v2.0.0-beta.15",
+    	"aurelia",
+    	"ember/dist",
+    	"mithril-v0.2.3",
+    	"plastiq-v1.28.0",
+    	"preact-v2.8.3",
+    	"ractive-v0.7.3",
+    	"react-v0.14.8",
+    	"react-lite-v0.0.18",
+    	"react-lite-v0.15.9",
+    	"vidom-v0.1.7",
+    	"vue-v1.0.21"
+    };
+    
+    private final static Bench[] benches = new Bench[] {
+    	new BenchRun(),
+    	new BenchRunHot(),
+    	new BenchUpdate(),
+    	new BenchSelect(),
+    	new BenchRemove(),
+    	new BenchHideAll(),
+    	new BenchShowAll(),
+    	new BenchRunBig(),
+    	new BenchRunBigHot(),
+    	new BenchClear(),
+    	new BenchClearHot(),
+    	new BenchSelectBig(),
+    	new BenchSwapRows(),
+    	new BenchRecycle()
+    };
 
+    private static int BINARY_VERSION = 0;
+    
     private static class PLogEntry {
         private final String name;
         private final long ts;
@@ -81,7 +122,7 @@ public class App {
         public void init(WebDriver driver, String framework) {
             driver.get("localhost:8080/" + framework + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
         }
 
         public void run(WebDriver driver, String framework) {
@@ -101,7 +142,7 @@ public class App {
             WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
             for (int i = 0; i< WARMUP_COUNT; i++) {
                 driver.findElement(By.id("run")).click();
-                element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
             }
         }
 
@@ -123,7 +164,7 @@ public class App {
             element.click();
             for (int i = 0; i< WARMUP_COUNT; i++) {
                 driver.findElement(By.id("update")).click();
-                element = wait.until(ExpectedConditions.elementToBeClickable(By.id("update")));
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("update")));
             }
         }
 
@@ -179,6 +220,191 @@ public class App {
             return "remove row";
         }
     }
+    
+    private static class BenchHideAll implements Bench {
+        public void init(WebDriver driver, String framework) {
+            driver.get("localhost:8080/" + framework + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+            element.click();
+            
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("hideall")));
+        }
+
+        public void run(WebDriver driver, String framework) {
+           driver.findElement(By.id("hideall")).click();
+        }
+
+        public String getName() {
+            return "hide all";
+        }
+    }
+    
+    private static class BenchShowAll implements Bench {
+        public void init(WebDriver driver, String framework) {
+            driver.get("localhost:8080/" + framework + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+            element.click();
+            element = wait.until(ExpectedConditions.elementToBeClickable(By.id("hideall")));
+            element.click();
+            
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("showall")));
+        }
+
+        public void run(WebDriver driver, String framework) {
+           driver.findElement(By.id("showall")).click();
+        }
+
+        public String getName() {
+            return "show all";
+        }
+    }
+    
+    private static class BenchRunBig implements Bench {
+        public void init(WebDriver driver, String framework) {
+            driver.get("localhost:8080/" + framework + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
+        }
+
+        public void run(WebDriver driver, String framework) {
+            driver.findElement(By.id("runlots")).click();
+        }
+
+        public String getName() {
+            return "create lots of rows";
+        }
+    }
+    
+    private static class BenchRunBigHot implements Bench {
+        public void init(WebDriver driver, String framework) {
+            driver.get("localhost:8080/" + framework + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
+            element.click();
+            
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("add")));
+        }
+
+        public void run(WebDriver driver, String framework) {
+            driver.findElement(By.id("add")).click();
+        }
+
+        public String getName() {
+            return "add 1000 rows after lots of rows";
+        }
+    }
+    
+    private static class BenchClear implements Bench {
+        public void init(WebDriver driver, String framework) {
+            driver.get("localhost:8080/" + framework + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
+            element.click();
+            
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("clear")));
+        }
+
+        public void run(WebDriver driver, String framework) {
+            driver.findElement(By.id("clear")).click();
+        }
+
+        public String getName() {
+            return "clear rows";
+        }
+    }
+    
+    private static class BenchClearHot implements Bench {
+        public void init(WebDriver driver, String framework) {
+            driver.get("localhost:8080/" + framework + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
+            element.click();
+            
+            element = wait.until(ExpectedConditions.elementToBeClickable(By.id("clear")));
+            element.click();
+            
+            element = wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
+            element.click();
+            
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("clear")));
+        }
+
+        public void run(WebDriver driver, String framework) {
+            driver.findElement(By.id("clear")).click();
+        }
+
+        public String getName() {
+            return "clear rows a 2nd time";
+        }
+    }
+    
+    private static class BenchSelectBig implements Bench {
+        public void init(WebDriver driver, String framework) {
+            driver.get("localhost:8080/" + framework + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
+            element.click();
+            
+            for (int i = 0; i< WARMUP_COUNT; i++) {
+                element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tbody/tr["+(i+1)+"]/td[2]/a")));
+                element.click();
+            }
+        }
+
+        public void run(WebDriver driver, String framework) {
+            WebElement element = driver.findElement(By.xpath("//tbody/tr[1]/td[2]/a"));
+            element.click();
+        }
+
+        public String getName() {
+            return "select row on big list";
+        }
+    }
+    
+    private static class BenchSwapRows implements Bench {
+        public void init(WebDriver driver, String framework) {
+            driver.get("localhost:8080/" + framework + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+            element.click();
+            for (int i = 0; i< WARMUP_COUNT; i+=2) {
+                driver.findElement(By.id("swaprows")).click();
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("swaprows")));
+            }
+        }
+
+        public void run(WebDriver driver, String framework) {
+            driver.findElement(By.id("swaprows")).click();
+        }
+
+        public String getName() {
+            return "swap rows";
+        }
+    }
+    
+    private static class BenchRecycle implements Bench {
+        public void init(WebDriver driver, String framework) {
+            driver.get("localhost:8080/" + framework + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+            element.click();
+            
+            element = wait.until(ExpectedConditions.elementToBeClickable(By.id("clear")));
+            element.click();
+            
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+        }
+
+        public void run(WebDriver driver, String framework) {
+            driver.findElement(By.id("run")).click();
+        }
+
+        public String getName() {
+            return "recycle rows";
+        }
+    }
 
     private void runTests() throws Exception {
 
@@ -187,49 +413,74 @@ public class App {
         int length = REPEAT_RUN;
         Table<String, String, DoubleSummaryStatistics> results = HashBasedTable.create();
 
-        for (String framework : frameworks) {
-            System.out.println(framework);
-            for (Bench bench : benches) {
-                System.out.println(bench.getName());
-                ChromeDriver driver = new ChromeDriver(cap);
-                try {
-                    double[] data = new double[length];
-                    double lastWait = 1000;
-                    for (int i = 0; i < length; i++) {
-                        System.out.println(framework+" "+bench.getName()+" => init");
-                        bench.init(driver, framework);
-
-                        WebDriverWait wait = new WebDriverWait(driver, 10);
-                        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-
-                        Thread.sleep(2000);
-                        printLog(driver, false, "aurelia".equals(framework));
-                        System.out.println(framework+" "+bench.getName()+" => run");
-                        bench.run(driver, framework);
-                        System.out.println("run " + bench.getName());
-
-                        element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-                        Thread.sleep(1000 + (int) lastWait);
-
-                        Double res = printLog(driver, true, "aurelia".equals(framework));
-                        if (res != null) {
-                            data[i] = res.doubleValue();
-                            lastWait = data[i];
-                        }
-                    }
-                    System.out.println("before "+Arrays.toString(data));
-                    if (DROP_WORST_COUNT>0) {
-                        Arrays.sort(data);
-                        data = Arrays.copyOf(data, data.length-DROP_WORST_COUNT);
-                        System.out.println("after "+Arrays.toString(data));
-                        System.out.println(Arrays.toString(data));
-                    }
-                    DoubleSummaryStatistics stats = DoubleStream.of(data).summaryStatistics();
-                    results.put(framework, bench.getName(), stats);
-                } finally {
-                    driver.quit();
-                }
-            }
+        int last = REPEAT_SERIE - 1;
+        int d = REPEAT_RUN - DROP_WORST_RUN;
+        double[][][] dat = new double[frameworks.length][benches.length][REPEAT_SERIE * d];
+        for (int r = 0; r <= last; r++) {
+        	int f = 0;
+			for (String framework : frameworks) {
+				System.out.println(framework);
+				int b = 0;
+				for (Bench bench : benches) {
+					System.out.println(bench.getName());
+					ChromeDriver driver = new ChromeDriver(cap);
+					try {
+						double[] data = new double[length];
+						double lastWait = 1000;
+						for (int i = 0; i < length; i++) {
+							System.out.println(framework+" "+bench.getName()+" => init");
+							bench.init(driver, framework);
+	
+							WebDriverWait wait = new WebDriverWait(driver, 10);
+							WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+	
+							Thread.sleep(2000);
+							printLog(driver, false, "aurelia".equals(framework));
+							System.out.println(framework+" "+bench.getName()+" => run");
+							bench.run(driver, framework);
+							System.out.println("run " + bench.getName());
+	
+							element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+							Thread.sleep(1000 + (int) lastWait);
+	
+							Double res = printLog(driver, true, "aurelia".equals(framework));
+							if (res != null) {
+								data[i] = res.doubleValue();
+								lastWait = data[i];
+							}
+						}
+						System.out.println("before "+Arrays.toString(data));
+						if (DROP_WORST_RUN>0) {
+							Arrays.sort(data);
+							data = Arrays.copyOf(data, data.length-DROP_WORST_RUN);
+							System.out.println("after "+Arrays.toString(data));
+						}
+						
+						System.arraycopy(data, 0, dat[f][b], r * d, data.length);
+						System.out.println(Arrays.toString(dat[f][b]));
+						
+						if(r == last) {
+							data = dat[f][b];
+							System.out.println("before " + Arrays.toString(data));
+							
+							if(DROP_WORST_SERIE_RUN > 0) {
+								Arrays.sort(data);
+								data = Arrays.copyOf(data, data.length - DROP_WORST_SERIE_RUN);
+								System.out.println("after " + Arrays.toString(data));
+							}
+							
+							DoubleSummaryStatistics stats = DoubleStream.of(data).summaryStatistics();
+							results.put(framework, bench.getName(), stats);
+						}
+					} finally {
+						driver.quit();
+					}
+					
+					++b;
+				}
+				
+				++f;
+			}
         }
 
         String labels = Stream.of(benches).map(b -> b.getName()).collect(Collectors.joining("','", "'", "'"));
@@ -241,7 +492,7 @@ public class App {
         }
         String fin = str + "]};";
         System.out.println("\n"+fin);
-        Files.write(Paths.get("chartData.js"), fin.getBytes());
+        Files.write(Paths.get("chart.data.js"), fin.getBytes());
 
         for (Bench b : benches) {
             System.out.println(b.getName()+":");
@@ -281,9 +532,7 @@ public class App {
         perfLogPrefs.put("traceCategories", "browser,devtools.timeline,devtools"); // comma-separated trace categories
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("perfLoggingPrefs", perfLogPrefs);
-        options.setBinary("/Applications/Chromium.app/Contents/MacOS/Chromium");
-//        options.setBinary("/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary");
-//        options.setBinary("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
+        options.setBinary(BINARY);
         cap.setCapability(ChromeOptions.CAPABILITY, options);
 
         return cap;
@@ -349,7 +598,7 @@ public class App {
         Optional<PLogEntry> evtTimer = filtered.stream().filter(pe -> "TimerFire".equals(pe.getName())).filter(pe -> pe.ts > tsEvent).findFirst();
         long tsEventFire = evtTimer.map(pe -> pe.ts+pe.duration).orElse(0L);
         // First Paint after TimerFire only for Aurelia
-        long tsAfter = isAurelia ? tsEventFire : tsEvent;
+        long tsAfter = isAurelia && BINARY_VERSION > 48 ? tsEventFire : tsEvent;
         Optional<PLogEntry> lastPaint = filtered.stream().filter(pe -> "Paint".equals(pe.getName())).
                 filter(pe -> pe.ts > tsAfter).reduce((p1,p2) -> p2);
 
@@ -387,6 +636,20 @@ public class App {
     }
 
     public static void main(String[] argv) throws Exception {
+        Path root = Paths.get(BINARY).resolveSibling("../Versions").toAbsolutePath();
+        int length = root.toString().length();
+        Files.walk(root, 1).filter(Files::isDirectory).forEach(filePath -> {
+        	String path = filePath.toString();
+			if(path.length() > length) {
+				path = path.substring(path.lastIndexOf("/") + 1);
+				int version = Integer.parseInt(path.substring(0, path.indexOf(".")));
+				if(version > BINARY_VERSION) {
+					BINARY_VERSION = version;
+				}
+			}
+        });
+        System.out.println("Running with " + Paths.get(BINARY).getFileName() + " v" + BINARY_VERSION);
+        
         System.setProperty("webdriver.chrome.driver", "node_modules/webdriver-manager/selenium/chromedriver");
         App test = new App();
         test.runTests();

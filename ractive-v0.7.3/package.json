@@ -1,0 +1,29 @@
+{
+  "name": "js-framework-benchmark-ractive",
+  "version": "1.0.0",
+  "description": "Boilerplate for Ractive.js",
+  "scripts": {
+    "build-dev": "webpack -w -d -c webpack.config.js",
+    "build-prod": "webpack -p -c webpack.config.js",
+    "start": "http-server -c-1 ."
+  },
+  "keywords": [
+    "ractive"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository" :
+  { "type" : "git",
+    "url" : "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "babel-core": "^4.7.4",
+    "babel-loader": "^4.1.0",
+    "http-server": "^0.8.5",
+    "webpack": "^1.7.2"
+  },
+  "dependencies": {
+    "ractive": "0.7.3"
+  }
+}
