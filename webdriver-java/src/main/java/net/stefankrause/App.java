@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
@@ -29,7 +30,6 @@ public class App {
     private final static String BINARY = "/Applications/Chromium.app/Contents/MacOS/Chromium";
     //private final static String BINARY = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
     //private final static String BINARY = "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary";
-    private final static int BINARY_VERSION = 48;
     private final static int REPEAT_SERIE = 2;
     private final static int REPEAT_RUN = 6;
     private final static int WARMUP_COUNT = 5;
@@ -70,6 +70,8 @@ public class App {
     	new BenchRecycle()
     };
 
+    private static int BINARY_VERSION = 0;
+    
     private static class PLogEntry {
         private final String name;
         private final long ts;
@@ -634,6 +636,20 @@ public class App {
     }
 
     public static void main(String[] argv) throws Exception {
+        Path root = Paths.get(BINARY).resolveSibling("../Versions").toAbsolutePath();
+        int length = root.toString().length();
+        Files.walk(root, 1).filter(Files::isDirectory).forEach(filePath -> {
+        	String path = filePath.toString();
+			if(path.length() > length) {
+				path = path.substring(path.lastIndexOf("/") + 1);
+				int version = Integer.parseInt(path.substring(0, path.indexOf(".")));
+				if(version > BINARY_VERSION) {
+					BINARY_VERSION = version;
+				}
+			}
+        });
+        System.out.println("Running with " + Paths.get(BINARY).getFileName() + " v" + BINARY_VERSION);
+        
         System.setProperty("webdriver.chrome.driver", "node_modules/webdriver-manager/selenium/chromedriver");
         App test = new App();
         test.runTests();
