@@ -49,6 +49,7 @@ public class App {
     	"react-v0.14.8",
     	"react-lite-v0.0.18",
     	"react-lite-v0.15.9",
+        "vanillajs",
     	"vidom-v0.1.7",
     	"vue-v1.0.21"
     };
