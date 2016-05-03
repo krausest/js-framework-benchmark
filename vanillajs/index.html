@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>VanillaJS</title>
+  <link href="../css/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../css/main.css" rel="stylesheet"/>
+</head>
+<body>
+  <div id='main'>
+    <div class="container">
+      <div class="jumbotron">
+        <div class="row">
+          <div class="col-md-8">
+            <h1>VanillaJS</h1>
+          </div>
+          <div class="col-md-4">
+            <button type="button" class="btn btn-primary btn-block" id="add">Add 1000 rows</button>
+            <button type="button" class="btn btn-primary btn-block" id="run">Create 1000 rows</button>
+            <button type="button" class="btn btn-primary btn-block" id="update">Update every 10th row</button>
+            <button type="button" class="btn btn-primary btn-block" id="hideall">HideAll</button>
+            <button type="button" class="btn btn-primary btn-block" id="showall">ShowAll</button>
+            <button type="button" class="btn btn-primary btn-block" id="runlots">Create lots of rows</button>
+            <button type="button" class="btn btn-primary btn-block" id="clear">Clear</button>
+            <button type="button" class="btn btn-primary btn-block" id="swaprows">Swap Rows</button>
+            <h3 id="duration"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;</h3>
+          </div>
+        </div>
+      </div>
+      <table class="table table-hover table-striped test-data">
+        <tbody id="tbody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src='dist/main.js'></script>
+</body>
+</html>
