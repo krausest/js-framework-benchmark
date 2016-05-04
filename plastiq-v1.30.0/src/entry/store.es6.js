@@ -21,20 +21,19 @@ export class Store {
     }
     updateData(mod = 10) {
         for (let i=0;i<this.data.length;i+=10) {
-            this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+            this.data[i].label += ' !!!';
         }
     }
     delete(id) {
         const idx = this.data.findIndex(d => d.id==id);
-        this.data = this.data.filter((e,i) => i!=idx);
-        return this;
+        this.data.splice(idx, 1);
     }
     run() {
         this.data = this.buildData();
         this.selected = undefined;
     }
     add() {
-        this.data = this.data.concat(this.buildData(1000));
+        this.data = this.data.concat(this.buildData());
         this.selected = undefined;
     }
     update() {
@@ -61,5 +60,12 @@ export class Store {
     clear() {
         this.data = [];
         this.selected = undefined;
+    }
+    swapRows() {
+    	if(this.data.length > 10) {
+    		var a = this.data[4];
+    		this.data[4] = this.data[9];
+    		this.data[9] = a;
+    	}
     }
 }

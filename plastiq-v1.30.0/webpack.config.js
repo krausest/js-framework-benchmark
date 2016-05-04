@@ -3,11 +3,11 @@
 var cache = {};
 var loaders = [
 	{
-		test: /\.es6\.js$/,
+		test: /\.es6\.jsx?$/,
 		loader: 'babel-loader',
 		exclude: /node_modules/,
 		query: {
-          presets: ['es2015']
+          presets: ['es2015', 'react']
         }
 	},
 	{
@@ -16,7 +16,7 @@ var loaders = [
 	}
 ];
 var extensions = [
-	'', '.js', '.es6.js'
+	'', '.js', '.es6.jsx', '.es6.js'
 ];
 
 module.exports = [{

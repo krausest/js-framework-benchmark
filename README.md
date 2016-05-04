@@ -61,6 +61,8 @@ which starts a web browser
 `npm run selenium`
 which runs the seleniums tests
 
-Open [http://localhost:8080/webdriver-java/chart.html](http://localhost:8080/webdriver-java/chart.html) for the results
+Open [http://localhost:8080/webdriver-java/chart.html](http://localhost:8080/webdriver-java/chart.html) or [http://localhost:8080/webdriver-java/table.html](http://localhost:8080/webdriver-java/table.html) for the results
 
-A test showing the durations on my machine can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-java/chart.html)
+A test showing the durations on my machine can be seen here:
+- [as a chart](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-java/chart.html)
+- [as a table](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-java/table.html)
