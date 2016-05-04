@@ -42,15 +42,16 @@ public class App {
     	"angular-v2.0.0-beta.15",
     	"aurelia",
     	"ember/dist",
-    	"inferno-v0.7.3",
+    	"inferno-v0.7.6",
     	"mithril-v0.2.3",
     	"plastiq-v1.28.0",
+    	"plastiq-v1.30.0",
     	"preact-v2.8.3",
     	"ractive-v0.7.3",
     	"react-v0.14.8",
     	"react-lite-v0.0.18",
     	"react-lite-v0.15.9",
-        "vanillajs",
+    	"vanillajs",
     	"vidom-v0.1.7",
     	"vue-v1.0.21"
     };

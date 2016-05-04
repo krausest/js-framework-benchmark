@@ -1,5 +1,4 @@
 'use strict';
-require("babel-plugin-syntax-jsx")
 
 var cache = {};
 var loaders = [

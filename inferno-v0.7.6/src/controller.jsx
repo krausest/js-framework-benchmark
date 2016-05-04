@@ -5,7 +5,7 @@ import {Store} from './store'
 import Inferno from 'inferno'
 import InfernoDOM from 'inferno-dom'
 import Component from 'inferno-component'
-console.log(Store, Inferno, InfernoDOM, Component);
+//console.log(Store, Inferno, InfernoDOM, Component);
 
 
 var startTime;
@@ -164,7 +164,7 @@ export class Controller extends Component{
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-8">
-                        <h1>Inferno v0.7.3</h1>
+                        <h1>Inferno v0.7.6</h1>
                     </div>
                     <div className="col-md-4">
                         <button type="button" className="btn btn-primary btn-block" id="add" onClick={this.add}>Add 1000 rows</button>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Results</title>
+    <link rel="stylesheet" href="../css/github-markdown.css">
+    <style>
+	td.top1 {
+		background-color: #63BF7C;
+	}
+	td.top2 {
+		background-color: #D1D580;
+	}
+	td.top3 {
+		background-color: #FFEC84;
+	}
+	td.top4 {
+		background-color: #FCAA78;
+	}
+	td.top5 {
+		background-color: #F9696C;
+	}
+	</style>
+</head>
+<body class="markdown-body">
+<h3>Duration in milliseconds</h3>
+<table>
+<thead>
+<tr>
+	{{~it.frameworks :value}}
+		<th>{{=value}}</th>
+	{{~}}
+</tr>
+</thead>
+<tbody>
+{{~it.benches :bench}}
+	<tr>
+		<th>{{=bench.name}}</th>
+		{{~bench.tests :test}}
+			<td class="{{=test.class}}">{{=test.value}}</td>
+		{{~}}
+	</tr>
+{{~}}
+</table>
+</body>
+</html>

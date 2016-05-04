@@ -63,13 +63,13 @@ class App {
             <button class="btn btn-primary btn-block" id="swaprows" onclick={() => this.store.swapRows()}>Swap Rows</button>
             <h3><span class="glyphicon glyphicon-remove"></span></h3>
           </div>
-          <table class="table table-hover table-striped test-data">
-            <tbody>
-              { this.store.data.map(item => this.renderItem(item)) }
-            </tbody>
-          </table>
         </div>
       </div>
+	  <table class="table table-hover table-striped test-data">
+		<tbody>
+		  { this.store.data.map(item => this.renderItem(item)) }
+		</tbody>
+	  </table>
     </div>;
   }
 
@@ -78,7 +78,7 @@ class App {
       return <tr key={item.id} class={{danger: item.id === this.store.selected}}>
         <td class="col-md-1">{item.id}</td>
         <td class="col-md-4">
-          <a data={item.id} onclick={() => this.select(item.id)}>{item.id + ' + ' + item.label}</a>
+          <a data={item.id} onclick={() => this.select(item.id)}>{item.label}</a>
         </td>
         <td class="col-md-1">
           <a data={item.id} onclick={() => this.delete(item.id)}><span class="glyphicon glyphicon-remove"></span></a>

@@ -4,7 +4,7 @@
   "description": "Vanilla.JS demo",
   "main": "index.js",
   "scripts": {
-    "build-dev": "node ./node_modules/webpack/bin/webpack.js -w -d -c webpack.config.js",
+    "build-dev": "webpack -w -d -c webpack.config.js",
     "build-prod": "webpack -p -c webpack.config.js",
     "start": "http-server -c-1 ."
   },
