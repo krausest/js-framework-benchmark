@@ -2,13 +2,13 @@
 
 This is a simple benchmark for several javascript frameworks. The benchmarks creates a large table with randomized entries and measures the time for various operations.
 
-This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations.
+This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
 
-Thanks for the great work.
+Thanks to Baptiste Augrain for making the benchmarks more sophisticated and adding frameworks.
 
 ## Prerequsites
 
-Have *node.js* installed. If you want to do yourself a favour use nvm for that. The benchmark has been tested with node 5.1+.
+Have *node.js (>=6.0)* installed . If you want to do yourself a favour use nvm for that. The benchmark has been tested with node 6.0.
 You will also need *mvn* for *selenium*.
 
 ## Building
@@ -60,6 +60,8 @@ You need to have a current java and maven installation to run the automated benc
 which starts a web browser
 `npm run selenium`
 which runs the seleniums tests
+
+For each framework the results are stored in JSON format in the webdriver-java directory. The scripts makeChart.js and makeTable.js create the final results.
 
 Open [http://localhost:8080/webdriver-java/chart.html](http://localhost:8080/webdriver-java/chart.html) or [http://localhost:8080/webdriver-java/table.html](http://localhost:8080/webdriver-java/table.html) for the results
 
