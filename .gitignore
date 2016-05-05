@@ -37,6 +37,7 @@ angular2/app/app.js.map
 tests/results/completed/
 target/
 webdriver-java/chromedriver
+webdriver-java/results/
 
 tests-browser-perf/
 tests-protractor-perf/

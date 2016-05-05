@@ -22,7 +22,7 @@
 	</style>
 </head>
 <body class="markdown-body">
-<h3>Duration in milliseconds</h3>
+<h3>Duration in milliseconds (Slowdown = Duration / Fastest)</h3>
 <table>
 <thead>
 <tr>
@@ -36,10 +36,16 @@
 	<tr>
 		<th>{{=bench.name}}</th>
 		{{~bench.tests :test}}
-			<td class="{{=test.class}}">{{=test.value}}</td>
+			<td class="{{=test.class}}">{{=test.value}}<br>({{=test.factor}})</td>
 		{{~}}
 	</tr>
 {{~}}
+<tr>
+    <th>Geom. mean</th>
+    {{~it.geomMeans :geomMean}}
+        <td class="{{=geomMean.class}}">{{=geomMean.value}}</td>
+    {{~}}
+</tr>
 </table>
 </body>
 </html>

@@ -49,5 +49,7 @@
       }
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "graceful-fs": "^4.1.3"
+  }
 }
