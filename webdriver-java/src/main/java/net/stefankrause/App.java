@@ -50,7 +50,6 @@ public class App {
 
     private final static Framework frameworks[] = {
     	new Framework("angular-v1.5.3"),
-    	new Framework("angular-v2.0.0-beta.2"),
     	new Framework("angular-v2.0.0-beta.15"),
     	new Framework("aurelia"),
         new Framework("ember", "ember/dist"),
@@ -480,6 +479,10 @@ public class App {
         nf.setMaximumFractionDigits(2);
         nf.setMinimumFractionDigits(2);
         nf.setGroupingUsed(false);
+
+        if (!Files.exists(Paths.get("results"))) {
+            Files.createDirectories(Paths.get("results"));
+        }
 
         StringBuilder line = new StringBuilder();
         line.append("{").append("\"framework\": \"").append(framework).append("\", ")
