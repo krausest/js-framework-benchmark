@@ -49,13 +49,13 @@ public class App {
     }
 
     private final static Framework frameworks[] = {
-    	new Framework("angular-v1.5.3"),
-    	new Framework("angular-v2.0.0-beta.15"),
-    	new Framework("aurelia"),
-        new Framework("ember", "ember/dist"),
-        new Framework("inferno-v0.7.6"),
-    	new Framework("mithril-v0.2.3"),
-    	new Framework("plastiq-v1.28.0"),
+//    	new Framework("angular-v1.5.3"),
+//    	new Framework("angular-v2.0.0-beta.15"),
+//    	new Framework("aurelia"),
+//        new Framework("ember", "ember/dist"),
+//        new Framework("inferno-v0.7.6"),
+//    	new Framework("mithril-v0.2.3"),
+//    	new Framework("plastiq-v1.28.0"),
         new Framework("plastiq-v1.30.0"),
     	new Framework("preact-v2.8.3"),
     	new Framework("ractive-v0.7.3"),
