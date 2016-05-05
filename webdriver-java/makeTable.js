@@ -22,6 +22,8 @@ var dots = require('dot').process({
 	path: './'
 });
 
+var factors = frameworks.map(f => 1.0);
+
 var benches = [];
 benchmarks.forEach(benchmark => {
 	var bench = {
@@ -50,32 +52,28 @@ benchmarks.forEach(benchmark => {
 		top3 *= 0.8;
 	}
 
-	_.forEach(values, function(value) {
-		if(value <= top1) {
-			bench.tests.push({
-				value: value,
-				class: 'top1'
-			});
-		}
-		else if(value <= top3) {
-			bench.tests.push({
-				value: value,
-				class: 'top3'
-			});
-		}
-		else {
-			bench.tests.push({
-				value: value,
-				class: 'top5'
-			});
-		}
+	_.forEach(values, function(value, idx) {
+		let factor = Math.max(16,value)/Math.max(16,min);
+		factors[idx] = factors[idx] * factor;
+		bench.tests.push({
+			value,
+			factor : factor.toPrecision(3),
+			class: value <= top1 ? 'top1' : value <= top3 ? 'top3' : 'top5'
+		});
 	})
 	benches.push(bench);
 });
 
+let geomMeans = factors.map(f => {
+			let value = Math.pow(f, 1/benchmarks.length).toPrecision(3);
+			return {value, class: value < 1.5 ? 'top1' : value < 3.0 ? 'top3' : 'top5'}
+		}
+	);
+
 fs.writeFileSync('./table.html', dots.table({
 	frameworks: [''].concat(frameworks).map(framework => framework.replace('-v', ' v').replace('/dist', '')),
-	benches: benches
+	benches,
+	geomMeans
 }), {
 	encoding: 'utf8'
 })
