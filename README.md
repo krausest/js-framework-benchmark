@@ -66,5 +66,5 @@ For each framework the results are stored in JSON format in the webdriver-java d
 Open [http://localhost:8080/webdriver-java/chart.html](http://localhost:8080/webdriver-java/chart.html) or [http://localhost:8080/webdriver-java/table.html](http://localhost:8080/webdriver-java/table.html) for the results
 
 A test showing the durations on my machine can be seen here:
-- [as a chart](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-java/chart.html)
-- [as a table](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-java/table.html)
+- [as a chart](https://cdn.rawgit.com/krausest/js-framework-benchmark/054d2d3fd226f5420fafecc60b05a363eb2b302a/webdriver-java/chart.html)
+- [as a table](https://cdn.rawgit.com/krausest/js-framework-benchmark/054d2d3fd226f5420fafecc60b05a363eb2b302a/webdriver-java/table.html)
