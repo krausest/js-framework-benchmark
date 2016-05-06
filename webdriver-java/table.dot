@@ -19,6 +19,12 @@
 	td.top5 {
 		background-color: #F9696C;
 	}
+	td {
+		text-align: center;
+	}
+	.factor {
+		font-size: 0.8em;
+	}
 	</style>
 </head>
 <body class="markdown-body">
@@ -36,7 +42,7 @@
 	<tr>
 		<th>{{=bench.name}}</th>
 		{{~bench.tests :test}}
-			<td class="{{=test.class}}">{{=test.value}}<br>({{=test.factor}})</td>
+			<td class="{{=test.class}}"><span class="msecs">{{=test.value}}</span><br><span class="factor">({{=test.factor}})</span></td>
 		{{~}}
 	</tr>
 {{~}}
