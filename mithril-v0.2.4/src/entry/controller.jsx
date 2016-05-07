@@ -126,7 +126,7 @@ var Controller = {
                 </div>
             </div>
             <table class="table table-hover table-striped test-data">
-                <tbody>
+                <tbody class="">
                 {rows}
                 </tbody>
             </table>
