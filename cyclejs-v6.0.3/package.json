@@ -20,7 +20,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "@cycle/core": "^6.0.3",
+    "@cycle/core": "6.0.3",
     "@cycle/dom": "^9.4.0",
     "@cycle/isolate": "^1.2.1",
     "babel-core": "^6.8.0",

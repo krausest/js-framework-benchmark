@@ -55,7 +55,7 @@ public class App {
     	new Framework("cyclejs-v6.0.3"),
         new Framework("ember", "ember/dist"),
         new Framework("inferno-v0.7.6"),
-    	new Framework("mithril-v0.2.3"),
+    	new Framework("mithril-v0.2.4"),
     	new Framework("plastiq-v1.28.0"),
         new Framework("plastiq-v1.30.0"),
     	new Framework("preact-v2.8.3"),
