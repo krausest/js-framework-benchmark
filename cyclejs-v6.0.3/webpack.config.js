@@ -3,8 +3,28 @@
 var cache = {};
 var loaders = [
 	{
-		test: /\.es6|\.js$/,
-		loader: 'babel-loader'
+		test: /\.jsx?$/,
+		loader: 'babel-loader',
+		exclude: /node_modules/,
+		query: {
+			presets: ['es2015', 'stage-0'],
+			plugins: [
+				[
+					'transform-react-jsx',
+					{
+						pragma: 'hJSX'
+					}
+				]
+			]
+		}
+	},
+	{
+		test: /\.es6\.js$/,
+		loader: 'babel-loader',
+		exclude: /node_modules/,
+		query: {
+			presets: ['es2015', 'stage-0']
+		}
 	},
 	{
 		test: /\.css$/,
@@ -21,11 +41,12 @@ module.exports = [{
 		loaders: loaders
 	},
 	entry: {
-		main: './src/SingleMain.es6',
+		main: './src/main',
 	},
 	output: {
 		path: './dist',
-		filename: '[name].js'
+		filename: '[name].js',
+		sourceMapFilename: "[file].map",
 	},
 	resolve: {
 		extensions: extensions,

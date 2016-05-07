@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Results</title>
+    <title>Table Report</title>
     <link rel="stylesheet" href="../css/github-markdown.css">
     <style>
 	td.top1 {
