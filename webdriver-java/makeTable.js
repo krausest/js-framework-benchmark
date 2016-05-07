@@ -1,3 +1,5 @@
+"use strict";
+
 var _ = require('lodash');
 var fs = require('fs');
 
@@ -16,7 +18,7 @@ files.map(f => {return {name: f, data: fs.readFileSync("./results/"+f, {encoding
 
 let benchmarks = results.values().next().value.results.map(r => r.benchmark);
 
-let getValue = (framework, benchmark) =>results.get(framework).results.find(r => r.benchmark === benchmark).avg;
+let getValue = (framework, benchmark) => results.get(framework).results.find(r => r.benchmark === benchmark).avg;
 
 var dots = require('dot').process({
 	path: './'
@@ -65,10 +67,9 @@ benchmarks.forEach(benchmark => {
 });
 
 let geomMeans = factors.map(f => {
-			let value = Math.pow(f, 1/benchmarks.length).toPrecision(3);
-			return {value, class: value < 1.5 ? 'top1' : value < 3.0 ? 'top3' : 'top5'}
-		}
-	);
+	let value = Math.pow(f, 1/benchmarks.length).toPrecision(3);
+	return {value, class: value < 1.5 ? 'top1' : value < 3.0 ? 'top3' : 'top5'}
+});
 
 fs.writeFileSync('./table.html', dots.table({
 	frameworks: [''].concat(frameworks).map(framework => framework.replace('-v', ' v').replace('/dist', '')),

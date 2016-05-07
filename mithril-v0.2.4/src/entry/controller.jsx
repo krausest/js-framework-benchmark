@@ -5,7 +5,7 @@
 /** @jsx m */
 
 var m = require('mithril')
-var Store = require('./store');
+var {Store} = require('./store');
 
 var startTime;
 var lastMeasure;
@@ -101,8 +101,6 @@ var Controller = {
     },
 
     view: function(ctrl) {
-
-
         let rows = ctrl.data().map((d,i) => {
             let sel = d.id === ctrl.selected() ? 'danger':'';
             return m.component(Row, {onclick:ctrl.select, onremove:ctrl.remove, key:d.id, label:d.label, id:d.id, styleClass:sel});
@@ -112,7 +110,7 @@ var Controller = {
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-md-8">
-                        <h1>Mithril v0.2.3</h1>
+                        <h1>Mithril v0.2.4</h1>
                     </div>
                     <div class="col-md-4">
                         <button type="button" class="btn btn-primary btn-block" id="add" onclick={ctrl.add}>Add 1000 rows</button>
@@ -137,4 +135,4 @@ var Controller = {
     }
 };
 
-export default Controller;
+export { Controller };

@@ -1,16 +1,15 @@
 'use strict';
-// require("babel-plugin-mjsx")
 
 var cache = {};
 var loaders = [
 	{
-		test: /\.jsx$/,
-		loader: 'jsx-loader!babel-loader'
+		test: /\.jsx?$/,
+		loader: 'babel-loader',
+		exclude: /node_modules/,
+		query: {
+          presets: ['es2015', 'react']
+        }
 	},
-/*	{
-		test: /\.msx$/,
-		loader: 'babel-plugin-mjsx!babel-loader'
-	},*/
 	{
 		test: /\.es6\.js$/,
 		loader: 'babel-loader'
@@ -21,7 +20,7 @@ var loaders = [
 	}
 ];
 var extensions = [
-	'', '.js', '.jsx', '.es6.js', '.msx'
+	'', '.js', '.jsx', '.es6.js'
 ];
 
 module.exports = [{
@@ -48,8 +47,3 @@ module.exports = [{
 		}
 	}
 }];
-
-/*
- "react": __dirname+"/node_modules/react/dist/react.min.js",
- "fluxthis": __dirname+"/node_modules/fluxthis/build/FluxThis.min.js"
- */
