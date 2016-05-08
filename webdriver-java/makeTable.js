@@ -9,6 +9,7 @@ const fs = require('fs');
 let results = {};
 let frameworks = [];
 let benchmarks = [];
+let types = {};
 
 fs.readdirSync('./results').filter(file => file.endsWith('.json')).forEach(name => {
 	let data = JSON.parse(fs.readFileSync('./results/' + name, {
@@ -17,6 +18,7 @@ fs.readdirSync('./results').filter(file => file.endsWith('.json')).forEach(name 
 	
 	frameworks.push(data.framework);
 	benchmarks.push(data.benchmark);
+	types[data.benchmark] = data.type;
 	
 	results[data.framework] = results[data.framework] || {};
 	results[data.framework][data.benchmark] = data;
@@ -24,6 +26,8 @@ fs.readdirSync('./results').filter(file => file.endsWith('.json')).forEach(name 
 
 frameworks = _.uniq(frameworks);
 benchmarks = _.uniq(benchmarks);
+
+let cpuBenchmarkCount = benchmarks.filter(benchmark => types[benchmark] === 'cpu').length;
 
 let getValue = (framework, benchmark) => results[framework] && results[framework][benchmark];
 
@@ -67,13 +71,28 @@ benchmarks.forEach(benchmark => {
 			while(top3 >= max) {
 				top3 *= 0.8;
 			}
+			
+			if(top1 < min) {
+				top1 = min * 1.33;
+			}
+			if(top3 < min) {
+				top3 = min * 2.33;
+			}
 		}
 	}
 
 	_.forEach(values, function(value, idx) {
 		if(value) {
-			let factor = Math.max(16,value.mean)/Math.max(16,min);
-			factors[idx] = factors[idx] * factor;
+			let factor;
+			if(types[benchmark] === 'cpu') {
+				factor = Math.max(16,value.mean)/Math.max(16,min);
+				
+				factors[idx] = factors[idx] * factor;
+			}
+			else {
+				factor = value.mean / min;
+			}
+			
 			bench.tests.push({
 				mean: value.mean,
 				deviation: value.standardDeviation,
@@ -84,12 +103,13 @@ benchmarks.forEach(benchmark => {
 		else {
 			bench.tests.push(null);
 		}
-	})
+	});
+	
 	benches.push(bench);
 });
 
 let geomMeans = factors.map(f => {
-	let value = Math.pow(f, 1/benchmarks.length).toPrecision(3);
+	let value = Math.pow(f, 1 / cpuBenchmarkCount).toPrecision(3);
 	return {value, class: value < 1.5 ? 'top1' : value < 3.0 ? 'top3' : 'top5'}
 });
 
