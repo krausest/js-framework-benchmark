@@ -12,7 +12,7 @@ var loaders = [
 				[
 					'transform-react-jsx',
 					{
-						pragma: 'hJSX'
+						pragma: 'h'
 					}
 				]
 			]
@@ -56,8 +56,9 @@ module.exports = [{
 		],
 		alias: {
 			"rx": __dirname+"/node_modules/rx/dist/rx.all.min.js",
-			"@cycle/core": __dirname+"/node_modules/@cycle/core/dist/cycle.min.js",
-			"@cycle/dom": __dirname+"/node_modules/@cycle/dom/dist/cycle-dom.min.js"
+			"@tsers/core": __dirname+"/node_modules/@tsers/core/dist/tsers.core.min.js",
+			"@tsers/model": __dirname+"/node_modules/@tsers/model/dist/tsers.model.min.js",
+			"@tsers/react": __dirname+"/node_modules/@tsers/react/dist/tsers.react.min.js",
 		}
 	}
 }];

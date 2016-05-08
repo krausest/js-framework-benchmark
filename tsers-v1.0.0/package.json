@@ -1,11 +1,10 @@
 {
-  "name": "js-framework-benchmark-cyclejs",
+  "name": "js-framework-benchmark-tsers",
   "version": "1.0.0",
-  "description": "Benchmark for Cycle.js framework",
+  "description": "Benchmark for TSERS framework",
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",
-    "build-prod": "webpack -d -c webpack.config.js",
-    "start": "http-server -c-1 ."
+    "build-prod": "webpack -d -c webpack.config.js"
   },
   "devDependencies": {
     "babel-core": "^6.8.0",
@@ -16,10 +15,9 @@
     "webpack": "^1.13.0"
   },
   "dependencies": {
-    "@cycle/core": "6.0.3",
-    "@cycle/dom": "9.4.0",
-    "@cycle/isolate": "1.2.1",
-    "rx": "^4.1.0",
-    "rx-combine-latest-obj": "^1.0.2"
+    "@tsers/core": "1.0.0",
+    "@tsers/model": "1.0.0",
+    "@tsers/react": "1.1.0",
+    "rx": "^4.1.0"
   }
 }

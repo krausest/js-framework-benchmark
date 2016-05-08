@@ -25,6 +25,8 @@ import org.openqa.selenium.remote.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+
 public class App {
 
         
@@ -55,7 +57,7 @@ public class App {
     	new Framework("cyclejs-v6.0.3"),
         new Framework("ember", "ember/dist"),
         new Framework("inferno-v0.7.6"),
-    	new Framework("mithril-v0.2.3"),
+    	new Framework("mithril-v0.2.4"),
     	new Framework("plastiq-v1.28.0"),
         new Framework("plastiq-v1.30.0"),
     	new Framework("preact-v2.8.3"),
@@ -64,6 +66,7 @@ public class App {
     	new Framework("react-v15.0.1"),
     	new Framework("react-lite-v0.0.18"),
     	new Framework("react-lite-v0.15.9"),
+    	new Framework("tsers-v1.0.0"),
         new Framework("vanillajs"),
         new Framework("vidom-v0.1.7"),
         new Framework("vue-v1.0.21")
@@ -132,9 +135,16 @@ public class App {
         void init(WebDriver driver, String url);
         void run(WebDriver driver, String url);
         String getName();
+        String getPath();
+    }
+    
+    private static abstract class AbstractBench implements Bench {
+    	public String getPath() {
+            return this.getName().replaceAll("(\\s+)", "-");
+        }
     }
 
-    private static class BenchRun implements Bench {
+    private static class BenchRun extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -149,9 +159,13 @@ public class App {
         public String getName() {
             return "create 1000 rows";
         }
+        
+        public String getPath() {
+            return "create1k";
+        }
     }
 
-    private static class BenchRunHot implements Bench {
+    private static class BenchRunHot extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -172,7 +186,7 @@ public class App {
         }
     }
 
-    private static class BenchUpdate implements Bench {
+    private static class BenchUpdate extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -193,7 +207,7 @@ public class App {
         }
     }
 
-    private static class BenchSelect implements Bench {
+    private static class BenchSelect extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -215,7 +229,7 @@ public class App {
         }
     }
 
-    private static class BenchRemove implements Bench {
+    private static class BenchRemove extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -237,7 +251,7 @@ public class App {
         }
     }
     
-    private static class BenchHideAll implements Bench {
+    private static class BenchHideAll extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -256,7 +270,7 @@ public class App {
         }
     }
     
-    private static class BenchShowAll implements Bench {
+    private static class BenchShowAll extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -277,7 +291,7 @@ public class App {
         }
     }
     
-    private static class BenchRunBig implements Bench {
+    private static class BenchRunBig extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -291,9 +305,13 @@ public class App {
         public String getName() {
             return "create lots of rows";
         }
+        
+        public String getPath() {
+            return "create10k";
+        }
     }
     
-    private static class BenchRunBigHot implements Bench {
+    private static class BenchRunBigHot extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -310,9 +328,13 @@ public class App {
         public String getName() {
             return "add 1000 rows after lots of rows";
         }
+        
+        public String getPath() {
+            return "create1k-after10k";
+        }
     }
     
-    private static class BenchClear implements Bench {
+    private static class BenchClear extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -331,7 +353,7 @@ public class App {
         }
     }
     
-    private static class BenchClearHot implements Bench {
+    private static class BenchClearHot extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -354,9 +376,13 @@ public class App {
         public String getName() {
             return "clear rows a 2nd time";
         }
+        
+        public String getPath() {
+            return "clear-rows-2nd-time";
+        }
     }
     
-    private static class BenchSelectBig implements Bench {
+    private static class BenchSelectBig extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -377,9 +403,13 @@ public class App {
         public String getName() {
             return "select row on big list";
         }
+        
+        public String getPath() {
+            return "select-row-10k";
+        }
     }
     
-    private static class BenchSwapRows implements Bench {
+    private static class BenchSwapRows extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -400,7 +430,7 @@ public class App {
         }
     }
     
-    private static class BenchRecycle implements Bench {
+    private static class BenchRecycle extends AbstractBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -426,78 +456,88 @@ public class App {
 
         DesiredCapabilities cap = setUp();
 
-        int length = REPEAT_RUN;
-        Table<String, String, DoubleSummaryStatistics> results = HashBasedTable.create();
+		int length = REPEAT_RUN;
+		for (Framework framework : frameworks) {
+			System.out.println(framework);
+			
+			for (Bench bench : benches) {
+				System.out.println(bench.getName());
+				
+				ChromeDriver driver = new ChromeDriver(cap);
+				
+				try {
+					double[] data = new double[length];
+					double lastWait = 1000;
+					for (int i = 0; i < length; i++) {
+						System.out.println(framework.framework+" "+bench.getName()+" => init");
+						bench.init(driver, framework.url);
 
-			for (Framework framework : frameworks) {
-				System.out.println(framework);
-				for (Bench bench : benches) {
-					System.out.println(bench.getName());
-					ChromeDriver driver = new ChromeDriver(cap);
-					try {
-						double[] data = new double[length];
-						double lastWait = 1000;
-						for (int i = 0; i < length; i++) {
-							System.out.println(framework.framework+" "+bench.getName()+" => init");
-							bench.init(driver, framework.url);
-	
-							WebDriverWait wait = new WebDriverWait(driver, 10);
-							WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-	
-							Thread.sleep(2000);
-							printLog(driver, false, "aurelia".equals(framework.framework));
-							System.out.println(framework.framework+" "+bench.getName()+" => run");
-							bench.run(driver, framework.url);
-							System.out.println("run " + bench.getName());
-	
-							element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-							Thread.sleep(1000 + (int) lastWait);
-	
-							Double res = printLog(driver, true, "aurelia".equals(framework.framework));
-							if (res != null) {
-								data[i] = res.doubleValue();
-								lastWait = data[i];
-							}
+						WebDriverWait wait = new WebDriverWait(driver, 10);
+						WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+
+						Thread.sleep(2000);
+						printLog(driver, false, "aurelia".equals(framework.framework));
+						System.out.println(framework.framework+" "+bench.getName()+" => run");
+						bench.run(driver, framework.url);
+						System.out.println("run " + bench.getName());
+
+						element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+						Thread.sleep(1000 + (int) lastWait);
+
+						Double res = printLog(driver, true, "aurelia".equals(framework.framework));
+						if (res != null) {
+							data[i] = res.doubleValue();
+							lastWait = data[i];
 						}
-                        System.out.println("before "+Arrays.toString(data));
-						if (DROP_WORST_RUN>0) {
-							Arrays.sort(data);
-							data = Arrays.copyOf(data, data.length-DROP_WORST_RUN);
-							System.out.println("after "+Arrays.toString(data));
-						}
-                        DoubleSummaryStatistics stats = DoubleStream.of(data).summaryStatistics();
-                        results.put(framework.framework, bench.getName(), stats);
-					} finally {
-						driver.quit();
 					}
+					
+					System.out.println("before "+Arrays.toString(data));
+					if (DROP_WORST_RUN>0) {
+						Arrays.sort(data);
+						data = Arrays.copyOf(data, data.length-DROP_WORST_RUN);
+						System.out.println("after "+Arrays.toString(data));
+					}
+					
+					writeSummary(framework.framework, bench, data);
 				}
-                logResult(framework.framework, results);
+				finally {
+					driver.quit();
+				}
 			}
+		}
     }
-
-    private void logResult(String framework, Table<String, String, DoubleSummaryStatistics> results) throws IOException {
-        NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+    
+    private void writeSummary(String framework, Bench bench, double[] data) throws IOException {
+    	NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
         nf.setMaximumFractionDigits(2);
         nf.setMinimumFractionDigits(2);
         nf.setGroupingUsed(false);
-
+        
         if (!Files.exists(Paths.get("results"))) {
             Files.createDirectories(Paths.get("results"));
         }
-
+        
+        SummaryStatistics summary = new SummaryStatistics();
+        for (int i = 0; i < data.length; i++) {
+        	summary.addValue(data[i]);
+        }
+        
         StringBuilder line = new StringBuilder();
-        line.append("{").append("\"framework\": \"").append(framework).append("\", ")
-                .append("\"results\":[");
-        line.append(Arrays.stream(benches).map(bench ->
-                "{\"benchmark\": \""+bench.getName()+"\", "
-                        +"\"min\": "+nf.format(results.get(framework, bench.getName()).getMin())+", "
-                        +"\"max\": "+nf.format(results.get(framework, bench.getName()).getMax())+", "
-                        +"\"avg\": "+nf.format(results.get(framework, bench.getName()).getAverage())+"}"
-        ).collect(Collectors.joining(", ")));
-        line.append("]}");
-
-        Files.write(Paths.get("results",framework+".txt"), line.toString().getBytes("utf-8"));
-        System.out.println("==== Results for "+framework+" written to results directory");
+        line.append("{");
+        line.append("\n\t\"framework\": \"").append(framework).append("\"");
+        line.append(",\n\t\"benchmark\": \"").append(bench.getName()).append("\"");
+        line.append(",\n\t\"min\": ").append(nf.format(summary.getMin()));
+        line.append(",\n\t\"max\": ").append(nf.format(summary.getMax()));
+        line.append(",\n\t\"mean\": ").append(nf.format(summary.getMean()));
+        line.append(",\n\t\"geometricMean\": ").append(nf.format(summary.getGeometricMean()));
+        line.append(",\n\t\"quadraticMean\": ").append(nf.format(summary.getQuadraticMean()));
+        line.append(",\n\t\"standardDeviation\": ").append(nf.format(summary.getStandardDeviation()));
+        line.append("\n}");
+        System.out.println(line.toString());
+        
+        Files.write(Paths.get("results", framework + "_" + bench.getPath() + ".json"), line.toString().getBytes("utf-8"));
+        
+        System.out.println("==== Results for " + framework + "_" + bench.getPath() + " written to results directory");
     }
 
     public DesiredCapabilities setUp() throws Exception {
