@@ -64,6 +64,7 @@ public class App {
     	new Framework("react-v15.0.1"),
     	new Framework("react-lite-v0.0.18"),
     	new Framework("react-lite-v0.15.9"),
+    	new Framework("tsers-v1.0.0"),
         new Framework("vanillajs"),
         new Framework("vidom-v0.1.7"),
         new Framework("vue-v1.0.21")

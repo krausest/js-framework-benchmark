@@ -97,7 +97,7 @@ function view(state$) {
 			<div className='jumbotron'>
 				<div className='row'>
 					<div className='col-md-8'>
-						<h1>Cycle.js</h1>
+						<h1>Cycle.js v6.0.3</h1>
 					</div>
 					<div className='col-md-4'>
 						<button type='button' className='btn btn-primary btn-block' id='add'>Add 1000 rows</button>
