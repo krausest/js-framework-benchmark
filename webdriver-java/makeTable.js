@@ -42,7 +42,7 @@ benchmarks.forEach(benchmark => {
 	});
 	
 	let sorted = _.compact(values).map(data => {
-		return data.geometricMean;
+		return data.mean;
 	}).sort((a, b) => a - b);
 	
 	let min, top1, top3;
@@ -72,13 +72,13 @@ benchmarks.forEach(benchmark => {
 
 	_.forEach(values, function(value, idx) {
 		if(value) {
-			let factor = Math.max(16,value.geometricMean)/Math.max(16,min);
+			let factor = Math.max(16,value.mean)/Math.max(16,min);
 			factors[idx] = factors[idx] * factor;
 			bench.tests.push({
-				mean: value.geometricMean,
+				mean: value.mean,
 				deviation: value.standardDeviation,
 				factor : factor.toPrecision(3),
-				class: value.geometricMean <= top1 ? 'top1' : value.geometricMean <= top3 ? 'top3' : 'top5'
+				class: value.mean <= top1 ? 'top1' : value.mean <= top3 ? 'top3' : 'top5'
 			});
 		}
 		else {
