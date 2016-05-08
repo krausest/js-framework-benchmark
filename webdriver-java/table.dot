@@ -22,6 +22,13 @@
 	td {
 		text-align: center;
 	}
+	.deviation {
+		font-size: 0.7em;
+		padding-left: 0.5em;
+	}
+	.deviation:before {
+		content: '± ';
+	}
 	.factor {
 		font-size: 0.8em;
 	}
@@ -42,7 +49,11 @@
 	<tr>
 		<th>{{=bench.name}}</th>
 		{{~bench.tests :test}}
-			<td class="{{=test.class}}"><span class="msecs">{{=test.value}}</span><br><span class="factor">({{=test.factor}})</span></td>
+			{{?test}}
+				<td class="{{=test.class}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
+			{{??}}
+				<td></td>
+			{{?}}
 		{{~}}
 	</tr>
 {{~}}
