@@ -465,7 +465,7 @@ public class App {
 
 		int length = REPEAT_RUN;
 		for (Framework framework : frameworks) {
-			System.out.println(framework);
+			System.out.println(framework.framework);
 			
 			for (Bench bench : benches) {
 				System.out.println(bench.getName());
@@ -492,6 +492,9 @@ public class App {
 					}
 					
 					writeSummary(framework.framework, bench, data);
+				}
+				catch(Exception ex) {
+					System.err.println(ex);
 				}
 				finally {
 					driver.quit();
