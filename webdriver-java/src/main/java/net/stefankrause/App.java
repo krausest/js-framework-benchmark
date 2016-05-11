@@ -549,6 +549,7 @@ public class App {
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("perfLoggingPrefs", perfLogPrefs);
         options.setBinary(BINARY);
+        options.addArguments("--js-flags=--expose-gc");
         cap.setCapability(ChromeOptions.CAPABILITY, options);
 
         return cap;

@@ -3,18 +3,15 @@ package net.stefankrause;
 import java.io.IOException;
 import java.util.*;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import org.json.*;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.logging.*;
-import org.openqa.selenium.remote.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public abstract class AbstractCPUBench implements Bench {
+public abstract class AbstractCPUBench extends Bench {
 	abstract void init(WebDriver driver, String url);
 	abstract void test(WebDriver driver);
 	
@@ -82,46 +79,6 @@ public abstract class AbstractCPUBench implements Bench {
 
 		return printLog(driver, true, "aurelia".equals(framework.framework));
 	}
-	
-	public String getAsString(JSONObject root, String path) {
-		return getAsStringRec(root, Arrays.asList(path.split("\\.")));
-	}
-
-	public double getAsLong(JSONObject root, String path) {
-		Double r = getAsLongRec(root, Arrays.asList(path.split("\\.")));
-		if (r==null) {
-			return 0;
-		} else {
-			return r.doubleValue();
-		}
-	}
-
-
-	public String getAsStringRec(JSONObject root, List<String> path) {
-		JSONObject obj = root;
-		if (!root.has(path.get(0)))
-			return null;
-
-		if (path.size()==1) {
-			return root.getString(path.get(0));
-		} else {
-			return getAsStringRec(root.getJSONObject(path.get(0)), path.subList(1, path.size()));
-		}
-	}
-
-	public Double getAsLongRec(JSONObject root, List<String> path) {
-		JSONObject obj = root;
-		if (!root.has(path.get(0)))
-			return null;
-
-		if (path.size()==1) {
-			return Double.valueOf(root.getDouble(path.get(0)));
-		} else {
-			return getAsLongRec(root.getJSONObject(path.get(0)), path.subList(1, path.size()));
-		}
-	}
-
-	
 
 	List<PLogEntry> submitPerformanceResult(List<LogEntry> perfLogEntries, boolean print)
 			throws IOException, JSONException {
@@ -137,8 +94,8 @@ public abstract class AbstractCPUBench implements Bench {
 				|| "Paint".equals(name)
 					|| "TimerFire".equals(name)) {
 				filtered.add(new PLogEntry(name,
-						(long)getAsLong(obj, "message.params.ts"),
-						(long)getAsLong(obj, "message.params.dur"),
+						(long) getAsDouble(obj, "message.params.ts"),
+						(long) getAsDouble(obj, "message.params.dur"),
 						entry.getMessage()));
 			}
 		}
