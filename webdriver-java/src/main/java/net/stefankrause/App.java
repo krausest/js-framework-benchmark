@@ -14,10 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-import org.json.*;
-
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.logging.*;
@@ -28,27 +24,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class App {
-
-        
+	
     private final static String BINARY = "/Applications/Chromium.app/Contents/MacOS/Chromium";
     //private final static String BINARY = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
     //private final static String BINARY = "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary";
     private final static int REPEAT_RUN = 10;
     private final static int WARMUP_COUNT = 5;
     private final static int DROP_WORST_RUN = 4;
-
-    private static class Framework {
-        private final String framework;
-        private final  String url;
-        public Framework(String name) {
-            this.framework = name;
-            this.url = name;
-        }
-        public Framework(String framework, String url) {
-            this.framework = framework;
-            this.url = url;
-        }
-    }
 
     private final static Framework frameworks[] = {
     	new Framework("angular-v1.5.3"),
@@ -86,72 +68,21 @@ public class App {
     	new BenchClearHot(),
     	new BenchSelectBig(),
     	new BenchSwapRows(),
-    	new BenchRecycle()
+    	new BenchRecycle(),
+    	new BenchReadyMemory(),
+    	new BenchRunMemory()
     };
 
-    private static int BINARY_VERSION = 0;
+    public static int BINARY_VERSION = 0;
     
-    private static class PLogEntry {
-        private final String name;
-        private final long ts;
-        private final long duration;
-        private final String message;
-
-        public PLogEntry(String name, long ts, long duration, String message) {
-            this.name = name;
-            this.ts = ts;
-            this.duration = duration;
-            this.message = message;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public long getTs() {
-            return ts;
-        }
-
-        public long getDuration() {
-            return duration;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        @Override
-        public String toString() {
-            return "PLogEntry{" +
-                    "name='" + name + '\'' +
-                    ", ts=" + ts +
-                    ", duration=" + duration +
-                    ", message='" + message + '\'' +
-                    '}';
-        }
-    }
-
-    public interface Bench {
-        void init(WebDriver driver, String url);
-        void run(WebDriver driver, String url);
-        String getName();
-        String getPath();
-    }
-    
-    private static abstract class AbstractBench implements Bench {
-    	public String getPath() {
-            return this.getName().replaceAll("(\\s+)", "-");
-        }
-    }
-
-    private static class BenchRun extends AbstractBench {
+    private static class BenchRun extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
             wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             WebElement element = driver.findElement(By.id("run"));
             element.click();
         }
@@ -161,11 +92,11 @@ public class App {
         }
         
         public String getPath() {
-            return "create1k";
+            return "01_create1k";
         }
     }
 
-    private static class BenchRunHot extends AbstractBench {
+    private static class BenchRunHot extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -176,7 +107,7 @@ public class App {
             }
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             WebElement element = driver.findElement(By.id("run"));
             element.click();
         }
@@ -184,9 +115,13 @@ public class App {
         public String getName() {
             return "update 1000 rows (hot)";
         }
+        
+        public String getPath() {
+            return "02_run1k-hot";
+        }
     }
 
-    private static class BenchUpdate extends AbstractBench {
+    private static class BenchUpdate extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -198,16 +133,20 @@ public class App {
             }
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             driver.findElement(By.id("update")).click();
         }
 
         public String getName() {
             return "partial update";
         }
+        
+        public String getPath() {
+            return "03_" + this.getName().replaceAll("(\\s+)", "-");
+        }
     }
 
-    private static class BenchSelect extends AbstractBench {
+    private static class BenchSelect extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -219,7 +158,7 @@ public class App {
             }
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             WebElement element = driver.findElement(By.xpath("//tbody/tr[1]/td[2]/a"));
             element.click();
         }
@@ -227,9 +166,13 @@ public class App {
         public String getName() {
             return "select row";
         }
+        
+        public String getPath() {
+            return "04_" + this.getName().replaceAll("(\\s+)", "-");
+        }
     }
 
-    private static class BenchRemove extends AbstractBench {
+    private static class BenchRemove extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -241,7 +184,7 @@ public class App {
             }
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             WebElement element = driver.findElement(By.xpath("//tbody/tr[1]/td[3]/a"));
             element.click();
         }
@@ -249,9 +192,13 @@ public class App {
         public String getName() {
             return "remove row";
         }
+        
+        public String getPath() {
+            return "05_" + this.getName().replaceAll("(\\s+)", "-");
+        }
     }
     
-    private static class BenchHideAll extends AbstractBench {
+    private static class BenchHideAll extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -261,16 +208,20 @@ public class App {
             wait.until(ExpectedConditions.elementToBeClickable(By.id("hideall")));
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
            driver.findElement(By.id("hideall")).click();
         }
 
         public String getName() {
             return "hide all";
         }
+        
+        public String getPath() {
+            return "06_" + this.getName().replaceAll("(\\s+)", "-");
+        }
     }
     
-    private static class BenchShowAll extends AbstractBench {
+    private static class BenchShowAll extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -282,23 +233,27 @@ public class App {
             wait.until(ExpectedConditions.elementToBeClickable(By.id("showall")));
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
            driver.findElement(By.id("showall")).click();
         }
 
         public String getName() {
             return "show all";
         }
+        
+        public String getPath() {
+            return "07_" + this.getName().replaceAll("(\\s+)", "-");
+        }
     }
     
-    private static class BenchRunBig extends AbstractBench {
+    private static class BenchRunBig extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
             wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             driver.findElement(By.id("runlots")).click();
         }
 
@@ -307,11 +262,11 @@ public class App {
         }
         
         public String getPath() {
-            return "create10k";
+            return "08_create10k";
         }
     }
     
-    private static class BenchRunBigHot extends AbstractBench {
+    private static class BenchRunBigHot extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -321,7 +276,7 @@ public class App {
             wait.until(ExpectedConditions.elementToBeClickable(By.id("add")));
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             driver.findElement(By.id("add")).click();
         }
 
@@ -330,11 +285,11 @@ public class App {
         }
         
         public String getPath() {
-            return "create1k-after10k";
+            return "09_create1k-after10k";
         }
     }
     
-    private static class BenchClear extends AbstractBench {
+    private static class BenchClear extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -344,16 +299,20 @@ public class App {
             wait.until(ExpectedConditions.elementToBeClickable(By.id("clear")));
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             driver.findElement(By.id("clear")).click();
         }
 
         public String getName() {
             return "clear rows";
         }
+        
+        public String getPath() {
+            return "10_" + this.getName().replaceAll("(\\s+)", "-");
+        }
     }
     
-    private static class BenchClearHot extends AbstractBench {
+    private static class BenchClearHot extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -369,7 +328,7 @@ public class App {
             wait.until(ExpectedConditions.elementToBeClickable(By.id("clear")));
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             driver.findElement(By.id("clear")).click();
         }
 
@@ -378,11 +337,11 @@ public class App {
         }
         
         public String getPath() {
-            return "clear-rows-2nd-time";
+            return "11_clear-rows-2nd-time";
         }
     }
     
-    private static class BenchSelectBig extends AbstractBench {
+    private static class BenchSelectBig extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -395,7 +354,7 @@ public class App {
             }
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             WebElement element = driver.findElement(By.xpath("//tbody/tr[1]/td[2]/a"));
             element.click();
         }
@@ -405,11 +364,11 @@ public class App {
         }
         
         public String getPath() {
-            return "select-row-10k";
+            return "12_select-row-10k";
         }
     }
     
-    private static class BenchSwapRows extends AbstractBench {
+    private static class BenchSwapRows extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -421,16 +380,20 @@ public class App {
             }
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             driver.findElement(By.id("swaprows")).click();
         }
 
         public String getName() {
             return "swap rows";
         }
+        
+        public String getPath() {
+            return "13_" + this.getName().replaceAll("(\\s+)", "-");
+        }
     }
     
-    private static class BenchRecycle extends AbstractBench {
+    private static class BenchRecycle extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -443,12 +406,56 @@ public class App {
             wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
         }
 
-        public void run(WebDriver driver, String url) {
+        public void test(WebDriver driver) {
             driver.findElement(By.id("run")).click();
         }
 
         public String getName() {
             return "recycle rows";
+        }
+        
+        public String getPath() {
+            return "14_" + this.getName().replaceAll("(\\s+)", "-");
+        }
+    }
+    
+    private static class BenchReadyMemory extends AbstractMemoryBench {
+        public void init(WebDriver driver, String url) {
+            driver.get("localhost:8080/" + url + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+        }
+
+        public void test(WebDriver driver) {
+        }
+
+        public String getName() {
+            return "ready memory";
+        }
+        
+        public String getPath() {
+            return "15_" + this.getName().replaceAll("(\\s+)", "-");
+        }
+    }
+    
+    private static class BenchRunMemory extends AbstractMemoryBench {
+        public void init(WebDriver driver, String url) {
+            driver.get("localhost:8080/" + url + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+        }
+
+        public void test(WebDriver driver) {
+        	WebElement element = driver.findElement(By.id("run"));
+            element.click();
+        }
+
+        public String getName() {
+            return "run memory";
+        }
+        
+        public String getPath() {
+            return "16_" + this.getName().replaceAll("(\\s+)", "-");
         }
     }
 
@@ -458,7 +465,7 @@ public class App {
 
 		int length = REPEAT_RUN;
 		for (Framework framework : frameworks) {
-			System.out.println(framework);
+			System.out.println(framework.framework);
 			
 			for (Bench bench : benches) {
 				System.out.println(bench.getName());
@@ -468,25 +475,11 @@ public class App {
 				try {
 					double[] data = new double[length];
 					double lastWait = 1000;
+					
 					for (int i = 0; i < length; i++) {
-						System.out.println(framework.framework+" "+bench.getName()+" => init");
-						bench.init(driver, framework.url);
-
-						WebDriverWait wait = new WebDriverWait(driver, 10);
-						WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-
-						Thread.sleep(2000);
-						printLog(driver, false, "aurelia".equals(framework.framework));
-						System.out.println(framework.framework+" "+bench.getName()+" => run");
-						bench.run(driver, framework.url);
-						System.out.println("run " + bench.getName());
-
-						element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-						Thread.sleep(1000 + (int) lastWait);
-
-						Double res = printLog(driver, true, "aurelia".equals(framework.framework));
-						if (res != null) {
-							data[i] = res.doubleValue();
+						Double time = bench.run(driver, framework, lastWait);
+						if (time != null) {
+							data[i] = time.doubleValue();
 							lastWait = data[i];
 						}
 					}
@@ -499,6 +492,9 @@ public class App {
 					}
 					
 					writeSummary(framework.framework, bench, data);
+				}
+				catch(Exception ex) {
+					System.err.println(ex);
 				}
 				finally {
 					driver.quit();
@@ -526,6 +522,7 @@ public class App {
         line.append("{");
         line.append("\n\t\"framework\": \"").append(framework).append("\"");
         line.append(",\n\t\"benchmark\": \"").append(bench.getName()).append("\"");
+        line.append(",\n\t\"type\": \"").append(bench.getType()).append("\"");
         line.append(",\n\t\"min\": ").append(nf.format(summary.getMin()));
         line.append(",\n\t\"max\": ").append(nf.format(summary.getMax()));
         line.append(",\n\t\"mean\": ").append(nf.format(summary.getMean()));
@@ -555,103 +552,6 @@ public class App {
         cap.setCapability(ChromeOptions.CAPABILITY, options);
 
         return cap;
-
-    }
-
-    public String getAsString(JSONObject root, String path) {
-        return getAsStringRec(root, Arrays.asList(path.split("\\.")));
-    }
-
-    public double getAsLong(JSONObject root, String path) {
-        Double r = getAsLongRec(root, Arrays.asList(path.split("\\.")));
-        if (r==null) {
-            return 0;
-        } else {
-            return r.doubleValue();
-        }
-    }
-
-
-    public String getAsStringRec(JSONObject root, List<String> path) {
-        JSONObject obj = root;
-        if (!root.has(path.get(0)))
-            return null;
-
-        if (path.size()==1) {
-            return root.getString(path.get(0));
-        } else {
-            return getAsStringRec(root.getJSONObject(path.get(0)), path.subList(1, path.size()));
-        }
-    }
-
-    public Double getAsLongRec(JSONObject root, List<String> path) {
-        JSONObject obj = root;
-        if (!root.has(path.get(0)))
-            return null;
-
-        if (path.size()==1) {
-            return Double.valueOf(root.getDouble(path.get(0)));
-        } else {
-            return getAsLongRec(root.getJSONObject(path.get(0)), path.subList(1, path.size()));
-        }
-    }
-
-    Double printLog(WebDriver driver, boolean print, boolean isAurelia) throws Exception {
-        List<LogEntry> entries = driver.manage().logs().get(LogType.BROWSER).getAll();
-        System.out.println(entries.size() + " " + LogType.BROWSER + " log entries found");
-        for (LogEntry entry : entries) {
-            if (print) System.out.println(
-                    new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
-        }
-
-        Logs logs = driver.manage().logs();
-        if (print) System.out.println("Log types: " + logs.getAvailableLogTypes());
-        List<PLogEntry> filtered = submitPerformanceResult(logs.get(LogType.PERFORMANCE).getAll(), false);
-
-        // Chrome 49 reports a Paint very short after the Event Dispatch which I can't find in the timeline
-        //   it also seems to have a performance regression that can be seen in the timeline
-        //   we're using the last paint event to fix measurement
-        Optional<PLogEntry> evt = filtered.stream().filter(pe -> "EventDispatch".equals(pe.getName())).findFirst();
-        long tsEvent = evt.map(pe -> pe.ts+pe.duration).orElse(0L);
-        // First TimerFire
-        Optional<PLogEntry> evtTimer = filtered.stream().filter(pe -> "TimerFire".equals(pe.getName())).filter(pe -> pe.ts > tsEvent).findFirst();
-        long tsEventFire = evtTimer.map(pe -> pe.ts+pe.duration).orElse(0L);
-        // First Paint after TimerFire only for Aurelia
-        long tsAfter = isAurelia && BINARY_VERSION > 48 ? tsEventFire : tsEvent;
-        Optional<PLogEntry> lastPaint = filtered.stream().filter(pe -> "Paint".equals(pe.getName())).
-                filter(pe -> pe.ts > tsAfter).reduce((p1,p2) -> p2);
-
-        if (print) System.out.println("************************ filtered events");
-        if (print) filtered.forEach(e -> System.out.println(e));
-        if (evt.isPresent() && lastPaint.isPresent()) {
-            if (print) System.out.println("Duration "+(lastPaint.get().ts + lastPaint.get().duration - evt.get().ts)/1000.0);
-            return (lastPaint.get().ts + lastPaint.get().duration - evt.get().ts)/1000.0;
-        }
-        return null;
-
-    }
-
-    List<PLogEntry> submitPerformanceResult(List<LogEntry> perfLogEntries, boolean print)
-            throws IOException, JSONException {
-        ArrayList<PLogEntry> filtered = new ArrayList<>();
-
-        if (print) System.out.println(perfLogEntries.size() + " performance log entries found");
-        for (LogEntry entry : perfLogEntries) {
-            JSONObject obj = new JSONObject(entry.getMessage());
-            String name = getAsString(obj, "message.params.name");
-            if (print) System.out.println(entry.getMessage());
-            if ("EventDispatch".equals(name)
-                    && "click".equals(getAsString(obj, "message.params.args.data.type"))
-                || "Paint".equals(name)
-                    || "TimerFire".equals(name)) {
-                filtered.add(new PLogEntry(name,
-                        (long)getAsLong(obj, "message.params.ts"),
-                        (long)getAsLong(obj, "message.params.dur"),
-                        entry.getMessage()));
-            }
-        }
-
-        return filtered;
     }
 
     public static void main(String[] argv) throws Exception {
