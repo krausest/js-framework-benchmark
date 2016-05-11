@@ -4,7 +4,7 @@
   "description": "Benchmark for TSERS framework",
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",
-    "build-prod": "webpack -d -c webpack.config.js"
+    "build-prod": "webpack -p -c webpack.config.js"
   },
   "devDependencies": {
     "babel-core": "^6.8.0",
