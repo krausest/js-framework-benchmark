@@ -59,10 +59,8 @@ which starts a web browser
 `npm run selenium`
 which runs the seleniums tests
 
-For each framework the results are stored in JSON format in the webdriver-java directory. The scripts makeChart.js and makeTable.js create the final results.
+For each framework the results are stored in JSON format in the webdriver-java directory. The script makeTable.js creates the final results.
 
-Open [http://localhost:8080/webdriver-java/chart.html](http://localhost:8080/webdriver-java/chart.html) or [http://localhost:8080/webdriver-java/table.html](http://localhost:8080/webdriver-java/table.html) for the results
+Open [http://localhost:8080/webdriver-java/table.html](http://localhost:8080/webdriver-java/table.html) for the results
 
-A test showing the durations on my machine can be seen here:
-- [as a chart](https://cdn.rawgit.com/krausest/js-framework-benchmark/054d2d3fd226f5420fafecc60b05a363eb2b302a/webdriver-java/chart.html)
-- [as a table](https://cdn.rawgit.com/krausest/js-framework-benchmark/054d2d3fd226f5420fafecc60b05a363eb2b302a/webdriver-java/table.html)
+A test showing the durations on my machine can be seen [here](https://cdn.rawgit.com/krausest/js-framework-benchmark/a2abc0c745cfe542b4d64e2800052d89114e737b/webdriver-java/table.html)
