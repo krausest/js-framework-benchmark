@@ -33,6 +33,7 @@
       "aurelia-templating-binding": "npm:aurelia-templating-binding@^1.0.0-rc.1.0.0",
       "aurelia-templating-resources": "npm:aurelia-templating-resources@^1.0.0-rc.1.0.0",
       "aurelia-templating-router": "npm:aurelia-templating-router@^1.0.0-rc.1.0.0",
+      "bootstrap": "github:twbs/bootstrap@^3.3.5",
       "fetch": "github:github/fetch@^0.10.1",
       "text": "github:systemjs/plugin-text@^0.0.3"
     },
