@@ -5,50 +5,79 @@
     <title>Table Report</title>
     <link rel="stylesheet" href="../css/github-markdown.css">
     <style>
-	td.top1 {
+    body {
+      overflow:scroll;
+    }
+    table.results {
+        font-size: 10px;
+        table-layout: fixed;
+        overflow:scroll;
+        width: 100%;
+        display: table;
+    }
+    table.results th {
+        width: 50px;
+    }
+    table.results th.benchname {
+        width: 100px;
+    }
+	table.results td {
+	    padding: 3px;
+	}
+	table.results th {
+	    padding: 3px;
+	}
+	.top1 {
 		background-color: #63BF7C;
 	}
-	td.top2 {
+	.top2 {
 		background-color: #D1D580;
 	}
-	td.top3 {
+	.top3 {
 		background-color: #FFEC84;
 	}
-	td.top4 {
+	.top4 {
 		background-color: #FCAA78;
 	}
-	td.top5 {
+	.top5 {
 		background-color: #F9696C;
 	}
 	td {
 		text-align: center;
 	}
+	.rowCount {
+		font-size: 8px;
+	}
 	.deviation {
-		font-size: 0.7em;
-		padding-left: 0.5em;
+		font-size: 8px;
+		padding-left: 5px;
 	}
 	.deviation:before {
 		content: '± ';
 	}
 	.factor {
-		font-size: 0.8em;
+		font-size: 8px;
 	}
 	</style>
 </head>
 <body class="markdown-body">
 <h3>Duration in milliseconds (Slowdown = Duration / Fastest)</h3>
-<table>
+<div class="rescontainer">
+<table class="results">
 <thead>
 <tr>
+	<th class='benchname'></th>
 	{{~it.frameworks :value}}
 		<th>{{=value}}</th>
 	{{~}}
 </tr>
 </thead>
 <tbody>
-{{~it.benches :bench}}
+{{~it.cpubenches :bench}}
 	<tr>
-		<th>{{=bench.name}}</th>
+		<th class='benchname'>{{=bench.name}}
+		<div class="rowCount">{{=bench.description}}</div>
+		</th>
 		{{~bench.tests :test}}
 			{{?test}}
 				<td class="{{=test.class}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
@@ -61,9 +90,36 @@
 <tr>
     <th>Geom. mean</th>
     {{~it.geomMeans :geomMean}}
-        <td class="{{=geomMean.class}}">{{=geomMean.value}}</td>
+        <th class="{{=geomMean.class}}">{{=geomMean.value}}</th>
     {{~}}
 </tr>
 </table>
+<h3>Memory allocation in MBs</h3>
+<table class="results">
+<thead>
+<tr>
+    <th class='benchname'></th>
+	{{~it.frameworks :value}}
+		<th>{{=value}}</th>
+	{{~}}
+</tr>
+</thead>
+<tbody>
+{{~it.membenches :bench}}
+	<tr>
+		<th class='benchname'>{{=bench.name}}
+		<div class="rowCount">{{=bench.description}}</div>
+		</th>
+		{{~bench.tests :test}}
+			{{?test}}
+				<td class="{{=test.class}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
+			{{??}}
+				<td></td>
+			{{?}}
+		{{~}}
+	</tr>
+{{~}}
+</table>
+</div>
 </body>
 </html>

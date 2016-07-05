@@ -120,11 +120,7 @@ public abstract class AbstractCPUBench extends Bench {
 		//   we're using the last paint event to fix measurement
 		Optional<PLogEntry> evt = filtered.stream().filter(pe -> "EventDispatch".equals(pe.getName())).findFirst();
 		long tsEvent = evt.map(pe -> pe.ts+pe.duration).orElse(0L);
-		// First TimerFire
-		Optional<PLogEntry> evtTimer = filtered.stream().filter(pe -> "TimerFire".equals(pe.getName())).filter(pe -> pe.ts > tsEvent).findFirst();
-		long tsEventFire = evtTimer.map(pe -> pe.ts+pe.duration).orElse(0L);
-		// First Paint after TimerFire only for Aurelia
-		long tsAfter = isAurelia && App.BINARY_VERSION > 48 ? tsEventFire : tsEvent;
+		long tsAfter = tsEvent;
 		Optional<PLogEntry> lastPaint = filtered.stream().filter(pe -> "Paint".equals(pe.getName())).
 				filter(pe -> pe.ts > tsAfter).reduce((p1,p2) -> p2);
 

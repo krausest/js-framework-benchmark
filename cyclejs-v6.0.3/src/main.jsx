@@ -96,19 +96,30 @@ function view(state$) {
 		<div className='container'>
 			<div className='jumbotron'>
 				<div className='row'>
-					<div className='col-md-8'>
+					<div className='col-md-6'>
 						<h1>Cycle.js v6.0.3</h1>
 					</div>
-					<div className='col-md-4'>
-						<button type='button' className='btn btn-primary btn-block' id='add'>Add 1000 rows</button>
-						<button type='button' className='btn btn-primary btn-block' id='run'>Create 1000 rows</button>
-						<button type='button' className='btn btn-primary btn-block' id='update'>Update every 10th row</button>
-						<button type='button' className='btn btn-primary btn-block' id='hideall'>HideAll</button>
-						<button type='button' className='btn btn-primary btn-block' id='showall'>ShowAll</button>
-						<button type='button' className='btn btn-primary btn-block' id='runlots'>Create lots of rows</button>
-						<button type='button' className='btn btn-primary btn-block' id='clear'>Clear</button>
-						<button type='button' className='btn btn-primary btn-block' id='swaprows'>Swap Rows</button>
-						<h3 id='duration'><span className='glyphicon glyphicon-remove' aria-hidden='true'></span>&nbsp;</h3>
+					<div className="col-md-6">
+						<div className="row">
+							<div className="col-sm-6 smallpad">
+								<button type='button' className='btn btn-primary btn-block' id='run'>Create 1,000 rows</button>
+							</div>
+							<div className="col-sm-6 smallpad">
+								<button type='button' className='btn btn-primary btn-block' id='runlots'>Create 10,000 rows</button>
+							</div>
+							<div className="col-sm-6 smallpad">
+								<button type='button' className='btn btn-primary btn-block' id='add'>Append 1,000 rows</button>
+							</div>
+							<div className="col-sm-6 smallpad">
+								<button type='button' className='btn btn-primary btn-block' id='update'>Update every 10th row</button>
+							</div>
+							<div className="col-sm-6 smallpad">
+								<button type='button' className='btn btn-primary btn-block' id='clear'>Clear</button>
+							</div>
+							<div className="col-sm-6 smallpad">
+								<button type='button' className='btn btn-primary btn-block' id='swaprows'>Swap Rows</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -130,6 +141,7 @@ function view(state$) {
 				}
 				</tbody>
 			</table>
+			<span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 		</div>
 	);
 }

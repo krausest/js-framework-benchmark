@@ -13,3 +13,11 @@ body {
 .test-data a {
     display: block;
 }
+.preloadicon {
+    position: absolute;
+    top:-20px;
+    left:-20px;
+}
+.col-sm-6.smallpad {
+    padding: 5px;
+}

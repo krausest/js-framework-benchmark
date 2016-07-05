@@ -241,12 +241,31 @@ export class Main {
             }
         }
     }
+    removeAllRows() {
+        // ~258 msecs
+        // for(let i=this.rows.length-1;i>=0;i--) {
+        //     tbody.removeChild(this.rows[i]);
+        // }
+        // ~251 msecs
+        // for(let i=0;i<this.rows.length;i++) {
+        //     tbody.removeChild(this.rows[i]);
+        // }
+        // ~216 msecs
+        var cNode = tbody.cloneNode(false);
+        tbody.parentNode.replaceChild(cNode ,tbody);
+
+        // ~236 msecs
+        // var rangeObj = new Range();
+        // rangeObj.selectNodeContents(tbody);
+        // rangeObj.deleteContents();
+        // ~260 msecs
+        // var last;
+        // while (last = tbody.lastChild) tbody.removeChild(last);
+    }
     hideAll() {
         startMeasure("hideAll");
         this.store.hideAll();
-        for(let i=0;i<this.rows.length;i++) {
-            tbody.removeChild(this.rows[i]);
-        }
+        this.removeAllRows();
         this.rows = [];
         this.data = [];
         this.unselect();
@@ -270,9 +289,7 @@ export class Main {
     }
     clear() {
         startMeasure("clear");
-        for(let i=0;i<this.rows.length;i++) {
-            tbody.removeChild(this.rows[i]);
-        }
+        this.removeAllRows();
         this.store.clear();
         this.rows = [];
         this.data = [];

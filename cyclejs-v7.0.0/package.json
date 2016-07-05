@@ -1,0 +1,24 @@
+{
+  "name": "js-framework-benchmark-cyclejs",
+  "version": "1.0.0",
+  "description": "Benchmark for Cycle.js framework",
+  "scripts": {
+    "build-dev": "webpack -w -d -c webpack.config.js",
+    "build-prod": "webpack -p -c webpack.config.js",
+    "start": "http-server -c-1 ."
+  },
+  "devDependencies": {
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-react-jsx": "^6.8.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "webpack": "^1.13.1"
+  },
+  "dependencies": {
+    "@cycle/dom": "^10.0.5",
+    "@cycle/xstream-run": "^3.0.3",
+    "snabbdom-jsx": "^0.3.0",
+    "xstream": "^5.1.0"
+  }
+}

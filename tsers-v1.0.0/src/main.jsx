@@ -112,7 +112,7 @@ function main(signals) {
 						[
 							h(
 								'div',
-								{ className: 'col-md-8' },
+								{ className: 'col-md-6' },
 								h(
 									'h1',
 									null,
@@ -121,53 +121,79 @@ function main(signals) {
 							),
 							h(
 								'div',
-								{ className: 'col-md-4' },
+								{ className: 'col-md-6' },
 								[
 									h(
-										'button',
-										{ type: 'button', className: 'btn btn-primary btn-block', id: 'add' },
-										'Add 1000 rows'
-									),
-									h(
-										'button',
-										{ type: 'button', className: 'btn btn-primary btn-block', id: 'run' },
-										'Create 1000 rows'
-									),
-									h(
-										'button',
-										{ type: 'button', className: 'btn btn-primary btn-block', id: 'update' },
-										'Update every 10th row'
-									),
-									h(
-										'button',
-										{ type: 'button', className: 'btn btn-primary btn-block', id: 'hideall' },
-										'HideAll'
-									),
-									h(
-										'button',
-										{ type: 'button', className: 'btn btn-primary btn-block', id: 'showall' },
-										'ShowAll'
-									),
-									h(
-										'button',
-										{ type: 'button', className: 'btn btn-primary btn-block', id: 'runlots' },
-										'Create lots of rows'
-									),
-									h(
-										'button',
-										{ type: 'button', className: 'btn btn-primary btn-block', id: 'clear' },
-										'Clear'
-									),
-									h(
-										'button',
-										{ type: 'button', className: 'btn btn-primary btn-block', id: 'swaprows' },
-										'Swap Rows'
-									),
-									h(
-										'h3',
-										{ id: 'duration' },
-										h('span', { className: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' }),
-										' '
+										'div',
+										{ className: 'row' },
+										[
+											h(
+												'div',
+												{ className: 'col-sm-6 smallpad' },
+												[
+													h(
+														'button',
+														{ type: 'button', className: 'btn btn-primary btn-block', id: 'run' },
+														'Create 1,000 rows'
+													)
+												]
+											),
+											h(
+												'div',
+												{ className: 'col-sm-6 smallpad' },
+												[
+													h(
+														'button',
+														{ type: 'button', className: 'btn btn-primary btn-block', id: 'runlots' },
+														'Create 10,000 rows'
+													)
+												]
+											),
+											h(
+												'div',
+												{ className: 'col-sm-6 smallpad' },
+												[
+													h(
+														'button',
+														{ type: 'button', className: 'btn btn-primary btn-block', id: 'add' },
+														'Append 1,000 rows'
+													)
+												]
+											),
+											h(
+												'div',
+												{ className: 'col-sm-6 smallpad' },
+												[
+													h(
+														'button',
+														{ type: 'button', className: 'btn btn-primary btn-block', id: 'update' },
+														'Update every 10th row'
+													)
+												]
+											),
+											h(
+												'div',
+												{ className: 'col-sm-6 smallpad' },
+												[
+													h(
+														'button',
+														{ type: 'button', className: 'btn btn-primary btn-block', id: 'clear' },
+														'Clear'
+													)
+												]
+											),
+											h(
+												'div',
+												{ className: 'col-sm-6 smallpad' },
+												[
+													h(
+														'button',
+														{ type: 'button', className: 'btn btn-primary btn-block', id: 'swaprows' },
+														'Swap Rows'
+													)
+												]
+											)
+										]
 									)
 								]
 							)
@@ -178,7 +204,8 @@ function main(signals) {
 					'table',
 					{ className: 'table table-hover table-striped test-data' },
 					h('tbody', rows)
-				)
+				),
+				h('span', { className: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' })
 			]
 		);
 	}
@@ -196,16 +223,6 @@ function main(signals) {
 	
 	const updateMod$ = DOM.events(vdom$, '#update', 'click').map(() => () => {
 		store.update();
-		return {items: store.data, selected: store.selected};
-	});
-	
-	const hideAllMod$ = DOM.events(vdom$, '#hideall', 'click').map(() => () => {
-		store.hideAll();
-		return {items: store.data, selected: store.selected};
-	});
-	
-	const showAllMod$ = DOM.events(vdom$, '#showall', 'click').map(() => () => {
-		store.showAll();
 		return {items: store.data, selected: store.selected};
 	});
 	
@@ -248,7 +265,7 @@ function main(signals) {
 	
 	return mux({
 		DOM: vdom$,
-		model$: model$.mod(Observable.merge(addMod$, runMod$, updateMod$, hideAllMod$, showAllMod$, runLotsMod$, clearMod$, swapRowsMod$, selectMod$, removeMod$))
+		model$: model$.mod(Observable.merge(addMod$, runMod$, updateMod$, runLotsMod$, clearMod$, swapRowsMod$, selectMod$, removeMod$))
 	});
 };
  

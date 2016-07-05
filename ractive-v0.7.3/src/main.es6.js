@@ -1,7 +1,5 @@
 'use strict';
 
-require('babel-core/lib/babel/polyfill');
-
 const Ractive = require('ractive');
 Ractive.DEBUG = /unminified/.test(function(){/*unminified*/});
 
@@ -58,16 +56,6 @@ class DataStore {
     add() {
         this.data = this.data.concat(this.buildData(1000));
     }
-    hideAll() {
-    	this.backup = this.data;
-        this.data = [];
-        this.selected = undefined;
-    }
-    showAll() {
-        this.data = this.backup;
-        this.backup = null;
-        this.selected = undefined;
-    }
     runLots() {
         this.data = this.buildData(10000);
         this.selected = undefined;
@@ -120,18 +108,6 @@ var ractive = new Ractive({
             store.delete(id);
             stopMeasure();
         });
-        this.on('hideAll', function (event) {
-            startMeasure("hideAll");
-            store.hideAll();
-            this.set("store", store);
-            stopMeasure();
-        });
-        this.on('showAll', function (event) {
-            startMeasure("showAll");
-            store.showAll();
-            this.set("store", store);
-            stopMeasure();
-        });
         this.on('runLots', function (event) {
             startMeasure("runLots");
             store.runLots();
@@ -155,19 +131,30 @@ var ractive = new Ractive({
     template:
     `<div class="jumbotron">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <h1>Ractive v0.7.3</h1>
             </div>
-            <div class="col-md-4">
-                <button type="button" class="btn btn-primary btn-block" id="add" on-click="add">Add 1000 rows</button>
-                <button type="button" class="btn btn-primary btn-block" id="run" on-click="run">Create 1000 rows</button>
-                <button type="button" class="btn btn-primary btn-block" id="update" on-click="partialUpdate">Update every 10th row</button>
-                <button type="button" class="btn btn-primary btn-block" id="hideall" on-click="hideAll">HideAll</button>
-                <button type="button" class="btn btn-primary btn-block" id="showall" on-click="showAll">ShowAll</button>
-                <button type="button" class="btn btn-primary btn-block" id="runlots" on-click="runLots">Create lots of rows</button>
-                <button type="button" class="btn btn-primary btn-block" id="clear" on-click="clear">Clear</button>
-                <button type="button" class="btn btn-primary btn-block" id="swaprows" on-click="swapRows">Swap Rows</button>
-                <h3 id="duration"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;</h3>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="run" on-click="run">Create 1,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="runlots" on-click="runLots">Create 10,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="add" on-click="add">Append 1,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="update" on-click="partialUpdate">Update every 10th row</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="clear" on-click="clear">Clear</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="swaprows" on-click="swapRows">Swap Rows</button>
+                    </div>
+               </div>
             </div>
         </div>
     </div>
@@ -185,6 +172,7 @@ var ractive = new Ractive({
             {{/each}}
         </tbody>
     </table>
+    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
     `
     ,
     data: { store: store, selected: undefined}

@@ -37,20 +37,18 @@ Most actions will try to measure the duration and print it to the console. Depen
 
 ## About the benchmarks
 
-* create 1000 rows: Time for creating a table with 1000 rows after the page loaded.
-* update 1000 rows (hot): Time for updating all 1000 rows of the table. A few iterations to warmup the javascript engine are performed before measuring.
-* partial update: Time to update the text of every 10th row. A few iterations to warmup the javascript engine are performed before measuring.
-* select row: Duration to highlight a row in response to a click on the row. A few iterations to warmup the javascript engine are performed before measuring.
-* remove row: Duration to remove a row. A few iterations to warmup the javascript engine are performed before measuring.
-* hide all: Time for hiding all the rows
-* show all: Timne for showing all the rows (after being hidden)
-* create lots of rows: Time for creating a table lots a rows (currently 10.000).
-* add 1000 rows after lots of rows: Time for adding 1000 rows on a table of add 1000 rows after lots of rows.
-* clear rows: Time to clear the table filled with 10.000 rows
+* create rows: Duration for creating 1000 rows after the page loaded.
+* replace all rows: Duration for updating all 1000 rows of the table (with 5 warmup iterations).
+* partial update: Time to update the text of every 10th row (with 5 warmup iterations).
+* select row: Duration to highlight a row in response to a click on the row. (with 5 warmup iterations).
+* swap rows: Time to swap 2 rows on a 1K table. (with 5 warmup iterations).
+* remove row: Duration to remove a row. (with 5 warmup iterations).
+* create many rows: Duration to create 10,000 rows
+* append rows to large table: Duration for adding 1000 rows on a table of 10,000 rows.
+* clear rows: Duration to clear the table filled with 10.000 rows.
 * clear rows a 2nd time: Time to clear the table filled with 10.000 rows. But warmed up with only one iteration.
-* select row on big list: Time to select a row on a 10K table.
-* swap rows: Time to swap 2 rows (1K table).
-* recycle rows: Time to create 1000 rows after clearing a 1K table.
+* ready memory: Memory usage after page load.
+* run memory: Memory usage after adding 1000 rows.
 
 ## Execute the benchmarks with selenium
 

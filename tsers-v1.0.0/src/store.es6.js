@@ -50,16 +50,6 @@ export class Store {
     select(id) {
         this.selected = id;
     }
-    hideAll() {
-    	this.backup = this.data;
-        this.data = [];
-        this.selected = undefined;
-    }
-    showAll() {
-        this.data = this.backup;
-        this.backup = null;
-        this.selected = undefined;
-    }
     runLots() {
         this.data = this.buildData(10000);
         this.selected = undefined;

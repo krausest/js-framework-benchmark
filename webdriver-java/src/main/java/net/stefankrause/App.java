@@ -1,18 +1,12 @@
 package net.stefankrause;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
-import java.util.stream.Stream;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.*;
@@ -25,50 +19,49 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 public class App {
 	
-    private final static String BINARY = "/Applications/Chromium.app/Contents/MacOS/Chromium";
-    //private final static String BINARY = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+//    private final static String BINARY = "/Applications/Chromium.app/Contents/MacOS/Chromium";
+    private final static String BINARY = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
     //private final static String BINARY = "/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary";
     private final static int REPEAT_RUN = 10;
     private final static int WARMUP_COUNT = 5;
     private final static int DROP_WORST_RUN = 4;
 
+//    private final static Framework frameworks[] = {
+//            new Framework("vanillajs") };
+
     private final static Framework frameworks[] = {
-    	new Framework("angular-v1.5.3"),
-    	new Framework("angular-v2.0.0-beta.15"),
-    	new Framework("aurelia"),
+    	new Framework("angular-v1.5.7"),
+    	new Framework("angular-v2.0.0-rc4"),
+    	new Framework("aurelia-v1.0.0-rc1.0.0"),
     	new Framework("cyclejs-v6.0.3"),
-        new Framework("ember", "ember/dist"),
-        new Framework("inferno-v0.7.6"),
-    	new Framework("mithril-v0.2.4"),
-    	new Framework("plastiq-v1.28.0"),
-        new Framework("plastiq-v1.30.0"),
-    	new Framework("preact-v2.8.3"),
+    	new Framework("cyclejs-v7.0.0"),
+        new Framework("ember-v2.6.1", "ember-v2.6.1/dist"),
+        new Framework("inferno-v0.7.13"),
+    	new Framework("mithril-v0.2.5"),
+        new Framework("plastiq-v1.30.1"),
+    	new Framework("preact-v4.8.0"),
     	new Framework("ractive-v0.7.3"),
     	new Framework("react-v0.14.8"),
-    	new Framework("react-v15.0.1"),
-    	new Framework("react-lite-v0.0.18"),
-    	new Framework("react-lite-v0.15.9"),
+    	new Framework("react-v15.2.0"),
+        new Framework("react-v15.2.0-mobX-v2.3.3"),
+    	new Framework("react-lite-v0.15.14"),
     	new Framework("tsers-v1.0.0"),
         new Framework("vanillajs"),
-        new Framework("vidom-v0.1.7"),
-        new Framework("vue-v1.0.21")
+        new Framework("vidom-v0.3.6"),
+        new Framework("vue-v1.0.26")
     };
     
     private final static Bench[] benches = new Bench[] {
     	new BenchRun(),
-    	new BenchRunHot(),
+    	new BenchReplaceAll(),
     	new BenchUpdate(),
     	new BenchSelect(),
     	new BenchRemove(),
-    	new BenchHideAll(),
-    	new BenchShowAll(),
+        new BenchSwapRows(),
     	new BenchRunBig(),
-    	new BenchRunBigHot(),
+    	new BenchAppendToManyRows(),
     	new BenchClear(),
-    	new BenchClearHot(),
-    	new BenchSelectBig(),
-    	new BenchSwapRows(),
-    	new BenchRecycle(),
+    	new BenchClear2nd(),
     	new BenchReadyMemory(),
     	new BenchRunMemory()
     };
@@ -79,24 +72,26 @@ public class App {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
-            wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("add")));
         }
 
         public void test(WebDriver driver) {
-            WebElement element = driver.findElement(By.id("run"));
+            WebElement element = driver.findElement(By.id("add"));
             element.click();
         }
 
         public String getName() {
-            return "create 1000 rows";
+            return "create rows";
         }
-        
+        public String getDescription() {
+            return "Duration for creating 1000 rows after the page loaded.";
+        }
         public String getPath() {
-            return "01_create1k";
+            return "01_run1k";
         }
     }
 
-    private static class BenchRunHot extends AbstractCPUBench {
+    private static class BenchReplaceAll extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -113,11 +108,14 @@ public class App {
         }
 
         public String getName() {
-            return "update 1000 rows (hot)";
+            return "replace all rows";
+        }
+        public String getDescription() {
+            return "Duration for updating all 1000 rows of the table (with "+WARMUP_COUNT+" warmup iterations).";
         }
         
         public String getPath() {
-            return "02_run1k-hot";
+            return "02_replace1k";
         }
     }
 
@@ -140,9 +138,11 @@ public class App {
         public String getName() {
             return "partial update";
         }
-        
+        public String getDescription() {
+            return "Time to update the text of every 10th row (with "+WARMUP_COUNT+" warmup iterations).";
+        }
         public String getPath() {
-            return "03_" + this.getName().replaceAll("(\\s+)", "-");
+            return "03_update10th1k";
         }
     }
 
@@ -166,10 +166,38 @@ public class App {
         public String getName() {
             return "select row";
         }
-        
-        public String getPath() {
-            return "04_" + this.getName().replaceAll("(\\s+)", "-");
+        public String getDescription() {
+            return "Duration to highlight a row in response to a click on the row. (with "+WARMUP_COUNT+" warmup iterations).";
         }
+        public String getPath() {
+            return "04_select1k";
+        }
+    }
+
+    private static class BenchSwapRows extends AbstractCPUBench {
+        public void init(WebDriver driver, String url) {
+            driver.get("localhost:8080/" + url + "/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
+            element.click();
+            for (int i = 0; i< WARMUP_COUNT; i+=2) {
+                driver.findElement(By.id("swaprows")).click();
+                wait.until(ExpectedConditions.elementToBeClickable(By.id("swaprows")));
+            }
+        }
+
+        public void test(WebDriver driver) {
+            driver.findElement(By.id("swaprows")).click();
+        }
+
+        public String getName() {
+            return "swap rows";
+        }
+        public String getDescription() {
+            return "Time to swap 2 rows on a 1K table. (with "+WARMUP_COUNT+" warmup iterations).";
+        }
+
+        public String getPath() { return "05_swap1k"; }
     }
 
     private static class BenchRemove extends AbstractCPUBench {
@@ -185,6 +213,7 @@ public class App {
         }
 
         public void test(WebDriver driver) {
+            WebDriverWait wait = new WebDriverWait(driver, 10);
             WebElement element = driver.findElement(By.xpath("//tbody/tr[1]/td[3]/a"));
             element.click();
         }
@@ -192,60 +221,15 @@ public class App {
         public String getName() {
             return "remove row";
         }
-        
+        public String getDescription() {
+            return "Duration to remove a row. (with "+WARMUP_COUNT+" warmup iterations).";
+        }
+
         public String getPath() {
-            return "05_" + this.getName().replaceAll("(\\s+)", "-");
+            return "06_remove-one-1k";
         }
     }
-    
-    private static class BenchHideAll extends AbstractCPUBench {
-        public void init(WebDriver driver, String url) {
-            driver.get("localhost:8080/" + url + "/");
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-            element.click();
-            
-            wait.until(ExpectedConditions.elementToBeClickable(By.id("hideall")));
-        }
 
-        public void test(WebDriver driver) {
-           driver.findElement(By.id("hideall")).click();
-        }
-
-        public String getName() {
-            return "hide all";
-        }
-        
-        public String getPath() {
-            return "06_" + this.getName().replaceAll("(\\s+)", "-");
-        }
-    }
-    
-    private static class BenchShowAll extends AbstractCPUBench {
-        public void init(WebDriver driver, String url) {
-            driver.get("localhost:8080/" + url + "/");
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-            element.click();
-            element = wait.until(ExpectedConditions.elementToBeClickable(By.id("hideall")));
-            element.click();
-            
-            wait.until(ExpectedConditions.elementToBeClickable(By.id("showall")));
-        }
-
-        public void test(WebDriver driver) {
-           driver.findElement(By.id("showall")).click();
-        }
-
-        public String getName() {
-            return "show all";
-        }
-        
-        public String getPath() {
-            return "07_" + this.getName().replaceAll("(\\s+)", "-");
-        }
-    }
-    
     private static class BenchRunBig extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
@@ -258,21 +242,24 @@ public class App {
         }
 
         public String getName() {
-            return "create lots of rows";
+            return "create many rows";
         }
-        
+        public String getDescription() {
+            return "Duration to create 10,000 rows";
+        }
+
         public String getPath() {
-            return "08_create10k";
+            return "07_create10k";
         }
     }
-    
-    private static class BenchRunBigHot extends AbstractCPUBench {
+
+    private static class BenchAppendToManyRows extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
             WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
             element.click();
-            
+
             wait.until(ExpectedConditions.elementToBeClickable(By.id("add")));
         }
 
@@ -281,11 +268,16 @@ public class App {
         }
 
         public String getName() {
-            return "add 1000 rows after lots of rows";
+            return "append rows to large table";
         }
-        
+
+        @Override
+        public String getDescription() {
+            return "Duration for adding 1000 rows on a table of 10,000 rows.";
+        }
+
         public String getPath() {
-            return "09_create1k-after10k";
+            return "08_create1k-after10k";
         }
     }
     
@@ -306,26 +298,28 @@ public class App {
         public String getName() {
             return "clear rows";
         }
-        
+        public String getDescription() {
+            return "Duration to clear the table filled with 10.000 rows.";
+        }
+
         public String getPath() {
-            return "10_" + this.getName().replaceAll("(\\s+)", "-");
+            return "09_clear10k";
         }
     }
     
-    private static class BenchClearHot extends AbstractCPUBench {
+    private static class BenchClear2nd extends AbstractCPUBench {
         public void init(WebDriver driver, String url) {
             driver.get("localhost:8080/" + url + "/");
             WebDriverWait wait = new WebDriverWait(driver, 10);
             WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
             element.click();
-            
+            WebElement row = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody/tr[1]/td[2]/a")));
             element = wait.until(ExpectedConditions.elementToBeClickable(By.id("clear")));
             element.click();
-            
+
             element = wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
             element.click();
-            
-            wait.until(ExpectedConditions.elementToBeClickable(By.id("clear")));
+            row = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tbody/tr[1]/td[2]/a")));
         }
 
         public void test(WebDriver driver) {
@@ -335,87 +329,12 @@ public class App {
         public String getName() {
             return "clear rows a 2nd time";
         }
-        
+        public String getDescription() {
+            return "Time to clear the table filled with 10.000 rows. But warmed up with only one iteration.";
+        }
+
         public String getPath() {
-            return "11_clear-rows-2nd-time";
-        }
-    }
-    
-    private static class BenchSelectBig extends AbstractCPUBench {
-        public void init(WebDriver driver, String url) {
-            driver.get("localhost:8080/" + url + "/");
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("runlots")));
-            element.click();
-            
-            for (int i = 0; i< WARMUP_COUNT; i++) {
-                element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//tbody/tr["+(i+1)+"]/td[2]/a")));
-                element.click();
-            }
-        }
-
-        public void test(WebDriver driver) {
-            WebElement element = driver.findElement(By.xpath("//tbody/tr[1]/td[2]/a"));
-            element.click();
-        }
-
-        public String getName() {
-            return "select row on big list";
-        }
-        
-        public String getPath() {
-            return "12_select-row-10k";
-        }
-    }
-    
-    private static class BenchSwapRows extends AbstractCPUBench {
-        public void init(WebDriver driver, String url) {
-            driver.get("localhost:8080/" + url + "/");
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-            element.click();
-            for (int i = 0; i< WARMUP_COUNT; i+=2) {
-                driver.findElement(By.id("swaprows")).click();
-                wait.until(ExpectedConditions.elementToBeClickable(By.id("swaprows")));
-            }
-        }
-
-        public void test(WebDriver driver) {
-            driver.findElement(By.id("swaprows")).click();
-        }
-
-        public String getName() {
-            return "swap rows";
-        }
-        
-        public String getPath() {
-            return "13_" + this.getName().replaceAll("(\\s+)", "-");
-        }
-    }
-    
-    private static class BenchRecycle extends AbstractCPUBench {
-        public void init(WebDriver driver, String url) {
-            driver.get("localhost:8080/" + url + "/");
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-            element.click();
-            
-            element = wait.until(ExpectedConditions.elementToBeClickable(By.id("clear")));
-            element.click();
-            
-            wait.until(ExpectedConditions.elementToBeClickable(By.id("run")));
-        }
-
-        public void test(WebDriver driver) {
-            driver.findElement(By.id("run")).click();
-        }
-
-        public String getName() {
-            return "recycle rows";
-        }
-        
-        public String getPath() {
-            return "14_" + this.getName().replaceAll("(\\s+)", "-");
+            return "10_clear-2nd-time10k";
         }
     }
     
@@ -432,9 +351,12 @@ public class App {
         public String getName() {
             return "ready memory";
         }
-        
+        public String getDescription() {
+            return "Memory usage after page load.";
+        }
+
         public String getPath() {
-            return "15_" + this.getName().replaceAll("(\\s+)", "-");
+            return "21_" + this.getName().replaceAll("(\\s+)", "-");
         }
     }
     
@@ -453,9 +375,12 @@ public class App {
         public String getName() {
             return "run memory";
         }
-        
+        public String getDescription() {
+            return "Memory usage after adding 1000 rows.";
+        }
+
         public String getPath() {
-            return "16_" + this.getName().replaceAll("(\\s+)", "-");
+            return "22_" + this.getName().replaceAll("(\\s+)", "-");
         }
     }
 
@@ -522,6 +447,7 @@ public class App {
         line.append("{");
         line.append("\n\t\"framework\": \"").append(framework).append("\"");
         line.append(",\n\t\"benchmark\": \"").append(bench.getName()).append("\"");
+        line.append(",\n\t\"description\": \"").append(bench.getDescription()).append("\"");
         line.append(",\n\t\"type\": \"").append(bench.getType()).append("\"");
         line.append(",\n\t\"min\": ").append(nf.format(summary.getMin()));
         line.append(",\n\t\"max\": ").append(nf.format(summary.getMax()));

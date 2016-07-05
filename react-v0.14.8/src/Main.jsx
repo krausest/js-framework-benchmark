@@ -32,8 +32,6 @@ export class Main extends React.Component{
         this.add = this.add.bind(this);
         this.run = this.run.bind(this);
         this.update = this.update.bind(this);
-        this.hideAll = this.hideAll.bind(this);
-        this.showAll = this.showAll.bind(this);
         this.runLots = this.runLots.bind(this);
         this.clear = this.clear.bind(this);
         this.swapRows = this.swapRows.bind(this);
@@ -73,16 +71,6 @@ export class Main extends React.Component{
         this.state.store.delete(id);
         this.setState({store: this.state.store});
     }
-    hideAll() {
-        startMeasure("hideAll");
-        this.state.store.hideAll();
-        this.setState({store: this.state.store});
-    }
-    showAll() {
-        startMeasure("showAll");
-        this.state.store.showAll();
-        this.setState({store: this.state.store});
-    }
     runLots() {
         startMeasure("runLots");
         this.state.store.runLots();
@@ -105,19 +93,30 @@ export class Main extends React.Component{
         return (<div className="container">
             <div className="jumbotron">
                 <div className="row">
-                    <div className="col-md-8">
+                    <div className="col-md-6">
                         <h1>React v0.14.8</h1>
                     </div>
-                    <div className="col-md-4">
-                        <button type="button" className="btn btn-primary btn-block" id="add" onClick={this.add}>Add 1000 rows</button>
-                        <button type="button" className="btn btn-primary btn-block" id="run" onClick={this.run}>Create 1000 rows</button>
-                        <button type="button" className="btn btn-primary btn-block" id="update" onClick={this.update}>Update every 10th row</button>
-                        <button type="button" className="btn btn-primary btn-block" id="hideall" onClick={this.hideAll}>HideAll</button>
-                        <button type="button" className="btn btn-primary btn-block" id="showall" onClick={this.showAll}>ShowAll</button>
-                        <button type="button" className="btn btn-primary btn-block" id="runlots" onClick={this.runLots}>Create lots of rows</button>
-                        <button type="button" className="btn btn-primary btn-block" id="clear" onClick={this.clear}>Clear</button>
-                        <button type="button" className="btn btn-primary btn-block" id="swaprows" onClick={this.swapRows}>Swap Rows</button>
-                        <h3 id="duration"><span className="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;</h3>
+                    <div className="col-md-6">
+                        <div className="row">
+                            <div className="col-sm-6 smallpad">
+                                <button type="button" className="btn btn-primary btn-block" id="run" onClick={this.run}>Create 1,000 rows</button>
+                            </div>
+                            <div className="col-sm-6 smallpad">
+                                <button type="button" className="btn btn-primary btn-block" id="runlots" onClick={this.runLots}>Create 10,000 rows</button>
+                            </div>
+                            <div className="col-sm-6 smallpad">
+                                <button type="button" className="btn btn-primary btn-block" id="add" onClick={this.add}>Append 1,000 rows</button>
+                            </div>
+                            <div className="col-sm-6 smallpad">
+                                <button type="button" className="btn btn-primary btn-block" id="update" onClick={this.update}>Update every 10th row</button>
+                            </div>
+                            <div className="col-sm-6 smallpad">
+                                <button type="button" className="btn btn-primary btn-block" id="clear" onClick={this.clear}>Clear</button>
+                            </div>
+                            <div className="col-sm-6 smallpad">
+                                <button type="button" className="btn btn-primary btn-block" id="swaprows" onClick={this.swapRows}>Swap Rows</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -126,6 +125,7 @@ export class Main extends React.Component{
                     {rows}
                 </tbody>
             </table>
-            </div>);
+            <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </div>);
     }
 }

@@ -9,6 +9,7 @@ import java.util.List;
 public abstract class Bench {
 	public abstract Double run(ChromeDriver driver, Framework framework, double lastWait) throws Exception;
 	public abstract String getName();
+	public abstract String getDescription();
 	public abstract String getPath();
 	public abstract String getType();
 

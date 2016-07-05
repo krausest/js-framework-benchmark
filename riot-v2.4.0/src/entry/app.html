@@ -1,0 +1,45 @@
+/*global riot */
+<app>
+	<div class="container">
+		<div class="jumbotron">
+			<div class="row">
+				<div class="col-md-8">
+					<h1>riot v2.4.0</h1>
+				</div>
+				<div class="col-md-4">
+					<button type="button" class="btn btn-primary btn-block" id="add" onclick={add} ref="text">Add 1000 rows</button>
+					<button type="button" class="btn btn-primary btn-block" id="run" onclick={run} ref="text">Create 1000 rows</button>
+					<button type="button" class="btn btn-primary btn-block" id="_update" onclick={_update}>Update every 10th row</button>
+					<h3 id="duration"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;</h3>
+				</div>
+			</div>
+		</div>
+		<table class="table table-hover table-striped test-data">
+			<tr each={ item, i in this.opts.data } class="{ danger: item.id === this.opts.selected }">
+				<td class="col-md-1">{ item.id }</td>
+				<td class="col-md-4">
+					<a onclick="{select(item.if)}">{ item.label }</a>
+				</td>
+				<td class="col-md-1">
+					<a onclick="{delete}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+				</td>
+				<td class="col-md-6"></td>
+			</tr>
+		</table>
+	</div>
+	<script>
+	'use strict';
+	add() {
+		this.opts.add();
+		this.update();
+	};
+	select(id) {
+		console.log("select",id);
+		this.update();
+	};
+	_update() {
+		this.opts.update();
+		this.update();
+	};
+	</script>
+</app>
