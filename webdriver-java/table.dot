@@ -11,12 +11,12 @@
     table.results {
         font-size: 10px;
         table-layout: fixed;
-        overflow:scroll;
-        width: 100%;
+        width: 1px;
+        overflow:visible;
         display: table;
     }
     table.results th {
-        width: 50px;
+        width: 60px;
     }
     table.results th.benchname {
         width: 100px;
@@ -62,7 +62,6 @@
 </head>
 <body class="markdown-body">
 <h3>Duration in milliseconds (Slowdown = Duration / Fastest)</h3>
-<div class="rescontainer">
 <table class="results">
 <thead>
 <tr>
@@ -88,9 +87,10 @@
 	</tr>
 {{~}}
 <tr>
-    <th>Geom. mean</th>
+    <th>slowdown geometric mean</th>
     {{~it.geomMeans :geomMean}}
-        <th class="{{=geomMean.class}}">{{=geomMean.value}}</th>
+        <th class="{{=geomMean.class}}">{{=geomMean.value}}
+        </th>
     {{~}}
 </tr>
 </table>
@@ -120,6 +120,5 @@
 	</tr>
 {{~}}
 </table>
-</div>
 </body>
 </html>
