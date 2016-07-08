@@ -121,7 +121,6 @@ function view(state$) {
 			<table className='table table-hover table-striped test-data'>
 				<tbody>
 				{
-					console.log(state),
 					state.items.map(item =>
 						<tr id={item.id} className={state.selected === item.id ? 'danger' : ''}>
 							<td className='col-md-1'>{item.id}</td>
@@ -137,6 +136,7 @@ function view(state$) {
 				}
 				</tbody>
 			</table>
+			<span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 		</div>
 	);
 }
