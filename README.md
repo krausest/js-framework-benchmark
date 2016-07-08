@@ -63,4 +63,4 @@ For each framework the results are stored in JSON format in the webdriver-java d
 
 Open [http://localhost:8080/webdriver-java/table.html](http://localhost:8080/webdriver-java/table.html) for the results
 
-A test showing the durations on my machine can be seen [here](https://cdn.rawgit.com/krausest/js-framework-benchmark/3b380aeeaf290d2f9d9aa7767c3a1a1ccee9c4c3/webdriver-java/table.html)
+A test showing the durations on my machine can be seen [here](https://cdn.rawgit.com/krausest/js-framework-benchmark/a358bc967e1d9ff0c268b43f5ab8b832abe0476e/webdriver-java/table.html)
