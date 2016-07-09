@@ -39,14 +39,16 @@
         </div>
     </div>
     <table class="table table-hover table-striped test-data">
-        <tr ng-repeat="item in homeController.data track by item.id" ng-class="{ danger: item.id === homeController.selected }">
-            <td class="col-md-1">{{item.id}}</td>
-            <td class="col-md-4">
-                <a ng-click="homeController.select(item)">{{item.label}}</a>
-            </td>
-            <td class="col-md-1"><a ng-click="homeController.del(item)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-            <td class="col-md-6"></td>
-        </tr>
+        <tbody>
+            <tr ng-repeat="item in homeController.data track by item.id" ng-class="{ danger: item.id === homeController.selected }">
+                <td class="col-md-1">{{item.id}}</td>
+                <td class="col-md-4">
+                    <a ng-click="homeController.select(item)">{{item.label}}</a>
+                </td>
+                <td class="col-md-1"><a ng-click="homeController.del(item)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                <td class="col-md-6"></td>
+            </tr>
+        </tbody>
     </table>
     <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 </div>

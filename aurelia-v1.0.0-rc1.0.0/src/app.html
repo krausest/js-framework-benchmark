@@ -28,14 +28,16 @@
             </div>
         </div>
         <table class="table table-hover table-striped test-data">
-            <tr repeat.for="item of rows" class="${ item.id === selected ? 'danger' : ''}">
-                <td class="col-md-1">${item.id}</td>
-                <td class="col-md-4">
-                    <a click.trigger="select(item)">${item.label}</a>
-                </td>
-                <td class="col-md-1"><a click.trigger="remove(item)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-                <td class="col-md-6"></td>
-            </tr>
+            <tbody>
+                <tr repeat.for="item of rows" class="${ item.id === selected ? 'danger' : ''}">
+                    <td class="col-md-1">${item.id}</td>
+                    <td class="col-md-4">
+                        <a click.trigger="select(item)">${item.label}</a>
+                    </td>
+                    <td class="col-md-1"><a click.trigger="remove(item)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                    <td class="col-md-6"></td>
+                </tr>
+            </tbody>
         </table>
         <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
     </div>

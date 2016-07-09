@@ -38,14 +38,16 @@ interface Data {
 			</div>
 		</div>
 		<table class="table table-hover table-striped test-data">
-			<tr [class.danger]="item.id === selected" *ngFor="let item of data">
-				<td class="col-md-1">{{item.id}}</td>
-				<td class="col-md-4">
-					<a href="#" (click)="select(item, $event)">{{item.label}}</a>
-				</td>
-				<td class="col-md-1"><a href="#" (click)="delete(item, $event)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-				<td class="col-md-6"></td>
-			</tr>
+		    <tbody>
+                <tr [class.danger]="item.id === selected" *ngFor="let item of data">
+                    <td class="col-md-1">{{item.id}}</td>
+                    <td class="col-md-4">
+                        <a href="#" (click)="select(item, $event)">{{item.label}}</a>
+                    </td>
+                    <td class="col-md-1"><a href="#" (click)="delete(item, $event)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                    <td class="col-md-6"></td>
+                </tr>
+			</tbody>
 		</table>
 		<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 	</div>
