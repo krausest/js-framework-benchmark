@@ -1,0 +1,33 @@
+{
+  "name": "js-framework-benchmark-bobril",
+  "version": "1.0.0",
+  "description": "Bobril demo",
+  "main": "src/app.js",
+  "scripts": {
+    "build-dev": "bb",
+    "build-prod": "bb b -v dist",
+    "start": "http-server -c-1 ."
+  },
+  "keywords": [
+    "bobril",
+    "bobril-build"
+  ],
+  "author": "Boris Letocha",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "bobril-build": "*"
+  },
+  "dependencies": {
+    "bobril": "^4.42.0"
+  },
+  "bobril": {
+    "title": "Bobril v4.42.0",
+    "dir": ".",
+    "head": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+  }
+}
