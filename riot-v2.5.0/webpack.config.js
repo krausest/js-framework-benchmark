@@ -25,7 +25,7 @@ module.exports = [{
 		loaders: loaders
 	},
 	entry: {
-		main: './src/entry/main',
+		main: './src/main',
 	},
 	output: {
 		path: './dist',

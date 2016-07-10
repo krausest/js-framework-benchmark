@@ -14,6 +14,6 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
-    "riot": "2.4.1"
+    "riot": "2.5.0"
   }
 }
