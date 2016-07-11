@@ -19,7 +19,7 @@ export class Store {
     }
     updateData(mod = 10) {
         for (let i=0;i<this.data.length;i+=10) {
-            this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+            this.data[i].label += ' !!!';
         }
     }
     delete(id) {
@@ -68,8 +68,9 @@ export class Store {
     swapRows() {
         if(this.data.length > 10) {
             var a = this.data[4];
-            this.data[4] = this.data[9];
-            this.data[9] = a;
+            var b = this.data[9];
+            this.data.splice(4, 1, b);
+            this.data.splice(9, 1, a);
         }
     }
 
