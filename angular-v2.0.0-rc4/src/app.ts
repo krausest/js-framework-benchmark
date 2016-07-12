@@ -57,7 +57,7 @@ let stopMeasure = function() {
 		</div>
 		<table class="table table-hover table-striped test-data">
 		    <tbody>
-                <tr [class.danger]="item.id === selected" *ngFor="let item of data">
+                <tr [class.danger]="item.id === selected" *ngFor="let item of data trackBy itemById">
                     <td class="col-md-1">{{item.id}}</td>
                     <td class="col-md-4">
                         <a href="#" (click)="select(item, $event)">{{item.label}}</a>
@@ -76,10 +76,10 @@ export class App implements AfterViewChecked {
     selected: number = undefined;
     id: number = 1;
     backup: Array<Data> = undefined;
-    
+
     constructor() {
     }
-    
+
     buildData(count: number = 1000): Array<Data> {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
         var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
@@ -94,6 +94,10 @@ export class App implements AfterViewChecked {
 
     _random(max: number) {
         return Math.round(Math.random()*1000)%max;
+    }
+
+    itemById(index: number, item: Data) {
+      return item.id;
     }
 
     select(item: Data, event: Event) {
@@ -147,7 +151,6 @@ export class App implements AfterViewChecked {
     		this.data[9] = a;
     	}
     }
-
     ngAfterViewChecked() {
         stopMeasure();
     }
