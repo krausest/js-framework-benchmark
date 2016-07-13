@@ -27,6 +27,7 @@ build/Release
 node_modules
 jspm_packages
 bower_components
+dist
 
 .idea
 .DS_Store

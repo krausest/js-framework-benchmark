@@ -262,23 +262,6 @@ export class Main {
         // var last;
         // while (last = tbody.lastChild) tbody.removeChild(last);
     }
-    hideAll() {
-        startMeasure("hideAll");
-        this.store.hideAll();
-        this.removeAllRows();
-        this.rows = [];
-        this.data = [];
-        this.unselect();
-        stopMeasure();
-    }
-    showAll() {
-        startMeasure("showAll");
-        this.store.showAll();
-        this.updateRows();
-        this.appendRows();
-        this.unselect();
-        stopMeasure();
-    }
     runLots() {
         startMeasure("runLots");
         this.store.runLots();
