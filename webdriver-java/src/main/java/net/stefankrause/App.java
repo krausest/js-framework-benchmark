@@ -33,7 +33,7 @@ public class App {
     	new Framework("angular-v1.5.7"),
     	new Framework("angular-v2.0.0-rc4"),
     	new Framework("aurelia-v1.0.0-rc1.0.0"),
-    	new Framework("bobril-v4.42.0"),
+    	new Framework("bobril-v4.43.0"),
     	new Framework("cyclejs-v6.0.3"),
     	new Framework("cyclejs-v7.0.0"),
         new Framework("ember-v2.6.1", "ember-v2.6.1/dist"),

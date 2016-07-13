@@ -23,10 +23,10 @@
     "bobril-build": "*"
   },
   "dependencies": {
-    "bobril": "^4.42.0"
+    "bobril": "^4.43.0"
   },
   "bobril": {
-    "title": "Bobril v4.42.0",
+    "title": "Bobril v4.43.0",
     "dir": ".",
     "head": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
   }
