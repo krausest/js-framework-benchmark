@@ -25,7 +25,7 @@ module.exports = [{
 		loaders: loaders
 	},
 	entry: {
-		main: './src/entry/main',
+		main: './src/main',
 	},
 	output: {
 		path: './dist',
@@ -35,8 +35,10 @@ module.exports = [{
 	resolve: {
 		extensions: extensions,
 		root: [
-			__dirname,
 			__dirname + '/src'
-		]
+		],
+		alias: {
+			"riot": __dirname+"/node_modules/riot/riot.min.js",
+		}
 	}
 }];

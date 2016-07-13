@@ -1,134 +1,64 @@
-import {inject, TaskQueue} from 'aurelia-framework';
+import {Store} from './store';
 
-function _random(max) {
-    return Math.round(Math.random() * 1000) % max;
+var startTime;
+var lastMeasure;
+var startMeasure = function(name) {
+    startTime = performance.now();
+    lastMeasure = name;
+}
+var stopMeasure = function() {
+    window.setTimeout(function() {
+        var stop = performance.now();
+        console.log(lastMeasure+" took "+(stop-startTime));
+    }, 0);
 }
 
-class Store {
-    constructor() {
-        this.data = [];
-        this.selected = undefined;
-        this.id = 1;
-    }
-
-    buildData(count = 1000) {
-        var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-        var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-        var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-        var data = [];
-        for (var i = 0; i < count; i++)
-            data.push({
-                id: this.id++,
-                label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)]
-            });
-        return data;
-    }
-
-    updateData(mod = 10) {
-        // Just assigning setting each tenth this.data doesn't cause a redraw, the following does:
-        var newData = [];
-        for (let i = 0; i < this.data.length; i ++) {
-        	newData[i] = this.data[i];
-            if (i%10===0) {
-                newData[i].label += ' !!!';
-            }
-        }
-        this.data = newData;
-    }
-
-    delete(id) {
-        let idx = this.data.findIndex(d => d.id == id);
-        this.data.splice(idx, 1);
-        this.data = this.data;
-    }
-
-    run() {
-        this.data = this.buildData();
-        this.selected = undefined;
-    }
-
-    add() {
-        this.data = this.data.concat(this.buildData(1000));
-        this.selected = undefined;
-    }
-
-    update() {
-        this.updateData();
-        this.selected = undefined;
-    }
-
-    select(id) {
-        this.selected = id;
-    }
-    
-    runLots() {
-        this.data = this.buildData(10000);
-        this.selected = undefined;
-    }
-    
-    clear() {
-        this.data = [];
-        this.selected = undefined;
-    }
-    
-    swapRows() {
-    	if(this.data.length > 10) {
-    		let d4 = this.data[4];
-			let d9 = this.data[9];
-			
-			var newData = this.data.map(function(data, i) {
-				if(i === 4) {
-					return d9;
-				}
-				else if(i === 9) {
-					return d4;
-				}
-				return data;
-			});
-			this.data = newData;
-    	}
-    }
-}
-
-@inject(TaskQueue)
 export class App {
-    constructor(taskQueue) {
+    constructor() {
         this.store = new Store();
-        this.taskQueue = taskQueue;
-    }
-
-    get rows() {
-        return this.store.data;
-    }
-    get selected() {
-        return this.store.selected;
     }
 
     run() {
+        startMeasure("run");
         this.store.run();
+        stopMeasure();
     }
     add() {
+        startMeasure("add");
         this.store.add();
+        stopMeasure();
     }
     remove(item) {
+        startMeasure("delete");
         this.store.delete(item.id);
+        stopMeasure();
     }
     select(item) {
+        startMeasure("select");
         this.store.select(item.id);
+        stopMeasure();
     }
     update() {
+        startMeasure("update");
         this.store.update();
+        stopMeasure();
     }
-    
+
     runLots() {
+        startMeasure("runLots");
         this.store.runLots();
+        stopMeasure();
     }
-    
+
     clear() {
+        startMeasure("clear");
         this.store.clear();
+        stopMeasure();
     }
-    
+
     swapRows() {
+        startMeasure("swapRows");
         this.store.swapRows();
+        stopMeasure();
     }
 }

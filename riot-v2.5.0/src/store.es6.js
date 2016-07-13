@@ -4,6 +4,24 @@ function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
 
+var startTime;
+var lastMeasure;
+var startMeasure = function(name) {
+    startTime = performance.now();
+    lastMeasure = name;
+}
+var stopMeasure = function() {
+    var last = lastMeasure;
+    if (lastMeasure) {
+        window.setTimeout(function () {
+            lastMeasure = null;
+            var stop = performance.now();
+            var duration = 0;
+            console.log(last+" took "+(stop-startTime));
+        }, 0);
+    }
+}
+
 export class Store {
     constructor() {
         this.data = [];
@@ -25,46 +43,49 @@ export class Store {
         }
     }
     delete(id) {
+        startMeasure("delete");
         const idx = this.data.findIndex(d => d.id==id);
-        this.data = this.data.filter((e,i) => i!=idx);
+        this.data.splice(idx, 1);
         return this;
     }
     run() {
+        startMeasure("run");
         this.data = this.buildData();
         this.selected = undefined;
     }
     add() {
+        startMeasure("add");
         this.data = this.data.concat(this.buildData(1000));
         this.selected = undefined;
     }
     update() {
+        startMeasure("update");
         this.updateData();
         this.selected = undefined;
     }
     select(id) {
-        console.log("select",e,id);
+        startMeasure("select");
         this.selected = id;
     }
-    hideAll(e) {
-        e.preventDefault();
-    	this.backup = this.data;
-        this.data = [];
-        this.selected = undefined;
-    }
-    showAll(e) {
-        e.preventDefault();
-        this.data = this.backup;
-        this.backup = null;
-        this.selected = undefined;
-    }
-    runLots(e) {
-        e.preventDefault();
+    runLots() {
+        startMeasure("runLots");
         this.data = this.buildData(10000);
         this.selected = undefined;
     }
-    clear(e) {
-        e.preventDefault();
+    clear() {
+        startMeasure("clear");
         this.data = [];
         this.selected = undefined;
+    }
+    swapRows() {
+        startMeasure("swapRows");
+        if(this.data.length > 10) {
+            var a = this.data[4];
+            this.data[4] = this.data[9];
+            this.data[9] = a;
+        }
+    }
+    updated() {
+        stopMeasure();
     }
 }
