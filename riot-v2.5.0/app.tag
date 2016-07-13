@@ -32,16 +32,7 @@
 		</div>
 		<table class="table table-hover table-striped test-data">
 			<tbody>
-				<tr each={ item in this.opts.data } class="{item.id == parent.opts.selected ? class='danger' : ''}">
-					<td class="col-md-1">{ item.id }</td>
-					<td class="col-md-4">
-						<a onclick={parent.select}>{ item.label }</a>
-					</td>
-					<td class="col-md-1">
-						<a onclick={parent.remove}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-					</td>
-					<td class="col-md-6"></td>
-				</tr>
+					<tr riot-tag="row" each={this.opts.data} data={this} no-reorder/>
 			</tbody>
 		</table>
 		<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -60,40 +51,30 @@
 		});
 		elem.appendChild(button);
 	})
-	this.on('updated', function() {
-		this.opts.updated();
-	})
 	run() {
 		this.opts.run();
-		this.update();
 	};
 	runLots() {
 		this.opts.runLots();
-		this.update();
 	};
 	add() {
 		this.opts.add();
-		this.update();
 	};
 	_update() {
 		this.opts.update();
-		this.update();
+		this.update(); // Why is that neccessary?
 	};
 	clear() {
 		this.opts.clear();
-		this.update();
 	};
 	swapRows() {
 		this.opts.swapRows();
-		this.update();
 	};
 	select(evt) {
 		this.opts.select(evt.item.item.id);
-		this.update();
 	};
 	remove(evt) {
 		this.opts.delete(evt.item.item.id);
-		this.update();
 	};
 	</script>
 </app>

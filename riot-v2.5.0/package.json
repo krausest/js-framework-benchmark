@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for riot framework",
   "scripts": {
-    "build-dev": "riot --whitespace -m app.tag src && webpack -w -d -c webpack.config.js",
-    "build-prod": "riot --whitespace -m app.tag src && webpack -d -c webpack.config.js",
+    "build-dev": "riot --whitespace -m row.tag src && riot --whitespace -m app.tag src && webpack -w -d -c webpack.config.js",
+    "build-prod": "riot --whitespace -m row.tag src && riot --whitespace -m app.tag src && webpack -d -c webpack.config.js",
     "start": "http-server -c-1 ."
   },
   "devDependencies": {

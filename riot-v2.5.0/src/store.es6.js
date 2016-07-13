@@ -39,43 +39,50 @@ export class Store {
     }
     updateData(mod = 10) {
         for (let i=0;i<this.data.length;i+=10) {
-            this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+            this.data[i].label += ' !!!';
         }
     }
     delete(id) {
         startMeasure("delete");
         const idx = this.data.findIndex(d => d.id==id);
         this.data.splice(idx, 1);
+        stopMeasure();
         return this;
     }
     run() {
         startMeasure("run");
         this.data = this.buildData();
         this.selected = undefined;
+        stopMeasure();
     }
     add() {
         startMeasure("add");
         this.data = this.data.concat(this.buildData(1000));
         this.selected = undefined;
+        stopMeasure();
     }
     update() {
         startMeasure("update");
         this.updateData();
         this.selected = undefined;
+        stopMeasure();
     }
     select(id) {
         startMeasure("select");
         this.selected = id;
+        stopMeasure();
     }
     runLots() {
         startMeasure("runLots");
         this.data = this.buildData(10000);
         this.selected = undefined;
+        stopMeasure();
     }
     clear() {
         startMeasure("clear");
         this.data = [];
         this.selected = undefined;
+        stopMeasure();
     }
     swapRows() {
         startMeasure("swapRows");
@@ -84,8 +91,6 @@ export class Store {
             this.data[4] = this.data[9];
             this.data[9] = a;
         }
-    }
-    updated() {
         stopMeasure();
     }
 }
