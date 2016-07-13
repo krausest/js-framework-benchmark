@@ -44,12 +44,15 @@ public class App {
     	new Framework("ractive-v0.7.3"),
     	new Framework("react-v0.14.8"),
     	new Framework("react-v15.2.0"),
+    	new Framework("riot-v2.5.0"),
         new Framework("react-v15.2.0-mobX-v2.3.3"),
     	new Framework("react-lite-v0.15.14"),
     	new Framework("tsers-v1.0.0"),
         new Framework("vanillajs"),
+        new Framework("vanillajs2"),
         new Framework("vidom-v0.3.6"),
-        new Framework("vue-v1.0.26")
+        new Framework("vue-v1.0.26"),
+        new Framework("vue-v2.0.0-beta1")
     };
     
     private final static Bench[] benches = new Bench[] {
