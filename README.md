@@ -50,6 +50,9 @@ Most actions will try to measure the duration and print it to the console. Depen
 * ready memory: Memory usage after page load.
 * run memory: Memory usage after adding 1000 rows.
 
+For all benchmarks the duration is measured including rendering time. You can read some details on this [article](http://www.stefankrause.net/wp/?p=218).
+The results of this benchmark is outlined on by blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283) and [round 3](http://www.stefankrause.net/wp/?p=301))
+
 ## Execute the benchmarks with selenium
 
 You need to have a current java and maven installation to run the automated benchmark.
