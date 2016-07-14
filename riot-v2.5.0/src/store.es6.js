@@ -58,13 +58,11 @@ export class Store {
     add() {
         startMeasure("add");
         this.data = this.data.concat(this.buildData(1000));
-        this.selected = undefined;
         stopMeasure();
     }
     update() {
         startMeasure("update");
         this.updateData();
-        this.selected = undefined;
         stopMeasure();
     }
     select(id) {

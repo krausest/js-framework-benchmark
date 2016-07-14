@@ -34,11 +34,9 @@ export class Store {
     }
     add() {
         this.data = this.data.concat(this.buildData());
-        this.selected = undefined;
     }
     update() {
         this.updateData();
-        this.selected = undefined;
     }
     select(id) {
         this.selected = id;

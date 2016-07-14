@@ -42,7 +42,6 @@ export class Store {
     }
     update() {
         this.updateData();
-        this.selected = undefined;
     }
     select(id) {
         this.selected = id;

@@ -34,7 +34,6 @@ export class Store {
     }
     add() {
         this.data = this.data.concat(this.buildData(1000));
-        this.selected = undefined;
     }
     update() {
         this.updateData();

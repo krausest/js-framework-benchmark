@@ -62,13 +62,11 @@ export default Ember.Service.extend({
   add() {
     startMeasure("add");
     this.set('data', this.data.concat(this.buildData(1000)));
-    this.set('selected', undefined);
     stopMeasure();
   },
   update() {
     startMeasure("update");
     this.set('data', this.updateData());
-    this.set('selected', undefined);
     stopMeasure();
   },
   select(id) {

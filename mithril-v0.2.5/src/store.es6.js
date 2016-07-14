@@ -37,7 +37,6 @@ var Store = {
     },
     add: function() {
         this.data = [].concat(this.data, this.buildData(1000));
-        this.selected = undefined;
     },
     select: function(id) {
         this.selected = id;
