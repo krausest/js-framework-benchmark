@@ -4,7 +4,7 @@ function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
 
-class Store {
+export class Store {
     constructor() {
         this.data = [];
         this.selected = undefined;
@@ -38,7 +38,6 @@ class Store {
     }
     update() {
         this.updateData();
-        this.selected = undefined;
     }
     select(id) {
         this.selected = id;

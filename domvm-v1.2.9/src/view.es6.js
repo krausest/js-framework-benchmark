@@ -1,5 +1,8 @@
 'use strict';
 
+import {Store} from './store'
+import domvm from 'domvm'
+
 var startTime;
 var lastMeasure;
 var startMeasure = function(name) {
