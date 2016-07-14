@@ -14,9 +14,7 @@ export class Row extends React.Component {
 		this.onDelete = this.onDelete.bind(this);
 		this.onClick = this.onClick.bind(this);
 	}
-	shouldComponentUpdate(nextProps, nextState) {
-		return nextProps.data !== this.props.data || nextProps.styleClass !== this.props.styleClass;
-	}
+
 //	componentDidUpdate() {
 //		window.rowsUpdated++;
 //	}
@@ -25,15 +23,15 @@ export class Row extends React.Component {
 //	}
 
 	onDelete() {
-		this.props.onDelete(this.props.data.id);
+		this.props.onDelete(this.props.data);
 	}
 	onClick() {
-		this.props.onClick(this.props.data.id);
+		this.props.onClick(this.props.data);
 	}
 
 	render() {
-		let {styleClass, onClick, onDelete, data} = this.props;
-		return (<tr className={styleClass}>
+		let {onClick, onDelete, data} = this.props;
+		return (<tr className={data.isSelected ? 'danger' : ''}>
 			<td className="col-md-1">{data.id}</td>
 			<td className="col-md-4">
 				<a onClick={this.onClick}>{data.label}</a>

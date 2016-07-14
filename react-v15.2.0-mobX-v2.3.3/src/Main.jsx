@@ -61,13 +61,13 @@ export class Main extends React.Component{
         startMeasure("update");
         this.props.store.update();
     }
-    select(id) {
+    select(row) {
         startMeasure("select");
-        this.props.store.select(id);
+        this.props.store.select(row);
     }
-    delete(id) {
+    delete(row) {
         startMeasure("delete");
-        this.props.store.delete(id);
+        this.props.store.delete(row);
     }
     runLots() {
         startMeasure("runLots");
@@ -83,7 +83,7 @@ export class Main extends React.Component{
     }
     render () {
         let rows = this.props.store.data.map((d,i) => {
-            return <Row key={d.id} data={d} onClick={this.select} onDelete={this.delete} styleClass={d.id === this.props.store.selected ? 'danger':''}></Row>
+            return <Row key={d.id} data={d} onClick={this.select} onDelete={this.delete}></Row>
         });
         return (<div className="container">
             <div className="jumbotron">
