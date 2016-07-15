@@ -60,10 +60,12 @@ export class Main extends React.Component{
     update() {
         startMeasure("update");
         this.props.store.update();
+        stopMeasure();
     }
     select(row) {
         startMeasure("select");
         this.props.store.select(row);
+        stopMeasure();
     }
     delete(row) {
         startMeasure("delete");
@@ -89,7 +91,7 @@ export class Main extends React.Component{
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>React v15.2.0 + Mobx 2.2</h1>
+                        <h1>React v15.2.0 + Mobx 2.3.7</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
