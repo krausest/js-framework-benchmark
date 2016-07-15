@@ -4,8 +4,6 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var {observer} = require("mobx-react");
 var {observable, computed} = require ("mobx");
-window.rowsUpdated = 0;
-window.rowsMounted = 0;
 
 @observer
 export class Row extends React.Component {
@@ -14,13 +12,6 @@ export class Row extends React.Component {
 		this.onDelete = this.onDelete.bind(this);
 		this.onClick = this.onClick.bind(this);
 	}
-
-//	componentDidUpdate() {
-//		window.rowsUpdated++;
-//	}
-//	componentDidMount() {
-//		window.rowsMounted++;
-//	}
 
 	onDelete() {
 		this.props.onDelete(this.props.data);
