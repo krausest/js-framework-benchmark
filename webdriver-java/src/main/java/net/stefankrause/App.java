@@ -39,6 +39,7 @@ public class App {
         new Framework("ember-v2.6.1", "ember-v2.6.1/dist"),
         new Framework("inferno-v0.7.13"),
     	new Framework("mithril-v0.2.5"),
+    	new Framework("mithril-v1.0.0-alpha"),
         new Framework("plastiq-v1.30.1"),
     	new Framework("preact-v4.8.0"),
     	new Framework("ractive-v0.7.3"),
