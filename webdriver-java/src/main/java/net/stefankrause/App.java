@@ -26,9 +26,6 @@ public class App {
     private final static int WARMUP_COUNT = 5;
     private final static int DROP_WORST_RUN = 4;
 
-//    private final static Framework frameworks[] = {
-//            new Framework("vanillajs") };
-
     private final static Framework frameworks[] = {
     	new Framework("angular-v1.5.7"),
     	new Framework("angular-v2.0.0-rc4"),
@@ -36,22 +33,26 @@ public class App {
     	new Framework("bobril-v4.43.0"),
     	new Framework("cyclejs-v6.0.3"),
     	new Framework("cyclejs-v7.0.0"),
+    	new Framework("domvm-v1.2.9"),
+    	new Framework("domvm-nowebpack"),
         new Framework("ember-v2.6.1", "ember-v2.6.1/dist"),
         new Framework("inferno-v0.7.13"),
     	new Framework("mithril-v0.2.5"),
-    	new Framework("mithril-v1.0.0-alpha"),
+        new Framework("mithril-v1.0.0-alpha"),
         new Framework("plastiq-v1.30.1"),
     	new Framework("preact-v4.8.0"),
     	new Framework("ractive-v0.7.3"),
     	new Framework("react-v0.14.8"),
     	new Framework("react-v15.2.0"),
     	new Framework("riot-v2.5.0"),
+        new Framework("react-mobX-v2.3.3-old"),
         new Framework("react-v15.2.0-mobX-v2.3.3"),
+        new Framework("react-v15.2.0-mobX-v2.3.7"),
     	new Framework("react-lite-v0.15.14"),
     	new Framework("tsers-v1.0.0"),
         new Framework("vanillajs"),
         new Framework("vanillajs2"),
-        new Framework("vidom-v0.3.6"),
+        new Framework("vidom-v0.3.14"),
         new Framework("vue-v1.0.26"),
         new Framework("vue-v2.0.0-beta1")
     };
