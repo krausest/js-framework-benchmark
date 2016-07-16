@@ -32,7 +32,7 @@ var Row = {
             };
             this.remove = function() {
                 const id = vnode.attrs.id;
-                vnode.attrs.props.onremove(id);
+                vnode.attrs.onremove(id);
             };
     },
     view: function(vnode) {
