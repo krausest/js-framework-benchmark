@@ -45,7 +45,6 @@ public class App {
     	new Framework("react-v0.14.8"),
     	new Framework("react-v15.2.0"),
     	new Framework("riot-v2.5.0"),
-        new Framework("react-mobX-v2.3.3-old"),
         new Framework("react-v15.2.0-mobX-v2.3.3"),
         new Framework("react-v15.2.0-mobX-v2.3.7"),
     	new Framework("react-lite-v0.15.14"),
