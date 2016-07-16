@@ -31,82 +31,102 @@ function View(vm, store) {
 		}
 	});
 
-	let run			= e => { startMeasure("run");		store.run();		vm.redraw(); };
-	let runLots		= e => { startMeasure("runLots");	store.runLots();	vm.redraw(); };
-	let add			= e => { startMeasure("add");		store.add();		vm.redraw(); };
-	let update		= e => { startMeasure("update");	store.update();		vm.redraw(); };
-	let clear		= e => { startMeasure("clear");		store.clear();		vm.redraw(); };
-	let swapRows	= e => { startMeasure("swapRows");	store.swapRows();	vm.redraw(); };
-
-	let select = (e, node) => {
+	let select = id => {
 		startMeasure("select");
-		store.select(node.data);
+		store.select(id);
 		vm.redraw();
-		return false;
 	};
 
-	let remove = (e, node) => {
+	let remove = id => {
 		startMeasure("delete");
-		store.delete(node.data == null ? node.parent.data : node.data);
+		store.delete(id);
 		vm.redraw();
-		return false;
 	};
 
 	// delegated handler
-	let tableClick = {
-		".remove, .remove *": remove,
-		".lbl": select,
+	let tableClick = function(e) {
+		let n = e.target._node;
+
+		let action =
+			n.props.class.indexOf("remove") != -1 ? remove :
+			n.props.class.indexOf("lbl")    != -1 ? select : _ => 0;
+
+		while (n.tag != "tr" && n.parent)
+			n = n.parent;
+
+		action(n.data);
 	};
 
 	return _ =>
 	["#main",
 		[".container",
-			[".jumbotron",
-				[".row",
-					[".col-md-6",
-						["h1", "domvm v1.2.9"]
-					],
-					[".col-md-6",
-						[".row",
-							[".col-sm-6.smallpad",
-								["button.btn.btn-primary.btn-block#run", {type: "button", onclick: run}, "Create 1,000 rows"]
-							],
-							[".col-sm-6.smallpad",
-								["button.btn.btn-primary.btn-block#runlots", {type: "button", onclick: runLots}, "Create 10,000 rows"]
-							],
-							[".col-sm-6.smallpad",
-								["button.btn.btn-primary.btn-block#add", {type: "button", onclick: add}, "Append 1,000 rows"]
-							],
-							[".col-sm-6.smallpad",
-								["button.btn.btn-primary.btn-block#update", {type: "button", onclick: update}, "Update every 10th row"]
-							],
-							[".col-sm-6.smallpad",
-								["button.btn.btn-primary.btn-block#clear", {type: "button", onclick: clear}, "Clear"]
-							],
-							[".col-sm-6.smallpad",
-								["button.btn.btn-primary.btn-block#swaprows", {type: "button", onclick: swapRows}, "Swap Rows"]
-							]
-						]
-					]
-				]
-			],
+		 	[Jumbo, store, false],
 			["table.table.table-hover.table-striped.test-data", {onclick: tableClick},
 				["tbody", store.data.map(item =>
-					["tr", {class: item.id === store.selected ? 'danger' : null},
-						["td.col-md-1", item.id],
-						["td.col-md-4",
-							["a.lbl", {_data: item.id}, item.label]
-						],
-						["td.col-md-1",
-							["a.remove", {_data: item.id},
-								["span.glyphicon.glyphicon-remove", {"aria-hidden": true}]
-							]
-						],
-						["td.col-md-6"]
-					]
+					[Row, {store: store, item: item}, false]
 				)]
 			],
 			["span.preloadicon.glyphicon.glyphicon-remove", {"aria-hidden": true}]
+		]
+	]
+}
+
+function Row(vm) {
+	vm.diff(ctx => [ctx.item.id === ctx.store.selected, ctx.item.label, ctx.item.id]);
+
+	return (vm, ctx) =>
+	["tr", {class: ctx.item.id === ctx.store.selected ? 'danger' : null, _data: ctx.item.id},
+		["td.col-md-1", ctx.item.id],
+		["td.col-md-4",
+			["a.lbl", ctx.item.label]
+		],
+		["td.col-md-1",
+			["a.remove",
+				["span.glyphicon.glyphicon-remove", {"aria-hidden": true}]
+			]
+		],
+		["td.col-md-6"]
+	]
+}
+
+function Jumbo(vm, store) {
+	let run			= e => { startMeasure("run");		store.run();		vm.redraw(1); };
+	let runLots		= e => { startMeasure("runLots");	store.runLots();	vm.redraw(1); };
+	let add			= e => { startMeasure("add");		store.add();		vm.redraw(1); };
+	let update		= e => { startMeasure("update");	store.update();		vm.redraw(1); };
+	let clear		= e => { startMeasure("clear");		store.clear();		vm.redraw(1); };
+	let swapRows	= e => { startMeasure("swapRows");	store.swapRows();	vm.redraw(1); };
+
+	vm.diff(_ => [true]);
+
+	return _ =>
+	[".jumbotron",
+		[".row",
+			[".col-md-6",
+				["h1", "domvm v1.2.9"]
+			],
+			[".col-md-6",
+				[".row",
+					[".col-sm-6.smallpad",
+						["button.btn.btn-primary.btn-block#run", {type: "button", onclick: run}, "Create 1,000 rows"]
+					],
+					[".col-sm-6.smallpad",
+						["button.btn.btn-primary.btn-block#runlots", {type: "button", onclick: runLots}, "Create 10,000 rows"]
+					],
+					[".col-sm-6.smallpad",
+						["button.btn.btn-primary.btn-block#add", {type: "button", onclick: add}, "Append 1,000 rows"]
+					],
+					[".col-sm-6.smallpad",
+						["button.btn.btn-primary.btn-block#update", {type: "button", onclick: update}, "Update every 10th row"]
+					],
+					[".col-sm-6.smallpad",
+						["button.btn.btn-primary.btn-block#clear", {type: "button", onclick: clear}, "Clear"]
+					],
+					[".col-sm-6.smallpad",
+						["button.btn.btn-primary.btn-block#swaprows", {type: "button", onclick: swapRows}, "Swap Rows"]
+					]
+				]
+			]
 		]
 	]
 }
