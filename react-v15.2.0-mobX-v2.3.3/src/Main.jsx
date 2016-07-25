@@ -61,13 +61,13 @@ export class Main extends React.Component{
         startMeasure("update");
         this.props.store.update();
     }
-    select(row) {
+    select(id) {
         startMeasure("select");
-        this.props.store.select(row);
+        this.props.store.select(id);
     }
-    delete(row) {
+    delete(id) {
         startMeasure("delete");
-        this.props.store.delete(row);
+        this.props.store.delete(id);
     }
     runLots() {
         startMeasure("runLots");
@@ -83,13 +83,13 @@ export class Main extends React.Component{
     }
     render () {
         let rows = this.props.store.data.map((d,i) => {
-            return <Row key={d.id} data={d} onClick={this.select} onDelete={this.delete}></Row>
+            return <Row key={d.id} data={d} onClick={this.select} onDelete={this.delete} styleClass={d.id === this.props.store.selected ? 'danger':''}></Row>
         });
         return (<div className="container">
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>React v15.2.0 + Mobx 2.2</h1>
+                        <h1>React v15.2.0 + Mobx 2.3.3-old</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">

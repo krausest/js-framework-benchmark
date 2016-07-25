@@ -92,7 +92,7 @@ export class Store {
 
 var td=function(className) {
     let td = document.createElement("td");
-    td.setAttribute("class", className);
+    td.className = className;
     return td;
 }
 
@@ -208,7 +208,7 @@ export class Main {
     }
     unselect() {
         if (this.selectedRow !== undefined) {
-            this.selectedRow.setAttribute("class","");
+            this.selectedRow.className = "";
             this.selectedRow = undefined;
         }
     }
@@ -217,7 +217,7 @@ export class Main {
         this.unselect();
         this.store.select(this.data[idx].id);
         this.selectedRow = this.rows[idx];
-        this.selectedRow.setAttribute("class","danger");
+        this.selectedRow.className = "danger";
         stopMeasure();
     }
     delete(idx) {
@@ -250,8 +250,10 @@ export class Main {
         //     tbody.removeChild(this.rows[i]);
         // }
         // ~216 msecs
-        var cNode = tbody.cloneNode(false);
-        tbody.parentNode.replaceChild(cNode ,tbody);
+        // var cNode = tbody.cloneNode(false);
+        // tbody.parentNode.replaceChild(cNode ,tbody);
+        // ~212 msecs
+        tbody.textContent = "";
 
         // ~236 msecs
         // var rangeObj = new Range();
@@ -280,7 +282,6 @@ export class Main {
     }
     swapRows() {
         startMeasure("swapRows");
-        debugger;
         let old_selection = this.store.selected;
         this.store.swapRows();
         this.updateRows();
@@ -290,7 +291,7 @@ export class Main {
             if (idx > 0) {
                 this.store.select(this.data[idx].id);
                 this.selectedRow = this.rows[idx];
-                this.selectedRow.setAttribute("class", "danger");
+                this.selectedRow.className = "danger";
             }
         }
         stopMeasure();
@@ -307,7 +308,7 @@ export class Main {
     }
     createRow(data) {
         let tr = document.createElement("tr");
-        tr.setAttribute("data-id", data.id);
+        tr.dataset.id = data.id;
         let td1 = td("col-md-1");
         td1.innerText = data.id;
         tr.appendChild(td1);
@@ -315,17 +316,17 @@ export class Main {
         let td2 = td("col-md-4")
         tr.appendChild(td2);
         let a2 = document.createElement("a");
-        a2.setAttribute("class","lbl");
+        a2.className = "lbl";
         td2.appendChild(a2);
         a2.innerText = data.label;
 
         let td3 = td("col-md-1");
         tr.appendChild(td3);
         let a = document.createElement("a");
-        a.setAttribute("class","remove");
+        a.className = "remove";
         td3.appendChild(a);
         let span = document.createElement("span");
-        span.setAttribute("class","glyphicon glyphicon-remove remove");
+        span.className = "glyphicon glyphicon-remove remove";
         span.setAttribute("aria-hidden","true");
         a.appendChild(span);
 

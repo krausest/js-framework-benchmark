@@ -1,6 +1,7 @@
-let riot = require('riot')
-const {Store} = require('./store');
-let app = require('./app.js')
-let row = require('./row.js')
+import riot from 'riot'
+import Store from './store'
+import './app.html'
 
-riot.mount('app', new Store());
+riot.mount('app', {
+  store: new Store()
+});

@@ -3,7 +3,15 @@
 var cache = {};
 var loaders = [
 	{
-		test: /\.js$/,
+		test: /\.jsx?$/,
+		loader: 'babel-loader',
+		exclude: /node_modules/,
+		query: {
+          presets: ['es2015', 'react']
+        }
+	},
+	{
+		test: /\.es6\.js$/,
 		loader: 'babel-loader'
 	},
 	{
@@ -21,19 +29,18 @@ module.exports = [{
 		loaders: loaders
 	},
 	entry: {
-		main: './src/Main.js',
+		main: './src/main',
 	},
 	output: {
 		path: './dist',
-		filename: '[name].js'
+		filename: '[name].js',
+		sourceMapFilename: "[file].map",
 	},
 	resolve: {
 		extensions: extensions,
 		root: [
 			__dirname,
 			__dirname + '/src'
-		],
-		alias: {
-		}
+		]
 	}
 }];

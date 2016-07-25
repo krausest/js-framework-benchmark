@@ -1,16 +1,16 @@
 'use strict';
 
-import {Store} from './store'
-
-import Inferno from 'inferno'
-import InfernoDOM from 'inferno-dom'
-import Component from 'inferno-component'
+var React = require('react');
+var ReactDOM = require('react-dom');
+const {Row} = require('./Row');
+var {observer} = require("mobx-react");
+var {observable, computed} = require ("mobx");
+const {Store} = require('./Store');
 
 
 var startTime;
 var lastMeasure;
 var startMeasure = function(name) {
-    performance.mark('mark_start_'+name);
     startTime = performance.now();
     lastMeasure = name;
 }
@@ -21,49 +21,15 @@ var stopMeasure = function() {
             lastMeasure = null;
             var stop = performance.now();
             var duration = 0;
-            performance.mark('mark_end_' + last);
-            window.performance.measure('measure_' + last, 'mark_start_' + last, 'mark_end_' + last);
-            var items = performance.getEntriesByType('measure');
-            for (var i = 0; i < items.length; ++i) {
-                var req = items[i];
-                duration = req.duration;
-                console.log(req.name + ' took ' + req.duration + 'ms');
-            }
-            performance.clearMeasures();
+            console.log(last+" took "+(stop-startTime));
         }, 0);
     }
 }
 
-export class Row extends Component {
+@observer
+export class Main extends React.Component{
     constructor(props) {
         super(props);
-        this.click = this.click.bind(this);
-        this.del = this.del.bind(this);
-    }
-    click() {
-        this.props.onClick(this.props.data.id);
-    }
-    del() {
-        this.props.onDelete(this.props.data.id);
-    }
-
-    render() {
-        let {styleClass, onClick, onDelete, data} = this.props;
-        return (<tr className={styleClass}>
-            <td className="col-md-1">{data.id}</td>
-            <td className="col-md-4">
-                <a onClick={this.click}>{data.label}</a>
-            </td>
-            <td className="col-md-1"><a onClick={this.del}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-            <td className="col-md-6"></td>
-        </tr>);
-    }
-}
-
-export class Controller extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {store: new Store()};
         this.select = this.select.bind(this);
         this.delete = this.delete.bind(this);
         this.add = this.add.bind(this);
@@ -72,8 +38,6 @@ export class Controller extends Component{
         this.runLots = this.runLots.bind(this);
         this.clear = this.clear.bind(this);
         this.swapRows = this.swapRows.bind(this);
-        this.componentDidUpdate = this.componentDidUpdate.bind(this);
-        this.componentDidMount = this.componentDidMount.bind(this);
         this.start = 0;
     }
     printDuration() {
@@ -87,54 +51,47 @@ export class Controller extends Component{
     }
     run() {
         startMeasure("run");
-        this.state.store.run();
-        this.setState({store: this.state.store});
+        this.props.store.run();
     }
     add() {
         startMeasure("add");
-        this.state.store.add();
-        this.setState({store: this.state.store});
+        this.props.store.add();
     }
     update() {
-        startMeasure("updater");
-        this.state.store.update();
-        this.setState({store: this.state.store});
+        startMeasure("update");
+        this.props.store.update();
+        stopMeasure();
     }
-    select(id) {
+    select(row) {
         startMeasure("select");
-        this.state.store.select(id);
-        this.setState({store: this.state.store});
+        this.props.store.select(row);
+        stopMeasure();
     }
-    delete(id) {
+    delete(row) {
         startMeasure("delete");
-        this.state.store.delete(id);
-        this.setState({store: this.state.store});
+        this.props.store.delete(row);
     }
     runLots() {
         startMeasure("runLots");
-        this.state.store.runLots();
-        this.setState({store: this.state.store});
+        this.props.store.runLots();
     }
     clear() {
         startMeasure("clear");
-        this.state.store.clear();
-        this.setState({store: this.state.store});
+        this.props.store.clear();
     }
     swapRows() {
         startMeasure("swapRows");
-        this.state.store.swapRows();
-        this.setState({store: this.state.store});
+        this.props.store.swapRows();
     }
     render () {
-        var rows = this.state.store.data.map((d,i) => {
-            var className = d.id === this.state.store.selected ? 'danger':'x';
-            return <Row key={d.id} data={d} onClick={this.select} onDelete={this.delete} styleClass={className}></Row>
+        let rows = this.props.store.data.map((d,i) => {
+            return <Row key={d.id} data={d} onClick={this.select} onDelete={this.delete}></Row>
         });
         return (<div className="container">
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>Inferno v0.7.13</h1>
+                        <h1>React v15.2.0 + Mobx 2.3.7</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
@@ -161,11 +118,15 @@ export class Controller extends Component{
                 </div>
             </div>
             <table className="table table-hover table-striped test-data">
-                <tbody>{rows}</tbody>
+                <tbody>
+                    {rows}
+                </tbody>
             </table>
             <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
-        </div>);
- }
+            </div>);
+    }
 }
 
-var str = InfernoDOM.render(<Controller/>,  document.getElementById("main"));
+let store = new Store();
+
+ReactDOM.render(<Main store={store}/>, document.getElementById('main'));
