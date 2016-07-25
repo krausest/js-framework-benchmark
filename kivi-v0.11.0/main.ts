@@ -37,7 +37,7 @@ interface RowData {
   mtime: number;
 }
 
-let nextId = 0;
+let nextId = 1;
 
 function buildRowData(count = 1000): RowData[] {
   const data = new Array(count);

@@ -9,14 +9,15 @@
   "repository": "https://github.com/krausest/js-framework-benchmark",
   "keywords": [],
   "scripts": {
-    "build-dev": "node ./node_modules/gulp/bin/gulp.js build",
-    "build-prod": "node ./node_modules/gulp/bin/gulp.js build",
+    "build-dev": "gulp build",
+    "build-prod": "gulp build",
     "start": "http-server -c-1 ."
   },
   "dependencies": {
     "kivi": "^0.11.0-alpha.2"
   },
   "devDependencies": {
+    "tslint": "^3.13.0",
     "del": "^2.2.1",
     "google-closure-compiler": "^20160713.0.0",
     "gulp": "github:gulpjs/gulp#4.0",
