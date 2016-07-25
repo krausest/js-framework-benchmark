@@ -186,8 +186,6 @@ function rowClick(e: MouseEvent) {
   onRowDelete(e);
 }
 
-const ButtonProps = {type: "button"};
-
 const Menu = new ComponentDescriptor()
   .enableBackRef()
   .attached((c) => {
@@ -223,27 +221,27 @@ const Menu = new ComponentDescriptor()
         createVElement("div").className("col-md-6").children([
           createVElement("div").className("row").children([
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").className("c1k btn btn-primary btn-block").props(ButtonProps)
+              createVElement("button").props({"id": "run", type: "button"}).className("c1k btn btn-primary btn-block")
                 .children("Create 1,000 rows"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").className("c10k btn btn-primary btn-block").props(ButtonProps)
+              createVElement("button").props({"id": "runlots", type: "button"}).className("c10k btn btn-primary btn-block")
                 .children("Create 10,000 rows"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").className("a1k btn btn-primary btn-block").props(ButtonProps)
+              createVElement("button").props({"id": "add", type: "button"}).className("a1k btn btn-primary btn-block")
                 .children("Append 1,000 rows"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").className("u10th btn btn-primary btn-block").props(ButtonProps)
+              createVElement("button").props({"id": "update", type: "button"}).className("u10th btn btn-primary btn-block")
                 .children("Update every 10th row"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").className("cl btn btn-primary btn-block").props(ButtonProps)
+              createVElement("button").props({"id": "clear", type: "button"}).className("cl btn btn-primary btn-block")
                 .children("Clear"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").className("sw btn btn-primary btn-block").props(ButtonProps)
+              createVElement("button").props({"id": "swaprows",type: "button"}).className("sw btn btn-primary btn-block")
                 .children("Swap Rows"),
             ]),
           ]),
