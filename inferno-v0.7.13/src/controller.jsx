@@ -54,7 +54,7 @@ export class Row extends Component {
             <td className="col-md-4">
                 <a onClick={this.click}>{data.label}</a>
             </td>
-            <td className="col-md-1"><a onClick={this.del}><span className="glyphicon glyphicon-remove"></span></a></td>
+            <td className="col-md-1"><a onClick={this.del}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
             <td className="col-md-6"></td>
         </tr>);
     }
