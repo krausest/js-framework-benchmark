@@ -14,7 +14,7 @@
     "start": "http-server -c-1 ."
   },
   "dependencies": {
-    "kivi": "^0.11.0-alpha.2"
+    "kivi": "^0.11.0-alpha.3"
   },
   "devDependencies": {
     "tslint": "^3.13.0",
