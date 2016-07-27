@@ -127,7 +127,7 @@ export class Controller extends Component{
     }
     render () {
         var rows = this.state.store.data.map((d,i) => {
-            var className = d.id === this.state.store.selected ? 'danger':'x';
+            var className = d.id === this.state.store.selected ? 'danger':'';
             return <Row key={d.id} data={d} onClick={this.select} onDelete={this.delete} styleClass={className}></Row>
         });
         return (<div className="container">
