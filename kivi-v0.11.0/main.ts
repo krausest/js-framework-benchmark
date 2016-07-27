@@ -157,7 +157,7 @@ const Row = new ComponentDescriptor<RowProps, void>()
   .update((c, props) => {
     const data = props.data;
 
-    c.vSync(c.createVRoot().className(props.selected ? "danger" : "x").children([
+    c.vSync(c.createVRoot().className(props.selected ? "danger" : null).children([
       RowTitle.createVNode().data(data.id),
       createVElement("td").className("col-md-4").children([
         createVElement("a").children(data.label),
@@ -191,28 +191,30 @@ const Menu = new ComponentDescriptor()
   .attached((c) => {
     (c.element as HTMLElement).onclick = (e) => {
       e.stopPropagation();
-      if (matchesWithAncestors(e.target as Element, ".c1k", c.element)) {
+      if (matchesWithAncestors(e.target as Element, "#run", c.element)) {
         startMeasure("run");
         store.run();
-      } else if (matchesWithAncestors(e.target as Element, ".c10k", c.element)) {
+      } else if (matchesWithAncestors(e.target as Element, "#runlots", c.element)) {
         startMeasure("runLots");
         store.runLots();
-      } else if (matchesWithAncestors(e.target as Element, ".a1k", c.element)) {
+      } else if (matchesWithAncestors(e.target as Element, "#add", c.element)) {
         startMeasure("add");
         store.add();
-      } else if (matchesWithAncestors(e.target as Element, ".u10th", c.element)) {
+      } else if (matchesWithAncestors(e.target as Element, "#update", c.element)) {
         startMeasure("update");
         store.update();
-      } else if (matchesWithAncestors(e.target as Element, ".cl", c.element)) {
+      } else if (matchesWithAncestors(e.target as Element, "#clear", c.element)) {
         startMeasure("clear");
         store.clear();
-      } else if (matchesWithAncestors(e.target as Element, ".sw", c.element)) {
+      } else if (matchesWithAncestors(e.target as Element, "#swaprows", c.element)) {
         startMeasure("swapRows");
         store.swapRows();
       }
     };
   })
   .update((c) => {
+    const buttonClassName = "btn btn-primary btn-block";
+
     c.vSync(c.createVRoot().className("jumbotron").children([
       createVElement("div").className("row").children([
         createVElement("div").className("col-md-6").children([
@@ -221,27 +223,27 @@ const Menu = new ComponentDescriptor()
         createVElement("div").className("col-md-6").children([
           createVElement("div").className("row").children([
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").props({"id": "run", type: "button"}).className("c1k btn btn-primary btn-block")
+              createVElement("button").props({"id": "run", "type": "button"}).className(buttonClassName)
                 .children("Create 1,000 rows"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").props({"id": "runlots", type: "button"}).className("c10k btn btn-primary btn-block")
+              createVElement("button").props({"id": "runlots", "type": "button"}).className(buttonClassName)
                 .children("Create 10,000 rows"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").props({"id": "add", type: "button"}).className("a1k btn btn-primary btn-block")
+              createVElement("button").props({"id": "add", "type": "button"}).className(buttonClassName)
                 .children("Append 1,000 rows"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").props({"id": "update", type: "button"}).className("u10th btn btn-primary btn-block")
+              createVElement("button").props({"id": "update", "type": "button"}).className(buttonClassName)
                 .children("Update every 10th row"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").props({"id": "clear", type: "button"}).className("cl btn btn-primary btn-block")
+              createVElement("button").props({"id": "clear", "type": "button"}).className(buttonClassName)
                 .children("Clear"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
-              createVElement("button").props({"id": "swaprows",type: "button"}).className("sw btn btn-primary btn-block")
+              createVElement("button").props({"id": "swaprows", "type": "button"}).className(buttonClassName)
                 .children("Swap Rows"),
             ]),
           ]),
