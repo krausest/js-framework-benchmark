@@ -79,7 +79,7 @@
 		</th>
 		{{~bench.tests :test}}
 			{{?test}}
-				<td class="{{=test.class}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
+				<td style="background-color:{{=test.class}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
 			{{??}}
 				<td></td>
 			{{?}}
@@ -89,7 +89,7 @@
 <tr>
     <th>slowdown geometric mean</th>
     {{~it.geomMeans :geomMean}}
-        <th class="{{=geomMean.class}}">{{=geomMean.value}}
+        <th style="background-color:{{=geomMean.class}}">{{=geomMean.value}}
         </th>
     {{~}}
 </tr>
@@ -112,7 +112,7 @@
 		</th>
 		{{~bench.tests :test}}
 			{{?test}}
-				<td class="{{=test.class}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
+				<td style="background-color:{{=test.class}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
 			{{??}}
 				<td></td>
 			{{?}}
