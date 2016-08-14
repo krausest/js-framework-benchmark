@@ -47,7 +47,7 @@ function bundle(done) {
           KIVI_DEBUG: 'DEBUG_DISABLED',
         },
       }),
-      rollupNodeResolve({jsnext: true}),
+      rollupNodeResolve(),
     ]
   }).then(function(bundle) {
     return bundle.write({
