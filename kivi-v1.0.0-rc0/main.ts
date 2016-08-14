@@ -1,4 +1,4 @@
-import { ComponentDescriptor, VModel, createVElement, injectComponent, clock, scheduleMicrotask,
+import { ComponentDescriptor, ElementDescriptor, createVElement, injectComponent, clock, scheduleMicrotask,
   matchesWithAncestors } from "kivi";
 
 let startTime = 0;
@@ -130,10 +130,10 @@ interface RowProps {
   selected: boolean;
 }
 
-const RowTitle = new VModel<string>("td")
+const RowTitle = new ElementDescriptor<string>("td")
   .enableCloning()
   .className("col-md-1")
-  .updateHandler((e, oldProps, newProps) => {
+  .update((e, oldProps, newProps) => {
     if (oldProps === undefined || oldProps !== newProps) {
       e.textContent = newProps;
     }
@@ -141,7 +141,7 @@ const RowTitle = new VModel<string>("td")
 
 const HiddenAttrs = {"aria-hidden": "true"};
 
-const RemoveIcon = new VModel<void>("span")
+const RemoveIcon = new ElementDescriptor<void>("span")
   .enableCloning()
   .className("glyphicon glyphicon-remove")
   .attrs(HiddenAttrs);
@@ -157,7 +157,7 @@ const Row = new ComponentDescriptor<RowProps, void>()
   .update((c, props) => {
     const data = props.data;
 
-    c.vSync(c.createVRoot().className(props.selected ? "danger" : null).children([
+    c.sync(c.createVRoot().className(props.selected ? "danger" : null).children([
       RowTitle.createVNode().data(data.id),
       createVElement("td").className("col-md-4").children([
         createVElement("a").children(data.label),
@@ -215,7 +215,7 @@ const Menu = new ComponentDescriptor()
   .update((c) => {
     const buttonClassName = "btn btn-primary btn-block";
 
-    c.vSync(c.createVRoot().className("jumbotron").children([
+    c.sync(c.createVRoot().className("jumbotron").children([
       createVElement("div").className("row").children([
         createVElement("div").className("col-md-6").children([
           createVElement("h1").children("kivi v0.11.0"),
@@ -268,14 +268,14 @@ const Table = new ComponentDescriptor<Store, void>()
       }).key(r.id);
     }
 
-    c.vSync(c.createVRoot().className("table table-hover table-striped test-data").children([
+    c.sync(c.createVRoot().className("table table-hover table-striped test-data").children([
       createVElement("tbody").trackByKeyChildren(children),
     ]));
   });
 
 const Main = new ComponentDescriptor()
   .update((c, props, state) => {
-    c.vSync(c.createVRoot().className("container").children([
+    c.sync(c.createVRoot().className("container").children([
       Menu.createImmutableVNode(),
       Table.createVNode(store),
       createVElement("span").className("preloadicon glyphicon glyphicon-remove").attrs(HiddenAttrs),

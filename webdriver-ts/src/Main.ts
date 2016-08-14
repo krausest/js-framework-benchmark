@@ -329,7 +329,7 @@ let frameworks = [
     "cyclejs-v7.0.0",
     "domvm-v1.2.9",
     "inferno-v0.7.13",
-    "kivi-v0.11.0-alpha3",
+    "kivi-v1.0.0-rc0",
     "mithril-v0.2.5",
     "mithril-v1.0.0-alpha",
     "react-v15.3.0",
