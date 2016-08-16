@@ -26,6 +26,6 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
-    "vidom": "0.3.14"
+    "vidom": "0.3.18"
   }
 }
