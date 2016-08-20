@@ -11,15 +11,30 @@ window.rowsMounted = 0;
 
 
 export class Row extends Component {
-    onRender({styleClass, onClick, onDelete, data}) {
+    onInit() {
+        this._onClick = this._onClick.bind(this);
+        this._onDelete = this._onDelete.bind(this);
+    }
+
+    onRender({styleClass, data}) {
         return (<tr key={data.id} className={styleClass}>
             <td className="col-md-1">{data.id}</td>
             <td className="col-md-4">
-                <a onClick={() => onClick(data.id)}>{data.label}</a>
+                <a onClick={this._onClick}>{data.label}</a>
             </td>
-            <td className="col-md-1"><a onClick={() => onDelete(data.id)}><span className="glyphicon glyphicon-remove"></span></a></td>
+            <td className="col-md-1"><a onClick={this._onDelete}><span className="glyphicon glyphicon-remove"></span></a></td>
             <td className="col-md-6"></td>
         </tr>);
+    }
+
+    _onClick() {
+        const {onClick, data} = this.getAttrs();
+        onClick(data.id);
+    }
+
+    _onDelete() {
+        const {onDelete, data} = this.getAttrs();
+        onDelete(data.id);
     }
 }
 
@@ -112,7 +127,7 @@ export class Controller extends Component{
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>Vidom v0.3.14</h1>
+                        <h1>Vidom v0.3.18</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
