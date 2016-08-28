@@ -74,14 +74,16 @@ interface Benchmark {
 function testTextContains(driver: WebDriver, xpath: string, text: string) {
     return driver.wait(new webdriver.until.Condition<boolean>(`testTextContains ${xpath} ${text}`,
         (driver) => driver.findElement(By.xpath(xpath)).getText().then(
-                v => v && v.indexOf(text)>-1
+                v => v && v.indexOf(text)>-1,
+                err => console.log("ignoring error in testTextContains for xpath = "+xpath+" text = "+text,err.toString().split("\n")[0])
             )                        
     ), TIMEOUT);        
 }
 function testClassContainsNot(driver: WebDriver, xpath: string, text: string) {
     return driver.wait(new webdriver.until.Condition<boolean>(`testClassContainsNot ${xpath} ${text}`,
         (driver) => driver.findElement(By.xpath(xpath)).getText().then(
-                v => v && v.indexOf(text)==-1
+                v => v && v.indexOf(text)==-1,
+                err => console.log("ignoring error in testClassContainsNot for xpath = "+xpath+" text = "+text,err.toString().split("\n")[0])
             )                        
         ), TIMEOUT);        
 }
@@ -89,8 +91,9 @@ function testClassContainsNot(driver: WebDriver, xpath: string, text: string) {
 function testClassContains(driver: WebDriver, xpath: string, text: string) {
     return driver.wait(new webdriver.until.Condition<boolean>(`testClassContains ${xpath} ${text}`,
             (driver) => driver.findElement(By.xpath(xpath)).getAttribute("class").then(
-            v => v && v.indexOf(text)>-1)
-        ), TIMEOUT); 
+            v => v && v.indexOf(text)>-1,
+            err => console.log("ignoring error in testClassContains for xpath = "+xpath+" text = "+text,err.toString().split("\n")[0])
+        )), TIMEOUT); 
 }
 
 function testElementLocatedByXpath(driver: WebDriver, xpath: string) {
@@ -101,13 +104,17 @@ function testElementNotLocatedByXPath(driver: WebDriver, xpath: string)
 {
     return driver.wait(new webdriver.until.Condition<boolean>(`testElementNotLocatedByXPath ${xpath}`,
         (driver) => driver.isElementPresent(By.xpath(xpath)).then(
-            v => !v)
+            v => !v,
+            err => console.log("ignoring error in testElementNotLocatedByXPath for xpath = "+xpath,err.toString().split("\n")[0]))
         ), TIMEOUT);
 }
 
 function testElementLocatedById(driver: WebDriver, id: string) {
     return driver.wait(new webdriver.until.Condition<boolean>(`testElementLocatedById ${id}`,
-        (driver) => driver.isElementPresent(By.id(id)).then(v => v))
+        (driver) => driver.isElementPresent(By.id(id)).then(
+            v => v,
+            err => console.log("ignoring error in testElementLocatedById for id = "+id,err.toString().split("\n")[0]))
+        )
         , TIMEOUT);
 }
 
