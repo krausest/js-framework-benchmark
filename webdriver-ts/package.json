@@ -18,7 +18,6 @@
     "typings": "^1.3.3"
   },
   "dependencies": {
-    "heapdump": "^0.3.7",
     "chromedriver": "^2.23.1",
     "dot": "^1.0.3",
     "jstat": "^1.5.3",
