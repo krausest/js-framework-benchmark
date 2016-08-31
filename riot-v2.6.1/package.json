@@ -8,13 +8,13 @@
     "start": "http-server -c-1 ."
   },
   "devDependencies": {
-    "babel-core": "^6.10.4",
-    "babel-loader": "^6.2.4",
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
     "babel-preset-es2015-riot": "^1.1.0",
     "tag-loader": "^0.3.0",
-    "webpack": "^1.13.1"
+    "webpack": "^1.13.2"
   },
   "dependencies": {
-    "riot": "2.5.0"
+    "riot": "2.6.1"
   }
 }
