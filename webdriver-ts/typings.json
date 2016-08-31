@@ -1,7 +1,9 @@
 {
   "name": "webdriver-ts",
-  "dependencies": {},
+  "dependencies": {
+  },
   "globalDependencies": {
+    "lodash": "registry:dt/lodash#4.14.0+20160829143836",
     "node": "registry:dt/node#6.0.0+20160728152422",
     "selenium-webdriver": "registry:dt/selenium-webdriver#2.44.0+20160317120654",
     "yargs": "registry:dt/yargs#0.0.0+20160808125142"

@@ -11,7 +11,8 @@
     },
     "files": [
         "typings/index.d.ts",
-        "./src/Main.ts"
+        "./src/Main.ts",
+        "./src/Results.ts"
     ],
     "exclude": [
         "node_modules"

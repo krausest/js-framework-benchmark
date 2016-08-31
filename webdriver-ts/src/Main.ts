@@ -324,30 +324,39 @@ const benchRunMemory: Benchmark = {
             .then(() => testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a"))
 }
 
+interface FrameworkData {
+    name: string;
+    uri: string;
+}
+
+function f(name: string, uri: string = null): FrameworkData 
+{
+    return {name, uri: uri? uri : name};
+}
+
 let frameworks = [
-    "angular-v1.5.7",
-    "angular-v2.0.0-rc4",
-    "aurelia-v1.0.0-rc1.0.0",
-    "bobril-v4.43.0",
-    "cyclejs-v7.0.0",
-    "domvm-v1.2.9",
-    "inferno-v0.7.13",
-    "kivi-v1.0.0-rc0",
-    "mithril-v0.2.5",
-    "mithril-v1.0.0-alpha",
-    "mithril-v0.2.5",
-    "plastiq-v1.30.1",
-    "preact-v4.8.0",
-    "ractive-v0.7.3",
-    "react-lite-v0.15.14",
-    "react-v15.3.0",
-    "react-v15.3.0-mobX-v2.4.2",
-    "riot-v2.5.0",
-    "tsers-v1.0.0",
-    "vanillajs",
-    "vidom-v0.3.18",
-    "vue-v1.0.26",
-    "vue-v2.0.0-beta1"        
+    f("angular-v1.5.8"),
+    f("angular-v2.0.0-rc5"),
+    f("aurelia-v1.0.0", "aurelia-v1.0.0/dist"),
+    f("bobril-v4.44.1"),
+    f("cyclejs-v7.0.0"),
+    f("domvm-v1.2.10"),
+    f("inferno-v0.7.26"),
+    f("kivi-v1.0.0-rc0"),
+    f("mithril-v0.2.5"),
+    f("mithril-v1.0.0-alpha"),
+    f("plastiq-v1.33.0"),
+    f("preact-v5.7.0"),
+    f("ractive-v0.7.3"),
+    f("react-lite-v0.15.17"),
+    f("react-v15.3.1"),
+    f("react-v15.3.1-mobX-v2.5.0"),
+    f("riot-v2.6.1"),
+    f("tsers-v1.0.0"),
+    f("vanillajs"),
+    f("vidom-v0.3.18"),
+    f("vue-v1.0.26"),
+    f("vue-v2.0.0-beta1")        
 ];
 
 let benchmarks : [ Benchmark ] = [
@@ -418,14 +427,14 @@ function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework: strin
 }
 
 interface Result {
-    framework: string;
+    framework: FrameworkData;
     results: number[];
     benchmark: Benchmark    
 }
 
 function writeResult(res: Result) {
     let benchmark = res.benchmark;
-        let framework = res.framework;
+        let framework = res.framework.name;
         let data = res.results;
         data = data.splice(0).sort((a:number,b:number) => a-b);
         data = data.slice(0, REPEAT_RUN - DROP_WORST_RUN);
@@ -445,12 +454,12 @@ function writeResult(res: Result) {
 }
 
 function runBench(frameworkNames: string[], benchmarkNames: string[]): webdriver.promise.Promise<any> {
-    let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.indexOf(name)>-1));
+    let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.name.indexOf(name)>-1));
     let runBenchmarks = benchmarks.filter(b => benchmarkNames.some(name => b.name.toLowerCase().indexOf(name)>-1));
     console.log("Frameworks that will be benchmarked", runFrameworks);
     console.log("Benchmarks that will be run", runBenchmarks.map(b => b.name));
 
-    let data : [[string,Benchmark]] = <any>[];
+    let data : [[FrameworkData, Benchmark]] = <any>[];
     for (let i=0;i<runFrameworks.length;i++) {
        for (let j=0;j<runBenchmarks.length;j++) {
            data.push( [runFrameworks[i], runBenchmarks[j]] );
@@ -463,10 +472,10 @@ function runBench(frameworkNames: string[], benchmarkNames: string[]): webdriver
         console.log("benchmarking ", framework, benchmark.name);
         let driver = buildDriver();
         return forProm(0, REPEAT_RUN, () => {
-            return driver.get(`http://localhost:8080/${framework}/`)
-            .then(() => initBenchmark(driver, benchmark, framework))
+            return driver.get(`http://localhost:8080/${framework.uri}/`)
+            .then(() => initBenchmark(driver, benchmark, framework.name))
             .then(() => clearLogs(driver))
-            .then(() => runBenchmark(driver, benchmark, framework))
+            .then(() => runBenchmark(driver, benchmark, framework.name))
         })
         .then(results => reduceBenchmarkResults(benchmark, results))
         .then(results => {  

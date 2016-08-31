@@ -1,16 +1,24 @@
-"use strict";
+import * as _ from 'lodash'
+import * as fs from 'fs';
 
-const _ = require('lodash');
 const dots = require('dot').process({
 	path: './'
 });
-const fs = require('fs');
 
-let makeInfo = (name,description) => ({name, description});
+let makeInfo = (name: string,description: string) => ({name, description});
 
 const WARMUP_COUNT = 5;
 
-let infos = {
+interface InformationData {
+	name: string;
+	description: string; 
+}
+
+interface InformationList {
+	[key: string]: InformationData;
+}
+
+let infos: InformationList = {
 	"01_run1k": makeInfo("create rows", "Duration for creating 1000 rows after the page loaded."),
 	"02_replace1k": makeInfo("replace all rows", "Duration for updating all 1000 rows of the table (with "+WARMUP_COUNT+" warmup iterations)."),
 	"03_update10th1k": makeInfo("partial update", "Time to update the text of every 10th row (with "+WARMUP_COUNT+" warmup iterations)."),
@@ -26,10 +34,10 @@ let infos = {
 	"22_run-memory": makeInfo("run memory", "Memory usage after adding 1000 rows."),
 }
 
-let results = {};
-let frameworks = [];
-let benchmarks = [];
-let types = {};
+let results: any = {};
+let frameworks: Array<string> = [];
+let benchmarks: Array<string> = [];
+let types = new Map();
 
 fs.readdirSync('./results').filter(file => file.endsWith('.json')).forEach(name => {
 	let data = JSON.parse(fs.readFileSync('./results/' + name, {
@@ -38,7 +46,7 @@ fs.readdirSync('./results').filter(file => file.endsWith('.json')).forEach(name 
 	
 	frameworks.push(data.framework);
 	benchmarks.push(data.benchmark);
-	types[data.benchmark] = data.type;
+	types.set(data.benchmark, data.type);
 
 	results[data.framework] = results[data.framework] || {};
 	results[data.framework][data.benchmark] = data;
@@ -60,28 +68,15 @@ frameworks = _.uniq(frameworks).sort((a,b) => {
 
 benchmarks = _.uniq(benchmarks);
 
-let cpuBenchmarks = benchmarks.filter(benchmark => types[benchmark] === 'cpu');
-let memBenchmarks = benchmarks.filter(benchmark => types[benchmark] === 'memory');
+let cpuBenchmarks = benchmarks.filter(benchmark => types.get(benchmark) === 'cpu');
+let memBenchmarks = benchmarks.filter(benchmark => types.get(benchmark) === 'memory');
 let cpuBenchmarkCount = cpuBenchmarks.length;
 
-let getValue = (framework, benchmark) => results[framework] && results[framework][benchmark];
+let getValue = (framework:string, benchmark:string) => results[framework] && results[framework][benchmark];
 
 let factors = frameworks.map(f => 1.0);
 
-function color_discrete(factor) {
-	if (factor < 1.5) {
-		let r = (80 + 2*50*(factor-1.0)).toFixed(0);
-		return `rgb(${r}, 200, 124)`
-	} else if (factor < 2.5) {
-		let g = (240 - 50*(factor-1.5)).toFixed(0);
-		return `rgb(255, ${g}, 132)`
-	} else {
-		let o = (105 - Math.min(50*(factor-2.5),50)).toFixed(0);
-		return `rgb(249, ${o}, ${o})`
-	}
-}
-
-function color(factor) {
+function color(factor:number): string {
 	if (factor < 2.0) {
 		let a = (factor - 1.0);
 		let r = (1.0-a)* 99 + a * 255;
@@ -97,17 +92,27 @@ function color(factor) {
 	}
 }
 
+interface TestData {
+	mean:string,
+	deviation: string,
+	factor: string,
+	styleClass: string	
+}
 
-let generateBenchData = benchmarks => {
-	let benches = [];
-	benchmarks.forEach(benchmark => {
-		let bench = {
-			name: infos[benchmark].name,
-			description: infos[benchmark].description,
-			tests: []
-		};
+class Bench {
+	tests: Array<TestData>;
 
-		let values = [];
+	constructor(public name: string, public description: string) {
+		this.tests = [];
+	}
+}
+
+let generateBenchData = (benchmarks: Array<string>) => {
+	let benches: Array<Bench> = [];
+	benchmarks.forEach((benchmark: string) => {
+		let bench = new Bench(infos[benchmark].name, infos[benchmark].description);
+
+		let values: Array<any> = [];
 		frameworks.forEach(framework => {
 			values.push(getValue(framework, benchmark));
 		});
@@ -124,22 +129,26 @@ let generateBenchData = benchmarks => {
 
 		_.forEach(values, function (value, idx) {
 			if (value) {
-				let factor;
-				if (types[benchmark] === 'cpu') {
-					// Clamp to 1 fps
-					factor = Math.max(16, value.mean) / Math.max(16, min);
-					factors[idx] = factors[idx] * factor;
-				}
-				else {
-					factor = value.mean / min;
-				}
+				try {
+					let factor: number;
+					if (types.get(benchmark) === 'cpu') {
+						// Clamp to 1 fps
+						factor = Math.max(16, value.mean) / Math.max(16, min);
+						factors[idx] = factors[idx] * factor;
+					}
+					else {
+						factor = value.mean / min;
+					}
 
-				bench.tests.push({
-					mean: value.mean.toFixed(2),
-					deviation: value.standardDeviation.toFixed(2),
-					factor: factor.toFixed(2),
-					class: color(factor)
-				});
+					bench.tests.push({
+						mean: value.mean.toFixed(2),
+						deviation: value.standardDeviation.toFixed(2),
+						factor: factor.toFixed(2),
+						styleClass: color(factor)
+					});
+				} catch (err) {
+					console.log(`error in ${benchmark} ${JSON.stringify(value)}`,err);
+				}
 			}
 			else {
 				bench.tests.push(null);
@@ -155,8 +164,8 @@ let cpubenches = generateBenchData(cpuBenchmarks);
 let membenches = generateBenchData(memBenchmarks);
 
 let geomMeans = factors.map(f => {
-	let value = Math.pow(f, 1 / cpuBenchmarkCount).toPrecision(3);
-	return {value, class: color(value)}
+	let value = Math.pow(f, 1 / cpuBenchmarkCount);
+	return {value: value.toPrecision(3), styleClass: color(value)}
 });
 
 fs.writeFileSync('./table.html', dots.table({

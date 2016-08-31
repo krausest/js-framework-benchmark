@@ -9,7 +9,7 @@
     "compile": "tsc",
     "build-prod": "tsc",
     "selenium": "node dist/Main.js",
-    "results": "node makeTable.js"
+    "results": "node dist/Results.js"
   },
   "author": "",
   "license": "Apache-2.0",
