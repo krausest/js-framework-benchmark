@@ -8,13 +8,13 @@
     "start": "http-server -c-1 ."
   },
   "devDependencies": {
-    "babel-core": "^6.10.4",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.9.0",
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
     "babel-preset-stage-0": "^6.5.0",
-    "webpack": "^1.13.1"
+    "webpack": "^1.13.2"
   },
   "dependencies": {
-    "domvm": "^1.2.9"
+    "domvm": "^1.2.10"
   }
 }

@@ -64,7 +64,7 @@ function View(vm, store) {
 			[".jumbotron",
 				[".row",
 					[".col-md-6",
-						["h1", "domvm v1.2.9"]
+						["h1", "domvm v1.2.10"]
 					],
 					[".col-md-6",
 						[".row",
