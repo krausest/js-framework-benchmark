@@ -50,7 +50,7 @@ class App {
       <div class="jumbotron">
         <div class="row">
           <div class="col-md-6">
-            <h1>plastiq v1.30.1</h1>
+            <h1>plastiq v1.33.0</h1>
           </div>
           <div class="col-md-6">
             <div className="row">
