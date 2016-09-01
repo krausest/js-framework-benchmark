@@ -20,5 +20,4 @@ rm -r react/dist
 rm -r vidom/dist
 rm -r vue/dist
 
-rm -r webdriver-java/node_modules
-rm -r webdriver-java/target
+rm -r webdriver-ts/node_modules

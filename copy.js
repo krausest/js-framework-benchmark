@@ -6,7 +6,7 @@ var path = require('path');
 if (fs.existsSync("dist")) fs.removeSync("dist");
 fs.mkdirSync("dist");
 fs.mkdirSync("dist"+path.sep+"webdriver-java");
-fs.copySync("webdriver-java"+path.sep+"table.html", "dist"+path.sep+"webdriver-java"+path.sep+"table.html");
+fs.copySync("webdriver-ts"+path.sep+"table.html", "dist"+path.sep+"webdriver-java"+path.sep+"table.html");
 
 fs.copySync("index.html", "dist"+path.sep+"index.html");
 fs.copySync("css", "dist"+path.sep+"css");

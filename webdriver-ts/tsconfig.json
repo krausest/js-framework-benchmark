@@ -11,8 +11,11 @@
     },
     "files": [
         "typings/index.d.ts",
-        "./src/Main.ts",
-        "./src/Results.ts"
+        "./src/common.ts",
+        "./src/benchmarks.ts",
+        "./src/webdriverAccess.ts",
+        "./src/benchmarkRunner.ts",
+        "./src/createResultTable.ts"
     ],
     "exclude": [
         "node_modules"

@@ -9,7 +9,7 @@ Thanks to Baptiste Augrain for making the benchmarks more sophisticated and addi
 ## Prerequsites
 
 Have *node.js (>=6.0)* installed . If you want to do yourself a favour use nvm for that. The benchmark has been tested with node 6.0.
-You will also need *mvn* for *selenium*.
+You will also need *java* (>=6, e.g. openjdk-8-jre on ubuntu) for the google closure compiler, currently used in kivi.
 
 ## Building
 
@@ -55,15 +55,20 @@ The results of this benchmark is outlined on by blog ([round 1](http://www.stefa
 
 ## Execute the benchmarks with selenium
 
-You need to have a current java and maven installation to run the automated benchmark.
+The former java test runner has been replaced with a typescript based test runner. The new test runner contains no timer based waits and is thus much faster.
 
 `npm start`
 which starts a web browser
 `npm run selenium`
 which runs the seleniums tests
 
-For each framework the results are stored in JSON format in the webdriver-java directory. The script makeTable.js creates the final results.
-
 Open [http://localhost:8080/webdriver-java/table.html](http://localhost:8080/webdriver-java/table.html) for the results
 
 A test showing the durations on my machine can be seen [here](https://cdn.rawgit.com/krausest/js-framework-benchmark/a358bc967e1d9ff0c268b43f5ab8b832abe0476e/webdriver-java/table.html)
+
+Single tests can be repeated easily. Just `cd webdriver-ts` and run the benchmarks and frameworks you want, e.g:
+`npm run selenium -- --framework angular bob --benchmark 01_ 02_`
+runs the test for all frameworks that contain either angular or bob, which means all angular versions and bobril and all benchmarks whose id contain 01_ or 02_
+which means the create rows and replace all rows benchmarks.
+After that you'll want to update the result table with
+`npm run results`

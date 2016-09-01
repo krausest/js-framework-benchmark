@@ -8,8 +8,8 @@
     "postinstall": "typings install && tsc",
     "compile": "tsc",
     "build-prod": "tsc",
-    "selenium": "node dist/Main.js",
-    "results": "node dist/Results.js"
+    "selenium": "node dist/benchmarkRunner.js",
+    "results": "node dist/createResultTable.js"
   },
   "author": "",
   "license": "Apache-2.0",
