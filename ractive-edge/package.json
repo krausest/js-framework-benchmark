@@ -24,6 +24,6 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
-    "ractive": "0.7.3"
+    "ractive": "ractivejs/ractive#edge"
   }
 }

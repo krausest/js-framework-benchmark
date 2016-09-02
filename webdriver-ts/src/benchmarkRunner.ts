@@ -79,6 +79,7 @@ let frameworks = [
     f("plastiq-v1.33.0"),
     f("preact-v5.7.0"),
     f("ractive-v0.7.3"),
+    f("ractive-edge"),
     f("react-lite-v0.15.17"),
     f("react-v15.3.1"),
     f("react-v15.3.1-mobX-v2.5.0"),
