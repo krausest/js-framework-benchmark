@@ -5,19 +5,19 @@ const tslint = require("gulp-tslint");
 const rollup = require('rollup');
 const rollupReplace = require('rollup-plugin-replace');
 const rollupNodeResolve = require('rollup-plugin-node-resolve');
-const closureCompiler = require('google-closure-compiler').gulp();
+const closureCompiler = require('google-closure-compiler-js').gulp();
 
 const ClosureConfig = {
   compilation_level: 'ADVANCED',
-  entry_point: 'goog:main',
-  dependency_mode: 'STRICT',
-  language_in: 'ECMASCRIPT6_STRICT',
-  language_out: 'ECMASCRIPT5_STRICT',
-  use_types_for_optimization: true,
-  assume_function_wrapper: true,
-  output_wrapper: '(function(){%output%}).call();',
-  summary_detail_level: 3,
-  warning_level: 'QUIET',
+//  entry_point: 'goog:main',
+//  dependency_mode: 'STRICT',
+  languageIn: 'ECMASCRIPT6_STRICT',
+  languageOut: 'ECMASCRIPT5_STRICT',
+  useTypesForOptimization: true,
+  assumeFunctionWrapper: true,
+//  output_wrapper: '(function(){%output%}).call();',
+//  summary_detail_level: 3,
+  warningLevel: 'QUIET',
 };
 
 function clean() {
