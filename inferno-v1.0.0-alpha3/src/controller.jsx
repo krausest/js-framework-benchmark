@@ -1,11 +1,9 @@
 'use strict';
 
 import {Store} from './store'
-
-import Inferno from 'inferno'
+import Inferno, { ChildrenTypes } from 'inferno'
 import InfernoDOM from 'inferno-dom'
 import Component from 'inferno-component'
-
 
 var startTime;
 var lastMeasure;
@@ -34,30 +32,57 @@ var stopMeasure = function() {
     }
 }
 
-export class Row extends Component {
-    constructor(props) {
-        super(props);
-        this.click = this.click.bind(this);
-        this.del = this.del.bind(this);
-    }
-    click() {
-        this.props.onClick(this.props.data.id);
-    }
-    del() {
-        this.props.onDelete(this.props.data.id);
-    }
+function clickEvent(e) {
+    let func;
+    let id;
+    let val = e.target.value;
 
-    render() {
-        let {styleClass, onClick, onDelete, data} = this.props;
-        return (<tr className={styleClass}>
-            <td className="col-md-1">{data.id}</td>
-            <td className="col-md-4">
-                <a onClick={this.click}>{data.label}</a>
-            </td>
-            <td className="col-md-1"><a onClick={this.del}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-            <td className="col-md-6"></td>
-        </tr>);
+    if (val) {
+        func = val.func;
+        id = val.id;
+    } else {
+        val = e.target.parentNode.value;
+        if (val) {
+            func = val.func;
+            id = val.id;
+        }
     }
+    func(id);
+}
+
+function Row({ d, id, selected, deleteFunc, selectFunc }) {
+    return (
+        <tr className={id === selected ? 'danger' : ''} childrenType={ ChildrenTypes.NON_KEYED }>
+            <td className="col-md-1" childrenType={ ChildrenTypes.TEXT }>{id}</td>
+            <td className="col-md-4" childrenType={ ChildrenTypes.NODE }>
+                <a onClick={clickEvent} value={{func: selectFunc, id}} childrenType={ ChildrenTypes.TEXT }>{d.label}</a>
+            </td>
+            <td className="col-md-1"><a onClick={clickEvent} value={{func: deleteFunc, id}}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+            <td className="col-md-6"></td>
+        </tr>
+    )
+}
+
+const onComponentShouldUpdate = {
+    onComponentShouldUpdate(lastProps, nextProps) {
+        return nextProps.d !== lastProps.d || nextProps.selected !== lastProps.selected;
+    }
+};
+
+function createRows(store, deleteFunc, selectFunc) {
+    const rows = [];
+    const data = store.data;
+    const selected = store.selected;
+
+    for (let i = 0; i < data.length; i++) {
+        const d = data[i];
+        const id = d.id;
+
+        rows.push(
+            <Row d={d} id={id} selected={selected} deleteFunc={deleteFunc} selectFunc={selectFunc} hooks={onComponentShouldUpdate} />
+        );
+    }
+    return <tbody childrenType={ ChildrenTypes.NON_KEYED }>{rows}</tbody>;
 }
 
 export class Controller extends Component{
@@ -126,15 +151,11 @@ export class Controller extends Component{
         this.setState({store: this.state.store});
     }
     render () {
-        var rows = this.state.store.data.map((d,i) => {
-            var className = d.id === this.state.store.selected ? 'danger':'';
-            return <Row key={d.id} data={d} onClick={this.select} onDelete={this.delete} styleClass={className}></Row>
-        });
         return (<div className="container">
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>Inferno v0.7.26</h1>
+                        <h1>Inferno v1.0.0-alpha3 - non-keyed</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
@@ -161,7 +182,7 @@ export class Controller extends Component{
                 </div>
             </div>
             <table className="table table-hover table-striped test-data">
-                <tbody>{rows}</tbody>
+                {createRows(this.state.store, this.delete, this.select)}
             </table>
             <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>);
