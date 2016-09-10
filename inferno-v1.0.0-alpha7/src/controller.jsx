@@ -155,7 +155,7 @@ export class Controller extends Component{
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>Inferno v1.0.0-alpha3 - non-keyed</h1>
+                        <h1>Inferno v1.0.0-alpha7 - non-keyed</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
