@@ -29,11 +29,6 @@ export class Store {
         this.data = this.data.filter((e,i) => i!=idx);
         return this;
     }
-    deleteNext(id) {
-        const idx = this.data.findIndex(d => d.id==id);
-        this.data = this.data.filter((e,i) => i!=idx+1);
-        return this;
-    }
     run() {
         this.data = this.buildData();
         this.selected = undefined;
