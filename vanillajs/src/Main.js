@@ -22,7 +22,7 @@ function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
 
-export class Store {
+class Store {
     constructor() {
         this.data = [];
         this.backup = null;
@@ -40,7 +40,8 @@ export class Store {
     }
     updateData(mod = 10) {
         for (let i=0;i<this.data.length;i+=10) {
-            this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label +' !!!'});
+            this.data[i].label += ' !!!';
+            // this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label +' !!!'});
         }
     }
     delete(id) {
@@ -99,13 +100,13 @@ var td=function(className) {
 var getParentId = function(elem) {
     while (elem) {
         if (elem.tagName==="TR") {
-            return parseInt(elem.getAttribute("data-id"));
+            return elem.data_id;
         }
         elem = elem.parentNode;
     }
     return undefined;
 }
-export class Main {
+class Main {
     constructor(props) {
         this.store = new Store();
         this.select = this.select.bind(this);
@@ -203,7 +204,10 @@ export class Main {
     update() {
         startMeasure("update");
         this.store.update();
-        this.updateRows();
+        // this.updateRows();
+        for (let i=0;i<this.data.length;i+=10) {
+            this.rows[i].childNodes[1].childNodes[0].innerText = this.store.data[i].label;
+        }
         stopMeasure();
     }
     unselect() {
@@ -222,10 +226,25 @@ export class Main {
     }
     delete(idx) {
         startMeasure("delete");
+        // Remove that row from the DOM
+        // this.store.delete(this.data[idx].id);
+        // this.rows[idx].remove();
+        // this.rows.splice(idx, 1);
+        // this.data.splice(idx, 1);
+
+        // Faster, shift all rows below the row that should be deleted rows one up and drop the last row
+        for(let i=this.rows.length-2; i>=idx;i--) {
+            let tr = this.rows[i];
+            let data =  this.store.data[i+1];
+            tr.data_id = data.id;
+            tr.childNodes[0].innerText = data.id;
+            tr.childNodes[1].childNodes[0].innerText = data.label;
+            this.data[i] = this.store.data[i];
+        }
         this.store.delete(this.data[idx].id);
-        tbody.removeChild(this.rows[idx]);
-        this.rows.splice(idx, 1);
         this.data.splice(idx, 1);
+        this.rows.pop().remove();
+
         stopMeasure();
     }
     updateRows() {
@@ -233,7 +252,7 @@ export class Main {
             if (this.data[i] !== this.store.data[i]) {
                 let tr = this.rows[i];
                 let data = this.store.data[i];
-                tr.setAttribute("data-id", data.id);
+                tr.data_id = data.id;
                 tr.childNodes[0].innerText = data.id;
                 tr.childNodes[1].childNodes[0].innerText = data.label;
                 this.data[i] = this.store.data[i];
@@ -253,7 +272,7 @@ export class Main {
         // var cNode = tbody.cloneNode(false);
         // tbody.parentNode.replaceChild(cNode ,tbody);
         // ~212 msecs
-        tbody.textContent = "";
+        this.tbody.textContent = "";
 
         // ~236 msecs
         // var rangeObj = new Range();
@@ -304,11 +323,11 @@ export class Main {
             this.data[i] = this.store.data[i];
             docfrag.appendChild(tr);
         }
-        tbody.appendChild(docfrag);
+        this.tbody.appendChild(docfrag);
     }
     createRow(data) {
         let tr = document.createElement("tr");
-        tr.dataset.id = data.id;
+        tr.data_id = data.id;
         let td1 = td("col-md-1");
         td1.innerText = data.id;
         tr.appendChild(td1);

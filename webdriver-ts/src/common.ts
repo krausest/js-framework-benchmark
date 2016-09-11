@@ -37,6 +37,7 @@ export let frameworks = [
     f("cyclejs-v7.0.0"),
     f("domvm-v1.2.10"),
     f("inferno-v0.7.26"),
+    f("inferno-v1.0.0-alpha7"),
     f("kivi-v1.0.0-rc0"),
     f("mithril-v0.2.5"),
     f("mithril-v1.0.0-alpha"),
