@@ -15,7 +15,8 @@
         "./src/benchmarks.ts",
         "./src/webdriverAccess.ts",
         "./src/benchmarkRunner.ts",
-        "./src/createResultTable.ts"
+        "./src/createResultTable.ts",
+        "./src/runCheck.ts"
     ],
     "exclude": [
         "node_modules"

@@ -205,3 +205,7 @@ export let benchmarks : [ Benchmark ] = [
     benchReadyMemory,
     benchRunMemory
     ];
+
+export function fileName(framework: string, benchmark: Benchmark) {
+    return `${framework}_${benchmark.id}.json`;
+}    

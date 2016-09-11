@@ -1,11 +1,11 @@
 import * as chrome from 'selenium-webdriver/chrome'
 import {Builder, WebDriver, promise, logging} from 'selenium-webdriver'
-import {BenchmarkType, Benchmark, benchmarks} from './benchmarks'
+import {BenchmarkType, Benchmark, benchmarks, fileName} from './benchmarks'
 import {forProm} from './webdriverAccess'
 
 import * as fs from 'fs';
 import * as yargs from 'yargs'; 
-import {JSONResult, config} from './common'
+import {JSONResult, config, FrameworkData, frameworks} from './common'
 var chromedriver:any = require('chromedriver');
 var jStat:any = require('jstat').jStat;
 
@@ -54,42 +54,6 @@ function readLogs(driver: WebDriver): promise.Promise<Timingresult[]> {
         return [click, lastPaint, mem];
     });
 }
-
-interface FrameworkData {
-    name: string;
-    uri: string;
-}
-
-function f(name: string, uri: string = null): FrameworkData 
-{
-    return {name, uri: uri? uri : name};
-}
-
-let frameworks = [
-    f("angular-v1.5.8"),
-    f("angular-v2.0.0-rc5"),
-    f("aurelia-v1.0.0", "aurelia-v1.0.0/dist"),
-    f("bobril-v4.44.1"),
-    f("cyclejs-v7.0.0"),
-    f("domvm-v1.2.10"),
-    f("inferno-v0.7.26"),
-    f("kivi-v1.0.0-rc0"),
-    f("mithril-v0.2.5"),
-    f("mithril-v1.0.0-alpha"),
-    f("plastiq-v1.33.0"),
-    f("preact-v5.7.0"),
-    f("ractive-v0.7.3"),
-    f("ractive-edge"),
-    f("react-lite-v0.15.17"),
-    f("react-v15.3.1"),
-    f("react-v15.3.1-mobX-v2.5.0"),
-    f("riot-v2.6.1"),
-    f("tsers-v1.0.0"),
-    f("vanillajs"),
-    f("vidom-v0.3.18"),
-    f("vue-v1.0.26"),
-    f("vue-v2.0.0-beta1")        
-];
 
 function buildDriver() {
     let logPref = new logging.Preferences();
@@ -149,7 +113,7 @@ interface Result {
     benchmark: Benchmark    
 }
 
-function writeResult(res: Result) {
+function writeResult(res: Result, dir: string) {
     let benchmark = res.benchmark;
         let framework = res.framework.name;
         let data = res.results;
@@ -167,10 +131,10 @@ function writeResult(res: Result) {
             "geometricMean": s.geomean(),
             "standardDeviation": s.stdev()
         }
-        fs.writeFileSync(`results/${framework}_${benchmark.id}.json`, JSON.stringify(result), {encoding: "utf8"});
+        fs.writeFileSync(`${dir}/${fileName(framework, benchmark)}`, JSON.stringify(result), {encoding: "utf8"});
 }
 
-function runBench(frameworkNames: string[], benchmarkNames: string[]): promise.Promise<any> {
+function runBench(frameworkNames: string[], benchmarkNames: string[], dir: string): promise.Promise<any> {
     let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.name.indexOf(name)>-1));
     let runBenchmarks = benchmarks.filter(b => benchmarkNames.some(name => b.id.toLowerCase().indexOf(name)>-1));
     console.log("Frameworks that will be benchmarked", runFrameworks);
@@ -196,7 +160,7 @@ function runBench(frameworkNames: string[], benchmarkNames: string[]): promise.P
         })
         .then(results => reduceBenchmarkResults(benchmark, results))
         .then(results => {  
-            writeResult({framework: framework, results: results, benchmark: benchmark});
+            writeResult({framework: framework, results: results, benchmark: benchmark}, dir);
         })
         .thenFinally(() => {console.log("QUIT"); driver.quit();})
     });
@@ -205,17 +169,24 @@ function runBench(frameworkNames: string[], benchmarkNames: string[]): promise.P
 let args = yargs(process.argv)
 .usage("$0 [--framework Framework1,Framework2,...] [--benchmark Benchmark1,Benchmark2,...]")
 .help('help')
+.default('check','false')
 .array("framework").array("benchmark").argv;
+
+console.log(args);
 
 let runBenchmarks = args.benchmark && args.benchmark.length>0 ? args.benchmark : [""];
 let runFrameworks = args.framework && args.framework.length>0 ? args.framework : [""];
 
-if (!fs.existsSync("results"))
-    fs.mkdirSync("results");
+let dir = args.check === 'true' ? "results_check" : "results"
+
+console.log("target directory", dir);
+
+if (!fs.existsSync(dir))
+    fs.mkdirSync(dir);
 
 if (args.help) {
     yargs.showHelp();
 } else {
-    runBench(runFrameworks, runBenchmarks);
+    runBench(runFrameworks, runBenchmarks, dir);
 }
 

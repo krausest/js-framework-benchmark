@@ -5,14 +5,14 @@ var path = require('path');
 
 if (fs.existsSync("dist")) fs.removeSync("dist");
 fs.mkdirSync("dist");
-fs.mkdirSync("dist"+path.sep+"webdriver-java");
-fs.copySync("webdriver-ts"+path.sep+"table.html", "dist"+path.sep+"webdriver-java"+path.sep+"table.html");
+fs.mkdirSync("dist"+path.sep+"webdriver-ts");
+fs.copySync("webdriver-ts"+path.sep+"table.html", "dist"+path.sep+"webdriver-ts"+path.sep+"table.html");
 
 fs.copySync("index.html", "dist"+path.sep+"index.html");
 fs.copySync("css", "dist"+path.sep+"css");
 
 _.each(fs.readdirSync('.'), function(name) {
-	if(fs.statSync(name).isDirectory() && name[0] !== '.' && name !== 'css' && name !== 'node_modules' && name !== 'webdriver-java' && name !== 'dist') {
+	if(fs.statSync(name).isDirectory() && name[0] !== '.' && name !== 'css' && name !== 'node_modules' && name !== 'webdriver-ts' && name !== 'dist') {
 		console.log("dist"+path.sep+name);
 		fs.mkdirSync("dist"+path.sep+name);
 		fs.mkdirSync("dist"+path.sep+name+path.sep+"dist");
