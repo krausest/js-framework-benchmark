@@ -40,7 +40,7 @@
           </div>
           <table class="table table-hover table-striped test-data">
               <tbody>
-                  <tr v-for="item in rows" track-by="id" v-bind:class="{'danger' : item.id === selected}">
+                  <tr v-for="item in rows" v-bind:class="{'danger' : item.id === selected}">
                       <td class="col-md-1">{{item.id}}</td>
                       <td class="col-md-4">
                           <a v-on:click="select(item)">{{item.label}}</a>
