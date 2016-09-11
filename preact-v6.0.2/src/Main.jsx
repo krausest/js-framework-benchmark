@@ -99,7 +99,7 @@ export class Main extends Component{
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>preact v5.7.0</h1>
+                        <h1>preact v6.0.2</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
