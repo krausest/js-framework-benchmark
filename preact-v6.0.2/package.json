@@ -27,6 +27,6 @@
     "babel-core": "^6.10.4",
     "babel-loader": "^6.2.4",
     "jsx-loader": "^0.13.2",
-    "preact": "^4.8.0"
+    "preact": "^6.0.2"
   }
 }
