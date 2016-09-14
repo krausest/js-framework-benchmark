@@ -91,8 +91,11 @@ var Controller = {
     view: function(vnode) {
         let rows = this.data().map((d,i) => {
             let sel = d.id === this.selected() ? 'danger':'';
-            return m(Row, {onclick:this.select, onremove:this.remove, key:d.id, label:d.label, id:d.id, styleClass:sel});
-// this doesn't work here return (<Row onclick={this.select} onremove={this.remove} key={d.id} label={d.label} id={d.id} styleClass={sel}></Row>);
+            //return m(Row, {onclick:this.select, onremove:this.remove, key:d.id, label:d.label, id:d.id, styleClass:sel});
+            // this doesn't work here 
+            //return (<Row onclick={this.select} onremove={this.remove} key={d.id} label={d.label} id={d.id} styleClass={sel}></Row>);
+            // FIXED
+            return <Row onclick={this.select} onremove={this.remove} key={d.id} label={d.label} id={d.id} styleClass={sel}></Row>;
         });
         var ret = <div className="container" onupdate={this.done}>
             <div class="jumbotron">
