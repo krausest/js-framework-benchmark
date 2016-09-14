@@ -30,9 +30,9 @@ var Row = {
                 const id = vnode.attrs.id;
                 vnode.attrs.onclick(id);
             };
-            this.remove = function() {
+            this.delete = function() {
                 const id = vnode.attrs.id;
-                vnode.attrs.onremove(id);
+                vnode.attrs.ondelete(id);
             };
     },
     view: function(vnode) {
@@ -41,7 +41,7 @@ var Row = {
             <td class="col-md-4">
                 <a onclick={this.click}>{vnode.attrs.label}</a>
             </td>
-            <td class="col-md-1"><a onclick={this.remove}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+            <td class="col-md-1"><a onclick={this.delete}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
             <td class="col-md-6"></td>
         </tr>);
     }
@@ -67,7 +67,7 @@ var Controller = {
                 startMeasure("select");
                 Store.select(id);
             };
-            this.remove = function(id) {
+            this.delete = function(id) {
                 startMeasure("delete")
                 Store.remove(id);
             };
@@ -91,7 +91,7 @@ var Controller = {
     view: function(vnode) {
         let rows = this.data().map((d,i) => {
             let sel = d.id === this.selected() ? 'danger':'';
-            return m(Row, {onclick:this.select, onremove:this.remove, key:d.id, label:d.label, id:d.id, styleClass:sel});
+            return m(Row, {onclick:this.select, ondelete:this.delete, key:d.id, label:d.label, id:d.id, styleClass:sel});
 // this doesn't work here return (<Row onclick={this.select} onremove={this.remove} key={d.id} label={d.label} id={d.id} styleClass={sel}></Row>);
         });
         var ret = <div className="container" onupdate={this.done}>
