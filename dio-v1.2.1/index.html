@@ -13,13 +13,17 @@
 		<div id='main'></div>
 
 		<script>
+			var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+			var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+			var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+
 			var startTime;
 			var lastMeasure;
-			var startMeasure = function(name) {
+			function startMeasure(name) {
 			    startTime = performance.now();
 			    lastMeasure = name;
 			}
-			var stopMeasure = function() {
+			function stopMeasure () {
 			    var last = lastMeasure;
 			    if (lastMeasure) {
 			        window.setTimeout(function () {
@@ -30,7 +34,7 @@
 			        }, 0);
 			    }
 			}
-			
+
 			function _random(max) {
 			    return Math.round(Math.random()*1000)%max;
 			}
@@ -42,12 +46,10 @@
 			        this.id = 1;
 				}
 			    buildData(count = 1000) {
-			        var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-			        var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-			        var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-			        var data = [];
-			        for (var i = 0; i < count; i++)
-			            data.push({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
+			        var data = new Array(count);
+			        for (var i = 0; i < count; i++) {
+			            data[i] = ({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
+			        }
 			        return data;
 			    }
 			    updateData(mod = 10) {
@@ -92,84 +94,82 @@
 			window.rowsUpdated = 0;
 			window.rowsMounted = 0;
 
-			var Row = dio.createComponent({
-				onDelete() {
-					this.props.onDelete(this.props.data.id);
-				},
-				onClick() {
-					this.props.onClick(this.props.data.id);
-				},
-				render() {
-					var 
-					styleClass = this.props.styleClass,
-					onClick = this.props.onClick,
-					onDelete = this.props.onDelete,
-					data = this.props.data;
-
-					return (
-						{
-							type: 'tr',
-							props: {className: styleClass},
-							children: [
-								{
-									type: 'td',
-									props: {className: 'col-md-1'},
-									children: [
-										{
-											type: 'text',
-											props: null,
-											children: [data.id]
-										}
-									]
-								},
-								{
-									type: 'td',
-									props: {className: 'col-md-4'},
-									children: [
-										{
-											type: 'a',
-											props: {onClick: this.onClick},
-											children: [
-												{
-													type: 'text',
-													props: null,
-													children: [data.label]
-												}
-											]
-										}
-									]
-								},
-								{
-									type: 'td',
-									props: {className: 'col-md-1'},
-									children: [
-										{
-											type: 'a',
-											props: {onClick: this.onDelete},
-											children: [
-												{
-													type: 'span',
-													props: {className: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'},
-													children: []
-												}
-											]
-										}
-									]
-								},
-								{
-									type: 'td',
-									props: {className: 'col-md-6'},
-									children: []
-								}
-							]
-						}
-					);
+			function Row (props) {
+				function onDelete () {
+					props.onDelete(props.key);
 				}
-			});
+
+				function onClick () {
+					props.onClick(props.key);
+				}
+
+				return (
+					{
+						type: 'tr',
+						props: {className: props.styleClass},
+						children: [
+							{
+								type: 'td',
+								props: {className: 'col-md-1'},
+								children: [
+									{
+										type: 'text',
+										props: null,
+										children: [props.data.id]
+									}
+								]
+							},
+							{
+								type: 'td',
+								props: {className: 'col-md-4'},
+								children: [
+									{
+										type: 'a',
+										props: {onClick: onClick},
+										children: [
+											{
+												type: 'text',
+												props: null,
+												children: [props.data.label]
+											}
+										]
+									}
+								]
+							},
+							{
+								type: 'td',
+								props: {className: 'col-md-1'},
+								children: [
+									{
+										type: 'a',
+										props: {onClick: onDelete},
+										children: [
+											{
+												type: 'span',
+												props: {className: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'},
+												children: []
+											}
+										]
+									}
+								]
+							},
+							{
+								type: 'td',
+								props: {className: 'col-md-6'},
+								children: []
+							}
+						]
+					}
+				);
+			};
+
+			// var store = new Store();
 
 			var Main = dio.createComponent({
-				getInitialState() {
-					return {store: new Store()};
+				getInitialState: function () {
+					return {
+						store: new Store()
+					}
 				},
 			    printDuration() {
 			        stopMeasure();
@@ -220,16 +220,22 @@
 			        this.state.store.swapRows();
 			        this.forceUpdate();
 			    },
-			    render () {
-			        var rows = this.state.store.data.map((d,i) => {
-			            return Row({
-			            	key: d.id,
-			            	data: d,
-			            	onClick: this.select,
-			            	onDelete: this.delete,
-			            	styleClass: d.id === this.state.store.selected ? 'danger' : '',
-			            })
-			        });
+			    render (props, state, self) {
+			    	var data   = this.state.store.data;
+			    	var length = data.length;
+			    	var rows   = new Array(length);
+			        
+			        for (var i = 0; i < length; i++) {
+			        	var d = data[i];
+
+		        	    rows[i] = Row({
+		        	    	key: d.id,
+		        	    	data: d,
+		        	    	onClick: this.select,
+		        	    	onDelete: this.delete,
+		        	    	styleClass: d.id === this.state.store.selected ? 'danger' : '',
+		        	    });
+			        }
 
 			        return (
 			        	{
