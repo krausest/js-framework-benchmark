@@ -35,7 +35,7 @@ export let frameworks = [
     f("aurelia-v1.0.0", "aurelia-v1.0.0/dist"),
     f("bobril-v4.44.1"),
     f("cyclejs-v7.0.0"),
-    f("dio-v1.2.2"),
+    f("dio-v1.2.1"),
     f("domvm-v1.2.10"),
     f("inferno-v0.7.26"),
     f("inferno-v1.0.0-alpha7"),
