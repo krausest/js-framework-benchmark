@@ -1,7 +1,7 @@
 {
   "name": "js-framework-benchmark-dio-1.2.1",
   "version": "1.2.1",
-  "description": "Benchmark for Dio 1.2.1 framework",
+  "description": "Benchmark for dio 1.2.1 framework",
   "scripts": {
     "start": "http-server -c-1 ."
   }
