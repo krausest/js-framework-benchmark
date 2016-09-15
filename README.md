@@ -67,7 +67,7 @@ which runs the seleniums tests
 
 Open [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html) for the results
 
-A test showing the durations on my machine can be seen [here](https://cdn.rawgit.com/krausest/js-framework-benchmark/ba8ee2e840d13893c75d7e6832341b5db9cc8229/webdriver-ts/table.html)
+A test showing the durations on my machine can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts/table.html)
 
 Single tests can be repeated easily. Just `cd webdriver-ts` and run the benchmarks and frameworks you want, e.g:
 `npm run selenium -- --framework angular bob --benchmark 01_ 02_`
