@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>DIO.js v1.2.1</title>
+        <link rel="stylesheet" href="../css/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="styleshee" href="../css/main.css">
+		<script src="dio.min.js"></script>
+	</head>
+	<body>
+		<div id='main'></div>
+
+		<script>
+			var startTime;
+			var lastMeasure;
+			var startMeasure = function(name) {
+			    startTime = performance.now();
+			    lastMeasure = name;
+			}
+			var stopMeasure = function() {
+			    var last = lastMeasure;
+			    if (lastMeasure) {
+			        window.setTimeout(function () {
+			            lastMeasure = null;
+			            var stop = performance.now();
+			            var duration = 0;
+			            console.log(last+" took "+(stop-startTime));
+			        }, 0);
+			    }
+			}
+			
+			function _random(max) {
+			    return Math.round(Math.random()*1000)%max;
+			}
+
+			class Store {
+			    constructor() {
+			        this.data = [];
+			        this.selected = undefined;
+			        this.id = 1;
+				}
+			    buildData(count = 1000) {
+			        var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+			        var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+			        var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+			        var data = [];
+			        for (var i = 0; i < count; i++)
+			            data.push({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
+			        return data;
+			    }
+			    updateData(mod = 10) {
+			        for (let i=0;i<this.data.length;i+=10) {
+			            this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+			        }
+			    }
+			    delete(id) {
+			        const idx = this.data.findIndex(d => d.id==id);
+			        this.data.splice(idx, 1);
+			    }
+			    run() {
+			        this.data = this.buildData();
+			        this.selected = undefined;
+			    }
+			    add() {
+			        this.data = this.data.concat(this.buildData(1000));
+			    }
+			    update() {
+			        this.updateData();
+			    }
+			    select(id) {
+			        this.selected = id;
+			    }
+			    runLots() {
+			        this.data = this.buildData(10000);
+			        this.selected = undefined;
+			    }
+			    clear() {
+			        this.data = [];
+			        this.selected = undefined;
+			    }
+			    swapRows() {
+			    	if(this.data.length > 10) {
+			    		var a = this.data[4];
+			    		this.data[4] = this.data[9];
+			    		this.data[9] = a;
+			    	}
+			    }
+			}
+
+			window.rowsUpdated = 0;
+			window.rowsMounted = 0;
+
+			var Row = dio.createComponent({
+				onDelete() {
+					this.props.onDelete(this.props.data.id);
+				},
+				onClick() {
+					this.props.onClick(this.props.data.id);
+				},
+				render() {
+					var 
+					styleClass = this.props.styleClass,
+					onClick = this.props.onClick,
+					onDelete = this.props.onDelete,
+					data = this.props.data;
+
+					return (
+						{
+							type: 'tr',
+							props: {className: styleClass},
+							children: [
+								{
+									type: 'td',
+									props: {className: 'col-md-1'},
+									children: [
+										{
+											type: 'text',
+											props: null,
+											children: [data.id]
+										}
+									]
+								},
+								{
+									type: 'td',
+									props: {className: 'col-md-4'},
+									children: [
+										{
+											type: 'a',
+											props: {onClick: this.onClick},
+											children: [
+												{
+													type: 'text',
+													props: null,
+													children: [data.label]
+												}
+											]
+										}
+									]
+								},
+								{
+									type: 'td',
+									props: {className: 'col-md-1'},
+									children: [
+										{
+											type: 'a',
+											props: {onClick: this.onDelete},
+											children: [
+												{
+													type: 'span',
+													props: {className: 'glyphicon glyphicon-remove', 'aria-hidden': true},
+													children: []
+												}
+											]
+										}
+									]
+								},
+								{
+									type: 'td',
+									props: {className: 'col-md-6'},
+									children: []
+								}
+							]
+						}
+					);
+				}
+			});
+
+			var Main = dio.createComponent({
+				getInitialState() {
+					return {store: new Store()};
+				},
+			    printDuration() {
+			        stopMeasure();
+			    },
+			    componentDidUpdate() {
+			        this.printDuration();
+			    },
+			    componentDidMount() {
+			        this.printDuration();
+			    },
+			    run() {
+			        startMeasure("run");
+			        this.state.store.run();
+			        this.forceUpdate();
+			    },
+			    add() {
+			        startMeasure("add");
+			        this.state.store.add();
+			        this.forceUpdate();
+			    },
+			    update() {
+			        startMeasure("update");
+			        this.state.store.update();
+			        this.forceUpdate();
+			    },
+			    select(id) {
+			        startMeasure("select");
+			        this.state.store.select(id);
+			        this.forceUpdate();
+			    },
+			    delete(id) {
+			        startMeasure("delete");
+			        this.state.store.delete(id);
+			        this.forceUpdate();
+			    },
+			    runLots() {
+			        startMeasure("runLots");
+			        this.state.store.runLots();
+			        this.forceUpdate();
+			    },
+			    clear() {
+			        startMeasure("clear");
+			        this.state.store.clear();
+			        this.forceUpdate();
+			    },
+			    swapRows() {
+			        startMeasure("swapRows");
+			        this.state.store.swapRows();
+			        this.forceUpdate();
+			    },
+			    render () {
+			        var rows = this.state.store.data.map((d,i) => {
+			            return Row({
+			            	key: d.id,
+			            	data: d,
+			            	onClick: this.select,
+			            	onDelete: this.delete,
+			            	styleClass: d.id === this.state.store.selected ? 'danger' : '',
+			            })
+			        });
+
+			        return (
+			        	{
+			        		type: 'div',
+			        		props: {className: 'container'},
+			        		children: [
+			        			{
+			        				type: 'div',
+			        				props: {className: 'jumbotron'},
+			        				children: [
+			        					{
+			        						type: 'div',
+			        						props: {className: 'row'},
+			        						children: [
+			        							{
+			        								type: 'div',
+			        								props: {className: 'col-md-6'},
+			        								children: [
+			        									{
+			        										type: 'h1',
+			        										props: {},
+			        										children: [
+			        											{
+			        												type: 'text',
+			        												props: null,
+			        												children: ['dio v1.2.1']
+			        											}
+			        										]
+			        									}
+			        								]
+			        							},
+			        							{
+			        								type: 'div',
+			        								props: {className: 'col-md-6'},
+			        								children: [
+			        									{
+			        										type: 'div',
+			        										props: {className: 'row'},
+			        										children: [
+			        											{
+			        												type: 'div',
+			        												props: {className: 'col-sm-6 smallpad'},
+			        												children: [
+			        													{
+			        														type: 'button',
+			        														props: {
+			        															type: 'button', 
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'run',
+			        															onClick: this.run
+		        															},
+			        														children: [
+			        															{
+			        																type: 'text',
+			        																props: null,
+			        																children: ['Create 1,000 rows']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											},
+			        											{
+			        												type: 'div',
+			        												props: {className: 'col-sm-6 smallpad'},
+			        												children: [
+			        													{
+			        														type: 'button',
+			        														props: {
+			        															type: 'button', 
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'runlots',
+			        															onClick: this.runLots
+		        															},
+			        														children: [
+			        															{
+			        																type: 'text',
+			        																props: null,
+			        																children: ['Create 10,000 rows']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											},
+			        											{
+			        												type: 'div',
+			        												props: {className: 'col-sm-6 smallpad'},
+			        												children: [
+			        													{
+			        														type: 'button',
+			        														props: {
+			        															type: 'button', 
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'add',
+			        															onClick: this.add
+		        															},
+			        														children: [
+			        															{
+			        																type: 'text',
+			        																props: null,
+			        																children: ['Append 1,000 rows']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											},
+			        											{
+			        												type: 'div',
+			        												props: {className: 'col-sm-6 smallpad'},
+			        												children: [
+			        													{
+			        														type: 'button',
+			        														props: {
+			        															type: 'button', 
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'update',
+			        															onClick: this.update
+		        															},
+			        														children: [
+			        															{
+			        																type: 'text',
+			        																props: null,
+			        																children: ['Update every 10th row']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											},
+			        											{
+			        												type: 'div',
+			        												props: {className: 'col-sm-6 smallpad'},
+			        												children: [
+			        													{
+			        														type: 'button',
+			        														props: {
+			        															type: 'button', 
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'clear',
+			        															onClick: this.clear
+		        															},
+			        														children: [
+			        															{
+			        																type: 'text',
+			        																props: null,
+			        																children: ['Clear']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											},
+			        											{
+			        												type: 'div',
+			        												props: {className: 'col-sm-6 smallpad'},
+			        												children: [
+			        													{
+			        														type: 'button',
+			        														props: {
+			        															type: 'button', 
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'swaprows',
+			        															onClick: this.swapRows
+		        															},
+			        														children: [
+			        															{
+			        																type: 'text',
+			        																props: null,
+			        																children: ['Swap Rows']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											}
+		        											]
+			        									}
+			        								]
+			        							}
+			        						]
+			        					}
+			        				]
+			        			},
+			        			{
+			        				type: 'table',
+			        				props: {className: 'table table-hover table-striped test-data'},
+			        				children: [
+			        					{
+			        						type: 'tbody',
+			        						props: {},
+			        						children: rows
+			        					}
+			        				]
+			        			},
+			        			{
+			        				type: 'span',
+			        				props: {className: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': true},
+			        				children: []
+			        			}
+			        		]
+			        	}
+		        	);
+			    }
+			});
+
+			dio.render(Main, document.getElementById('main'))();
+		</script>
+	</body>
+</html>
