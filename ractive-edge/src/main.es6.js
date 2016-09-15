@@ -54,7 +54,7 @@ class DataStore {
         this.data = this.buildData();
     }
     add() {
-        this.data = this.data.concat(this.buildData(1000));
+        this.data.push.apply(this.data, this.buildData(1000));
     }
     runLots() {
         this.data = this.buildData(10000);
