@@ -1,5 +1,6 @@
 
-import { Component, AfterViewChecked } from '@angular/core';
+import { Component, NgModule, AfterViewChecked } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser'
 
 interface Data {
     id: number;
@@ -35,16 +36,16 @@ let stopMeasure = function() {
 				</div>
 				<div class="col-md-6">
                     <div class="col-sm-6 smallpad">
-					<button type="button" class="btn btn-primary btn-block" id="run" (click)="run()" ref="text">Create 1,000 rows</button>
+					<button type="button" class="btn btn-primary btn-block" id="run" (click)="run($event)" ref="text">Create 1,000 rows</button>
                     </div>
                     <div class="col-sm-6 smallpad">
 					<button type="button" class="btn btn-primary btn-block" id="runlots" (click)="runLots()">Create 10,000 rows</button>
                     </div>
                     <div class="col-sm-6 smallpad">
-					<button type="button" class="btn btn-primary btn-block" id="add" (click)="add()" ref="text">Append 1,000 rows</button>
+					<button type="button" class="btn btn-primary btn-block" id="add" (click)="add($event)" ref="text">Append 1,000 rows</button>
                     </div>
                     <div class="col-sm-6 smallpad">
-					<button type="button" class="btn btn-primary btn-block" id="update" (click)="update()">Update every 10th row</button>
+					<button type="button" class="btn btn-primary btn-block" id="update" (click)="update($event)">Update every 10th row</button>
                     </div>
                     <div class="col-sm-6 smallpad">
 					<button type="button" class="btn btn-primary btn-block" id="clear" (click)="clear()">Clear</button>
@@ -155,3 +156,10 @@ export class App implements AfterViewChecked {
         stopMeasure();
     }
 }
+
+@NgModule({
+	imports: [BrowserModule],
+	declarations: [App],
+	bootstrap: [App]
+})
+export class AppModule {}
