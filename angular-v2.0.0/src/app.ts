@@ -1,5 +1,6 @@
 
-import { Component, AfterViewChecked } from '@angular/core';
+import { Component, NgModule, AfterViewChecked } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser'
 
 interface Data {
     id: number;
@@ -31,7 +32,7 @@ let stopMeasure = function() {
 		<div class="jumbotron">
 			<div class="row">
 				<div class="col-md-6">
-					<h1>Angular v2.0.0-rc5</h1>
+					<h1>Angular v2.0.0</h1>
 				</div>
 				<div class="col-md-6">
                     <div class="col-sm-6 smallpad">
@@ -117,17 +118,17 @@ export class App implements AfterViewChecked {
        }
     }
 
-    run(event: Event) {
+    run() {
         startMeasure("run");
         this.data = this.buildData();
     }
 
-    add(event: Event) {
+    add() {
         startMeasure("add");
         this.data = this.data.concat(this.buildData(1000));
     }
 
-    update(event: Event) {
+    update() {
         startMeasure("update");
         for (let i=0;i<this.data.length;i+=10) {
             this.data[i].label += ' !!!';
@@ -155,3 +156,10 @@ export class App implements AfterViewChecked {
         stopMeasure();
     }
 }
+
+@NgModule({
+	imports: [BrowserModule],
+	declarations: [App],
+	bootstrap: [App]
+})
+export class AppModule {}
