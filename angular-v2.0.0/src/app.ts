@@ -32,20 +32,20 @@ let stopMeasure = function() {
 		<div class="jumbotron">
 			<div class="row">
 				<div class="col-md-6">
-					<h1>Angular v2.0.0-rc5</h1>
+					<h1>Angular v2.0.0</h1>
 				</div>
 				<div class="col-md-6">
                     <div class="col-sm-6 smallpad">
-					<button type="button" class="btn btn-primary btn-block" id="run" (click)="run($event)" ref="text">Create 1,000 rows</button>
+					<button type="button" class="btn btn-primary btn-block" id="run" (click)="run()" ref="text">Create 1,000 rows</button>
                     </div>
                     <div class="col-sm-6 smallpad">
 					<button type="button" class="btn btn-primary btn-block" id="runlots" (click)="runLots()">Create 10,000 rows</button>
                     </div>
                     <div class="col-sm-6 smallpad">
-					<button type="button" class="btn btn-primary btn-block" id="add" (click)="add($event)" ref="text">Append 1,000 rows</button>
+					<button type="button" class="btn btn-primary btn-block" id="add" (click)="add()" ref="text">Append 1,000 rows</button>
                     </div>
                     <div class="col-sm-6 smallpad">
-					<button type="button" class="btn btn-primary btn-block" id="update" (click)="update($event)">Update every 10th row</button>
+					<button type="button" class="btn btn-primary btn-block" id="update" (click)="update()">Update every 10th row</button>
                     </div>
                     <div class="col-sm-6 smallpad">
 					<button type="button" class="btn btn-primary btn-block" id="clear" (click)="clear()">Clear</button>
@@ -118,17 +118,17 @@ export class App implements AfterViewChecked {
        }
     }
 
-    run(event: Event) {
+    run() {
         startMeasure("run");
         this.data = this.buildData();
     }
 
-    add(event: Event) {
+    add() {
         startMeasure("add");
         this.data = this.data.concat(this.buildData(1000));
     }
 
-    update(event: Event) {
+    update() {
         startMeasure("update");
         for (let i=0;i<this.data.length;i+=10) {
             this.data[i].label += ' !!!';
