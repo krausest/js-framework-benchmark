@@ -53,13 +53,26 @@
 			        return data;
 			    }
 			    updateData(mod = 10) {
-			        for (let i=0;i<this.data.length;i+=10) {
-			            this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
-			        }
+			    	const data = this.data;
+
+		    	    for (let i = 0; i < data.length; i += 10) {
+			    	    const r = data[i];
+			    	    r.label += " !!!";
+		    	    }
 			    }
 			    delete(id) {
-			        const idx = this.data.findIndex(d => d.id==id);
-			        this.data.splice(idx, 1);
+			    	var idx = id - 1;
+			    	var data = this.data;
+
+			        if (idx === 0) {
+			        	data.shift();
+			        }
+			        else if (id === data.length) {
+			        	data.pop();
+			        }
+			        else {
+			        	data.splice(idx, 1);
+			        }
 			    }
 			    run() {
 			        this.data = this.buildData();
