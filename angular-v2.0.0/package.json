@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "A webpack starter for angular 2",
   "scripts": {
-    "start": "webpack-dev-server --inline --progress --port 8080 --config config/webpack.dev.js",
+    "start": "npm run build-dev && npm run serve",
     "test": "karma start",
     "precompile": "ngc",
-    "build-prod": "npm run precompile && webpack --config config/webpack.prod.js --progress --profile --bail",
-    "build-dev": "webpack -w -d --config config/webpack.dev.js --progress --profile --bail",
+    "build-prod": "npm run precompile && node rollup.config.js --prod",
+    "build-dev": "npm run precompile && node rollup.config.js",
+    "serve": "http-server",
     "postinstall": "typings install"
   },
   "license": "MIT",
@@ -24,14 +25,13 @@
     "zone.js": "0.6.23"
   },
   "devDependencies": {
-    "rollup": "^0.35.11",
-    "rollup-plugin-commonjs": "^5.0.3",
+    "google-closure-compiler-js": "^20160916.0.0",
+    "http-server": "^0.9.0",
+    "rollup": "^0.35.15",
+    "rollup-plugin-commonjs": "^5.0.4",
     "rollup-plugin-node-resolve": "^2.0.0",
-    "ts-loader": "^0.8.2",
     "typescript": "2.0.2",
     "typings": "^1.3.3",
-    "webpack": "^2.1.0-beta.22",
-    "webpack-dev-server": "^1.15.0",
-    "webpack-merge": "^0.14.1"
+    "yargs": "^5.0.0"
   }
 }

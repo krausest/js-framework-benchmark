@@ -1,8 +1,8 @@
+//we only need reflect in JIT mode
+import 'core-js/es7/reflect';
+import 'zone.js/dist/zone';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';
 import { AppModule } from './app';
-if (process.env.ENV === 'production') {
-  console.log("enable prod mode");
-  enableProdMode();
-}
+enableProdMode();
 platformBrowserDynamic().bootstrapModule(AppModule);
