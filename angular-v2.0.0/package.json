@@ -7,7 +7,7 @@
     "test": "karma start",
     "precompile": "ngc",
     "build-prod": "npm run precompile && node rollup.config.js --prod",
-    "build-dev": "npm run precompile && node rollup.config.js"
+    "build-dev": "npm run precompile && node rollup.config.js",
     "postinstall": "typings install"
   },
   "license": "MIT",
