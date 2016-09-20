@@ -14,16 +14,16 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "typescript": "^1.8.10",
-    "typings": "^1.3.3"
+    "typescript": "1.8.10",
+    "typings": "1.3.3"
   },
   "dependencies": {
-    "chromedriver": "^2.23.1",
-    "dot": "^1.0.3",
-    "jstat": "^1.5.3",
-    "lodash": "^4.15.0",
-    "rgba-convert": "^0.3.0",
-    "selenium-webdriver": "^2.53.3",
-    "yargs": "^5.0.0"
+    "chromedriver": "2.23.1",
+    "dot": "1.0.3",
+    "jstat": "1.5.3",
+    "lodash": "4.15.0",
+    "rgba-convert": "0.3.0",
+    "selenium-webdriver": "2.53.3",
+    "yargs": "5.0.0"
   }
 }

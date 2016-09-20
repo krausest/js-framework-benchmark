@@ -10,23 +10,21 @@
   "keywords": [],
   "scripts": {
     "build-dev": "gulp build",
-    "build-prod": "gulp build",
-    "start": "http-server -c-1 ."
+    "build-prod": "gulp build"
   },
   "dependencies": {
     "kivi": "1.0.0-rc0"
   },
   "devDependencies": {
-    "del": "^2.2.1",
-    "google-closure-compiler": "^20160713.2.0",
-    "google-closure-compiler-js": "^20160828.0.1",
+    "del": "2.2.1",
+    "google-closure-compiler-js": "20160916.0.0",
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-tslint": "^6.0.1",
-    "gulp-typescript": "^2.13.6",
-    "rollup": "^0.34.7",
-    "rollup-plugin-node-resolve": "^2.0.0",
-    "rollup-plugin-replace": "^1.1.1",
-    "tslint": "^3.13.0",
-    "typescript": "^2.0.0"
+    "gulp-tslint": "6.0.1",
+    "gulp-typescript": "2.13.6",
+    "rollup": "0.34.7",
+    "rollup-plugin-node-resolve": "2.0.0",
+    "rollup-plugin-replace": "1.1.1",
+    "tslint": "3.13.0",
+    "typescript": "2.0.0"
   }
 }

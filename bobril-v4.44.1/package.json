@@ -5,8 +5,7 @@
   "main": "src/app.js",
   "scripts": {
     "build-dev": "bb",
-    "build-prod": "bb b -v dist",
-    "start": "http-server -c-1 ."
+    "build-prod": "bb b -v dist"
   },
   "keywords": [
     "bobril",
@@ -20,10 +19,10 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "bobril-build": "*"
+    "bobril-build": "0.47.0"
   },
   "dependencies": {
-    "bobril": "^4.44.1"
+    "bobril": "4.44.1"
   },
   "bobril": {
     "title": "Bobril v4.44.1",
