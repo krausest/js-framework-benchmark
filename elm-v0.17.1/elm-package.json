@@ -8,6 +8,7 @@
     ],
     "exposed-modules": [],
     "dependencies": {
+        "elm-community/array-extra": "1.0.1 <= v < 2.0.0",
         "elm-lang/core": "4.0.5 <= v < 5.0.0",
         "elm-lang/html": "1.1.0 <= v < 2.0.0",
         "mgold/elm-random-pcg": "3.0.3 <= v < 4.0.0"
