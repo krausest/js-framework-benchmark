@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Array exposing (Array)
+import Array.Extra
 import Html exposing (div, a, h1, span, button, table, td, tr, text, Html, Attribute)
 import Html.App exposing (program)
 import Html.Attributes exposing (id, class, classList, attribute, type', href)
@@ -135,11 +136,12 @@ rowView index { id, label, selected } =
         , td
             [ class "col-md-1" ]
             [ a
-                [ href "#" ]
+                [ href "#"
+                , onClick (Remove index)
+                ]
                 [ span
                     [ class "glyphicon glyphicon-remove"
                     , attribute "aria-hidden" "true"
-                    , onClick (Remove index)
                     ]
                     []
                 ]
@@ -308,8 +310,28 @@ update msg model =
             , Cmd.none
             )
 
-        Select id ->
-            ( model, Cmd.none )
+        Select index ->
+            ( { model
+                | rows =
+                    model.rows
+                        |> List.map
+                            (\row ->
+                                if row.selected == True then
+                                    { row | selected = False }
+                                else
+                                    row
+                            )
+                        |> Array.fromList
+                        |> Array.Extra.update index
+                            (\row ->
+                                { row
+                                    | selected = True
+                                }
+                            )
+                        |> Array.toList
+              }
+            , Cmd.none
+            )
 
         UpdateSeed seed ->
             ( { model | seed = Just seed }, Cmd.none )
@@ -333,7 +355,7 @@ init : ( Model, Cmd Msg )
 init =
     ( { seed = Nothing
       , rows = []
-      , lastId = 0
+      , lastId = 1
       }
     , Random.Pcg.generate (UpdateSeed) (Random.Pcg.independentSeed)
     )
