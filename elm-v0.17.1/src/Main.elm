@@ -8,7 +8,7 @@ import Html.Attributes exposing (id, class, classList, attribute, type', href)
 import Html.Events exposing (onClick)
 import Html.Keyed
 import String
-import Random.Pcg exposing (Seed)
+import Random.Pcg exposing (Seed, Generator)
 
 
 main : Program Never
@@ -184,6 +184,7 @@ view model =
         ]
 
 
+createRandomBatch : Maybe Seed -> Int -> Int -> ( List Row, Seed )
 createRandomBatch maybeSeed amount lastId =
     case maybeSeed of
         Just seed ->
@@ -361,10 +362,12 @@ init =
     )
 
 
+batch : Int -> Generator (List String)
 batch n =
     Random.Pcg.list n generator
 
 
+generator : Generator String
 generator =
     Random.Pcg.map3
         (\a b c ->
@@ -395,5 +398,6 @@ generator =
         (Random.Pcg.int 0 (Array.length nouns - 1))
 
 
+subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
