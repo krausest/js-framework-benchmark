@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>dio v2.0.0</title>
+        <link rel="stylesheet" href="../css/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/main.css">
+	<script src="dio.js"></script>
+	</head>
+	<body>
+		<div id='main'></div>
+
+		<script>
+			var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+			var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+			var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+			var dioVersion = 'dio v' + dio.version;
+
+			document.head.querySelector('title').childNodes[0].nodeValue = dioVersion;
+
+			var startTime;
+			var lastMeasure;
+			function startMeasure(name) {
+			    startTime = performance.now();
+			    lastMeasure = name;
+			}
+
+			function stopMeasure () {
+			    var last = lastMeasure;
+			    if (lastMeasure) {
+			        window.setTimeout(function () {
+			            lastMeasure = null;
+			            var stop = performance.now();
+			            var duration = 0;
+			            console.log(last+" took "+(stop-startTime));
+			        }, 0);
+			    }
+			}
+
+			function _random(max) {
+			    return Math.round(Math.random()*1000)%max;
+			}
+
+			class Store {
+			    constructor() {
+			        this.data = [];
+			        this.selected = undefined;
+			        this.id = 1;
+				}
+			    buildData(count = 1000) {
+			        var data = new Array(count);
+			        for (var i = 0; i < count; i++) {
+			            data[i] = ({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
+			        }
+			        return data;
+			    }
+			    updateData(mod = 10) {
+			    	const data = this.data;
+
+		    	    for (let i = 0; i < data.length; i += 10) {
+			    	    const r = data[i];
+			    	    r.label += " !!!";
+		    	    }
+			    }
+			    delete(id) {
+			    	var idx = id - 1;
+			    	var data = this.data;
+
+			        if (idx === 0) {
+			        	data.shift();
+			        }
+			        else if (id === data.length) {
+			        	data.pop();
+			        }
+			        else {
+			        	data.splice(idx, 1);
+			        }
+			    }
+			    run() {
+			        this.data = this.buildData();
+			        this.selected = undefined;
+			    }
+			    add() {
+			        this.data = this.data.concat(this.buildData(1000));
+			    }
+			    update() {
+			        this.updateData();
+			    }
+			    select(id) {
+			        this.selected = id;
+			    }
+			    runLots() {
+			        this.data = this.buildData(10000);
+			        this.selected = undefined;
+			    }
+			    clear() {
+			        this.data = [];
+			        this.selected = undefined;
+			    }
+			    swapRows() {
+			    	if(this.data.length > 10) {
+			    		var a = this.data[4];
+			    		this.data[4] = this.data[9];
+			    		this.data[9] = a;
+			    	}
+			    }
+			}
+
+			window.rowsUpdated = 0;
+			window.rowsMounted = 0;
+
+			// --------------------------------------
+
+			var colMd1       = {className: 'col-md-1'};
+			var colMd4       = {className: 'col-md-4'};
+			var colMd6       = {className: 'col-md-6'};
+			var colSm6       = {className: 'col-sm-6 smallpad'};
+			var tableClasses = {className: 'table table-hover table-striped test-data'};
+
+			var RowEmpty = {
+				nodeType: 1,
+				type: 'td',
+				props: colMd6,
+				children: []
+			}
+
+			var RowDeleteIcon = {
+				nodeType: 1,
+				type: 'span',
+				props: {className: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'},
+				children: []
+			}
+
+			// class Row extends dio.Component {
+			// 	onDelete() {
+			// 		this.props.onDelete(this.props.id);
+			// 	}
+			// 	onClick() {
+			// 		this.props.onClick(this.props.id);
+			// 	}
+			// 	render() {
+			// 		return (
+			// 			{
+			// 				nodeType: 1,
+			// 				type: 'tr',
+			// 				props: {className: this.props.styleClass},
+			// 				children: [
+			// 					{
+			// 						nodeType: 1,
+			// 						type: 'td',
+			// 						props: colMd1,
+			// 						children: [
+			// 							{
+			// 								nodeType: 3,
+			// 								type: 'text',
+			// 								props: {},
+			// 								children: [this.props.id]
+			// 							}
+			// 						]
+			// 					},
+			// 					{
+			// 						nodeType: 1,
+			// 						type: 'td',
+			// 						props: colMd4,
+			// 						children: [
+			// 							{
+			// 								nodeType: 1,
+			// 								type: 'a',
+			// 								props: {onClick: this.onClick.bind(this)},
+			// 								children: [
+			// 									{
+			// 										nodeType: 3,
+			// 										type: 'text',
+			// 										props: {},
+			// 										children: [this.props.label]
+			// 									}
+			// 								]
+			// 							}
+			// 						]
+			// 					},
+			// 					{
+			// 						nodeType: 1,
+			// 						type: 'td',
+			// 						props: colMd1,
+			// 						children: [
+			// 							{
+			// 								nodeType: 1,
+			// 								type: 'a',
+			// 								props: {onClick: this.onDelete.bind(this)},
+			// 								children: [
+			// 									RowDeleteIcon
+			// 								]
+			// 							}
+			// 						]
+			// 					},
+			// 					RowEmpty
+			// 				]
+			// 			}
+			// 		);
+			// 	}
+			// }
+
+			function Row (props) {
+				return (
+					{
+						nodeType: 1,
+						type: 'tr',
+						props: {className: props.styleClass},
+						children: [
+							{
+								nodeType: 1,
+								type: 'td',
+								props: colMd1,
+								children: [
+									{
+										nodeType: 3,
+										type: 'text',
+										props: {},
+										children: [props.id]
+									}
+								]
+							},
+							{
+								nodeType: 1,
+								type: 'td',
+								props: colMd4,
+								children: [
+									{
+										nodeType: 1,
+										type: 'a',
+										props: {onClick: function () {
+											props.onClick(props.id);
+										}},
+										children: [
+											{
+												nodeType: 3,
+												type: 'text',
+												props: {},
+												children: [props.label]
+											}
+										]
+									}
+								]
+							},
+							{
+								nodeType: 1,
+								type: 'td',
+								props: colMd1,
+								children: [
+									{
+										nodeType: 1,
+										type: 'a',
+										props: {onClick: function () {
+											props.onDelete(props.id);
+										}},
+										children: [
+											RowDeleteIcon
+										]
+									}
+								]
+							},
+							RowEmpty
+						]
+					}
+				);
+			}
+
+			class Main extends dio.Component {
+			    printDuration() {
+			        stopMeasure();
+			    }
+			    componentDidUpdate() {
+			        this.printDuration();
+			    }
+			    componentDidMount() {
+			        this.printDuration();
+			    }
+			    run() {
+			        startMeasure("run");
+			        this.state.store.run();
+			        this.forceUpdate();
+			    }
+			    add() {
+			        startMeasure("add");
+			        this.state.store.add();
+			        this.forceUpdate();
+			    }
+			    update() {
+			        startMeasure("update");
+			        this.state.store.update();
+			        this.forceUpdate();
+			    }
+			    select(id) {
+			        startMeasure("select");
+			        this.state.store.select(id);
+			        this.forceUpdate();
+			    }
+			    delete(id) {
+			        startMeasure("delete");
+			        this.state.store.delete(id);
+			        this.forceUpdate();
+			    }
+			    runLots() {
+			        startMeasure("runLots");
+			        this.state.store.runLots();
+			        this.forceUpdate();
+			    }
+			    clear() {
+			        startMeasure("clear");
+			        this.state.store.clear();
+			        this.forceUpdate();
+			    }
+			    swapRows() {
+			        startMeasure("swapRows");
+			        this.state.store.swapRows();
+			        this.forceUpdate();
+			    }
+			    constructor() {
+			    	super();
+			    	this.state   = {store: new Store()};
+			    	this.autoBind(['delete', 'select', 'run', 'runLots', 'add', 'update', 'clear', 'swapRows']);
+			    }
+			    render(props, state, self) {
+			    	var data   = state.store.data;
+			    	var length = data.length;
+			    	var rows   = new Array(length);
+			        
+			        for (var i = 0; i < length; i++) {
+			        	var d = data[i];
+			        	var id = d.id;
+			        	var label = d.label;
+
+		        	    // rows[i] = {
+		        	    // 	nodeType: 1,
+		        	    // 	type: Row,
+		        	    // 	props: {
+			        	   //  	id: id,
+			        	   //  	label: label, 
+			        	   //  	onDelete: this.delete, 
+			        	   //  	onClick: this.select, 
+			        	   //  	styleClass: id === state.store.selected ? 'danger' : ''
+			        	   //  },
+			        	   //  children: []
+		        	    // }
+
+		        	    rows[i] = Row({
+	        	    		id: id,
+	        	    		label: label,
+	        	    		onDelete: this.delete,
+	        	    		onClick: this.select,
+	        	    		styleClass: id === state.store.selected ? 'danger' : ''
+	        	    	});
+			        }
+
+			        return (
+			        	{
+			        		nodeType: 1,
+			        		type: 'div',
+			        		props: {className: 'container'},
+			        		children: [
+			        			{
+			        				nodeType: 1,
+			        				type: 'div',
+			        				props: {className: 'jumbotron'},
+			        				children: [
+			        					{
+			        						nodeType: 1,
+			        						type: 'div',
+			        						props: {className: 'row'},
+			        						children: [
+			        							{
+			        								nodeType: 1,
+			        								type: 'div',
+			        								props: colMd6,
+			        								children: [
+			        									{
+			        										nodeType: 1,
+			        										type: 'h1',
+			        										props: {},
+			        										children: [
+			        											{
+			        												nodeType: 3,
+			        												type: 'text',
+			        												props: {},
+			        												children: [dioVersion]
+			        											}
+			        										]
+			        									}
+			        								]
+			        							},
+			        							{
+			        								nodeType: 1,
+			        								type: 'div',
+			        								props: colMd6,
+			        								children: [
+			        									{
+			        										nodeType: 1,
+			        										type: 'div',
+			        										props: {className: 'row'},
+			        										children: [
+			        											{
+			        												nodeType: 1,
+			        												type: 'div',
+			        												props: colSm6,
+			        												children: [
+			        													{
+			        														nodeType: 1,
+			        														type: 'button',
+			        														props: {
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'run',
+			        															onClick: this.run
+		        															},
+			        														children: [
+			        															{
+			        																nodeType: 3,
+			        																type: 'text',
+			        																props: {},
+			        																children: ['Create 1,000 rows']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											},
+			        											{
+			        												nodeType: 1,
+			        												type: 'div',
+			        												props: colSm6,
+			        												children: [
+			        													{
+			        														nodeType: 1,
+			        														type: 'button',
+			        														props: {
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'runlots',
+			        															onClick: this.runLots
+		        															},
+			        														children: [
+			        															{
+			        																nodeType: 3,
+			        																type: 'text',
+			        																props: {},
+			        																children: ['Create 10,000 rows']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											},
+			        											{
+			        												nodeType: 1,
+			        												type: 'div',
+			        												props: colSm6,
+			        												children: [
+			        													{
+			        														nodeType: 1,
+			        														type: 'button',
+			        														props: {
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'add',
+			        															onClick: this.add
+		        															},
+			        														children: [
+			        															{
+			        																nodeType: 3,
+			        																type: 'text',
+			        																props: {},
+			        																children: ['Append 1,000 rows']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											},
+			        											{
+			        												nodeType: 1,
+			        												type: 'div',
+			        												props: colSm6,
+			        												children: [
+			        													{
+			        														nodeType: 1,
+			        														type: 'button',
+			        														props: {
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'update',
+			        															onClick: this.update
+		        															},
+			        														children: [
+			        															{
+			        																nodeType: 3,
+			        																type: 'text',
+			        																props: {},
+			        																children: ['Update every 10th row']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											},
+			        											{
+			        												nodeType: 1,
+			        												type: 'div',
+			        												props: colSm6,
+			        												children: [
+			        													{
+			        														nodeType: 1,
+			        														type: 'button',
+			        														props: {
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'clear',
+			        															onClick: this.clear
+		        															},
+			        														children: [
+			        															{
+			        																nodeType: 3,
+			        																type: 'text',
+			        																props: {},
+			        																children: ['Clear']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											},
+			        											{
+			        												nodeType: 1,
+			        												type: 'div',
+			        												props: colSm6,
+			        												children: [
+			        													{
+			        														nodeType: 1,
+			        														type: 'button',
+			        														props: {
+			        															className: 'btn btn-primary btn-block', 
+			        															id: 'swaprows',
+			        															onClick: this.swapRows
+		        															},
+			        														children: [
+			        															{
+			        																nodeType: 3,
+			        																type: 'text',
+			        																props: {},
+			        																children: ['Swap Rows']
+			        															}
+			        														]
+			        													}
+			        												]
+			        											}
+		        											]
+			        									}
+			        								]
+			        							}
+			        						]
+			        					}
+			        				]
+			        			},
+			        			{
+			        				nodeType: 1,
+			        				type: 'table',
+			        				props: {className: 'table table-hover table-striped test-data'},
+			        				children: [
+			        					{
+			        						nodeType: 1,
+			        						type: 'tbody',
+			        						props: {},
+			        						children: rows
+			        					}
+			        				]
+			        			},
+			        			{
+			        				nodeType: 1,
+			        				type: 'span',
+			        				props: {className: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true'},
+			        				children: []
+			        			}
+			        		]
+			        	}
+		        	);
+			    }
+			}
+
+			dio.render(
+				{
+					nodeType: 1, 
+					type: Main, 
+					props: {}, 
+					children: []
+				}, 
+				document.getElementById('main')
+			);
+		</script>
+	</body>
+</html>
