@@ -1,0 +1,30 @@
+{
+  "name": "js-framework-benchmark-vanillajs",
+  "version": "1.0.0",
+  "description": "Smurfs.JS demo",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
+  },
+  "keywords": [
+    "apprun",
+    "js benmarks"
+  ],
+  "author": "Yiyi Sun <yiyisun@gmail.com",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.4",
+    "ts-loader": "^0.8.2",
+    "typescript": "^2.0.3",
+    "webpack": "^1.13.2"
+  },
+  "dependencies": {
+    "apprun": "^0.1.0"
+  }
+}

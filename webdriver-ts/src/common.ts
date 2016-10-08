@@ -24,7 +24,7 @@ export interface FrameworkData {
     uri: string;
 }
 
-function f(name: string, uri: string = null): FrameworkData 
+function f(name: string, uri: string = null): FrameworkData
 {
     return {name, uri: uri? uri : name};
 }
@@ -32,6 +32,7 @@ function f(name: string, uri: string = null): FrameworkData
 export let frameworks = [
     f("angular-v1.5.8"),
     f("angular-v2.0.0"),
+    f("apprun-v0.1.0"),
     f("aurelia-v1.0.3", "aurelia-v1.0.3/dist"),
     f("bobril-v4.44.1"),
     f("cyclejs-v7.0.0"),
@@ -48,11 +49,11 @@ export let frameworks = [
     f("react-lite-v0.15.17"),
     f("react-v15.3.1"),
     f("react-v15.3.1-mobX-v2.5.0"),
-    f("react-v15.3.2-redux-v3.6.0"),    
+    f("react-v15.3.2-redux-v3.6.0"),
     f("riot-v2.6.1"),
     f("tsers-v1.0.0"),
     f("vanillajs"),
     f("vidom-v0.3.18"),
     f("vue-v1.0.26"),
-    f("vue-v2.0.0-beta1")        
+    f("vue-v2.0.0-beta1")
 ];
