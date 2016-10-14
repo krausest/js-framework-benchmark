@@ -84,7 +84,7 @@ export class HomeController {
         this.printDuration();
     };
     swapRows() {
-    	startMeasure("clear");
+    	startMeasure("swapRows");
     	if(this.data.length > 10) {
     		var a = this.data[4];
     		this.data[4] = this.data[9];
