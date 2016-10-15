@@ -23,6 +23,7 @@
     "jstat": "1.5.3",
     "lodash": "4.16.4",
     "rgba-convert": "0.3.0",
+    "selenium-webdriver": "^2.53.3",
     "yargs": "6.0.0"
   }
 }
