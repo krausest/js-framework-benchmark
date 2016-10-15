@@ -4,8 +4,7 @@
   "description": "Benchmark for vue.js framework",
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",
-    "build-prod": "webpack -p -c webpack.config.js",
-    "start": "http-server -c-1 ."
+    "build-prod": "webpack -p -c webpack.config.js"
   },
   "keywords": [
     "ractive"
@@ -18,11 +17,11 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "babel-core": "^6.10.4",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-preset-stage-0": "^6.5.0",
-    "webpack": "^1.13.1"
+    "babel-core": "6.10.4",
+    "babel-loader": "6.2.4",
+    "babel-preset-es2015": "6.9.0",
+    "babel-preset-stage-0": "6.5.0",
+    "webpack": "1.13.1"
   },
   "dependencies": {
     "vue": "1.0.26"

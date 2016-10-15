@@ -1,0 +1,21 @@
+{
+  "name": "js-framework-benchmark-angular-testrunner",
+  "version": "1.0.0",
+  "description": "Simple Benchmark for Javascript client side rendering",
+  "scripts": {
+    "postinstall": "mvn package",
+    "selenium": "mvn package exec:java && node makeTable.js"
+  },
+  "author": "Stefan Krause",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "chromedriver": "^2.24.1",
+    "dot": "^1.0.0",
+    "lodash": "^4.0.0",
+    "rgba-convert": "^0.3.0"
+  }
+}
