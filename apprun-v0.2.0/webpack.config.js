@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './src/main.ts',
+  entry: './src/main.tsx',
   output: {
     filename: './dist/main.js'
   },

@@ -1,4 +1,4 @@
-import app from '../node_modules/apprun/index'
+import app from '../node_modules/apprun/apprun-jsx/index'
 import Store from './store';
 
 var startTime;
@@ -29,7 +29,6 @@ const update = {
     },
 
     remove(store, id) {
-        console.log(id);
         store.delete(id);
         return store;
     },
@@ -61,28 +60,26 @@ const update = {
 }
 
 const view = (model) => {
-
-  return '<table class="table table-hover table-striped test-data"><tbody>' +
-
-    model.data.reduce((prev, curr) => {
-      const selected = curr.id === model.selected ? "class='danger'" : "";
-
-      return prev + `
-      <tr ${selected}>
-      <td class="col-md-1">${curr.id}</td>
-      <td class="col-md-4">
-          <a class="lbl" onclick="app.run('select', ${curr.id})">${curr.label}</a>
+  const rows = model.data.map((curr) => {
+    const selected = curr.id == model.selected ? 'danger' : '';
+    const id = curr.id;
+    return <tr className={selected} id={id}>
+      <td className="col-md-1">{id}</td>
+      <td className="col-md-4">
+          <a className="lbl" onclick={ ()=>app.run('select', id) }>{curr.label}</a>
       </td>
-      <td class="col-md-1">
-        <a class="remove" onclick="app.run('remove', ${curr.id})">
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      <td className="col-md-1">
+        <a className="remove" onclick={ ()=>app.run('remove', id) }>
+          <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>
       </td>
-      <td class="col-md-6"></td>
-    </tr>`;
-    }, '')
+      <td className="col-md-6"></td>
+    </tr>;
+  });
 
-    + '</tbody></table>';
+  return <table className="table table-hover table-striped test-data">
+    <tbody>{rows}</tbody>
+  </table>;
 }
 
 document.getElementById("main").addEventListener('click', e => {

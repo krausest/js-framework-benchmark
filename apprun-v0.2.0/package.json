@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-vanillajs",
+  "name": "js-framework-benchmark-apprun-v0.2.0",
   "version": "1.0.0",
   "description": "Smurfs.JS demo",
   "main": "index.js",
@@ -25,6 +25,6 @@
     "webpack": "^1.13.2"
   },
   "dependencies": {
-    "apprun": "^0.1.0"
+    "apprun": "^0.2.0"
   }
 }
