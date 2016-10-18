@@ -22,31 +22,35 @@
 }(this, function (exports) {
 	'use strict';
 
-	var
-	VERSION                    = '2.0.0',
-	// signatures
-	FRAGMENT                   = '@',
-	SIGNATURE                  = '@DIO',
-	STORE                      = '@DIO/STORE',
-	// objects
-	window                    = typeof global === 'object' ? global : exports,
-	document                  = window.document,
-	mathNS                    = 'http://www.w3.org/1998/Math/MathML',
-	xlinkNS                   = 'http://www.w3.org/1999/xlink',
-	svgNS                     = 'http://www.w3.org/2000/svg',
-	// functions
-	XMLHttpRequest            = window && window.XMLHttpRequest,
-	hasOwnProperty            = Object.prototype.hasOwnProperty,
-	slice                     = Array.prototype.slice,
-	// other
-	isDevEnv                  = registerEnviroment()|0,
-	emptyNode                 = {nodeType: 0, type: '', props: {}, children: []},
-	voidElements              = {
-		'area': 0, 'base': 0, 'br': 0, '!doctype': 0, 'col': 0, 
-		'embed': 0, 'wbr': 0, 'track': 0, 'hr': 0, 'img': 0, 'input': 0, 
-		'keygen': 0, 'link': 0, 'meta': 0, 'param': 0, 'source': 0
-	},
-	specialVirtualElementTypeRegExp;
+	var VERSION                    = '2.1.0',
+		// objects
+		_window                   = typeof global === 'object' ? global : window,
+		_document                 = _window.document,
+		// namespaces
+		mathNS                    = 'http://www.w3.org/1998/Math/MathML',
+		xlinkNS                   = 'http://www.w3.org/1999/xlink',
+		svgNS                     = 'http://www.w3.org/2000/svg',
+		// functions
+		XMLHttpRequest            = _window.XMLHttpRequest,
+		bind                      = _window.Function.prototype.bind || functionBind,
+		hasAddEventListener       = _window.Node && _window.Node.prototype.addEventListener !== void 0,
+		// other
+		isDevEnv                  = registerEnviroment(),
+		emptyObject               = {},
+		emptyArray                = [],
+		emptyVNode                = {
+			nodeType: 0, 
+			type: '', 
+			props: emptyObject, 
+			children: emptyArray,
+			_el: null
+		},
+		voidElements              = {
+			'area':   0, 'base':  0, 'br':   0, '!doctype': 0, 'col':    0,'embed':  0,
+			'wbr':    0, 'track': 0, 'hr':   0, 'img':      0, 'input':  0, 
+			'keygen': 0, 'link':  0, 'meta': 0, 'param':    0, 'source': 0
+		},
+		specialVirtualElementTypeRegExp;
 
 
 	/**
@@ -68,7 +72,7 @@
 	 */
 	function sliceArray (subject, startIndex, endIndex) {
 		return (
-			slice.call(subject, startIndex || 0, endIndex)
+			Array.prototype.slice.call(subject, startIndex || 0, endIndex)
 		);
 	}
 
@@ -83,18 +87,30 @@
 	function spliceArray (subject, index, deleteCount, item) {
 		if (item === void 0) {
 			// remove first item using faster shift if start of array
-			if (index === 0) { return subject.shift(); }
+			if (index === 0) { 
+				return subject.shift(); 
+			}
 			// remove last item using faster pop if end of array
-			else if (index >= subject.length - 1) { return subject.pop(); }
+			else if (index > subject.length - 1) { 
+				return subject.pop(); 
+			}
 			// remove at a specific index
-			else { return subject.splice(index, deleteCount); }
+			else { 
+				return subject.splice(index, 1); 
+			}
 		} else {
 			// prepend using faster unshift if start of array
-			if (index === 0) { return subject.unshift(item); }
+			if (index === 0) { 
+				return subject.unshift(item); 
+			}
 			// append using faster push to end of array
-			else if (index >= subject.length - 1) { return subject[subject.length] = item; }
+			else if (index > subject.length - 1) { 
+				return subject[subject.length] = item; 
+			}
 			// insert at index
-			else { return subject.splice(index, deleteCount, item); }
+			else { 
+				return subject.splice(index, deleteCount, item); 
+			}
 		}
 	}
 
@@ -113,7 +129,7 @@
 		// throw error
 		else { throw error; }
 	}
-	
+
 	/**
 	 * [].forEach or for in {}
 	 * 
@@ -122,11 +138,8 @@
 	 * @param  {*=}             thisArg
 	 */
 	function forEach (subject, callback, thisArg) {
-		if (subject !== void 0 && subject !== null) {
-			var len;
-
-			if (subject.constructor === Array) {
-				// arrays/array-like object
+		if (isDefined(subject)) {
+			if (subject.constructor === Array || isNumber(subject.length)) {
 				for (var i = 0, len = subject.length; i < len; i = i + 1) {
 					if (callback.call(thisArg, subject[i], i, subject) === false) {
 						return void 0;
@@ -322,7 +335,7 @@
 	 * @param {function} callback
 	 */
 	function addEventListener (target, eventName, callback) {
-		if (target.addEventListener !== void 0) {
+		if (hasAddEventListener) {
 			target.addEventListener(eventName, callback, false);
 		} else if (target.attachEvent !== void 0) {
 			// ie8 has no currentTarget, target or preventDefault equivalent, emulate
@@ -347,22 +360,30 @@
 	 * @return {function}
 	 */
 	function functionBind (func, thisArg) {
-		if (func.bind !== void 0) {
-			return func.bind(thisArg);
-		} else {
-			return function () {
-				var args = arguments,
-					len = args.length;
+		var pos, offset;
 
-				switch(len) {
-					case 0:  func.call(thisArg); break;
-					case 1:  func.call(thisArg, args[0]); break;
-					case 2:  func.call(thisArg, args[0], args[1]); break;
-					case 3:  func.call(thisArg, args[0], args[1], args[2]); break;
-					case 4:  func.call(thisArg, args[0], args[1], args[2], args[3]); break;
-					default: func.apply(thisArg, sliceArray(args));
-				}
+		isFunction(func) ? (pos = offset = 2) : (thisArg = func, func = this, pos = offset = 1);
+
+		var len = arguments.length - pos, args = [];
+
+		if (len > 0) {
+			for (var i = 0; i < len; i = i + 1) { 
+				args[i] = arguments[i + offset]; 
+			} 
+		}
+
+		return function () {
+			var _len = arguments.length, _args;
+
+			if (_len !== 0) { 
+				_args = [];
+
+				for (var j = 0; j < _len; j = j + 1) { 
+					_args[j] = arguments[j]; 
+				} 
 			}
+
+			return func.apply(thisArg, args.concat(_args || emptyArray));
 		}
 	}
 
@@ -383,6 +404,16 @@
 	function isString (subject) {
 		return (
 			typeof subject === 'string'
+		);
+	}
+
+	/**
+	 * @param  {*}
+	 * @return {boolean}
+	 */
+	function isNumber (subject) {
+		return (
+			typeof subject === 'number'
 		);
 	}
 
@@ -417,6 +448,16 @@
 	}
 
 	/**
+	 * @param  {*}  subject 
+	 * @return {boolean}
+	 */
+	function isArrayLike (subject) {
+		return (
+			isDefined(subject) && isNumber(subject.length) === false && isFunction(subject) === false
+		);
+	}
+
+	/**
 	 * curry function
 	 * 
 	 * @param  {function} subject
@@ -432,9 +473,11 @@
 				e.preventDefault();
 			}
 			// if empty args, else
-			return (args === void 0 || args === null || args.length === 0) ? 
+			return (
+				(args === void 0 || args === null || args.length === 0) ? 
 					subject.call(this, e) : 
-					subject.apply(this, args);
+					subject.apply(this, args)
+			);
 		}
 	}
 
@@ -475,6 +518,145 @@
 	 * ---------------------------------------------------------------------------------
 	 */
 
+	/**
+	 * DOM factory
+	 *
+	 * @param {any[]=} types
+	 * create references to common dom elements
+	 */
+	function DOM (types) {
+		types = types || [
+			'h1','h2','h3','h4','h5', 'h6','audio','video','canvas',
+			'header','nav','main','aside','footer','section','article','div',
+			'form','button','fieldset','form','input','label','option','select','textarea',
+			'ul','ol','li','p','a','pre','code','span','img','strong','time','small','hr','br',
+			'table','tr','td','th','tbody','thead',
+		];
+
+		var elements = {};
+
+		for (var i = 0, len = types.length; i < len; i = i + 1) {
+			var type = types[i]; elements[type] = bind.call(VElement, null, type);
+		}
+
+		elements.text = VText;
+		elements.fragment = VFragment;
+		
+		if (elements.svg !== void 0) {
+			var svgs = [
+				'rect','path','polygon','circle','ellipse','line','polyline','image','marker','a','symbol',
+				'linearGradient','radialGradient','stop','filter','use','clipPath','view','pattern','svg',
+				'g','defs','text','textPath','tspan','mpath','defs','g','marker','mask'
+			];
+
+			for (var i = 0, len = svgs.length; i < len; i = i + 1) {
+				var type = svgs[i]; elements[type] = bind.call(VSvg, null, type);
+			}
+		}
+
+		return elements;
+	}
+
+	/**
+	 * virtual fragment node factory
+	 * 
+	 * @param {any[]} children
+	 */
+	function VFragment (children) {
+		return {
+			nodeType: 11, 
+			type: '@', 
+			props: emptyObject, 
+			children: children,
+			_el: null
+		};
+	}
+
+	/**
+	 * virtual text node factory
+	 * 
+	 * @param {string=} text
+	 */
+	function VText (text) {
+		return {
+			nodeType: 3, 
+			type: 'text', 
+			props: emptyObject, 
+			children: text, 
+			_el: null
+		};
+	}
+		
+	/**
+	 * virtual element node factory
+	 * @param {string} type
+	 * @param {Object=} props
+	 * @param {any[]=}  children
+	 */
+	function VElement (type, props, children) {
+		return {
+			nodeType: 1, 
+			type: type, props: props || emptyObject, 
+			children: children || [], 
+			_el: null
+		};
+	}
+
+	/**
+	 * virtual svg node factory
+	 * 
+	 * @param {string} type
+	 * @param {Object=} props
+	 * @param {any[]=} children
+	 */
+	function VSvg (type, props, children) {
+		props = props || {}; props.xmlns = svgNS;
+
+		return {
+			nodeType: 1, 
+			type: type, 
+			props: props, 
+			children: children || [],
+			_el: null
+		};
+	}
+
+	/**
+	 * virtual component node factory
+	 * 
+	 * @param {function} type
+	 * @param {Object=}  props
+	 * @param {any[]=}   children
+	 */
+	function VComponent (type, props, children) {
+		return {
+			nodeType: 2, 
+			type: type, 
+			props: props || emptyObject, 
+			children: children || emptyArray,
+			_el: null
+		};
+	}
+
+	/**
+	 * virtual blueprint node factory
+	 * 
+	 * @param  {Object} VNode
+	 * @return {Object} Vnode
+	 */
+	function VBlueprint (VNode) {
+		if (isArray(VNode)) {
+			for (var i = 0, len = VNode; i < len; i = i + 1) {
+				VBlueprint(VNode[i]);
+			}
+		} else {
+			if (VNode._el === null) {
+				VNode._el = createNode(VNode);
+			}
+		}
+
+		return VNode;
+	}
 
 	/**
 	 * create virtual element
@@ -484,16 +666,13 @@
 	 * @param  {...*=}                    children
 	 * @return {Object}
 	 */
-	function createVirtualElement (type, props) {
-		var length   = arguments.length,
-			children = [],
-		// position children element(s) begin, h('tag', {}, ...children) -> h(0, 1, 2)
-		position = 2;
+	function createElement (type, props) {		
+		var length = arguments.length, children = [], position = 2;
 
 		// if props = element
-		if (props === void 0 || props.constructor !== Object || props.children) {
+		if (props === void 0 || props.nodeType !== void 0 || props.constructor !== Object) {
 			// update position if props !== undefined|null
-			if (props !== null) position = 1;
+			if (props !== null) { position = 1; }
 
 			// default
 			props = {};
@@ -501,7 +680,7 @@
 
 		// if !props.xmlns && type === svg|math assign svg && math props.xmlns
 		if (props.xmlns === void 0) {
-			if (type === 'svg') { props.xmlns = svgNS; }
+			if (type === 'svg') { props.xmlns = svgNS; } 
 			else if (type === 'math') { props.xmlns = mathNS; }
 		}
 
@@ -511,30 +690,37 @@
 	
 			if (child !== void 0 && child !== null && child.constructor === Array) {
 				var len = child.length;
+
 				// array child
 				for (var j = 0; j < len; j = j + 1) {
-					assignVirtualElement(child[j], children); 
+					assignElement(child[j], children); 
 				} 
 			} else {
-				assignVirtualElement(child, children);
+				assignElement(child, children);
 			}
 		}
 
-		var nodeType = type === '@' ? 11 : 1;
+		var typeofType = typeof type;
 
 		// create element
-		var element = {nodeType: nodeType, type: type, props: props, children: children};
+		if (typeofType === 'function') {
+			return VComponent(type, props, children);
+		}
 
-		// if special type, i.e [type] | div.class | #id
+		var element;
+
+		if (type.charAt(0) === '@') {
+			element = VFragment(children);
+		} else {
+			element = VElement(type, props, children);
+		}
+
+		// special type, i.e [type] | div.class | #id
 		if (
-			typeof type === 'string' &&
-			(
-				type.indexOf('.') > -1 || 
-				type.indexOf('[') > -1 || 
-				type.indexOf('#') > -1
-			)
+			typeofType === 'string' &&
+			(type.indexOf('.') > -1 || type.indexOf('[') > -1 || type.indexOf('#') > -1)
 		) {
-			element = specialVirtualElementType(element);
+			specialVirtualElementType(element);
 		}
 
 		return element;
@@ -546,19 +732,18 @@
 	 * @param  {*}     element
 	 * @param  {any[]} children
 	 */
-	function assignVirtualElement (element, children) {
+	function assignElement (element, children) {
 		var childNode;
 			
-		if (element === void 0 || element === null || element.type === void 0) {
+		if (element === void 0 || element === null || element.nodeType === void 0) {
 			// primitives, string, bool, number
-			childNode = {nodeType: 3, type: 'text', props: {}, children: ['' + element]};
-		}	
-		else if (element.type !== void 0) {
+			childNode = VText(element);
+		} else if (element.nodeType !== void 0) {
 			// default element
 			childNode = element;
 		} else if (typeof element === 'function') {
 			// component
-			childNode = {nodeType: 1, type: element, props: {}, children: []};
+			childNode = VComponent(element.type, element.props, element.children);
 		}
 
 		// push to children array
@@ -574,7 +759,7 @@
 	 * @return {Object} element
 	 */
 	function specialVirtualElementType (element) {
-		var matches, classes = [],
+		var matches, classes = '',
 			// reference type
 			type = element.type,
 			// reference/create props
@@ -608,7 +793,7 @@
 				props.id = matchedValue;
 			} else if (matchedType === '.') { 
 				// class(es)
-				classes[classes.length] = matchedValue;
+				classes += ' ' + matchedValue;
 			} else if (matchedProp.charAt(0) === '[') { 
 				// attribute
 				var prop = matchedPropValue;
@@ -625,13 +810,11 @@
 
 		// if classes, assign classes
 		if (classes.length !== 0) {
-			props.className = classes.join(' ');
+			props.className = classes;
 		}
 
 		// assign props
 		element.props = props;
-
-		return element;		
 	}
 
 	/**
@@ -684,10 +867,10 @@
 	 * @param  {string} element
 	 * @return {function}
 	 */
-	function createFactory (element) {
-		return function (props) {
-			return createVirtualElement.call(void 0, element, props, sliceArray(arguments, 1));
-		} 
+	function createFactory (type, props) {
+		return props === void 0 ? 
+			bind.call(VElement, null, type) : 
+			bind.call(VElement, null, type, props);
 	}
 
 
@@ -708,6 +891,7 @@
 	 * @return {boolean}
 	 */
 	function isEventName (name, value) {
+		// opt: getting the first two characters with charAt is faster than substr(0, 2)
 		return (
 			name.charAt(0) === 'o' && 
 			name.charAt(1) === 'n' && 
@@ -734,16 +918,16 @@
 	 * @param {Node}   element
 	 * @param {Object} refs
 	 */
-	function assignRefs (ref, element, refs) {
-		if (ref !== void 0) {
-			// string ref
-			if (typeof ref === 'string') {
-				// assign ref
-				refs[ref] = element;
-			} else if (typeof ref === 'function') {
-				// function ref
-				ref(element);
-			}
+	function assignRefs (element, ref, refs) {
+		// hoist typeof info
+		var typeOfRef = typeof ref;
+
+		if (typeOfRef === 'string') {
+			// string ref, assign
+			refs[ref] = element;
+		} else if (typeOfRef === 'function') {
+			// function ref, call with element as arg
+			ref(element);
 		}
 	}
 
@@ -779,14 +963,14 @@
 	 * @param  {number} onlyEvents
 	 */
 	function assignProp (target, name, props, onlyEvents) {
-		var value = props[name];
+		var propValue = props[name];
 
-		if (isEventName(name, value) === true) {
+		if (isEventName(name, propValue)) {
 			// add event listener
-			addEventListener(target, extractEventName(name), value);
+			addEventListener(target, extractEventName(name), propValue);
 		} else if (onlyEvents !== 1) {
 			// add attribute
-			updateProp(target, 'setAttribute', name, value, props.xmlns);
+			updateProp(target, 'setAttribute', name, propValue, props.xmlns);
 		}
 	}
 
@@ -794,101 +978,58 @@
 	 * assign/update/remove prop
 	 * 
 	 * @param  {Node}   target
+	 * @param  {string} action
 	 * @param  {string} name
-	 * @param  {*}      value
-	 * @param  {string} action       
+	 * @param  {*}      propValue
 	 * @param  {string} namespace
 	 */
-	function updateProp (target, action, name, value, namespace) {
+	function updateProp (target, action, name, propValue, namespace) {
 		// avoid refs, keys, events and xmlns namespaces
-		if (
-			name === 'ref' ||
-			name === 'key' ||
-			isEventName(name, value) === true || 
-			value === svgNS ||
-			value === mathNS
+		if (name === 'ref' || 
+			name === 'key' || 
+			isEventName(name, propValue) || 
+			propValue === svgNS || 
+			propValue === mathNS
 		) {
 			return void 0;
 		}
 
 		// if xlink:href set, exit, 
 		if (name === 'xlink:href') {
-			target[action + 'NS'](xlinkNS, 'href', value);
-			return void 0;
+			return (target[action + 'NS'](xlinkNS, 'href', propValue), void 0);
 		}
 
-		var isSVG = 0;
+		var isSVG = 0, propName;
 
-		// normalize class/className references, className:svg !== className:html
+		// normalize class/className references, i.e svg className !== html className
+		// uses className instead of class for html elements
 		if (namespace === svgNS) {
-			isSVG = 1;
-			if (name === 'className') name = 'class';
+			isSVG = 1, propName = name === 'className' ? 'class' : name;
 		} else {
-			// optimization, use className instead of class
-			if (name === 'class') name = 'className';
+			propName = name === 'class' ? 'className' : name;
 		}
 
-		var isDefinedValue = (value !== null && value !== void 0) ? 1 : 0;
+		var targetProp = target[propName];
+		var isDefinedValue = (propValue !== null && propValue !== false && propValue !== void 0) ? 1 : 0;
 
-		// objects
-		if (isDefinedValue === 1 && typeof value === 'object') {
-			if (name === 'className' || name === 'class') {
-				var className = classNameObjectToString(value);
-
-				isSVG === 1 ? target[action](name, className) : target[name] = className;
-			} else {
-				// retrieve attr object
-				var targetAttr = target[name];
-
-				// exit early if undefined
-				if (targetAttr === void 0) return void 0;
-
-				updatePropObject(value, targetAttr);
-			}
-		}
-		// default
-		else {
-			if (target[name] !== void 0 && isSVG === 0) {
-				target[name] = value;
+		// objects, adds property if undefined, else, updates each memeber of attribute object
+		if (isDefinedValue === 1 && typeof propValue === 'object') {
+			targetProp === void 0 ? target[propName] = propValue : updatePropObject(propValue, targetProp);
+		} else {
+			if (targetProp !== void 0 && isSVG === 0) {
+				target[propName] = propValue;
 			} else {
 				// remove attributes with false/null/undefined values
-				if (isDefinedValue === 0 || value === false) {
-					action = 'removeAttribute';
-				} else if (value === true) {
-					// reduce value to an empty string if true, 
-					// checked=true --> checked
-					value = '';
+				if (isDefinedValue === 0) {
+					target['removeAttribute'](propName);
+				} else {
+					// reduce value to an empty string if true, <tag checked=true> --> <tag checked>
+					if (propValue === true) { propValue = ''; }
+
+					target[action](propName, propValue);
 				}
-
-				target[action](name, value);
 			}
 		}
-	}
-
-	/**
-	 * convert className Object to string
-	 * 
-	 * @param  {Object} value
-	 * @return {string}
-	 */
-	function classNameObjectToString (value) {
-		var className = '';
-
-		for (var propName in value) {
-			var propValue = value[propName];
-
-			// if !(falsey), add className
-			if (propValue !== void 0 && 
-				propValue !== null && 
-				propValue !== false && 
-				propValue !== 0 &&
-				propValue !== ''
-			) {
-				className = className + propValue;
-			}
-		}
-
-		return className;
 	}
 
 	/**
@@ -944,9 +1085,13 @@
 	 */
 	function diffProps (newProps, oldProps, namespace, propsDiff) {
 		// diff newProps
-		for (var newName in newProps) { diffNewProps(newProps, oldProps, newName, namespace, propsDiff); }
+		for (var newName in newProps) { 
+			diffNewProps(newProps, oldProps, newName, namespace, propsDiff); 
+		}
 		// diff oldProps
-		for (var oldName in oldProps) { diffOldProps(newProps, oldName, namespace, propsDiff); }
+		for (var oldName in oldProps) { 
+			diffOldProps(newProps, oldName, namespace, propsDiff); 
+		}
 
 		return propsDiff;
 	}
@@ -956,6 +1101,7 @@
 	 * 
 	 * @param  {Object}  newProps 
 	 * @param  {Object}  oldProps 
+	 * @param  {string}  newName
 	 * @param  {string}  namespace
 	 * @param  {Array[]} propsDiff
 	 * @return {Array[]}          
@@ -973,14 +1119,16 @@
 	 * diff oldProps agains newProps
 	 * 
 	 * @param  {Object}  newProps 
-	 * @param  {Object}  oldProps 
+	 * @param  {Object}  oldName 
 	 * @param  {string}  namespace
 	 * @param  {Array[]} propsDiff
 	 * @return {Array[]}          
 	 */
-	function diffOldProps (newProps, oldNode, namespace, propsDiff) {
-		if (newProps[oldNode] === null || newProps[oldNode] === void 0) {
-			propsDiff[propsDiff.length] = ['removeAttribute', oldNode, '', namespace];
+	function diffOldProps (newProps, oldName, namespace, propsDiff) {
+		var newValue = newProps[oldName];
+
+		if (newValue === void 0 || newValue === null) {
+			propsDiff[propsDiff.length] = ['removeAttribute', oldName, '', namespace];
 		}
 	}
 
@@ -1001,7 +1149,7 @@
 	 * @param  {Node}   parent
 	 * @param  {Node}   prevNode
 	 */
-	function removeChild (oldNode, parent, prevNode) {
+	function removeNode (oldNode, parent, prevNode) {
 		// remove node
 		parent.removeChild(prevNode);
 
@@ -1018,7 +1166,7 @@
 	 * @param  {Node}   nextNode
 	 * @param  {Node=}  beforeNode
 	 */
-	function insertBefore (newNode, parent, nextNode, beforeNode) {
+	function insertNode (newNode, parent, nextNode, beforeNode) {
 		if (newNode._owner !== void 0 && newNode._owner.componentWillMount !== void 0) {
 			newNode._owner.componentWillMount();
 		}
@@ -1039,7 +1187,7 @@
 	 * @param  {Node}   nextNode
 	 * @param  {Node=}  beforeNode
 	 */
-	function appendChild (newNode, parent, nextNode, beforeNode) {
+	function appendNode (newNode, parent, nextNode, beforeNode) {
 		if (newNode._owner !== void 0 && newNode._owner.componentWillMount !== void 0) {
 			newNode._owner.componentWillMount();
 		}
@@ -1059,7 +1207,7 @@
 	 * @param  {Node}   prevNode
 	 * @param  {Node}   nextNode
 	 */
-	function replaceChild (newNode, parent, nextNode, prevNode) {
+	function replaceNode (newNode, parent, nextNode, prevNode) {
 		// replace node
 		parent.replaceChild(nextNode, prevNode);
 	}
@@ -1076,12 +1224,12 @@
 	 */
 	function addNode (index, oldLength, parent, newElement, newNode, oldNode) {
 		// append/insert
-		if (index >= oldLength - 1) {
+		if (index > oldLength - 1) {
 			// append node to the dom
-			appendChild(newNode, parent, newElement);
+			appendNode(newNode, parent, newElement);
 		} else {
 			// insert node to the dom at an specific position
-			insertBefore(newNode, parent, newElement, oldNode._el);
+			insertNode(newNode, parent, newElement, oldNode._el);
 		}
 	}
 
@@ -1093,62 +1241,86 @@
 	 * @param  {string=} namespace
 	 * @return {Node}
 	 */
-	function createElement (subject, component, namespace) {
+	function createNode (subject, component, namespace) {
 		// textNode
 		if (subject.nodeType === 3) {
-			var textContent = subject.children[0] || '';
-
-			return subject._el = document.createTextNode(
-				typeof textContent !== 'string' ? '' + textContent : textContent
-			);
+			return subject._el = _document.createTextNode(subject.children || '');
 		}
 		// element
 		else {
-			var element, newNode  = extractNode(subject);
+			var element, props;
 
-			var type     = newNode.type,
-				props    = newNode.props,
-				children = newNode.children,
-				len      = children.length;
-
-			if (subject._owner !== void 0) {
-				component = subject._owner;
+			// clone, blueprint node/hoisted vnode
+			if (subject._el) {
+				element = subject._el;
+				props = subject.props;
 			}
-
-			// assign namespace
-			if (props.xmlns !== void 0) namespace = props.xmlns;
-
-			// if namespaced
-			if (namespace !== void 0) {
-				// create namespaced element
-				element = document.createElementNS(namespace, type);
-				// assign xlmns
-				if(props.xmlns === void 0) props.xmlns = namespace;
-			}
-			// not namespaced
+			// create
 			else {
-				element = newNode.nodeType === 11 ? document.createDocumentFragment() : document.createElement(type);
-			}			
+				var newNode  = extractNode(subject),
+					type     = newNode.type,
+					children = newNode.children,
+					len      = children.length;
+					props    = newNode.props;
+
+				// vnode has component attachment
+				if (subject._owner !== void 0) { component = subject._owner; }
+
+				// assign namespace
+				if (props.xmlns !== void 0) { namespace = props.xmlns; }
+
+				// if namespaced, create namespaced element
+				if (namespace !== void 0) {
+					// if undefined, assign svg namespace
+					if (props.xmlns === void 0) {
+						props.xmlns = namespace;
+					}
+
+					element = _document.createElementNS(namespace, type);
+				} else {
+					element = newNode.nodeType === 11 ? 
+									_document.createDocumentFragment() : 
+									_document.createElement(type);
+				}
+
+				// diff and update/add/remove props
+				assignProps(element, props, 0);
+
+				if (len !== 0) {
+					// create children
+					for (var i = 0; i < len; i = i + 1) {
+						var newChild = children[i];
+
+						// clone vnode of hoisted/blueprint node
+						if (newChild._el) {
+							newChild = children[i] = {
+								nodeType: newChild.nodeType,
+								type: newChild.type, 
+								props: newChild.props, 
+								children: newChild.children,
+								_el: newChild._el.cloneNode(true)
+							};
+						}
+
+						// append child
+						appendNode(newChild, element, createNode(newChild, component, namespace));
+
+						// we pass namespace and component so that 
+						// 1. when the element is an svg element all child elements are svg namespaces and 
+						// 2. so that refs nested in childNodes can propagate to the parent component
+					}
+				}
+
+				subject._el = element;
+			}
 
 			// refs
 			if (props.ref !== void 0 && component !== void 0) {
-				assignRefs(props.ref, element, component.refs);
-			}
-
-			// diff and update/add/remove props
-			assignProps(element, props, 0);
-
-			if (len !== 0) {
-				// create children
-				for (var i = 0; i < len; i = i + 1) {
-					var newChild = children[i];
-					// append child
-					appendChild(newChild, element, createElement(newChild, component, namespace));	
-				}
+				assignRefs(element, props.ref, component.refs);
 			}
 
 			// cache element reference
-			return subject._el = newNode._el = element;
+			return element;
 		}
 	}
 
@@ -1170,33 +1342,27 @@
 	 * @return {Object} 
 	 */
 	function extractNode (subject) {
-		var type       = subject.type,
-			typeOfType = typeof type;
-
 		// static node
-		if (typeOfType === 'string') {
+		if (subject.nodeType !== 2) {
 			return subject;
 		}
 
-		var component, vnode;
+		var component, type = subject.type;
 
-		if (typeOfType === 'function') {
-			if (type._component !== void 0) {
-				// cache
-				component = type._component;
-			} else if (type.constructor === Function && type.prototype.render === void 0) {
-				// function components
-				component = type._component = createClass(type);
-			} else {
-				// class / createClass components
-				component = type;
-			}
-			subject._owner = new component(subject.props || component.defaultProps);
+		if (type._component !== void 0) {
+			// cache
+			component = type._component;
+		} else if (type.constructor === Function && type.prototype.render === void 0) {
+			// function components
+			component = type._component = createClass(type);
 		} else {
-			subject._owner = subject.type;
+			// class / createClass components
+			component = type;
 		}
 
-		return vnode = retrieveVirtualElement(subject);
+		subject._owner = new component(subject.props || component.defaultProps);
+
+		return retrieveElement(subject);
 	}
 
 	/**
@@ -1205,8 +1371,12 @@
 	 * @param  {Object} subject
 	 * @return {Object}
 	 */
-	function retrieveVirtualElement (subject) {
-		var vnode, component = subject._owner;
+	function retrieveElement (subject) {
+		var vnode, component = subject._owner, children = subject.props.children;
+
+		if (children !== void 0 && children.length !== 0) {
+			component.props.children = children;
+		}
 		
 		// retrieve vnode
 		vnode = component.render(component.props, component.state, component);
@@ -1221,7 +1391,7 @@
 		subject.children = vnode.children;
 
 		// assign component node
-		component._node  = subject;
+		component._vnode  = subject;
 
 		return vnode;
 	}
@@ -1243,168 +1413,206 @@
 	 * @param {Object} oldNode  
 	 */
 	function patch (newNode, oldNode) {
-		var newNodeType = newNode.nodeType,
-			oldNodeType = oldNode.nodeType;
+		var newNodeType = newNode.nodeType, oldNodeType = oldNode.nodeType;
 
 		// remove operation
-		if (newNodeType === 0) { return 1; }
+		if (newNodeType === 0) { 
+			return 1; 
+		}
 		// add operation
-		else if (oldNodeType === 0) { return 2; }
+		else if (oldNodeType === 0) { 
+			return 2; 
+		}
 		// text operation
-		else if (newNodeType === 3 && newNodeType === 3) { if (newNode.children[0] !== oldNode.children[0]) { return 3; } }
-		// key operation
-		else if (newNode.props.key !== oldNode.props.key) { return 5; }
+		else if (newNodeType === 3 && oldNodeType === 3) { 
+			if (newNode.children !== oldNode.children) {
+				return 3; 
+			} 
+		}
 		// replace operation
-		else if (newNode.type !== oldNode.type) { return 4; }
-
+		else if (newNode.type !== oldNode.type) {
+			return 4; 
+		}
+		// key operation
+		else if (newNode.props.key !== oldNode.props.key) {
+			return 5; 
+		}
 		// recursive
 		else {
 			// extract node from possible component node
-			var _newNode = extractNode(newNode);
+			var currentNode = newNodeType === 2 ? extractNode(newNode) : newNode;
 
-			// opt: if _newNode and oldNode are the same, exity early
-			if (_newNode === oldNode) { return 0; }
+			// opt1: if currentNode and oldNode are the identical, exit early
+			if (currentNode !== oldNode) {
+				// opt2: patch props only if oldNode is not a textNode 
+				// and the props objects of the two noeds are not equal
+				if (currentNode.props !== oldNode.props) {
+					patchProps(currentNode, oldNode); 
+				}
 
-			// opt: patch props only if oldNode is not a textNode and the props objects of the two noeds are not equal
-			if (oldNode.nodeType === 1 && _newNode.props !== oldNode.props) { patchProps(_newNode, oldNode); }
+				// references, children & children length
+				var currentChildren = currentNode.children,
+					oldChildren     = oldNode.children,
+					newLength       = currentChildren.length,
+					oldLength       = oldChildren.length;
 
-			// references, children & children length
-			var newChildren = _newNode.children,
-				oldChildren = oldNode.children,
-				newLength   = newChildren.length,
-				oldLength   = oldChildren.length;
+				// opt3: if new children length is 0 clear/remove all children
+				if (newLength === 0) {
+					// but only if old children is not already cleared
+					if (oldLength !== 0) {
+						oldNode._el.textContent = '';
+						oldNode.children = currentChildren;
+					}	
+				}
+				// if newNode has children
+				// opt4: if currentChildren and oldChildren are identical, exit early
+				else {
+					// count of index change when we remove items to keep track of the new index to reference
+					var deleteCount = 0, parentElement = oldNode._el;
 
-			// opt: if new children length is 0 clear/remove all children
-			if (newLength === 0) {
-				// but only if old children is not already cleared
-				if (oldLength !== 0) {
-					oldNode._el.textContent = '';
-					oldNode.children = _newNode.children;
-				}	
-			}
-			// if newNode has children
-			else {
-				// count of index change when we .splice to keep track of the new index to reference
-				var deleteCount = 0,
-					parent      = oldNode._el;
+					// for loop, the end point being which ever is the 
+					// greater value between newLength and oldLength
+					for (var i = 0; i < newLength || i < oldLength; i = i + 1) {
+						var newChild = currentChildren[i] || emptyVNode,
+							oldChild = oldChildren[i] || emptyVNode,
+							action   = patch(newChild, oldChild);
 
-				// for loop, the end point being which ever is the greater value between newLength and oldLength
-				for (var i = 0; i < newLength || i < oldLength; i = i + 1) {
-					var newChild = newChildren[i] || emptyNode,
-						oldChild = oldChildren[i] || emptyNode,
-						action   = patch(newChild, oldChild);
+						// if action dispatched, 
+						// ref: 1 - remove, 2 - add, 3 - text update, 4 - replace, 5 - key
+						if (action !== 0) {
+							// index is always the index 'i' (minus) the deleteCount to get the correct
+							// index amidst .splice operations that mutate oldChildren's indexes
+							var index = i - deleteCount;
 
-					// if action dispatched, ref: 1 - remove, 2 - add, 3 - text update, 4 - replace, 5 - key
-					if (action !== 0) {
-						// index is always the index 'i' (minus) the deleteCount to get the correct
-						// index amidst .splice operations that mutate oldChildren's indexes
-						var index = i - deleteCount;
+							switch (action) {
+								// remove operation
+								case 1: {
+									var nodeToRemove = oldChildren[index];
 
-						switch (action) {
-							// remove operation
-							case 1: {
-								var removeNode = oldChildren[index];
+									// remove node from the dom
+									removeNode(nodeToRemove, parentElement, nodeToRemove._el);
+									// normalize old children, remove from array
+									spliceArray(oldChildren, index, 1);
+									// update delete count, increment
+									deleteCount = deleteCount + 1;
 
-								// remove node from the dom
-								removeChild(removeNode, parent, removeNode._el);
-								// normalize old children, remove from array
-								spliceArray(oldChildren, index, 1);
-								// update delete count, increment
-								deleteCount = deleteCount + 1;
-								// update old children length, decrement
-
-								break;
-							}
-							// add operation
-							case 2: {
-								addNode(index, oldLength, parent, createElement(newChild), newChild, oldChild);
-
-								// normalize old children, add to array								
-								spliceArray(oldChildren, index, 0, newChild);
-								// update delete count, decrement
-								deleteCount = deleteCount - 1;
-
-								break;
-							}
-							// text operation
-							case 3: {
-								// update dom textNode value and oldChild textNode content
-								oldChild._el.nodeValue = oldChild.children[0] = newChild.children[0];
-
-								break;
-							}
-							// replace operation
-							case 4: {
-								// replace dom node
-								replaceChild(newChild, parent, createElement(newChild), oldChild._el);
-								// update old children, replace array element
-								oldChildren[index] = newChild; 
-
-								break;
-							}
-							// key operation
-							case 5: {
-								var fromIndex, newChildKey = newChild.props.key;
-
-								// opt: try to find newChild in oldChildren
-								for (var j = 0; j < oldLength; j = j + 1) {
-									// found newChild in oldChildren, reference index, exit
-									if (oldChildren[j].props.key === newChildKey) {
-										fromIndex = j;
-
-										break;
-									}
+									break;
 								}
+								// add operation
+								case 2: {
+									addNode(
+										index, 
+										oldLength, 
+										parentElement, 
+										createNode(newChild), 
+										newChild, 
+										oldChild
+									);
 
-								// opt: if found newChild in oldChildren
-								if (fromIndex !== void 0) {
-									// reference element from oldChildren that matches newChild key
-									var element = oldChildren[fromIndex];
+									// normalize old children, add to array								
+									spliceArray(oldChildren, index, 0, newChild);
+									// update delete count, decrement
+									deleteCount = deleteCount - 1;
 
-								    addNode(index, oldLength, parent, element._el, element, oldChild);
-
-									// remove element from 'old' oldChildren index
-								    oldChildren.splice(fromIndex, 1);
-								    // insert into 'new' oldChildren index
-								    oldChildren.splice(index, 0, element);
-								    // the length of oldChildren does not change in this case
-								} else {
-									// remove node
-									if (newLength < oldLength) {
-										// reference node to be removed
-										var removeNode = oldChildren[index];
-										
-										// remove node from the dom
-										removeChild(removeNode, parent, removeNode._el);
-
-										// normalize old children, remove from array
-										spliceArray(oldChildren, index, 1);
-										// update delete count, increment
-										deleteCount = deleteCount + 1;
-										// update old children length, decrement
-										oldLength = oldLength - 1;
-									}
-									// add node
-									else if (newLength > oldLength) {
-										addNode(index, oldLength, parent, createElement(newChild), newChild, oldChild);
-
-										// normalize old children, add to array
-										spliceArray(oldChildren, index, 0, newChild);
-										// update delete count, decrement
-										deleteCount = deleteCount - 1;
-										// update old children length, increment
-										oldLength = oldLength + 1;
-									}
-									// replace node
-									else {
-										// replace dom node
-										replaceChild(newChild, parent, createElement(newChild), oldChild._el);
-										// update old children, replace array element
-										oldChildren[index] = newChild; 
-									}
+									break;
 								}
+								// text operation
+								case 3: {
+									// update dom textNode value and oldChild textNode content
+									oldChild._el.nodeValue = oldChild.children = newChild.children;
 
-								break;
+									break;
+								}
+								// replace operation
+								case 4: {
+									// replace dom node
+									replaceNode(newChild, parentElement, createNode(newChild), oldChild._el);
+									// update old children, replace array element
+									oldChildren[index] = newChild; 
+
+									break;
+								}
+								// key operation
+								case 5: {
+									var fromIndex, newChildKey = newChild.props.key;
+
+									// opt: try to find newChild in oldChildren
+									for (var j = 0; j < oldLength; j = j + 1) {
+										// found newChild in oldChildren, reference index, exit
+										if (oldChildren[j].props.key === newChildKey) {
+											fromIndex = j;
+											break;
+										}
+									}
+
+									// opt: if found newChild in oldChildren, only move element
+									if (fromIndex !== void 0) {
+										// reference element from oldChildren that matches newChild key
+										var element = oldChildren[fromIndex];
+
+									    addNode(index, oldLength, parentElement, element._el, element, oldChild);
+
+										// remove element from 'old' oldChildren index
+									    spliceArray(oldChildren, fromIndex, 1);
+									    // insert into 'new' oldChildren index
+									    spliceArray(oldChildren, index, 0, element);
+
+									    // NOTE: the length of oldChildren does not change in this case
+									} else {
+										// remove node
+										if (newLength < oldLength) {
+											// reference node to be removed
+											var nodeToRemove = oldChildren[index];
+											
+											// remove node from the dom
+											removeNode(nodeToRemove, parentElement, nodeToRemove._el);
+
+											// normalize old children, remove from array
+											spliceArray(oldChildren, index, 1);
+
+											// update delete count, increment
+											deleteCount = deleteCount + 1;
+
+											// update old children length, decrement
+											oldLength = oldLength - 1;
+										}
+										// add node
+										else if (newLength > oldLength) {
+											addNode(
+												index, 
+												oldLength, 
+												parentElement, 
+												createNode(newChild), 
+												newChild, 
+												oldChild
+											);
+
+											// normalize old children, add to array
+											spliceArray(oldChildren, index, 0, newChild);
+
+											// update delete count, decrement
+											deleteCount = deleteCount - 1;
+
+											// update old children length, increment
+											oldLength = oldLength + 1;
+										}
+										// replace node
+										else {
+											// replace dom node
+											replaceNode(
+												newChild, 
+												parentElement, 
+												createNode(newChild), 
+												oldChild._el
+											);
+
+											// update old children, replace array element
+											oldChildren[index] = newChild; 
+										}
+									}
+
+									break;
+								}
 							}
 						}
 					}
@@ -1433,35 +1641,29 @@
 	 * @param  {number}  index
 	 * @param  {Object} parentNode
 	 */
-	function hydrate (element, $newNode, index, parentNode) {
-		var newNode        = extractNode($newNode), 
-			isFragmentNode = 0;
+	function hydrate (element, newNode, index, parentNode) {
+		var currentNode = extractNode(newNode),
+			nodeType = currentNode.nodeType;
 
 		// is fragment if newNode is not a text node and type is fragment signature '@'
-		if (newNode.props !== void 0 && newNode.type.charAt(0) === FRAGMENT) {
-			isFragmentNode = 1;
-		}
-
-		var newElement = isFragmentNode === 1 ? 
-			element : 
-			element.childNodes[index];
+		var isFragmentNode = nodeType === 11 ? 1 : 0,
+			newElement = isFragmentNode === 1 ? element : element.childNodes[index];
 
 		// if the node is not a textNode and
 		// has children hydrate each of its children
-		if (newNode.nodeType === 1) {
-			var newChildren = newNode.children, 
-				newLength   = newChildren.length;
+		if (nodeType === 1) {
+			var newChildren = currentNode.children, newLength = newChildren.length;
 
 			for (var i = 0; i < newLength; i = i + 1) {
-				hydrate(newElement, newChildren[i], i, newNode);
+				hydrate(newElement, newChildren[i], i, currentNode);
 			}
 
 			// hydrate the dom element to the virtual element
-			newNode._el = newElement;
+			currentNode._el = newElement;
 
 			// exit early if fragment
-			if (isFragmentNode === 1) {
-				return void 0;
+			if (isFragmentNode === 1) { 
+				return void 0; 
 			}
 		}
 
@@ -1472,20 +1674,20 @@
 			to a documentFragment starting from the current child 
 			till we reach a non textNode child such that on 
 			h('p', 'foo', 'bar') foo and bar are two different 
-			textNodes in the fragment, we then replaceChild the 
+			textNodes in the fragment, we then replaceNode the 
 			single dom's textNode with the fragment converting the dom's single 
 			textNode to multiple textNodes
 		 */
-		if (newNode.nodeType === 3) {
+		if (nodeType === 3) {
 			// fragment to use to replace a single textNode with multiple text nodes
 			// case in point h('h1', 'Hello', 'World') output: <h1>HelloWorld</h1>
 			// but HelloWorld is one text node in the dom while two in the vnode
-			var fragment = document.createDocumentFragment(),
-				children = sliceArray(parentNode.children, index);
+			var fragment = _document.createDocumentFragment(),
+				children = parentNode.children;
 
 			// look ahead of this nodes siblings and add all textNodes to the the fragment.
 			// exit when a non text node is encounted
-			for (var i = 0, len = children.length; i < len; i = i + 1) {
+			for (var i = index, len = children.length - index; i < len; i = i + 1) {
 				var textNode = children[i];
 
 				// exit early once we encounter a non text/string node
@@ -1494,22 +1696,24 @@
 				}
 
 				// create textnode, append to the fragment
-				fragment.appendChild(createElement(textNode));
+				fragment.appendChild(createNode(textNode));
 			}
 
 			// replace the textNode with a set of textNodes
 			element.replaceChild(fragment, element.childNodes[index]);
 		}
 
-		// add event listeners to non textNodes
-		// and add set refs
-		if (newNode.nodeType === 1) {
+		// add event listeners to non textNodes and add set refs
+		if (nodeType === 1) {
 			// add events if any
-			assignProps(newNode._el, newNode.props, 1);
+			assignProps(currentNode._el, currentNode.props, 1);
+
+			var ref = currentNode.props.ref, 
+				component = currentNode._owner;
 
 			// assign refs
-			if (newNode.props.ref !== void 0) {
-				assignRefs(newNode.props.ref, newElement, component.refs);
+			if (ref !== void 0 && component !== void 0) {
+				assignRefs(newElement, ref, component.refs);
 			}
 		}
 	}
@@ -1534,7 +1738,7 @@
 	 */
 	function renderToString (subject) {		
 		return renderToStringHTML(
-			subject.type !== void 0 ? subject : {nodeType: 1, type: subject, props: {}, children: []}
+			subject.type !== void 0 ? subject : VComponent(subject)
 		);
 	}
 
@@ -1545,11 +1749,12 @@
 	 * @return {string}
 	 */
 	function renderToStringHTML (subject) {
-		var vnode = extractNode(subject);
+		var vnode    = extractNode(subject),
+			nodeType = vnode.nodeType;
 
 		// textNode
-		if (vnode.nodeType === 3) {
-			return vnode.children[0];
+		if (nodeType === 3) {
+			return vnode.children;
 		}
 
 		// references
@@ -1557,7 +1762,7 @@
 			props    = vnode.props, 
 			children = vnode.children;
 
-		if (type.charAt(0) === FRAGMENT) {
+		if (nodeType === 11) {
 			return renderToStringChildren(children);
 		} else if (voidElements[type] === 0) {
 			// <type ...props>
@@ -1665,40 +1870,35 @@
    				// register mount dispatched
    				initial = 0;
    				// assign component
-   				if (component === void 0) { component = node._owner; }
+   				if (component === void 0) { 
+   					component = node._owner;
+   				}
    			} else {
    				// update props
    				if (props !== void 0) {
+   					if (component.shouldComponentUpdate !== void 0 && 
+   						component.shouldComponentUpdate(props, component.state) === false) {
+   						return reconciler;
+   					}
+
    					component.props = props;
    				}
 
-		   		var time  = Date.now(),
-		   			delta = time - then;
-
-		   		if (delta > interval) {
-	   				then = time - (delta % interval);
-	   				// update component
-	   				component.forceUpdate();
-	   			}
+   				// update component
+   				component.forceUpdate();
    			}
 
 	   		return reconciler;
 	   	}
 
-	   	// render cache
-	   	if (subject._render !== void 0 && subject._mount === target) {
-	   		return subject._render;
-	   	} 
-
 	   	var component, node;
 
-	   	// create component from object
-	   	if (subject.render !== void 0 || subject.constructor === Function) {
-	   		node = {nodeType: 1, type: createClass(subject), props: {}, children: []};
-	   	}
-	   	// normalization
-	   	else if (subject.type === void 0) {
-	   		node = {nodeType: 1, type: subject, props: {}, children: []};
+	   	if (subject.render !== void 0) {
+	   		// create component from object
+	   		node = VComponent(createClass(subject))
+	   	} else if (subject.type === void 0) {
+	   		// normalization
+	   		node = VComponent(subject);
 	   	} else {
 	   		node = subject;
 	   	}
@@ -1709,33 +1909,20 @@
 	   	}
 
 	   	// server-side
-	   	if (document === void 0) {
+	   	if (_document === void 0) {
 	   		return renderToString(node);
 	   	}
 
 		// retrieve mount element
-		var element = retrieveMountElement(target);
+		var element = retrieveMount(target);
 
-		// initialize variables
-		var initial   = 1, 
-			then      = 0,
-			// pipe each update at 60 frames per second
-			// this does not use async requestAnimationFrame
-			interval  = 1000/60;
-
-		// caching
-		reconciler._render = reconciler;
-		reconciler._mount  = target;
-
-		if (typeof node.type === 'function') {
-			node.type._render = reconciler;
-			node.type._mount = target;
-		}
+		// initial mount registry
+		var initial = 1;
 
 		// hydration
 	   	if (element.hasAttribute('data-hydrate')) {
 	   		// dispatch hydration
-	   		hydrate(element, node, 0, emptyNode);
+	   		hydrate(element, node, 0, emptyVNode);
 	   		// cleanup element hydrate attributes
 	   		element.removeAttribute('data-hydrate');
 	   		// register mount dispatched
@@ -1760,7 +1947,7 @@
 		// clear element
 		element.textContent = '';
 		// create element
-		appendChild(newNode, element, createElement(newNode));
+		appendNode(newNode, element, createNode(newNode));
 	}
 
 	/**
@@ -1781,9 +1968,9 @@
 	 * @param  {*} subject
 	 * @return {Node}
 	 */
-	function retrieveMountElement (subject) {
+	function retrieveMount (subject) {
 		// document not available
-		if (document === void 0) {
+		if (_document === void 0) {
 			return subject;
 		}
 
@@ -1798,12 +1985,12 @@
 		if (target !== void 0 && target !== null && target.nodeType !== void 0) {
 			candidate = target;
 		} else {
-			candidate = document.querySelector(target);
+			candidate = _document.querySelector(target);
 		}
 
 		// default document.body
-		return candidate === void 0 || candidate === null || candidate === document ? 
-					document.body : 
+		return candidate === void 0 || candidate === null || candidate === _document ? 
+					_document.body : 
 					candidate;
 	}
 
@@ -1816,6 +2003,7 @@
 	 * ---------------------------------------------------------------------------------
 	 */
 	
+
 	/**
 	 * assign component properties
 	 * 
@@ -1827,7 +2015,7 @@
 		for (var name in source) {
 			var value = source[name];
 
-			if (value !== SIGNATURE) {
+			if (value !== null) {
 				destination[name] = value;
 			}
 		}
@@ -1869,9 +2057,19 @@
 
 		return function autoBind (thisArg) {
 			for (var i = 0; i < length; i = i + 1) {
-				thisArg[names[i]] = functionBind(functions[i], thisArg);
+				thisArg[names[i]] = bind.call(functions[i], thisArg);
 			}
 		}
+	}
+
+	/**
+	 * findDOMNode
+	 * 
+	 * @param  {Object} component
+	 * @return {(Node|bool)}
+	 */
+	function findDOMNode (component) {
+		return component._vnode && component._vnode._el;
 	}
 	
 	/**
@@ -1920,16 +2118,16 @@
 			componentWillReceiveProps           = component.componentWillReceiveProps,
 			propTypes                           = component.propTypes;
 
-		if (statics                   !== void 0) component.statics                   = SIGNATURE;
-		if (_getDefaultProps          !== void 0) component.getDefaultProps           = SIGNATURE;
-		if (_getInitialState          !== void 0) component.getInitialState           = SIGNATURE;
-		if (componentWillUpdate       !== void 0) component.componentWillUpdate       = SIGNATURE;
-		if (componentDidUpdate        !== void 0) component.componentDidUpdate        = SIGNATURE;
-		if (componentWillMount        !== void 0) component.componentWillMount        = SIGNATURE;
-		if (componentDidMount         !== void 0) component.componentDidMount         = SIGNATURE;
-		if (componentWillUnmount      !== void 0) component.componentWillUnmount      = SIGNATURE;
-		if (componentWillReceiveProps !== void 0) component.componentWillReceiveProps = SIGNATURE;
-		if (propTypes                 !== void 0) component.propTypes                 = SIGNATURE;
+		if (statics                   !== void 0) component.statics                   = null;
+		if (_getDefaultProps          !== void 0) component.getDefaultProps           = null;
+		if (_getInitialState          !== void 0) component.getInitialState           = null;
+		if (componentWillUpdate       !== void 0) component.componentWillUpdate       = null;
+		if (componentDidUpdate        !== void 0) component.componentDidUpdate        = null;
+		if (componentWillMount        !== void 0) component.componentWillMount        = null;
+		if (componentDidMount         !== void 0) component.componentDidMount         = null;
+		if (componentWillUnmount      !== void 0) component.componentWillUnmount      = null;
+		if (componentWillReceiveProps !== void 0) component.componentWillReceiveProps = null;
+		if (propTypes                 !== void 0) component.propTypes                 = null;
 
 		assignComponentProperties(component, prototype);
 
@@ -1984,7 +2182,7 @@
 				}
 
 				// validate propTypes
-				if (isDevEnv === 1) {
+				if (isDevEnv) {
 					var propTypes = this.propTypes || this.constructor.propTypes;
 
 					if (propTypes !== void 0) {
@@ -2003,25 +2201,23 @@
 			}
 
 			this.refs  = {};
-			this._node = {};
+			this._vnode = {};
 		}
 
 		componentClass.prototype = {
-			autoBind: function autoBind (methods) {
-				for (var i = 0, len = methods.length; i < len; i = i + 1) {
-					var name   = methods[i];
+			autoBind: function autoBind () {
+				for (var i = 0, len = arguments.length; i < len; i = i + 1) {
+					var name   = arguments[i];
 					var method = this[name];
 
 					if (method !== void 0) {
-						this[name] = functionBind(method, this);
+						this[name] = bind.call(method, this);
 					}
 				}
 			},
 			setState: function setState (newState, callback) {
-				if (
-					this.shouldComponentUpdate !== void 0 && 
-					this.shouldComponentUpdate(this.props, newState) === false
-				) {
+				if (this.shouldComponentUpdate !== void 0 && 
+					this.shouldComponentUpdate(this.props, newState) === false) {
 					return;
 				}
 
@@ -2036,21 +2232,21 @@
 				}
 			},
 			forceUpdate: function forceUpdate () {
-				// patch update
-				if (this._node !== void 0) {
+				if (this._vnode !== void 0) {
 					// componentWillUpdate lifecycle
 					if (this.componentWillUpdate !== void 0) {
 						this.componentWillUpdate(this.props, this.state);
 					}
 
 					var newNode = this.render(this.props, this.state, this), 
-						oldNode = this._node;
+						oldNode = this._vnode;
 
 					// never executes more than once
 					if (oldNode.type !== newNode.type) {
 						oldNode.type = newNode.type;
 					}
 
+					// patch update
 					update(newNode, oldNode);
 
 					// componentDidUpdate lifecycle
@@ -2206,7 +2402,7 @@
 		// check if the propValue is of this type
 		return (
 			propValue !== void 0 && propValue !== null && 
-			propValue.constructor === window[expectedType]
+			propValue.constructor === _window[expectedType]
 		);
 	}
 
@@ -2270,7 +2466,7 @@
 		return function (validator) {
 			var expectedTypeName = validator._propType + type;
 
-			return createTypeValidator(expectedTypeName, void 0,
+			return createTypeValidator(expectedTypeName, 0,
 				function (propValue, expectedType, props, propName, displayName) {
 					// failed, exit early if not array
 					if (propValue.constructor !== Array) {
@@ -2314,7 +2510,7 @@
 		}
 
 		// element
-		propTypesObj._element = createTypeValidator('element', void 0,
+		propTypesObj.element = createTypeValidator('element', 0,
 			function (propValue) {
 				if (isValidElement(propValue) === false) {
 					return 1;
@@ -2323,11 +2519,11 @@
 		);
 
 		// number, string, element ...or array of those
-		propTypesObj.node = createTypeValidator('node', void 0,
+		propTypesObj.node = createTypeValidator('node', 0,
 			function (propValue) {
 				if (
-					typeof propValue !== 'string' &&
-					isNaN(propValue) === true && 
+					isString(propValue)       === false &&
+					isNumber(propValue)       === false &&
 					isValidElement(propValue) === false
 				) {
 					return 1;
@@ -2336,7 +2532,7 @@
 		);
 
 		// any defined data type
-		propTypesObj.any = createTypeValidator('any', void 0,
+		propTypesObj.any = createTypeValidator('any', 0,
 			function (propValue) {
 				if (propValue !== void 0 && propValue !== null) {
 					return 1;
@@ -2348,7 +2544,7 @@
 		propTypesObj.instanceOf = function (constructor) {
 			var expectedTypeName = getDisplayName(constructor);
 
-			return createTypeValidator(expectedTypeName, void 0,
+			return createTypeValidator(expectedTypeName, 0,
 				function (propValue, expectedType) {
 					if ((propValue instanceof constructor) !== true) {
 						return 1;
@@ -2364,7 +2560,7 @@
 			expectedTypes    = arrayMap(shapeKeys, function (name) { return name + ': ' + shape[name]._propType; }),
 			expectedTypeName = '{\n\t' + expectedTypes.join(', \n\t') + '\n}';
 
-			return createTypeValidator(expectedTypeName, void 0,
+			return createTypeValidator(expectedTypeName, 0,
 				function (propValue, expectedType, props, propName, displayName) {
 					// fail if propValue is not an object
 					if (!propValue || propValue.constructor !== Object) {
@@ -2399,7 +2595,7 @@
 		propTypesObj.oneOf = function (values) {
 			var expectedTypeName = values.join(' or ');
 
-			return createTypeValidator(expectedTypeName, void 0,
+			return createTypeValidator(expectedTypeName, 0,
 				function (propValue) {
 					// default state
 					var failed = 1;
@@ -2423,7 +2619,7 @@
 				return type._propType;
 			}).join(' or ');
 
-			return createTypeValidator(expectedTypeName, void 0,
+			return createTypeValidator(expectedTypeName, 0,
 				function (propValue, expectedType, props, propName, displayName) {
 					// default state
 					var failed = 1;
@@ -2461,9 +2657,9 @@
 						typeof NODE_ENV === 'string' ? NODE_ENV : 0
 			);
 
-			return (enviroment === 'development')|0;
+			return enviroment === 'development';
 		} else if (enviroment !== void 0) {
-			return isDevEnv = (enviroment === 'development')|0; 
+			return isDevEnv = enviroment === 'development'; 
 		}
 	}
 
@@ -2475,9 +2671,9 @@
 	 */
 	function injectWindowDependency (mockWindow) {
 		if (mockWindow !== void 0) {
-			window           = mockWindow,
-			document         = window.document,
-			XMLHttpRequest   = window.XMLHttpRequest;
+			_window          = mockWindow,
+			_document        = _window.document,
+			XMLHttpRequest   = _window.XMLHttpRequest;
 		}
 
 		return mockWindow;
@@ -2502,7 +2698,8 @@
 	 */
 	function Stream (value, middleware) {
 		var store, 
-			chain = {then: void 0, 'catch': void 0}, listeners = {then: [],'catch': []};
+			chain     = {then: null, 'catch': null}, 
+			listeners = {then: [],'catch': []};
 
 		function stream (value) {
 			// recieved value, update stream
@@ -2603,8 +2800,8 @@
 		};
 		// end/reset a stream
 		stream.end = function () {
-			chain.then         = void 0;
-			chain['catch']     = void 0;
+			chain.then         = null;
+			chain['catch']     = null;
 			listeners.then     = [];
 			listeners['catch'] = [];
 		};
@@ -2626,14 +2823,18 @@
 	 * @return {any[]}    deps
 	 */
 	Stream.combine = function combine (reducer, deps) {
-		var depsIsArray = deps !== void 0 && deps !== null && deps.constructor === Array,
-			args        = depsIsArray ? deps : arguments;
+		if (isArray(deps) === false) {
+			var args = [];
 
-		// if deps`dependecies` !== single array create from arguments
-		deps = sliceArray(args, depsIsArray === false ? 1 : 0);
+			for (var i = 0, len = arguments.length; i < len; i = i + 1) {
+				args[i] = arguments[i];
+			}
+
+			deps = args;
+		}
 
 		// add address for the prev store
-		deps[deps.length] = void 0;
+		deps[deps.length] = null;
 
 		// the previous store will always be the last item in the list of dependencies
 		var prevStoreAddress = deps.length - 1;
@@ -2643,7 +2844,7 @@
 		return Stream(function (resolve) {
 			resolve(function () {
 				// extract return value of reducer, assign prevStore, return it
-				return deps[prevStoreAddress] = reducer.apply(void 0, deps);
+				return deps[prevStoreAddress] = reducer.apply(null, deps);
 			});
 		}, 1);
 	};
@@ -2801,9 +3002,9 @@
 				// create xhr object 
 				var xhr  = new XMLHttpRequest(),
 				// reference window location
-				location = window.location,
+				location = _window.location,
 				// create anchor element, extract url data
-				a        = document.createElement('a');
+				a        = _document.createElement('a');
 				a.href   = url;
 
 				// if cross origin request
@@ -2942,7 +3143,7 @@
 					}
 				} else {
 					routes[uri] = function (data) {
-						render({nodeType: 1, type: component, props: data, children: []}, element);
+						render(VComponent(component, data), element);
 					}
 				}
 			});
@@ -2968,7 +3169,7 @@
 
 			// start listening for a change in the url
 			interval = setInterval(function () {
-				var path = window.location.pathname;
+				var path = _window.location.pathname;
 
 				// if our store of the current url does not 
 				// equal the url of the browser, something has changed
@@ -3040,7 +3241,7 @@
 							nextState[vars[index]] = value;
 
 							return nextState;
-						}, void 0);
+						}, null);
 
 					callback(_data, uri);
 				}
@@ -3053,7 +3254,7 @@
 				path = addr + path;
 			}
 
-			history.pushState(void 0, void 0, path);
+			history.pushState(null, null, path);
 		}
 
 		// normalize rootAddress format
@@ -3114,20 +3315,27 @@
 	 * (...args) => f(g(h(...args))).
 	 */
 	function compose () {
-		var args  = arguments,
-			funcs = sliceArray(args);
+		var len = arguments.length;
 
 		// no functions passed
-		if (funcs.length === 0) {
+		if (len === 0) {
 			return function (arg) { return arg; }
 		} else {
+			var funcs = [];
+
+			// passing arguments to a function i.e [].splice() will prevent this function
+			// from getting optimized by the VM, so we manually build the array in-line
+			for (var i = 0; i < len; i = i + 1) {
+				args[i] = arguments[i];
+			}
+
 			// remove and retrieve last function
 			var last = funcs.pop();
 			
 			return function () {
 				return arrayReduceRight(funcs, function (composed, func) {
 					return func(composed);
-				}, last.apply(void 0, arguments));
+				}, last.apply(null, arguments));
 			}
 		}
 	}
@@ -3137,18 +3345,22 @@
 	 * creates a store enhancer
 	 *
 	 * @param   {...function} middlewares
-	 * @return  {function}                - a store enhancer
+	 * @return  {function} - a store enhancer
 	 */
 	function applyMiddleware () {
-		var args = arguments,
-			middlewares = sliceArray(args);
+		var middlewares = [];
+
+		// passing arguments to a function i.e [].splice() will prevent this function
+		// from getting optimized by the VM, so we manually build the array in-line
+		for (var i = 0, len = arguments.length; i < len; i = i + 1) {
+			middlewares[i] = arguments[i];
+		}
 
 		return function (createStore) {
 			return function (reducer, initialState, enhancer) {
 				// create store
 				var store         = createStore(reducer, initialState, enhancer),
 					dispatch      = store.dispatch,
-					chain         = [],
 					middlewareAPI = {
 						getState: store.getState,
 						dispatch: function (action) {
@@ -3157,17 +3369,12 @@
 					};
 
 				// create chain
-				chain = arrayMap(middlewares, function (middleware) {
+				var chain = arrayMap(middlewares, function (middleware) {
 					return middleware(middlewareAPI);
 				});
 
-				// compose dispatcher
-				dispatch = compose.apply(void 0, sliceArray(chain))(store.dispatch);
-
 				// return store with composed dispatcher
-				return objectAssign({}, store, {
-					dispatch: dispatch
-				});
+				return objectAssign({}, store, {dispatch: compose.apply(null, chain)(store.dispatch)});
 			}
 		}
 	}
@@ -3261,7 +3468,7 @@
 			reducer = nextReducer;
 
 			// dispath initial action
-			dispatch({type: STORE});
+			dispatch({type: '@DIO/STORE'});
 		}
 
 		// auto subscribe a component to a store
@@ -3271,7 +3478,7 @@
 			// if component
 			if (subject.constructor !== Function || element !== void 0) {
 				// create renderer
-				callback = render({nodeType: 1, type: subject, props: getState(), children: []}, element);
+				callback = render(VComponent(subject, getState(), emptyArray), element);
 			} else{
 				callback = subject;
 			}
@@ -3283,7 +3490,7 @@
 		}
 
 		// dispath initial action
-		dispatch({type: STORE});
+		dispatch({type: '@DIO/STORE'});
 
 		return {
 			getState: getState, 
@@ -3312,7 +3519,7 @@
 		// if initialState is a function and enhancer is undefined
 		// we assume that initialState is an enhancer
 		if (typeof initialState === 'function' && enhancer === void 0) {
-			enhancer = initialState, initialState = void 0;
+			enhancer = initialState, initialState = null;
 		}
 
 		// delegate to enhancer if defined
@@ -3326,9 +3533,7 @@
 		}
 
 		// if object, multiple reducers, else, single reducer
-		return reducer.constructor === Object ? 
-								createStore(combineReducers(reducer)) : 
-								createStore(reducer);
+		return reducer.constructor === Object ? createStore(combineReducers(reducer)) : createStore(reducer);
 	}
 
 
@@ -3457,7 +3662,7 @@
 
 				// get element if selector
 				if (typeof element === 'string') {
-					element = document.querySelector(element);
+					element = _document.querySelector(element);
 				} else if (this.nodeType !== void 0) {
 					element = this;
 				}
@@ -3472,7 +3677,7 @@
 					invert       = {},
 					element      = element.currentTarget || element,
 					style        = element.style,
-					body         = document.body,
+					body         = _document.body,
 					runningClass = 'animation-running',
 					transEvtEnd  = 'transitionend';
 
@@ -3558,14 +3763,14 @@
 							return void 0;
 						}
 						// clear transition and transform styles
-						prefix(style, 'transition', void 0); 
-						prefix(style, 'transform', void 0);
+						prefix(style, 'transition', null); 
+						prefix(style, 'transform', null);
 					}
 
 					// remove event listener
 					element.removeEventListener(transEvtEnd, onfinish);
 					// clear transform origin styles
-					prefix(style, 'transformOrigin', void 0);
+					prefix(style, 'transformOrigin', null);
 
 					// clear animation running styles
 					removeClass(element, runningClass);
@@ -3599,7 +3804,8 @@
 				return function (element, callback) {
 					// exit early in the absence of an element
 					if (element === void 0 || element === null || element.nodeType === void 0) {
-						return (callback(keyframe, element), void 0);
+						callback(element, keyframe);
+						return void 0;
 					}
 
 					// push to next event-cycle/frame
@@ -3617,7 +3823,8 @@
 
 						// if !(duration property)
 						if (transition === void 0) {
-							return (callback(keyframe, element), void 0);
+							callback(element, keyframe);
+							return void 0;
 						}
 
 						// remove 's' & spaces, '0.4s, 0.2s' ---> '0.4,0.2', split ---> ['0.4','0.2']
@@ -3629,7 +3836,7 @@
 						}
 
 						// callback, duration of transition, passing element & keyframe to callback
-						setTimeout(callback, duration, keyframe, element);
+						setTimeout(callback, duration, element, keyframe);
 					});
 				}
 			}
@@ -3641,7 +3848,7 @@
 			animations: cssAnimation('animation')
 		};
 	}
-
+		
 
 	/**
 	 * ---------------------------------------------------------------------------------
@@ -3651,15 +3858,25 @@
 	 * ---------------------------------------------------------------------------------
 	 */
 	
-	exports.h   = createVirtualElement;
+
+	exports.h   = createElement;
 	exports.dio = {
 		version: VERSION,
 
 		// elements
-		createElement: createVirtualElement,
+		createNode: createElement,
 		isValidElement: isValidElement,
 		cloneElement: cloneElement,
 		createFactory: createFactory,
+
+		VText: VText,
+		VElement: VElement,
+		VFragment: VFragment,
+		VSvg: VSvg,
+		VComponent: VComponent,
+		VBlueprint: VBlueprint,
+
+		DOM: DOM,
 
 		// render
 		render: render,
@@ -3669,6 +3886,7 @@
 		// components
 		Component: createComponentClass(),
 		createClass: createClass,
+		findDOMNode: findDOMNode,
 
 		// stores
 		createStore: Store,
@@ -3706,6 +3924,8 @@
 		isString: isString,
 		isArray: isArray,
 		isDefined: isDefined,
+		isNumber: isNumber,
+		isArrayLike: isArrayLike,
 		curry: curry
 	};
 }));
