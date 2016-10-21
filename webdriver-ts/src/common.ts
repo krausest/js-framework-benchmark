@@ -38,7 +38,7 @@ export let frameworks = [
     f("dio-v2.1.0"),
     f("domvm-v1.2.10"),
     f("elm-v0.17.1"),
-    f("inferno-v1.0.0-alpha7"),
+    f("inferno-v1.0.0-beta5"),
     f("kivi-v1.0.0-rc0"),
     f("knockout-v3.4.0"),
     f("mithril-v0.2.5"),
