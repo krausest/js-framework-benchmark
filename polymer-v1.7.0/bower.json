@@ -1,0 +1,7 @@
+{
+  "name": "polymer-temp",
+  "dependencies": {
+    "polymer": "1.7.0",
+    "webcomponentsjs": "^0.7.22"
+  }
+}

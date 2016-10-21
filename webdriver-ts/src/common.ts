@@ -1,12 +1,7 @@
 export interface JSONResult {
-    framework: string,
-    benchmark: string,
-    type: string,
-    min: number,
-    max: number,
-    mean: number,
-    geometricMean: number,
-    standardDeviation: number
+    framework: string, benchmark: string, type: string, min: number,
+        max: number, mean: number, geometricMean: number,
+        standardDeviation: number
 }
 
 export let config = {
@@ -15,18 +10,18 @@ export let config = {
     WARMUP_COUNT: 5,
     TIMEOUT: 60 * 1000,
     LOG_PROGRESS: true,
-    LOG_DETAILS: false,
+    LOG_DETAILS: true,
     LOG_DEBUG: false
 }
 
 export interface FrameworkData {
     name: string;
     uri: string;
+    useShadowRoot: boolean;
 }
 
-function f(name: string, uri: string = null): FrameworkData 
-{
-    return {name, uri: uri? uri : name};
+function f(name: string, uri: string = null, useShadowRoot = false): FrameworkData {
+    return {name, uri: uri ? uri : name, useShadowRoot};
 }
 
 export let frameworks = [
@@ -44,13 +39,14 @@ export let frameworks = [
     f("mithril-v0.2.5"),
     f("mithril-v1.0.0-alpha"),
     f("plastiq-v1.33.0"),
+    f("polymer-v1.7.0", "polymer-v1.7.0", true),
     f("preact-v6.0.2"),
     f("ractive-v0.7.3"),
     f("ractive-edge"),
     f("react-lite-v0.15.17"),
     f("react-v15.3.1"),
     f("react-v15.3.1-mobX-v2.5.0"),
-    f("react-v15.3.2-redux-v3.6.0"),    
+    f("react-v15.3.2-redux-v3.6.0"),
     f("riot-v2.6.1"),
     f("tsers-v1.0.0"),
     f("vanillajs"),
