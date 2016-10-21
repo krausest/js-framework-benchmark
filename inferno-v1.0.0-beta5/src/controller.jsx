@@ -1,18 +1,19 @@
 'use strict';
 
-import {Store} from './store'
-import Inferno, { ChildrenTypes } from 'inferno'
-import InfernoDOM from 'inferno-dom'
+import { Store } from './store'
+import Inferno, { ChildrenTypes, disableRecycling } from 'inferno'
 import Component from 'inferno-component'
+
+disableRecycling(true);
 
 var startTime;
 var lastMeasure;
-var startMeasure = function(name) {
-    performance.mark('mark_start_'+name);
+var startMeasure = function (name) {
+    performance.mark('mark_start_' + name);
     startTime = performance.now();
     lastMeasure = name;
 }
-var stopMeasure = function() {
+var stopMeasure = function () {
     var last = lastMeasure;
     if (lastMeasure) {
         window.setTimeout(function () {
@@ -32,7 +33,7 @@ var stopMeasure = function() {
     }
 }
 
-function clickEvent(e) {
+document.addEventListener('click', e => {
     let func;
     let id;
     let val = e.target.value;
@@ -47,17 +48,21 @@ function clickEvent(e) {
             id = val.id;
         }
     }
-    func(id);
-}
+    func && func(id);
+});
+
+const NON_KEYED = ChildrenTypes.NON_KEYED;
+const TEXT = ChildrenTypes.TEXT;
+const NODE = ChildrenTypes.NODE;
 
 function Row({ d, id, selected, deleteFunc, selectFunc }) {
     return (
-        <tr className={id === selected ? 'danger' : ''} childrenType={ ChildrenTypes.NON_KEYED }>
-            <td className="col-md-1" childrenType={ ChildrenTypes.TEXT }>{id}</td>
-            <td className="col-md-4" childrenType={ ChildrenTypes.NODE }>
-                <a onClick={clickEvent} value={{func: selectFunc, id}} childrenType={ ChildrenTypes.TEXT }>{d.label}</a>
+        <tr className={id === selected ? 'danger' : ''} childrenType={NON_KEYED}>
+            <td className="col-md-1" childrenType={TEXT}>{id}</td>
+            <td className="col-md-4" childrenType={NODE}>
+                <a value={{ func: selectFunc, id }} childrenType={TEXT}>{d.label}</a>
             </td>
-            <td className="col-md-1"><a onClick={clickEvent} value={{func: deleteFunc, id}}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+            <td className="col-md-1"><a value={{ func: deleteFunc, id }}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
             <td className="col-md-6"></td>
         </tr>
     )
@@ -82,13 +87,13 @@ function createRows(store, deleteFunc, selectFunc) {
             <Row d={d} id={id} selected={selected} deleteFunc={deleteFunc} selectFunc={selectFunc} hooks={onComponentShouldUpdate} />
         );
     }
-    return <tbody childrenType={ ChildrenTypes.NON_KEYED }>{rows}</tbody>;
+    return <tbody childrenType={NON_KEYED}>{rows}</tbody>;
 }
 
-export class Controller extends Component{
+export class Controller extends Component {
     constructor(props) {
         super(props);
-        this.state = {store: new Store()};
+        this.state = { store: new Store() };
         this.select = this.select.bind(this);
         this.delete = this.delete.bind(this);
         this.add = this.add.bind(this);
@@ -113,49 +118,49 @@ export class Controller extends Component{
     run() {
         startMeasure("run");
         this.state.store.run();
-        this.setState({store: this.state.store});
+        this.setState({ store: this.state.store });
     }
     add() {
         startMeasure("add");
         this.state.store.add();
-        this.setState({store: this.state.store});
+        this.setState({ store: this.state.store });
     }
     update() {
         startMeasure("updater");
         this.state.store.update();
-        this.setState({store: this.state.store});
+        this.setState({ store: this.state.store });
     }
     select(id) {
         startMeasure("select");
         this.state.store.select(id);
-        this.setState({store: this.state.store});
+        this.setState({ store: this.state.store });
     }
     delete(id) {
         startMeasure("delete");
         this.state.store.delete(id);
-        this.setState({store: this.state.store});
+        this.setState({ store: this.state.store });
     }
     runLots() {
         startMeasure("runLots");
         this.state.store.runLots();
-        this.setState({store: this.state.store});
+        this.setState({ store: this.state.store });
     }
     clear() {
         startMeasure("clear");
         this.state.store.clear();
-        this.setState({store: this.state.store});
+        this.setState({ store: this.state.store });
     }
     swapRows() {
         startMeasure("swapRows");
         this.state.store.swapRows();
-        this.setState({store: this.state.store});
+        this.setState({ store: this.state.store });
     }
-    render () {
+    render() {
         return (<div className="container">
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>Inferno v1.0.0-alpha7 - non-keyed</h1>
+                        <h1>Inferno v1.0.0-beta5</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
@@ -186,7 +191,7 @@ export class Controller extends Component{
             </table>
             <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>);
- }
+    }
 }
 
-var str = InfernoDOM.render(<Controller/>,  document.getElementById("main"));
+var str = Inferno.render(<Controller />, document.getElementById("main"));
