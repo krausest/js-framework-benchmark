@@ -1,4 +1,4 @@
-import {testTextContains, testClassContainsNot, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, forProm} from './webdriverAccess'
+import {testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, forProm} from './webdriverAccess'
 import {WebDriver} from 'selenium-webdriver' 
 import {config} from './common'
 
@@ -106,7 +106,7 @@ const benchRemove: Benchmark = {
             return getTextByXPath(driver, "//tbody/tr[4]/td[2]/a")
             .then(val => text = val)
             .then(() => clickElementByXPath(driver, "//tbody/tr[4]/td[3]/a"))
-            .then(() => testClassContainsNot(driver, "//tbody/tr[4]/td[2]/a", text));
+            .then(() => testTextNotContained(driver, "//tbody/tr[4]/td[2]/a", text));
     }
 }
 
@@ -176,7 +176,7 @@ const benchReadyMemory: Benchmark = {
     init: (driver: WebDriver) =>
             testElementLocatedById(driver, "add"),
     run: (driver: WebDriver) =>  
-            testElementNotLocatedByXPath(driver, "//tbody/tr[1]/td[2]/a")
+            testElementNotLocatedByXPath(driver, "//tbody/tr[1]")
 }
 
 const benchRunMemory: Benchmark = { 

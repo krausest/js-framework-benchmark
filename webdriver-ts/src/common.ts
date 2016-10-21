@@ -10,17 +10,18 @@ export let config = {
     WARMUP_COUNT: 5,
     TIMEOUT: 60 * 1000,
     LOG_PROGRESS: true,
-    LOG_DETAILS: false,
+    LOG_DETAILS: true,
     LOG_DEBUG: false
 }
 
 export interface FrameworkData {
     name: string;
     uri: string;
+    useShadowRoot: boolean;
 }
 
-function f(name: string, uri: string = null): FrameworkData {
-    return {name, uri: uri ? uri : name};
+function f(name: string, uri: string = null, useShadowRoot = false): FrameworkData {
+    return {name, uri: uri ? uri : name, useShadowRoot};
 }
 
 export let frameworks = [
@@ -36,7 +37,7 @@ export let frameworks = [
     f("mithril-v0.2.5"),
     f("mithril-v1.0.0-alpha"),
     f("plastiq-v1.33.0"),
-    f("polymer-v1.7.0"),
+    f("polymer-v1.7.0", "polymer-v1.7.0", true),
     f("preact-v6.0.2"),
     f("ractive-v0.7.3"),
     f("ractive-edge"),
