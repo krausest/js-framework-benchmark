@@ -169,11 +169,5 @@ export function getTextByXPath(driver: WebDriver, xpath: string): webdriver.prom
 }
 
 function shadowRoot(driver: WebDriver) : webdriver.promise.Promise<webdriver.WebElement> {
-    if (useShadowRoot) {
-        console.log("use shadow root");
-        return driver.executeScript('return document.querySelector("main-element").shadowRoot');
-    } else {
-        console.log("use body");
-        return driver.findElement(By.tagName("body")); 
-    } 
+    return useShadowRoot ? driver.executeScript('return document.querySelector("main-element").shadowRoot') : driver.findElement(By.tagName("body")); 
 }
