@@ -8,7 +8,7 @@ Thanks to Baptiste Augrain for making the benchmarks more sophisticated and addi
 
 ## Prerequsites
 
-Have *node.js (>=6.0)* installed . If you want to do yourself a favour use nvm for that. The benchmark has been tested with node 6.0.
+Have *node.js (>=6.0)* installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node 6.0.
 You will also need *java* (>=6, e.g. openjdk-8-jre on ubuntu) for the google closure compiler, currently used in kivi.
 
 ## Building
@@ -16,6 +16,8 @@ You will also need *java* (>=6, e.g. openjdk-8-jre on ubuntu) for the google clo
 * To build the benchmarks for all frameworks:
 
 `npm install`
+or 
+`yarn`
 
 `npm run build`
 
@@ -26,6 +28,8 @@ The latter calls npm build-prod in each subproject.
 `cd aurelia`
 
 `npm install`
+or 
+`yarn`
 
 `npm run build-prod`
 
