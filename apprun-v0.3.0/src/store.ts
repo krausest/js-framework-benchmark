@@ -69,4 +69,5 @@ export default class Store {
             this.data[9] = a;
         }
     }
+    
 }

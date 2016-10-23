@@ -32,7 +32,7 @@ function f(name: string, uri: string = null): FrameworkData
 export let frameworks = [
     f("angular-v1.5.8"),
     f("angular-v2.0.0"),
-    f("apprun-v0.2.0"),
+    f("apprun-v0.3.0"),
     f("aurelia-v1.0.3", "aurelia-v1.0.3/dist"),
     f("bobril-v4.44.1"),
     f("cyclejs-v7.0.0"),
