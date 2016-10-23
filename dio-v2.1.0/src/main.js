@@ -1,6 +1,6 @@
 import {Store, startMeasure, stopMeasure} from './store.js'
 
-var dio = require("imports?define=>false!dio.js").dio;
+var dio = require("dio.js").dio;
 
 var {VElement, VComponent, VText, VBlueprint, version} = dio;
 
