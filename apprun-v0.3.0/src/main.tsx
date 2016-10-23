@@ -23,7 +23,7 @@ const update = {
         return store;
     },
 
-    add() {
+    add(store) {
         store.add();
         return store;
     },
@@ -43,22 +43,25 @@ const update = {
         return store;
     },
 
-    update() {
+    update(store) {
         store.update();
         return store;
     },
 
-    runlots() {
+    runlots(store) {
         store.runLots();
         return store;
     },
 
-    clear() {
+    clear(store) {
         store.clear();
+        store.view = store => {
+            document.getElementById('app').innerHTML = '';
+        }
         return store;
     },
 
-    swaprows() {
+    swaprows(store) {
         store.swapRows();
         return store;
     },
@@ -69,7 +72,6 @@ const update = {
             if (sel) sel.className = '';
         }
     }
-
 }
 
 const view = (model) => {
@@ -90,7 +92,7 @@ const view = (model) => {
         </tr>;
     });
 
-    return <table className="table table-hover table-striped test-data">
+    return <table className="table table-hover table-striped test-data" id="main-table">
         <tbody>{rows}</tbody>
     </table>;
 }
