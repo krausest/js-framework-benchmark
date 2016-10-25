@@ -20,7 +20,6 @@ export function stopMeasure () {
         setTimeout(function () {
             lastMeasure = null;
             var stop = performance.now();
-            var duration = 0;
             console.log(last+" took "+(stop-startTime));
         }, 0);
     }
