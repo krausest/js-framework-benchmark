@@ -1,6 +1,6 @@
 import {Store, startMeasure, stopMeasure} from './store.js'
 
-var dio = require("imports?define=>false!dio.js").dio;
+var dio = require("dio.js").dio;
 
 var {VElement, VComponent, VText, VBlueprint, version} = dio;
 
@@ -14,21 +14,6 @@ var colSm6   = {className: 'col-sm-6 smallpad'};
 var RowEmpty    = VElement('td', colMd6);
 var RowDelIcon  = VElement('span', {className: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'});
 var preLoadIcon = VElement('span', {className: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true'});
-
-function clickEvent(e) {
-    var fn, id, target = e.target, val = target.value;
-
-    if (val !== void 0) {
-        fn = val.fn, id = val.id;
-    } else {
-        val = target.parentNode.value;
-        if (val !== void 0) {
-            fn = val.fn, id = val.id;
-        }
-    }
-
-    fn(id);
-}
 
 function Nav (run, runLots, add, update, clear, swapRows) {
     return (
@@ -80,8 +65,8 @@ function Row (id, label, selected, onDelete, onSelect) {
     return (
         VElement('tr', {className: id === selected ? 'danger' : ''}, [
             VElement('td', colMd1, [VText(id)]),
-            VElement('td', colMd4, [VElement('a', {onClick: clickEvent, value: {id: id, fn: onSelect}}, [VText(label)])]),
-            VElement('td', colMd1, [VElement('a', {onClick: clickEvent, value: {id: id, fn: onDelete}}, [RowDelIcon])]),
+            VElement('td', colMd4, [VElement('a', {value: {id: id, fn: onSelect}}, [VText(label)])]),
+            VElement('td', colMd1, [VElement('a', {value: {id: id, fn: onDelete}}, [RowDelIcon])]),
             RowEmpty
         ])
     );
@@ -137,6 +122,20 @@ class Main extends dio.Component {
         this.state.store.swapRows();
         this.forceUpdate();
     }
+	function handleClick(e) {
+		var fn, id, target = e.target, val = target.value;
+
+		if (val !== void 0) {
+			fn = val.fn, id = val.id;
+		} else {
+			val = target.parentNode.value;
+			if (val !== void 0) {
+				fn = val.fn, id = val.id;
+			}
+		}
+
+		fn && fn(id);
+	}
     constructor(props) {
         super(props);
         this.state   = {store: new Store()};
@@ -162,7 +161,7 @@ class Main extends dio.Component {
             VElement('div', {className: 'container'}, [
                 nav,
                 VElement('table', {className: 'table table-hover table-striped test-data'}, [
-                    VElement('tbody', {}, rows)
+                    VElement('tbody', {onClick: this.handleClick}, rows)
                 ]),
                 preLoadIcon
             ])
