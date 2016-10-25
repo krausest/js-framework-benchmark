@@ -122,7 +122,7 @@ class Main extends dio.Component {
         this.state.store.swapRows();
         this.forceUpdate();
     }
-	function handleClick(e) {
+	handleClick(e) {
 		var fn, id, target = e.target, val = target.value;
 
 		if (val !== void 0) {
