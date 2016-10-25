@@ -10,7 +10,7 @@ commandExists('yarn', function(err, commandExists) {
 	instalCommand = commandExists ? 'yarn' : 'npm install';
 
 	_.each(fs.readdirSync('.'), function(name) {
-		if(fs.statSync(name).isDirectory() && name[0] !== '.' && name !== 'css' && name !== 'node_modules') {
+		if(fs.statSync(name).isDirectory() && name[0] !== '.' && ['css', 'dist','node_modules'].indexOf(name)==-1) {
 			exec(instalCommand, {
 				cwd: name,
 				stdio: 'inherit'
