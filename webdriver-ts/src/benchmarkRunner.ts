@@ -1,7 +1,7 @@
 import * as chrome from 'selenium-webdriver/chrome'
 import {Builder, WebDriver, promise, logging} from 'selenium-webdriver'
 import {BenchmarkType, Benchmark, benchmarks, fileName} from './benchmarks'
-import {forProm} from './webdriverAccess'
+import {forProm, setUseShadowRoot} from './webdriverAccess'
 
 import * as fs from 'fs';
 import * as yargs from 'yargs'; 
@@ -73,7 +73,7 @@ function buildDriver() {
 }
 
 function reduceBenchmarkResults(benchmark: Benchmark, results: Timingresult[][]): number[] {
-    if (config.LOG_DEBUG) console.log("data for reduceBenchmarkResults", results);
+    if (config.LOG_DETAILS) console.log("data for reduceBenchmarkResults", results);
         if (benchmark.type === BenchmarkType.CPU) {
             return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat((val[1].end - val[0].ts)/1000.0), []);
         } else {
@@ -153,6 +153,7 @@ function runBench(frameworkNames: string[], benchmarkNames: string[], dir: strin
         console.log("benchmarking ", framework, benchmark.id);
         let driver = buildDriver();
         return forProm(0, config.REPEAT_RUN, () => {
+            setUseShadowRoot(framework.useShadowRoot);
             return driver.get(`http://localhost:8080/${framework.uri}/`)
             .then(() => initBenchmark(driver, benchmark, framework.name))
             .then(() => clearLogs(driver))
