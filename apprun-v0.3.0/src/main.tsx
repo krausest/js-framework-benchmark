@@ -85,7 +85,7 @@ const view = (model) => {
             </td>
             <td className="col-md-1">
                 <a className="remove">
-                    <span className="glyphicon glyphicon-remove" aria-hidden="true"data-></span>
+                    <span className="glyphicon glyphicon-remove remove" aria-hidden="true"></span>
                 </a>
             </td>
             <td className="col-md-6"></td>
