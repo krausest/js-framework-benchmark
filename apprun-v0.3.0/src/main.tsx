@@ -62,6 +62,7 @@ const update = {
     },
 
     swaprows(store) {
+        this.unselect(store);
         store.swapRows();
         return store;
     },
