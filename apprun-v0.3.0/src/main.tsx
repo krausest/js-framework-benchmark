@@ -55,9 +55,9 @@ const update = {
 
     clear(store) {
         store.clear();
-        store.view = store => {
-            document.getElementById('app').innerHTML = '';
-        }
+        // store.view = store => {
+        //     document.getElementById('app').innerHTML = '';
+        // }
         return store;
     },
 
