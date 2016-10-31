@@ -21,24 +21,24 @@ var stopMeasure = function() {
 var h  = (tag, arg1, arg2) => domvm.defineElement(tag, arg1, arg2, domvm.FAST_REMOVE | domvm.FIXED_BODY),
 	h2 = (tag, arg1, arg2) => domvm.defineElement(tag, arg1, arg2, domvm.FAST_REMOVE);
 
-let wrapMeasure = (store, name) => e => {
-	startMeasure(name);
-	store[name]();
-	vm.redraw();
-	stopMeasure(name);
-};
-
 let store = new Store();
 
 let vm = domvm.createView(View, store).mount(document.body);
 
 function View(vm, store) {
-	let run			= wrapMeasure(store, "run");
-	let runLots		= wrapMeasure(store, "runLots");
-	let add			= wrapMeasure(store, "add");
-	let update		= wrapMeasure(store, "update");
-	let clear		= wrapMeasure(store, "clear");
-	let swapRows	= wrapMeasure(store, "swapRows");
+	let wrapMeasure = name => e => {
+		startMeasure(name);
+		store[name]();
+		vm.redraw(true);
+		stopMeasure(name);
+	};
+
+	let run			= wrapMeasure("run");
+	let runLots		= wrapMeasure("runLots");
+	let add			= wrapMeasure("add");
+	let update		= wrapMeasure("update");
+	let clear		= wrapMeasure("clear");
+	let swapRows	= wrapMeasure("swapRows");
 
 	let select = (e, node) => {
 		startMeasure("select");
