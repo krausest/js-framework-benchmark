@@ -1,0 +1,8 @@
+{
+  "name": "js-framework-benchmark-domvm",
+  "version": "2.0.0-beta",
+  "description": "Benchmark for Domvm framework",
+  "dependencies": {
+    "domvm": "git://github.com/leeoniya/domvm.git#58fd6d1afd2cadbbd5e098a2e3c655a8b9bf9b51"
+  }
+}
