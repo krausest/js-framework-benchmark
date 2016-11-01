@@ -103,14 +103,14 @@ function View(vm, store) {
 						]),
 						h("td.col-md-1", [
 							h("a.remove", {_data: item.id}, [
-								h("span.glyphicon.glyphicon-remove", {"aria-hidden": true})
+								h("span.glyphicon.glyphicon-remove", {"aria-hidden": ""})
 							])
 						]),
 						h("td.col-md-6")
 					])
 				))
 			]),
-			h("span.preloadicon.glyphicon.glyphicon-remove", {"aria-hidden": true})
+			h("span.preloadicon.glyphicon.glyphicon-remove", {"aria-hidden": ""})
 		])
 	])
 }
