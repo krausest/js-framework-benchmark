@@ -3,6 +3,6 @@
   "version": "2.0.0-beta",
   "description": "Benchmark for Domvm framework",
   "dependencies": {
-    "domvm": "git://github.com/leeoniya/domvm.git#58fd6d1afd2cadbbd5e098a2e3c655a8b9bf9b51"
+    "domvm": "git://github.com/leeoniya/domvm.git#d8bf362a9f693c321286a07f4d6704a4971f4284"
   }
 }
