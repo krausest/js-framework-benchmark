@@ -1,10 +1,8 @@
-'use strict';
-
 function _random(max) {
 	return Math.round(Math.random()*1000)%max;
 }
 
-function Store() {
+export function Store() {
 	this.data = [];
 	this.backup = null;
 	this.selected = null;
