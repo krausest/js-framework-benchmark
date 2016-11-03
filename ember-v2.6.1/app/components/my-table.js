@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  rows: Ember.inject.service('rows'),
-  actions : {
+  rows: Ember.inject.service(),
+  actions: {
     add: function() {
       //console.log("add");
       this.get('rows').add();
@@ -23,6 +23,12 @@ export default Ember.Component.extend({
     },
     swapRows: function() {
       this.get('rows').swapRows();
+    },
+    remove(identifier) {
+      this.get('rows').remove(identifier);
+    },
+    select(identifier) {
+      this.get('rows').select(identifier);
     }
   }
 });

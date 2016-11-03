@@ -21,8 +21,6 @@ export default Ember.Service.extend({
   data: [],
   selected: undefined,
   id: 1,
-  init() {
-  },
   buildData(count = 1000) {
     var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
     var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
