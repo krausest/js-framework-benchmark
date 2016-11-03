@@ -8,7 +8,10 @@
     "test": "tests"
   },
   "scripts": {
+    "postinstall": "bower install",
     "build": "ember build",
+    "build-dev": "ember build --environment=production",
+    "build-prod": "ember build --environment=production",
     "start": "ember server",
     "test": "ember test"
   },
