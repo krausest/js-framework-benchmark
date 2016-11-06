@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-simulacra",
+  "version": "1.0.0",
+  "description": "Benchmark for simulacra.js",
+  "scripts": {
+    "build-dev": "browserify src/main.js -o dist/main.js",
+    "build-prod": "browserify src/main.js -o dist/main.js"
+  },
+  "keywords": [
+    "simulacra"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "browserify": "^13.1.1"
+  },
+  "dependencies": {
+    "simulacra": "^1.5.5"
+  }
+}
