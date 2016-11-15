@@ -31,7 +31,7 @@ var stopMeasure = function() {
     }
 }
 
-// Inferno.disableRecycling();
+Inferno.disableRecycling();
 
 function handleClick(e) {
     let func;
@@ -91,7 +91,7 @@ function createRows(store, deleteFunc, selectFunc) {
 
 const title = (
     <div className="col-md-6" noNormalize>
-        <h1 noNormalize>Inferno v1.0.0-beta8 - non-keyed</h1>
+        <h1 noNormalize>Inferno v1.0.0-beta9 - non-keyed</h1>
     </div>
 );
 const span2 = <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" noNormalize></span>;
