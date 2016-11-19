@@ -43,7 +43,7 @@ export let frameworks = [
     f("mithril-v1.0.0-alpha"),
     f("plastiq-v1.33.0"),
     f("polymer-v1.7.0", "polymer-v1.7.0", true),
-    f("preact-v6.0.2"),
+    f("preact-v6.4.0"),
     f("simulacra-v1.5.5"),
     f("ractive-v0.7.3"),
     f("ractive-edge"),

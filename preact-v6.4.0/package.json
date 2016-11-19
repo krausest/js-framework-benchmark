@@ -17,14 +17,14 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "babel-preset-es2015": "6.9.0",
-    "babel-preset-react": "6.11.1",
-    "webpack": "1.13.1"
+    "babel-preset-es2015": "6.18.0",
+    "babel-preset-react": "6.16.0",
+    "webpack": "1.13.3"
   },
   "dependencies": {
-    "babel-core": "6.10.4",
-    "babel-loader": "6.2.4",
+    "babel-core": "6.18.2",
+    "babel-loader": "6.2.8",
     "jsx-loader": "0.13.2",
-    "preact": "6.0.2"
+    "preact": "6.4.0"
   }
 }
