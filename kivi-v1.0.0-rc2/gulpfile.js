@@ -1,7 +1,7 @@
 const gulp = require('gulp');
 const typescript = require('typescript');
 const ts = require('gulp-typescript');
-const tslint = require("gulp-tslint");
+//const tslint = require("gulp-tslint");
 const rollup = require('rollup');
 const rollupReplace = require('rollup-plugin-replace');
 const rollupNodeResolve = require('rollup-plugin-node-resolve');
@@ -27,9 +27,9 @@ function clean() {
 
 function compileTS() {
   return gulp.src('main.ts')
-    .pipe(tslint({
+/*    .pipe(tslint({
       formatter: "verbose",
-    }))
+    }))*/
     .pipe(ts(Object.assign(require('./tsconfig.json').compilerOptions, {
       typescript: require('typescript'),
     })))

@@ -160,7 +160,7 @@ const Row = new ComponentDescriptor<RowProps, void>()
     c.sync(c.createVRoot().className(props.selected ? "danger" : null).children([
       RowTitle.createVNode().data(data.id),
       createVElement("td").className("col-md-4").children([
-        createVElement("a").children(data.label),
+        createVElement("a").child(data.label),
       ]),
       createVElement("td").className("col-md-1").children([
         createVElement("a").children([
@@ -218,33 +218,33 @@ const Menu = new ComponentDescriptor()
     c.sync(c.createVRoot().className("jumbotron").children([
       createVElement("div").className("row").children([
         createVElement("div").className("col-md-6").children([
-          createVElement("h1").children("kivi v0.11.0"),
+          createVElement("h1").child("kivi v0.11.0"),
         ]),
         createVElement("div").className("col-md-6").children([
           createVElement("div").className("row").children([
             createVElement("div").className("col-sm-6 smallpad").children([
               createVElement("button").props({"id": "run", "type": "button"}).className(buttonClassName)
-                .children("Create 1,000 rows"),
+                .child("Create 1,000 rows"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
               createVElement("button").props({"id": "runlots", "type": "button"}).className(buttonClassName)
-                .children("Create 10,000 rows"),
+                .child("Create 10,000 rows"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
               createVElement("button").props({"id": "add", "type": "button"}).className(buttonClassName)
-                .children("Append 1,000 rows"),
+                .child("Append 1,000 rows"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
               createVElement("button").props({"id": "update", "type": "button"}).className(buttonClassName)
-                .children("Update every 10th row"),
+                .child("Update every 10th row"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
               createVElement("button").props({"id": "clear", "type": "button"}).className(buttonClassName)
-                .children("Clear"),
+                .child("Clear"),
             ]),
             createVElement("div").className("col-sm-6 smallpad").children([
               createVElement("button").props({"id": "swaprows", "type": "button"}).className(buttonClassName)
-                .children("Swap Rows"),
+                .child("Swap Rows"),
             ]),
           ]),
         ]),

@@ -37,7 +37,7 @@ export let frameworks = [
     f("ember-v2.10.0-beta.2", "ember-v2.10.0-beta.2/dist"),
     f("elm-v0.17.1"),
     f("inferno-v1.0.0-beta9"),
-    f("kivi-v1.0.0-rc0"),
+    f("kivi-v1.0.0-rc2"),
     f("knockout-v3.4.0"),
     f("mithril-v0.2.5"),
     f("mithril-v1.0.0-alpha"),
