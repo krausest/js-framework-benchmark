@@ -47,7 +47,7 @@ export let frameworks = [
     f("simulacra-v1.5.5"),
     f("ractive-v0.8.5"),
     f("ractive-edge"),
-    f("react-lite-v0.15.17"),
+    f("react-lite-v0.15.27"),
     f("react-v15.3.1"),
     f("react-v15.3.1-mobX-v2.5.0"),
     f("react-v15.3.2-redux-v3.6.0"),
