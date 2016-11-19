@@ -34,7 +34,7 @@ if(argv.prod){
 
 //build the AOT package
 var buildAOT = rollup.rollup({
-	entry: './lib/main.aot.js',
+	entry: './lib/src/main.aot.js',
 	plugins: plugins
 })
 .then(writeIIFE('./dist/main.aot.js'))
@@ -42,7 +42,7 @@ var buildAOT = rollup.rollup({
 
 //build the JIT package
 var buildJIT = rollup.rollup({
-	entry: './lib/main.jit.js',
+	entry: './lib/src/main.jit.js',
 	plugins: plugins
 })
 .then(writeIIFE('./dist/main.jit.js'))
