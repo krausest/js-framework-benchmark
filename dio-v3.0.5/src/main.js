@@ -1,10 +1,9 @@
 import {Store, startMeasure, stopMeasure} from './store.js'
 
-var dio = require("dio.js").dio;
+var dio = require("dio.js");
 
 var {VElement, VComponent, VText, VBlueprint, version} = dio;
 
-console.log("***", VElement, VComponent, VText, VBlueprint, version);
 
 var colMd1   = {className: 'col-md-1'};
 var colMd4   = {className: 'col-md-4'};
@@ -139,7 +138,16 @@ class Main extends dio.Component {
     constructor(props) {
         super(props);
         this.state   = {store: new Store()};
-        this.autoBind('delete', 'select', 'run', 'runLots', 'add', 'update', 'clear', 'swapRows');
+
+        this.delete = this.delete.bind(this);
+        this.select = this.select.bind(this);
+        this.run = this.run.bind(this);
+        this.runLots = this.runLots.bind(this);
+        this.add = this.add.bind(this);
+        this.update = this.update.bind(this);
+        this.clear = this.clear.bind(this);
+        this.swapRows = this.swapRows.bind(this);
+
         this.nav = Nav(this.run, this.runLots, this.add, this.update, this.clear, this.swapRows);
     }
     render(props, state, self) {
