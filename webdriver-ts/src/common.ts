@@ -51,7 +51,7 @@ export let frameworks = [
     f("react-v15.4.0"),
     f("react-v15.4.0-mobX-v2.6.3"),
     f("react-v15.4.0-redux-v3.6.0"),
-    f("riot-v2.6.1"),
+    f("riot-v2.6.7"),
     f("tsers-v1.0.0"),
     f("vanillajs"),
     f("vidom-v0.3.18"),
