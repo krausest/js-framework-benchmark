@@ -29,6 +29,7 @@ const update = {
     },
 
     remove(store, id) {
+        if (id == store.selected) this.unselect(store);
         store.delete(id);
         return store;
     },
