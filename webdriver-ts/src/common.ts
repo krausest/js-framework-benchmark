@@ -27,6 +27,7 @@ function f(name: string, uri: string = null, useShadowRoot = false): FrameworkDa
 export let frameworks = [
     f("angular-v1.5.8"),
     f("angular-v2.0.0"),
+    f("apprun-v0.3.0"),
     f("aurelia-v1.0.3", "aurelia-v1.0.3/dist"),
     f("bobril-v4.44.1"),
     f("cyclejs-v7.0.0"),
@@ -55,5 +56,5 @@ export let frameworks = [
     f("vanillajs"),
     f("vidom-v0.3.18"),
     f("vue-v1.0.26"),
-    f("vue-v2.0.0-beta1")        
+    f("vue-v2.0.0-beta1")
 ];
