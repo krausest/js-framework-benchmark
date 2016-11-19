@@ -19,10 +19,10 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "bobril-build": "0.47.0"
+    "bobril-build": "0.50.1"
   },
   "dependencies": {
-    "bobril": "4.44.1"
+    "bobril": "4.49.2"
   },
   "bobril": {
     "title": "Bobril v4.44.1",

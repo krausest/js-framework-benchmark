@@ -28,7 +28,7 @@ export let frameworks = [
     f("angular-v1.5.8"),
     f("angular-v2.2.1"),
     f("aurelia-v1.0.7", "aurelia-v1.0.7/dist"),
-    f("bobril-v4.44.1"),
+    f("bobril-v4.49.2"),
     f("cyclejs-dom-v14.1.0"),
     f("dio-v2.1.0"),
     f("domvm-v1.2.10"),

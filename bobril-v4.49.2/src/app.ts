@@ -72,7 +72,7 @@ const Header = b.createComponent<IHeaderData>({
         const d = ctx.data;
         me.className = "jumbotron";
         me.children = divWithClass("row", [
-            divWithClass("col-md-6", { tag: 'h1', children: "Bobril v4.44.1" }),
+            divWithClass("col-md-6", { tag: 'h1', children: "Bobril v4.49.2" }),
             divWithClass("col-md-6", [
                 divWithClass("col-sm-6 smallpad", Button({ id: "run", action: () => store.run() }, "Create 1,000 rows")),
                 divWithClass("col-sm-6 smallpad", Button({ id: "runlots", action: () => store.runLots() }, "Create 10,000 rows")),
@@ -85,8 +85,8 @@ const Header = b.createComponent<IHeaderData>({
     }
 });
 
-const ClickSelect = {
-    onClick(ctx: { data: number }) {
+const ClickSelect : b.IBobrilComponent = {
+    onClick(ctx: b.IBobrilCtx, event: b.IBobrilMouseEvent): boolean {
         startMeasure("select");
         store.select(ctx.data);
         b.invalidate();
@@ -94,8 +94,8 @@ const ClickSelect = {
     }
 };
 
-const ClickRemove = {
-    onClick(ctx: { data: number }) {
+const ClickRemove : b.IBobrilComponent = {
+    onClick(ctx: b.IBobrilCtx, event: b.IBobrilMouseEvent): boolean {
         startMeasure("delete");
         store.delete(ctx.data);
         b.invalidate();
