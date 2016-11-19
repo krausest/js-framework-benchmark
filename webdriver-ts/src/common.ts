@@ -26,17 +26,17 @@ function f(name: string, uri: string = null, useShadowRoot = false): FrameworkDa
 
 export let frameworks = [
     f("angular-v1.5.8"),
-    f("angular-v2.0.0"),
-    f("aurelia-v1.0.3", "aurelia-v1.0.3/dist"),
+    f("angular-v2.2.1"),
+    f("aurelia-v1.0.7", "aurelia-v1.0.7/dist"),
     f("bobril-v4.44.1"),
-    f("cyclejs-v7.0.0"),
+    f("cyclejs-dom-v14.1.0"),
     f("dio-v2.1.0"),
     f("domvm-v1.2.10"),
     f("domvm-v2.0.0-beta"),
     f("ember-v2.6.1", "ember-v2.6.1/dist"),
     f("ember-v2.10.0-beta.2", "ember-v2.10.0-beta.2/dist"),
     f("elm-v0.17.1"),
-    f("inferno-v1.0.0-beta5"),
+    f("inferno-v1.0.0-beta9"),
     f("kivi-v1.0.0-rc0"),
     f("knockout-v3.4.0"),
     f("mithril-v0.2.5"),
@@ -44,6 +44,7 @@ export let frameworks = [
     f("plastiq-v1.33.0"),
     f("polymer-v1.7.0", "polymer-v1.7.0", true),
     f("preact-v6.0.2"),
+    f("simulacra-v1.5.5"),
     f("ractive-v0.7.3"),
     f("ractive-edge"),
     f("react-lite-v0.15.17"),
@@ -55,5 +56,5 @@ export let frameworks = [
     f("vanillajs"),
     f("vidom-v0.3.18"),
     f("vue-v1.0.26"),
-    f("vue-v2.0.0-beta1")        
+    f("vue-v2.0.7")        
 ];
