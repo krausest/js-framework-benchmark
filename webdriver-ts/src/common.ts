@@ -55,6 +55,5 @@ export let frameworks = [
     f("tsers-v1.0.0"),
     f("vanillajs"),
     f("vidom-v0.5.3"),
-    f("vue-v1.0.26"),
     f("vue-v2.0.7")        
 ];
