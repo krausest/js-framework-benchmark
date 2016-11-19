@@ -45,7 +45,7 @@ export let frameworks = [
     f("polymer-v1.7.0", "polymer-v1.7.0", true),
     f("preact-v6.4.0"),
     f("simulacra-v1.5.5"),
-    f("ractive-v0.7.3"),
+    f("ractive-v0.8.5"),
     f("ractive-edge"),
     f("react-lite-v0.15.17"),
     f("react-v15.3.1"),

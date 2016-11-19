@@ -55,7 +55,6 @@ class DataStore {
     }
     add() {
         this.data.push.apply(this.data, this.buildData(1000));
-        // this.data = this.data.concat(this.buildData(1000));
     }
     runLots() {
         this.data = this.buildData(10000);
@@ -77,7 +76,7 @@ class DataStore {
 const store = new DataStore();
 
 
-var ractive = new Ractive({
+var ractive = window.r = new Ractive({
     oninit : function(options) {
         const that = this;
         this.on( 'run', function ( event) {
@@ -104,11 +103,6 @@ var ractive = new Ractive({
             that.set("selected", store.selected);
             stopMeasure();
         });
-        this.on('delete', function (event, id) {
-            startMeasure("delete");
-            store.delete(id);
-            stopMeasure();
-        });
         this.on('runLots', function (event) {
             startMeasure("runLots");
             store.runLots();
@@ -128,12 +122,22 @@ var ractive = new Ractive({
             stopMeasure();
         });
     },
+    remove(idx) {
+        startMeasure("delete");
+        this.splice('store.data', idx, 1);
+        stopMeasure();
+    },
+    select(id) {
+        startMeasure("select");
+        this.set("selected", id);
+        stopMeasure();
+    },
     el: "#main",
     template:
     `<div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Ractive v0.7.3</h1>
+                <h1>Ractive v0.8.5</h1>
             </div>
             <div class="col-md-6">
                 <div class="row">
@@ -162,12 +166,12 @@ var ractive = new Ractive({
     <table class="table table-hover table-striped test-data">
         <tbody>
             {{#each store.data:num}}
-            <tr class="{{ selected == id ? 'danger' : '' }}">
-                <td class="col-md-1">{{id}}</td>
+            <tr class-danger="{{~/selected === .id}}">
+                <td class="col-md-1">{{.id}}</td>
                 <td class="col-md-4">
-                    <a on-click="select:{{id}}">{{label}}</a>
+                    <a on-click="@this.select(.id)">{{label}}</a>
                 </td>
-                <td class="col-md-1"><a on-click="delete:{{id}}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                <td class="col-md-1"><a on-click="@this.remove(num)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
                 <td class="col-md-6"></td>
             </tr>
             {{/each}}
