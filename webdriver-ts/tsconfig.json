@@ -16,6 +16,7 @@
         "./src/webdriverAccess.ts",
         "./src/benchmarkRunner.ts",
         "./src/createResultTable.ts",
+        "./src/createIndex.ts",
         "./src/runCheck.ts"
     ],
     "exclude": [
