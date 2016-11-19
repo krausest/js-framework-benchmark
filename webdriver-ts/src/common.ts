@@ -48,7 +48,7 @@ export let frameworks = [
     f("ractive-v0.8.5"),
     f("ractive-edge"),
     f("react-lite-v0.15.27"),
-    f("react-v15.3.1"),
+    f("react-v15.4.0"),
     f("react-v15.3.1-mobX-v2.5.0"),
     f("react-v15.3.2-redux-v3.6.0"),
     f("riot-v2.6.1"),
