@@ -63,11 +63,11 @@ export function testTextContains(driver: WebDriver, xpath: string, text: string)
 }
 
 export function testTextNotContained(driver: WebDriver, xpath: string, text: string) {
-    return driver.wait(new until.Condition<boolean>(`testClassContainsNot ${xpath} ${text}`,
+    return driver.wait(new until.Condition<boolean>(`testTextNotContained ${xpath} ${text}`,
         (driver) => shadowRoot(driver).then(elem => findByXPath(elem, xpath))
             .then(elem => elem.getText()).then(
                 v => v && v.indexOf(text)==-1,
-                err => console.log("ignoring error in testClassContainsNot for xpath = "+xpath+" text = "+text,err.toString().split("\n")[0])
+                err => console.log("ignoring error in testTextNotContained for xpath = "+xpath+" text = "+text,err.toString().split("\n")[0])
             )                        
         ), config.TIMEOUT);        
 }

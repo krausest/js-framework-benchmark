@@ -10,7 +10,7 @@ export let config = {
     WARMUP_COUNT: 5,
     TIMEOUT: 60 * 1000,
     LOG_PROGRESS: true,
-    LOG_DETAILS: true,
+    LOG_DETAILS: false,
     LOG_DEBUG: false
 }
 
@@ -44,7 +44,6 @@ export let frameworks = [
     f("plastiq-v1.33.0"),
     f("polymer-v1.7.0", "polymer-v1.7.0", true),
     f("preact-v6.4.0"),
-    f("simulacra-v1.5.5"),
     f("ractive-v0.8.5"),
     f("ractive-edge"),
     f("react-lite-v0.15.27"),
@@ -52,6 +51,7 @@ export let frameworks = [
     f("react-v15.4.0-mobX-v2.6.3"),
     f("react-v15.4.0-redux-v3.6.0"),
     f("riot-v2.6.7"),
+    f("simulacra-v1.5.5"),
     f("tsers-v1.0.0"),
     f("vanillajs"),
     f("vidom-v0.5.3"),

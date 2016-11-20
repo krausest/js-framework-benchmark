@@ -100,12 +100,20 @@ const benchRemove: Benchmark = {
             testElementLocatedById(driver, "run")
             .then(() => clickElementById(driver, 'run'))
             .then(() => testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a"))
-            .then(() => forProm(0, config.WARMUP_COUNT, (i) => clickElementByXPath(driver, `//tbody/tr[${config.WARMUP_COUNT-i+4}]/td[3]/a`))),
+            .then(() => forProm(0, config.WARMUP_COUNT, (i) => {
+                let text = '';
+                return getTextByXPath(driver, `//tbody/tr[${config.WARMUP_COUNT-i+4}]/td[2]/a`)
+                .then(val => text = val )
+                .then(() => clickElementByXPath(driver, `//tbody/tr[${config.WARMUP_COUNT-i+4}]/td[3]/a/span[1]`))
+                .then(() => testTextNotContained(driver, `//tbody/tr[${config.WARMUP_COUNT-i+4}]/td[2]/a`, text));
+                //     return clickElementByXPath(driver, `//tbody/tr[${config.WARMUP_COUNT-i+4}]/td[3]/a`) 
+                }
+        )),
     run: (driver: WebDriver) => {
             let text = '';
             return getTextByXPath(driver, "//tbody/tr[4]/td[2]/a")
             .then(val => text = val)
-            .then(() => clickElementByXPath(driver, "//tbody/tr[4]/td[3]/a"))
+            .then(() => clickElementByXPath(driver, "//tbody/tr[4]/td[3]/a/span[1]"))
             .then(() => testTextNotContained(driver, "//tbody/tr[4]/td[2]/a", text));
     }
 }
