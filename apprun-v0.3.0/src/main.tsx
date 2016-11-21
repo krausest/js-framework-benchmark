@@ -37,10 +37,6 @@ const update = {
     select(store, id) {
         this.unselect(store);
         store.select(id);
-        store.view = store => {
-            const selected = document.getElementById(id);
-            if (selected) selected.className = 'danger';
-        };
         return store;
     },
 
@@ -56,9 +52,6 @@ const update = {
 
     clear(store) {
         store.clear();
-        // store.view = store => {
-        //     document.getElementById('app').innerHTML = '';
-        // }
         return store;
     },
 
@@ -69,10 +62,7 @@ const update = {
     },
 
     unselect(store) {
-        if (store.selected) {
-            let sel = document.getElementById(store.selected);
-            if (sel) sel.className = '';
-        }
+        store.selected = null;
     }
 }
 
