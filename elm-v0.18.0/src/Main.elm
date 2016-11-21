@@ -2,16 +2,15 @@ module Main exposing (..)
 
 import Array exposing (Array)
 import Array.Extra
-import Html exposing (div, a, h1, span, button, table, td, tr, text, Html, Attribute)
-import Html.App exposing (program)
-import Html.Attributes exposing (id, class, classList, attribute, type', href)
+import Html exposing (Html, Attribute, program, div, a, h1, span, button, table, td, tr, text)
+import Html.Attributes exposing (id, class, classList, attribute, type_, href)
 import Html.Events exposing (onClick)
 import Html.Keyed
 import String
 import Random.Pcg exposing (Seed, Generator)
 
 
-main : Program Never
+main : Program Never Model Msg
 main =
     program
         { view = view
@@ -21,71 +20,68 @@ main =
         }
 
 
-adjectives : Array String
+adjectives : List String
 adjectives =
-    Array.fromList
-        [ "pretty"
-        , "large"
-        , "big"
-        , "small"
-        , "tall"
-        , "short"
-        , "long"
-        , "handsome"
-        , "plain"
-        , "quaint"
-        , "clean"
-        , "elegant"
-        , "easy"
-        , "angry"
-        , "crazy"
-        , "helpful"
-        , "mushy"
-        , "odd"
-        , "unsightly"
-        , "adorable"
-        , "important"
-        , "inexpensive"
-        , "cheap"
-        , "expensive"
-        , "fancy"
-        ]
+    [ "pretty"
+    , "large"
+    , "big"
+    , "small"
+    , "tall"
+    , "short"
+    , "long"
+    , "handsome"
+    , "plain"
+    , "quaint"
+    , "clean"
+    , "elegant"
+    , "easy"
+    , "angry"
+    , "crazy"
+    , "helpful"
+    , "mushy"
+    , "odd"
+    , "unsightly"
+    , "adorable"
+    , "important"
+    , "inexpensive"
+    , "cheap"
+    , "expensive"
+    , "fancy"
+    ]
 
 
-colours : Array String
+colours : List String
 colours =
-    Array.fromList
-        [ "red"
-        , "yellow"
-        , "blue"
-        , "green"
-        , "pink"
-        , "brown"
-        , "purple"
-        , "brown"
-        , "white"
-        , "black"
-        , "orange"
-        ]
+    [ "red"
+    , "yellow"
+    , "blue"
+    , "green"
+    , "pink"
+    , "brown"
+    , "purple"
+    , "brown"
+    , "white"
+    , "black"
+    , "orange"
+    ]
 
 
-nouns : Array String
+nouns : List String
 nouns =
-    Array.fromList
-        [ "table"
-        , "chair"
-        , "house"
-        , "bbq"
-        , "desk"
-        , "car"
-        , "pony"
-        , "cookie"
-        , "sandwich"
-        , "burger"
-        , "pizza"
-        , "mouse"
-        , "keyboard"
-        ]
+    [ "table"
+    , "chair"
+    , "house"
+    , "bbq"
+    , "desk"
+    , "car"
+    , "pony"
+    , "cookie"
+    , "sandwich"
+    , "burger"
+    , "pizza"
+    , "mouse"
+    , "keyboard"
+    ]
 
 
 buttons : List ( String, String, Msg )
@@ -109,7 +105,7 @@ btnPrimaryBlock ( buttonId, labelText, msg ) =
     div
         [ class "col-sm-6 smallpad" ]
         [ button
-            [ type' "button"
+            [ type_ "button"
             , class "btn btn-primary btn-block"
             , id buttonId
             , onClick msg
@@ -163,7 +159,7 @@ view model =
                     [ class "col-md-6" ]
                     [ h1
                         []
-                        [ text "Elm 0.17.1" ]
+                        [ text "Elm 0.18.0" ]
                     ]
                 , div
                     [ class "col-md-6" ]
@@ -189,13 +185,13 @@ createRandomBatch maybeSeed amount lastId =
     case maybeSeed of
         Just seed ->
             let
-                ( list, seed ) =
+                ( list, newSeed ) =
                     Random.Pcg.step (batch amount) seed
 
                 row =
                     createRow lastId
             in
-                ( List.indexedMap row list, seed )
+                ( List.indexedMap row list, newSeed )
 
         Nothing ->
             Debug.crash "Attempting to create values without a seed!"
@@ -369,33 +365,13 @@ batch n =
 
 generator : Generator String
 generator =
-    Random.Pcg.map3
-        (\a b c ->
-            let
-                adjective index =
-                    adjectives
-                        |> Array.get index
-                        |> Maybe.withDefault ""
-
-                colour index =
-                    colours
-                        |> Array.get index
-                        |> Maybe.withDefault ""
-
-                noun index =
-                    nouns
-                        |> Array.get index
-                        |> Maybe.withDefault ""
-            in
-                String.join " "
-                    [ adjective a
-                    , colour b
-                    , noun c
-                    ]
+    Random.Pcg.map (Maybe.withDefault "")
+        (Random.Pcg.map3
+            (Maybe.map3 (\a c n -> String.join " " [ a, c, n ]))
+            (Random.Pcg.sample adjectives)
+            (Random.Pcg.sample colours)
+            (Random.Pcg.sample nouns)
         )
-        (Random.Pcg.int 0 (Array.length adjectives - 1))
-        (Random.Pcg.int 0 (Array.length colours - 1))
-        (Random.Pcg.int 0 (Array.length nouns - 1))
 
 
 subscriptions : Model -> Sub Msg

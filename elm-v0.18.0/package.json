@@ -10,7 +10,7 @@
   "keywords": [
     "elm"
   ],
-  "author": "Eduard Kyvenko <duardeco@gmail.com>",
+  "author": "Eduard Kyvenko <eduard.kyvenko@gmail.com>",
   "license": "ISC",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {
@@ -18,6 +18,6 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "elm": "^0.17.1"
+    "elm": "0.18.0"
   }
 }
