@@ -35,7 +35,7 @@ export let frameworks = [
     f("domvm-v2.0.0-beta"),
     f("ember-v2.6.1", "ember-v2.6.1/dist"),
     f("ember-v2.10.0-beta.2", "ember-v2.10.0-beta.2/dist"),
-    f("elm-v0.17.1"),
+    f("elm-v0.18.0"),
     f("inferno-v1.0.0-beta9"),
     f("kivi-v1.0.0-rc2"),
     f("knockout-v3.4.1"),
@@ -55,5 +55,5 @@ export let frameworks = [
     f("tsers-v1.0.0"),
     f("vanillajs"),
     f("vidom-v0.5.3"),
-    f("vue-v2.0.7")        
+    f("vue-v2.0.7")
 ];
