@@ -54,6 +54,7 @@ export let frameworks = [
     f("simulacra-v1.5.5"),
     f("tsers-v1.0.0"),
     f("vanillajs"),
+    f("vanillajs-keyed"),
     f("vidom-v0.5.3"),
     f("vue-v2.0.7")
 ];
