@@ -41,6 +41,7 @@ export let frameworks = [
     f("knockout-v3.4.1"),
     f("mithril-v0.2.5"),
     f("mithril-v1.0.0-alpha"),
+    f("nx-v1.0.0-alpha.4.0.0"),
     f("plastiq-v1.33.0"),
     f("polymer-v1.7.0", "polymer-v1.7.0", true),
     f("preact-v6.4.0"),
