@@ -74,58 +74,54 @@ export default {
         add() {
             startMeasure("add");
             store.add();
-            this.rows = store.data;
-            this.selected = store.selected;
+            this.sync();
             stopMeasure();
         },
         remove(item) {
             startMeasure("remove");
             store.delete(item.id);
-            this.rows = store.data;
-            this.selected = store.selected;
+            this.sync();
             stopMeasure();
         },
         select(item) {
             startMeasure("select");
             store.select(item.id);
-            this.rows = store.data;
-            this.selected = store.selected;
+            this.sync();
             stopMeasure();
         },
         run() {
             startMeasure("run");
             store.run();
-            this.rows = store.data;
-            this.selected = store.selected;
+            this.sync();
             stopMeasure();
         },
         update() {
             startMeasure("update");
             store.update();
-            this.rows = store.data;
-            this.selected = store.selected;
+            this.sync();
             stopMeasure();
         },
         runLots() {
             startMeasure("runLots");
             store.runLots();
-            this.rows = store.data;
-            this.selected = store.selected;
+            this.sync();
             stopMeasure();
         },
         clear() {
             startMeasure("clear");
             store.clear();
-            this.rows = store.data;
-            this.selected = store.selected;
+            this.sync();
             stopMeasure();
         },
         swapRows() {
             startMeasure("swapRows");
             store.swapRows();
-            this.rows = store.data;
-            this.selected = store.selected;
+            this.sync();
             stopMeasure();
+        },
+        sync() {
+            this.rows = Object.freeze(store.data);
+            this.selected = Object.freeze(store.selected);
         }
     }
 }
