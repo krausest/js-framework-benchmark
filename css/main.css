@@ -21,10 +21,6 @@ body {
 .col-sm-6.smallpad {
     padding: 5px;
 }
-/*a:visited  { background-color:#f00; }
-a:link  { background-color:#0f0; }
-a:active  { background-color:#00f; }*/
-/*a:target { background-color: #ff0}*/
 
 a span {
     transition: all 5s;
