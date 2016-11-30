@@ -3,15 +3,15 @@ var exec = require('child_process').execSync;
 var fs = require('fs');
 var commandExists = require('command-exists');
 
-var instalCommand = 'npm install';
+var installCommand = 'npm install';
 
 commandExists('yarn', function(err, commandExists) {
 
-	instalCommand = commandExists ? 'yarn' : 'npm install';
+	installCommand = commandExists ? 'yarn' : 'npm install';
 
 	_.each(fs.readdirSync('.'), function(name) {
-		if(fs.statSync(name).isDirectory() && name[0] !== '.' && ['css', 'dist','node_modules'].indexOf(name)==-1) {
-			exec(instalCommand, {
+		if(fs.statSync(name).isDirectory() && name[0] !== '.' && ['css', 'dist', 'node_modules'].indexOf(name) == -1) {
+			exec(installCommand, {
 				cwd: name,
 				stdio: 'inherit'
 			});
