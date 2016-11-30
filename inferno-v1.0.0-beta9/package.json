@@ -7,7 +7,7 @@
     "build-prod": "webpack -d -c webpack.config.js"
   },
   "keywords": [
-    "ractive"
+    "inferno"
   ],
   "author": "Stefan Krause",
   "license": "Apache-2.0",
