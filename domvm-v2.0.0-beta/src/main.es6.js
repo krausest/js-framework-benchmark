@@ -43,7 +43,9 @@ function View(vm, store) {
 
 	let select = (e, node) => {
 		startMeasure("select");
-		store.select(node.data);
+		while (node.key == null)
+			node = node.parent;
+		store.select(node.key);
 		vm.redraw(true);		// sync redraw
 		stopMeasure("select");
 		return false;
@@ -51,7 +53,9 @@ function View(vm, store) {
 
 	let remove = (e, node) => {
 		startMeasure("delete");
-		store.delete(node.data == null ? node.parent.data : node.data);
+		while (node.key == null)
+			node = node.parent;
+		store.delete(node.key);
 		vm.redraw(true);
 		stopMeasure("delete");
 		return false;
@@ -97,13 +101,13 @@ function View(vm, store) {
 			]),
 			h("table.table.table-hover.table-striped.test-data", {onclick: tableClick}, [
 				h2("tbody", store.data.map(item =>
-					h("tr", {class: item.id === store.selected ? 'danger' : null}, [
+					h("tr", {_key: item.id, class: item.id === store.selected ? 'danger' : null}, [
 						h("td.col-md-1", item.id),
 						h("td.col-md-4", [
-							h("a.lbl", {_data: item.id}, item.label)
+							h("a.lbl", item.label)
 						]),
 						h("td.col-md-1", [
-							h("a.remove", {_data: item.id}, [
+							h("a.remove", [
 								h("span.glyphicon.glyphicon-remove", {"aria-hidden": ""})
 							])
 						]),
