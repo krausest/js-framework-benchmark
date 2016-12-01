@@ -1,5 +1,6 @@
 'use strict';
 
+var webpack = require('webpack')
 var cache = {};
 var loaders = [
 	{
@@ -11,16 +12,20 @@ var loaders = [
         }
 	},
 	{
-		test: /\.es6\.js$/,
+		test: /\.js$/,
 		loader: 'babel-loader',
-		exclude: /node_modules/,
-		query: {
-          presets: ['es2015', 'stage-0']
-        }
+		exclude: /node_modules/
 	},
 	{
 		test: /\.css$/,
 		loader: 'style-loader!css-loader'
+	},
+	{
+		test: /\.vue$/,
+		loader: 'vue-loader',
+		query: {
+			preserveWhitespace: false
+		}
 	}
 ];
 var extensions = [
@@ -45,9 +50,11 @@ module.exports = [{
 		root: [
 			__dirname,
 			__dirname + '/src'
-		],
-		alias: {
-			"vue": __dirname+"/node_modules/vue/dist/vue.min.js",
-		}
-	}
+		]
+	},
+	plugins: [
+		new webpack.DefinePlugin({
+			'process.env.NODE_ENV': '"production"'
+		})
+	]
 }];
