@@ -33,7 +33,7 @@ export class Store {
     }
     delete(id) {
         const idx = this.data.findIndex(d => d.id==id);
-        this.data.splice(idx, 1);
+        this.data = this.data.slice(0, idx).concat(this.data.slice(idx + 1))
     }
     run() {
         this.data = this.buildData();
@@ -60,7 +60,7 @@ export class Store {
     	if(this.data.length > 10) {
     		let d4 = this.data[4];
 			let d9 = this.data[9];
-			
+
 			var newData = this.data.map(function(data, i) {
 				if(i === 4) {
 					return d9;
