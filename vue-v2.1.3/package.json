@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for vue.js framework",
   "scripts": {
-    "build-dev": "webpack -w -d -c webpack.config.js",
-    "build-prod": "webpack -p -c webpack.config.js"
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
   },
   "keywords": [
     "ractive"
