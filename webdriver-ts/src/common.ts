@@ -45,6 +45,7 @@ export let frameworks = [
     f("plastiq-v1.33.0"),
     f("polymer-v1.7.0", "polymer-v1.7.0", true),
     f("preact-v6.4.0"),
+    f("svelte-v1.0.1"),
     f("ractive-v0.8.5"),
     f("ractive-edge"),
     f("react-lite-v0.15.27"),
