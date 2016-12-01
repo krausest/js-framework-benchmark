@@ -56,5 +56,5 @@ export let frameworks = [
     f("vanillajs"),
     f("vanillajs-keyed"),
     f("vidom-v0.5.3"),
-    f("vue-v2.0.7")
+    f("vue-v2.1.3")
 ];
