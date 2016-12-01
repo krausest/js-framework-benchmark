@@ -6,6 +6,11 @@ This work is derived from a benchmark that Richard Ayotte published on https://g
 
 Thanks to Baptiste Augrain for making the benchmarks more sophisticated and adding frameworks.
 
+## Important News
+
+Chrome 54 on OSX has a bug that causes webdriver to hang or crash on non english systems. Plese run the following command prior to executing the webdriver-ts testdriver:```
+export LANG="en_US.UTF-8"```
+
 ## Prerequsites
 
 Have *node.js (>=6.0)* installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node 6.0.
