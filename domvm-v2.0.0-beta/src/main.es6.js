@@ -19,8 +19,7 @@ var stopMeasure = function() {
 	}
 }
 
-var h  = (tag, arg1, arg2) => domvm.defineElement(tag, arg1, arg2, domvm.FAST_REMOVE | domvm.FIXED_BODY),
-	h2 = (tag, arg1, arg2) => domvm.defineElement(tag, arg1, arg2, domvm.FAST_REMOVE);
+var h  = (tag, arg1, arg2) => domvm.defineElement(tag, arg1, arg2, domvm.FAST_REMOVE | domvm.FIXED_BODY);
 
 let store = new Store();
 
@@ -100,7 +99,7 @@ function View(vm, store) {
 				])
 			]),
 			h("table.table.table-hover.table-striped.test-data", {onclick: tableClick}, [
-				h2("tbody", {_list: true}, store.data.map(item =>
+				h("tbody", {_flags: domvm.KEYED_LIST | domvm.FAST_REMOVE}, store.data.map(item =>
 					h("tr", {_key: item.id, class: item.id === store.selected ? 'danger' : null}, [
 						h("td.col-md-1", item.id),
 						h("td.col-md-4", [
