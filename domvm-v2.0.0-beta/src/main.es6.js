@@ -100,7 +100,7 @@ function View(vm, store) {
 				])
 			]),
 			h("table.table.table-hover.table-striped.test-data", {onclick: tableClick}, [
-				h2("tbody", store.data.map(item =>
+				h2("tbody", {_list: true}, store.data.map(item =>
 					h("tr", {_key: item.id, class: item.id === store.selected ? 'danger' : null}, [
 						h("td.col-md-1", item.id),
 						h("td.col-md-4", [
