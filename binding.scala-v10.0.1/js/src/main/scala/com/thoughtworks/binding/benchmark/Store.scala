@@ -9,7 +9,7 @@ import scala.util.Random
   */
 final class Store {
 
-  val data: Var[Vars[(Int, String)]] = Var(Vars.empty)
+  val data: Var[Vars[(Int, Var[String])]] = Var(Vars.empty)
   val selected: Var[Option[Int]] = Var(None)
   var seed = 1
 
@@ -73,7 +73,7 @@ final class Store {
         raw"""${adjectives(Random.nextInt(adjectives.length))} ${colours(
           Random.nextInt(colours.length))} ${nouns(
           Random.nextInt(nouns.length))}"""
-      id -> label
+      id -> Var(label)
     }
   }
 
@@ -92,8 +92,8 @@ final class Store {
   def update() = {
     val buffer = data.get.get
     for (i <- 0 until buffer.length by 10) {
-      val (id, label) = buffer(i)
-      buffer(i) = id -> raw"""$label !!!"""
+      val (_, label) = buffer(i)
+      label := raw"""${label.get} !!!"""
     }
   }
 

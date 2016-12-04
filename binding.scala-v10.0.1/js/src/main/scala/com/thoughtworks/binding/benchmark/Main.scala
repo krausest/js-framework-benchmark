@@ -41,7 +41,7 @@ object Main extends scalajs.js.JSApp {
     <table className="table table-hover table-striped test-data">
       <tbody>{
         for ((id, label) <- store.data.bind) yield {
-          <tr className={store.selected.bind match { case Some(`id`) => "danger" case _ => "" }}><td className="col-md-1">{id.toString}</td><td className="col-md-4"><a onclick={_: Any => store.select(id)}>{label}</a></td><td className="col-md-1"><a onclick={_: Any => store.delete(id)}><span className="glyphicon glyphicon-remove" data:aria-hidden="true"></span></a></td><td className="col-md-6"></td></tr>
+          <tr className={store.selected.bind match { case Some(`id`) => "danger" case _ => "" }}><td className="col-md-1">{id.toString}</td><td className="col-md-4"><a onclick={_: Any => store.select(id)}>{label.bind}</a></td><td className="col-md-1"><a onclick={_: Any => store.delete(id)}><span className="glyphicon glyphicon-remove" data:aria-hidden="true"></span></a></td><td className="col-md-6"></td></tr>
         }
       }</tbody>
     </table>
