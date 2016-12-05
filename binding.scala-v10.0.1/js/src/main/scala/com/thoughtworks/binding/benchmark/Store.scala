@@ -9,7 +9,7 @@ import scala.util.Random
   */
 final class Store {
 
-  val data: Var[Vars[(Int, Var[String])]] = Var(Vars.empty)
+  val data: Vars[(Int, Var[String])] = Vars.empty
   val selected: Var[Option[Int]] = Var(None)
   var seed = 1
 
@@ -66,7 +66,7 @@ final class Store {
                     "keyboard")
 
   private def buildData(count: Int = 1000) = {
-    for (i <- 0 until count) yield {
+    (for (i <- 0 until count) yield {
       val id = seed
       seed += 1
       val label =
@@ -74,35 +74,40 @@ final class Store {
           Random.nextInt(colours.length))} ${nouns(
           Random.nextInt(nouns.length))}"""
       id -> Var(label)
-    }
+    })(collection.breakOut(scalajs.js.WrappedArray.canBuildFrom))
   }
 
   def run() = {
-    data := Vars(buildData(): _*)
+    val buffer = data.get
+    buffer.clear()
+    buffer ++= buildData()
   }
 
   def runLots() = {
-    data := Vars(buildData(10000): _*)
+    val buffer = data.get
+    buffer.clear()
+    buffer ++= buildData(10000)
   }
 
   def add() = {
-    data.get.get ++= buildData()
+    data.get ++= buildData()
   }
 
   def update() = {
-    val buffer = data.get.get
+    val buffer = data.get
+    val i = buffer.iterator
     for (i <- 0 until buffer.length by 10) {
       val (_, label) = buffer(i)
-      label := raw"""${label.get} !!!"""
+      label := label.get + " !!!"
     }
   }
 
   def clear() = {
-    data := Vars()
+    data.get.clear()
   }
 
   def swapRows() = {
-    val buffer = data.get.get
+    val buffer = data.get
     if (buffer.length >= 10) {
       val tmp = buffer(4)
       buffer(4) = buffer(9)
@@ -111,7 +116,7 @@ final class Store {
   }
 
   def delete(id: Int) = {
-    val buffer = data.get.get
+    val buffer = data.get
     buffer.remove(buffer.indexWhere {
       case (`id`, _) => true
       case _ => false
