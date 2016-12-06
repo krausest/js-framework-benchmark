@@ -8,9 +8,10 @@ import scala.util.Random
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 final class Store {
+  import Store.Row
 
-  val data: Vars[(Int, Var[String])] = Vars.empty
-  val selected: Var[Option[Int]] = Var(None)
+  val data: Vars[Row] = Vars.empty
+  val selected: Var[Option[Row]] = Var(None)
   var seed = 1
 
   val adjectives = Array("pretty",
@@ -65,30 +66,62 @@ final class Store {
                     "mouse",
                     "keyboard")
 
+  @inline
+  private def newLabel() = {
+    raw"""${
+      adjectives(Random.nextInt(adjectives.length))
+    } ${
+      colours(Random.nextInt(colours.length))
+    } ${
+      nouns(Random.nextInt(nouns.length))
+    }"""
+  }
+
+  @inline
+  private def newId() = {
+    val id = seed
+    seed += 1
+    id
+  }
+
   private def buildData(count: Int = 1000) = {
     (for (i <- 0 until count) yield {
-      val id = seed
-      seed += 1
-      val label =
-        raw"""${adjectives(Random.nextInt(adjectives.length))} ${colours(
-          Random.nextInt(colours.length))} ${nouns(
-          Random.nextInt(nouns.length))}"""
-      id -> Var(label)
+      Row(Var(newId()), Var(newLabel()))
     })(collection.breakOut(scalajs.js.WrappedArray.canBuildFrom))
   }
 
+  private def replace(count: Int = 1000) = {
+    val buffer = data.get
+    val oldLength = buffer.length
+    if (oldLength > count) {
+      buffer.dropRight(oldLength - count)
+      for (row <- buffer) {
+        row.id := newId()
+        row.label := newLabel()
+      }
+    } else {
+      for (row <- buffer) {
+        row.id := newId()
+        row.label := newLabel()
+      }
+      if (count > oldLength) {
+        buffer ++= buildData(count - oldLength)
+      }
+    }
+
+  }
+
+  @inline
   def run() = {
-    val buffer = data.get
-    buffer.clear()
-    buffer ++= buildData()
+    replace(1000)
   }
 
+  @inline
   def runLots() = {
-    val buffer = data.get
-    buffer.clear()
-    buffer ++= buildData(10000)
+    replace(10000)
   }
 
+  @inline
   def add() = {
     data.get ++= buildData()
   }
@@ -97,36 +130,47 @@ final class Store {
     val buffer = data.get
     val i = buffer.iterator
     for (i <- 0 until buffer.length by 10) {
-      val (_, label) = buffer(i)
+      val label = buffer(i).label
       label := label.get + " !!!"
     }
   }
 
+  @inline
   def clear() = {
     data.get.clear()
+  }
+
+  @inline
+  private def swap[A](left:Var[A], right:Var[A]) = {
+    val tmp = left.get
+    left := right.get
+    right := tmp
   }
 
   def swapRows() = {
     val buffer = data.get
     if (buffer.length >= 10) {
-      val tmp = buffer(4)
-      buffer(4) = buffer(9)
-      buffer(9) = tmp
+      val row4 = buffer(4)
+      val row9 = buffer(9)
+      swap(row4.id, row9.id)
+      swap(row4.label, row9.label)
     }
   }
 
-  def delete(id: Int) = {
+  def delete(row: Row) = {
     val buffer = data.get
-    buffer.remove(buffer.indexWhere {
-      case (`id`, _) => true
-      case _ => false
-    })
+    buffer -= row
   }
 
-  def select(id: Int) = {
-    selected := Some(id)
+  @inline
+  def select(row: Row) = {
+    selected := Some(row)
   }
 
 }
 
-object Store {}
+object Store {
+
+  final case class Row(id: Var[Int], label: Var[String])
+
+}
