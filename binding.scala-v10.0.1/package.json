@@ -1,0 +1,12 @@
+{
+  "name": "js-framework-benchmark-binding.scala",
+  "version": "1.0.0",
+  "description": "Benchmark for Binding.scala",
+  "scripts": {
+    "build-prod": "sbt web-stage"
+  },
+  "devDependencies": {
+    "sbt-bin": "0.1.1"
+  },
+  "author": "杨博 (Yang Bo) <pop.atry@gmail.com>"
+}
