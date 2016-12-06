@@ -157,6 +157,7 @@ final class Store {
     }
   }
 
+  @inline
   def delete(row: Row) = {
     val buffer = data.get
     buffer -= row
