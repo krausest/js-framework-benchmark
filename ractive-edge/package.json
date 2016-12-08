@@ -23,6 +23,6 @@
     "webpack": "1.13.1"
   },
   "dependencies": {
-    "ractive": "ractivejs/ractive#edge"
+    "ractive": "edge"
   }
 }
