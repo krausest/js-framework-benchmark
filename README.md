@@ -8,7 +8,7 @@ Thanks to Baptiste Augrain for making the benchmarks more sophisticated and addi
 
 ## Important News
 
-Chrome 54 on OSX has a bug that causes webdriver to hang or crash on non english systems. Plese run the following command prior to executing the webdriver-ts testdriver:```
+Chrome 54 on OSX has a bug that causes webdriver to hang or crash on non english systems. Please run the following command prior to executing the webdriver-ts testdriver:```
 export LANG="en_US.UTF-8"```
 
 ## Prerequsites
