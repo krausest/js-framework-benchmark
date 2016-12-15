@@ -13,6 +13,6 @@
     "webpack": "1.13.2"
   },
   "dependencies": {
-    "domvm": "git://github.com/leeoniya/domvm.git#21df1dfc848650cf73afd242eef33ab8e6a76de4"
+    "domvm": "git://github.com/leeoniya/domvm.git#36037846526eceac47b04deb50eb290813845c2d"
   }
 }
