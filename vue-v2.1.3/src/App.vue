@@ -29,19 +29,29 @@
                 </div>
             </div>
         </div>
-        <my-table
-            :rows="rows"
-            :selected="selected"
-            @select="select"
-            @remove="remove">
-        </my-table>
+        <table class="table table-hover table-striped test-data" @click="handleClick">
+            <tbody>
+                <tr v-for="item in rows" :key="item.id" :class="{'danger': item.id == selected}">
+                    <td class="col-md-1">{{item.id}}</td>
+                    <td class="col-md-4">
+                        <a data-action="select" :data-id="item.id">{{item.label}}</a>
+                    </td>
+                    <td class="col-md-1">
+                        <a>
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"
+                                data-action="remove" :data-id="item.id"></span>
+                        </a>
+                    </td>
+                    <td class="col-md-6"></td>
+                </tr>
+            </tbody>
+        </table>
         <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
     </div>
 </template>
 
 <script>
 import { Store } from './store';
-import MyTable from './Table.vue';
 
 var store = new Store();
 
@@ -63,29 +73,32 @@ var stopMeasure = function() {
 }
 
 export default {
-    components: {
-        MyTable
-    },
     data: () => ({
         rows: store.data,
         selected: store.selected
     }),
     methods: {
+        handleClick (e) {
+            const { action, id } = e.target.dataset
+            if (action && id) {
+                this[action](id)
+            }
+        },
         add() {
             startMeasure("add");
             store.add();
             this.sync();
             stopMeasure();
         },
-        remove(item) {
+        remove(id) {
             startMeasure("remove");
-            store.delete(item.id);
+            store.delete(id);
             this.sync();
             stopMeasure();
         },
-        select(item) {
+        select(id) {
             startMeasure("select");
-            store.select(item.id);
+            store.select(id);
             this.sync();
             stopMeasure();
         },
@@ -121,7 +134,7 @@ export default {
         },
         sync() {
             this.rows = Object.freeze(store.data);
-            this.selected = Object.freeze(store.selected);
+            this.selected = store.selected;
         }
     }
 }
