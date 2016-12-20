@@ -132,9 +132,18 @@ var ractive = window.r = new Ractive({
         this.set("selected", id);
         stopMeasure();
     },
+    clicked(ev) {
+        var el = ev.original.target;
+        var info = this.getNodeInfo(el);
+        if (el.classList.contains('glyphicon-remove')) {
+            this.remove(info.get('@index'));
+        } else {
+            this.select(info.get('.id'));
+        }
+    },
     el: "#main",
-    template:
-    `<div class="jumbotron">
+    template:`
+    <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
                 <h1>Ractive edge</h1>
@@ -159,27 +168,26 @@ var ractive = window.r = new Ractive({
                     <div class="col-sm-6 smallpad">
                         <button type="button" class="btn btn-primary btn-block" id="swaprows" on-click="swapRows">Swap Rows</button>
                     </div>
-               </div>
+                </div>
             </div>
         </div>
     </div>
-    <table class="table table-hover table-striped test-data">
+    <table class="table table-hover table-striped test-data" on-click="@this.clicked(event)">
         <tbody>
-            {{#each store.data:num}}
+            {{#each store.data}}
             <tr class-danger="{{~/selected === .id}}">
                 <td class="col-md-1">{{.id}}</td>
                 <td class="col-md-4">
-                    <a on-click="@this.select(.id)">{{label}}</a>
+                    <a>{{label}}</a>
                 </td>
-                <td class="col-md-1"><a on-click="@this.remove(num)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                <td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
                 <td class="col-md-6"></td>
             </tr>
             {{/each}}
         </tbody>
     </table>
     <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
-    `
-    ,
+    `,
     data: { store: store, selected: undefined}
 });
 
