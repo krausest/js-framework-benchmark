@@ -189,8 +189,11 @@ class Main {
     }
     run() {
         startMeasure("run");
+        this.removeAllRows();
+        this.store.clear();
+        this.rows = [];
+        this.data = [];
         this.store.run();
-        this.updateRows();
         this.appendRows();
         this.unselect();
         stopMeasure();
@@ -204,7 +207,6 @@ class Main {
     update() {
         startMeasure("update");
         this.store.update();
-        // this.updateRows();
         for (let i=0;i<this.data.length;i+=10) {
             this.rows[i].childNodes[1].childNodes[0].innerText = this.store.data[i].label;
         }
@@ -243,33 +245,7 @@ class Main {
         this.unselect();
 
         this.recreateSelection();
-
-        // Faster, shift all rows below the row that should be deleted rows one up and drop the last row
-        // for(let i=this.rows.length-2; i>=idx;i--) {
-        //     let tr = this.rows[i];
-        //     let data =  this.store.data[i+1];
-        //     tr.data_id = data.id;
-        //     tr.childNodes[0].innerText = data.id;
-        //     tr.childNodes[1].childNodes[0].innerText = data.label;
-        //     this.data[i] = this.store.data[i];
-        // }
-        // this.store.delete(this.data[idx].id);
-        // this.data.splice(idx, 1);
-        // this.rows.pop().remove();
-
         stopMeasure();
-    }
-    updateRows() {
-        for(let i=0;i<this.rows.length;i++) {
-            if (this.data[i] !== this.store.data[i]) {
-                let tr = this.rows[i];
-                let data = this.store.data[i];
-                tr.data_id = data.id;
-                tr.childNodes[0].innerText = data.id;
-                tr.childNodes[1].childNodes[0].innerText = data.label;
-                this.data[i] = this.store.data[i];
-            }
-        }
     }
     removeAllRows() {
         // ~258 msecs
@@ -296,8 +272,11 @@ class Main {
     }
     runLots() {
         startMeasure("runLots");
+        this.removeAllRows();
+        this.store.clear();
+        this.rows = [];
+        this.data = [];
         this.store.runLots();
-        this.updateRows();
         this.appendRows();
         this.unselect();
         stopMeasure();
