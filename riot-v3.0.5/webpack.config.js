@@ -11,7 +11,7 @@ var loaders = [
   {
     test: /\.html$/, loader: 'tag',
     query: {
-      type: 'babel'
+      type: 'es6'
     }
   },
   {

@@ -120,13 +120,5 @@
 
   this.rows = store.data
   this.selected = store.selected
-
-  this.one('mount', () => {
-    // we need to replace the id of this DOM element
-    // riot automatically bind ids to the tags scopes but 'update' is a read only property
-    // that's a quick way to replace the id in order to fit the bench specs
-    this._update.setAttribute('id', 'update')
-  })
-
 </script>
 </app>
