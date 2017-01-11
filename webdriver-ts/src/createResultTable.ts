@@ -14,7 +14,7 @@ fs.readdirSync('./results').filter(file => file.endsWith('.json')).forEach(name 
 	let data = <JSONResult>JSON.parse(fs.readFileSync('./results/' + name, {
 		encoding:'utf-8'
 	}));
-	
+
 	frameworks.push(data.framework);
 
 	if (!results.has(data.framework)) results.set(data.framework, new Map());
@@ -63,7 +63,7 @@ interface TestData {
 	mean:string,
 	deviation: string,
 	factor: string,
-	styleClass: string	
+	styleClass: string
 }
 
 class BenchResultList {
@@ -103,8 +103,7 @@ let generateBenchData = (benchmarks: Array<Benchmark>) => {
 				try {
 					let factor: number;
 					if (benchmark.type === BenchmarkType.CPU) {
-						// Clamp to 1 fps
-						factor = Math.max(16, value.mean) / Math.max(16, min);
+						factor = value.mean / min;
 						factors[idx] = factors[idx] * factor;
 					}
 					else {
