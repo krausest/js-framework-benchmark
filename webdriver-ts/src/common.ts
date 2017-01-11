@@ -17,47 +17,58 @@ export let config = {
 export interface FrameworkData {
     name: string;
     uri: string;
+    nonKeyed: boolean;
     useShadowRoot: boolean;
 }
 
-function f(name: string, uri: string = null, useShadowRoot = false): FrameworkData {
-    return {name, uri: uri ? uri : name, useShadowRoot};
+interface Options {
+    uri: string;
+    useShadowRoot? : boolean;
+}
+
+function f(name: string, nonKeyed: boolean, options: Options = {uri: null, useShadowRoot: false}): FrameworkData {
+    let ret = {name, nonKeyed, uri: options.uri ? options.uri : name, useShadowRoot: options.useShadowRoot};
+    console.log("framework ", ret);
+    return ret;
 }
 
 export let frameworks = [
-    f("angular-v1.5.8"),
-    f("angular-v2.2.1"),
-    f("aurelia-v1.0.7", "aurelia-v1.0.7/dist"),
-    f("binding.scala-v10.0.1", "binding.scala-v10.0.1/target/web/stage"),
-    f("bobril-v4.49.2"),
-    f("cyclejs-dom-v14.1.0"),
-    f("dio-v3.0.5"),
-    f("domvm-v1.2.10"),
-    f("domvm-v2.0.0-beta"),
-    f("ember-v2.6.1", "ember-v2.6.1/dist"),
-    f("ember-v2.10.0-beta.2", "ember-v2.10.0-beta.2/dist"),
-    f("elm-v0.18.0"),
-    f("inferno-v1.0.0-beta9"),
-    f("kivi-v1.0.0-rc2"),
-    f("knockout-v3.4.1"),
-    f("mithril-v0.2.5"),
-    f("mithril-v1.0.0-alpha"),
-    f("nx-v1.0.0-alpha.4.0.0"),
-    f("plastiq-v1.33.0"),
-    f("polymer-v1.7.0", "polymer-v1.7.0", true),
-    f("preact-v6.4.0"),
-    f("svelte-v1.0.1"),
-    f("ractive-v0.8.5"),
-    f("ractive-edge"),
-    f("react-lite-v0.15.27"),
-    f("react-v15.4.0"),
-    f("react-v15.4.0-mobX-v2.6.3"),
-    f("react-v15.4.0-redux-v3.6.0"),
-    f("riot-v2.6.7"),
-    f("simulacra-v1.5.5"),
-    f("tsers-v1.0.0"),
-    f("vanillajs"),
-    f("vanillajs-keyed"),
-    f("vidom-v0.5.3"),
-    f("vue-v2.1.3")
+    f("angular-v1.5.8", false),
+    f("angular-v2.2.1", false),
+    f("aurelia-v1.0.7", true, {uri: "aurelia-v1.0.7/dist"}),
+    f("binding.scala-v10.0.1", false, {uri: "binding.scala-v10.0.1/target/web/stage"}),
+    f("bobril-v4.49.2", false),
+    f("cyclejs-dom-v14.1.0", true),
+    f("dio-v3.0.5", true),
+    f("domvm-v1.2.10", true),
+    f("domvm-v2.0.0-beta", false),
+    f("ember-v2.6.1", true, {uri: "ember-v2.6.1/dist"}),    // TODO: Copy CSS and check
+    f("ember-v2.10.0-beta.2", true, {uri: "ember-v2.10.0-beta.2/dist"}),
+    f("elm-v0.18.0", false),
+    f("inferno-v1.0.0-beta9", true),
+    f("kivi-v1.0.0-rc2", false),
+    f("knockout-v3.4.1", false),
+    f("mithril-v0.2.5", false),
+    f("mithril-v1.0.0-alpha", false),
+    f("nx-v1.0.0-alpha.4.0.0", true),
+    f("plastiq-v1.33.0", false),
+    f("polymer-v1.7.0", false, {uri: "polymer-v1.7.0", useShadowRoot: true}),
+    f("preact-v6.4.0", false),
+    f("svelte-v1.0.1", true),
+    f("ractive-v0.8.5", false),
+    f("ractive-edge", false),
+    f("react-lite-v0.15.27", false),
+    f("react-v15.4.0", false),
+    f("react-v15.4.0-mobX-v2.6.3", false),
+    f("react-v15.4.0-redux-v3.6.0", false),
+    f("riot-v2.6.7", true),
+    f("simulacra-v1.5.5", false),
+    f("tsers-v1.0.0", true),
+    f("vanillajs", true),
+//    // f("vanillajs-nocss"),
+//    // f("vanillajs-slimcss"),
+//    // f("vanillajs-small-css"),
+    f("vanillajs-keyed", false),
+    f("vidom-v0.5.3", false),
+    f("vue-v2.1.3", false)
 ];

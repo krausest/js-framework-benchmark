@@ -61,64 +61,70 @@
 	</style>
 </head>
 <body class="markdown-body">
-<h3>Duration in milliseconds (Slowdown = Duration / Fastest)</h3>
-<table class="results">
-<thead>
-<tr>
-	<th class='benchname'></th>
-	{{~it.frameworks :value}}
-		<th>{{=value}}</th>
-	{{~}}
-</tr>
-</thead>
-<tbody>
-{{~it.cpubenches :bench}}
+<p>Warning: These results are preliminary - use with caution (they may e.g. be from different browser versions).
+Official results are published on my <a href="http://www.stefankrause.net/">blog</a>.</p>
+{{~it.data :data}}
+	<h1>{{=data.label}}</h1>
+	<p>{{=data.description}}</p>
+	<h3>Duration in milliseconds (Slowdown = Duration / Fastest)</h3>
+	<table class="results">
+	<thead>
 	<tr>
-		<th class='benchname'>{{=bench.name}}
-		<div class="rowCount">{{=bench.description}}</div>
-		</th>
-		{{~bench.tests :test}}
-			{{?test}}
-				<td style="background-color:{{=test.styleClass}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
-			{{??}}
-				<td></td>
-			{{?}}
+		<th class='benchname'></th>
+		{{~data.cpubenches.frameworks :value}}
+			<th>{{=value}}</th>
 		{{~}}
 	</tr>
-{{~}}
-<tr>
-    <th>slowdown geometric mean</th>
-    {{~it.geomMeans :geomMean}}
-        <th style="background-color:{{=geomMean.styleClass}}">{{=geomMean.value}}
-        </th>
-    {{~}}
-</tr>
-</table>
-<h3>Memory allocation in MBs</h3>
-<table class="results">
-<thead>
-<tr>
-    <th class='benchname'></th>
-	{{~it.frameworks :value}}
-		<th>{{=value}}</th>
+	</thead>
+	<tbody>
+	{{~data.cpubenches.benches :bench}}
+		<tr>
+			<th class='benchname'>{{=bench.name}}
+			<div class="rowCount">{{=bench.description}}</div>
+			</th>
+			{{~bench.tests :test}}
+				{{?test}}
+					<td style="background-color:{{=test.styleClass}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
+				{{??}}
+					<td></td>
+				{{?}}
+			{{~}}
+		</tr>
 	{{~}}
-</tr>
-</thead>
-<tbody>
-{{~it.membenches :bench}}
 	<tr>
-		<th class='benchname'>{{=bench.name}}
-		<div class="rowCount">{{=bench.description}}</div>
-		</th>
-		{{~bench.tests :test}}
-			{{?test}}
-				<td style="background-color:{{=test.styleClass}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
-			{{??}}
-				<td></td>
-			{{?}}
+		<th>slowdown geometric mean</th>
+		{{~data.cpubenches.geomMeans :geomMean}}
+			<th style="background-color:{{=geomMean.styleClass}}">{{=geomMean.value}}
+			</th>
 		{{~}}
 	</tr>
+	</table>
+	<h3>Memory allocation in MBs</h3>
+	<table class="results">
+	<thead>
+	<tr>
+		<th class='benchname'></th>
+		{{~data.membenches.frameworks :value}}
+			<th>{{=value}}</th>
+		{{~}}
+	</tr>
+	</thead>
+	<tbody>
+	{{~data.membenches.benches :bench}}
+		<tr>
+			<th class='benchname'>{{=bench.name}}
+			<div class="rowCount">{{=bench.description}}</div>
+			</th>
+			{{~bench.tests :test}}
+				{{?test}}
+					<td style="background-color:{{=test.styleClass}}"><span class="mean">{{=test.mean}}</span><span class="deviation">{{=test.deviation}}</span><br><span class="factor">({{=test.factor}})</span></td>
+				{{??}}
+					<td></td>
+				{{?}}
+			{{~}}
+		</tr>
+	{{~}}
+	</table>
 {{~}}
-</table>
 </body>
 </html>
