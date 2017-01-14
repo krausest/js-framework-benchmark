@@ -15,6 +15,24 @@ export LANG="en_US.UTF-8"```
 
 Have *node.js (>=6.0)* installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node 6.0.
 You will also need *java* (>=6, e.g. openjdk-8-jre on ubuntu) for the google closure compiler, currently used in kivi.
+Further maven is needed and the bin directory of maven must be added to the path.
+Please make sure that the following command work before trying to build:
+```
+> npm
+npm -version
+4.0.5
+> node --version
+v7.4.0
+> echo %JAVA_HOME% / echo $JAVA_HOME
+> java -version
+java version "1.8.0_111" ...
+> javac
+javac 1.8.0_111
+> mvn -version
+Apache Maven 3.3.9 (...
+> git --version
+git version 2.11.0.windows.3
+```
 
 ## Building
 
