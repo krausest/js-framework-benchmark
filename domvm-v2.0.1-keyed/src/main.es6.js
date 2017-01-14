@@ -1,5 +1,6 @@
-import {Store} from './store'
-import domvm from 'domvm'
+import domvm from '../node_modules/domvm/dist/nano/domvm.nano.min.js';
+
+import {Store} from './store.es6';
 
 var startTime;
 var lastMeasure;
@@ -72,7 +73,7 @@ function View(vm, store) {
 			h(".jumbotron", [
 				h(".row", [
 					h(".col-md-6", [
-						h("h1", "domvm v2.0.0-beta")
+						h("h1", "domvm v2.0.1 (keyed)")
 					]),
 					h(".col-md-6", [
 						h(".row", [
