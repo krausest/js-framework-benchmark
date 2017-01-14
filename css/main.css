@@ -21,10 +21,3 @@ body {
 .col-sm-6.smallpad {
     padding: 5px;
 }
-
-a span {
-    transition: all 5s;
-}
-a:active  span { 
-    transform: scale(4.0, 4.0);
-}

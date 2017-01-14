@@ -17,7 +17,8 @@
         "./src/benchmarkRunner.ts",
         "./src/createResultTable.ts",
         "./src/createIndex.ts",
-        "./src/runCheck.ts"
+        "./src/runCheck.ts",
+        "./src/nonKeyed.ts"
     ],
     "exclude": [
         "node_modules"
