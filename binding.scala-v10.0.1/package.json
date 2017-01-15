@@ -6,7 +6,7 @@
     "build-prod": "sbt web-stage"
   },
   "devDependencies": {
-    "sbt-bin": "0.1.1"
+    "sbt-bin": "0.1.2"
   },
   "author": "杨博 (Yang Bo) <pop.atry@gmail.com>"
 }
