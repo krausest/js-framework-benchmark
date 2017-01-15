@@ -95,10 +95,8 @@ let generateBenchData = (benchmarks: Array<Benchmark>, frameworkPredicate: Frame
 		}
 	});
 
-	let frameworkNames = sortedFrameworks.map(framework => framework.name.replace('-v', ' v'));
+	let frameworkNames = sortedFrameworks.map(framework => framework.name.replace('-v', ' v')) // .replace(/-keyed$|-non-keyed$/, ''))
 	let factors = sortedFrameworks.map(f => 1.0);
-
-	console.log("frameworkNames", sortedFrameworks);
 
 	benchmarks.forEach((benchmark) => {
 		let bench = new BenchResultList(benchmark);
