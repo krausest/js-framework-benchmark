@@ -111,7 +111,7 @@ function create (label, number) {
       var i = 0, data = buildData(number)
 
       for (; i < number; i++) {
-        if (i < state.rows.length - 1) {
+        if (i < state.rows.length) {
           state.rows[i].id = data[i].id
           state.rows[i].label = data[i].label
         }
