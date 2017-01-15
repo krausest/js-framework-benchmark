@@ -28,13 +28,14 @@ interface Options {
 
 function f(name: string, nonKeyed: boolean, options: Options = {uri: null, useShadowRoot: false}): FrameworkData {
     let ret = {name, nonKeyed, uri: options.uri ? options.uri : name, useShadowRoot: options.useShadowRoot};
-    console.log("framework ", ret);
     return ret;
 }
 
 export let frameworks = [
     f("angular-v1.5.8", false),
-    f("angular-v2.2.1", false),
+    f("angular-v2.2.1", false), // REMOVED
+    f("angular-v2.4.3-keyed", false),
+    f("angular-v2.4.3-non-keyed", true),
     f("aurelia-v1.0.7", true, {uri: "aurelia-v1.0.7/dist"}),
     f("binding.scala-v10.0.1", true, {uri: "binding.scala-v10.0.1/target/web/stage"}),
     f("bobril-v4.49.2", false),
@@ -53,7 +54,8 @@ export let frameworks = [
     f("nx-v1.0.0-alpha.4.0.0", true),
     f("plastiq-v1.33.0", false),
     f("polymer-v1.7.0", true, {uri: "polymer-v1.7.0", useShadowRoot: true}),
-    f("preact-v6.4.0", false),
+    f("preact-v6.4.0", false),  // REMOVED
+    f("preact-v7.1.0", false),
     f("svelte-v1.0.1", true),
     f("ractive-v0.8.5", true),
     f("ractive-edge", true),
