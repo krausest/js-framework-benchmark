@@ -86,7 +86,7 @@ The former java test runner has been replaced with a typescript based test runne
 
 `npm start`
 
-which starts a web browser
+which starts a web server
 
 `npm run selenium`
 
@@ -102,3 +102,11 @@ runs the test for all frameworks that contain either angular or bob, which means
 which means the create rows and replace all rows benchmarks.
 After that you'll want to update the result table with
 `npm run results`
+
+## How to contribute
+
+Contributions are very welcome. Please use the following rules:
+* Each contribution must be buildable by a "npm run build-prod" command in the directory. What build-prod does is up to you.
+* All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server should not be a local dependency. npm start in the root directory start a web server that can be used for all contributions.
+* Please use fixed version number, no ranges, as it turned out to break often. Updating works IMO best with npm-check-updates, which keeps the version format.
+* Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
