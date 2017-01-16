@@ -40,8 +40,8 @@ export let frameworks = [
     f("bobril-v4.49.2", false),
     f("cyclejs-dom-v14.1.0", true),
     f("dio-v3.0.5", true),
-    f("domvm-v1.2.10", true),
-    f("domvm-v2.0.0-beta", false),
+    f("domvm-v2.0.1-non-keyed", true),
+    f("domvm-v2.0.1-keyed", false),
     f("ember-v2.6.1", false, {uri: "ember-v2.6.1/dist"}),    // TODO: Copy CSS and check
     f("ember-v2.10.0-beta.2", false, {uri: "ember-v2.10.0-beta.2/dist"}),
     f("elm-v0.18.0", false),
