@@ -45,7 +45,7 @@ export let frameworks = [
     f("ember-v2.6.1", false, {uri: "ember-v2.6.1/dist"}),    // TODO: Copy CSS and check
     f("ember-v2.10.0-beta.2", false, {uri: "ember-v2.10.0-beta.2/dist"}),
     f("elm-v0.18.0", false),
-    f("inferno-v1.0.0-beta9", true),
+    f("inferno-v1.2.0", true),
     f("kivi-v1.0.0-rc2", false),
     f("knockout-v3.4.1", false),
     f("mithril-v0.2.5", false),
