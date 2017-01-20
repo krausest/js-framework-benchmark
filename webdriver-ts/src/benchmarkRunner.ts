@@ -73,10 +73,17 @@ function buildDriver() {
 }
 
 function reduceBenchmarkResults(benchmark: Benchmark, results: Timingresult[][]): number[] {
-    if (config.LOG_DETAILS) console.log("data for reduceBenchmarkResults", results);
         if (benchmark.type === BenchmarkType.CPU) {
+            if (results.some(val => val[0]==null || val[1]==null)) {
+                console.log("data for CPU reduceBenchmarkResults", results);
+                throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser was window all the time the benchmark was running!`;
+            }
             return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat((val[1].end - val[0].ts)/1000.0), []);
         } else {
+            if (results.some(val => val[2]==null)) {
+                console.log("data for MEM reduceBenchmarkResults", results);
+                throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser was window all the time the benchmark was running!`;
+            }
             return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat([val[2].mem]), []);
         }
 }
@@ -158,6 +165,17 @@ function runBench(frameworkNames: string[], benchmarkNames: string[], dir: strin
             .then(() => initBenchmark(driver, benchmark, framework.name))
             .then(() => clearLogs(driver))
             .then(() => runBenchmark(driver, benchmark, framework.name))
+            .thenCatch((e) => {
+                console.error("Benchmark failed",e);
+                driver.takeScreenshot().then(
+                    function(image) {
+                        require('fs').writeFileSync('error-'+framework+'-'+benchmark.id+'.png', image, 'base64', function(err:any) {
+                            console.log(err);
+                        });
+                        throw e;
+                    }
+                );                
+            });
         })
         .then(results => reduceBenchmarkResults(benchmark, results))
         .then(results => {  

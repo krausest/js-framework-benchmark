@@ -37,17 +37,30 @@ function convertPath(path: string): Array<PathPart> {
 // Fake findByXPath for simple XPath expressions to allow usage with shadow dom
 function findByXPath(node: webdriver.WebElement, path: string): webdriver.promise.Promise<webdriver.WebElement> {
     // if there wasn't polymer with it's shadow dom useage one would like to use:
-    // return node.findElement(By.xpath(path));
-    let paths = convertPath(path);
-    let n = promise.fulfilled(node);
-    for (let p of paths) {
-        // n = n.then(nd => nd.findElements(By.tagName(p.tagName))).then(elems => { // costly since it fetches all elements
-        n = n.then(nd => nd.findElements(By.css(p.tagName+":nth-child("+(p.index)+")"))).then(elems => {
-            if (elems.length==0) { console.log("not found"); return null}; //throw "Element not found "+p.tagName+"["+p.index+"]";
-            return elems[0];
-        });
+    if (!useShadowRoot) {
+        return node.findElements(By.xpath(path)).then(nodes => {
+                if (nodes.length === 0) {
+                    return null;
+                } else {
+                    return nodes[0];
+                }
+        })
+    } else {
+        let paths = convertPath(path);
+        let n = promise.fulfilled(node);
+        for (let p of paths) {
+            n = n.then(nd => nd.findElements(By.tagName(p.tagName))).then(elems => { // costly since it fetches all elements
+                if (elems.length < p.index) { console.log("not found"); return null}; //throw "Element not found "+p.tagName+"["+p.index+"]";
+                return elems[p.index-1];
+            });
+            // n = n.then(nd => nd.findElements(By.css(p.tagName+":nth-child("+(p.index)+")"))).then(elems => {
+            //     console.log("*", elems.length);
+            //     if (elems.length==0) { console.log("not found"); return null}; //throw "Element not found "+p.tagName+"["+p.index+"]";
+            //     return elems[0];
+            // });
+        }
+        return n;
     }
-    return n;
 }
 
 // driver.findElement(By.xpath("//tbody/tr[1]/td[1]")).getText().then(...) can throw a stale element error: 
