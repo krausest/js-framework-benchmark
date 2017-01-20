@@ -5,7 +5,7 @@ module.exports = function(environment) {
     modulePrefix: 'ember-temp',
     environment: environment,
     locationType: 'auto',
-    rootURL: '/ember-v2.10.0-beta.2/dist/',
+    rootURL: '/ember-v2.10.0-beta.3/dist/',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
