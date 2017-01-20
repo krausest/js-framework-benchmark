@@ -18,7 +18,7 @@
     "typings": "1.4.0"
   },
   "dependencies": {
-    "chromedriver": "2.24.1",
+    "chromedriver": "2.27.2",
     "dot": "1.0.3",
     "jstat": "1.5.3",
     "lodash": "4.16.4",
