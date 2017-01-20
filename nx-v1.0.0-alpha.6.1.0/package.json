@@ -7,9 +7,9 @@
     "build-prod": "webpack ./src/app.js dist/main.js"
   },
   "devDependencies": {
-    "webpack": "1.13.1"
+    "webpack": "1.14.0"
   },
   "dependencies": {
-    "@risingstack/nx-framework": "^1.0.0-alpha.4.0.0"
+    "@risingstack/nx-framework": "^1.0.0-alpha.6.1.0"
   }
 }
