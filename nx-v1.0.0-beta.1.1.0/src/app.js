@@ -1,6 +1,6 @@
 'use strict';
 
-const nx = require('@risingstack/nx-framework')
+const nx = require('@nx-js/framework')
 const randomSentence = require('./randomSentence')
 const timer = require('./timer')
 
@@ -16,8 +16,6 @@ nx.components.app()
 // it can be instantiated with <tr is="perf-row"></tr> in HTML
 nx.component({element: 'tr', state: false, isolate: 'middlewares'})
   .useOnContent(nx.middlewares.observe)
-  .useOnContent(nx.middlewares.code)
-  .useOnContent(nx.middlewares.expression)
   .useOnContent(nx.middlewares.interpolate)
   .useOnContent(nx.middlewares.events)
   .use(nx.middlewares.attributes)
