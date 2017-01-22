@@ -89,8 +89,4 @@ function setup (elem, state) {
         }
         timer.stopMeasure()
     }
-
-    state.track = function track (item1, item2) {
-      return (item2 !== undefined)
-    }
 }
