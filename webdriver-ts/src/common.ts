@@ -45,12 +45,12 @@ export let frameworks = [
     f("ember-v2.6.1", false, {uri: "ember-v2.6.1/dist"}),    // TODO: Copy CSS and check
     f("ember-v2.10.0-beta.3", false, {uri: "ember-v2.10.0-beta.3/dist"}),
     f("elm-v0.18.0", false),
-    f("inferno-v1.2.0", true),  
+    f("inferno-v1.2.0", true),
     f("kivi-v1.0.0-rc2", false),
     f("knockout-v3.4.1", false),
     f("mithril-v0.2.5", false),
     f("mithril-v1.0.0-alpha", false),
-    f("nx-v1.0.0-alpha.6.1.0", true),
+    f("nx-v1.0.0-beta.1.1.0", true),
     f("plastiq-v1.33.0", false),
     f("polymer-v1.7.0", true, {uri: "polymer-v1.7.0", useShadowRoot: true}),
     f("preact-v7.1.0", false),
@@ -71,7 +71,7 @@ export let frameworks = [
     // f("vanillajs-slimcss"),
     // f("vanillajs-small-css"),
     f("vanillajs-keyed", false),
-    f("vidom-v0.7.1", false),   
+    f("vidom-v0.7.1", false),
     f("vue-v2.1.10-keyed", false),
     f("vue-v2.1.10-non-keyed", true),
 ]
