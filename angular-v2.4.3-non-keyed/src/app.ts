@@ -54,8 +54,8 @@ export class App implements AfterViewChecked {
         return Math.round(Math.random()*1000)%max;
     }
 
-    itemById(index: number, item: Data) {
-      return index; //item.id;
+    itemByIndex(index: number, item: Data) {
+      return index; 
     }
 
     select(item: Data, event: Event) {
