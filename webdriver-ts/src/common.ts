@@ -51,7 +51,7 @@ export let frameworks = [
     f("mithril-v0.2.5", false),
     f("mithril-v1.0.0-alpha", false),
     f("nx-v1.0.0-beta.1.1.0-keyed", false),
-    f("nx-v1.0.0-beta.1.1.0", true),
+    f("nx-v1.0.0-beta.1.1.0-non-keyed", true),
     f("plastiq-v1.33.0", false),
     f("polymer-v1.7.0", true, {uri: "polymer-v1.7.0", useShadowRoot: true}),
     f("preact-v7.1.0", false),
