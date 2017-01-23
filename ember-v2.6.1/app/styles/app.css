@@ -21,3 +21,6 @@ body {
 .col-sm-6.smallpad {
   padding: 5px;
 }
+.jumbotron .row h1 {
+    font-size: 40px;
+}
