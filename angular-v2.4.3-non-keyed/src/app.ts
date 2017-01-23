@@ -109,20 +109,6 @@ export class App implements AfterViewChecked {
     		this.data[9] = a;
     	}
     }
-    cycleDown() {
-        startMeasure("cycleDown");
-        if (this.data.length>2) {
-            // this.data = [this.data[this.data.length-2], this.data[this.data.length-1], ...this.data.slice(0,this.data.length-2)];
-            this.data = [this.data[this.data.length-1], ...this.data.slice(0,this.data.length-1)];
-        }
-    }
-    cycleUp() {
-        startMeasure("cycleUp");
-        if (this.data.length>2) {
-            // this.data = [...this.data.slice(2, this.data.length), this.data[0], this.data[1]];
-            this.data = [...this.data.slice(1, this.data.length), this.data[0]];
-        }
-    }
     ngAfterViewChecked() {
         stopMeasure();
     }
