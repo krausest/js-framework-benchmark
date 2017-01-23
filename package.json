@@ -5,6 +5,8 @@
   "scripts": {
     "postinstall": "node install.js",
     "build": "node build.js",
+    "build-prod": "node build.js",
+    "compile": "node build.js",
     "start": "http-server -c-1 .",
     "selenium": "cd webdriver-ts && npm run selenium && npm run results"
   },

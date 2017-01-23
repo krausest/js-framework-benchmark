@@ -41,6 +41,7 @@
     "debug": "0.7.4",
     "colors": "1.1.2",
     "esprima": "2.7.3",
-    "fs-extra": "1.0.0"
+    "fs-extra": "1.0.0",
+    "bobril": "5.0.4"
   }
 }
