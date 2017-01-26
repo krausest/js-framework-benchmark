@@ -78,7 +78,7 @@ Most actions will try to measure the duration and print it to the console. Depen
 * run memory: Memory usage after adding 1000 rows.
 
 For all benchmarks the duration is measured including rendering time. You can read some details on this [article](http://www.stefankrause.net/wp/?p=218).
-The results of this benchmark is outlined on by blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301) and [round 4](http://www.stefankrause.net/wp/?p=316)).
+The results of this benchmark is outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316), and [round 5](http://www.stefankrause.net/wp/?p=392)).
 
 ## Execute the benchmarks with webdriver
 
