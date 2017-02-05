@@ -36,7 +36,7 @@ export let frameworks = [
     f("angular-v2.4.3-keyed", false),
     f("angular-v2.4.3-non-keyed", true),
     f("aurelia-v1.0.7", true, {uri: "aurelia-v1.0.7/dist"}),
-    f("binding.scala-v10.0.1", true, {uri: "binding.scala-v10.0.1/target/web/stage"}),
+    f("binding.scala-v10.0.1", false, {uri: "binding.scala-v10.0.1/target/web/stage"}),
     f("bobril-v5.0.4", false),
     f("cyclejs-dom-v14.1.0", true),
     f("dio-v3.0.5", true),

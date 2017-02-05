@@ -92,23 +92,8 @@ final class Store {
 
   private def replace(count: Int = 1000) = {
     val buffer = data.get
-    val oldLength = buffer.length
-    if (oldLength > count) {
-      buffer.dropRight(oldLength - count)
-      for (row <- buffer) {
-        row.id := newId()
-        row.label := newLabel()
-      }
-    } else {
-      for (row <- buffer) {
-        row.id := newId()
-        row.label := newLabel()
-      }
-      if (count > oldLength) {
-        buffer ++= buildData(count - oldLength)
-      }
-    }
-
+    buffer.clear()
+    buffer ++= buildData(count)
   }
 
   @inline
