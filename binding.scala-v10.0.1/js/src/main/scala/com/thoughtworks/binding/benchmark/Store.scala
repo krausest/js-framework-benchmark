@@ -86,7 +86,7 @@ final class Store {
 
   private def buildData(count: Int = 1000) = {
     (for (i <- 0 until count) yield {
-      Row(newId(), Var(newLabel()))
+      new Row(newId(), Var(newLabel()))
     })(collection.breakOut(scalajs.js.WrappedArray.canBuildFrom))
   }
 
@@ -150,6 +150,6 @@ final class Store {
 
 object Store {
 
-  final case class Row(id: Int, label: Var[String])
+  final class Row(val id: Int, val label: Var[String])
 
 }
