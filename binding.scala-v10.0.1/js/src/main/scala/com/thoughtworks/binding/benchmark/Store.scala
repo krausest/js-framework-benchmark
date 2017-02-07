@@ -86,7 +86,7 @@ final class Store {
 
   private def buildData(count: Int = 1000) = {
     (for (i <- 0 until count) yield {
-      Row(Var(newId()), Var(newLabel()))
+      new Row(newId(), Var(newLabel()))
     })(collection.breakOut(scalajs.js.WrappedArray.canBuildFrom))
   }
 
@@ -125,20 +125,13 @@ final class Store {
     data.get.clear()
   }
 
-  @inline
-  private def swap[A](left:Var[A], right:Var[A]) = {
-    val tmp = left.get
-    left := right.get
-    right := tmp
-  }
-
   def swapRows() = {
     val buffer = data.get
     if (buffer.length >= 10) {
       val row4 = buffer(4)
       val row9 = buffer(9)
-      swap(row4.id, row9.id)
-      swap(row4.label, row9.label)
+      buffer(9) = row4
+      buffer(4) = row9
     }
   }
 
@@ -157,6 +150,6 @@ final class Store {
 
 object Store {
 
-  final case class Row(id: Var[Int], label: Var[String])
+  final class Row(val id: Int, val label: Var[String])
 
 }
