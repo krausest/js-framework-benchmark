@@ -76,13 +76,13 @@ function reduceBenchmarkResults(benchmark: Benchmark, results: Timingresult[][])
         if (benchmark.type === BenchmarkType.CPU) {
             if (results.some(val => val[0]==null || val[1]==null)) {
                 console.log("data for CPU reduceBenchmarkResults", results);
-                throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser was window all the time the benchmark was running!`;
+                throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser window was visible all the time the benchmark was running!`;
             }
             return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat((val[1].end - val[0].ts)/1000.0), []);
         } else {
             if (results.some(val => val[2]==null)) {
                 console.log("data for MEM reduceBenchmarkResults", results);
-                throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser was window all the time the benchmark was running!`;
+                throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser window was visible all the time the benchmark was running!`;
             }
             return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat([val[2].mem]), []);
         }

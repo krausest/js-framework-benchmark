@@ -9,7 +9,10 @@
     "compile": "tsc",
     "build-prod": "tsc",
     "selenium": "node dist/benchmarkRunner.js",
-    "results": "node dist/createResultTable.js"
+    "checkSelenium": "node dist/benchmarkRunner.js --check true",
+    "results": "node dist/createResultTable.js",
+    "index": "node dist/createIndex.js",
+    "check": "node dist/runCheck.js"
   },
   "author": "",
   "license": "Apache-2.0",

@@ -156,24 +156,6 @@ const benchClear: Benchmark = {
             .then(() =>  testElementNotLocatedByXPath(driver, "//tbody/tr[1]"))
 }
 
-const benchClear2nd: Benchmark = { 
-    id: "10_clear-2nd-time10k",
-    label: "clear rows a 2nd time",
-    description: "Time to clear the table filled with 10.000 rows. But warmed up with only one iteration.",
-    type: BenchmarkType.CPU,
-    init: (driver: WebDriver) =>
-            testElementLocatedById(driver, "runlots")
-            .then(() => clickElementById(driver, 'runlots'))
-            .then(() => testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a"))
-            .then(() => clickElementById(driver, 'clear'))
-            .then(() =>  testElementNotLocatedByXPath(driver, "//tbody/tr[1]")) 
-            .then(() => clickElementById(driver, 'runlots'))
-            .then(() => testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a")),
-    run: (driver: WebDriver) => 
-            clickElementById(driver, 'clear')
-            .then(() =>  testElementNotLocatedByXPath(driver, "//tbody/tr[1]"))
-}
-
 const benchReadyMemory: Benchmark = { 
     id: "21_ready-memory",
     label: "ready memory",
@@ -207,7 +189,6 @@ export let benchmarks : [ Benchmark ] = [
     benchRunBig,
     benchAppendToManyRows,
     benchClear,
-    benchClear2nd,
     benchReadyMemory,
     benchRunMemory
     ];

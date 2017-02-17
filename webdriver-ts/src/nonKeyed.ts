@@ -99,6 +99,10 @@ function isNonKeyedRemove(result: any): boolean {
     if (result.removedStoredTr>0) return false;
     return true;
 }
+function isNonKeyedSwapRow(result: any): boolean {
+    if (result.tradded>0 && result.trremoved>0) return false;
+    return true;
+}
 
 function runBench(frameworkNames: string[]) {
     let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.name.indexOf(name)>-1));
@@ -108,10 +112,10 @@ function runBench(frameworkNames: string[]) {
     frameworks.forEach(f => frameworkMap.set(f.name, f));
 
     return forProm(0, runFrameworks.length, (i) => {
-        let driver = buildDriver();
         let framework = runFrameworks[i];
+        let driver = buildDriver();
         let text: string;
-        let nonKeyedRun = false, nonKeyedRemove = false;
+        let nonKeyedRun = false, nonKeyedRemove = false, nonKeyedSwap = false;
         setUseShadowRoot(framework.useShadowRoot);
         return driver.get(`http://localhost:8080/${framework.uri}/`)
             .then(() => testElementLocatedById(driver, "add"))
@@ -120,10 +124,18 @@ function runBench(frameworkNames: string[]) {
             .then(() => driver.executeScript(init))
             .then(() => driver.executeScript(`window.nonKeyedDetector_setUseShadowDom(${framework.useShadowRoot});`))
             .then(() => driver.executeScript('window.nonKeyedDetector_instrument()'))
+            // swap
+            .then(() => clickElementById(driver,'swaprows'))
+            .then(() => testTextContains(driver,'//tbody/tr[10]/td[1]','5'))
+            .then(() => driver.executeScript('return nonKeyedDetector_result()'))
+            .then(res => {nonKeyedSwap =isNonKeyedSwapRow(res); /*console.log(res);*/ })
+            // run
+            .then(() => driver.executeScript('window.nonKeyedDetector_reset()'))
             .then(() => clickElementById(driver,'run'))
             .then(() => testTextContains(driver,'//tbody/tr[1000]/td[1]','2000'))
             .then(() => driver.executeScript('return nonKeyedDetector_result()'))
             .then(res => {nonKeyedRun =isNonKeyedRun(res); /*console.log(res);*/ })
+            // remove
             .then(() => driver.executeScript('nonKeyedDetector_storeTr()'))
             .then(() => getTextByXPath(driver, `//tbody/tr[2]/td[2]/a`))
             .then(val => {text = val;} )
@@ -133,10 +145,11 @@ function runBench(frameworkNames: string[]) {
             .then(() => driver.executeScript('return nonKeyedDetector_result()'))
             .then(res => {nonKeyedRemove =isNonKeyedRemove(res); /*console.log(res);*/ })
             .then(() => {
-                    let nonKeyed = nonKeyedRemove || nonKeyedRun;
+                    let nonKeyed = nonKeyedRemove || nonKeyedRun || nonKeyedSwap;
                     console.log(framework.name +" is "+(nonKeyedRun ? "non-keyed" : "keyed")+" for 'run benchmark' and " 
-                    + (nonKeyedRemove ? "non-keyed" : "keyed") + " for 'remove row benchmark'. "
-                    +"It'll appear as "+(nonKeyed ? "non-keyed" : "keyed")+" in the results");
+                    + (nonKeyedRemove ? "non-keyed" : "keyed") + " for 'remove row benchmark' "
+                    + (nonKeyedSwap ? "non-keyed" : "keyed") + " for 'swap rows benchmark' "
+                    +". It'll appear as "+(nonKeyed ? "non-keyed" : "keyed")+" in the results");
                     if (frameworkMap.get(framework.name).nonKeyed !== nonKeyed) {
                         console.log("ERROR: Framework "+framework.name+" is not correctly categorized in commons.ts");
                     }
@@ -158,4 +171,16 @@ if (args.help) {
 } else {
     runBench(runFrameworks);
 }
-
+// console.log(promise.Promise);
+//         let driver = buildDriver();
+// forProm(1, 10, (idx) => {
+//     return new promise.Promise((resolve, reject) => {
+//         console.log("starting ",idx);
+//         setTimeout(() => {
+//             console.log("resolve ",idx);            
+//             resolve(idx);
+//         }, Math.random()*1000);
+//     })
+// }).then(val => {    
+//     console.log(val);
+// })
