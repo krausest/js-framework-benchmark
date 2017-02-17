@@ -110,3 +110,17 @@ Contributions are very welcome. Please use the following rules:
 * All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server should not be a local dependency. npm start in the root directory start a web server that can be used for all contributions.
 * Please use fixed version number, no ranges, as it turned out to break often. Updating works IMO best with npm-check-updates, which keeps the version format.
 * Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
+
+How to start submitting a new implementation:
+* Clone the repository and run `npm install.
+* If something fails the easiest way is to move the folder that causes the problem somewhere else and run `npm install` (or `npm run build-prod` if you really want to build all benchmarks again). The install and build process prints the name of the folder it is currently working on so it should be simple to find which folder causes the problems.
+* Create a folder according to the naming scheme "framework-version"
+* cd into that folder
+* Create a package.json such that `npm install` installs *all* neccessary dependencies including grunt, webpack, gulp and so on (the only thing you don't need is http-server).
+* Create a src directory and put your implementation there.
+* Take a look at some other framework you know like react or vue and start adapting the source code.
+* Copy the index.html from that implementation, copy the Store implementation. It might already contain all that is neccessary and you might only have to bind the data and events in your index.html
+* Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
+* The package.json must support a build-prod task that assembles your application. Often you'd use webpack to do that.
+* Make sure your application compiles and runs in the browser. The easiest way to start a local server is by invoking npm start in the root dir and opening your application on http://localhost:8080/framework-version/index.html
+* Optional: Run it with the automated benchmarking tool. Add a new array entry to the frameworks array in webdriver-ts/src/common.ts. Compile the test driver in webdriver-ts with `npm run build-prod` and run it just with `npm run selenium -- --framework framework-version` if you want to run your version only or just `npm run selenium` if you have time, built everything and want to run the benchmarks for all frameworks. The results will be written in the directory webdriver-ts/results in JSON format. `npm run results` will create the results table that can be opened on http://localhost:8080/webdriver-ts/table.html. If you don't I'll update webdriver-ts for you ;-)
