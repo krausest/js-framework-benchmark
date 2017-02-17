@@ -1,0 +1,9 @@
+{
+    "plugins": [
+        "external-helpers",
+        "transform-decorators-legacy",
+        "transform-class-properties",
+        ["transform-react-jsx", { "pragma": "UI.createElement" }],
+    ],
+    "presets": [ ["es2015", {"modules": false}]]
+}
