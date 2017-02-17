@@ -1,7 +1,7 @@
 'use strict';
 
 import {Store} from './store'
-import Inferno from 'inferno'
+import Inferno, {linkEvent} from 'inferno'
 import Component from 'inferno-component'
 
 Inferno.options.recyclingEnabled=false;
@@ -59,9 +59,9 @@ function Row({ d, id, selected, deleteFunc, selectFunc }) {
         <tr className={id === selected ? 'danger' : ''} hasNonKeyedChildren noNormalize>
             <td className="col-md-1" noNormalize>{id + ''}</td>
             <td className="col-md-4" noNormalize>
-                <a defaultValue={{func: selectFunc, id}} noNormalize>{d.label}</a>
+                <a onClick={linkEvent(id, selectFunc)} noNormalize>{d.label}</a>
             </td>
-            <td className="col-md-1"><a defaultValue={{func: deleteFunc, id}} noNormalize>{ span }</a></td>
+            <td className="col-md-1"><a onClick={linkEvent(id, deleteFunc)} noNormalize>{ span }</a></td>
             { td }
         </tr>
     )
@@ -86,12 +86,12 @@ function createRows(store, deleteFunc, selectFunc) {
             <Row d={d} id={id} selected={selected} deleteFunc={deleteFunc} selectFunc={selectFunc} ref={onComponentShouldUpdate}  />
         );
     }
-    return <tbody hasNonKeyedChildren noNormalize onClick={ handleClick }>{rows}</tbody>;
+    return <tbody hasNonKeyedChildren noNormalize>{rows}</tbody>;
 }
 
 const title = (
     <div className="col-md-6" noNormalize>
-        <h1 noNormalize>Inferno v1.2.0 - non-keyed</h1>
+        <h1 noNormalize>Inferno v1.3.0-rc3 - non-keyed</h1>
     </div>
 );
 const span2 = <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" noNormalize></span>;
@@ -137,6 +137,7 @@ export class Controller extends Component{
         this.setState({store: this.state.store});
     }
     select(id) {
+        console.log("select");
         startMeasure("select");
         this.state.store.select(id);
         this.setState({store: this.state.store});
