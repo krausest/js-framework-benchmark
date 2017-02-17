@@ -112,7 +112,7 @@ Contributions are very welcome. Please use the following rules:
 * Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
 
 How to start submitting a new implementation:
-* Clone the repository and run `npm install.
+* Clone the repository. `npm install` would be next and will invoke install.js that in turn calls `npm install` in every folder. If you're not interested in mirroring npm just remove the folders for frameworks you're not interested in and run `npm install` then.
 * If something fails the easiest way is to move the folder that causes the problem somewhere else and run `npm install` (or `npm run build-prod` if you really want to build all benchmarks again). The install and build process prints the name of the folder it is currently working on so it should be simple to find which folder causes the problems.
 * Create a folder according to the naming scheme "framework-version"
 * cd into that folder
