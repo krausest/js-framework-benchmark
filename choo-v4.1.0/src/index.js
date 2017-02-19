@@ -102,7 +102,9 @@ function view (state, prev, send) {
 };
 
 app.router([
-  ['/', view] 
+  ['/', view], 
+  [':chooversion/', view],
+  [':chooversion/index.html', view] 
 ]);
 
 const tree = app.start();
