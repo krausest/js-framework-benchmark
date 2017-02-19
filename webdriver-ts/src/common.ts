@@ -80,4 +80,5 @@ export let frameworks = [
     f("vidom-v0.7.1", false),
     f("vue-v2.1.10-keyed", false),
     f("vue-v2.1.10-non-keyed", true),
+    f("choo-v4.1.0", true)
 ]
