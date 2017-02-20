@@ -106,7 +106,6 @@ const Store = Backbone.Collection.extend({
         this.trigger('sort');
         stopMeasure();
     }
-}
 });
 
 const store = new Store();
@@ -115,7 +114,7 @@ const ChildView = Mn.View.extend({
     tagName: 'tr',
     template: rowTemplate,
     setSelected() {
-        this.addClass('danger');
+        this.$el.addClass('danger');
     },
     triggers: {
         'click .js-link': 'select',
@@ -131,7 +130,7 @@ const CollectionView = Mn.CollectionView.extend({
         this.listenTo(state, 'change:selected', this.setSelect);
     },
     setSelect(model, selectedId) {
-        this.$('.danger').removeClass('.danger');
+        this.$('.danger').removeClass('danger');
         
         if (selectedId) {
             const selectedView = this.children.findByModel(this.collection.get(selectedId));
