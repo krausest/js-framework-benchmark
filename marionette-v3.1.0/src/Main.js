@@ -39,9 +39,9 @@ function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
 
-const state = new Backbone.Model();
+const state = new Bb.Model();
 
-const Store = Backbone.Collection.extend({
+const Store = Bb.Collection.extend({
     initialize() {
         this.id = 1;
         this.on('reset update', function() {
@@ -111,6 +111,9 @@ const Store = Backbone.Collection.extend({
 const store = new Store();
  
 const ChildView = Mn.View.extend({
+    modelEvents: {
+        'change:label': 'render'
+    },
     tagName: 'tr',
     template: rowTemplate,
     setSelected() {
