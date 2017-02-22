@@ -51,6 +51,7 @@ export let frameworks = [
     f("inferno-v1.3.0-rc3-keyed", false),
     f("kivi-v1.0.0-rc2", false),
     f("knockout-v3.4.1", false),
+    f("marionette-v3.1.0", false),
     f("mithril-v0.2.5", false),
     f("mithril-v1.0.0-alpha", false),
     f("nx-v1.0.0-beta.1.1.0-keyed", false),
@@ -80,5 +81,6 @@ export let frameworks = [
     f("vidom-v0.7.1", false),
     f("vue-v2.1.10-keyed", false),
     f("vue-v2.1.10-non-keyed", true),
+    f("choo-v4.1.0", true),
     f("stem-v0.2.60", true),
 ]
