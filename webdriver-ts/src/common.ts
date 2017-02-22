@@ -82,5 +82,5 @@ export let frameworks = [
     f("vue-v2.1.10-keyed", false),
     f("vue-v2.1.10-non-keyed", true),
     f("choo-v4.1.0", true),
-    f("stem-v0.2.60", true),
+    f("stem-v0.2.60", false),
 ]
