@@ -22,7 +22,7 @@ export class RowStore extends GenericObjectStore {
         super("rows", RowStateObject, {state: state});
         this.selected = undefined;
         this.id = 1;
-	}
+    }
 
     generateData(count) {
         const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];

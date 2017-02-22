@@ -58,11 +58,6 @@ class BenchmarkElement extends UI.Element {
         rowStore.select(id);
         this.printDuration();
     }
-    delete(id) {
-        startMeasure("delete");
-        rowStore.delete(id);
-        this.printDuration();
-    }
     runLots() {
         startMeasure("runLots");
         rowStore.runLots();
@@ -76,29 +71,27 @@ class BenchmarkElement extends UI.Element {
     swapRows() {
         startMeasure("swapRows");
 
-        const i = 5;
-        const j = 10;
+        const i = 4;
+        const j = 9;
 
-        let obj_i_opts = this.storeObjects[i].options;
-        let obj_j_opts = this.storeObjects[j].options;
+        let obj_i = this.tbody.getGivenChildren()[i];
+        let obj_j = this.tbody.getGivenChildren()[j];
+
+        let obj_i_opts = obj_i.options;
+        let obj_j_opts = obj_j.options;
 
         let aux_obj = obj_i_opts.rowObject;
         obj_i_opts.rowObject = obj_j_opts.rowObject;
         obj_j_opts.rowObject = aux_obj;
 
-        this.storeObjects[i].setOnUpdate();
-        this.storeObjects[j].setOnUpdate();
-
-        this.storeObjects[i].redraw();
-        this.storeObjects[j].redraw();
+        obj_i.refresh();
+        obj_j.refresh();
 
         this.printDuration();
     }
 
     rowFromStateObject(stateObject) {
-        return <Row
-            ref={this.refLinkArray("storeObjects", stateObject.id)}
-            rowObject={stateObject} />;
+        return <Row rowObject={stateObject} ref={this.refLink("row" + stateObject.id)} />;
     }
 
     render () {
@@ -144,14 +137,8 @@ class BenchmarkElement extends UI.Element {
     }
 
     onMount() {
-
-        rowStore.addCreateListener((object) => {
-            this.tbody.appendChild(this.rowFromStateObject(object));
-        });
-
-        rowStore.addDeleteListener((object) => {
-            this.tbody.eraseChild(this.storeObjects[object.id]);
-        });
+        rowStore.addCreateListener((object) => this.tbody.appendChild(this.rowFromStateObject(object)));
+        rowStore.addDeleteListener((object) => this.tbody.eraseChild(this["row" + object.id]));
     }
 }
 

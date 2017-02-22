@@ -16,6 +16,7 @@ class Row extends UI.Primitive("tr") {
 			attr.addClass("danger");
 		}
 	}
+
 	render() {
 		const state = this.getRowObject();
 		return [
@@ -28,9 +29,17 @@ class Row extends UI.Primitive("tr") {
 	}
 
 	setOnUpdate() {
-		this.attachUpdateListener(this.getRowObject(), () => {
-			this.redraw();
-		});
+		this.attachUpdateListener(this.getRowObject(), () => this.redraw());
+	}
+
+	refresh() {
+		this.setOnUpdate();
+
+		this.removeRef();
+		this.options.ref.name = "row" + this.getRowObject().id;
+		this.applyRef();
+
+		this.redraw();
 	}
 
 	onMount() {
