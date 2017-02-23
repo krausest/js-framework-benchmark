@@ -1,0 +1,197 @@
+* {
+	box-sizing: border-box;
+    font-family: inherit;
+}
+
+body {
+    padding: 10px 0 0 0;
+    margin: 0;
+    overflow-y: scroll;
+
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+}
+
+#duration {
+    padding-top: 0px;
+}
+
+.test-data a {
+    display: block;
+}
+
+.col-sm-6.smallpad {
+    padding: 5px;
+}
+
+.danger {
+    background-color: #f2dede !important;
+}
+
+.danger:hover {
+	background-color: #ebcccc !important;
+}
+
+.container {
+	width: 1170px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.jumbotron {
+	border-radius: 6px;
+    padding: 10px 60px;
+    margin-bottom: 30px;
+    background-color: #eef;
+}
+
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+	overflow: auto;
+}
+
+h1 {
+    font-weight: 500;
+    line-height: 1.1;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 63px;
+}
+
+table {
+	border-spacing: 0;
+	border-collapse: collapse;
+	width: 100%;
+	max-width: 100%;
+	table-layout: fixed;
+}
+
+.col-sm-6.smallpad {
+    padding: 5px;
+}
+
+.col-md-6 {
+    width: 50%;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.col-sm-6 {
+    width: 50%;
+    float: left;
+}
+
+.col-md-1 {
+	width: 8.33333333%;
+}
+
+.col-md-4 {
+    width: 33.33333333%;
+}
+
+td {
+	padding: 8px;
+	border-top: 1px solid #ddd;
+}
+
+tr:nth-child(odd) {
+	background-color: #f9f9f9;
+}
+
+a {
+    color: #337ab7;
+    text-decoration: none;
+}
+
+a:hover {
+	color: #23527c;
+	text-decoration: underline;
+}
+
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #286090;
+    border-color: #204d74;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+
+  src: url('bootstrap/fonts/glyphicons-halflings-regular.eot');
+  src: url('bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), 
+    url('bootstrap/fonts/glyphicons-halflings-regular.woff2') format('woff2'), 
+    url('bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), 
+    url('bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), 
+    url('bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+.glyphicon-remove:before {
+	content: "\e014";
+}
+
+.glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.jumbotron .row h1 {
+    font-size: 40px;
+}
+
+.preloadicon {
+    position: absolute;
+    top:-20px;
+    left:-20px;
+}
+
+table td[class*=col-], table th[class*=col-] {
+    position: static;
+    display: table-cell;
+    float: none;
+}

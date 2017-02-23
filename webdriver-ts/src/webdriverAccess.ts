@@ -43,11 +43,12 @@ function findByXPath(node: webdriver.WebElement, path: string): webdriver.promis
      for (let p of paths) {
          // n = n.then(nd => nd.findElements(By.tagName(p.tagName))).then(elems => { // costly since it fetches all elements
          n = n.then(nd => nd.findElements(By.css(p.tagName+":nth-child("+(p.index)+")"))).then(elems => {
-             if (elems.length==0) { console.log("not found"); return null}; //throw "Element not found "+p.tagName+"["+p.index+"]";
+             if (elems==null || elems.length==0) { console.log("not found"); return null}; 
              return elems[0];
-         });
+         }).thenCatch(e => {console.log("REJECTED PROMISE",e); return null;});
      }
      return n;    
+  
     // if (!useShadowRoot) {
     //     return node.findElements(By.xpath(path)).then(nodes => {
     //             if (nodes.length === 0) {

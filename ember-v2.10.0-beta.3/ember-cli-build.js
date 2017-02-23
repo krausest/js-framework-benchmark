@@ -19,12 +19,6 @@ module.exports = function(defaults) {
   // modules that you would like to import into your application
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
-  app.import('vendor/bootstrap.min.css');
-  app.import('vendor/fonts/glyphicons-halflings-regular.eot');
-  app.import('vendor/fonts/glyphicons-halflings-regular.svg');
-  app.import('vendor/fonts/glyphicons-halflings-regular.ttf');
-  app.import('vendor/fonts/glyphicons-halflings-regular.woff');
-  app.import('vendor/fonts/glyphicons-halflings-regular.woff2');
 
   return app.toTree();
 };

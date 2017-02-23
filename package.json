@@ -31,5 +31,8 @@
     "fs-extra": "^0.30.0",
     "http-server": "^0.9.0",
     "lodash": "^4.15.0"
+  },
+  "devDependencies": {
+    "yargs": "^6.6.0"
   }
 }
