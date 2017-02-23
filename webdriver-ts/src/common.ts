@@ -69,6 +69,7 @@ export let frameworks = [
     f("react-v15.4.2-redux-v3.6.0", false),
     f("riot-v3.0.7", true),
     f("simulacra-v1.5.5", true),
+    f("stem-v0.2.60", true),
     f("tsers-v1.0.0", true),
     f("vanillajs-non-keyed", true),
     f("vanillajs-keyed", false),
