@@ -14,11 +14,6 @@ export default {
 		resolve({
 			jsnext: true
 		}),
-		uglify({
-			compress: {
-				collapse_vars: true,
-				pure_funcs: ["Object.defineProperty"]
-			}
-		})
+		uglify()
 	]
 }
