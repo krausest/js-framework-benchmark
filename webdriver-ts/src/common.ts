@@ -46,7 +46,7 @@ export let frameworks = [
     f("ember-v2.6.1", false, {uri: "ember-v2.6.1/dist"}),
     f("ember-v2.10.0-beta.3", false, {uri: "ember-v2.10.0-beta.3/dist"}),
     f("elm-v0.18.0", false),
-    f("hyperapp-v0.5.0", true),
+    f("hyperapp-v0.6.0", true),
     f("inferno-v1.3.0-rc3-non-keyed", true),
     f("inferno-v1.3.0-rc3-keyed", false),
     f("kivi-v1.0.0-rc2", false),
