@@ -4,7 +4,7 @@
   "description": "hyperapp v0.6.0 js benchmark",
   "main": "index.js",
   "dependencies": {
-    "hyperapp": "0.5.0"
+    "hyperapp": "0.6.0"
   },
   "devDependencies": {
     "babel-plugin-transform-react-jsx": "^6.23.0",
