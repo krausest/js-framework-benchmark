@@ -129,8 +129,7 @@ const reducers = {
     }),
 
     delete: (model, data) => ({
-        data: model.data.filter(d => d.id !== data.id),
-        selected: data.id
+        data: model.data.filter(d => d.id !== data.id)
     })
 }
 
