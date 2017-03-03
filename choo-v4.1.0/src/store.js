@@ -57,7 +57,7 @@ module.exports = {
         const a = newData[4];
         newData[4] = newData[9];
         newData[9] = a;
-      
+
         return {
           data: newData,
           selected: state.selected
@@ -74,8 +74,7 @@ module.exports = {
     },
     delete: function(state, data) {
       return {
-        data: state.data.filter((d) => d.id !== data.id),
-        selected: data.id
+        data: state.data.filter((d) => d.id !== data.id)
       };
     }
   }
