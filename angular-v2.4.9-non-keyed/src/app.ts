@@ -1,5 +1,5 @@
 
-import { Component, NgModule, AfterViewChecked } from '@angular/core';
+import { Component, NgModule, AfterViewChecked, VERSION } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser'
 
 interface Data {
@@ -36,6 +36,7 @@ export class App implements AfterViewChecked {
     backup: Array<Data> = undefined;
 
     constructor() {
+        console.info(VERSION.full);
     }
 
     buildData(count: number = 1000): Array<Data> {
@@ -54,8 +55,8 @@ export class App implements AfterViewChecked {
         return Math.round(Math.random()*1000)%max;
     }
 
-    itemById(index: number, item: Data) {
-      return item.id;
+    itemByIndex(index: number, item: Data) {
+      return index; 
     }
 
     select(item: Data, event: Event) {
