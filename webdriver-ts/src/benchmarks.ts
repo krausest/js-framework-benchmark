@@ -1,16 +1,16 @@
 import {testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, forProm} from './webdriverAccess'
 import {WebDriver} from 'selenium-webdriver' 
-import {config} from './common'
+import {config, FrameworkData} from './common'
 
-export enum BenchmarkType { CPU, MEM };
+export enum BenchmarkType { CPU, MEM, STARTUP };
 
 export interface Benchmark {
     id: string;
     type: BenchmarkType;
     label: string;
     description: string;
-    init(driver: WebDriver) : webdriver.promise.Promise<any>;
-    run(driver: WebDriver) : webdriver.promise.Promise<any>;
+    init(driver: WebDriver, framework: FrameworkData) : webdriver.promise.Promise<any>;
+    run(driver: WebDriver, framework: FrameworkData) : webdriver.promise.Promise<any>;
 }
 
 const benchRun: Benchmark = {
@@ -179,6 +179,18 @@ const benchRunMemory: Benchmark = {
             .then(() => testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a"))
 }
 
+const benchStartup: Benchmark = { 
+    id: "30_startup",
+    label: "startup time",
+    description: "Time for loading, parsing and starting up",
+    type: BenchmarkType.STARTUP,
+    init: (driver: WebDriver) =>
+           driver.get(`http://localhost:8080/`),
+    run: (driver: WebDriver, framework: FrameworkData) => 
+            driver.get(`http://localhost:8080/${framework.uri}/`)
+            .then(() => testElementLocatedById(driver, "run"))
+}
+
 export let benchmarks : [ Benchmark ] = [
     benchRun,
     benchReplaceAll,
@@ -190,7 +202,8 @@ export let benchmarks : [ Benchmark ] = [
     benchAppendToManyRows,
     benchClear,
     benchReadyMemory,
-    benchRunMemory
+    benchRunMemory,
+    benchStartup
     ];
 
 export function fileName(framework: string, benchmark: Benchmark) {

@@ -32,8 +32,9 @@ function clearLogs(driver: WebDriver): promise.Promise<void> {
 function readLogs(driver: WebDriver): promise.Promise<Timingresult[]> {
     return driver.manage().logs().get(logging.Type.PERFORMANCE).then(entries => {
         let click : Timingresult = null;
-        let lastPaint : Timingresult = null;
+        let lastPaint : Timingresult = {type:'paint', ts: 0, dur: 0, end: 0};;
         let mem : Timingresult = null;
+        let navigationStart : Timingresult = null;
         let results = entries.forEach(x => 
         {
             let e = JSON.parse(x.message).message;
@@ -43,15 +44,18 @@ function readLogs(driver: WebDriver): promise.Promise<Timingresult[]> {
                     let end = +e.params.ts+e.params.dur;
                     click = {type:'click', ts: +e.params.ts, dur: +e.params.dur, end: end};
                 }
+            } else if (e.params.name==='navigationStart') {
+                    navigationStart = {type:'navigationStart', ts: +e.params.ts, dur: 0, end: +e.params.ts};
+                    console.log("navigationStart found");
             } else if (e.params.name==='Paint') {
-                if (click && e.params.ts > click.end) {
+                if (e.params.ts > lastPaint.ts) {
                     lastPaint = {type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur};
                 }
             } else if (e.params.name==='MajorGC' && e.params.args.usedHeapSizeAfter) {
                 mem = {type:'gc', ts: +e.params.ts, mem: Number(e.params.args.usedHeapSizeAfter)/1024/1024};
             }
         });
-        return [click, lastPaint, mem];
+        return [click, lastPaint, mem, navigationStart];
     });
 }
 
@@ -64,7 +68,7 @@ function buildDriver() {
     // options = options.setChromeBinaryPath("/Applications/Chromium.app/Contents/MacOS/Chromium");
     options = options.addArguments("--js-flags=--expose-gc");
     options = options.setLoggingPrefs(logPref);
-    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "browser,devtools.timeline,devtools", bufferUsageReportingInterval: 1000});
+    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "v8,blink.console,disabled-by-default-devtools.timeline,devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 10000});
 
     return new Builder()
         .forBrowser('chrome')
@@ -79,19 +83,25 @@ function reduceBenchmarkResults(benchmark: Benchmark, results: Timingresult[][])
                 throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser window was visible all the time the benchmark was running!`;
             }
             return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat((val[1].end - val[0].ts)/1000.0), []);
-        } else {
+        } else if (benchmark.type === BenchmarkType.MEM) {
             if (results.some(val => val[2]==null)) {
                 console.log("data for MEM reduceBenchmarkResults", results);
                 throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser window was visible all the time the benchmark was running!`;
             }
             return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat([val[2].mem]), []);
+        } else if (benchmark.type === BenchmarkType.STARTUP) {
+            if (results.some(val => val[1]==null || val[3]==null)) {
+                console.log("data for STARTUP reduceBenchmarkResults", results);
+                throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser window was visible all the time the benchmark was running!`;
+            }
+            return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat((val[1].end - val[3].ts)/1000.0), []);
         }
 }
 
-function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: string) : promise.Promise<any> {
-    return benchmark.run(driver)
+function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: FrameworkData) : promise.Promise<any> {
+    return benchmark.run(driver, framework)
         .then(() => {
-            if (config.LOG_PROGRESS) console.log("after run ",benchmark.id, benchmark.type, framework);
+            if (config.LOG_PROGRESS) console.log("after run ",benchmark.id, benchmark.type, framework.name);
             if (benchmark.type === BenchmarkType.MEM) {
                 return driver.executeScript("window.gc();");
             }            
@@ -100,14 +110,15 @@ function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: string
         .then((results) => {if (config.LOG_PROGRESS) console.log(`result ${framework}_${benchmark.id}`, results); return results});
 }
 
-function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework: string) : promise.Promise<any> {
-    return benchmark.init(driver)
+function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework: FrameworkData) : promise.Promise<any> {
+    return benchmark.init(driver, framework)
     .then(() => {
-        if (config.LOG_PROGRESS) console.log("after initialized ",benchmark.id, benchmark.type, framework);                                 
+        if (config.LOG_PROGRESS) console.log("after initialized ",benchmark.id, benchmark.type, framework.name);                                 
         if (benchmark.type === BenchmarkType.MEM) {
             return driver.executeScript("window.gc();");
         }
     })
+    .then(() => clearLogs(driver))
     .thenCatch( (err) => {
         console.log(`error in initBenchmark ${framework} ${benchmark.id}`);
         throw err;
@@ -141,6 +152,60 @@ function writeResult(res: Result, dir: string) {
         fs.writeFileSync(`${dir}/${fileName(framework, benchmark)}`, JSON.stringify(result), {encoding: "utf8"});
 }
 
+function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchmark) : promise.Promise<any> {
+        console.log("benchmarking ", framework, benchmark.id);
+        let driver = buildDriver();
+        return forProm(0, config.REPEAT_RUN, () => {
+            setUseShadowRoot(framework.useShadowRoot);
+            return driver.get(`http://localhost:8080/${framework.uri}/`)
+            .then(() => initBenchmark(driver, benchmark, framework))
+            .then(() => runBenchmark(driver, benchmark, framework))
+            .thenCatch((e) => {
+                console.error("Benchmark failed",e);
+                driver.takeScreenshot().then(
+                    function(image) {
+                        require('fs').writeFileSync('error-'+framework+'-'+benchmark.id+'.png', image, 'base64', function(err:any) {
+                            console.log(err);
+                        });
+                        throw e;
+                    }
+                );                
+            });
+        })
+        .then(results => reduceBenchmarkResults(benchmark, results))
+        .then(results => writeResult({framework: framework, results: results, benchmark: benchmark}, dir))
+        .thenFinally(() => {console.log("QUIT"); driver.quit();})
+}
+
+function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmark) : promise.Promise<any> {
+        console.log("benchmarking ", framework, benchmark.id);
+        let results : Timingresult[][] = [];
+        return forProm(0, config.REPEAT_RUN, () => {
+            let driver = buildDriver();
+            setUseShadowRoot(framework.useShadowRoot);
+            return initBenchmark(driver, benchmark, framework)
+            .then(() => runBenchmark(driver, benchmark, framework))
+            .then((res) => results.push(res))
+            // Check what we measured. Results are pretty similar, though we are measuring a bit longer until the final repaint happened.
+            // .then(() => driver.executeScript("return window.performance.timing.loadEventEnd - window.performance.timing.navigationStart"))
+            // .then((duration) => console.log(duration, typeof duration))            
+            .thenCatch((e) => {
+                console.error("Benchmark failed",e);
+                driver.takeScreenshot().then(
+                    function(image) {
+                        (<any>fs).writeFileSync('error-'+framework+'_startup.png', image, 'base64', function(err:any) {
+                            console.log(err);
+                        });
+                        throw e;
+                    }
+                );                
+            })
+            .thenFinally(() => {console.log("QUIT"); driver.quit();})
+        })
+        .then(() => reduceBenchmarkResults(benchmark, results))
+        .then(results => writeResult({framework: framework, results: results, benchmark: benchmark}, dir))
+}
+
 function runBench(frameworkNames: string[], benchmarkNames: string[], dir: string): promise.Promise<any> {
     let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.name.indexOf(name)>-1));
     let runBenchmarks = benchmarks.filter(b => benchmarkNames.some(name => b.id.toLowerCase().indexOf(name)>-1));
@@ -157,31 +222,11 @@ function runBench(frameworkNames: string[], benchmarkNames: string[], dir: strin
     return forProm(0, data.length, (i) => {
         let framework = data[i][0];
         let benchmark = data[i][1];
-        console.log("benchmarking ", framework, benchmark.id);
-        let driver = buildDriver();
-        return forProm(0, config.REPEAT_RUN, () => {
-            setUseShadowRoot(framework.useShadowRoot);
-            return driver.get(`http://localhost:8080/${framework.uri}/`)
-            .then(() => initBenchmark(driver, benchmark, framework.name))
-            .then(() => clearLogs(driver))
-            .then(() => runBenchmark(driver, benchmark, framework.name))
-            .thenCatch((e) => {
-                console.error("Benchmark failed",e);
-                driver.takeScreenshot().then(
-                    function(image) {
-                        require('fs').writeFileSync('error-'+framework+'-'+benchmark.id+'.png', image, 'base64', function(err:any) {
-                            console.log(err);
-                        });
-                        throw e;
-                    }
-                );                
-            });
-        })
-        .then(results => reduceBenchmarkResults(benchmark, results))
-        .then(results => {  
-            writeResult({framework: framework, results: results, benchmark: benchmark}, dir);
-        })
-        .thenFinally(() => {console.log("QUIT"); driver.quit();})
+        if (benchmark.type == BenchmarkType.STARTUP) {
+            return runStartupBenchmark(framework, benchmark);
+        } else {
+            return runMemOrCPUBenchmark(framework, benchmark);
+        }
     });
 }
 

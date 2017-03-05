@@ -25,7 +25,7 @@ fs.readdirSync('./results').filter(file => file.endsWith('.json')).forEach(name 
 	}
 });
 
-let cpuBenchmarks = benchmarks.filter(benchmark => benchmark.type === BenchmarkType.CPU);
+let cpuBenchmarks = benchmarks.filter(benchmark => benchmark.type === BenchmarkType.CPU || benchmark.type === BenchmarkType.STARTUP);
 let memBenchmarks = benchmarks.filter(benchmark => benchmark.type === BenchmarkType.MEM);
 let cpuBenchmarkCount = cpuBenchmarks.length;
 
