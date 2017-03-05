@@ -4,4 +4,4 @@ node_js:
 install: 
   - npm install
 script:
-  - npm build
+  - npm run build-prod
