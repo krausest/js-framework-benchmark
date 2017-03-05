@@ -1,8 +1,9 @@
 language: node_js
+sudo: required
 node_js:
   - "node"
 before_install:
-  - sudo apt-get install openjdk-8-jdk
+  - sudo apt-get install oracle-java8-installer
 install: 
   - npm install
 script:
