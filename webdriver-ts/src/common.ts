@@ -32,9 +32,10 @@ function f(name: string, nonKeyed: boolean, options: Options = {uri: null, useSh
 }
 
 export let frameworks = [
-    f("angular-v1.6.1-keyed", false),
-    f("angular-v2.4.3-keyed", false),
-    f("angular-v2.4.3-non-keyed", true),
+    f("angular-v1.6.2-keyed", false),
+    f("angular-v2.4.9-keyed", false),
+    f("angular-v2.4.9-non-keyed", true),
+    f("angular-v4.0.0-rc-keyed", false),
     f("aurelia-v1.0.8", true, {uri: "aurelia-v1.0.8/dist"}),
     f("binding.scala-v10.0.1", false, {uri: "binding.scala-v10.0.1/target/web/stage"}),
     f("bobril-v5.0.4", false),

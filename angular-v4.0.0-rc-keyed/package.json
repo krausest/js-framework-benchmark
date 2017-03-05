@@ -4,10 +4,10 @@
   "description": "A webpack starter for angular 2",
   "scripts": {
     "start": "npm run build-dev && npm run serve",
-    "test": "node_modules/.bin/karma start",
-    "precompile": "node_modules/.bin/tsc",
-    "rollup-aot": "node_modules/.bin/rollup -c rollup.config.aot.js",
-    "rollup-jit": "node_modules/.bin/rollup -c rollup.config.jit.js",
+    "test": "karma start",
+    "precompile": "ngc",
+    "rollup-aot": "rollup -c rollup.config.aot.js",
+    "rollup-jit": "rollup -c rollup.config.jit.js",
     "build-prod": "npm run precompile && npm run rollup-aot && npm run rollup-jit",
     "build-dev": "npm run build-prod"
   },

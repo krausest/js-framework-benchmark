@@ -31,9 +31,9 @@
   },
   "resolutions": {
     "glob": "7.1.1",
-    "uglify-js": "2.7.5",
+    "uglify-js": "2.8.7",
     "supports-color": "3.2.3",
-    "readable-stream": "2.0.2",
+    "readable-stream": "2.2.3",
     "mkdirp": "0.5.1",
     "rimraf": "2.5.4",
     "minimist": "1.2.0",
@@ -43,6 +43,7 @@
     "colors": "1.1.2",
     "esprima": "2.7.3",
     "fs-extra": "1.0.0",
-    "bobril": "5.0.4"
+    "bobril": "5.0.4",
+    "request": "2.79.0"
   }
 }
