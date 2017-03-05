@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "node"
+before_install:
+  - sudo apt-get install openjdk-8-jdk
+install: 
+  - npm install
+script:
+  - npm build
