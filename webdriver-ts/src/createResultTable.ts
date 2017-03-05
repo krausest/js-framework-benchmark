@@ -122,12 +122,11 @@ let generateBenchData = (benchmarks: Array<Benchmark>, frameworkPredicate: Frame
 			if (value) {
 				try {
 					let factor: number;
-					if (benchmark.type === BenchmarkType.CPU) {
+					if (benchmark.type === BenchmarkType.CPU || benchmark.type === BenchmarkType.STARTUP) {
 						// Clamp to 1 fps
 						factor = Math.max(16, value.mean) / Math.max(16, min);
 						factors[idx] = factors[idx] * factor;
-					}
-					else {
+					} else {
 						factor = value.mean / min;
 					}
 
@@ -145,11 +144,11 @@ let generateBenchData = (benchmarks: Array<Benchmark>, frameworkPredicate: Frame
 				bench.tests.push(null);
 			}
 		});
-
 		benches.push(bench);		
 	});
 	let geomMeans = factors.map(f => {
 		let value = Math.pow(f, 1 / cpuBenchmarkCount);
+		console.log("cpuBenchmarkCount", cpuBenchmarkCount, f);
 		return {value: value.toPrecision(3), styleClass: color(value)}
 	});
 	return {
