@@ -1,14 +1,13 @@
-'use strict';
+import { default as jQuery } from 'jquery';
+import { default as angular } from 'angular';
+import { HomeController } from './home.controller';
 
-var jQuery = require("jquery");
-
-const angular = require('./angularmin');
-const {HomeController} = require('./HomeController');
-
-const myApp = angular.module('app', []);
-
-myApp.config(['$compileProvider', function ($compileProvider) {
-    $compileProvider.debugInfoEnabled(false);
-}]);
-
-myApp.controller('HomeController',HomeController);
+angular
+    .module('app', [])
+    .config(['$compileProvider', function ($compileProvider) {
+        $compileProvider.debugInfoEnabled(false);
+    }])
+    .run(() => {
+        console.info(angular.version.full);
+    })
+    .controller('HomeController', HomeController);
