@@ -42,3 +42,9 @@ webdriver-java/results/
 webdriver-ts/results/
 webdriver-ts/typings/
 webdriver-ts/.vscode/
+
+yarn.lock
+
+# angular 2 aot
+angular-*/lib/
+**/app.ngfactory.ts

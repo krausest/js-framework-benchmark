@@ -1,0 +1,26 @@
+{
+  "name": "js-framework-benchmark-dio-2.0.0",
+  "version": "2.0.0",
+  "description": "Benchmark for DIO 2.0.0 framework",
+  "scripts": {
+    "build-dev": "webpack -w -d -c webpack.config.js",
+    "build-prod": "webpack -p -c webpack.config.js"
+  },
+  "author": "Sultan Tarimo",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "babel-core": "6.18.2",
+    "babel-loader": "6.2.8",
+    "babel-preset-es2015": "6.18.0",
+    "imports-loader": "^0.6.5",
+    "webpack": "1.13.3"
+  },
+  "dependencies": {
+    "dio.js": "^3.0.5"
+  }
+}

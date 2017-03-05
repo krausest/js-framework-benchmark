@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "name": "js-framework-benchmark-kivi",
+  "version": "0.11.0",
+  "description": "Benchmark for kivi",
+  "author": "Stefan Krause",
+  "license": "Apache-2",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": "https://github.com/krausest/js-framework-benchmark",
+  "keywords": [],
+  "scripts": {
+    "build-dev": "gulp build",
+    "build-prod": "gulp build"
+  },
+  "dependencies": {
+    "kivi": "1.0.0-rc2"
+  },
+  "devDependencies": {
+    "del": "2.2.2",
+    "google-closure-compiler-js": "20161024.0.0",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-tslint": "6.1.3",
+    "gulp-typescript": "3.1.3",
+    "rollup": "0.36.3",
+    "rollup-plugin-node-resolve": "2.0.0",
+    "rollup-plugin-replace": "1.1.1",
+    "tslint": "4.0.0",
+    "typescript": "2.0.10"
+  }
+}

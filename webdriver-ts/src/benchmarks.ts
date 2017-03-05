@@ -1,4 +1,4 @@
-import {testTextContains, testClassContainsNot, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, forProm} from './webdriverAccess'
+import {testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, forProm} from './webdriverAccess'
 import {WebDriver} from 'selenium-webdriver' 
 import {config} from './common'
 
@@ -100,13 +100,19 @@ const benchRemove: Benchmark = {
             testElementLocatedById(driver, "run")
             .then(() => clickElementById(driver, 'run'))
             .then(() => testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a"))
-            .then(() => forProm(0, config.WARMUP_COUNT, (i) => clickElementByXPath(driver, `//tbody/tr[${config.WARMUP_COUNT-i+4}]/td[3]/a`))),
+            .then(() => forProm(0, config.WARMUP_COUNT, (i) => {
+                return testTextContains(driver, `//tbody/tr[${config.WARMUP_COUNT-i+4}]/td[1]`, (config.WARMUP_COUNT-i+4).toString())
+                .then(() => clickElementByXPath(driver, `//tbody/tr[${config.WARMUP_COUNT-i+4}]/td[3]/a/span[1]`))
+                .then(() => testTextContains(driver, `//tbody/tr[${config.WARMUP_COUNT-i+4}]/td[1]`, '10'));
+            }))             
+            .then(() => 
+                testTextContains(driver, '//tbody/tr[5]/td[1]', '10')
+                .then(() => testTextContains(driver, '//tbody/tr[4]/td[1]', '4'))
+            ),
     run: (driver: WebDriver) => {
-            let text = '';
-            return getTextByXPath(driver, "//tbody/tr[4]/td[2]/a")
-            .then(val => text = val)
-            .then(() => clickElementByXPath(driver, "//tbody/tr[4]/td[3]/a"))
-            .then(() => testClassContainsNot(driver, "//tbody/tr[4]/td[2]/a", text));
+            let text = '';            
+            return clickElementByXPath(driver, "//tbody/tr[4]/td[3]/a/span[1]")
+            .then(() => testTextContains(driver, '//tbody/tr[4]/td[1]', '10'));
     }
 }
 
@@ -150,24 +156,6 @@ const benchClear: Benchmark = {
             .then(() =>  testElementNotLocatedByXPath(driver, "//tbody/tr[1]"))
 }
 
-const benchClear2nd: Benchmark = { 
-    id: "10_clear-2nd-time10k",
-    label: "clear rows a 2nd time",
-    description: "Time to clear the table filled with 10.000 rows. But warmed up with only one iteration.",
-    type: BenchmarkType.CPU,
-    init: (driver: WebDriver) =>
-            testElementLocatedById(driver, "runlots")
-            .then(() => clickElementById(driver, 'runlots'))
-            .then(() => testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a"))
-            .then(() => clickElementById(driver, 'clear'))
-            .then(() =>  testElementNotLocatedByXPath(driver, "//tbody/tr[1]")) 
-            .then(() => clickElementById(driver, 'runlots'))
-            .then(() => testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a")),
-    run: (driver: WebDriver) => 
-            clickElementById(driver, 'clear')
-            .then(() =>  testElementNotLocatedByXPath(driver, "//tbody/tr[1]"))
-}
-
 const benchReadyMemory: Benchmark = { 
     id: "21_ready-memory",
     label: "ready memory",
@@ -176,7 +164,7 @@ const benchReadyMemory: Benchmark = {
     init: (driver: WebDriver) =>
             testElementLocatedById(driver, "add"),
     run: (driver: WebDriver) =>  
-            testElementNotLocatedByXPath(driver, "//tbody/tr[1]/td[2]/a")
+            testElementNotLocatedByXPath(driver, "//tbody/tr[1]")
 }
 
 const benchRunMemory: Benchmark = { 
@@ -201,7 +189,6 @@ export let benchmarks : [ Benchmark ] = [
     benchRunBig,
     benchAppendToManyRows,
     benchClear,
-    benchClear2nd,
     benchReadyMemory,
     benchRunMemory
     ];

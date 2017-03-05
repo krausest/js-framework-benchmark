@@ -9,21 +9,24 @@
     "compile": "tsc",
     "build-prod": "tsc",
     "selenium": "node dist/benchmarkRunner.js",
-    "results": "node dist/createResultTable.js"
+    "checkSelenium": "node dist/benchmarkRunner.js --check true",
+    "results": "node dist/createResultTable.js",
+    "index": "node dist/createIndex.js",
+    "check": "node dist/runCheck.js"
   },
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "typescript": "1.8.10",
-    "typings": "1.3.3"
+    "typescript": "2.0.3",
+    "typings": "1.4.0"
   },
   "dependencies": {
-    "chromedriver": "2.23.1",
+    "chromedriver": "2.27.2",
     "dot": "1.0.3",
     "jstat": "1.5.3",
-    "lodash": "4.15.0",
+    "lodash": "4.16.4",
     "rgba-convert": "0.3.0",
-    "selenium-webdriver": "2.53.3",
-    "yargs": "5.0.0"
+    "selenium-webdriver": "^2.53.3",
+    "yargs": "6.0.0"
   }
 }

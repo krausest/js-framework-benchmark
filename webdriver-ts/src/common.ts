@@ -1,12 +1,7 @@
 export interface JSONResult {
-    framework: string,
-    benchmark: string,
-    type: string,
-    min: number,
-    max: number,
-    mean: number,
-    geometricMean: number,
-    standardDeviation: number
+    framework: string, benchmark: string, type: string, min: number,
+        max: number, mean: number, geometricMean: number,
+        standardDeviation: number
 }
 
 export let config = {
@@ -22,37 +17,64 @@ export let config = {
 export interface FrameworkData {
     name: string;
     uri: string;
+    nonKeyed: boolean;
+    useShadowRoot: boolean;
 }
 
-function f(name: string, uri: string = null): FrameworkData 
-{
-    return {name, uri: uri? uri : name};
+interface Options {
+    uri: string;
+    useShadowRoot? : boolean;
+}
+
+function f(name: string, nonKeyed: boolean, options: Options = {uri: null, useShadowRoot: false}): FrameworkData {
+    let ret = {name, nonKeyed, uri: options.uri ? options.uri : name, useShadowRoot: options.useShadowRoot};
+    return ret;
 }
 
 export let frameworks = [
-    f("angular-v1.5.8"),
-    f("angular-v2.0.0"),
-    f("aurelia-v1.0.3", "aurelia-v1.0.3/dist"),
-    f("bobril-v4.44.1"),
-    f("cyclejs-v7.0.0"),
-    f("domvm-v1.2.10"),
-    f("elm-v0.17.1"),
-    f("inferno-v1.0.0-alpha7"),
-    f("kivi-v1.0.0-rc0"),
-    f("mithril-v0.2.5"),
-    f("mithril-v1.0.0-alpha"),
-    f("plastiq-v1.33.0"),
-    f("preact-v6.0.2"),
-    f("ractive-v0.7.3"),
-    f("ractive-edge"),
-    f("react-lite-v0.15.17"),
-    f("react-v15.3.1"),
-    f("react-v15.3.1-mobX-v2.5.0"),
-    f("react-v15.3.2-redux-v3.6.0"),    
-    f("riot-v2.6.1"),
-    f("tsers-v1.0.0"),
-    f("vanillajs"),
-    f("vidom-v0.3.18"),
-    f("vue-v1.0.26"),
-    f("vue-v2.0.0-beta1")        
-];
+    f("angular-v1.6.1-keyed", false),
+    f("angular-v2.4.3-keyed", false),
+    f("angular-v2.4.3-non-keyed", true),
+    f("aurelia-v1.0.8", true, {uri: "aurelia-v1.0.8/dist"}),
+    f("binding.scala-v10.0.1", false, {uri: "binding.scala-v10.0.1/target/web/stage"}),
+    f("bobril-v5.0.4", false),
+    f("choo-v4.1.0", true),
+    f("cyclejs-dom-v14.1.0", true),
+    f("dio-v3.0.5", true),
+    f("domvm-v2.0.1-non-keyed", true),
+    f("domvm-v2.0.1-keyed", false),
+    f("ember-v2.6.1", false, {uri: "ember-v2.6.1/dist"}),
+    f("ember-v2.10.0-beta.3", false, {uri: "ember-v2.10.0-beta.3/dist"}),
+    f("elm-v0.18.0", false),
+    f("hyperapp-v0.6.0", true),
+    f("inferno-v1.3.0-rc3-non-keyed", true),
+    f("inferno-v1.3.0-rc3-keyed", false),
+    f("kivi-v1.0.0-rc2", false),
+    f("knockout-v3.4.1", false),
+    f("marionette-v3.1.0", false),
+    f("mithril-v0.2.5", false),
+    f("mithril-v1.0.0-alpha", false),
+    f("nx-v1.0.0-beta.1.1.0-keyed", false),
+    f("nx-v1.0.0-beta.1.1.0-non-keyed", true),
+    f("plastiq-v1.33.0", false),
+    f("polymer-v1.7.0", true, {uri: "polymer-v1.7.0", useShadowRoot: true}),
+    f("preact-v7.1.0", false),
+    f("svelte-v1.0.1", true),
+    f("ractive-v0.8.9-keyed", false),
+    f("ractive-v0.8.9-non-keyed", true),
+    f("ractive-edge", true),
+    f("react-lite-v0.15.30", false),
+    f("react-v15.4.2-keyed", false),
+    f("react-v15.4.2-non-keyed", true),
+    f("react-v15.4.2-mobX-v3.0.1", false),
+    f("react-v15.4.2-redux-v3.6.0", false),
+    f("riot-v3.0.7", true),
+    f("simulacra-v1.5.5", true),
+    f("stem-v0.2.60", true),
+    f("tsers-v1.0.0", true),
+    f("vanillajs-non-keyed", true),
+    f("vanillajs-keyed", false),
+    f("vidom-v0.7.1", false),
+    f("vue-v2.1.10-keyed", false),
+    f("vue-v2.1.10-non-keyed", true),
+]

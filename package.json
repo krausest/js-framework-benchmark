@@ -5,6 +5,8 @@
   "scripts": {
     "postinstall": "node install.js",
     "build": "node build.js",
+    "build-prod": "node build.js",
+    "compile": "node build.js",
     "start": "http-server -c-1 .",
     "selenium": "cd webdriver-ts && npm run selenium && npm run results"
   },
@@ -25,8 +27,12 @@
   "license": "ISC",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "dependencies": {
+    "command-exists": "^1.0.2",
     "fs-extra": "^0.30.0",
     "http-server": "^0.9.0",
     "lodash": "^4.15.0"
+  },
+  "devDependencies": {
+    "yargs": "^6.6.0"
   }
 }

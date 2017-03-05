@@ -1,37 +1,27 @@
 import * as _ from 'lodash'
 import * as fs from 'fs';
-import {JSONResult, config} from './common'
+import {JSONResult, config, frameworks, FrameworkData} from './common'
 import {BenchmarkType, Benchmark, benchmarks} from './benchmarks'
 
 const dots = require('dot').process({
 	path: './'
 });
 
+let frameworkMap = new Map<string, FrameworkData>();
+frameworks.map(f => frameworkMap.set(f.name, f));
+
 let results: Map<string, Map<string, JSONResult>> = new Map();
-let frameworks: Array<string> = [];
 
 fs.readdirSync('./results').filter(file => file.endsWith('.json')).forEach(name => {
 	let data = <JSONResult>JSON.parse(fs.readFileSync('./results/' + name, {
 		encoding:'utf-8'
 	}));
 	
-	frameworks.push(data.framework);
-
-	if (!results.has(data.framework)) results.set(data.framework, new Map());
-	results.get(data.framework).set(data.benchmark, data);
-});
-
-frameworks = _.uniq(frameworks).sort((a,b) => {
-	if (a=='vanillajs') {
-		if (b=='vanillajs') return 0;
-		return 1;
-	} else if (b=='vanillajs') {
-		if (a=='vanillajs') return 0;
-		return -1;
+	if (!frameworkMap.has(data.framework)) {
+		console.log("WARN: No entry in commons.ts for "+data.framework+". Data will not appear in result table.");
 	} else {
-		if (a < b) return -1;
-		else if (a == b) return 0;
-		else return 1;
+		if (!results.has(data.framework)) results.set(data.framework, new Map());
+		results.get(data.framework).set(data.benchmark, data);
 	}
 });
 
@@ -40,8 +30,6 @@ let memBenchmarks = benchmarks.filter(benchmark => benchmark.type === BenchmarkT
 let cpuBenchmarkCount = cpuBenchmarks.length;
 
 let getValue = (framework:string, benchmark:string) => results.has(framework) && results.get(framework).get(benchmark);
-
-let factors = frameworks.map(f => 1.0);
 
 function color(factor:number): string {
 	if (factor < 2.0) {
@@ -78,14 +66,46 @@ class BenchResultList {
 	}
 }
 
-let generateBenchData = (benchmarks: Array<Benchmark>) => {
+interface SearchFunc {
+    (source: string, subString: string): boolean;
+}
+
+interface FrameworkPredicate {
+	(framework: FrameworkData) : boolean;
+}
+
+let generateBenchData = (benchmarks: Array<Benchmark>, frameworkPredicate: FrameworkPredicate, referenceName: string) => {
 	let benches: Array<BenchResultList> = [];
+
+	let filteredFrameworks = frameworks.filter(f => frameworkPredicate(f)).slice();
+
+	let sortedFrameworks = filteredFrameworks.sort((a:FrameworkData,b:FrameworkData) => {
+		if (a.name==referenceName) {
+			if (b.name==referenceName) return 0;
+			console.log("found reference name", referenceName);
+			return 1;
+		} else if (b.name==referenceName) {
+			if (a.name==referenceName) return 0;
+			console.log("found reference name", referenceName);
+			return -1;
+		} else {
+			if (a.name < b.name) return -1;
+			else if (a.name == b.name) return 0;
+			else return 1;
+		}
+	});
+
+	let frameworkNames = sortedFrameworks.map(framework => framework.name.replace('-v', ' v')) // .replace(/-keyed$|-non-keyed$/, ''))
+	let factors = sortedFrameworks.map(f => 1.0);
+
 	benchmarks.forEach((benchmark) => {
 		let bench = new BenchResultList(benchmark);
 
 		let values: Array<JSONResult> = [];
-		frameworks.forEach(framework => {
-			values.push(getValue(framework, benchmark.id));
+		sortedFrameworks.forEach(framework => {
+			if (frameworkPredicate(framework)) {
+				values.push(getValue(framework.name, benchmark.id));
+			}
 		});
 
 		let sorted = _.compact(values).map(data => {
@@ -126,24 +146,48 @@ let generateBenchData = (benchmarks: Array<Benchmark>) => {
 			}
 		});
 
-		benches.push(bench);
+		benches.push(bench);		
 	});
-	return benches;
+	let geomMeans = factors.map(f => {
+		let value = Math.pow(f, 1 / cpuBenchmarkCount);
+		return {value: value.toPrecision(3), styleClass: color(value)}
+	});
+	return {
+		frameworks: frameworkNames,
+		benches,
+		geomMeans
+	}
 }
 
-let cpubenches = generateBenchData(cpuBenchmarks);
-let membenches = generateBenchData(memBenchmarks);
-
-let geomMeans = factors.map(f => {
-	let value = Math.pow(f, 1 / cpuBenchmarkCount);
-	return {value: value.toPrecision(3), styleClass: color(value)}
-});
+function frameworkPredicateKeyed(nonKeyed : boolean): FrameworkPredicate {
+	return (framework: FrameworkData) => {return framework.nonKeyed === nonKeyed;};
+}
+let cpubenchesNonKeyed = generateBenchData(cpuBenchmarks, frameworkPredicateKeyed(true), 'vanillajs-non-keyed');
+let membenchesNonKeyed = generateBenchData(memBenchmarks, frameworkPredicateKeyed(true), 'vanillajs-non-keyed');
+let cpubenchesKeyed = generateBenchData(cpuBenchmarks, frameworkPredicateKeyed(false), 'vanillajs-keyed'); // react
+let membenchesKeyed = generateBenchData(memBenchmarks, frameworkPredicateKeyed(false), 'vanillajs-keyed');
 
 fs.writeFileSync('./table.html', dots.table({
-	frameworks: frameworks.map(framework => framework.replace('-v', ' v')),
-	cpubenches,
-	membenches,
-	geomMeans
+	data: [
+	{
+		label: 'Keyed results',
+		description: `Keyed implementations create an association between the domain data and a dom element
+		by assigning a 'key'. If data changes the dom element with that key will be updated.
+		In consequence inserting or deleting an element in the data array causes a corresponding change to the dom. 		 
+		`,
+		cpubenches: cpubenchesKeyed,
+		membenches: membenchesKeyed
+	},		
+	{
+		label: 'Non keyed results',
+		description: `Non keyed implementations are allowed to reuse existing dom elements.
+		In consequence inserting or deleting an element in the data array might append after or delete the last table row
+		and update the contents of all elements after the inserting or deletion index. 
+		This can perform better, but can cause problems if dom state is modified externally.
+		`,
+		cpubenches: cpubenchesNonKeyed,
+		membenches: membenchesNonKeyed
+	}]
 }), {
 	encoding: 'utf8'
 })

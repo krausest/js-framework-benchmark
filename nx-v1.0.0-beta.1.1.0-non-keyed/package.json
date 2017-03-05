@@ -1,0 +1,15 @@
+{
+  "name": "js-framework-benchmark-nx",
+  "version": "1.0.0",
+  "description": "Benchmark for NX framework",
+  "scripts": {
+    "build-dev": "webpack ./src/app.js dist/main.js",
+    "build-prod": "webpack ./src/app.js dist/main.js"
+  },
+  "devDependencies": {
+    "webpack": "1.14.0"
+  },
+  "dependencies": {
+    "@nx-js/framework": "^1.0.0-beta.1.1.0"
+  }
+}

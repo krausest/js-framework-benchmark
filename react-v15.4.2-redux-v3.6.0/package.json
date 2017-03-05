@@ -1,0 +1,38 @@
+{
+  "name": "js-framework-benchmark-react",
+  "version": "1.1.1",
+  "description": "React demo",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "webpack -w -d -c webpack.config.js",
+    "build-prod": "webpack --define process.env.NODE_ENV='\"production\"' -p -c webpack.config.js",
+    "start": "http-server -c-1 ."
+  },
+  "keywords": [
+    "react",
+    "webpack"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "babel-core": "6.21.0",
+    "babel-loader": "6.2.10",
+    "babel-preset-es2015": "6.18.0",
+    "babel-preset-react": "6.16.0",
+    "jsx-loader": "0.13.2",
+    "webpack": "1.14.0"
+  },
+  "dependencies": {
+    "immutable": "v3.8.1",
+    "react": "15.4.2",
+    "react-addons-shallow-compare": "15.4.2",
+    "react-dom": "15.4.2",
+    "react-redux": "5.0.2",
+    "redux": "3.6.0"
+  }
+}
