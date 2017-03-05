@@ -30,7 +30,7 @@
     "rollup": "0.41.4",
     "rollup-plugin-commonjs": "7.0.0",
     "rollup-plugin-node-resolve": "2.0.0",
-    "rollup-plugin-uglify": "^1.0.1",
+    "rollup-plugin-uglify": "1.0.1",
     "typescript": "2.2.1",
     "typings": "2.1.0",
     "yargs": "7.0.1"
