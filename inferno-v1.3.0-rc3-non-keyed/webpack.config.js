@@ -1,31 +1,7 @@
-'use strict';
-require("babel-plugin-syntax-jsx")
-require("babel-plugin-inferno")
-
-var cache = {};
-var loaders = [
-	{
-		test: /\.jsx$/,
-		loader: 'babel-loader'
-	},
-	{
-		test: /\.es6\.js$/,
-		loader: 'babel-loader'
-	},
-	{
-		test: /\.css$/,
-		loader: 'style-loader!css-loader'
-	}
-];
-var extensions = [
-	'', '.js', '.jsx', '.es6.js', '.msx'
-];
+require("babel-plugin-syntax-jsx");
+require("babel-plugin-inferno");
 
 module.exports = [{
-	cache: cache,
-	module: {
-		loaders: loaders
-	},
 	entry: {
 		main: './src/main',
 	},
@@ -34,15 +10,21 @@ module.exports = [{
 		filename: '[name].js',
 		sourceMapFilename: "[file].map",
 	},
+	module: {
+		rules: [
+			{
+				test: /\.jsx?$/,
+				loader: 'babel-loader'
+			}
+		]
+	},
 	resolve: {
-		extensions: extensions,
-		root: [
-			__dirname,
-			__dirname + '/src'
+		extensions: [
+			'.js', '.jsx'
 		],
 		alias: {
-			"inferno": __dirname+"/node_modules/inferno/dist/inferno.min.js",
-			"inferno-component": __dirname+"/node_modules/inferno-component/dist/inferno-component.min.js"
+			"inferno": __dirname + "/node_modules/inferno/dist/inferno.min.js",
+			"inferno-component": __dirname + "/node_modules/inferno-component/dist/inferno-component.min.js"
 		}
 	}
 }];

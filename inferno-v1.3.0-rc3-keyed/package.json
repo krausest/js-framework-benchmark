@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for inferno framework",
   "scripts": {
-    "build-dev": "webpack -w -d -c webpack.config.js",
-    "build-prod": "webpack -d -c webpack.config.js"
+    "build-dev": "webpack -w",
+    "build-prod": "webpack"
   },
   "keywords": [
     "ractive"
@@ -23,10 +23,10 @@
     "babel-plugin-syntax-jsx": "6.18.0",
     "babel-preset-es2015": "6.22.0",
     "babel-preset-stage-0": "6.22.0",
-    "webpack": "1.14.0"
+    "webpack": "2.2.1"
   },
   "dependencies": {
-    "inferno": "1.3.0-rc.3",
-    "inferno-component": "1.3.0-rc.3"
+    "inferno": "~1.3.0-rc",
+    "inferno-component": "~1.3.0-rc"
   }
 }

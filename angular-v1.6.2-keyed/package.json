@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Boilerplate for Angular.js",
   "scripts": {
-    "build-dev": "node_modules/.bin/webpack -w",
-    "build-prod": "node_modules/.bin/webpack"
+    "build-dev": "webpack -w",
+    "build-prod": "webpack"
   },
   "keywords": [
     "angular"

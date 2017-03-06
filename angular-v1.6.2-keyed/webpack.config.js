@@ -9,7 +9,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.es6\.js$/,
+        test: /\.js$/,
         loader: 'babel-loader'
       }
     ]
