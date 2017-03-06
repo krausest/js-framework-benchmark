@@ -1,13 +1,13 @@
 {
-  "name": "js-framework-benchmark-angular",
+  "name": "js-framework-benchmark-inferno",
   "version": "1.0.0",
-  "description": "Boilerplate for Angular.js",
+  "description": "Benchmark for inferno framework",
   "scripts": {
     "build-dev": "webpack -w",
     "build-prod": "webpack"
   },
   "keywords": [
-    "angular"
+    "ractive"
   ],
   "author": "Stefan Krause",
   "license": "Apache-2.0",
@@ -19,11 +19,14 @@
   "devDependencies": {
     "babel-core": "6.23.1",
     "babel-loader": "6.3.2",
+    "babel-plugin-inferno": "1.9.0",
+    "babel-plugin-syntax-jsx": "6.18.0",
     "babel-preset-es2015": "6.22.0",
+    "babel-preset-stage-0": "6.22.0",
     "webpack": "2.2.1"
   },
   "dependencies": {
-    "angular": "1.6.2",
-    "jquery": "3.1.1"
+    "inferno": "~1.3.0-rc",
+    "inferno-component": "~1.3.0-rc"
   }
 }
