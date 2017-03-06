@@ -28,45 +28,60 @@ Vue.component('vue-table', {
         for (let item of context.props.items) {
             list.push(
                 h('tr', {
-                    class: 'col-md-4',
+                    class: {
+                        danger: item.id == context.props.selected
+                    }
                 }, [
                         h('td', {
-                            class: item.id === context.props.selected ? 'danger' : '',
+                            attrs: {
+                                'class': 'col-md-1'
+                            }
                         }, `${item.id}`),
                         h('td', {
-                            class: 'col-md-4',
+                            attrs: {
+                                'class': 'col-md-4'
+                            }
                         }, [
                                 h('a', {
-                                    class: 'col-md-1',
-                                    'data-action': 'select',
-                                    'data-id': `${item.id}`
+                                    attrs: {
+                                        'data-action': 'select',
+                                        'data-id': `${item.id}`
+                                    },
                                 }, `${item.label}`)
                             ]),
                         h('td', {
-                            class: 'col-md-1',
+                            attrs: {
+                                'class': 'col-md-1'
+                            }
                         }, [
                                 h('a', {}, [
                                     h('span', {
-                                        class: 'glyphicon glyphicon-remove',
-                                        'aria-hidden': 'true',
-                                        'data-action': 'remove',
-                                        'data-id': `${item.id}`
+                                        attrs: {
+                                            'class': 'glyphicon glyphicon-remove',
+                                            'aria-hidden': 'true',
+                                            'data-action': 'remove',
+                                            'data-id': `${item.id}`
+                                        }
                                     })
                                 ])
                             ]),
                         h('td', {
-                            class: 'col-md-6',
+                            attrs: {
+                                'class': 'col-md-6',
+                            }
                         })
                     ])
             );
         }
         return h('table', {
-            domProps: {
-                class: 'table table-hover table-striped test-data'
+            attrs: {
+                'class': 'table table-hover table-striped test-data'
             },
             on: {
                 click: context.props.onClick
             }
-        }, list);
+        }, [
+                h('tbody', {}, list)
+            ]);
     }
 });
