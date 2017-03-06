@@ -118,7 +118,7 @@ Vue.component('app-vue', {
             </div>
         </div>
     </div>
-    <vue-table :items="rows" :selected="selected" @click="handleClick"></vue-table>
+    <vue-table :items="rows" :selected="selected" :on-click="handleClick"></vue-table>
     <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 </div>`
 });
