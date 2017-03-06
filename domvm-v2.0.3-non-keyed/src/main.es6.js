@@ -20,7 +20,8 @@ var stopMeasure = function() {
 	}
 }
 
-var h  = (tag, arg1, arg2) => domvm.defineElement(tag, arg1, arg2, domvm.FIXED_BODY);
+var el = domvm.defineElement;
+var h = (tag, arg1, arg2) => el(tag, arg1, arg2, domvm.FIXED_BODY);
 
 let store = new Store();
 
@@ -100,7 +101,7 @@ function View(vm, store) {
 				])
 			]),
 			h("table.table.table-hover.table-striped.test-data", {onclick: tableClick}, [
-				h("tbody", store.data.map(item =>
+				el("tbody", store.data.map(item =>
 					h("tr", {_data: item.id, class: item.id === store.selected ? 'danger' : null}, [
 						h("td.col-md-1", item.id),
 						h("td.col-md-4", [
