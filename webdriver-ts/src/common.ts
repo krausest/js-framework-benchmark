@@ -73,6 +73,8 @@ export let frameworks = [
     f("riot-v3.0.7", true),
     f("simulacra-v1.5.5", true),
     f("stem-v0.2.60", true),
+    f("surplus-v0.4.0-keyed", false, { uri: "surplus-v0.4.0?keyed" }),
+    f("surplus-v0.4.0-nonkeyed", true, { uri: "surplus-v0.4.0" }),
     f("tsers-v1.0.0", true),
     f("vanillajs-non-keyed", true),
     f("vanillajs-keyed", false),

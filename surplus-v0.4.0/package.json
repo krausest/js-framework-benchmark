@@ -1,0 +1,35 @@
+{
+  "name": "js-framework-benchmark-surplus",
+  "version": "0.4.0",
+  "description": "Surplus js-framework-benchmark implementation",
+  "main": "dist/main.js",
+  "scripts": {
+    "build-dev": "webpack -w -d --config webpack.config.js",
+    "build-prod": "webpack -p --config webpack.config.js"
+  },
+  "keywords": [
+    "s.js",
+    "surplus",
+    "javascript",
+    "framework",
+    "benchmark"
+  ],
+  "author": "Adam Haile",
+  "license": "MIT",
+  "homepage": "https://github.com/curveship/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/curveship/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "s-js": "^0.4.0",
+    "s-array": "^0.4.0",
+    "surplus": "^0.4.0"
+  },
+  "devDependencies": {
+    "ts-loader": "0.8.2",
+    "typescript": "2.2.1",
+    "surplus-loader": "^0.4.0",
+    "webpack": "2.2.1"
+  }
+}
