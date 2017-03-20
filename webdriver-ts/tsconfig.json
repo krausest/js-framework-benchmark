@@ -10,7 +10,6 @@
         "allowJs": false
     },
     "files": [
-        "typings/index.d.ts",
         "./src/common.ts",
         "./src/benchmarks.ts",
         "./src/webdriverAccess.ts",

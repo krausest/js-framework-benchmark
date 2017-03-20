@@ -1,5 +1,5 @@
 import * as chrome from 'selenium-webdriver/chrome'
-import {By, until, Builder, WebDriver, Locator, promise} from 'selenium-webdriver'
+import {By, until, Builder, WebDriver, Locator, promise, WebElement, Condition} from 'selenium-webdriver'
 import {config} from './common'
 
 interface PathPart {
@@ -35,7 +35,7 @@ function convertPath(path: string): Array<PathPart> {
 }
 
 // Fake findByXPath for simple XPath expressions to allow usage with shadow dom
-function findByXPath(node: webdriver.WebElement, path: string): webdriver.promise.Promise<webdriver.WebElement> {
+function findByXPath(node: WebElement, path: string): promise.Promise<WebElement> {
     // if there wasn't polymer with it's shadow dom useage one would like to use:
 
      let paths = convertPath(path);
@@ -45,7 +45,7 @@ function findByXPath(node: webdriver.WebElement, path: string): webdriver.promis
          n = n.then(nd => nd.findElements(By.css(p.tagName+":nth-child("+(p.index)+")"))).then(elems => {
              if (elems==null || elems.length==0) { console.log("not found"); return null}; 
              return elems[0];
-         }).thenCatch(e => {console.log("REJECTED PROMISE",e); return null;});
+         }).catch(e => {console.log("REJECTED PROMISE",e); return null;});
      }
      return n;    
   
@@ -83,7 +83,7 @@ function elemNull(v: any) {
 // driver.findElement(By.xpath("//tbody/tr[1]/td[1]")).getText().then(...) can throw a stale element error: 
 // thus we're using a safer way here:
 export function testTextContains(driver: WebDriver, xpath: string, text: string) {
-    return driver.wait(new until.Condition<boolean>(`testTextContains ${xpath} ${text}`,
+    return driver.wait(new Condition<boolean>(`testTextContains ${xpath} ${text}`,
         (driver) => shadowRoot(driver).then(elem => findByXPath(elem, xpath))
             .then(elem => elem==null ? elemNull(false) : elem.getText().then(
                 v => v && v.indexOf(text)>-1,
@@ -93,7 +93,7 @@ export function testTextContains(driver: WebDriver, xpath: string, text: string)
 }
 
 export function testTextNotContained(driver: WebDriver, xpath: string, text: string) {
-    return driver.wait(new until.Condition<boolean>(`testTextNotContained ${xpath} ${text}`,
+    return driver.wait(new Condition<boolean>(`testTextNotContained ${xpath} ${text}`,
         (driver) => shadowRoot(driver).then(elem => findByXPath(elem, xpath))
             .then(elem => elem==null ? elemNull(false) : elem.getText().then(
                 v => v && v.indexOf(text)==-1,
@@ -103,7 +103,7 @@ export function testTextNotContained(driver: WebDriver, xpath: string, text: str
 }
 
 export function testClassContains(driver: WebDriver, xpath: string, text: string) {
-    return driver.wait(new until.Condition<boolean>(`testClassContains ${xpath} ${text}`,
+    return driver.wait(new Condition<boolean>(`testClassContains ${xpath} ${text}`,
         (driver) => shadowRoot(driver).then(elem => findByXPath(elem, xpath))
             .then(elem => elem==null ? elemNull(false) : elem.getAttribute("class").then(
             v => v && v.indexOf(text)>-1,
@@ -114,7 +114,7 @@ export function testClassContains(driver: WebDriver, xpath: string, text: string
 
 export function testElementLocatedByXpath(driver: WebDriver, xpath: string) {
     // return driver.wait(until.elementLocated(By.xpath(xpath)), 3000);
-    return driver.wait(new until.Condition<boolean>(`testElementLocatedByXpath ${xpath}`, (driver) => 
+    return driver.wait(new Condition<boolean>(`testElementLocatedByXpath ${xpath}`, (driver) => 
             shadowRoot(driver).then(elem => 
                     elem==null ? elemNull(false) : findByXPath(elem, xpath).then(
                     (v:any) => v,
@@ -125,7 +125,7 @@ export function testElementLocatedByXpath(driver: WebDriver, xpath: string) {
 
 export function testElementNotLocatedByXPath(driver: WebDriver, xpath: string)
 {
-    return driver.wait(new until.Condition<boolean>(`testElementNotLocatedByXPath ${xpath}`,
+    return driver.wait(new Condition<boolean>(`testElementNotLocatedByXPath ${xpath}`,
         (driver) => shadowRoot(driver).then(elem => findByXPath(elem, xpath)).then(
             v => !v,
             err => console.log("ignoring error in testElementNotLocatedByXPath for xpath = "+xpath,err.toString().split("\n")[0]))
@@ -133,15 +133,15 @@ export function testElementNotLocatedByXPath(driver: WebDriver, xpath: string)
 }
 
 export function testElementLocatedById(driver: WebDriver, id: string) {
-    return driver.wait(new until.Condition<boolean>(`testElementLocatedById ${id}`,
-        (driver) => shadowRoot(driver).then(elem => elem.isElementPresent(By.id(id))).then(
+    return driver.wait(new Condition<boolean>(`testElementLocatedById ${id}`,
+        (driver) => shadowRoot(driver).then(elem => elem.findElement(By.id(id))).then(
             v => true,
             err => console.log("ignoring error in testElementLocatedById for id = "+id,err.toString().split("\n")[0]))
         )
         , config.TIMEOUT);
 }
 
-function retry<T>(retryCount: number, driver: WebDriver, fun : (driver:  WebDriver) => webdriver.promise.Promise<T>):  webdriver.promise.Promise<T> {
+function retry<T>(retryCount: number, driver: WebDriver, fun : (driver:  WebDriver) => promise.Promise<T>):  promise.Promise<T> {
     return fun(driver).then(
         val => { return val;},
         err => { console.log("retry failed"); 
@@ -154,16 +154,16 @@ function retry<T>(retryCount: number, driver: WebDriver, fun : (driver:  WebDriv
     );
 }
 
-export function forPromRec(priorResults : any[], from: number, to: number, fun : (idx: number) => webdriver.promise.Promise<any>):  webdriver.promise.Promise<any[]> {
+export function forPromRec(priorResults : any[], from: number, to: number, fun : (idx: number) => promise.Promise<any>):  promise.Promise<any[]> {
     if (from >= to) throw "fromProm from (="+from+") >=to (="+to+")";
     else if (from < to-1) return fun(from).then(val => forPromRec(priorResults.concat([val]), from+1, to, fun));
     else return fun(from).then(val => priorResults.concat([val]));
 }
 
-export function forProm(from: number, to: number, fun : (idx: number) => webdriver.promise.Promise<any>):  webdriver.promise.Promise<any[]> {
+export function forProm(from: number, to: number, fun : (idx: number) => promise.Promise<any>):  promise.Promise<any[]> {
     return forPromRec([], from, to, fun);
 }
-// export function forProm(from: number, to: number, fun : (idx: number) => webdriver.promise.Promise<any>):  webdriver.promise.Promise<any[]> {
+// export function forProm(from: number, to: number, fun : (idx: number) => promise.Promise<any>):  promise.Promise<any[]> {
 //     let res: any[] = []; 
 //     let p = fun(from);
 //     for (let i=from+1; i<to; i++) {
@@ -195,7 +195,7 @@ export function clickElementByXPath(driver: WebDriver, xpath: string) {
     // return to(driver.findElement(By.xpath(xpath)).click());
 }
 
-export function getTextByXPath(driver: WebDriver, xpath: string): webdriver.promise.Promise<string> {
+export function getTextByXPath(driver: WebDriver, xpath: string): promise.Promise<string> {
     let count = 0;
     return retry(5, driver, (driver) => { count++; 
             if (count>1 && config.LOG_DETAILS) console.log("getTextByXPath ",xpath," attempt #",count); 
@@ -206,6 +206,6 @@ export function getTextByXPath(driver: WebDriver, xpath: string): webdriver.prom
     // return to(driver.findElement(By.xpath(xpath)).getText());
 }
 
-function shadowRoot(driver: WebDriver) : webdriver.promise.Promise<webdriver.WebElement> {
+function shadowRoot(driver: WebDriver) : promise.Promise<WebElement> {
     return useShadowRoot ? driver.executeScript('return document.querySelector("main-element").shadowRoot') : driver.findElement(By.tagName("body")); 
 }

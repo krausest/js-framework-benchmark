@@ -154,7 +154,7 @@ function runBench(frameworkNames: string[]) {
                         console.log("ERROR: Framework "+framework.name+" is not correctly categorized in commons.ts");
                     }
             })        
-            .thenFinally(() => {driver.quit();})
+            .then(() => {driver.quit();}, () => {driver.quit();})
     })
 }
 

@@ -69,7 +69,6 @@ function buildDriver() {
     options = options.addArguments("--js-flags=--expose-gc");
     options = options.setLoggingPrefs(logPref);
     options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "v8,blink.console,disabled-by-default-devtools.timeline,devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 10000});
-
     return new Builder()
         .forBrowser('chrome')
         .setChromeOptions(options)    
@@ -119,7 +118,7 @@ function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework: Frame
         }
     })
     .then(() => clearLogs(driver))
-    .thenCatch( (err) => {
+    .catch((err:any) => {
         console.log(`error in initBenchmark ${framework} ${benchmark.id}`);
         throw err;
     });
@@ -160,7 +159,7 @@ function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchmark) : 
             return driver.get(`http://localhost:8080/${framework.uri}/`)
             .then(() => initBenchmark(driver, benchmark, framework))
             .then(() => runBenchmark(driver, benchmark, framework))
-            .thenCatch((e) => {
+            .catch((e) => {
                 console.error("Benchmark failed",e);
                 driver.takeScreenshot().then(
                     function(image) {
@@ -174,7 +173,7 @@ function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchmark) : 
         })
         .then(results => reduceBenchmarkResults(benchmark, results))
         .then(results => writeResult({framework: framework, results: results, benchmark: benchmark}, dir))
-        .thenFinally(() => {console.log("QUIT"); driver.quit();})
+        .then(() => {console.log("QUIT"); driver.quit();}, () => {console.log("QUIT after error"); driver.quit();})
 }
 
 function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmark) : promise.Promise<any> {
@@ -189,18 +188,19 @@ function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmark) : p
             // Check what we measured. Results are pretty similar, though we are measuring a bit longer until the final repaint happened.
             // .then(() => driver.executeScript("return window.performance.timing.loadEventEnd - window.performance.timing.navigationStart"))
             // .then((duration) => console.log(duration, typeof duration))            
-            .thenCatch((e) => {
+            .then(() => {console.log("QUIT"); driver.quit();},
+                (e) => {
                 console.error("Benchmark failed",e);
                 driver.takeScreenshot().then(
                     function(image) {
                         (<any>fs).writeFileSync('error-'+framework+'_startup.png', image, 'base64', function(err:any) {
                             console.log(err);
+                            console.log("QUIT after error"); driver.quit();
                         });
                         throw e;
                     }
                 );                
             })
-            .thenFinally(() => {console.log("QUIT"); driver.quit();})
         })
         .then(() => reduceBenchmarkResults(benchmark, results))
         .then(results => writeResult({framework: framework, results: results, benchmark: benchmark}, dir))

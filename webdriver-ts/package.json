@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "typings install && tsc",
     "compile": "tsc",
     "build-prod": "tsc",
     "selenium": "node dist/benchmarkRunner.js",
@@ -17,16 +16,19 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "typescript": "2.0.3",
-    "typings": "1.4.0"
+    "@types/lodash": "^4.14.55",
+    "@types/node": "^7.0.8",
+    "@types/selenium-webdriver": "^3.0.0",
+    "@types/yargs": "^6.6.0",
+    "typescript": "2.2.1"
   },
   "dependencies": {
-    "chromedriver": "2.27.2",
-    "dot": "1.0.3",
+    "chromedriver": "2.28.0",
+    "dot": "1.1.1",
     "jstat": "1.5.3",
-    "lodash": "4.16.4",
+    "lodash": "4.17.4",
     "rgba-convert": "0.3.0",
-    "selenium-webdriver": "^2.53.3",
-    "yargs": "6.0.0"
+    "selenium-webdriver": "^3.3.0",
+    "yargs": "7.0.2"
   }
 }

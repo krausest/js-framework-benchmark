@@ -1,5 +1,5 @@
 import {testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, forProm} from './webdriverAccess'
-import {WebDriver} from 'selenium-webdriver' 
+import {Builder, WebDriver, promise, logging} from 'selenium-webdriver'
 import {config, FrameworkData} from './common'
 
 export enum BenchmarkType { CPU, MEM, STARTUP };
@@ -9,8 +9,8 @@ export interface Benchmark {
     type: BenchmarkType;
     label: string;
     description: string;
-    init(driver: WebDriver, framework: FrameworkData) : webdriver.promise.Promise<any>;
-    run(driver: WebDriver, framework: FrameworkData) : webdriver.promise.Promise<any>;
+    init(driver: WebDriver, framework: FrameworkData) : promise.Promise<any>;
+    run(driver: WebDriver, framework: FrameworkData) : promise.Promise<any>;
 }
 
 const benchRun: Benchmark = {
