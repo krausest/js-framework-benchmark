@@ -1,3 +1,6 @@
+'use strict';
+var path = require('path')
+
 module.exports = {
   entry: {
     main: './src/main'
@@ -9,7 +12,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.es6\.js$/,
+        test: /.js$/,
         loader: 'babel-loader'
       }
     ]
