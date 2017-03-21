@@ -19,7 +19,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "bobril-build": "0.57.0"
+    "bobril-build": "0.57.0",
+    "uglify-js": "^2.8.8"
   },
   "dependencies": {
     "bobril": "5.0.4"
@@ -27,6 +28,7 @@
   "bobril": {
     "title": "Bobril v5.0.4",
     "dir": ".",
+    "dependencies": "disable",
     "head": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
   },
   "resolutions": {
