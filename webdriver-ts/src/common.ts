@@ -79,6 +79,6 @@ export let frameworks = [
     f("vanillajs-non-keyed", true),
     f("vanillajs-keyed", false),
     f("vidom-v0.7.1", false),
-    f("vue-v2.1.10-keyed", false),
-    f("vue-v2.1.10-non-keyed", true),
+    f("vue-v2.2.4-keyed", false),
+    f("vue-v2.2.4-non-keyed", true),
 ]

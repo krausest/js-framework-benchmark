@@ -1,5 +1,5 @@
 'use strict';
-
+var path = require('path')
 var webpack = require('webpack')
 var cache = {};
 var loaders = [
@@ -29,7 +29,7 @@ var loaders = [
 	}
 ];
 var extensions = [
-	'', '.js', '.jsx', '.es6.js', '.msx'
+	'.js', '.jsx', '.es6.js', '.msx'
 ];
 
 module.exports = [{
@@ -46,11 +46,12 @@ module.exports = [{
 		sourceMapFilename: "[file].map",
 	},
 	resolve: {
-		extensions: extensions,
-		root: [
+		modules: [
 			__dirname,
-			__dirname + '/src'
-		]
+			path.resolve(__dirname, "src"),
+			"node_modules"
+		],
+		extensions: extensions
 	},
 	plugins: [
 		new webpack.DefinePlugin({
