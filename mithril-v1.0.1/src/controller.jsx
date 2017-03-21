@@ -98,7 +98,7 @@ var Controller = {
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-md-6">
-                        <h1>Mithril v1.0.0-alpha</h1>
+                        <h1>Mithril v1.0.1</h1>
                     </div>
                     <div class="col-md-6">
                         <div className="col-sm-6 smallpad">
