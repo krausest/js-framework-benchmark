@@ -42,6 +42,10 @@ webdriver-java/results/
 webdriver-ts/results/
 webdriver-ts/typings/
 webdriver-ts/.vscode/
+marko-*/.cache
+marko-*/static
+marko-*/build
+marko-*/src/xtable.marko
 
 yarn.lock
 
