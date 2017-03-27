@@ -70,6 +70,36 @@ export class Row extends React.Component {
             </td>
             <td className="col-md-1"><a onClick={this.del}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
             <td className="col-md-6"></td>
+
+            <td class="col-md-6" style={{display: 'none'}}>
+              <span class="label label-default">{data.get('id')}</span>
+            </td>
+
+            <td class="col-md-6" style={{display: 'none'}}>
+              <h3>Example heading <span class="label label-default">{data.get('label')}</span></h3>
+            </td>
+
+            <td class="col-md-6" style={{display: 'none'}}>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style={{width: '60%;'}}>
+                  <span class="sr-only">60% Complete</span>
+                </div>
+              </div>
+            </td>
+
+            <td class="col-md-6" style={{display: 'none'}}>
+              <div class="media">
+                <div class="media-left media-middle">
+                  <a href="#">
+                    <img class="media-object" alt="..." />
+                  </a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">Middle aligned media</h4>
+                  {data.get('label')}
+                </div>
+              </div>
+            </td>
         </tr>);
     }
 }
