@@ -26,7 +26,7 @@ v7.4.0
 > echo %JAVA_HOME% / echo $JAVA_HOME
 > java -version
 java version "1.8.0_111" ...
-> javac
+> javac -version
 javac 1.8.0_111
 > mvn -version
 Apache Maven 3.3.9 (...
