@@ -321,14 +321,24 @@ class Main {
         stopMeasure();
     }
     appendRows() {
-        var docfrag = document.createDocumentFragment();
-        for(let i=this.rows.length;i<this.store.data.length; i++) {
-            let tr = this.createRow(this.store.data[i]);
-            this.rows[i] = tr;
-            this.data[i] = this.store.data[i];
-            docfrag.appendChild(tr);
+        // Using a document fragment is slower...
+        // var docfrag = document.createDocumentFragment();
+        // for(let i=this.rows.length;i<this.store.data.length; i++) {
+        //     let tr = this.createRow(this.store.data[i]);
+        //     this.rows[i] = tr;
+        //     this.data[i] = this.store.data[i];
+        //     docfrag.appendChild(tr);
+        // }
+        // this.tbody.appendChild(docfrag);
+
+        // ... than adding directly
+        var rows = this.rows, s_data = this.store.data, data = this.data, tbody = this.tbody;
+        for(let i=rows.length;i<s_data.length; i++) {
+            let tr = this.createRow(s_data[i]);
+            rows[i] = tr;
+            data[i] = s_data[i];
+            tbody.appendChild(tr);
         }
-        this.tbody.appendChild(docfrag);
     }
     createRow(data) {
         let tr = document.createElement("tr");
