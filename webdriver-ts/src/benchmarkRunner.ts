@@ -67,6 +67,8 @@ function buildDriver() {
     let options = new chrome.Options();
     // options = options.setChromeBinaryPath("/Applications/Chromium.app/Contents/MacOS/Chromium");
     options = options.addArguments("--js-flags=--expose-gc");
+    options = options.addArguments("--disable-infobars");
+    options = options.addArguments("--disable-background-networking");
     options = options.setLoggingPrefs(logPref);
     options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "v8,blink.console,disabled-by-default-devtools.timeline,devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 10000});
     return new Builder()
