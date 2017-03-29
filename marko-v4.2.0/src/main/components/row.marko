@@ -1,0 +1,25 @@
+class {
+    select() {
+        this.emit('select', this.input.item);
+    }
+
+    delete() {
+        this.emit('delete', this.input.item);
+    }
+}
+
+$ var item = input.item;
+
+<tr class=(input.selected && 'danger')>
+    <td class="col-md-1">${item.id}</td>
+    <td class="col-md-4">
+        <a data-action="select" on-click('select')>${item.label}</a>
+    </td>
+    <td class="col-md-1">
+        <a on-click('delete')>
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"
+                data-action="remove"></span>
+        </a>
+    </td>
+    <td class="col-md-6"></td>
+</tr>

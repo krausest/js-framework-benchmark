@@ -2,7 +2,7 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Marko v4.1.3</h1>
+                <h1>Marko v4.2.0</h1>
             </div>
             <div class="col-md-6">
                 <div class="row">
@@ -31,19 +31,11 @@
     <table class="table table-hover table-striped test-data">
         <tbody>
             <for(item in state.data)>
-            <tr key='${item.id}' class={danger: item.id == state.selected}>
-                <td class="col-md-1">${item.id}</td>
-                <td class="col-md-4">
-                    <a data-action="select" on-click('select', item.id)>${item.label}</a>
-                </td>
-                <td class="col-md-1">
-                    <a on-click('delete', item.id)>
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"
-                            data-action="remove"></span>
-                    </a>
-                </td>
-                <td class="col-md-6"></td>
-            </tr>
+                <row item=item
+                    selected=(item.id == state.selected)
+                    key=item.id
+                    on-delete('delete')
+                    on-select('select')/>
             </for>
         </tbody>
     </table>
