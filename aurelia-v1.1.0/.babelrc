@@ -12,7 +12,7 @@
             "targets": {
               "browsers": [
                 "last 2 versions",
-                "not ie <= 11"
+                "not ie <= 10"
               ]
             },
             "loose": true,
@@ -33,7 +33,7 @@
             "targets": {
               "browsers": [
                 "last 2 versions",
-                "not ie <= 11"
+                "not ie <= 10"
               ]
             },
             "loose": true,
