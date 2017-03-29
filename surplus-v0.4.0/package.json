@@ -23,13 +23,13 @@
   },
   "dependencies": {
     "s-js": "^0.4.0",
-    "s-array": "^0.4.0",
+    "s-array": "^0.4.2",
     "surplus": "^0.4.0"
   },
   "devDependencies": {
     "ts-loader": "0.8.2",
     "typescript": "2.2.1",
-    "surplus-loader": "^0.4.0",
+    "surplus-loader": "^0.4.2",
     "webpack": "2.2.1"
   }
 }

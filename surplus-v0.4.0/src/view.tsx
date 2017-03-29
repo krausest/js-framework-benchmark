@@ -18,10 +18,10 @@ export let AppView = (app : App) =>
                     <div className="col-md-6">
                         <div className="row">
                             <div className="col-sm-6 smallpad">
-                                <button type="button" className="btn btn-primary btn-block" id="run" onClick={e => app.run()}>Create 1,000 rows</button>
+                                <button type="button" className="btn btn-primary btn-block" id="run" onClick={e => app.run(!USE_NON_KEYED_TBODY)}>Create 1,000 rows</button>
                             </div>
                             <div className="col-sm-6 smallpad">
-                                <button type="button" className="btn btn-primary btn-block" id="runlots" onClick={e => app.runLots()}>Create 10,000 rows</button>
+                                <button type="button" className="btn btn-primary btn-block" id="runlots" onClick={e => app.runLots(!USE_NON_KEYED_TBODY)}>Create 10,000 rows</button>
                             </div>
                             <div className="col-sm-6 smallpad">
                                 <button type="button" className="btn btn-primary btn-block" id="add" onClick={e => app.add()}>Append 1,000 rows</button>
@@ -49,19 +49,24 @@ export let AppView = (app : App) =>
         while (el.tagName !== 'TR') el = el.parentElement!; 
         return +el.childNodes[0].textContent!; 
     },
-    TBodyKeyed = (app : App) =>
-        <tbody>
-            {app.store.data.mapSample(row =>
-                <tr className={row.id === app.store.selected() ? 'danger' : ''}>
-                    <td className="col-md-1" innerText={row.id}></td>
-                    <td className="col-md-4">
-                        <a innerText={row.label()}></a>
-                    </td>
-                    <td className="col-md-1"><a><span className="glyphicon glyphicon-remove delete"></span></a></td>
-                    <td className="col-md-6"></td>
-                </tr>
-            )}
-        </tbody>,
+    TBodyKeyed = (app : App) => {
+        let trs = app.store.data.mapSample(row =>
+            <tr>
+                <td className="col-md-1" innerText={row.id}></td>
+                <td className="col-md-4">
+                    <a innerText={row.label()}></a>
+                </td>
+                <td className="col-md-1"><a><span className="glyphicon glyphicon-remove delete"></span></a></td>
+                <td className="col-md-6"></td>
+            </tr>);
+
+        S.on(app.store.selected, () => {
+            let sel = app.store.selected(), data = app.store.data();
+            trs().forEach((tr, i) => tr.className = data[i].id === sel ? 'danger' : '');
+        });
+        
+        return <tbody>{trs}</tbody>;
+    },
     TBodyNonKeyed = (app : App) => {
         var tbody = <tbody></tbody>,
             trs = [] as RowTr[];
