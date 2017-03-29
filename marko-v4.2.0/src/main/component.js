@@ -28,7 +28,7 @@ module.exports = {
     onCreate() {
         this.state = {
             selected: null,
-            data: [],
+            data: []
         };
     },
     onUpdate() {
@@ -46,12 +46,12 @@ module.exports = {
     run() {
         startMeasure("run");
         this.state.data = this.buildData();
-        this.selected = null;
+        this.state.selected = null;
     },
     runLots() {
         startMeasure("runLots");
         this.state.data = this.buildData(10000);
-        this.selected = null;
+        this.state.selected = null;
     },
     add() {
         startMeasure("add");
@@ -59,11 +59,11 @@ module.exports = {
     },
     update() {
         startMeasure("update");
-        let d = this.state.data.splice(0);
+        let d = this.state.data;
         for (let i=0;i<d.length;i+=10) {
             d[i] = Object.assign({}, d[i], {label: d[i].label + ' !!!'});
         }
-        this.state.data = d;
+        this.forceUpdate();
     },
     clear() {
         startMeasure("clear");
@@ -72,22 +72,25 @@ module.exports = {
     },
     swapRows() {
         startMeasure("swapRows");
-        let d = this.state.data.splice(0);
-    	if(d.length > 10) {
-    		var a = d[4];
-    		d[4] = d[9];
-    		d[9] = a;
+        let data = this.state.data;
+
+    	if(data.length > 10) {
+    		var a = data[4];
+    		data[4] = data[9];
+    		data[9] = a;
         }
-        this.state.data = d;
+        this.forceUpdate();
     },
-    delete(id) {
+    delete(item) {
         startMeasure("delete");
-        console.log("delete", id);
-        this.state.data = this.state.data.filter(d => d.id!=id);
+        var id = item.id;
+        var data = this.state.data;
+        var idx = data.findIndex(d => d.id === id);
+        data.splice(idx, 1);
+        this.forceUpdate();
     },
-    select(id) {
+    select(item) {
         startMeasure("select");
-        console.log("select", id);
-        this.state.selected = id;
+        this.state.selected = item.id;
     }
 };
