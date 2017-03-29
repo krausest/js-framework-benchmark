@@ -12,6 +12,5 @@ module.exports = {
 		rules: [
 			{ test: /\.tsx?$/, loader: 'surplus-loader!ts-loader' },
 		]
-	},
-	externals: [ { '@types/react' : 'this'} ]
+	}
 };

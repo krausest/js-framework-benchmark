@@ -38,7 +38,8 @@ export class Store {
         const idx = (this.data() as any).findIndex((d : Row) => d.id == id);
         this.data.splice(idx, 1);
     }
-    run() {
+    run(clear : boolean) {
+        if (clear) this.data([]);
         S.freeze(() => {
             this.data(this.buildData());
             this.selected(undefined);
@@ -53,7 +54,8 @@ export class Store {
     select(id : number) {
         this.selected(id);
     }
-    runLots() {
+    runLots(clear : boolean) {
+        if (clear) this.data([]);
         S.freeze(() => {
             this.data(this.buildData(10000));
             this.selected(undefined);
