@@ -68,12 +68,12 @@ function createRows(store, deleteFunc, selectFunc) {
             <Row key={id} d={d} id={id} selected={selected} deleteFunc={deleteFunc} selectFunc={selectFunc} ref={onComponentShouldUpdate}  />
         );
     }
-    return <tbody  noNormalize>{rows}</tbody>;
+    return <tbody hasKeyedChildren noNormalize>{rows}</tbody>;
 }
 
 const title = (
     <div className="col-md-6" noNormalize>
-        <h1 noNormalize>Inferno v1.3.0-rc3 - non-keyed</h1>
+        <h1 noNormalize>Inferno v1.6.0 - non-keyed</h1>
     </div>
 );
 const span2 = <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" noNormalize></span>;
