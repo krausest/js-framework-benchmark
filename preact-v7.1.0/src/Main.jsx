@@ -39,7 +39,7 @@ export class Main extends Component{
         this.swapRows = this.swapRows.bind(this);
         this.start = 0;
         this.length = 0;
-        
+
         window.app = this;
     }
     printDuration() {
