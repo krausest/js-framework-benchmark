@@ -73,7 +73,7 @@ function createRows(store, deleteFunc, selectFunc) {
 
 const title = (
     <div className="col-md-6" noNormalize>
-        <h1 noNormalize>Inferno v1.6.0 - non-keyed</h1>
+        <h1 noNormalize>Inferno v1.6.0 - keyed</h1>
     </div>
 );
 const span2 = <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" noNormalize></span>;
