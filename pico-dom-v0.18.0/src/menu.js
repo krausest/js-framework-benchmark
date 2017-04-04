@@ -14,22 +14,22 @@ module.exports = co('div.row', {
       init: function() { this.node.addEventListener('click', this, true) }
     }
   }, [
-  el('div.col-sm-6 smallpad',
+  el('div.col-sm-6.smallpad',
     co('button[type=button].btn.btn-primary.btn-block#run', {extra: {key: 'run'}}, 'Create 1,000 rows')
   ),
-  el('div.col-sm-6 smallpad',
+  el('div.col-sm-6.smallpad',
     co('button[type=button].btn.btn-primary.btn-block#runlots', {extra: {key: 'runLots'}}, 'Create 10,000 rows')
   ),
-  el('div.col-sm-6 smallpad',
+  el('div.col-sm-6.smallpad',
     co('button[type=button].btn.btn-primary.btn-block#add', {extra: {key: 'add'}}, 'Append 1,000 rows')
   ),
-  el('div.col-sm-6 smallpad',
+  el('div.col-sm-6.smallpad',
     co('button[type=button].btn.btn-primary.btn-block#update', {extra: {key: 'update'}}, 'Update every 10th row')
   ),
-  el('div.col-sm-6 smallpad',
+  el('div.col-sm-6.smallpad',
     co('button[type=button].btn.btn-primary.btn-block#clear', {extra: {key: 'clear'}}, 'Clear')
   ),
-  el('div.col-sm-6 smallpad',
+  el('div.col-sm-6.smallpad',
     co('button[type=button].btn.btn-primary.btn-block#swaprows', {extra: {key: 'swapRows'}}, 'Swap Rows')
   )
 ])
