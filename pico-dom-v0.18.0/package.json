@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-pico-dom-0.17.0",
+  "version": "0.1.0",
+  "description": "Benchmark for picoDom 0.17.0",
+  "scripts": {
+    "build-dev": "webpack -w -d --entry ./src/main.js --output-filename ./dist/main.js",
+    "build-prod": "webpack -p --entry ./src/main.js --output-filename ./dist/main.js"
+  },
+  "author": "Hugo Villeneuve",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "webpack": "^2.3.3"
+  },
+  "dependencies": {
+    "pico-dom": "0.18.0"
+  }
+}
