@@ -4,7 +4,7 @@ var el = require('pico-dom').element,
     table = require('./table'),
     Store = require('./store')
 
-var title = 'picoDom-keyed',
+var title = 'picoDOM v0.18.0',
     store = new Store()
 
 el(document.body,
