@@ -12,7 +12,6 @@ import babel from '@easy-webpack/config-babel'
 import html from '@easy-webpack/config-html'
 import css from '@easy-webpack/config-css'
 import fontAndImages from '@easy-webpack/config-fonts-and-images'
-import globalBluebird from '@easy-webpack/config-global-bluebird'
 import globalJquery from '@easy-webpack/config-global-jquery'
 import globalRegenerator from '@easy-webpack/config-global-regenerator'
 import generateIndexHtml from '@easy-webpack/config-generate-index-html'
@@ -37,8 +36,7 @@ const coreBundles = {
     'aurelia-polyfills',
     'aurelia-pal',
     'aurelia-pal-browser',
-    'regenerator-runtime',
-    'bluebird'
+    'regenerator-runtime'
   ],
   // these will be included in the 'aurelia' bundle (except for the above bootstrap packages)
   aurelia: [
@@ -87,7 +85,7 @@ let config = generateConfig(
    * Don't be afraid, you can put bits of standard Webpack configuration here
    * (or at the end, after the last parameter, so it won't get overwritten by the presets)
    * Because that's all easy-webpack configs are - snippets of premade, maintained configuration parts!
-   * 
+   *
    * For Webpack docs, see: https://webpack.js.org/configuration/
    */
 
@@ -101,7 +99,6 @@ let config = generateConfig(
   html(),
   css({ filename: 'styles.css', allChunks: true, sourceMap: false }),
   fontAndImages(),
-  globalBluebird(),
   globalJquery(),
   globalRegenerator(),
   generateIndexHtml({minify: ENV === 'production'}),
