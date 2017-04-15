@@ -42,6 +42,7 @@ export let frameworks = [
     f("bobril-v6.2.0", false),
     f("choo-v4.1.0", true),
     f("cyclejs-dom-v14.1.0", true),
+    f("Datum-v0.8.0", true),
     f("dio-v3.0.5", true),
     f("domvm-v2.1.3-non-keyed", true),
     f("domvm-v2.1.3-keyed", false),
