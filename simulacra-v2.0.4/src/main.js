@@ -148,8 +148,8 @@ function buildData (count) {
 function bench (label, fn) {
   var t0 = performance.now(), t1
   fn()
-  requestAnimationFrame(function () {
+  window.setTimeout(function () {
     t1 = performance.now()
     console.log(label + ' took ' + (t1 - t0))
-  })
+  }, 0);
 }

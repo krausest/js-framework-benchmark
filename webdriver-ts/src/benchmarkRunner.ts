@@ -19,34 +19,30 @@ interface Timingresult {
 
 function clearLogs(driver: WebDriver): promise.Promise<void> {
     return driver.manage().logs().get(logging.Type.PERFORMANCE).then(entries => {
-        if (config.LOG_DEBUG) {
-            let results = entries.forEach(x => 
-            {                
-                let e = JSON.parse(x.message).message;
-                console.log(e);
-            });
-        }
+        if (config.LOG_DEBUG) entries.forEach(x => console.log("DISCARDED", x));
     });
 }
 
 function readLogs(driver: WebDriver): promise.Promise<Timingresult[]> {
-    return driver.manage().logs().get(logging.Type.PERFORMANCE).then(entries => {
+    return driver.manage().logs().get(logging.Type.BROWSER).then(entries => {
+        let results = entries.forEach(x => console.log(x));
+    }).then(() => driver.manage().logs().get(logging.Type.PERFORMANCE).then(entries => {
         let click : Timingresult = null;
         let lastPaint : Timingresult = {type:'paint', ts: 0, dur: 0, end: 0};;
         let mem : Timingresult = null;
         let navigationStart : Timingresult = null;
         let results = entries.forEach(x => 
         {
+            if (config.LOG_DEBUG) console.log(x.message);
             let e = JSON.parse(x.message).message;
-            if (config.LOG_DEBUG) console.log(e);
             if (e.params.name==='EventDispatch') {
                 if (e.params.args.data.type==="click") {
                     let end = +e.params.ts+e.params.dur;
                     click = {type:'click', ts: +e.params.ts, dur: +e.params.dur, end: end};
                 }
             } else if (e.params.name==='navigationStart') {
-                    navigationStart = {type:'navigationStart', ts: +e.params.ts, dur: 0, end: +e.params.ts};
-                    console.log("navigationStart found");
+                navigationStart = {type:'navigationStart', ts: +e.params.ts, dur: 0, end: +e.params.ts};
+                console.log("navigationStart found");
             } else if (e.params.name==='Paint') {
                 if (e.params.ts > lastPaint.ts) {
                     lastPaint = {type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur};
@@ -56,13 +52,13 @@ function readLogs(driver: WebDriver): promise.Promise<Timingresult[]> {
             }
         });
         return [click, lastPaint, mem, navigationStart];
-    });
+    }));
 }
 
 function buildDriver() {
     let logPref = new logging.Preferences();
     logPref.setLevel(logging.Type.PERFORMANCE, logging.Level.ALL);
-    // logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
+    logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
     let options = new chrome.Options();
     // options = options.setChromeBinaryPath("/Applications/Chromium.app/Contents/MacOS/Chromium");
@@ -70,7 +66,8 @@ function buildDriver() {
     options = options.addArguments("--disable-infobars");
     options = options.addArguments("--disable-background-networking");
     options = options.setLoggingPrefs(logPref);
-    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "v8,blink.console,disabled-by-default-devtools.timeline,devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 10000});
+    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
+    // options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "v8,blink.console,disabled-by-default-devtools.timeline,devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
     return new Builder()
         .forBrowser('chrome')
         .setChromeOptions(options)    

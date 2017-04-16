@@ -75,7 +75,7 @@ export let frameworks = [
     f("react-v15.4.2-mobX-v3.0.1", false),
     f("react-v15.4.2-redux-v3.6.0", false),
     f("riot-v3.0.7", true),
-    f("simulacra-v1.5.5", true),
+    f("simulacra-v2.0.4", true),
     f("stem-v0.2.60", true),
     f("surplus-v0.4.0-keyed", false, { uri: "surplus-v0.4.0?keyed" }),
     f("surplus-v0.4.0-nonkeyed", true, { uri: "surplus-v0.4.0" }),
