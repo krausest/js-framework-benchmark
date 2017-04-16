@@ -1,31 +1,32 @@
 'use strict'
 
 var bindObject = require('simulacra')
-var flow = bindObject.flow
-var setDefault = bindObject.setDefault
 var bindEvents = bindObject.bindEvents
 
 var state = { rows: [] }
 
+var labelEvents = bindEvents({
+  click: function (event, path) {
+    console.log('click happen')
+    bench('select', function () {
+      var i = 0, j = path.root.rows.length
+
+      for (; i < j; i++)
+        if (path.root.rows[i].isSelected)
+          path.root.rows[i].isSelected = false
+
+      path.target.isSelected = true
+    })
+  }
+})
+
 var binding = [ '#main', {
   rows: [ 'tr', {
     id: 'td:nth-of-type(1)',
-    label: [ 'td:nth-of-type(2) a', flow(
-      setDefault,
-      bindEvents({
-        click: function (event, path) {
-          bench('select', function () {
-            var i = 0, j = path.root.rows.length
-
-            for (; i < j; i++)
-              if (path.root.rows[i].isSelected)
-                path.root.rows[i].isSelected = false
-
-            path.target.isSelected = true
-          })
-        }
-      })
-    ) ],
+    label: [ 'td:nth-of-type(2) a', function (node, value) {
+      labelEvents.apply(null, arguments)
+      return value
+    } ],
     isSelected: function (node, value) {
       node.className = value ? 'danger' : ''
     }
@@ -36,7 +37,7 @@ var binding = [ '#main', {
           var id = event.target.parentNode.parentNode
             .parentNode.childNodes[1].textContent
 
-          path.target.rows.splice(path.target.rows.findIndex(function (obj) {
+          path.root.rows.splice(path.root.rows.findIndex(function (obj) {
             return obj.id === id
           }), 1)
         })
@@ -66,7 +67,7 @@ var methods = {
       var a, b
 
     	if (state.rows.length > 10) {
-    		a = Object.assign({}, state.rows[4])
+        a = Object.assign({}, state.rows[4])
   		  b = Object.assign({}, state.rows[9])
         Object.assign(state.rows[4], b)
         Object.assign(state.rows[9], a)
@@ -147,8 +148,8 @@ function buildData (count) {
 function bench (label, fn) {
   var t0 = performance.now(), t1
   fn()
-  requestAnimationFrame(function () {
+  window.setTimeout(function () {
     t1 = performance.now()
     console.log(label + ' took ' + (t1 - t0))
-  })
+  }, 0);
 }
