@@ -53,3 +53,7 @@ yarn.lock
 angular-*/lib/
 **/app.ngfactory.ts
 angular-*/src/app.ngsummary.json
+
+#glimmer
+glimmer-*/dist
+glimmer-*/tmp
