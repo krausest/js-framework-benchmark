@@ -15,9 +15,9 @@
   },
   "devDependencies": {
     "@glimmer/application": "^0.4.0",
-    "@glimmer/application-pipeline": "^0.6.0-beta.2",
+    "@glimmer/application-pipeline": "^0.6.8",
     "@glimmer/blueprint": "^0.1.12",
-    "@glimmer/component": "^0.3.8",
+    "@glimmer/component": "^0.3.10",
     "@glimmer/resolver": "^0.3.0",
     "broccoli-asset-rev": "^2.5.0",
     "ember-cli": "github:ember-cli/ember-cli",
