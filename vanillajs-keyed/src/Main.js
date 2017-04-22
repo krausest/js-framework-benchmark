@@ -243,7 +243,6 @@ class Main {
         this.rows.splice(idx, 1);
         this.data.splice(idx, 1);
         this.unselect();
-
         this.recreateSelection();
         stopMeasure();
     }
@@ -283,13 +282,15 @@ class Main {
     }
     clear() {
         startMeasure("clear");
-        this.removeAllRows();
         this.store.clear();
         this.rows = [];
         this.data = [];
-        this.unselect();
-        stopMeasure();
-    }
+        requestAnimationFrame(() => {
+            this.removeAllRows();
+            this.unselect();
+            stopMeasure();
+        });
+    }    
     swapRows() {
         startMeasure("swapRows");
         if (this.data.length>10) {

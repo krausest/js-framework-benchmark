@@ -292,13 +292,15 @@ class Main {
     }
     clear() {
         startMeasure("clear");
-        this.removeAllRows();
         this.store.clear();
         this.rows = [];
         this.data = [];
-        this.unselect();
-        stopMeasure();
-    }
+        requestAnimationFrame(() => {
+            this.removeAllRows();
+            this.unselect();
+            stopMeasure();
+        });
+    }    
     swapRows() {
         startMeasure("swapRows");
         let old_selection = this.store.selected;
