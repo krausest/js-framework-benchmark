@@ -61,7 +61,7 @@ function Jumbotron(vm) {
 		h(".jumbotron", [
 			h(".row", [
 				h(".col-md-6", [
-					h("h1", "domvm v2.1.3 (non-keyed)")
+					h("h1", "domvm v2.1.4 (keyed)")
 				]),
 				h(".col-md-6", [
 					h(".row", [
@@ -92,9 +92,9 @@ function Jumbotron(vm) {
 function Table(vm) {
 	let select = (e, node) => {
 		startMeasure("select");
-		while (node.data == null)
+		while (node.key == null)
 			node = node.parent;
-		store.select(node.data);
+		store.select(node.key);
 		vm.redraw(true);		// sync redraw
 		stopMeasure("select");
 		return false;
@@ -102,9 +102,9 @@ function Table(vm) {
 
 	let remove = (e, node) => {
 		startMeasure("delete");
-		while (node.data == null)
+		while (node.key == null)
 			node = node.parent;
-		store.delete(node.data);
+		store.delete(node.key);
 		vm.redraw(true);
 		stopMeasure("delete");
 		return false;
@@ -118,17 +118,17 @@ function Table(vm) {
 
 	return _ =>
 		h("table.table.table-hover.table-striped.test-data", {onclick: tableClick}, [
-			h("tbody", store.data.map(item =>
-				v(Item, item, false)
+			h("tbody", {_flags: domvm.KEYED_LIST}, store.data.map(item =>
+				v(Item, item, item.id)
 			))
 		]);
 }
 
-function Item(vm) {
-	vm.diff((vm, item) => [item.label, item.id, item.id === store.selected]);
+function Item(vm, item) {
+	vm.diff((vm, item) => [item.label, item.id === store.selected]);
 
-	return (vm, item) =>
-		h("tr", {class: item.id === store.selected ? 'danger' : null, _data: item.id}, [
+	return _ =>
+		h("tr", {class: item.id === store.selected ? 'danger' : null}, [
 			h("td.col-md-1", item.id),
 			h("td.col-md-4", [
 				h("a.lbl", item.label)
