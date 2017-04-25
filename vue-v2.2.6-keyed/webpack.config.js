@@ -41,7 +41,7 @@ module.exports = [{
 		main: './src/main',
 	},
 	output: {
-		path: './dist',
+		path: path.resolve(__dirname, "dist"),
 		filename: '[name].js',
 		sourceMapFilename: "[file].map",
 	},

@@ -17,16 +17,16 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "babel-core": "6.24.0",
-    "babel-loader": "6.4.1",
-    "babel-preset-es2015": "6.24.0",
-    "babel-preset-stage-0": "6.22.0",
-    "webpack": "2.2.1",
-    "vue-loader": "11.2.0",
-    "vue-template-compiler": "2.2.4",
-    "css-loader": "0.27.3"
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-stage-0": "6.24.1",
+    "webpack": "2.4.1",
+    "vue-loader": "11.3.4",
+    "vue-template-compiler": "2.2.6",
+    "css-loader": "0.28.0"
   },
   "dependencies": {
-    "vue": "2.2.4"
+    "vue": "2.2.6"
   }
 }
