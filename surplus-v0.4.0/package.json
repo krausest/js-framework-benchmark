@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "s-js": "^0.4.0",
-    "s-array": "^0.4.2",
+    "s-array": "^0.4.3",
     "surplus": "^0.4.0"
   },
   "devDependencies": {

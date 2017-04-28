@@ -50,20 +50,24 @@ export let AppView = (app : App) =>
         return +el.childNodes[0].textContent!; 
     },
     TBodyKeyed = (app : App) => {
-        let trs = app.store.data.mapSample(row =>
-            <tr>
-                <td className="col-md-1" innerText={row.id}></td>
-                <td className="col-md-4">
-                    <a innerText={row.label()}></a>
-                </td>
-                <td className="col-md-1"><a><span className="glyphicon glyphicon-remove delete"></span></a></td>
-                <td className="col-md-6"></td>
-            </tr>);
+        const index = {} as { [id : number] : HTMLTableRowElement | undefined},
+            trs = app.store.data.mapSample(row =>
+                <tr ref={index[row.id]!}>
+                    <td className="col-md-1" innerText={row.id}></td>
+                    <td className="col-md-4">
+                        <a innerText={row.label()}></a>
+                    </td>
+                    <td className="col-md-1"><a><span className="glyphicon glyphicon-remove delete"></span></a></td>
+                    <td className="col-md-6"></td>
+                </tr>,
+                row => index[row.id] = undefined);
 
-        S.on(app.store.selected, () => {
-            let sel = app.store.selected(), data = app.store.data();
-            trs().forEach((tr, i) => tr.className = data[i].id === sel ? 'danger' : '');
-        });
+        S.on(app.store.selected, (tr? : HTMLTableRowElement) => {
+            if (tr) tr.className = '';
+            tr = index[app.store.selected()!];
+            if (tr) tr.className = 'danger';
+            return tr;
+        }, undefined);
         
         return <tbody>{trs}</tbody>;
     },

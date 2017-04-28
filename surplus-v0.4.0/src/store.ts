@@ -14,7 +14,7 @@ export class Row {
 
 export class Store {
     data = SArray<Row>([]);
-    selected = S.data<number | undefined>(undefined);
+    selected = S.value<number | undefined>(undefined);
     id = 1;
 
     buildData(count = 1000) {
