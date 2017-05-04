@@ -52,7 +52,7 @@ export class App {
     }
     clear() {
         startMeasure("clear");
-        requestAnimationFrame(() => this.store.clear());
+        this.store.clear();
         stopMeasure();
     }
     swapRows() {
