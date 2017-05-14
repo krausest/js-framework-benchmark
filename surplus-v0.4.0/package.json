@@ -22,8 +22,8 @@
     "url": "https://github.com/curveship/js-framework-benchmark.git"
   },
   "dependencies": {
-    "s-js": "^0.4.0",
-    "s-array": "^0.4.2",
+    "s-js": "^0.4.1",
+    "s-array": "^0.4.5",
     "surplus": "^0.4.0"
   },
   "devDependencies": {
