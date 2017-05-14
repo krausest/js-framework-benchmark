@@ -92,7 +92,7 @@ function view(state$) {
 			<div className='jumbotron'>
 				<div className='row'>
 					<div className='col-md-6'>
-						<h1>Cycle.js dom@14.1.0</h1>
+						<h1>Cycle.js dom@17.1.0</h1>
 					</div>
 					<div className="col-md-6">
 						<div className="row">
