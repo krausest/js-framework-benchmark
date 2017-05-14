@@ -1,17 +1,18 @@
 const html = require('choo/html');
 
-module.exports = function rowsView (state, prev, send) {
+module.exports = function rowsView (state, emit) {
+  console.log("rowsViews", state, emit);
   const data = state.data;
   const selected = state.selected;
   function del(id) {
     return function(e) {
-      send('delete', { id: id });
+      emit('delete', { id: id });
     };
   }
   
   function click(id) {
     return function (e) {
-      send('select', { id: id });
+      emit('select', { id: id });
     };
   }
 
