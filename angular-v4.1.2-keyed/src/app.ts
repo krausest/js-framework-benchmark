@@ -31,7 +31,7 @@ let stopMeasure = function () {
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Angular v4.0.0</h1>
+                <h1>Angular v4.1.2</h1>
             </div>
             <div class="col-md-6">
                 <div class="col-sm-6 smallpad">
@@ -57,7 +57,7 @@ let stopMeasure = function () {
     </div>
     <table class="table table-hover table-striped test-data">
         <tbody>
-            <tr [class.danger]="item.id === selected" *ngFor="let item of data trackBy itemByIndex">
+            <tr [class.danger]="item.id === selected" *ngFor="let item of data trackBy itemById">
                 <td class="col-md-1">{{item.id}}</td>
                 <td class="col-md-4">
                     <a href="#" (click)="select(item, $event)">{{item.label}}</a>
@@ -96,8 +96,8 @@ export class App implements AfterViewChecked {
         return Math.round(Math.random() * 1000) % max;
     }
 
-    itemByIndex(index: number, item: Data) {
-      return index; 
+    itemById(index: number, item: Data) {
+        return item.id;
     }
 
     select(item: Data, event: Event) {
