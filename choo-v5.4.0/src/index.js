@@ -62,13 +62,11 @@ app.use(function(state, emitter) {
       emitter.emit('render');
     }),
     emitter.on('select', function(params) {
-      console.log("select", params);
       state.selected = params.id;
       emitter.emit('render');
     });
     emitter.on('delete', function(params) {
       let idx = state.data.findIndex(d => d.id==params.id);
-      console.log("delete", params, idx);
       state.data.splice(idx, 1);
       emitter.emit('render');
     });
@@ -95,7 +93,6 @@ function stopMeasure() {
 
 function view (state, emit) {
   function run() {
-    console.log("run");
     startMeasure('run');
     emit('run');
   }

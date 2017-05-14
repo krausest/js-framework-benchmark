@@ -1,7 +1,6 @@
 const html = require('choo/html');
 
 module.exports = function rowsView (state, emit) {
-  console.log("rowsViews", state, emit);
   const data = state.data;
   const selected = state.selected;
   function del(id) {
