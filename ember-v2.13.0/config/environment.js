@@ -4,12 +4,16 @@ module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'ember-temp',
     environment: environment,
-    baseURL: '/',
     locationType: 'auto',
+    rootURL: '/ember-v2.13.0/dist/',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
+      },
+      EXTEND_PROTOTYPES: {
+        // Prevent Ember Data from overriding Date.parse.
+        Date: false
       }
     },
 
@@ -20,7 +24,6 @@ module.exports = function(environment) {
   };
 
   if (environment === 'development') {
-    ENV.baseURL = '/ember-v2.6.1/dist/';
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
@@ -29,8 +32,8 @@ module.exports = function(environment) {
   }
 
   if (environment === 'test') {
+    ENV.rootURL = '/';
     // Testem prefers this...
-    ENV.baseURL = '/';
     ENV.locationType = 'none';
 
     // keep test console output quieter
@@ -41,7 +44,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    ENV.baseURL = '/ember-v2.6.1/dist/';
+
   }
 
   return ENV;
