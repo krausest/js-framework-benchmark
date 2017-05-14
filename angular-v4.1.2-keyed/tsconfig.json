@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "es2015",
+    "module": "es2015",
     "moduleResolution": "node",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
@@ -15,6 +15,12 @@
     "outDir": "tmp"
   },
   "angularCompilerOptions": {
-    "skipMetadataEmit": true
-  }
+    "annotationsAs": "static fields",
+    "annotateForClosureCompiler": true
+  },
+  "exclude": [
+    "node_modules",
+    "tmp",
+    "dist"
+  ]
 }
