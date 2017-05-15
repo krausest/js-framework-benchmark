@@ -1,5 +1,3 @@
-'use strict';
-
 var startTime;
 var lastMeasure;
 var startMeasure = function(name) {
@@ -127,10 +125,10 @@ Slim.tag('main-app',
         </div>
         <table class="table table-hover table-striped test-data">
             <tbody id="tbody">
-                <tr slim-repeat="items" slim-repeat-adjacent="true">
+                <tr slim-repeat="items" slim-repeat-adjacent="true" class="[[isSelected(data)]]">
                     <td class="col-md-1" bind>[[data.id]]</td>
                     <td class="col-md-4">
-                        <a bind>[[data.label]]</a>
+                        <a click="doSelect" bind>[[data.label]]</a>
                     </td>
                     <td class="col-md-1">
                         <a>
@@ -151,6 +149,18 @@ class extends Slim {
     onBeforeCreated() {
         this.items = [];
         this.store = new Store();
+    }
+
+    doSelect(e) {
+        startMeasure('select');
+        this.store.select(e.target.data.id);
+        this.items = this.store.data;
+        stopMeasure();
+    }
+
+    isSelected(data) {
+        if (!data) return '';
+        return this.store.selected === data.id ? 'danger' : '';
     }
 
     deleteOne(e) {
