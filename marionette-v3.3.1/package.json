@@ -4,20 +4,20 @@
   "description": "Marionette v3.1.0 demo",
   "main": "index.js",
   "scripts": {
-    "build-dev": "webpack -w -d -c webpack.config.js",
-    "build-prod": "webpack -p -c webpack.config.js"
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
   },
   "devDependencies": {
-    "babel-core": "6.10.4",
-    "babel-loader": "6.2.4",
-    "babel-preset-es2015": "6.9.0",
-    "webpack": "1.13.1"
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
+    "babel-preset-es2015": "6.24.1",
+    "webpack": "2.5.1"
   },
   "dependencies": {
     "backbone": "1.3.3",
-    "backbone.marionette": "3.1.0",
+    "backbone.marionette": "3.3.1",
     "backbone.radio": "2.0.0",
-    "jquery": "3.1.1",
+    "jquery": "3.2.1",
     "underscore": "1.8.3"
   }
 }

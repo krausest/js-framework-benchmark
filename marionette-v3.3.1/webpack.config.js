@@ -1,10 +1,12 @@
 'use strict';
+var path = require('path')
 
 var cache = {};
 var loaders = [
 	{
 		test: /\.js$/,
-		loader: 'babel-loader'
+		loader: 'babel-loader',
+		exclude: /node_modules/
 	},
 	{
 		test: /\.css$/,
@@ -12,7 +14,7 @@ var loaders = [
 	}
 ];
 var extensions = [
-	'', '.js', '.jsx', '.es6.js'
+	'.js', '.jsx', '.es6.js'
 ];
 
 module.exports = [{
@@ -24,15 +26,16 @@ module.exports = [{
 		main: './src/Main.js',
 	},
 	output: {
-		path: './dist',
+		path: path.resolve(__dirname, "dist"),
 		filename: '[name].js'
 	},
 	resolve: {
-		extensions: extensions,
-		root: [
+		modules: [
 			__dirname,
-			__dirname + '/src'
+			path.resolve(__dirname, "src"),
+			"node_modules"
 		],
+		extensions: extensions,
 		alias: {
 		}
 	}

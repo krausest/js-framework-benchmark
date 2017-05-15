@@ -56,7 +56,7 @@ export let frameworks = [
     f("kivi-v1.0.0-rc2", false),
     f("knockout-v3.4.1", false),
     f("marko-v4.2.0", false),
-    f("marionette-v3.1.0", false),
+    f("marionette-v3.3.1", false),
     f("mithril-v0.2.5", false),
     f("mithril-v1.1.1", false), 
     f("nx-v1.0.0-beta.1.1.0-keyed", false),
