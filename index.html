@@ -1,1 +1,197 @@
-<!DOCTYPE html><html><head> <title>JS-Framkeworks Benchmark</title> <meta charset="UTF-8"> <link href="css/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/> <link rel="stylesheet" href="css/main.css"> <meta name="viewport" content="width=device-width, initial-scale=1"></head><body><div class="container"> <div class="panel panel-default"> <div class="panel-heading"> <h3 class="panel-title">Choose a framework:</h3> </div> <div class="panel-body"> <ul class="nav nav-pills nav-stacked"> <li><a href="angular-v1.6.3-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> angular-v1.6.3-keyed</a></li> <li><a href="angular-v2.4.9-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> angular-v2.4.9-keyed</a></li> <li><a href="angular-v2.4.9-non-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> angular-v2.4.9-non-keyed</a></li> <li><a href="angular-v4.1.2-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> angular-v4.1.2-keyed</a></li> <li><a href="angular-v4.1.2-non-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> angular-v4.1.2-non-keyed</a></li> <li><a href="aurelia-v1.1.0/dist"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> aurelia-v1.1.0</a></li> <li><a href="binding.scala-v10.0.1/target/web/stage"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> binding.scala-v10.0.1</a></li> <li><a href="bobril-v7.1.2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> bobril-v7.1.2</a></li> <li><a href="choo-v5.4.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> choo-v5.4.0</a></li> <li><a href="cyclejs-dom-v17.1.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> cyclejs-dom-v17.1.0</a></li> <li><a href="Datum-v0.8.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Datum-v0.8.0</a></li> <li><a href="dio-v3.0.5"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> dio-v3.0.5</a></li> <li><a href="domvm-v2.1.4-non-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> domvm-v2.1.4-non-keyed</a></li> <li><a href="domvm-v2.1.4-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> domvm-v2.1.4-keyed</a></li> <li><a href="ember-v2.13.0/dist"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> ember-v2.13.0</a></li> <li><a href="elm-v0.18.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> elm-v0.18.0</a></li> <li><a href="glimmer-v0.3.10/dist"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> glimmer-v0.3.10</a></li> <li><a href="hyperapp-v0.6.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> hyperapp-v0.6.0</a></li> <li><a href="inferno-v1.6.0-non-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> inferno-v1.6.0-non-keyed</a></li> <li><a href="inferno-v1.6.0-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> inferno-v1.6.0-keyed</a></li> <li><a href="ivi-v0.5.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> ivi-v0.5.0</a></li> <li><a href="kivi-v1.0.0-rc2"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> kivi-v1.0.0-rc2</a></li> <li><a href="knockout-v3.4.1"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> knockout-v3.4.1</a></li> <li><a href="marko-v4.2.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> marko-v4.2.0</a></li> <li><a href="marionette-v3.1.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> marionette-v3.1.0</a></li> <li><a href="mithril-v0.2.5"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> mithril-v0.2.5</a></li> <li><a href="mithril-v1.1.1"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> mithril-v1.1.1</a></li> <li><a href="nx-v1.0.0-beta.1.1.0-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> nx-v1.0.0-beta.1.1.0-keyed</a></li> <li><a href="nx-v1.0.0-beta.1.1.0-non-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> nx-v1.0.0-beta.1.1.0-non-keyed</a></li> <li><a href="pico-dom-v0.18.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> pico-dom-v0.18.0</a></li> <li><a href="plastiq-v1.33.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> plastiq-v1.33.0</a></li> <li><a href="polymer-v1.7.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> polymer-v1.7.0</a></li> <li><a href="preact-v7.1.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> preact-v7.1.0</a></li> <li><a href="svelte-v1.0.1"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> svelte-v1.0.1</a></li> <li><a href="ractive-v0.8.9-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> ractive-v0.8.9-keyed</a></li> <li><a href="ractive-v0.8.9-non-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> ractive-v0.8.9-non-keyed</a></li> <li><a href="ractive-edge"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> ractive-edge</a></li> <li><a href="react-lite-v0.15.30"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> react-lite-v0.15.30</a></li> <li><a href="react-v15.4.2-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> react-v15.4.2-keyed</a></li> <li><a href="react-v15.4.2-non-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> react-v15.4.2-non-keyed</a></li> <li><a href="react-v15.4.2-mobX-v3.0.1"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> react-v15.4.2-mobX-v3.0.1</a></li> <li><a href="react-v15.4.2-redux-v3.6.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> react-v15.4.2-redux-v3.6.0</a></li> <li><a href="riot-v3.0.7"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> riot-v3.0.7</a></li> <li><a href="rx-domh-v0.0.2-rxjs-v5.3.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> rx-domh-v0.0.2-rxjs-v5.3.0</a></li> <li><a href="simulacra-v2.0.4"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> simulacra-v2.0.4</a></li> <li><a href="stem-v0.2.60"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> stem-v0.2.60</a></li> <li><a href="surplus-v0.4.0?keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> surplus-v0.4.0-keyed</a></li> <li><a href="surplus-v0.4.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> surplus-v0.4.0-nonkeyed</a></li> <li><a href="tsers-v1.0.0"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> tsers-v1.0.0</a></li> <li><a href="vanillajs-non-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> vanillajs-non-keyed</a></li> <li><a href="vanillajs-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> vanillajs-keyed</a></li> <li><a href="vidom-v0.7.1"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> vidom-v0.7.1</a></li> <li><a href="vue-v2.2.6-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> vue-v2.2.6-keyed</a></li> <li><a href="vue-v2.2.6-non-keyed"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> vue-v2.2.6-non-keyed</a></li> </ul> </div> </div> <div class="panel panel-default"> <div class="panel-body"> <ul class="nav nav-pills nav-stacked"> <li><a href="webdriver-ts/table.html"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Table Report</a></li> </ul> </div> </div></div></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JS-Framkeworks Benchmark</title>
+    <meta charset="UTF-8">
+    <link href="css/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Choose a framework:</h3>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-pills nav-stacked">
+                <li>
+                    <a href="slim-js-v2.8.20"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> Slim.js-v2.8.17</a>
+                </li>
+                <li>
+                    <a href="angular-v1.6.3-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> angular-v1.6.3-keyed</a>
+                </li>
+                <li>
+                    <a href="angular-v2.4.9-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> angular-v2.4.9-keyed</a>
+                </li>
+                <li>
+                    <a href="angular-v2.4.9-non-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> angular-v2.4.9-non-keyed</a>
+                </li>
+                <li>
+                    <a href="angular-v4.1.2-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> angular-v4.1.2-keyed</a>
+                </li>
+                <li>
+                    <a href="angular-v4.1.2-non-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> angular-v4.1.2-non-keyed</a>
+                </li>
+                <li>
+                    <a href="aurelia-v1.1.0/dist"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> aurelia-v1.1.0</a>
+                </li>
+                <li>
+                    <a href="binding.scala-v10.0.1/target/web/stage"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> binding.scala-v10.0.1</a>
+                </li>
+                <li>
+                    <a href="bobril-v7.1.2"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> bobril-v7.1.2</a>
+                </li>
+                <li>
+                    <a href="choo-v5.4.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> choo-v5.4.0</a>
+                </li>
+                <li>
+                    <a href="cyclejs-dom-v17.1.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> cyclejs-dom-v17.1.0</a>
+                </li>
+                <li>
+                    <a href="Datum-v0.8.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> Datum-v0.8.0</a>
+                </li>
+                <li>
+                    <a href="dio-v3.0.5"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> dio-v3.0.5</a>
+                </li>
+                <li>
+                    <a href="domvm-v2.1.4-non-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> domvm-v2.1.4-non-keyed</a>
+                </li>
+                <li>
+                    <a href="domvm-v2.1.4-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> domvm-v2.1.4-keyed</a>
+                </li>
+                <li>
+                    <a href="ember-v2.13.0/dist"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> ember-v2.13.0</a>
+                </li>
+                <li>
+                    <a href="elm-v0.18.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> elm-v0.18.0</a>
+                </li>
+                <li>
+                    <a href="glimmer-v0.3.10/dist"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> glimmer-v0.3.10</a>
+                </li>
+                <li>
+                    <a href="hyperapp-v0.6.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> hyperapp-v0.6.0</a>
+                </li>
+                <li>
+                    <a href="inferno-v1.6.0-non-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> inferno-v1.6.0-non-keyed</a>
+                </li>
+                <li>
+                    <a href="inferno-v1.6.0-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> inferno-v1.6.0-keyed</a>
+                </li>
+                <li>
+                    <a href="ivi-v0.5.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> ivi-v0.5.0</a>
+                </li>
+                <li>
+                    <a href="kivi-v1.0.0-rc2"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> kivi-v1.0.0-rc2</a>
+                </li>
+                <li>
+                    <a href="knockout-v3.4.1"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> knockout-v3.4.1</a>
+                </li>
+                <li>
+                    <a href="marko-v4.2.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> marko-v4.2.0</a>
+                </li>
+                <li>
+                    <a href="marionette-v3.1.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> marionette-v3.1.0</a>
+                </li>
+                <li>
+                    <a href="mithril-v0.2.5"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> mithril-v0.2.5</a>
+                </li>
+                <li>
+                    <a href="mithril-v1.1.1"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> mithril-v1.1.1</a>
+                </li>
+                <li>
+                    <a href="nx-v1.0.0-beta.1.1.0-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> nx-v1.0.0-beta.1.1.0-keyed</a>
+                </li>
+                <li>
+                    <a href="nx-v1.0.0-beta.1.1.0-non-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> nx-v1.0.0-beta.1.1.0-non-keyed</a>
+                </li>
+                <li>
+                    <a href="pico-dom-v0.18.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> pico-dom-v0.18.0</a>
+                </li>
+                <li>
+                    <a href="plastiq-v1.33.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> plastiq-v1.33.0</a>
+                </li>
+                <li>
+                    <a href="polymer-v1.7.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> polymer-v1.7.0</a>
+                </li>
+                <li>
+                    <a href="preact-v7.1.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> preact-v7.1.0</a>
+                </li>
+                <li>
+                    <a href="svelte-v1.0.1"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> svelte-v1.0.1</a>
+                </li>
+                <li>
+                    <a href="ractive-v0.8.9-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> ractive-v0.8.9-keyed</a>
+                </li>
+                <li>
+                    <a href="ractive-v0.8.9-non-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> ractive-v0.8.9-non-keyed</a>
+                </li>
+                <li>
+                    <a href="ractive-edge"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> ractive-edge</a>
+                </li>
+                <li>
+                    <a href="react-lite-v0.15.30"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> react-lite-v0.15.30</a>
+                </li>
+                <li>
+                    <a href="react-v15.4.2-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> react-v15.4.2-keyed</a>
+                </li>
+                <li>
+                    <a href="react-v15.4.2-non-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> react-v15.4.2-non-keyed</a>
+                </li>
+                <li>
+                    <a href="react-v15.4.2-mobX-v3.0.1"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> react-v15.4.2-mobX-v3.0.1</a>
+                </li>
+                <li>
+                    <a href="react-v15.4.2-redux-v3.6.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> react-v15.4.2-redux-v3.6.0</a>
+                </li>
+                <li>
+                    <a href="riot-v3.0.7"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> riot-v3.0.7</a>
+                </li>
+                <li>
+                    <a href="rx-domh-v0.0.2-rxjs-v5.3.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> rx-domh-v0.0.2-rxjs-v5.3.0</a>
+                </li>
+                <li>
+                    <a href="simulacra-v2.0.4"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> simulacra-v2.0.4</a>
+                </li>
+                <li>
+                    <a href="stem-v0.2.60"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> stem-v0.2.60</a>
+                </li>
+                <li>
+                    <a href="surplus-v0.4.0?keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> surplus-v0.4.0-keyed</a>
+                </li>
+                <li>
+                    <a href="surplus-v0.4.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> surplus-v0.4.0-nonkeyed</a>
+                </li>
+                <li>
+                    <a href="tsers-v1.0.0"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> tsers-v1.0.0</a>
+                </li>
+                <li>
+                    <a href="vanillajs-non-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> vanillajs-non-keyed</a>
+                </li>
+                <li>
+                    <a href="vanillajs-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> vanillajs-keyed</a>
+                </li>
+                <li>
+                    <a href="vidom-v0.7.1"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> vidom-v0.7.1</a>
+                </li>
+                <li>
+                    <a href="vue-v2.2.6-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> vue-v2.2.6-keyed</a>
+                </li>
+                <li>
+                    <a href="vue-v2.2.6-non-keyed"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> vue-v2.2.6-non-keyed</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <ul class="nav nav-pills nav-stacked">
+                <li>
+                    <a href="webdriver-ts/table.html"><span aria-hidden="true" class="glyphicon glyphicon-arrow-right"></span> Table Report</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
