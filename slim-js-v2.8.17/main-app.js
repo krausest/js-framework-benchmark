@@ -134,7 +134,7 @@ Slim.tag('main-app',
                     </td>
                     <td class="col-md-1">
                         <a>
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            <span click="deleteOne" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td class="col-md-6">
@@ -151,6 +151,14 @@ class extends Slim {
     onBeforeCreated() {
         this.items = [];
         this.store = new Store();
+    }
+
+    deleteOne(e) {
+        startMeasure('delete');
+        this.store.delete(e.target.data.id);
+        console.log(e.target.data);
+        this.items = this.store.data;
+        stopMeasure();
     }
 
     update10() {

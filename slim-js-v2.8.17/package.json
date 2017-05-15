@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "slim-js": "^2.8.19"
+    "slim-js": "^2.8.20"
   }
 }
