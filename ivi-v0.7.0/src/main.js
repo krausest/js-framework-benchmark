@@ -167,7 +167,7 @@ function Controller() {
             $h("div", "jumbotron").children(
                 $h("div", "row").children([
                     $h("div", "col-md-6").children(
-                        $h("h1").children("ivi v0.5.0")
+                        $h("h1").children("ivi v0.7.0")
                     ),
                     $h("div", "col-md-6").children(
                         $h("div", "row").children([

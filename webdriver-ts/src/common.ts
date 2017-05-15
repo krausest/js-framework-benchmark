@@ -52,7 +52,7 @@ export let frameworks = [
     f("hyperapp-v0.9.1", true),
     f("inferno-v3.1.2-non-keyed", true),
     f("inferno-v3.1.2-keyed", false),
-    f("ivi-v0.5.0", false),
+    f("ivi-v0.7.0", false),
     f("kivi-v1.0.0-rc2", false),
     f("knockout-v3.4.1", false),
     f("marko-v4.2.0", false),
