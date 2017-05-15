@@ -1,6 +1,7 @@
 'use strict';
 require("babel-plugin-syntax-jsx")
 require("babel-plugin-inferno")
+var path = require('path')
 
 var cache = {};
 var loaders = [
@@ -18,7 +19,7 @@ var loaders = [
 	}
 ];
 var extensions = [
-	'', '.js', '.jsx', '.es6.js', '.msx'
+	'.js', '.jsx', '.es6.js', '.msx'
 ];
 
 module.exports = [{
@@ -30,16 +31,17 @@ module.exports = [{
 		main: './src/main',
 	},
 	output: {
-		path: './dist',
+		path: path.resolve(__dirname, "dist"),
 		filename: '[name].js',
 		sourceMapFilename: "[file].map",
 	},
 	resolve: {
-		extensions: extensions,
-		root: [
+				modules: [
 			__dirname,
-			__dirname + '/src'
+			path.resolve(__dirname, "src"),
+			"node_modules"
 		],
+		extensions: extensions,
 		alias: {
 			"inferno": __dirname+"/node_modules/inferno/dist/inferno.min.js",
 			"inferno-component": __dirname+"/node_modules/inferno-component/dist/inferno-component.min.js"

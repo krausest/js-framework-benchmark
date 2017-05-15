@@ -33,30 +33,12 @@ var stopMeasure = function() {
     }
 }
 
-function handleClick(e) {
-    let func;
-    let id;
-    let val = e.target.defaultValue;
-
-    if (val) {
-        func = val.func;
-        id = val.id;
-    } else {
-        val = e.target.parentNode.defaultValue;
-        if (val) {
-            func = val.func;
-            id = val.id;
-        }
-    }
-    func && func(id);
-}
-
 const span = <span className="glyphicon glyphicon-remove" aria-hidden="true" noNormalize></span>;
 const td = <td className="col-md-6" noNormalize></td>;
 
 function Row({ d, id, selected, deleteFunc, selectFunc }) {
     return (
-        <tr className={id === selected ? 'danger' : ''} hasNonKeyedChildren noNormalize>
+        <tr className={id === selected ? 'danger' : ''}  noNormalize>
             <td className="col-md-1" noNormalize>{id + ''}</td>
             <td className="col-md-4" noNormalize>
                 <a onClick={linkEvent(id, selectFunc)} noNormalize>{d.label}</a>
@@ -65,7 +47,7 @@ function Row({ d, id, selected, deleteFunc, selectFunc }) {
             { td }
         </tr>
     )
-}
+} 
 
 const onComponentShouldUpdate = {
     onComponentShouldUpdate(lastProps, nextProps) {
@@ -83,15 +65,15 @@ function createRows(store, deleteFunc, selectFunc) {
         const id = d.id;
 
         rows.push(
-            <Row d={d} id={id} selected={selected} deleteFunc={deleteFunc} selectFunc={selectFunc} ref={onComponentShouldUpdate}  />
+            <Row key={id} d={d} id={id} selected={selected} deleteFunc={deleteFunc} selectFunc={selectFunc} ref={onComponentShouldUpdate}  />
         );
     }
-    return <tbody hasNonKeyedChildren noNormalize>{rows}</tbody>;
+    return <tbody hasKeyedChildren noNormalize>{rows}</tbody>;
 }
 
 const title = (
     <div className="col-md-6" noNormalize>
-        <h1 noNormalize>Inferno v1.6.0 - non-keyed</h1>
+        <h1 noNormalize>Inferno v3.1.2 - keyed</h1>
     </div>
 );
 const span2 = <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" noNormalize></span>;
@@ -163,12 +145,12 @@ export class Controller extends Component{
         this.setState({store: this.state.store});
     }
     render () {
-        return (<div className="container" hasNonKeyedChildren noNormalize>
+        return (<div className="container"  noNormalize>
             <div className="jumbotron" noNormalize>
-                <div className="row" hasNonKeyedChildren noNormalize>
+                <div className="row"  noNormalize>
                     { title }
                     <div className="col-md-6" noNormalize>
-                        <div className="row" hasNonKeyedChildren noNormalize>
+                        <div className="row"  noNormalize>
                             <div className="col-sm-6 smallpad" noNormalize>
                                 <button type="button" className="btn btn-primary btn-block" id="run" onClick={this.run} noNormalize>Create 1,000 rows</button>
                             </div>
