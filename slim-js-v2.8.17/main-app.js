@@ -156,7 +156,6 @@ class extends Slim {
     deleteOne(e) {
         startMeasure('delete');
         this.store.delete(e.target.data.id);
-        console.log(e.target.data);
         this.items = this.store.data;
         stopMeasure();
     }
