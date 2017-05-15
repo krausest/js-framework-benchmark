@@ -1,7 +1,7 @@
 import { h } from "hyperapp"
 
-export default ({ model, actions }) => model.data.map(({ id, label }, i) =>
-    <tr class={id === model.selected ? "danger" : ""}>
+export default ({ state, actions }) => state.data.map(({ id, label }, i) =>
+    <tr class={id === state.selected ? "danger" : ""}>
         <td class="col-md-1">{id}</td>
         <td class="col-md-4">
             <a onclick={_ => actions.select({ id })}>{label}</a>

@@ -70,35 +70,35 @@ function buildData(count) {
     }))
 }
 
-const model = {
+const state = {
     data: [],
     selected: false
 }
 
-const reducers = {
-    run: model => ({
+const actions = {
+    run: state => ({
         data: buildData(1000),
         selected: undefined
     }),
 
-    add: model => ({
-        data: model.data.concat(buildData(1000)),
+    add: state => ({
+        data: state.data.concat(buildData(1000)),
         selected: undefined
     }),
 
-    runLots: model => ({
+    runLots: state => ({
         data: buildData(10000),
         selected: undefined
     }),
 
-    clear: model => ({
+    clear: state => ({
         data: [],
         selected: undefined
     }),
 
-    update: model => {
+    update: state => {
         return {
-            data: model.data.map((d, i) => {
+            data: state.data.map((d, i) => {
                 if (i % 10 === 0) {
                     d.label = `${d.label} !!!`
                 }
@@ -108,32 +108,32 @@ const reducers = {
         }
     },
 
-    swapRows: model => {
-        if (model.data.length <= 10) {
-            return model
+    swapRows: state => {
+        if (state.data.length <= 10) {
+            return state
         }
 
-        const temp = model.data[4]
-        model.data[4] = model.data[9]
-        model.data[9] = temp
+        const temp = state.data[4]
+        state.data[4] = state.data[9]
+        state.data[9] = temp
 
         return {
-            data: model.data,
-            selected: model.selected
+            data: state.data,
+            selected: state.selected
         }
     },
 
-    select: (model, data) => ({
-        data: model.data,
-        selected: data.id
+    select: (state, actions, data) => ({
+            data: state.data,
+            selected: data.id
     }),
 
-    delete: (model, data) => ({
-        data: model.data.filter(d => d.id !== data.id)
+    delete: (state, actions, data) => ({
+        data: state.data.filter(d => d.id !== data.id)
     })
 }
 
 export {
-    model, reducers
+    state, actions
 }
 

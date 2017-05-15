@@ -1,5 +1,5 @@
 import { h, app } from "hyperapp"
-import { model, reducers } from "./store"
+import { state, actions } from "./store"
 import RowsView from "./rowsView"
 
 let startTime
@@ -27,7 +27,7 @@ function stopMeasure() {
     }
 }
 
-function view(model, actions) {
+function view(state, actions) {
     stopMeasure()
 
     return (
@@ -35,7 +35,7 @@ function view(model, actions) {
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-md-6">
-                        <h1>HyperApp v0.6.0</h1>
+                        <h1>HyperApp v0.9.1</h1>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
@@ -111,7 +111,7 @@ function view(model, actions) {
             </div>
             <table class="table table-hover table-striped test-data">
                 <tbody>
-                    <RowsView model={model} actions={actions} />
+                    <RowsView state={state} actions={actions} />
                 </tbody>
             </table>
             <span
@@ -124,7 +124,7 @@ function view(model, actions) {
 
 app({
     root: document.getElementById("main"),
-    model,
-    reducers,
+    state,
+    actions,
     view
 })
