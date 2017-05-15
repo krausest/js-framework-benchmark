@@ -1,19 +1,18 @@
-import * as S from 's-js';
-import * as SArray from 's-array';
+import S, { DataSignal } from 's-js';
 
 function _random(max : number) {
     return Math.round(Math.random()*1000)%max;
 }
 
 export class Row {
-    label : S.DataSignal<string>;
+    label : DataSignal<string>;
     constructor (public id : number, label : string) {
         this.label = S.data(label);
     }
 }
 
 export class Store {
-    data = SArray<Row>([]);
+    data = S.data<Row[]>([]);
     selected = S.value<number | undefined>(undefined);
     id = 1;
 
@@ -35,8 +34,10 @@ export class Store {
         });
     }
     delete(id : number) {
-        const idx = (this.data() as any).findIndex((d : Row) => d.id == id);
-        this.data.splice(idx, 1);
+        const data = this.data().slice(0),
+            idx = (data as any).findIndex((d : Row) => d.id == id);
+        data.splice(idx, 1);
+        this.data(data);
     }
     run(clear : boolean) {
         if (clear) this.data([]);
