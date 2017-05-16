@@ -80,7 +80,7 @@ export let frameworks = [
     f("stem-v0.2.70", true),
     f("surplus-v0.4.0-keyed", false, { uri: "surplus-v0.4.0?keyed" }),
     f("surplus-v0.4.0-nonkeyed", true, { uri: "surplus-v0.4.0" }),
-    f("svelte-v1.0.1", true),
+    f("svelte-v1.8.1", true),
     f("tsers-v1.0.0", true),
     f("vanillajs-non-keyed", true),
     f("vanillajs-keyed", false),
