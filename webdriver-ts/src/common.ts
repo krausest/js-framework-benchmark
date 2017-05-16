@@ -73,7 +73,7 @@ export let frameworks = [
     f("react-v15.5.4-non-keyed", true),
     f("react-v15.5.4-mobX-v3.1.9", false),
     f("react-v15.5.4-redux-v3.6.0", false),
-    f("riot-v3.0.7", true),
+    f("riot-v3.5.0", true),
     f("rx-domh-v0.0.2-rxjs-v5.3.0", false),
     f("simulacra-v2.0.4", true),
     f("slim-js-v2.8.20", true),

@@ -3,17 +3,17 @@
   "version": "1.0.0",
   "description": "Benchmark for riot framework",
   "scripts": {
-    "build-dev": "webpack -w -d -c webpack.config.js",
-    "build-prod": "webpack -d -c webpack.config.js"
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
   },
   "devDependencies": {
-    "babel-core": "6.18.2",
-    "babel-loader": "6.2.8",
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
     "babel-preset-es2015-riot": "1.1.0",
     "tag-loader": "0.3.0",
-    "webpack": "1.13.3"
+    "webpack": "2.5.1"
   },
   "dependencies": {
-    "riot": "3.0.7"
+    "riot": "3.5.0"
   }
 }
