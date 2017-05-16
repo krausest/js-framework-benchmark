@@ -101,7 +101,7 @@ class BenchmarkElement extends UI.Element {
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>stemjs 0.2.60</h1>
+                        <h1>stemjs v0.2.70</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
