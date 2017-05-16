@@ -32,7 +32,7 @@ function f(name: string, nonKeyed: boolean, options: Options = {uri: null, useSh
 }
 
 export let frameworks = [
-    f("slim-js-v2.8.20", false),
+    f("slim-js-v2.9.1", false),
     f("angular-v1.6.3-keyed", false),
     f("angular-v2.4.9-keyed", false),
     f("angular-v2.4.9-non-keyed", true),
