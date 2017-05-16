@@ -7,7 +7,6 @@ var state = { rows: [] }
 
 var labelEvents = bindEvents({
   click: function (event, path) {
-    console.log('click happen')
     bench('select', function () {
       var i = 0, j = path.root.rows.length
 

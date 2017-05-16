@@ -1,4 +1,5 @@
 'use strict';
+var path = require('path')
 
 var cache = {};
 var loaders = [
@@ -12,7 +13,7 @@ var loaders = [
 	}
 ];
 var extensions = [
-	'', '.js', '.es6.js'
+	'.js', '.es6.js'
 ];
 
 module.exports = [{
@@ -22,15 +23,16 @@ module.exports = [{
 	},
 	entry: './src/main',
 	output: {
-		path: './dist',
+		path: path.resolve(__dirname, "dist"),
 		filename: 'main.js',
 		sourceMapFilename: "main.map",
 	},
 	resolve: {
 		extensions: extensions,
-		root: [
+		modules: [
 			__dirname,
-			__dirname + '/src'
+			path.resolve(__dirname, "src"),
+			"node_modules"
 		],
 		alias: {
 		}

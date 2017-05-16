@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for simulacra.js",
   "scripts": {
-    "build-dev": "webpack -w -d -c webpack.config.js",
-    "build-prod": "webpack -p -c webpack.config.js"
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
   },
   "keywords": [
     "simulacra"
@@ -17,11 +17,11 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "babel-core": "6.14.0",
-    "babel-loader": "6.2.5",
-    "babel-preset-es2015": "6.14.0",
-    "babel-preset-stage-0": "6.5.0",
-    "webpack": "1.13.2"
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-stage-0": "6.24.1",
+    "webpack": "2.5.1"
   },
   "dependencies": {
     "simulacra": "^2.0.4"
