@@ -16,7 +16,8 @@ export class Row extends Component {
         this._onDelete = this._onDelete.bind(this);
     }
 
-    onRender({styleClass, data}) {
+    onRender(props) {
+        let {styleClass, data} = this.attrs;
         return (<tr key={data.id} className={styleClass}>
             <td className="col-md-1">{data.id}</td>
             <td className="col-md-4">
@@ -28,12 +29,12 @@ export class Row extends Component {
     }
 
     _onClick() {
-        const {onClick, data} = this.getAttrs();
+        const {onClick, data} = this.attrs;
         onClick(data.id);
     }
 
     _onDelete() {
-        const {onDelete, data} = this.getAttrs();
+        const {onDelete, data} = this.attrs;
         onDelete(data.id);
     }
 }
@@ -127,7 +128,7 @@ export class Controller extends Component{
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>Vidom v0.7.1</h1>
+                        <h1>Vidom v0.9.8</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">

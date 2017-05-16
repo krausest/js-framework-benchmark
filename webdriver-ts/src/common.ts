@@ -84,7 +84,7 @@ export let frameworks = [
     f("tsers-v1.0.0", true),
     f("vanillajs-non-keyed", true),
     f("vanillajs-keyed", false),
-    f("vidom-v0.7.1", false),
+    f("vidom-v0.7.1", false),   // remove
     f("vue-v2.2.6-keyed", false),
     f("vue-v2.2.6-non-keyed", true),
 ]
