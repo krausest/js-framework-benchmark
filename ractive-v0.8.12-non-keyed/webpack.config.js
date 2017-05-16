@@ -1,4 +1,5 @@
 'use strict';
+var path = require('path')
 
 var cache = {};
 var loaders = [
@@ -12,7 +13,7 @@ var loaders = [
   }
 ];
 var extensions = [
-  '', '.js', '.es6.js'
+  '.js', '.es6.js'
 ];
 
 module.exports = [{
@@ -24,15 +25,16 @@ module.exports = [{
     main: './src/main',
   },
   output: {
-    path: './dist',
+    path: path.resolve(__dirname, "dist"),
     filename: 'main.js'
   },
   resolve: {
     extensions: extensions,
-    root: [
-      __dirname,
-      __dirname + '/src'
-    ],
+		modules: [
+			__dirname,
+			path.resolve(__dirname, "src"),
+			"node_modules"
+		],
     alias: {
       "ractive": __dirname+"/node_modules/ractive/ractive.min.js",
     }

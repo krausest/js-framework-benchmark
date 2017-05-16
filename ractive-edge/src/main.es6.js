@@ -175,7 +175,7 @@ var ractive = window.r = new Ractive({
     <table class="table table-hover table-striped test-data" on-click="@this.clicked(event)">
         <tbody>
             {{#each store.data}}
-            <tr class-danger="{{~/selected === .id}}">
+            <tr class="{{selected === .id ? 'danger' : ''}}">
                 <td class="col-md-1">{{.id}}</td>
                 <td class="col-md-4">
                     <a>{{label}}</a>
