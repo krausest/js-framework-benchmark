@@ -46,7 +46,7 @@ var ractive = window.r = new Ractive({
         this.on( 'add', function ( event) {
             startMeasure("add");
             let data = this.get('data');
-            data.push(...buildData(10000));
+            data.push(...buildData(1000));
             this.set('data', data);
             stopMeasure();
         });
