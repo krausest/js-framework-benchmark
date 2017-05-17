@@ -14,16 +14,16 @@
     "build-prod": "ember build --environment=production"
   },
   "devDependencies": {
-    "@glimmer/application": "^0.4.0",
-    "@glimmer/application-pipeline": "^0.6.8",
-    "@glimmer/blueprint": "^0.1.12",
-    "@glimmer/component": "^0.3.10",
-    "@glimmer/resolver": "^0.3.0",
-    "broccoli-asset-rev": "^2.5.0",
-    "ember-cli": "github:ember-cli/ember-cli",
-    "ember-cli-inject-live-reload": "^1.6.1",
-    "ember-cli-uglify": "^1.2.0",
-    "typescript": "^2.2.2"
+    "@glimmer/application": "0.4.0",
+    "@glimmer/application-pipeline": "0.6.8",
+    "@glimmer/blueprint": "0.1.12",
+    "@glimmer/component": "0.3.10",
+    "@glimmer/resolver": "0.3.0",
+    "broccoli-asset-rev": "2.5.0",
+    "ember-cli": "github:ember-cli/ember-cli#3bb9bdce6959f04592413b75c541ef63749cf504",
+    "ember-cli-inject-live-reload": "1.6.1",
+    "ember-cli-uglify": "1.2.0",
+    "typescript": "2.2.2"
   },
   "engines": {
     "node": ">= 4.0"
