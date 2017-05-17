@@ -2,7 +2,7 @@
 var startTime
 var lastMeasure
 
-module.exports = {
+export default {
   start: function startMeasure(name) {
     startTime = performance.now()
     lastMeasure = name
