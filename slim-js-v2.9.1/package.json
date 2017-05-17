@@ -29,6 +29,6 @@
     "babel-preset-es2015": "^6.3.13"
   },
   "dependencies": {
-    "slim-js": "^2.8.20"
+    "slim-js": "^2.9.1"
   }
 }

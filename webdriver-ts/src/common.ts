@@ -77,7 +77,7 @@ export let frameworks = [
     f("riot-v3.5.0", true),
     f("rx-domh-v0.0.2-rxjs-v5.3.0", false),
     f("simulacra-v2.1.1", true),
-    f("slim-js-v2.8.20", true),
+    f("slim-js-v2.9.1", true),
     f("stem-v0.2.70", true),
     f("surplus-v0.4.0-keyed", false, { uri: "surplus-v0.4.0?keyed" }),
     f("surplus-v0.4.0-nonkeyed", true, { uri: "surplus-v0.4.0" }),
