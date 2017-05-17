@@ -3,7 +3,11 @@ var path = require('path')
 var cache = {};
 var loaders = [
 	{
-		test: /\.js$/,
+		test: /\.jsx$/,
+		loader: 'babel-loader'
+	},
+	{
+		test: /\.es6\.js$/,
 		loader: 'babel-loader'
 	},
 	{
@@ -12,7 +16,7 @@ var loaders = [
 	}
 ];
 var extensions = [
-	'.js', '.jsx', '.es6.js'
+	'.js', '.jsx', '.es6.js', '.msx'
 ];
 
 module.exports = [{
@@ -21,11 +25,12 @@ module.exports = [{
 		loaders: loaders
 	},
 	entry: {
-		main: './src/Main.js',
+		main: './src/main',
 	},
 	output: {
 		path: path.resolve(__dirname, "dist"),
-		filename: '[name].js'
+		filename: '[name].js',
+		sourceMapFilename: "[file].map",
 	},
 	resolve: {
 		extensions: extensions,
@@ -35,6 +40,7 @@ module.exports = [{
 			"node_modules"
 		],
 		alias: {
+			"vidom": __dirname+"/node_modules/vidom/dist/vidom.min.js",
 		}
 	}
 }];

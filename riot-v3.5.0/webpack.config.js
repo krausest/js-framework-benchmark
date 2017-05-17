@@ -1,20 +1,28 @@
-'use strict';
+'use strict'
 var path = require('path')
+var cache = {}
 
-var cache = {};
 var loaders = [
   {
     test: /\.es6\.js$/,
-    loader: 'babel-loader'
+    loader: 'babel-loader',
+    exclude: /node_modules/
+  },
+  {
+    test: /\.html$/, loader: 'tag-loader',
+    query: {
+      type: 'es6'
+    }
   },
   {
     test: /\.css$/,
     loader: 'style-loader!css-loader'
   }
-];
+]
+
 var extensions = [
-  '.js', '.es6.js'
-];
+  '.js', '.es6.js', '.html'
+]
 
 module.exports = [{
   cache: cache,
@@ -26,7 +34,8 @@ module.exports = [{
   },
   output: {
 		path: path.resolve(__dirname, "dist"),
-    filename: 'main.js'
+    filename: '[name].js',
+    sourceMapFilename: "[file].map",
   },
   resolve: {
     extensions: extensions,
@@ -36,7 +45,7 @@ module.exports = [{
 			"node_modules"
 		],
     alias: {
-      "ractive": __dirname+"/node_modules/ractive/ractive.min.js",
+      "riot": __dirname+"/node_modules/riot/riot.min.js",
     }
   }
-}];
+}]

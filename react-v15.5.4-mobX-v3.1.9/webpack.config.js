@@ -1,9 +1,15 @@
 'use strict';
+require("babel-plugin-syntax-jsx")
 var path = require('path')
+var webpack = require('webpack')
 var cache = {};
 var loaders = [
 	{
-		test: /\.js$/,
+		test: /\.jsx$/,
+		loader: 'babel-loader'
+	},
+	{
+		test: /\.es6\.js$/,
 		loader: 'babel-loader'
 	},
 	{
@@ -21,7 +27,7 @@ module.exports = [{
 		loaders: loaders
 	},
 	entry: {
-		main: './src/Main.js',
+		main: './src/Main.jsx',
 	},
 	output: {
 		path: path.resolve(__dirname, "dist"),
@@ -33,8 +39,11 @@ module.exports = [{
 			__dirname,
 			path.resolve(__dirname, "src"),
 			"node_modules"
-		],
-		alias: {
-		}
-	}
+		]
+	},
+	plugins: [
+		new webpack.DefinePlugin({
+			'process.env.NODE_ENV': '"production"'
+		})
+	]
 }];

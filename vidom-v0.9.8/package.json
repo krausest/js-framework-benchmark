@@ -1,15 +1,13 @@
 {
-  "name": "js-framework-benchmark-vanillajs",
-  "version": "1.1.1",
-  "description": "Vanilla.JS demo",
-  "main": "index.js",
+  "name": "js-framework-benchmark-vidom",
+  "version": "1.0.0",
+  "description": "Benchmark for vidom framework",
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"
   },
   "keywords": [
-    "react",
-    "webpack"
+    "ractive"
   ],
   "author": "Stefan Krause",
   "license": "Apache-2.0",
@@ -21,7 +19,12 @@
   "devDependencies": {
     "babel-core": "6.24.1",
     "babel-loader": "7.0.0",
+    "babel-plugin-vidom-jsx": "0.5.1",
     "babel-preset-es2015": "6.24.1",
+    "babel-preset-stage-0": "6.24.1",
     "webpack": "2.5.1"
+  },
+  "dependencies": {
+    "vidom": "0.9.8"
   }
 }
