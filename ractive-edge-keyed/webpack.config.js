@@ -25,7 +25,7 @@ module.exports = [{
     main: './src/main',
   },
   output: {
-		path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "dist"),
     filename: 'main.js'
   },
   resolve: {

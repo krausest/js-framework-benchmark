@@ -39,8 +39,7 @@ var ractive = window.r = new Ractive({
         const that = this;
         this.on( 'run', function ( event) {
             startMeasure("run");
-            this.splice('data', 0, this.get('data').length);
-            this.merge('data', buildData(), 'id');
+            this.splice('data', 0, this.get('data').length, ...buildData());
             that.set("selected", undefined);
             stopMeasure();
         });
@@ -51,20 +50,21 @@ var ractive = window.r = new Ractive({
         });
         this.on( 'partialUpdate', function ( event) {
            startMeasure("update");
-            for (let i=0;i<this.get('data').length;i+=10) {
-                this.set(`data[${i}].label`,  this.get('data')[i].label +' !!!');
-            }
+           const data = this.get('data');
+           const len = data.length;
+           for (let i=0;i<len;i+=10) {
+               this.set(`data.${i}.label`, data[i].label + ' !!!');
+           }
            stopMeasure();
         });
         this.on('select', function (event, id) {
             startMeasure("select");
-            that.set("selected", id);
+            this.set("selected", id);
             stopMeasure();
         });
         this.on('runLots', function (event) {
             startMeasure("runLots");
-            this.splice('data', 0, this.get('data').length);
-            this.merge('data', buildData(10000), 'id');
+            this.splice('data', 0, this.get('data').length, ...buildData(10000));
             that.set("selected", undefined);
             stopMeasure();
         });
@@ -81,7 +81,7 @@ var ractive = window.r = new Ractive({
                 this.splice('data', 4, 1, this.get('data')[9]);
                 this.splice('data', 9, 1, a);
             }
-            stopMeasure();            
+            stopMeasure();
         });
     },
     remove(idx) {
@@ -99,7 +99,7 @@ var ractive = window.r = new Ractive({
     `<div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Ractive v0.8.12</h1>
+                <h1>Ractive v0.8.12 keyed</h1>
             </div>
             <div class="col-md-6">
                 <div class="row">
@@ -127,13 +127,13 @@ var ractive = window.r = new Ractive({
     </div>
     <table class="table table-hover table-striped test-data">
         <tbody>
-            {{#each data:num}}
+            {{#each data}}
             <tr class-danger="{{~/selected === .id}}">
                 <td class="col-md-1">{{.id}}</td>
                 <td class="col-md-4">
                     <a on-click="@this.select(.id)">{{label}}</a>
                 </td>
-                <td class="col-md-1"><a on-click="@this.remove(num)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                <td class="col-md-1"><a on-click="@this.remove(@index)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
                 <td class="col-md-6"></td>
             </tr>
             {{/each}}
@@ -142,7 +142,7 @@ var ractive = window.r = new Ractive({
     <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
     `
     ,
-    data: { 
+    data: {
         data: [],
         selected: undefined
     }

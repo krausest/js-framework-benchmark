@@ -39,56 +39,54 @@ var ractive = window.r = new Ractive({
         const that = this;
         this.on( 'run', function ( event) {
             startMeasure("run");
-            this.set('data', buildData());
+            this.splice('data', 0, this.get('data').length, ...buildData());
             that.set("selected", undefined);
             stopMeasure();
         });
         this.on( 'add', function ( event) {
             startMeasure("add");
-            let data = this.get('data');
-            data.push(...buildData(1000));
-            this.set('data', data);
+            this.splice('data', this.get('data').length, 0, ...buildData(1000));
             stopMeasure();
         });
         this.on( 'partialUpdate', function ( event) {
            startMeasure("update");
-           let data = this.get('data');
-            for (let i=0;i<data.length;i+=10) {
-                this.set(`data.${i}.label`, data[i].label + ' !!!');
-            }
+           const data = this.get('data');
+           const len = data.length;
+           for (let i=0;i<len;i+=10) {
+               this.set(`data.${i}.label`, data[i].label + ' !!!');
+           }
            stopMeasure();
         });
         this.on('select', function (event, id) {
             startMeasure("select");
-            that.set("selected", id);
+            this.set("selected", id);
             stopMeasure();
         });
         this.on('runLots', function (event) {
             startMeasure("runLots");
-            this.set('data', buildData(10000));
+            this.splice('data', 0, this.get('data').length, ...buildData(10000));
             that.set("selected", undefined);
             stopMeasure();
         });
         this.on('clear', function (event) {
             startMeasure("clear");
-            this.set('data', []);
+            this.splice('data', 0, this.get('data').length);
+            that.set("selected", undefined);
             stopMeasure();
         });
         this.on('swapRows', function (event) {
             startMeasure("swapRows");
             if(this.get('data').length > 10) {
                 var a = this.get('data')[4];
-                this.set('data[4]', this.get('data')[9]);
-                this.set('data[9]', a);
+                this.splice('data', 4, 1, this.get('data')[9]);
+                this.splice('data', 9, 1, a);
             }
             stopMeasure();
         });
     },
     remove(idx) {
         startMeasure("delete");
-        let data = this.get('data');
-        data.splice(idx, 1);
-        this.set('data', data);
+        this.splice('data',idx, 1);
         stopMeasure();
     },
     select(id) {
@@ -101,7 +99,7 @@ var ractive = window.r = new Ractive({
     `<div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Ractive v0.8.12 non-keyed</h1>
+                <h1>Ractive edge keyed</h1>
             </div>
             <div class="col-md-6">
                 <div class="row">
@@ -130,7 +128,7 @@ var ractive = window.r = new Ractive({
     <table class="table table-hover table-striped test-data">
         <tbody>
             {{#each data}}
-            <tr class-danger="{{~/selected === .id}}">
+            <tr class-danger="~/selected === .id">
                 <td class="col-md-1">{{.id}}</td>
                 <td class="col-md-4">
                     <a on-click="@this.select(.id)">{{label}}</a>
