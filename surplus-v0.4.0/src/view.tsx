@@ -1,12 +1,11 @@
 import * as Surplus from 'surplus';
-import * as S from 's-js';
+import S from 's-js';
+import { mapSample } from 's-array';
 import { App } from './controller';
 
 Surplus;
 
-const 
-    USE_NAIVE_TBODY = location.search.indexOf('naive') !== -1,
-    USE_KEYED_TBODY = location.search.indexOf('keyed') !== -1;
+const USE_KEYED_TBODY = location.search.indexOf('keyed') !== -1;
 
 type RowTr = HTMLTableRowElement & { _id : HTMLTableCellElement, _label : HTMLAnchorElement };
 
@@ -43,7 +42,7 @@ export let AppView = (app : App) =>
             </div>
             <table className="table table-hover table-striped test-data"  
                 onClick = {(e : any) => e.target.matches('.delete') ? app.delete(rowId(e)) : app.select(rowId(e))}>
-                { USE_NAIVE_TBODY ? TBodyNaive(app) : USE_KEYED_TBODY ? TBodyKeyed(app) : TBodyNonKeyed(app) }
+                { USE_KEYED_TBODY ? TBodyKeyed(app) : TBodyNonKeyed(app) }
             </table>
             <span className="preloadicon glyphicon glyphicon-remove"></span>
         </div>,
@@ -51,22 +50,9 @@ export let AppView = (app : App) =>
         while (el.tagName !== 'TR') el = el.parentElement!; 
         return +el.childNodes[0].textContent!; 
     },
-    TBodyNaive = (app : App) =>
-        <tbody>
-            {app.store.data.mapSample(row =>
-                <tr className={app.store.selected() === row.id ? 'danger' : ''}>
-                    <td className="col-md-1">{row.id}</td>
-                    <td className="col-md-4">
-                        <a>{row.label()}</a>
-                    </td>
-                    <td className="col-md-1"><a><span className="glyphicon glyphicon-remove delete"></span></a></td>
-                    <td className="col-md-6"></td>
-                </tr>
-            )}
-        </tbody>,
     TBodyKeyed = (app : App) => {
         const index = {} as { [id : number] : HTMLTableRowElement | undefined},
-            trs = app.store.data.mapSample(row =>
+            trs = mapSample(app.store.data, row =>
                 <tr ref={index[row.id]!}>
                     <td className="col-md-1" innerText={row.id}></td>
                     <td className="col-md-4">

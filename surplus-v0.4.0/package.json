@@ -4,8 +4,8 @@
   "description": "Surplus js-framework-benchmark implementation",
   "main": "dist/main.js",
   "scripts": {
-    "build-dev": "webpack -w -d --config webpack.config.js",
-    "build-prod": "webpack -p --config webpack.config.js"
+    "build-dev": "tsc && rollup -c",
+    "build-prod": "tsc && rollup -c --environment production"
   },
   "keywords": [
     "s.js",
@@ -22,14 +22,15 @@
     "url": "https://github.com/curveship/js-framework-benchmark.git"
   },
   "dependencies": {
-    "s-js": "^0.4.1",
-    "s-array": "^0.4.5",
-    "surplus": "^0.4.0"
+    "s-js": "^0.4.2",
+    "s-array": "^0.4.6",
+    "surplus": "^0.4.2"
   },
   "devDependencies": {
-    "ts-loader": "0.8.2",
-    "typescript": "2.2.1",
-    "surplus-loader": "^0.4.2",
-    "webpack": "2.2.1"
+    "rollup": "^0.41.6",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-surplus": "^0.0.1",
+    "rollup-plugin-uglify": "^1.0.2",
+    "typescript": "2.3.2"
   }
 }
