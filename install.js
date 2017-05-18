@@ -7,9 +7,9 @@ var installCommand = 'npm install';
 
 var excludedDirectories = ['css', 'dist','node_modules','webdriver-java'];
 
-commandExists('yarn', function(err, commandExists) {
+// commandExists('yarn', function(err, commandExists) {
 
-	installCommand = commandExists ? 'yarn' : 'npm install';
+// 	installCommand = commandExists ? 'yarn' : 'npm install';
 
 	_.each(fs.readdirSync('.'), function(name) {
 		if(fs.statSync(name).isDirectory() && name[0] !== '.' && excludedDirectories.indexOf(name)==-1) {
@@ -20,4 +20,4 @@ commandExists('yarn', function(err, commandExists) {
 			});
 		}
 	});
-});
+// });
