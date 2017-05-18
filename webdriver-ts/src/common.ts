@@ -57,7 +57,6 @@ export let frameworks = [
     f("knockout-v3.4.1", false),
     f("marionette-v3.3.1", false),
     f("marko-v4.3.0", false),
-    f("mithril-v0.2.5", false),
     f("mithril-v1.1.1", false),
     f("nx-v1.0.0-beta.2.0.1-keyed", false),
     f("nx-v1.0.0-beta.2.0.1-non-keyed", true),
