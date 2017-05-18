@@ -1,0 +1,14 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/main-element.html",
+  "lint": {
+    "rules": [
+      "polymer-2-hybrid"
+    ]
+  },
+  "builds": [{
+    "js": {"minify": true},
+    "css": {"minify": true},
+    "html": {"minify": true}
+  }]
+}

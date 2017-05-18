@@ -63,7 +63,7 @@ export let frameworks = [
     f("nx-v1.0.0-beta.2.0.1-non-keyed", true),
     f("pico-dom-v0.33.0", false),
     f("plastiq-v1.33.0", false),
-    f("polymer-v1.7.0", true, {uri: "polymer-v1.7.0", useShadowRoot: true}),
+    f("polymer-v2.0.0", true, {uri: "polymer-v2.0.0", useShadowRoot: true}),
     f("preact-v7.1.0", false),
     f("ractive-v0.8.12-keyed", false),
     f("ractive-v0.8.12-non-keyed", true),

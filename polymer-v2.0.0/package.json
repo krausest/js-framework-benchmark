@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "bower install",
     "build-dev": "polymer build",
-    "build-prod": "polymer build"
+    "build-prod": "polymer build --js-minify --css-minify --html-minify"
   },
   "keywords": [
     "polymer"
@@ -18,8 +18,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "bower": "^1.7.9",
-    "polymer-cli": "^0.16.0"
+    "bower": "^1.8.0",
+    "polymer-cli": "^1.0.0"
   },
   "dependencies": {}
 }
