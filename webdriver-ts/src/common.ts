@@ -5,7 +5,7 @@ export interface JSONResult {
 }
 
 export let config = {
-    REPEAT_RUN: 10,
+    REPEAT_RUN: 1,
     DROP_WORST_RUN: 0,
     WARMUP_COUNT: 5,
     TIMEOUT: 60 * 1000,
@@ -37,7 +37,7 @@ export let frameworks = [
     f("angular-v2.4.9-non-keyed", true),
     f("angular-v4.1.2-keyed", false),
     f("angular-v4.1.2-non-keyed", true),
-    f("aurelia-v1.1.0", true, {uri: "aurelia-v1.1.0/dist"}),
+    f("aurelia-v1.1.2", true, {uri: "aurelia-v1.1.2/dist"}),
     f("binding.scala-v10.0.1", false, {uri: "binding.scala-v10.0.1/target/web/stage"}),
     f("bobril-v7.1.2", false),
     f("choo-v5.4.0", true),
