@@ -1,0 +1,36 @@
+{
+  "name": "js-framework-benchmark-surplus",
+  "version": "0.4.0",
+  "description": "Surplus js-framework-benchmark implementation",
+  "main": "dist/main.js",
+  "scripts": {
+    "build-dev": "tsc && rollup -c",
+    "build-prod": "tsc && rollup -c --environment production"
+  },
+  "keywords": [
+    "s.js",
+    "surplus",
+    "javascript",
+    "framework",
+    "benchmark"
+  ],
+  "author": "Adam Haile",
+  "license": "MIT",
+  "homepage": "https://github.com/curveship/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/curveship/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "s-js": "^0.4.2",
+    "s-array": "^0.4.6",
+    "surplus": "^0.4.2"
+  },
+  "devDependencies": {
+    "rollup": "^0.41.6",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-surplus": "^0.0.1",
+    "rollup-plugin-uglify": "^1.0.2",
+    "typescript": "2.3.2"
+  }
+}

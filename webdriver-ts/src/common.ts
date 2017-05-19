@@ -5,7 +5,7 @@ export interface JSONResult {
 }
 
 export let config = {
-    REPEAT_RUN: 1,
+    REPEAT_RUN: 10,
     DROP_WORST_RUN: 0,
     WARMUP_COUNT: 5,
     TIMEOUT: 60 * 1000,
@@ -78,8 +78,8 @@ export let frameworks = [
     f("simulacra-v2.1.1", true),
     f("slim-js-v2.9.1", true),
     f("stem-v0.2.70", true),
-    f("surplus-v0.4.0-keyed", false, { uri: "surplus-v0.4.0?keyed" }),
-    f("surplus-v0.4.0-nonkeyed", true, { uri: "surplus-v0.4.0" }),
+    f("surplus-v0.4.0-keyed", false),
+    f("surplus-v0.4.0-nonkeyed", true),
     f("svelte-v1.20.2-keyed", false),
     f("svelte-v1.20.2-non-keyed", true),
     f("tsers-v1.0.0", true),
