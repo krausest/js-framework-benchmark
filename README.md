@@ -2,9 +2,25 @@
 
 This is a simple benchmark for several javascript frameworks. The benchmarks creates a large table with randomized entries and measures the time for various operations.
 
-This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
+## About the benchmarks
 
-Thanks to Baptiste Augrain for making the benchmarks more sophisticated and adding frameworks.
+* create rows: Duration for creating 1000 rows after the page loaded.
+* replace all rows: Duration for updating all 1000 rows of the table (with 5 warmup iterations).
+* partial update: Time to update the text of every 10th row (with 5 warmup iterations).
+* select row: Duration to highlight a row in response to a click on the row. (with 5 warmup iterations).
+* swap rows: Time to swap 2 rows on a 1K table. (with 5 warmup iterations).
+* remove row: Duration to remove a row. (with 5 warmup iterations).
+* create many rows: Duration to create 10,000 rows
+* append rows to large table: Duration for adding 1000 rows on a table of 10,000 rows.
+* clear rows: Duration to clear the table filled with 10.000 rows.
+* clear rows a 2nd time: Time to clear the table filled with 10.000 rows. But warmed up with only one iteration.
+* ready memory: Memory usage after page load.
+* run memory: Memory usage after adding 1000 rows.
+* startup time: Duration for loading and parsing the javascript code and rendering the page.
+
+For all benchmarks the duration is measured including rendering time. You can read some details on this [article](http://www.stefankrause.net/wp/?p=218).
+The results of this benchmark is outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316), and [round 5](http://www.stefankrause.net/wp/?p=392)).
+
 
 ## Important News
 
@@ -62,24 +78,6 @@ Execute `npm start` in the main directory to start a http-server for the web pag
 Open [http://localhost:8080](http://localhost:8080/) and choose the directory for the framework you want to test.
 Most actions will try to measure the duration and print it to the console. Depending on the framework this might be more or less precise. To measure the exact numbers one needs to use e.g. the timeline from the chrome dev tools.
 
-## About the benchmarks
-
-* create rows: Duration for creating 1000 rows after the page loaded.
-* replace all rows: Duration for updating all 1000 rows of the table (with 5 warmup iterations).
-* partial update: Time to update the text of every 10th row (with 5 warmup iterations).
-* select row: Duration to highlight a row in response to a click on the row. (with 5 warmup iterations).
-* swap rows: Time to swap 2 rows on a 1K table. (with 5 warmup iterations).
-* remove row: Duration to remove a row. (with 5 warmup iterations).
-* create many rows: Duration to create 10,000 rows
-* append rows to large table: Duration for adding 1000 rows on a table of 10,000 rows.
-* clear rows: Duration to clear the table filled with 10.000 rows.
-* clear rows a 2nd time: Time to clear the table filled with 10.000 rows. But warmed up with only one iteration.
-* ready memory: Memory usage after page load.
-* run memory: Memory usage after adding 1000 rows.
-
-For all benchmarks the duration is measured including rendering time. You can read some details on this [article](http://www.stefankrause.net/wp/?p=218).
-The results of this benchmark is outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316), and [round 5](http://www.stefankrause.net/wp/?p=392)).
-
 ## Execute the benchmarks with webdriver
 
 The former java test runner has been replaced with a typescript based test runner. The new test runner contains no timer based waits and is thus much faster.
@@ -124,3 +122,7 @@ How to start submitting a new implementation:
 * The package.json must support a build-prod task that assembles your application. Often you'd use webpack to do that.
 * Make sure your application compiles and runs in the browser. The easiest way to start a local server is by invoking npm start in the root dir and opening your application on http://localhost:8080/framework-version/index.html
 * Optional: Run it with the automated benchmarking tool. Add a new array entry to the frameworks array in webdriver-ts/src/common.ts. Compile the test driver in webdriver-ts with `npm run build-prod` and run it just with `npm run selenium -- --framework framework-version` if you want to run your version only or just `npm run selenium` if you have time, built everything and want to run the benchmarks for all frameworks. The results will be written in the directory webdriver-ts/results in JSON format. `npm run results` will create the results table that can be opened on http://localhost:8080/webdriver-ts/table.html. If you don't I'll update webdriver-ts for you ;-)
+
+This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
+
+Thanks to Baptiste Augrain for making the benchmarks more sophisticated and adding frameworks.
