@@ -71,6 +71,7 @@ export let frameworks = [
     f("react-lite-v0.15.30", false),
     f("react-v15.5.4-keyed", false),
     f("react-v15.5.4-non-keyed", true),
+    f("react-v15.5.4-easy-state-v1.0.3", false),
     f("react-v15.5.4-mobX-v3.1.9", false),
     f("react-v15.5.4-redux-v3.6.0", false),
     f("riot-v3.5.0", true),
