@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-dio",
-  "version": "2.0.0",
+  "version": "7.0.1",
   "description": "Benchmark for DIO",
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",
@@ -21,6 +21,6 @@
     "webpack": "1.13.3"
   },
   "dependencies": {
-    "dio.js": "^7.0.0"
+    "dio.js": "^7.0.1"
   }
 }
