@@ -6,6 +6,8 @@ import {Framework, Benchmark, BenchmarkType, convertToMap, ResultTableData, SORT
 import {SelectBar} from './SelectBar';
 import {ResultTable} from './ResultTable';
 
+import "bootstrap/dist/css/bootstrap.css";
+
 interface State {
   benchmarks: Array<Benchmark>;
   benchmarksCPU: Array<Benchmark>;

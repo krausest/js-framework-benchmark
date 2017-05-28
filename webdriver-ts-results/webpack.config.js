@@ -1,5 +1,8 @@
 'use strict';
 require("babel-plugin-syntax-jsx")
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+
 var path = require('path')
 var webpack = require('webpack')
 var cache = {};
@@ -47,7 +50,7 @@ module.exports = [{
 		loaders: loaders
 	},
 	entry: {
-		main: './src/App.tsx',
+		main: './src/App.tsx'
 	},
 	output: {
 		path: path.resolve(__dirname, "dist"),
@@ -62,8 +65,13 @@ module.exports = [{
 		]
 	},
 	plugins: [
-		new webpack.DefinePlugin({
+		/*new webpack.DefinePlugin({
 			'process.env.NODE_ENV': '"production"'
-		})
-	]	
+		}),*/
+		new HtmlWebpackPlugin({
+			filename: 'result.html',
+			template: 'index.html',
+			inlineSource: '.(js|css)$' // embed all javascript and css inline
+		}),
+  	new HtmlWebpackInlineSourcePlugin()	]	
 }];
