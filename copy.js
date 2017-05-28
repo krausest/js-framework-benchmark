@@ -31,8 +31,9 @@ function copyFileSync( source, target ) {
 
 function include(name) {
 		if (name.indexOf("binding.scala")>-1) {
+			console.log('name.indexOf("binding.scala")>-1', name.indexOf("/target")>-1, name.indexOf("/target/web")>-1, name);
 				if (name.indexOf("/target")>-1) {
-					return name.indexOf("/target/web")>-1;
+					return name.endsWith('/target') || name.indexOf("/target/web")>-1;
 				}
 		}
 		if (excludes.every(ex => name.indexOf(ex)==-1)) {
@@ -56,10 +57,10 @@ function copyFolderRecursiveSync( source, target ) {
     if ( fs.lstatSync( source ).isDirectory() ) {
         files = fs.readdirSync( source );
         files.forEach( function ( file ) {
-			if (include(file)) {
-				var curSource = path.join( source, file );
+			var curSource = path.join( source, file );
+			if (include(curSource)) {
 				if ( fs.lstatSync( curSource ).isDirectory() ) {
-					// console.log("copy dir "+curSource);
+					console.log("copy dir "+curSource);
 					copyFolderRecursiveSync( curSource, targetFolder );
 				} else if ( fs.lstatSync( curSource ).isSymbolicLink() ) {
 					console.log("**** LINK");
@@ -92,4 +93,7 @@ _.each(fs.readdirSync('.'), function(name) {
 		} */
 	}
 });
+
+fs.copySync("stem-v0.2.70/node_modules/babel-polyfill/dist/polyfill.min.js","dist/stem-v0.2.70/node_modules/babel-polyfill/dist");
+fs.copySync("slim-js-v2.9.1/node_modules/slim-js/src/Slim.js","dist/slim-js-v2.9.1/node_modules/slim-js/src/Slim.js");
 

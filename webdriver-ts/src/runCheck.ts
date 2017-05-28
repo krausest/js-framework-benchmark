@@ -50,8 +50,8 @@ for (let i= 0;i<benchmarks.length;i++) {
     let row : Array<ResultCheck> = [];
     for (let j= 0;j<frameworks.length;j++) {
         let framework = frameworks[j];
-        let origRunName = `results/${fileName(framework.name, benchmark)}`;
-        let checkRunName = `results_check/${fileName(framework.name, benchmark)}`;
+        let origRunName = `results/${fileName(framework, benchmark)}`;
+        let checkRunName = `results_check/${fileName(framework, benchmark)}`;
         if (fs.existsSync(origRunName) && fs.existsSync(checkRunName))
         {
             let origRun = parse(origRunName);

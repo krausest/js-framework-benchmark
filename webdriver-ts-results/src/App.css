@@ -1,0 +1,77 @@
+.dropdown-backdrop {
+  display:none;
+}
+
+.open>.dropdown-backdrop {
+  display:block;
+}
+
+.hspan {
+  display: inline-block;
+  width: 10px;
+}
+
+.panel-body .checkbox {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+table.results {
+font-size: 10px;
+table-layout: fixed;
+width: 1px;
+overflow:visible;
+display: table;
+border: 1px solid #333;
+}
+table.results th {
+width: 60px;
+text-align: center;
+word-break:keep-all;
+word-wrap:break-word;
+}
+table.results th.benchname {
+width: 100px;
+}
+table.results td {
+padding: 3px;
+border: 1px solid #ddd;
+}
+table.results th {
+padding: 3px;
+border: 1px solid #ddd;
+}
+.top1 {
+background-color: #63BF7C;
+}
+.top2 {
+background-color: #D1D580;
+}
+.top3 {
+background-color: #FFEC84;
+}
+.top4 {
+background-color: #FCAA78;
+}
+.top5 {
+background-color: #F9696C;
+}
+td {
+text-align: center;
+}
+.rowCount {
+font-size: 8px;
+}
+.deviation {
+font-size: 8px;
+padding-left: 5px;
+}
+.deviation:before {
+content: '± ';
+}
+.factor {
+font-size: 8px;
+}
+.sortKey {
+  text-decoration: underline;
+}

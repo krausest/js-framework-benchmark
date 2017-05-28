@@ -49,6 +49,8 @@ function readLogs(driver: WebDriver): promise.Promise<Timingresult[]> {
                 }
             } else if (e.params.name==='MajorGC' && e.params.args.usedHeapSizeAfter) {
                 mem = {type:'gc', ts: +e.params.ts, mem: Number(e.params.args.usedHeapSizeAfter)/1024/1024};
+            } else if (e.params.name==='MinorGC' && mem===null && e.params.args.usedHeapSizeAfter) {
+                mem = {type:'gc', ts: +e.params.ts, mem: Number(e.params.args.usedHeapSizeAfter)/1024/1024};
             }
         });
         return [click, lastPaint, mem, navigationStart];
@@ -61,7 +63,8 @@ function buildDriver() {
     logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
     let options = new chrome.Options();
-    // options = options.setChromeBinaryPath("/Applications/Chromium.app/Contents/MacOS/Chromium");
+    options = options.setChromeBinaryPath("/Applications/Chromium.app/Contents/MacOS/Chromium");
+    // options = options.setChromeBinaryPath("/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary");
     options = options.addArguments("--js-flags=--expose-gc");
     options = options.addArguments("--disable-infobars");
     options = options.addArguments("--disable-background-networking");
@@ -96,12 +99,35 @@ function reduceBenchmarkResults(benchmark: Benchmark, results: Timingresult[][])
         }
 }
 
+function snapMemorySize(driver: WebDriver) {
+		driver.executeScript(":takeHeapSnapshot").then((heapSnapshot: any) => {
+            let node_fields: any = heapSnapshot.snapshot.meta.node_fields;
+            let nodes: any = heapSnapshot.nodes;
+            
+            let k = node_fields.indexOf("self_size");
+
+            let self_size = 0;
+            for(let l = nodes.length, d = node_fields.length; k < l; k += d) {
+                self_size += nodes[k];
+            }
+            
+            let memory = self_size / 1024.0 / 1024.0;
+            console.log("!!! memory", memory);
+        });
+}
+
 function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: FrameworkData) : promise.Promise<any> {
     return benchmark.run(driver, framework)
         .then(() => {
             if (config.LOG_PROGRESS) console.log("after run ",benchmark.id, benchmark.type, framework.name);
             if (benchmark.type === BenchmarkType.MEM) {
                 return driver.executeScript("window.gc();");
+            }            
+        })
+        .then(() => {
+            if (benchmark.type === BenchmarkType.MEM) {
+                // Without it angular v4.2.1 reports no MajorGC
+                return snapMemorySize(driver);
             }            
         })
         .then(() => readLogs(driver))
@@ -136,7 +162,7 @@ function writeResult(res: Result, dir: string) {
         data = data.splice(0).sort((a:number,b:number) => a-b);
         data = data.slice(0, config.REPEAT_RUN - config.DROP_WORST_RUN);
         let s = jStat(data);
-        console.log(`result ${framework}_${benchmark.id}`, s.min(), s.max(), s.mean(), s.stdev());
+        console.log(`result ${fileName(res.framework, benchmark)}`, s.min(), s.max(), s.mean(), s.stdev());
         let result: JSONResult = {
             "framework": framework,
             "benchmark": benchmark.id,
@@ -147,7 +173,7 @@ function writeResult(res: Result, dir: string) {
             "geometricMean": s.geomean(),
             "standardDeviation": s.stdev()
         }
-        fs.writeFileSync(`${dir}/${fileName(framework, benchmark)}`, JSON.stringify(result), {encoding: "utf8"});
+        fs.writeFileSync(`${dir}/${fileName(res.framework, benchmark)}`, JSON.stringify(result), {encoding: "utf8"});
 }
 
 function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchmark) : promise.Promise<any> {

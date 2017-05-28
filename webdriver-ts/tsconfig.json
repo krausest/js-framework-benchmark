@@ -15,6 +15,7 @@
         "./src/webdriverAccess.ts",
         "./src/benchmarkRunner.ts",
         "./src/createResultTable.ts",
+        "./src/createResultJS.ts",
         "./src/createIndex.ts",
         "./src/runCheck.ts",
         "./src/nonKeyed.ts"

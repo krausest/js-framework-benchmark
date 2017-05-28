@@ -33,8 +33,9 @@ dist
 .DS_Store
 *.iml
 */dist/
-angular2/app/app.js
-angular2/app/app.js.map
+angular*/app/app.js
+angular*/app/app.js.map
+angular*/src/app.ngsummary.json
 tests/results/completed/
 target/
 webdriver-java/chromedriver

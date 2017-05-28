@@ -206,6 +206,6 @@ export let benchmarks : [ Benchmark ] = [
     benchStartup
     ];
 
-export function fileName(framework: string, benchmark: Benchmark) {
-    return `${framework}_${benchmark.id}.json`;
+export function fileName(framework :FrameworkData, benchmark: Benchmark) {
+    return `${framework.name}_${benchmark.id}.json`;
 }    
