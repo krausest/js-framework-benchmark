@@ -9,7 +9,7 @@
     "build-prod": "tsc",
     "selenium": "node dist/benchmarkRunner.js",
     "checkSelenium": "node dist/benchmarkRunner.js --check true",
-    "results": "node dist/createResultTable.js && node dist/createResultJS.js",
+    "results": "node dist/createResultTable.js && node dist/createResultJS.js && cd .. && cd webdriver-ts-results && npm run build-prod",
     "index": "node dist/createIndex.js",
     "check": "node dist/runCheck.js"
   },
