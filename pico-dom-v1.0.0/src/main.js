@@ -5,24 +5,23 @@ import {menuTemplate} from './menu'
 import {tableTemplate} from './table'
 import {Store} from './store'
 
-var TITLE = 'picoDOM v0.33.0',
-    config = {common: {store: new Store}},
-    table = tableTemplate.create(config)
+var TITLE = 'picoDOM v1.0.0'
 
-config.common.table = table
-table.update()
-
-el('div', {attr: ['id', 'main']},
+el('div', {attrs: {id: 'main'}},
   el('div', {class: 'container'},
     el('div', {class: 'jumbotron'},
       el('div', {class: 'row'},
         el('div', {class: 'col-md-6'},
           el('h1', TITLE)
         ),
-        el('div', {class: 'col-md-6'}, menuTemplate.create(config))
+        el('div', {class: 'col-md-6'}, menuTemplate)
       )
     ),
-    table,
+    tableTemplate,
     el('span', {class: 'preloadicon glyphicon glyphicon-remove', attr:'aria-hidden'})
   )
-).create().moveTo(document.body)
+)
+.create()
+.extra('store', new Store)
+.update()
+.moveTo(document.body)

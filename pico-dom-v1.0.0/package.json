@@ -1,10 +1,10 @@
 {
-  "name": "js-framework-benchmark-pico-dom-0.33.0",
+  "name": "js-framework-benchmark-pico-dom-1.0.0",
   "version": "0.1.0",
-  "description": "Benchmark for picoDom 0.33.0",
+  "description": "Benchmark for picoDom 1.0.0",
   "scripts": {
     "build-dev": "rollup -c -w",
-    "build-prod": "rollup -c && uglifyjs ./dist/main.js -c -m -o main.js"
+    "build-prod": "rollup -c && uglifyjs ./dist/main.js -c -m -o ./dist/main.js"
   },
   "author": "Hugo Villeneuve",
   "license": "Apache-2.0",
@@ -14,11 +14,11 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "rollup": "^0.41.6",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "uglify-js": "^3.0.7"
+    "rollup": "0.41.6",
+    "rollup-plugin-node-resolve": "3.0.0",
+    "uglify-js": "3.0.12"
   },
   "dependencies": {
-    "pico-dom": "0.33.0"
+    "pico-dom": "1.0.0"
   }
 }
