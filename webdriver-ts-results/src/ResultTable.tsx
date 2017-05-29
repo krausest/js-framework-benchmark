@@ -22,7 +22,7 @@ const CpuResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData
             </thead>
             <tbody>
               {data.resultsCPU.map((resultsForBenchmark, benchIdx) => 
-                (<tr>
+                (<tr key={data.benchmarksCPU[benchIdx].id}>
                     <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksCPU[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksCPU[benchIdx].id)}}>{data.benchmarksCPU[benchIdx].label}</a>
                       <div className="rowCount">{data.benchmarksCPU[benchIdx].description}</div>
                     </th>
@@ -51,7 +51,7 @@ const MemResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData
             </thead>
             <tbody>
               {data.resultsMEM.map((resultsForBenchmark, benchIdx) => 
-                (<tr>
+                (<tr key={data.benchmarksMEM[benchIdx].id}>
                     <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksMEM[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksMEM[benchIdx].id)}}>{data.benchmarksMEM[benchIdx].label}</a>
                       <div className="rowCount">{data.benchmarksMEM[benchIdx].description}</div>
                     </th>

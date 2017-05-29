@@ -59,11 +59,11 @@ let computeColor = function(factor: number): string {
 
 export class TableResultValueEntry implements TableResultEntry {
     color: string;
-    constructor(public mean: number, public standardDeviation: number, public factor: number) {
+    constructor(public key:string, public mean: number, public standardDeviation: number, public factor: number) {
         this.color = computeColor(factor);
     }
     render() {
-        return (<td style={{backgroundColor:this.color}}>
+        return (<td key={this.key} style={{backgroundColor:this.color}}>
                     <span className="mean">{this.mean.toFixed(1)}</span>
                     <span className="deviation">{this.standardDeviation.toFixed(1)}</span>
                     <br />
@@ -74,11 +74,11 @@ export class TableResultValueEntry implements TableResultEntry {
 
 export class TableResultGeommeanEntry implements TableResultEntry {
     color: string;
-    constructor(public mean: number) {
+    constructor(public key:string, public mean: number) {
         this.color = computeColor(mean);
     }
     render() {
-        return (<th style={{backgroundColor:this.color}}>{this.mean.toFixed(1)}
+        return (<th key={this.key} style={{backgroundColor:this.color}}>{this.mean.toFixed(2)}
                 </th>);
     }
 }
@@ -172,7 +172,7 @@ export class ResultTableData {
                 return gMean;
             }, 1.0);
             let value = Math.pow(gMean, 1 / count);
-            return new TableResultGeommeanEntry(value);
+            return new TableResultGeommeanEntry(framework.name, value);
     }
     computeFactors(benchmark: Benchmark, clamp: boolean): Array<TableResultValueEntry|null> {
         let benchmarkResults = this.frameworks.map(f => this.results(benchmark, f));
@@ -184,7 +184,7 @@ export class ResultTableData {
                 let mean = result.mean;
                 let factor = clamp ? Math.max(16, result.mean) / Math.max(16, min) : result.mean/min;
                 let standardDeviation = result.standardDeviation;
-                return new TableResultValueEntry(mean, standardDeviation, factor);
+                return new TableResultValueEntry(f.name, mean, standardDeviation, factor);
             }
         });
     }

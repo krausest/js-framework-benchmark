@@ -68,10 +68,16 @@ module.exports = [{
 		/*new webpack.DefinePlugin({
 			'process.env.NODE_ENV': '"production"'
 		}),*/
+		process.env.NODE_ENV === 'production' ? 
 		new HtmlWebpackPlugin({
-			filename: 'result.html',
+			filename: 'table.html',
 			template: 'index.html',
 			inlineSource: '.(js|css)$' // embed all javascript and css inline
-		}),
+		}) :
+		new HtmlWebpackPlugin({
+			filename: 'table.html',
+			template: 'index.html'
+		})
+		,
   	new HtmlWebpackInlineSourcePlugin()	]	
 }];

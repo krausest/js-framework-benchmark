@@ -4,8 +4,8 @@
   "description": "React demo",
   "main": "index.js",
   "scripts": {
-    "build-dev": "webpack -w -d",
-    "build-prod": "webpack -p && cpx dist/result.html ."
+    "build-dev": "cross-env NODE_ENV=\"development\" webpack -w -d",
+    "build-prod": "cross-env NODE_ENV=\"production\" webpack -p && cpx dist/table.html ."
   },
   "keywords": [
     "react",
@@ -28,6 +28,7 @@
     "babel-preset-react": "6.24.1",
     "bootstrap": "^3.3.7",
     "cpx": "^1.5.0",
+    "cross-env": "^5.0.0",
     "css-loader": "^0.28.3",
     "file-loader": "^0.11.1",
     "html-webpack-inline-source-plugin": "0.0.8",

@@ -121,11 +121,11 @@ class App extends React.Component<{}, State> {
     this.setState({sortKey:sortkey, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, sortkey)});
   }
   render() {
-    let disclaimer = /*<div>
+    let disclaimer = (false) ? (<div>
           <h2>Results for js web frameworks benchmark – round 6</h2>
           <p>Go here for the accompanying article <a href="http://www.stefankrause.net/wp/?p=431">http://www.stefankrause.net/wp/?p=431</a>. Source code can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>	
-        </div>;*/
-        <p>Warning: These results are preliminary - use with caution (they may e.g. be from different browser versions).Official results are published on my <a href="http://www.stefankrause.net/">blog</a>.</p>;
+        </div>) :
+        (<p>Warning: These results are preliminary - use with caution (they may e.g. be from different browser versions).Official results are published on my <a href="http://www.stefankrause.net/">blog</a>.</p>);
 
     return (
       <div>   
