@@ -5,6 +5,7 @@ import {benchmarks, frameworks, results} from './results';
 import {Framework, Benchmark, BenchmarkType, convertToMap, ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN} from './Common';
 import {SelectBar} from './SelectBar';
 import {ResultTable} from './ResultTable';
+require('babel-polyfill')
 
 import "bootstrap/dist/css/bootstrap.css";
 

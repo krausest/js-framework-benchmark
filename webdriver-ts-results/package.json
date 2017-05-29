@@ -41,6 +41,7 @@
     "webpack": "2.5.1"
   },
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "react": "15.5.4",
     "react-dom": "15.5.4"
   }
