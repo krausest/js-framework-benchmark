@@ -43,7 +43,6 @@ export let frameworks = [
     f("choo-v5.4.0", true),
     f("cyclejs-dom-v17.1.0", true),
     f("Datum-v0.8.0", true),
-    f("dio-v3.0.5", true),
     f("dio-v7.0.1-keyed", false),
     f("dio-v7.0.1-non-keyed", true),
     f("domvm-v2.1.4-non-keyed", true),
