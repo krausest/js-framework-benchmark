@@ -25,6 +25,7 @@ The results of this benchmark is outlined on my blog ([round 1](http://www.stefa
 
 Official results are posted on the blog mentioned above. A snapshot that may not have the same quality (i.e. 
 results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html) or as a static page here [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts/table.html)
+The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX >= 10.12.5, Chrome >= 58.0.3029.110 (64-bit))
 
 ## Important News
 
@@ -94,7 +95,7 @@ which starts a web server
 
 which runs the seleniums tests
 
-Open [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html) for the results
+Open [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html) or the static version [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html) for the results
 
 Single tests can be repeated easily. Just `cd webdriver-ts` and run the benchmarks and frameworks you want, e.g:
 `npm run selenium -- --framework angular bob --benchmark 01_ 02_`
