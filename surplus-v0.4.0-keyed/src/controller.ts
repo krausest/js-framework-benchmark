@@ -20,9 +20,9 @@ var stopMeasure = function() {
 
 export class App {
     constructor(public store : Store) { }
-    run(clear : boolean) {
+    run() {
         startMeasure("run");
-        this.store.run(clear);
+        this.store.run();
         stopMeasure();
     }
     add() {
@@ -45,9 +45,9 @@ export class App {
         this.store.delete(idx);
         stopMeasure();
     }
-    runLots(clear : boolean) {
+    runLots() {
         startMeasure("runLots");
-        this.store.runLots(clear);
+        this.store.runLots();
         stopMeasure();
     }
     clear() {
