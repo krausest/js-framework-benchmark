@@ -39,8 +39,8 @@ export class Store {
         data.splice(idx, 1);
         this.data(data);
     }
-    run(clear : boolean) {
-        if (clear) this.data([]);
+    run() {
+        this.data([]);
         S.freeze(() => {
             this.data(this.buildData());
             this.selected(undefined);
@@ -55,8 +55,8 @@ export class Store {
     select(id : number) {
         this.selected(id);
     }
-    runLots(clear : boolean) {
-        if (clear) this.data([]);
+    runLots() {
+        this.data([]);
         S.freeze(() => {
             this.data(this.buildData(10000));
             this.selected(undefined);

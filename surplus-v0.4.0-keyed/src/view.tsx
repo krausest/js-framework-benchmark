@@ -3,11 +3,7 @@ import S from 's-js';
 import { mapSample } from 's-array';
 import { App } from './controller';
 
-Surplus;
-
-const USE_KEYED_TBODY = location.search.indexOf('keyed') !== -1;
-
-type RowTr = HTMLTableRowElement & { _id : HTMLTableCellElement, _label : HTMLAnchorElement };
+Surplus; // have to reference it, or ts removes it from package :(
 
 export let AppView = (app : App) => 
         <div className="container">
@@ -19,10 +15,10 @@ export let AppView = (app : App) =>
                     <div className="col-md-6">
                         <div className="row">
                             <div className="col-sm-6 smallpad">
-                                <button type="button" className="btn btn-primary btn-block" id="run" onClick={e => app.run(USE_KEYED_TBODY)}>Create 1,000 rows</button>
+                                <button type="button" className="btn btn-primary btn-block" id="run" onClick={e => app.run()}>Create 1,000 rows</button>
                             </div>
                             <div className="col-sm-6 smallpad">
-                                <button type="button" className="btn btn-primary btn-block" id="runlots" onClick={e => app.runLots(USE_KEYED_TBODY)}>Create 10,000 rows</button>
+                                <button type="button" className="btn btn-primary btn-block" id="runlots" onClick={e => app.runLots()}>Create 10,000 rows</button>
                             </div>
                             <div className="col-sm-6 smallpad">
                                 <button type="button" className="btn btn-primary btn-block" id="add" onClick={e => app.add()}>Append 1,000 rows</button>
@@ -42,7 +38,7 @@ export let AppView = (app : App) =>
             </div>
             <table className="table table-hover table-striped test-data"  
                 onClick = {(e : any) => e.target.matches('.delete') ? app.delete(rowId(e)) : app.select(rowId(e))}>
-                { USE_KEYED_TBODY ? TBodyKeyed(app) : TBodyNonKeyed(app) }
+                { TBody(app) }
             </table>
             <span className="preloadicon glyphicon glyphicon-remove"></span>
         </div>,
@@ -50,7 +46,7 @@ export let AppView = (app : App) =>
         while (el.tagName !== 'TR') el = el.parentElement!; 
         return +el.childNodes[0].textContent!; 
     },
-    TBodyKeyed = (app : App) => {
+    TBody = (app : App) => {
         const index = {} as { [id : number] : HTMLTableRowElement | undefined},
             trs = mapSample(app.store.data, row =>
                 <tr ref={index[row.id]!}>
@@ -71,42 +67,4 @@ export let AppView = (app : App) =>
         }, undefined);
         
         return <tbody>{trs}</tbody>;
-    },
-    TBodyNonKeyed = (app : App) => {
-        var tbody = <tbody></tbody>,
-            trs = [] as RowTr[];
-
-        S(() => { // keeps trs in sync with data
-            let rows = app.store.data(),
-                selectedId = app.store.selected();
-
-            if (rows.length === 0) {
-                tbody.textContent = '';
-                trs = [];
-            } else for (let i = trs.length - 1; i >= rows.length; i--) { 
-                tbody.removeChild(trs[i]); 
-                trs.pop();
-            }
-
-            for (let i = 0; i < rows.length; i++) {
-                var row = rows[i],
-                    tr : RowTr | undefined = i < trs.length ? trs[i] : tbody.appendChild(
-                        (<tr ref={tr}>
-                            <td ref={tr!._id} className="col-md-1"></td>
-                            <td className="col-md-4">
-                                <a ref={tr!._label} className="select"></a>
-                            </td>
-                            <td className="col-md-1"><a className="delete"><span className="glyphicon glyphicon-remove delete"></span></a></td>
-                            <td className="col-md-6"></td>
-                        </tr> as RowTr,
-                        trs.push(tr!),
-                        tr!));
-
-                tr.className = row.id === selectedId ? 'danger' : '';
-                tr._id.innerText = row.id + '';
-                tr._label.innerText = row.label();
-            }
-        });
-        
-        return tbody;
     };
