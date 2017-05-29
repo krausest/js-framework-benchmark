@@ -19,8 +19,12 @@ This is a simple benchmark for several javascript frameworks. The benchmarks cre
 * startup time: Duration for loading and parsing the javascript code and rendering the page.
 
 For all benchmarks the duration is measured including rendering time. You can read some details on this [article](http://www.stefankrause.net/wp/?p=218).
-The results of this benchmark is outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316), and [round 5](http://www.stefankrause.net/wp/?p=392)).
+The results of this benchmark is outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316) [round 5](http://www.stefankrause.net/wp/?p=392) and [round 6](http://www.stefankrause.net/wp/?p=431)).
 
+## Temporary results
+
+Official results are posted on the blog mentioned above. A snapshot that may not have the same quality (i.e. 
+results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html) or as a static page here [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts/table.html)
 
 ## Important News
 
@@ -91,8 +95,6 @@ which starts a web server
 which runs the seleniums tests
 
 Open [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html) for the results
-
-A test showing the durations on my machine (MacBook Pro 15, 2,5 GHz i7, 16 GB RAM) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts/table.html)
 
 Single tests can be repeated easily. Just `cd webdriver-ts` and run the benchmarks and frameworks you want, e.g:
 `npm run selenium -- --framework angular bob --benchmark 01_ 02_`
