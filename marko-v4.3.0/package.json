@@ -4,7 +4,7 @@
   "description": "Marko.JS demo",
   "scripts": {
     "build-dev": "rollup -c rollup.config.js",
-    "build-prod": "NODE_ENV=production rollup -c rollup.config.js"
+    "build-prod": "cross-env NODE_ENV=production rollup -c rollup.config.js"
   },
   "keywords": [
     "marko",
@@ -17,7 +17,9 @@
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "cross-env": "^5.0.0"
+  },
   "dependencies": {
     "envify": "^4.0.0",
     "marko": "^4.2.0",
