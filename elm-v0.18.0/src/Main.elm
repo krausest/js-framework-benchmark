@@ -259,19 +259,7 @@ update msg model =
                 )
 
         UpdateEvery amount ->
-            ( { model
-                | rows =
-                    List.indexedMap
-                        (\index row ->
-                            if (index % 10) == 0 then
-                                { row | label = row.label ++ " !!!" }
-                            else
-                                row
-                        )
-                        model.rows
-              }
-            , Cmd.none
-            )
+            ( { model | rows = List.indexedMap updateRow model.rows }, Cmd.none )
 
         Clear ->
             ( { model | rows = [] }, Cmd.none )
@@ -315,6 +303,14 @@ update msg model =
 
         UpdateSeed seed ->
             ( { model | seed = Just seed }, Cmd.none )
+
+
+updateRow : Int -> Row -> Row
+updateRow index row =
+    if index % 10 == 0 then
+        { row | label = row.label ++ " !!!" }
+    else
+        row
 
 
 select : Int -> Int -> Row -> Row
