@@ -10,10 +10,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "redom": "~2.6.1",
+    "redom": "~2.6.4",
     "rollup": "~0.41.6",
     "rollup-plugin-buble": "~0.15.0",
     "rollup-plugin-node-resolve": "~3.0.0",
-    "rollup-plugin-uglify": "~1.0.2"
+    "rollup-plugin-uglify": "~2.0.1"
   }
 }
