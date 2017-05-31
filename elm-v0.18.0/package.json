@@ -4,7 +4,7 @@
   "description": "Elm demo",
   "main": "index.js",
   "scripts": {
-    "postinstall" : "elm-package install -y",
+    "postinstall": "elm-package install -y",
     "build-prod": "elm-make src/Main.elm --output=dist/main.js"
   },
   "keywords": [

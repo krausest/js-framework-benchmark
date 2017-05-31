@@ -49,6 +49,7 @@ marko-*/build
 marko-*/src/xtable.marko
 
 yarn.lock
+package-lock.json
 
 # angular 2 aot
 angular-*/lib/
