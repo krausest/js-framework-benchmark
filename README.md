@@ -32,7 +32,7 @@ The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX >= 10.12.5
 Chrome 54 on OSX has a bug that causes webdriver to hang or crash on non english systems. Please run the following command prior to executing the webdriver-ts testdriver:```
 export LANG="en_US.UTF-8"```
 
-## Prerequsites
+## Prerequisites
 
 Have *node.js (>=6.0)* installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node 6.0.
 You will also need *java* (>=8, e.g. openjdk-8-jre on ubuntu) for the google closure compiler, currently used in kivi.
@@ -117,10 +117,10 @@ How to start submitting a new implementation:
 * If something fails the easiest way is to move the folder that causes the problem somewhere else and run `npm install` (or `npm run build-prod` if you really want to build all benchmarks again). The install and build process prints the name of the folder it is currently working on so it should be simple to find which folder causes the problems.
 * Create a folder according to the naming scheme "framework-version"
 * cd into that folder
-* Create a package.json such that `npm install` installs *all* neccessary dependencies including grunt, webpack, gulp and so on (the only thing you don't need is http-server).
+* Create a package.json such that `npm install` installs *all* necessary dependencies including grunt, webpack, gulp and so on (the only thing you don't need is http-server).
 * Create a src directory and put your implementation there.
 * Take a look at some other framework you know like react or vue and start adapting the source code.
-* Copy the index.html from that implementation, copy the Store implementation. It might already contain all that is neccessary and you might only have to bind the data and events in your index.html
+* Copy the index.html from that implementation, copy the Store implementation. It might already contain all that is necessary and you might only have to bind the data and events in your index.html
 * Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
 * The package.json must support a build-prod task that assembles your application. Often you'd use webpack to do that.
 * Make sure your application compiles and runs in the browser. The easiest way to start a local server is by invoking npm start in the root dir and opening your application on http://localhost:8080/framework-version/index.html
