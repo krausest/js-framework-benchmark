@@ -6,6 +6,7 @@ import Html exposing (Html, Attribute, program, div, a, h1, span, button, table,
 import Html.Attributes exposing (id, class, classList, attribute, type_, href)
 import Html.Events exposing (onClick)
 import Html.Keyed
+import Html.Lazy
 import String
 import Random.Pcg exposing (Seed, Generator)
 
@@ -115,10 +116,14 @@ btnPrimaryBlock ( buttonId, labelText, msg ) =
         ]
 
 
-rowView : Int -> Row -> ( String, Html Msg )
-rowView index { id, label, selected } =
-    ( toString id
-    , tr
+viewKeyedRow : Int -> Row -> ( String, Html Msg )
+viewKeyedRow index row =
+  ( toString row.id, Html.Lazy.lazy2 viewRow index row )
+
+
+viewRow : Int -> Row -> Html Msg
+viewRow index { id, label, selected } =
+    tr
         [ classList [ ( "danger", selected ) ] ]
         [ td [ class "col-md-1" ] [ text (toString id) ]
         , td
@@ -144,7 +149,6 @@ rowView index { id, label, selected } =
             ]
         , td [ class "col-md-6" ] []
         ]
-    )
 
 
 view : Model -> Html Msg
@@ -170,7 +174,7 @@ view model =
             [ class "table table-hover table-striped test-data" ]
             [ tbody
                 []
-                (List.indexedMap rowView model.rows)
+                (List.indexedMap viewKeyedRow model.rows)
             ]
         , span
             [ class "preloadicon glyphicon glyphicon-remove"
