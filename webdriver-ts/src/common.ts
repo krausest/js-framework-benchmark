@@ -33,8 +33,6 @@ function f(name: string, nonKeyed: boolean, options: Options = {uri: null, useSh
 
 export let frameworks = [
     f("angular-v1.6.3-keyed", false),
-    f("angular-v2.4.9-keyed", false),
-    f("angular-v2.4.9-non-keyed", true),
     f("angular-v4.1.2-keyed", false),
     f("angular-v4.1.2-non-keyed", true),
     f("aurelia-v1.1.2", true, {uri: "aurelia-v1.1.2/dist"}),
