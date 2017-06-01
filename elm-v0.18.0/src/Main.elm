@@ -1,7 +1,6 @@
 module Main exposing (..)
 
 import Array exposing (Array)
-import Array.Extra
 import Html exposing (Html, Attribute, program, div, a, h1, span, button, table, td, tr, text)
 import Html.Attributes exposing (id, class, classList, attribute, type_, href)
 import Html.Events exposing (onClick)
@@ -260,19 +259,7 @@ update msg model =
                 )
 
         UpdateEvery amount ->
-            ( { model
-                | rows =
-                    List.indexedMap
-                        (\index row ->
-                            if (index % 10) == 0 then
-                                { row | label = row.label ++ " !!!" }
-                            else
-                                row
-                        )
-                        model.rows
-              }
-            , Cmd.none
-            )
+            ( { model | rows = List.indexedMap updateRow model.rows }, Cmd.none )
 
         Clear ->
             ( { model | rows = [] }, Cmd.none )
@@ -312,30 +299,28 @@ update msg model =
             )
 
         Select index ->
-            ( { model
-                | rows =
-                    model.rows
-                        |> List.map
-                            (\row ->
-                                if row.selected == True then
-                                    { row | selected = False }
-                                else
-                                    row
-                            )
-                        |> Array.fromList
-                        |> Array.Extra.update index
-                            (\row ->
-                                { row
-                                    | selected = True
-                                }
-                            )
-                        |> Array.toList
-              }
-            , Cmd.none
-            )
+            ( { model | rows = List.indexedMap (select index) model.rows }, Cmd.none )
 
         UpdateSeed seed ->
             ( { model | seed = Just seed }, Cmd.none )
+
+
+updateRow : Int -> Row -> Row
+updateRow index row =
+    if index % 10 == 0 then
+        { row | label = row.label ++ " !!!" }
+    else
+        row
+
+
+select : Int -> Int -> Row -> Row
+select targetIndex index ({ id, label, selected } as row) =
+    if index == targetIndex then
+        Row id label True
+    else if selected == True then
+        Row id label False
+    else
+        row
 
 
 type alias Model =
