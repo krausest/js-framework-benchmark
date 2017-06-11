@@ -115,13 +115,13 @@ btnPrimaryBlock ( buttonId, labelText, msg ) =
         ]
 
 
-viewKeyedRow : Int -> Row -> ( String, Html Msg )
-viewKeyedRow index row =
-  ( toString row.id, Html.Lazy.lazy2 viewRow index row )
+viewKeyedRow : Row -> ( String, Html Msg )
+viewKeyedRow row =
+    ( toString row.id, Html.Lazy.lazy viewRow row )
 
 
-viewRow : Int -> Row -> Html Msg
-viewRow index { id, label, selected } =
+viewRow : Row -> Html Msg
+viewRow { id, label, selected } =
     tr
         [ classList [ ( "danger", selected ) ] ]
         [ td [ class "col-md-1" ] [ text (toString id) ]
@@ -129,7 +129,7 @@ viewRow index { id, label, selected } =
             [ class "col-md-4" ]
             [ a
                 [ href "#"
-                , onClick (Select index)
+                , onClick (Select id)
                 ]
                 [ text label ]
             ]
@@ -137,7 +137,7 @@ viewRow index { id, label, selected } =
             [ class "col-md-1" ]
             [ a
                 [ href "#"
-                , onClick (Remove index)
+                , onClick (Remove id)
                 ]
                 [ span
                     [ class "glyphicon glyphicon-remove"
@@ -173,7 +173,7 @@ view model =
             [ class "table table-hover table-striped test-data" ]
             [ tbody
                 []
-                (List.indexedMap viewKeyedRow model.rows)
+                (List.map viewKeyedRow model.rows)
             ]
         , span
             [ class "preloadicon glyphicon glyphicon-remove"
@@ -290,16 +290,10 @@ update msg model =
                 ( model, Cmd.none )
 
         Remove id ->
-            ( { model
-                | rows =
-                    List.take id model.rows
-                        ++ List.drop (id + 1) model.rows
-              }
-            , Cmd.none
-            )
+            ( { model | rows = List.filter (\r -> r.id /= id) model.rows }, Cmd.none )
 
-        Select index ->
-            ( { model | rows = List.indexedMap (select index) model.rows }, Cmd.none )
+        Select id ->
+            ( { model | rows = List.map (select id) model.rows }, Cmd.none )
 
         UpdateSeed seed ->
             ( { model | seed = Just seed }, Cmd.none )
@@ -313,9 +307,9 @@ updateRow index row =
         row
 
 
-select : Int -> Int -> Row -> Row
-select targetIndex index ({ id, label, selected } as row) =
-    if index == targetIndex then
+select : Int -> Row -> Row
+select targetId ({ id, label, selected } as row) =
+    if id == targetId then
         Row id label True
     else if selected == True then
         Row id label False
