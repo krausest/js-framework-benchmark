@@ -21,6 +21,7 @@ interface State {
   separateKeyedAndNonKeyed: boolean;
   resultTables: Array<ResultTableData>;
   sortKey: string;
+  compareWith: Framework | undefined;
 }
 
 let allBenchmarks = () => benchmarks.reduce((set, b) => set.add(b), new Set() );
@@ -37,13 +38,13 @@ class App extends React.Component<{}, State> {
         event.preventDefault();
         let set = this.state.selectedBenchmarks;
         benchmarks.forEach(b => {if ((b.type === BenchmarkType.MEM) === memBenchmarks) set.add(b);});
-        this.setState({selectedBenchmarks: set, resultTables: this.updateResultTable(set, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, this.state.sortKey)});
+        this.setState({selectedBenchmarks: set, resultTables: this.updateResultTable(set, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, this.state.sortKey, this.state.compareWith)});
       },
       selectNone: (event: React.SyntheticEvent<any>) => {    
         event.preventDefault();
         let set = this.state.selectedBenchmarks;
         benchmarks.forEach(b => {if ((b.type === BenchmarkType.MEM) === memBenchmarks) set.delete(b);});
-        this.setState({selectedBenchmarks: set, sortKey: SORT_BY_NAME, resultTables: this.updateResultTable(set, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, SORT_BY_NAME)});
+        this.setState({selectedBenchmarks: set, sortKey: SORT_BY_NAME, resultTables: this.updateResultTable(set, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, SORT_BY_NAME, this.state.compareWith)});
       },
       areAllSelected: () => benchmarks.filter(b => memBenchmarks ? b.type === BenchmarkType.MEM : b.type !== BenchmarkType.MEM)
                               .every(b => this.state.selectedBenchmarks.has(b)),
@@ -56,13 +57,13 @@ class App extends React.Component<{}, State> {
         event.preventDefault();
         let set = this.state.selectedFrameworks;
         frameworks.forEach(framework => {if (framework.nonKeyed === nonKeyed && !set.has(framework)) set.add(framework);});
-        this.setState({selectedFrameworks: set, resultTables: this.updateResultTable(this.state.selectedBenchmarks, set, this.state.separateKeyedAndNonKeyed, this.state.sortKey)});
+        this.setState({selectedFrameworks: set, resultTables: this.updateResultTable(this.state.selectedBenchmarks, set, this.state.separateKeyedAndNonKeyed, this.state.sortKey, this.state.compareWith)});
       },
       selectNone: (event: React.SyntheticEvent<any>) => {    
         event.preventDefault();
         let set = this.state.selectedFrameworks;
         set.forEach(framework => {if (framework.nonKeyed === nonKeyed) set.delete(framework);});
-        this.setState({selectedFrameworks: set, resultTables: this.updateResultTable(this.state.selectedBenchmarks, set, this.state.separateKeyedAndNonKeyed, this.state.sortKey)});
+        this.setState({selectedFrameworks: set, resultTables: this.updateResultTable(this.state.selectedBenchmarks, set, this.state.separateKeyedAndNonKeyed, this.state.sortKey, this.state.compareWith)});
       },
       areAllSelected: () => frameworks.filter(f => f.nonKeyed===nonKeyed).every(f => this.state.selectedFrameworks.has(f)),
       isNoneSelected: () => frameworks.filter(f => f.nonKeyed===nonKeyed).every(f => !this.state.selectedFrameworks.has(f)),
@@ -84,8 +85,9 @@ class App extends React.Component<{}, State> {
                   selectedBenchmarks: _allBenchmarks,
                   selectedFrameworks: _allFrameworks,
                   separateKeyedAndNonKeyed: true,
-                  resultTables: this.updateResultTable(_allBenchmarks, _allFrameworks, true, SORT_BY_NAME),
-                  sortKey: SORT_BY_NAME     
+                  resultTables: this.updateResultTable(_allBenchmarks, _allFrameworks, true, SORT_BY_NAME, undefined),
+                  sortKey: SORT_BY_NAME,
+                  compareWith: undefined                  
                 };
   }
   selectBenchmark = (benchmark: Benchmark, value: boolean) => {
@@ -97,29 +99,39 @@ class App extends React.Component<{}, State> {
     let setIds = new Set();
     set.forEach(b => setIds.add(b.id))
     if ((sortKey!=SORT_BY_NAME && sortKey!=SORT_BY_GEOMMEAN) && !setIds.has(sortKey)) sortKey = SORT_BY_NAME;
-    this.setState({selectedBenchmarks: set, sortKey, resultTables: this.updateResultTable(set, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, sortKey)});
+    this.setState({selectedBenchmarks: set, sortKey, resultTables: this.updateResultTable(set, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, sortKey, this.state.compareWith)});
   }
   selectFramework = (framework: Framework, value: boolean): void => {
     let set = new Set();
     this.state.selectedFrameworks.forEach(framework => set.add(framework));
     if (set.has(framework)) set.delete(framework);
     else set.add(framework);
-    this.setState({selectedFrameworks: set, resultTables: this.updateResultTable(this.state.selectedBenchmarks, set, this.state.separateKeyedAndNonKeyed, this.state.sortKey)});
+    this.setState({selectedFrameworks: set, resultTables: this.updateResultTable(this.state.selectedBenchmarks, set, this.state.separateKeyedAndNonKeyed, this.state.sortKey, this.state.compareWith)});
   }  
   selectSeparateKeyedAndNonKeyed = (value: boolean): void => {
-    this.setState({separateKeyedAndNonKeyed: value, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, value, this.state.sortKey)});
+    this.setState({separateKeyedAndNonKeyed: value, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, value, this.state.sortKey, this.state.compareWith)});
   }
-  updateResultTable(selectedBenchmarks: Set<Benchmark>, selectedFrameworks: Set<Framework>, separateKeyedAndNonKeyed: boolean, sortKey: string) {
+  updateResultTable(selectedBenchmarks: Set<Benchmark>, selectedFrameworks: Set<Framework>, separateKeyedAndNonKeyed: boolean, sortKey: string, compareWith: Framework|undefined) {
     if (separateKeyedAndNonKeyed) {
-      return [new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, false, sortKey),
-              new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, true, sortKey)]      
+      return [new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, false, sortKey, compareWith),
+              new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, true, sortKey, compareWith)]      
     } else {
-      return [new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, undefined, sortKey)]
+      return [new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, undefined, sortKey, compareWith)]
     }
   }
+  selectComparison = (framework: string): void => {
+    let compareWith: Framework | undefined = undefined;
+    compareWith = this.state.frameworksKeyed.find((f) => f.name === framework);
+    if (!compareWith) {
+      compareWith = this.state.frameworksNonKeyed.find((f) => f.name === framework);
+    }
+    console.log("compareWith", compareWith);
+    this.setState({compareWith:compareWith, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, this.state.sortKey, compareWith)});
+  }
+
   sortBy = (sortkey: string, tableIdx: number): void => {
     this.state.resultTables[tableIdx].sortBy(sortkey);
-    this.setState({sortKey:sortkey, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, sortkey)});
+    this.setState({sortKey:sortkey, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, sortkey, this.state.compareWith)});
   }
   render() {
     let disclaimer = (false) ? (<div>
@@ -143,7 +155,15 @@ class App extends React.Component<{}, State> {
                     selectBenchmark={this.selectBenchmark}
                     selectFramework={this.selectFramework}
                     selectSeparateKeyedAndNonKeyed={this.selectSeparateKeyedAndNonKeyed}
-                    separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed}/>
+                    separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed}
+                    compareWith={this.state.compareWith}
+                    selectComparison={this.selectComparison}
+                    />
+          {!this.state.compareWith ? null :           
+          (<p style={{marginTop:'10px'}}>In comparison mode white cells mean there's no statistically significant difference. 
+            Green cells are significantly faster than the comparison and red cells are slower. 
+            The test is performed as a one sided t-test. The significance level is 10%. The darker the color the lower the p-Value.</p>
+          )}
           <ResultTable currentSortKey={this.state.sortKey} data={this.state.resultTables} separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed} sortBy={this.sortBy}/>
       </div>
     );

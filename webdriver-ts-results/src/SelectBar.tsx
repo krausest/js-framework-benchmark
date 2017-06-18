@@ -19,6 +19,8 @@ export interface Props {
   frameworksNonKeyed: Array<Framework>;
   benchmarksCPU: Array<Benchmark>;
   benchmarksMEM: Array<Benchmark>;
+  compareWith: Framework | undefined;
+  selectComparison: (framework: string) => void;
 }
 
 export class SelectBar extends React.Component<Props, void> {
@@ -34,7 +36,10 @@ export class SelectBar extends React.Component<Props, void> {
           frameworksKeyed,
           frameworksNonKeyed,
           benchmarksCPU,
-          benchmarksMEM} = this.props;
+          benchmarksMEM,
+          compareWith,
+          selectComparison
+      } = this.props;
         return (
           <div>
             <DropDown label="Which frameworks?" width='1024px'>
@@ -73,6 +78,29 @@ export class SelectBar extends React.Component<Props, void> {
                   Separate keyed and non-keyed
                 </label>
             </div>
+            <div className="hspan"/>
+            <form className="form-inline" style={{display:"inline-block"}}>
+              <div className="form-group">
+                  <div className="hspan"/>
+                  <select className="form-control" value={compareWith ? compareWith.name : ''} onChange={(evt) => selectComparison(evt.target.value)}>
+                    <option value=''>Compare with ...</option>                        
+                    <optgroup label="Keyed">
+                      {
+                        frameworksKeyed.map(f => 
+                            <option key={f.name} value={f.name}>{f.name}</option>                        
+                        )
+                      }
+                    </optgroup>
+                    <optgroup label="Non-keyed">
+                      {
+                        frameworksNonKeyed.map(f => 
+                            <option key={f.name} value={f.name}>{f.name}</option>                        
+                        )
+                      }
+                    </optgroup>
+                  </select>
+              </div>
+            </form>
           </div>
         );
     }

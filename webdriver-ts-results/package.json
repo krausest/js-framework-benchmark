@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
+    "jStat": "^1.6.2",
     "react": "15.5.4",
     "react-dom": "15.5.4"
   }

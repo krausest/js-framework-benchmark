@@ -1,4 +1,5 @@
 import * as React from 'react';
+var jStat:any = require('jstat').jStat;
 
 export interface Framework {
     name: string;
@@ -22,6 +23,7 @@ export interface Result {
     min: number;
     max: number;
     mean: number;
+    count?: number;
     geometricMean: number;
     standardDeviation: number;
 }
@@ -59,11 +61,13 @@ let computeColor = function(factor: number): string {
 
 export class TableResultValueEntry implements TableResultEntry {
     color: string;
-    constructor(public key:string, public mean: number, public standardDeviation: number, public factor: number) {
+    constructor(public key:string, public mean: number, public standardDeviation: number, public factor: number, public statisticallySignificantFactor: string|number|undefined, public statisticalCol: [string,string]|undefined) {
         this.color = computeColor(factor);
     }
     render() {
-        return (<td key={this.key} style={{backgroundColor:this.color}}>
+        let col = this.statisticalCol === undefined ? this.color : this.statisticalCol[0];
+        let textCol = this.statisticalCol === undefined ? '#000' : this.statisticalCol[1];
+        return (<td key={this.key} style={{backgroundColor:col, color: textCol}}>
                     <span className="mean">{this.mean.toFixed(1)}</span>
                     <span className="deviation">{this.standardDeviation.toFixed(1)}</span>
                     <br />
@@ -101,6 +105,25 @@ export function convertToMap(results: Array<Result>): ResultLookup {
     }
 }
 
+let statisticComputeColor = function(sign: number, pValue: number): [string, string] {
+    if (pValue < 0.90) {
+        return ['#fff','#000'];
+    } 
+    if (sign < 0) {
+        let a = (pValue - 0.9) * 10.0;
+        let r = 0;
+        let g = (1.0-a)* 255 + a * 160;
+        let b = 0;
+        return [`rgb(${r.toFixed(0)}, ${g.toFixed(0)}, ${b.toFixed(0)})`, '#fff'];
+    } else  {
+        let a = (pValue - 0.9) * 10.0;
+        let r = (1.0-a)* 255 + a * 160;
+        let g = 0;
+        let b = 0;
+        return [`rgb(${r.toFixed(0)}, ${g.toFixed(0)}, ${b.toFixed(0)})`, '#fff'];
+    }
+}
+
 export class ResultTableData {
     // Rows
     benchmarksCPU: Array<Benchmark>;
@@ -113,7 +136,8 @@ export class ResultTableData {
     resultsMEM: Array<Array<TableResultValueEntry|null>>;
 
     constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup, 
-        public selectedFrameworks: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, nonKeyed: boolean|undefined, sortKey: string) {
+        public selectedFrameworks: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, nonKeyed: boolean|undefined, sortKey: string,
+        public compareWith: Framework|undefined) {
         this.frameworks = this.allFrameworks.filter(framework => (nonKeyed===undefined || framework.nonKeyed === nonKeyed) && selectedFrameworks.has(framework));
         this.update(sortKey);
     }
@@ -176,6 +200,7 @@ export class ResultTableData {
     }
     computeFactors(benchmark: Benchmark, clamp: boolean): Array<TableResultValueEntry|null> {
         let benchmarkResults = this.frameworks.map(f => this.results(benchmark, f));
+        let compareWithResults = this.compareWith ? this.results(benchmark, this.compareWith) : undefined;
         let min = benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min,result.mean), Number.POSITIVE_INFINITY);
         return this.frameworks.map(f => {
             let result = this.results(benchmark, f);
@@ -184,7 +209,35 @@ export class ResultTableData {
                 let mean = result.mean;
                 let factor = clamp ? Math.max(16, result.mean) / Math.max(16, min) : result.mean/min;
                 let standardDeviation = result.standardDeviation;
-                return new TableResultValueEntry(f.name, mean, standardDeviation, factor);
+
+                let statisticalResult = undefined;
+                let statisticalCol = undefined;
+                // X1,..,Xn: this Framework, Y1, ..., Yn: selected Framework
+                // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
+                if (compareWithResults) {
+                    let n = result.count || 20;
+                    let m = result.count || 20;
+                    let s2 = (n-1)*Math.pow(result.standardDeviation,2) + (m-1)*Math.pow(compareWithResults.standardDeviation,2) / (n+m-2)
+                    let s = Math.sqrt(s2);
+                    let t = Math.sqrt((n * m) / (n + m))*(result.mean - compareWithResults.mean - 0)/s;                            
+                    let talpha = jStat.studentt.inv( 0.975, n + m - 2);
+                    statisticalResult = t.toFixed(3) + ": " +talpha.toFixed(3);
+                    let p = jStat.studentt.cdf( Math.abs(t), n + m -2 );
+                    statisticalCol = statisticComputeColor(t, p);
+                    statisticalResult += ": " + p.toFixed(3) + ";" + statisticalCol;
+                    if (result.mean < compareWithResults.mean) {
+                        // H0 X >= Y, H1 X < Y
+                        if (t < -talpha) {
+                            statisticalResult += " faster";
+                        }
+                    } else {
+                        // H0 X <= Y, H1 X > Y
+                        if (t > talpha) {
+                            statisticalResult += " slower";
+                        }
+                    }
+                }
+                return new TableResultValueEntry(f.name, mean, standardDeviation, factor, statisticalResult, statisticalCol);
             }
         });
     }
