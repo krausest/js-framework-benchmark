@@ -160,8 +160,8 @@ function writeResult(res: Result, dir: string) {
     let benchmark = res.benchmark;
         let framework = res.framework.name;
         let data = res.results;
-        data = data.splice(0).sort((a:number,b:number) => a-b);
-        data = data.slice(0, config.REPEAT_RUN - config.DROP_WORST_RUN);
+        data = data.slice(0).sort((a:number,b:number) => a-b);
+        // data = data.slice(0, config.REPEAT_RUN - config.DROP_WORST_RUN);
         let s = jStat(data);
         console.log(`result ${fileName(res.framework, benchmark)}`, s.min(), s.max(), s.mean(), s.stdev());
         let result: JSONResult = {
@@ -171,8 +171,10 @@ function writeResult(res: Result, dir: string) {
             "min": s.min(),
             "max": s.max(),
             "mean": s.mean(),
+            "median": s.median(),
             "geometricMean": s.geomean(),
-            "standardDeviation": s.stdev()
+            "standardDeviation": s.stdev(),
+            "values": res.results
         }
         fs.writeFileSync(`${dir}/${fileName(res.framework, benchmark)}`, JSON.stringify(result), {encoding: "utf8"});
 }
@@ -257,15 +259,19 @@ function runBench(frameworkNames: string[], benchmarkNames: string[], dir: strin
 }
 
 let args = yargs(process.argv)
-.usage("$0 [--framework Framework1,Framework2,...] [--benchmark Benchmark1,Benchmark2,...]")
+.usage("$0 [--framework Framework1,Framework2,...] [--benchmark Benchmark1,Benchmark2,...] [--count n]")
 .help('help')
 .default('check','false')
+.default('count', config.REPEAT_RUN)
 .array("framework").array("benchmark").argv;
 
 console.log(args);
 
 let runBenchmarks = args.benchmark && args.benchmark.length>0 ? args.benchmark : [""];
 let runFrameworks = args.framework && args.framework.length>0 ? args.framework : [""];
+let count = Number(args.count);
+
+config.REPEAT_RUN = count;
 
 let dir = args.check === 'true' ? "results_check" : "results"
 

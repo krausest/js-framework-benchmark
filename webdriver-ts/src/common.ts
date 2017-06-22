@@ -1,11 +1,11 @@
 export interface JSONResult {
     framework: string, benchmark: string, type: string, min: number,
         max: number, mean: number, geometricMean: number,
-        standardDeviation: number
+        standardDeviation: number, median: number, values: Array<number>
 }
 
 export let config = {
-    REPEAT_RUN: 10,
+    REPEAT_RUN: 20,
     DROP_WORST_RUN: 0,
     WARMUP_COUNT: 5,
     TIMEOUT: 60 * 1000,
@@ -73,6 +73,7 @@ export let frameworks = [
     f("react-v15.5.4-easy-state-v1.0.3", false),
     f("react-v15.5.4-mobX-v3.1.9", false),
     f("react-v15.5.4-redux-v3.6.0", false),
+    f("react-v16.alpha.13-keyed", false),
     f("redom-v2.6.4-keyed", false),
     f("redom-v2.6.4-non-keyed", true),
     f("riot-v3.5.0", true),

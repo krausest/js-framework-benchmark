@@ -23,9 +23,11 @@ export interface Result {
     min: number;
     max: number;
     mean: number;
-    count?: number;
     geometricMean: number;
     standardDeviation: number;
+    median: number;
+    values: number[];
+    count?: number;
 }
 
 export interface DropdownCallback<T> {
@@ -137,13 +139,43 @@ export class ResultTableData {
 
     constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup, 
         public selectedFrameworks: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, nonKeyed: boolean|undefined, sortKey: string,
-        public compareWith: Framework|undefined) {
+        public compareWith: Framework|undefined,
+        public useMedian: boolean,
+        public sampleCount: number
+        ) {
         this.frameworks = this.allFrameworks.filter(framework => (nonKeyed===undefined || framework.nonKeyed === nonKeyed) && selectedFrameworks.has(framework));
         this.update(sortKey);
     }
     private update(sortKey: string) {
         this.benchmarksCPU = this.allBenchmarks.filter(benchmark => benchmark.type !== BenchmarkType.MEM && this.selectedBenchmarks.has(benchmark));
         this.benchmarksMEM = this.allBenchmarks.filter(benchmark => benchmark.type === BenchmarkType.MEM && this.selectedBenchmarks.has(benchmark));
+
+
+        this.benchmarksCPU.forEach(benchmark => {
+            this.frameworks.forEach(f => {
+                let result = this.results(benchmark, f);
+                if (result !== null) {
+                    let vals = result.values.slice(0, this.sampleCount);
+                    result.mean = jStat.mean(vals);
+                    result.median = jStat.median(vals);
+                    result.standardDeviation = jStat.stdev(vals);
+                    result.count = vals.length;
+                }
+            });
+        });
+        this.benchmarksMEM.forEach(benchmark => {
+            this.frameworks.forEach(f => {
+                let result = this.results(benchmark, f);
+                if (result !== null) {
+                    let vals = result.values.slice(0, this.sampleCount);
+                    result.mean = jStat.mean(vals);
+                    result.median = jStat.median(vals);
+                    result.standardDeviation = jStat.stdev(vals);
+                    result.count = vals.length;
+                }
+            });
+        })
+
 
         this.resultsCPU = this.benchmarksCPU.map(benchmark => this.computeFactors(benchmark, true));
         this.resultsMEM = this.benchmarksMEM.map(benchmark => this.computeFactors(benchmark, false));
@@ -206,26 +238,29 @@ export class ResultTableData {
             let result = this.results(benchmark, f);
             if (result === null) return null;
             else {
-                let mean = result.mean;
-                let factor = clamp ? Math.max(16, result.mean) / Math.max(16, min) : result.mean/min;
+                let mean = this.useMedian ? result.median : result.mean;
+                let factor = clamp ? Math.max(16, mean) / Math.max(16, min) : mean/min;
                 let standardDeviation = result.standardDeviation;
 
                 let statisticalResult = undefined;
                 let statisticalCol = undefined;
-                // X1,..,Xn: this Framework, Y1, ..., Yn: selected Framework
+                // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
                 // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
                 if (compareWithResults) {
+                    let compareWithMean = this.useMedian ? compareWithResults.median : compareWithResults.mean;
                     let n = result.count || 20;
-                    let m = result.count || 20;
+                    let m = compareWithResults.count || 20;
+                    console.log("n+m-2",n+m-2);
                     let s2 = (n-1)*Math.pow(result.standardDeviation,2) + (m-1)*Math.pow(compareWithResults.standardDeviation,2) / (n+m-2)
                     let s = Math.sqrt(s2);
-                    let t = Math.sqrt((n * m) / (n + m))*(result.mean - compareWithResults.mean - 0)/s;                            
+                    let t = Math.sqrt((n * m) / (n + m))*(mean - compareWithMean - 0)/s;                            
                     let talpha = jStat.studentt.inv( 0.975, n + m - 2);
+                    console.log("talpha",talpha, "t", t);
                     statisticalResult = t.toFixed(3) + ": " +talpha.toFixed(3);
                     let p = jStat.studentt.cdf( Math.abs(t), n + m -2 );
                     statisticalCol = statisticComputeColor(t, p);
                     statisticalResult += ": " + p.toFixed(3) + ";" + statisticalCol;
-                    if (result.mean < compareWithResults.mean) {
+                    if (mean < compareWithMean) {
                         // H0 X >= Y, H1 X < Y
                         if (t < -talpha) {
                             statisticalResult += " faster";
