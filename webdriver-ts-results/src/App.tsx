@@ -23,7 +23,6 @@ interface State {
   sortKey: string;
   compareWith: Framework | undefined;
   useMedian: boolean;
-  countSamples: number,
 }
 
 let allBenchmarks = () => benchmarks.reduce((set, b) => set.add(b), new Set() );
@@ -40,13 +39,16 @@ class App extends React.Component<{}, State> {
         event.preventDefault();
         let set = this.state.selectedBenchmarks;
         benchmarks.forEach(b => {if ((b.type === BenchmarkType.MEM) === memBenchmarks) set.add(b);});
-        this.setState({selectedBenchmarks: set, resultTables: this.updateResultTable(set, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, this.state.sortKey, this.state.compareWith, this.state.useMedian, this.state.countSamples)});
+        this.nextState.selectedBenchmarks = set;
+        this.setState({selectedBenchmarks: set, resultTables: this.updateResultTable()});
       },
       selectNone: (event: React.SyntheticEvent<any>) => {    
         event.preventDefault();
         let set = this.state.selectedBenchmarks;
         benchmarks.forEach(b => {if ((b.type === BenchmarkType.MEM) === memBenchmarks) set.delete(b);});
-        this.setState({selectedBenchmarks: set, sortKey: SORT_BY_NAME, resultTables: this.updateResultTable(set, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, SORT_BY_NAME, this.state.compareWith, this.state.useMedian, this.state.countSamples)});
+        this.nextState.selectedBenchmarks = set;
+        this.nextState.sortKey = SORT_BY_NAME;
+        this.setState({selectedBenchmarks: set, sortKey: SORT_BY_NAME, resultTables: this.updateResultTable()});
       },
       areAllSelected: () => benchmarks.filter(b => memBenchmarks ? b.type === BenchmarkType.MEM : b.type !== BenchmarkType.MEM)
                               .every(b => this.state.selectedBenchmarks.has(b)),
@@ -59,13 +61,15 @@ class App extends React.Component<{}, State> {
         event.preventDefault();
         let set = this.state.selectedFrameworks;
         frameworks.forEach(framework => {if (framework.nonKeyed === nonKeyed && !set.has(framework)) set.add(framework);});
-        this.setState({selectedFrameworks: set, resultTables: this.updateResultTable(this.state.selectedBenchmarks, set, this.state.separateKeyedAndNonKeyed, this.state.sortKey, this.state.compareWith, this.state.useMedian, this.state.countSamples)});
+        this.nextState.selectedFrameworks = set;
+        this.setState({selectedFrameworks: set, resultTables: this.updateResultTable()});
       },
       selectNone: (event: React.SyntheticEvent<any>) => {    
         event.preventDefault();
         let set = this.state.selectedFrameworks;
         set.forEach(framework => {if (framework.nonKeyed === nonKeyed) set.delete(framework);});
-        this.setState({selectedFrameworks: set, resultTables: this.updateResultTable(this.state.selectedBenchmarks, set, this.state.separateKeyedAndNonKeyed, this.state.sortKey, this.state.compareWith, this.state.useMedian, this.state.countSamples)});
+        this.nextState.selectedFrameworks = set;
+        this.setState({selectedFrameworks: set, resultTables: this.updateResultTable()});
       },
       areAllSelected: () => frameworks.filter(f => f.nonKeyed===nonKeyed).every(f => this.state.selectedFrameworks.has(f)),
       isNoneSelected: () => frameworks.filter(f => f.nonKeyed===nonKeyed).every(f => !this.state.selectedFrameworks.has(f)),
@@ -75,10 +79,11 @@ class App extends React.Component<{}, State> {
   benchSelectMem = this.benchSelect(true);
   frameworkSelectKeyed = this.frameworkSelect(false);
   frameworkSelectNonKeyed = this.frameworkSelect(true);
+  nextState: State;
 
   constructor(props: object) {
     super(props);
-    this.state = {benchmarks, 
+    this.nextState = {benchmarks, 
                   benchmarksCPU: benchmarks.filter(b => b.type !== BenchmarkType.MEM),
                   benchmarksMEM: benchmarks.filter(b => b.type === BenchmarkType.MEM),
                   frameworks,
@@ -87,12 +92,13 @@ class App extends React.Component<{}, State> {
                   selectedBenchmarks: _allBenchmarks,
                   selectedFrameworks: _allFrameworks,
                   separateKeyedAndNonKeyed: true,
-                  resultTables: this.updateResultTable(_allBenchmarks, _allFrameworks, true, SORT_BY_NAME, undefined, false, 20),
-                  sortKey: SORT_BY_NAME,
+                  resultTables: [],
+                  sortKey: SORT_BY_GEOMMEAN,
                   compareWith: undefined,
                   useMedian: false,
-                  countSamples: 25,
                 };
+    this.nextState.resultTables = this.updateResultTable();
+    this.state = this.nextState;
   }
   selectBenchmark = (benchmark: Benchmark, value: boolean) => {
     let set = new Set();
@@ -103,30 +109,31 @@ class App extends React.Component<{}, State> {
     let setIds = new Set();
     set.forEach(b => setIds.add(b.id))
     if ((sortKey!=SORT_BY_NAME && sortKey!=SORT_BY_GEOMMEAN) && !setIds.has(sortKey)) sortKey = SORT_BY_NAME;
-    this.setState({selectedBenchmarks: set, sortKey, resultTables: this.updateResultTable(set, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, sortKey, this.state.compareWith, this.state.useMedian, this.state.countSamples)});
+    this.nextState.selectedBenchmarks = set;
+    this.setState({selectedBenchmarks: set, sortKey, resultTables: this.updateResultTable()});
   }
   selectFramework = (framework: Framework, value: boolean): void => {
     let set = new Set();
     this.state.selectedFrameworks.forEach(framework => set.add(framework));
     if (set.has(framework)) set.delete(framework);
     else set.add(framework);
-    this.setState({selectedFrameworks: set, resultTables: this.updateResultTable(this.state.selectedBenchmarks, set, this.state.separateKeyedAndNonKeyed, this.state.sortKey, this.state.compareWith, this.state.useMedian, this.state.countSamples)});
+    this.nextState.selectedFrameworks = set;
+    this.setState({selectedFrameworks: set, resultTables: this.updateResultTable()});
   }  
   selectSeparateKeyedAndNonKeyed = (value: boolean): void => {
-    this.setState({separateKeyedAndNonKeyed: value, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, value, this.state.sortKey, this.state.compareWith, this.state.useMedian, this.state.countSamples)});
+    this.nextState.separateKeyedAndNonKeyed = value;
+    this.setState({separateKeyedAndNonKeyed: value, resultTables: this.updateResultTable()});
   }
   selectMedian = (value: boolean): void => {
-    this.setState({useMedian: value, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, this.state.sortKey, this.state.compareWith, value, this.state.countSamples)});
+    this.nextState.useMedian = value;
+    this.setState({useMedian: value, resultTables: this.updateResultTable()});
   }
-  selectSampleCount = (value: number): void => {
-    this.setState({countSamples: value, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, this.state.sortKey, this.state.compareWith, this.state.useMedian, value)});
-  }
-  updateResultTable(selectedBenchmarks: Set<Benchmark>, selectedFrameworks: Set<Framework>, separateKeyedAndNonKeyed: boolean, sortKey: string, compareWith: Framework|undefined, useMedian: boolean, sampleCount: number) {
-    if (separateKeyedAndNonKeyed) {
-      return [new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, false, sortKey, compareWith, useMedian, sampleCount),
-              new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, true, sortKey, compareWith, useMedian, sampleCount)]      
+  updateResultTable() {
+    if (this.nextState.separateKeyedAndNonKeyed) {
+      return [new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, false, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian),
+              new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, true, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian)]      
     } else {
-      return [new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, undefined, sortKey, compareWith, useMedian, sampleCount)]
+      return [new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, undefined, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian)]
     }
   }
   selectComparison = (framework: string): void => {
@@ -135,13 +142,14 @@ class App extends React.Component<{}, State> {
     if (!compareWith) {
       compareWith = this.state.frameworksNonKeyed.find((f) => f.name === framework);
     }
-    console.log("compareWith", compareWith);
-    this.setState({compareWith:compareWith, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, this.state.sortKey, compareWith, this.state.useMedian, this.state.countSamples)});
+    this.nextState.compareWith = compareWith;
+    this.setState({compareWith:compareWith, resultTables: this.updateResultTable()});
   }
 
   sortBy = (sortkey: string, tableIdx: number): void => {
     this.state.resultTables[tableIdx].sortBy(sortkey);
-    this.setState({sortKey:sortkey, resultTables: this.updateResultTable(this.state.selectedBenchmarks, this.state.selectedFrameworks, this.state.separateKeyedAndNonKeyed, sortkey, this.state.compareWith, this.state.useMedian, this.state.countSamples)});
+    this.nextState.sortKey = sortkey;
+    this.setState({sortKey:sortkey, resultTables: this.updateResultTable()});
   }
   render() {
     let disclaimer = (false) ? (<div>
@@ -170,8 +178,6 @@ class App extends React.Component<{}, State> {
                     selectComparison={this.selectComparison}
                     useMedian={this.state.useMedian}
                     selectMedian={this.selectMedian}
-                    countSamples={this.state.countSamples}
-                    selectSampleCount={this.selectSampleCount}
                     />
           {!this.state.compareWith ? null :           
           (<p style={{marginTop:'10px'}}>In comparison mode white cells mean there's no statistically significant difference. 

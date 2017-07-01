@@ -23,11 +23,9 @@ export interface Props {
   selectComparison: (framework: string) => void;
   useMedian: boolean;
   selectMedian: (value: boolean) => void;
-  countSamples: number,
-  selectSampleCount: (value: number) => void;
 }
 
-export class SelectBar extends React.Component<Props, void> {
+export class SelectBar extends React.Component<Props, {}> {
     render() {
     let   {frameworkSelectKeyed,
           frameworkSelectNonKeyed,
@@ -44,34 +42,10 @@ export class SelectBar extends React.Component<Props, void> {
           compareWith,
           selectComparison,
           useMedian,
-          selectMedian,
-          countSamples,
-          selectSampleCount,
+          selectMedian
       } = this.props;
         return (
           <div>
-            <div className="form-inline">
-              (Just as an experiment)
-              <div className="hspan"/>
-                <div className="checkbox" style={{display:"inline-block"}}>
-                    <label>
-                      <input type="checkbox" onChange={(evt) => selectMedian(evt.target.checked)} checked={useMedian} />
-                      <div className="hspan"/>
-                      Use median instead of mean
-                    </label>
-                </div>
-                <div className="hspan"/>
-                <div style={{display:"inline-block"}}>
-                    <div className="form-group">
-                      Simulate # samples
-                      <div className="hspan"/>
-                      <input id="countSample" className="form-control" type="range" min="3" max="25" value={countSamples} onChange={(evt) => selectSampleCount(Number(evt.target.value))}/>
-                      <div className="hspan"/>
-                      {countSamples}
-                    </div>
-                </div>
-
-            </div>
             <div>
               <DropDown label="Which frameworks?" width='1024px'>
                 <DropDownContents {...frameworkSelectKeyed}>
@@ -132,6 +106,13 @@ export class SelectBar extends React.Component<Props, void> {
                     </select>
                 </div>
               </form>
+              <div className="hspan"/>
+              <div className="checkbox" style={{display:"inline-block"}}>
+                  <label>
+                    <input type="checkbox" onChange={(evt) => selectMedian(evt.target.checked)} checked={useMedian} />
+                    Use median instead of mean
+                  </label>
+              </div>
             </div>
           </div>
         );

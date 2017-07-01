@@ -140,9 +140,7 @@ export class ResultTableData {
     constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup, 
         public selectedFrameworks: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, nonKeyed: boolean|undefined, sortKey: string,
         public compareWith: Framework|undefined,
-        public useMedian: boolean,
-        public sampleCount: number
-        ) {
+        public useMedian: boolean) {
         this.frameworks = this.allFrameworks.filter(framework => (nonKeyed===undefined || framework.nonKeyed === nonKeyed) && selectedFrameworks.has(framework));
         this.update(sortKey);
     }
@@ -155,7 +153,7 @@ export class ResultTableData {
             this.frameworks.forEach(f => {
                 let result = this.results(benchmark, f);
                 if (result !== null) {
-                    let vals = result.values.slice(0, this.sampleCount);
+                    let vals = result.values.slice(0);
                     result.mean = jStat.mean(vals);
                     result.median = jStat.median(vals);
                     result.standardDeviation = jStat.stdev(vals);
@@ -167,7 +165,7 @@ export class ResultTableData {
             this.frameworks.forEach(f => {
                 let result = this.results(benchmark, f);
                 if (result !== null) {
-                    let vals = result.values.slice(0, this.sampleCount);
+                    let vals = result.values.slice(0);
                     result.mean = jStat.mean(vals);
                     result.median = jStat.median(vals);
                     result.standardDeviation = jStat.stdev(vals);

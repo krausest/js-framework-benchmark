@@ -30,7 +30,7 @@ const CpuResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData
                 </tr>
               ))}                      
               <tr>
-                <th><a href='#' onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_GEOMMEAN)}}>slowdown geometric mean</a></th>
+                <th><a href='#' className={currentSortKey==SORT_BY_GEOMMEAN ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_GEOMMEAN)}}>slowdown geometric mean</a></th>
                 {data.geomMeanCPU.map(result => result == null ? null : result.render())}
               </tr>                      
             </tbody>
@@ -69,7 +69,7 @@ interface Texts {
   description: string;
 }
 
-export class ResultTable extends React.Component<Props, void> {
+export class ResultTable extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
   }
