@@ -3,3 +3,5 @@ node_js  : 7
 cache    : yarn
 install  : yarn
 script   : npm run build-prod
+git:
+  depth: 700
