@@ -1,5 +1,5 @@
 import * as React from 'react';
-var jStat:any = require('jstat').jStat;
+var jStat:any = require('jStat').jStat;
 
 export interface Framework {
     name: string;
