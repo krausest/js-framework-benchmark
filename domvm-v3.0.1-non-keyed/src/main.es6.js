@@ -1,29 +1,7 @@
 import domvm from '../node_modules/domvm/dist/nano/domvm.nano.min.js';
-
 import {Store} from './store.es6';
 
-let startTime;
-let lastMeasure;
-
-function startMeasure(name) {
-	startTime = performance.now();
-	lastMeasure = name;
-}
-
-function stopMeasure() {
-	var last = lastMeasure;
-
-	if (lastMeasure) {
-		window.setTimeout(function () {
-			lastMeasure = null;
-			var stop = performance.now();
-			var duration = 0;
-			console.log(last+" took "+(stop-startTime));
-		}, 0);
-	}
-}
-
-const h = domvm.defineElement;
+const h = (tag, arg1, arg2) => domvm.defineElement(tag, arg1, arg2, domvm.FIXED_BODY);
 const v = domvm.defineView;
 const store = new Store();
 
@@ -41,27 +19,25 @@ function App(vm) {
 }
 
 function Jumbotron(vm) {
-	vm.diff(_ => [0]);
+	vm.config({diff: _ => 0});
 
-	let wrapMeasure = name => e => {
-		startMeasure(name);
+	let exec = name => e => {
 		store[name]();
-		vm.root().redraw(true);
-		stopMeasure(name);
+		vm.root().redraw();
 	};
 
-	let run			= wrapMeasure("run");
-	let runLots		= wrapMeasure("runLots");
-	let add			= wrapMeasure("add");
-	let update		= wrapMeasure("update");
-	let clear		= wrapMeasure("clear");
-	let swapRows	= wrapMeasure("swapRows");
+	let run			= exec("run");
+	let runLots		= exec("runLots");
+	let add			= exec("add");
+	let update		= exec("update");
+	let clear		= exec("clear");
+	let swapRows	= exec("swapRows");
 
 	return _ =>
 		h(".jumbotron", [
 			h(".row", [
 				h(".col-md-6", [
-					h("h1", "domvm v2.1.4 (keyed)")
+					h("h1", "domvm v3.0.1 (non-keyed)")
 				]),
 				h(".col-md-6", [
 					h(".row", [
@@ -91,22 +67,18 @@ function Jumbotron(vm) {
 
 function Table(vm) {
 	let select = (e, node) => {
-		startMeasure("select");
-		while (node.key == null)
+		while (node.data == null)
 			node = node.parent;
-		store.select(node.key);
-		vm.redraw(true);		// sync redraw
-		stopMeasure("select");
+		store.select(node.data);
+		vm.redraw();
 		return false;
 	};
 
 	let remove = (e, node) => {
-		startMeasure("delete");
-		while (node.key == null)
+		while (node.data == null)
 			node = node.parent;
-		store.delete(node.key);
-		vm.redraw(true);
-		stopMeasure("delete");
+		store.delete(node.data);
+		vm.redraw();
 		return false;
 	};
 
@@ -116,28 +88,26 @@ function Table(vm) {
 		".lbl": select,
 	};
 
-	return _ =>
-		h("table.table.table-hover.table-striped.test-data", {onclick: tableClick}, [
-			h("tbody", {_flags: domvm.KEYED_LIST}, store.data.map(item =>
-				v(Item, item, item.id)
+	return _ => {
+		var items = domvm.lazyList(store.data, {
+			diff: item => [item.label, item.id === store.selected, item.id],
+		});
+
+		return h("table.table.table-hover.table-striped.test-data", {onclick: tableClick}, [
+			h("tbody", {_flags: domvm.LAZY_LIST}, items.map(item =>
+				h("tr", {_data: item.id, class: item.id === store.selected ? 'danger' : null}, [
+					h("td.col-md-1", item.id),
+					h("td.col-md-4", [
+						h("a.lbl", item.label)
+					]),
+					h("td.col-md-1", [
+						h("a.remove", [
+							h("span.glyphicon.glyphicon-remove", {"aria-hidden": ""})
+						])
+					]),
+					h("td.col-md-6")
+				])
 			))
 		]);
-}
-
-function Item(vm, item) {
-	vm.diff((vm, item) => [item.label, item.id === store.selected]);
-
-	return _ =>
-		h("tr", {class: item.id === store.selected ? 'danger' : null}, [
-			h("td.col-md-1", item.id),
-			h("td.col-md-4", [
-				h("a.lbl", item.label)
-			]),
-			h("td.col-md-1", [
-				h("a.remove", [
-					h("span.glyphicon.glyphicon-remove", {"aria-hidden": ""})
-				])
-			]),
-			h("td.col-md-6")
-		]);
+	};
 }
