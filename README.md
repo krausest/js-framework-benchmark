@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/alexteves/js-framework-benchmark.svg?branch=master)](https://travis-ci.org/alexteves/js-framework-benchmark)
+
 # js-framework-benchmark
 
 This is a simple benchmark for several javascript frameworks. The benchmarks creates a large table with randomized entries and measures the time for various operations.
