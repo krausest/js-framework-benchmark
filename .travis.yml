@@ -5,6 +5,7 @@ os:
 env:
   - JS_FRAMEWORK=angular-v1.6.3-keyed
   - JS_FRAMEWORK=angular-v4.1.2-keyed
+  - JS_FRAMEWORK=angular-v4.1.2-no-zone-keyed
   - JS_FRAMEWORK=angular-v4.1.2-non-keyed
   - JS_FRAMEWORK=aurelia-v1.1.2
   - JS_FRAMEWORK=binding.scala-v10.0.1
