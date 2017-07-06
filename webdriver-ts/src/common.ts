@@ -34,6 +34,7 @@ function f(name: string, nonKeyed: boolean, options: Options = {uri: null, useSh
 export let frameworks = [
     f("angular-v1.6.3-keyed", false),
     f("angular-v4.1.2-keyed", false),
+    f("angular-v4.1.2-no-zone-keyed", false),
     f("angular-v4.1.2-non-keyed", true),
     f("aurelia-v1.1.2", true, {uri: "aurelia-v1.1.2/dist"}),
     f("binding.scala-v10.0.1", false, {uri: "binding.scala-v10.0.1/target/web/stage"}),
