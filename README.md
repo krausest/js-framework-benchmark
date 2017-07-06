@@ -128,6 +128,7 @@ How to start submitting a new implementation:
 * Make sure your application compiles and runs in the browser. The easiest way to start a local server is by invoking npm start in the root dir and opening your application on http://localhost:8080/framework-version/index.html
 * Optional: Run it with the automated benchmarking tool. Add a new array entry to the frameworks array in webdriver-ts/src/common.ts. Compile the test driver in webdriver-ts with `npm run build-prod` and run it just with `npm run selenium -- --framework framework-version` if you want to run your version only or just `npm run selenium` if you have time, built everything and want to run the benchmarks for all frameworks. The results will be written in the directory webdriver-ts/results in JSON format. `npm run results` will create the results table that can be opened on http://localhost:8080/webdriver-ts/table.html. If you don't I'll update webdriver-ts for you ;-)
 * *If you have a conflict in index.html or common.ts you don't need to fix them. I'm fine with solving conflicts in those files.*.
+* *Currently we're experimenting with a travis-ci integration build. Currently pull requests seem to fail regularly. Please ignore that for now.*
 
 This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
 
