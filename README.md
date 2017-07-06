@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/alexteves/js-framework-benchmark.svg?branch=master)](https://travis-ci.org/alexteves/js-framework-benchmark)
+[![Build Status](https://travis-ci.org/krausest/js-framework-benchmark.svg?branch=master)](https://travis-ci.org/krausest/js-framework-benchmark)
 
 # js-framework-benchmark
 
