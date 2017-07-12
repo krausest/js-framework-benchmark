@@ -231,7 +231,7 @@ export class ResultTableData {
     computeFactors(benchmark: Benchmark, clamp: boolean): Array<TableResultValueEntry|null> {
         let benchmarkResults = this.frameworks.map(f => this.results(benchmark, f));
         let compareWithResults = this.compareWith ? this.results(benchmark, this.compareWith) : undefined;
-        let min = benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min,result.mean), Number.POSITIVE_INFINITY);
+        let min = benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, this.useMedian ? result.median : result.mean), Number.POSITIVE_INFINITY);
         return this.frameworks.map(f => {
             let result = this.results(benchmark, f);
             if (result === null) return null;
