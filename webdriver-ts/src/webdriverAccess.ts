@@ -80,65 +80,65 @@ function elemNull(v: any) {
     return false;
 }
 
+function waitForCondition(driver: WebDriver) {
+    return function(text: string, fn: (driver:WebDriver) => promise.Promise<boolean>, timeout: number): promise.Promise<boolean> {
+        return driver.wait(new Condition<boolean>(text, fn), timeout);
+    }
+}
+
 // driver.findElement(By.xpath("//tbody/tr[1]/td[1]")).getText().then(...) can throw a stale element error: 
 // thus we're using a safer way here:
-export function testTextContains(driver: WebDriver, xpath: string, text: string) {
-    return driver.wait(new Condition<boolean>(`testTextContains ${xpath} ${text}`,
+export function testTextContains(driver: WebDriver, xpath: string, text: string, timeout = config.TIMEOUT) {
+    return waitForCondition(driver)(`testTextContains ${xpath} ${text}`,
         (driver) => shadowRoot(driver).then(elem => findByXPath(elem, xpath))
             .then(elem => elem==null ? elemNull(false) : elem.getText().then(
                 v => v && v.indexOf(text)>-1,
                 err => console.log("ignoring error in testTextContains for xpath = "+xpath+" text = "+text,err.toString().split("\n")[0])
-        ))                        
-    ), config.TIMEOUT);        
+        )), timeout);        
 }
 
-export function testTextNotContained(driver: WebDriver, xpath: string, text: string) {
-    return driver.wait(new Condition<boolean>(`testTextNotContained ${xpath} ${text}`,
+export function testTextNotContained(driver: WebDriver, xpath: string, text: string, timeout = config.TIMEOUT) {
+    return waitForCondition(driver)(`testTextNotContained ${xpath} ${text}`,
         (driver) => shadowRoot(driver).then(elem => findByXPath(elem, xpath))
             .then(elem => elem==null ? elemNull(false) : elem.getText().then(
                 v => v && v.indexOf(text)==-1,
                 err => console.log("ignoring error in testTextNotContained for xpath = "+xpath+" text = "+text,err.toString().split("\n")[0])
-            ))                        
-        ), config.TIMEOUT);        
+        )), timeout);        
 }
 
-export function testClassContains(driver: WebDriver, xpath: string, text: string) {
-    return driver.wait(new Condition<boolean>(`testClassContains ${xpath} ${text}`,
+export function testClassContains(driver: WebDriver, xpath: string, text: string, timeout = config.TIMEOUT) {
+    return waitForCondition(driver)(`testClassContains ${xpath} ${text}`,
         (driver) => shadowRoot(driver).then(elem => findByXPath(elem, xpath))
             .then(elem => elem==null ? elemNull(false) : elem.getAttribute("class").then(
             v => v && v.indexOf(text)>-1,
             err => console.log("ignoring error in testClassContains for xpath = "+xpath+" text = "+text,err.toString().split("\n")[0])
-        ))
-    ), config.TIMEOUT); 
+        )), timeout); 
 }
 
-export function testElementLocatedByXpath(driver: WebDriver, xpath: string) {
-    // return driver.wait(until.elementLocated(By.xpath(xpath)), 3000);
-    return driver.wait(new Condition<boolean>(`testElementLocatedByXpath ${xpath}`, (driver) => 
+export function testElementLocatedByXpath(driver: WebDriver, xpath: string, timeout = config.TIMEOUT) {
+    return waitForCondition(driver)(`testElementLocatedByXpath ${xpath}`, (driver) => 
             shadowRoot(driver).then(elem => 
                     elem==null ? elemNull(false) : findByXPath(elem, xpath).then(
                     (v:any) => v,
                     (err:any) => console.log("ignoring error in testElementLocatedByXpath for xpath = "+xpath,err.toString())
-            ))
-        ), config.TIMEOUT); 
+            )), config.TIMEOUT); 
 }
 
-export function testElementNotLocatedByXPath(driver: WebDriver, xpath: string)
+export function testElementNotLocatedByXPath(driver: WebDriver, xpath: string, timeout = config.TIMEOUT)
 {
-    return driver.wait(new Condition<boolean>(`testElementNotLocatedByXPath ${xpath}`,
+    return waitForCondition(driver)(`testElementNotLocatedByXPath ${xpath}`,
         (driver) => shadowRoot(driver).then(elem => findByXPath(elem, xpath)).then(
             v => !v,
             err => console.log("ignoring error in testElementNotLocatedByXPath for xpath = "+xpath,err.toString().split("\n")[0]))
-        ), config.TIMEOUT);
+        , timeout);
 }
 
-export function testElementLocatedById(driver: WebDriver, id: string) {
-    return driver.wait(new Condition<boolean>(`testElementLocatedById ${id}`,
+export function testElementLocatedById(driver: WebDriver, id: string, timeout = config.TIMEOUT) {
+    return waitForCondition(driver)(`testElementLocatedById ${id}`,
         (driver) => shadowRoot(driver).then(elem => elem.findElement(By.id(id))).then(
             v => true,
             err => console.log("ignoring error in testElementLocatedById for id = "+id,err.toString().split("\n")[0]))
-        )
-        , config.TIMEOUT);
+        , timeout);
 }
 
 function retry<T>(retryCount: number, driver: WebDriver, fun : (driver:  WebDriver) => promise.Promise<T>):  promise.Promise<T> {

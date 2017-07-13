@@ -179,6 +179,16 @@ function writeResult(res: Result, dir: string) {
         fs.writeFileSync(`${dir}/${fileName(res.framework, benchmark)}`, JSON.stringify(result), {encoding: "utf8"});
 }
 
+function takeScreenshotOnError(driver: WebDriver, fileName: string, error: string): promise.Promise<any> {
+    console.error("Benchmark failed");
+    return driver.takeScreenshot().then(
+        function(image) {
+            console.error(`Writing screenshot ${fileName}`);
+            fs.writeFileSync(fileName, image, {encoding: 'base64'});
+        }
+    );                
+}
+
 function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchmark) : promise.Promise<any> {
         console.log("benchmarking ", framework, benchmark.id);
         let driver = buildDriver();
@@ -187,17 +197,9 @@ function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchmark) : 
             return driver.get(`http://localhost:8080/${framework.uri}/`)
             .then(() => initBenchmark(driver, benchmark, framework))
             .then(() => runBenchmark(driver, benchmark, framework))
-            .catch((e) => {
-                console.error("Benchmark failed",e);
-                driver.takeScreenshot().then(
-                    function(image) {
-                        require('fs').writeFileSync('error-'+framework+'-'+benchmark.id+'.png', image, 'base64', function(err:any) {
-                            console.log(err);
-                        });
-                        throw e;
-                    }
-                );                
-            });
+            .catch((e) => takeScreenshotOnError(driver, 'error-'+framework+'-'+benchmark.id+'.png', e).then(
+                    () => {throw e})
+            );
         })
         .then(results => reduceBenchmarkResults(benchmark, results))
         .then(results => writeResult({framework: framework, results: results, benchmark: benchmark}, dir))
@@ -216,19 +218,13 @@ function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmark) : p
             // Check what we measured. Results are pretty similar, though we are measuring a bit longer until the final repaint happened.
             // .then(() => driver.executeScript("return window.performance.timing.loadEventEnd - window.performance.timing.navigationStart"))
             // .then((duration) => console.log(duration, typeof duration))            
-            .then(() => {console.log("QUIT"); driver.quit();},
-                (e) => {
-                console.error("Benchmark failed",e);
-                driver.takeScreenshot().then(
-                    function(image) {
-                        (<any>fs).writeFileSync('error-'+framework+'_startup.png', image, 'base64', function(err:any) {
-                            console.log(err);
-                            console.log("QUIT after error"); driver.quit();
-                        });
-                        throw e;
-                    }
-                );                
-            })
+            .then(() => {console.log("QUIT"); driver.quit()},
+                (e) => takeScreenshotOnError(driver, 'error-'+framework+'-'+benchmark.id+'.png', e).then(
+                        () => {
+                            return driver.quit().then(() => {throw e});
+                        }
+                    )
+            )
         })
         .then(() => reduceBenchmarkResults(benchmark, results))
         .then(results => writeResult({framework: framework, results: results, benchmark: benchmark}, dir))

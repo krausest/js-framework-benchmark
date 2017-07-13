@@ -4,6 +4,8 @@ import {config, FrameworkData} from './common'
 
 export enum BenchmarkType { CPU, MEM, STARTUP };
 
+const SHORT_TIMEOUT = 1000;
+
 export interface Benchmark {
     id: string;
     type: BenchmarkType;
@@ -18,7 +20,7 @@ const benchRun: Benchmark = {
     label: "create rows",
     description: "Duration for creating 1000 rows after the page loaded.",
     type: BenchmarkType.CPU,
-    init: (driver: WebDriver) => testElementLocatedById(driver, "add"),    
+    init: (driver: WebDriver) => testElementLocatedById(driver, "add", SHORT_TIMEOUT),    
     run: (driver: WebDriver) => 
         clickElementById(driver,"add")
         .then(() => testElementLocatedByXpath(driver,"//tbody/tr[1000]/td[2]/a")),
@@ -30,7 +32,7 @@ const benchReplaceAll: Benchmark = {
     description: "Duration for updating all 1000 rows of the table (with "+config.WARMUP_COUNT+" warmup iterations).",
     type: BenchmarkType.CPU,
     init: (driver: WebDriver) =>
-            testElementLocatedById(driver,'run')
+            testElementLocatedById(driver,'run', SHORT_TIMEOUT)
             .then(() => forProm(0, config.WARMUP_COUNT, () => clickElementById(driver,'run'))),
     run: (driver: WebDriver) => 
             clickElementById(driver,'run')
@@ -43,7 +45,7 @@ const benchUpdate: Benchmark = {
     description: "Time to update the text of every 10th row (with "+config.WARMUP_COUNT+" warmup iterations).",
     type: BenchmarkType.CPU,
     init: (driver: WebDriver) =>
-            testElementLocatedById(driver,"run")
+            testElementLocatedById(driver,"run", SHORT_TIMEOUT)
             .then(() => clickElementById(driver,'run'))
             .then(() => forProm(0, config.WARMUP_COUNT, () => clickElementById(driver,'update'))),
     run: (driver: WebDriver) => 
@@ -57,7 +59,7 @@ const benchSelect: Benchmark = {
     description: "Duration to highlight a row in response to a click on the row. (with "+config.WARMUP_COUNT+" warmup iterations).",
     type: BenchmarkType.CPU,
     init: (driver: WebDriver) =>
-            testElementLocatedById(driver,"run")
+            testElementLocatedById(driver,"run", SHORT_TIMEOUT)
             .then(() => clickElementById(driver,'run'))
             .then(() => testElementLocatedByXpath(driver,"//tbody/tr[1]/td[2]/a"))
             .then(() =>forProm(0, config.WARMUP_COUNT, (i) => clickElementByXPath(driver,`//tbody/tr[${i+1}]/td[2]/a`))),
@@ -73,7 +75,7 @@ const benchSwapRows: Benchmark = {
     type: BenchmarkType.CPU,
     init: (driver: WebDriver) => {
             let text = '';
-            return testElementLocatedById(driver,"run")
+            return testElementLocatedById(driver,"run", SHORT_TIMEOUT)
             .then(() => clickElementById(driver,'run'))
             .then(() => testElementLocatedByXpath(driver,"//tbody/tr[1]/td[2]/a"))
             .then(() => forProm(0, config.WARMUP_COUNT, () => 
@@ -97,7 +99,7 @@ const benchRemove: Benchmark = {
     description: "Duration to remove a row. (with "+config.WARMUP_COUNT+" warmup iterations).",
     type: BenchmarkType.CPU,
     init: (driver: WebDriver) =>
-            testElementLocatedById(driver, "run")
+            testElementLocatedById(driver, "run", SHORT_TIMEOUT)
             .then(() => clickElementById(driver, 'run'))
             .then(() => testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a"))
             .then(() => forProm(0, config.WARMUP_COUNT, (i) => {
@@ -122,7 +124,7 @@ const benchRunBig: Benchmark = {
     description: "Duration to create 10,000 rows",
     type: BenchmarkType.CPU,
     init: (driver: WebDriver) =>
-            testElementLocatedById(driver, "runlots"),
+            testElementLocatedById(driver, "runlots", SHORT_TIMEOUT),
     run: (driver: WebDriver) => 
             clickElementById(driver, 'runlots')
             .then(() => testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a"))
@@ -134,7 +136,7 @@ const benchAppendToManyRows: Benchmark = {
     description: "Duration for adding 1000 rows on a table of 10,000 rows.",
     type: BenchmarkType.CPU,
     init: (driver: WebDriver) =>
-            testElementLocatedById(driver, "runlots")
+            testElementLocatedById(driver, "runlots", SHORT_TIMEOUT)
             .then(() => clickElementById(driver, 'runlots'))
             .then(() => testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a")),
     run: (driver: WebDriver) => 
@@ -148,7 +150,7 @@ const benchClear: Benchmark = {
     description: "Duration to clear the table filled with 10.000 rows.",
     type: BenchmarkType.CPU,
     init: (driver: WebDriver) =>
-            testElementLocatedById(driver, "runlots")
+            testElementLocatedById(driver, "runlots", SHORT_TIMEOUT)
             .then(() => clickElementById(driver, 'runlots'))
             .then(() => testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a")),
     run: (driver: WebDriver) => 
@@ -162,7 +164,7 @@ const benchReadyMemory: Benchmark = {
     description: "Memory usage after page load.",
     type: BenchmarkType.MEM,
     init: (driver: WebDriver) =>
-            testElementLocatedById(driver, "add"),
+            testElementLocatedById(driver, "add", SHORT_TIMEOUT),
     run: (driver: WebDriver) =>  
             testElementNotLocatedByXPath(driver, "//tbody/tr[1]")
 }
@@ -173,7 +175,7 @@ const benchRunMemory: Benchmark = {
     description: "Memory usage after adding 1000 rows.",
     type: BenchmarkType.MEM,
     init: (driver: WebDriver) =>
-           testElementLocatedById(driver, "add"),
+           testElementLocatedById(driver, "add", SHORT_TIMEOUT),
     run: (driver: WebDriver) => 
             clickElementById(driver, 'run')
             .then(() => testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a"))
@@ -188,7 +190,7 @@ const benchStartup: Benchmark = {
            driver.get(`http://localhost:8080/`),
     run: (driver: WebDriver, framework: FrameworkData) => 
             driver.get(`http://localhost:8080/${framework.uri}/`)
-            .then(() => testElementLocatedById(driver, "run"))
+            .then(() => testElementLocatedById(driver, "run", SHORT_TIMEOUT))
 }
 
 export let benchmarks : [ Benchmark ] = [
