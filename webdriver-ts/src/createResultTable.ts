@@ -158,13 +158,13 @@ let generateBenchData = (benchmarks: Array<Benchmark>, frameworkPredicate: Frame
 	}
 }
 
-function frameworkPredicateKeyed(nonKeyed : boolean): FrameworkPredicate {
-	return (framework: FrameworkData) => {return framework.nonKeyed === nonKeyed;};
+function frameworkPredicateKeyed(keyed : boolean): FrameworkPredicate {
+	return (framework: FrameworkData) => {return framework.keyed !== keyed;};
 }
-let cpubenchesNonKeyed = generateBenchData(cpuBenchmarks, frameworkPredicateKeyed(true), 'vanillajs-non-keyed');
-let membenchesNonKeyed = generateBenchData(memBenchmarks, frameworkPredicateKeyed(true), 'vanillajs-non-keyed');
-let cpubenchesKeyed = generateBenchData(cpuBenchmarks, frameworkPredicateKeyed(false), 'vanillajs-keyed'); // react
-let membenchesKeyed = generateBenchData(memBenchmarks, frameworkPredicateKeyed(false), 'vanillajs-keyed');
+let cpubenchesNonKeyed = generateBenchData(cpuBenchmarks, frameworkPredicateKeyed(false), 'vanillajs-non-keyed');
+let membenchesNonKeyed = generateBenchData(memBenchmarks, frameworkPredicateKeyed(false), 'vanillajs-non-keyed');
+let cpubenchesKeyed = generateBenchData(cpuBenchmarks, frameworkPredicateKeyed(true), 'vanillajs-keyed'); // react
+let membenchesKeyed = generateBenchData(memBenchmarks, frameworkPredicateKeyed(true), 'vanillajs-keyed');
 
 fs.writeFileSync('./table.html', dots.table({
 	data: [

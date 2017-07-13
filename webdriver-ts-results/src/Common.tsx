@@ -4,7 +4,7 @@ var jStat:any = require('jStat').jStat;
 export interface Framework {
     name: string;
     uri: string;
-    nonKeyed: boolean;
+    keyed: boolean;
 }
 
 export enum BenchmarkType { CPU, MEM, STARTUP }
@@ -141,7 +141,7 @@ export class ResultTableData {
         public selectedFrameworks: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, nonKeyed: boolean|undefined, sortKey: string,
         public compareWith: Framework|undefined,
         public useMedian: boolean) {
-        this.frameworks = this.allFrameworks.filter(framework => (nonKeyed===undefined || framework.nonKeyed === nonKeyed) && selectedFrameworks.has(framework));
+        this.frameworks = this.allFrameworks.filter(framework => (nonKeyed===undefined || framework.keyed !== nonKeyed) && selectedFrameworks.has(framework));
         this.update(sortKey);
     }
     private update(sortKey: string) {

@@ -14,11 +14,14 @@ let resultJS = "export let results=[";
 frameworks.forEach((framework, fIdx) => {
 	benchmarks.forEach((benchmark, bIdx) => {
 		let name = `${fileName(framework, benchmark)}`;
-		let data = fs.readFileSync('./results/' + name, {
-			encoding:'utf-8'
-		});
-		if (fIdx!==0 || bIdx!==0) resultJS += ',';
-		resultJS += '\n' + data;
+		let file = './results/' + name;
+		if (fs.existsSync(file)) {
+			let data = fs.readFileSync(file, {
+				encoding:'utf-8'
+			});
+			if (fIdx!==0 || bIdx!==0) resultJS += ',';
+			resultJS += '\n' + data;
+		}
 	})
 });
 

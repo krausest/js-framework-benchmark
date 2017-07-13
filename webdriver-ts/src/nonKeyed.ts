@@ -150,7 +150,7 @@ function runBench(frameworkNames: string[]) {
                     + (nonKeyedRemove ? "non-keyed" : "keyed") + " for 'remove row benchmark' "
                     + (nonKeyedSwap ? "non-keyed" : "keyed") + " for 'swap rows benchmark' "
                     +". It'll appear as "+(nonKeyed ? "non-keyed" : "keyed")+" in the results");
-                    if (frameworkMap.get(framework.name).nonKeyed !== nonKeyed) {
+                    if (frameworkMap.get(framework.name).keyed === nonKeyed) {
                         console.log("ERROR: Framework "+framework.name+" is not correctly categorized in commons.ts");
                     }
             })        

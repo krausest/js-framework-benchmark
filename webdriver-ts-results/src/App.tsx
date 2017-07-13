@@ -56,29 +56,29 @@ class App extends React.Component<{}, State> {
                               .every(b => !this.state.selectedBenchmarks.has(b)),
       isSelected: (benchmark: Benchmark) => this.state.selectedBenchmarks.has(benchmark)
   })
-  frameworkSelect = (nonKeyed: boolean) => ({
+  frameworkSelect = (keyed: boolean) => ({
       selectAll: (event: React.SyntheticEvent<any>) => {    
         event.preventDefault();
         let set = this.state.selectedFrameworks;
-        frameworks.forEach(framework => {if (framework.nonKeyed === nonKeyed && !set.has(framework)) set.add(framework);});
+        frameworks.forEach(framework => {if (framework.keyed === keyed && !set.has(framework)) set.add(framework);});
         this.nextState.selectedFrameworks = set;
         this.setState({selectedFrameworks: set, resultTables: this.updateResultTable()});
       },
       selectNone: (event: React.SyntheticEvent<any>) => {    
         event.preventDefault();
         let set = this.state.selectedFrameworks;
-        set.forEach(framework => {if (framework.nonKeyed === nonKeyed) set.delete(framework);});
+        set.forEach(framework => {if (framework.keyed === keyed) set.delete(framework);});
         this.nextState.selectedFrameworks = set;
         this.setState({selectedFrameworks: set, resultTables: this.updateResultTable()});
       },
-      areAllSelected: () => frameworks.filter(f => f.nonKeyed===nonKeyed).every(f => this.state.selectedFrameworks.has(f)),
-      isNoneSelected: () => frameworks.filter(f => f.nonKeyed===nonKeyed).every(f => !this.state.selectedFrameworks.has(f)),
+      areAllSelected: () => frameworks.filter(f => f.keyed===keyed).every(f => this.state.selectedFrameworks.has(f)),
+      isNoneSelected: () => frameworks.filter(f => f.keyed===keyed).every(f => !this.state.selectedFrameworks.has(f)),
       isSelected: (framework: Framework) => this.state.selectedFrameworks.has(framework)
   });
   benchSelectCpu = this.benchSelect(false);
   benchSelectMem = this.benchSelect(true);
-  frameworkSelectKeyed = this.frameworkSelect(false);
-  frameworkSelectNonKeyed = this.frameworkSelect(true);
+  frameworkSelectKeyed = this.frameworkSelect(true);
+  frameworkSelectNonKeyed = this.frameworkSelect(false);
   nextState: State;
 
   constructor(props: object) {
@@ -87,8 +87,8 @@ class App extends React.Component<{}, State> {
                   benchmarksCPU: benchmarks.filter(b => b.type !== BenchmarkType.MEM),
                   benchmarksMEM: benchmarks.filter(b => b.type === BenchmarkType.MEM),
                   frameworks,
-                  frameworksKeyed: frameworks.filter(f => f.nonKeyed === false),
-                  frameworksNonKeyed: frameworks.filter(f => f.nonKeyed === true),
+                  frameworksKeyed: frameworks.filter(f => f.keyed === true),
+                  frameworksNonKeyed: frameworks.filter(f => f.keyed === false),
                   selectedBenchmarks: _allBenchmarks,
                   selectedFrameworks: _allFrameworks,
                   separateKeyedAndNonKeyed: true,
