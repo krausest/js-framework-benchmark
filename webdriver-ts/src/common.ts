@@ -53,7 +53,6 @@ export let frameworks = [
     f("hyperapp-v0.9.1-non-keyed", false),
     f("inferno-v3.1.2-non-keyed", false),
     f("inferno-v3.1.2-keyed", true),
-    f("ivi-v0.7.0", true),          // remove
     f("ivi-v0.8.0-keyed", true),    
     f("knockout-v3.4.1-keyed", true),
     f("marionette-v3.3.1-keyed", true),
