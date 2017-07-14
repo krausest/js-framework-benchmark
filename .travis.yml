@@ -81,7 +81,7 @@ before_script:
   - sleep 3                             # give xvfb some time to start
   
 script:
-  - npm install --ignore-scripts
+  - npm install
   - npm start &                         # start a Web server
   - sleep 3                             # give Web server some time to bind to sockets, etc
   - cd $JS_FRAMEWORK
