@@ -2,9 +2,13 @@
 
 # js-framework-benchmark
 
-This is a simple benchmark for several javascript frameworks. The benchmarks creates a large table with randomized entries and measures the time for various operations.
+This is a simple benchmark for several javascript frameworks. The benchmarks creates a large table with randomized entries and measures the time for various operations including rendering duration.
+
+![Screenshot](images/screenshot.png?raw=true "Screenshot")
 
 ## About the benchmarks
+
+The following operations are benchmarked for each framework:
 
 * create rows: Duration for creating 1000 rows after the page loaded.
 * replace all rows: Duration for updating all 1000 rows of the table (with 5 warmup iterations).
@@ -23,11 +27,11 @@ This is a simple benchmark for several javascript frameworks. The benchmarks cre
 For all benchmarks the duration is measured including rendering time. You can read some details on this [article](http://www.stefankrause.net/wp/?p=218).
 The results of this benchmark is outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316) [round 5](http://www.stefankrause.net/wp/?p=392) and [round 6](http://www.stefankrause.net/wp/?p=431)).
 
-## Temporary results
+## Snapshot of the results
 
-Official results are posted on the blog mentioned above. A snapshot that may not have the same quality (i.e. 
-results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html) or as a static page here [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts/table.html)
-The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX >= 10.12.5, Chrome >= 58.0.3029.110 (64-bit))
+Official results are posted on the blog mentioned above. The current snapshot that may not have the same quality (i.e. 
+results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html) 
+[![Results](images/results.png?raw=true "Results")](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
 
 ## Important News
 
