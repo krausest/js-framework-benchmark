@@ -2,7 +2,7 @@ var _ = require('lodash');
 var exec = require('child_process').execSync;
 var fs = require('fs');
 
-var excludedDirectories = ['css', 'dist','node_modules','webdriver-java'];
+var excludedDirectories = ['css', 'images', 'dist','node_modules','webdriver-java'];
 
 // set the following variable to resume building with a framework and skip all
 // other frameworks that would be buils before
