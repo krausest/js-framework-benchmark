@@ -78,7 +78,7 @@ Now open a new terminal window and keep http-server in background running
 
 We now try to build the first framework. Go to the vanillajs reference implementation
 ```
-cd vanillajs-keyed/
+cd vanillajs-keyed
 ```
 and install the dependencies
 ```
@@ -100,7 +100,47 @@ Open the browser console and click a bit on the buttons and you should see some 
 
 **For contributions it is sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional.**
 
-## To build the benchmarks for all frameworks:
+## 4. Running a single framework with the automated benchmark driver
+
+As mentioned above the benchmark uses an automated benchmark driver using chromedriver to measure the duration for each operation using chrome's timeline. Here are the steps to run is for a single framework:
+
+```
+cd webdriver-ts
+```
+and install the dependencies
+```
+npm install
+```
+and build the benchmark driver
+```
+npm run build-prod
+```
+now run the benchmark driver for the vanillajs-keyed framework:
+```
+npm run selenium -- --count 3 --framework vanillajs-keyed
+```
+Just lean back and watch chrome running the benchmarks. It runs each benchmark 3 times for the vanillajs-keyed framework.
+
+You should keep the chrome window visible since otherwise it seems like paint events can be skipped leading to wrong results. On the terminal will appear various log statements.  
+
+The results for that run will be saved in the `webdriver-ts/results` directory. We can take a look at the results of a single result:
+```
+cat results/vanillajs-keyed_01_run1k.json
+{"framework":"vanillajs-keyed","benchmark":"01_run1k","type":"cpu","min":135.532,"max":154.821,"mean":143.79166666666666,"median":141.022,"geometricMean":143.56641695989177,"standardDeviation":8.114582360718808,"values":[154.821,135.532,141.022]}
+```
+As you can see the mean duration for create 1000 rows was 144 msecs.
+
+## 6. Building the result table
+
+In the webdriver-ts directory issue the follwing command:
+```
+npm run static-results
+```
+Now a static result table should have been created which can be opened on [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html).
+There won't be much in table except for the column vanillajs-keyed at the right end of the first table.
+![First Run Results](images/staticResults.png?raw=true "First Run Results")
+
+## 5. Building the benchmarks for all frameworks
 
 `npm install`
 or 
