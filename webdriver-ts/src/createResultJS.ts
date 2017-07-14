@@ -19,8 +19,7 @@ frameworks.forEach((framework, fIdx) => {
 			let data = fs.readFileSync(file, {
 				encoding:'utf-8'
 			});
-			if (fIdx!==0 || bIdx!==0) resultJS += ',';
-			resultJS += '\n' + data;
+			resultJS += '\n' + data + ',';
 		} else {
 			console.log("MISSING FILE",file);
 		}

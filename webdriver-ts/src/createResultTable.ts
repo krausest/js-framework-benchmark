@@ -159,7 +159,7 @@ let generateBenchData = (benchmarks: Array<Benchmark>, frameworkPredicate: Frame
 }
 
 function frameworkPredicateKeyed(keyed : boolean): FrameworkPredicate {
-	return (framework: FrameworkData) => {return framework.keyed !== keyed;};
+	return (framework: FrameworkData) => {return framework.keyed === keyed;};
 }
 let cpubenchesNonKeyed = generateBenchData(cpuBenchmarks, frameworkPredicateKeyed(false), 'vanillajs-non-keyed');
 let membenchesNonKeyed = generateBenchData(memBenchmarks, frameworkPredicateKeyed(false), 'vanillajs-non-keyed');
