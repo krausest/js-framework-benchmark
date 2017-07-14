@@ -121,6 +121,7 @@ In most cases you'll need `npm install` and `npm run build-prod` and then check 
 As mentioned above the benchmark uses an automated benchmark driver using chromedriver to measure the duration for each operation using chrome's timeline. Here are the steps to run is for a single framework:
 
 ```
+cd ..
 cd webdriver-ts
 ```
 and install the dependencies
@@ -153,7 +154,7 @@ In the webdriver-ts directory issue the follwing command:
 npm run static-results
 ```
 Now a static result table should have been created which can be opened on [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html).
-There won't be much in table except for the column vanillajs-keyed at the right end of the first table.
+There's nothing in table except for the column vanillajs-keyed at the right end of the first table.
 ![First Run Results](images/staticResults.png?raw=true "First Run Results")
 
 ## Optional 6.1 Adding your new implementation to the results table.
@@ -180,6 +181,8 @@ and update the result table
 npm run static-results
 ```
 Super-VanillaJS-keyed should now be listed in [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html)
+
+> If you compare the results chances are that one of both is significantly faster. This is due to the very low number of runs and maybe some distracting background processes. Try again with a much higher count and you'll see the numbers converge.
 
 ## Optional 6.2 Updating the index.html file 
 With
@@ -209,12 +212,16 @@ and let it create the interactive table
 ```
 npm run interactive-results
 ```
-This will take a bit, but you should see no errors and be able to see the interactive results on [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html)
+This will take a bit, but you should see no errors besides some "MISSING FILE" messages and be able to see the interactive results on [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html). The "MISSING FILE" warnings will disappear if the results for all frameworks are available.
 
 ## Optional 8. Building and running the benchmarks for all frameworks
 
-This is not for the faint at heart. You can build all frameworks simply by issuing
-`npm run build-prod` in the root directory. After downloading the whole internet it starts building it. Basically there should be no errors during the build, but I can't guarantee that the dependencies won't break.
+This is not for the faint at heart. You can build all frameworks simply by issuing 
+```
+cd ..
+npm run build-prod
+```
+After downloading the whole internet it starts building it. Basically there should be no errors during the build, but I can't guarantee that the dependencies won't break.
 You can now run selenium for all frameworks by invoking
 `npm run selenium`
 in the root directory.
