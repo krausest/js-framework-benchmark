@@ -33,37 +33,74 @@ Official results are posted on the blog mentioned above. The current snapshot th
 results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html) 
 [![Results](images/results.png?raw=true "Results")](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
 
-## Important News
+## How to get started - building and running
 
-Chrome 54 on OSX has a bug that causes webdriver to hang or crash on non english systems. Please run the following command prior to executing the webdriver-ts testdriver:```
-export LANG="en_US.UTF-8"```
+There are currently ~60 framework entries in this repository. Installing (and maintaining) those can be challenging, but here are simplified instructions how to get started.
 
-## Prerequisites
+### 1. Prerequisites
 
-Have *node.js (>=6.0)* installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node 7.0.
-You will also need *java* (>=8, e.g. openjdk-8-jre on ubuntu) for the google closure compiler, currently used in kivi.
-Further maven is needed and the bin directory of maven must be added to the path.
+Have *node.js (>=7.0)* installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node 7.0.
+For some frameworks you'll also need *java* (>=8, e.g. openjdk-8-jre on ubuntu).
 Please make sure that the following command work before trying to build:
 ```
 > npm
 npm -version
-4.0.5
+5.0.0
 > node --version
-v7.4.0
+v8.0.0
 > echo %JAVA_HOME% / echo $JAVA_HOME
 > java -version
-java version "1.8.0_111" ...
+java version "1.8.0_131" ...
 > javac -version
-javac 1.8.0_111
-> mvn -version
-Apache Maven 3.3.9 (...
-> git --version
-git version 2.11.0.windows.3
+javac 1.8.0_131
 ```
 
-## Building
+### 2. Start installing
 
-* To build the benchmarks for all frameworks:
+As stated above building and running the benchmarks for all frameworks can be challenging, thus we start step by step...
+
+Install global dependencies
+This installs just a few top level dependencies for the building the frameworks and a http-server.
+```
+npm install
+```
+We start the http-server in the root directory
+```
+npm start
+```
+Verify that the http-server works:
+Try to open [http://localhost:8080/index.html](http://localhost:8080/index.html). If you see something like that you're on the right track:
+![Index.html](images/index.png?raw=true "Index.html")
+
+Now open a new terminal window and keep http-server in background running
+
+### 3. Building and running a single framework
+
+We now try to build the first framework. Go to the vanillajs reference implementation
+```
+cd vanillajs-keyed/
+```
+and install the dependencies
+```
+npm install
+```
+and build the framework
+```
+npm run build-prod
+```
+There should be no build errors and we can open the framework in the browser:
+[http://localhost:8080/vanillajs-keyed/](http://localhost:8080/vanillajs-keyed/)
+
+Some frameworks like aurelia, binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a third parameter in [common.ts](https://github.com/krausest/js-framework-benchmark/blob/master/webdriver-ts/src/common.ts#L38-L42) that represents the url.
+
+Open the browser console and click a bit on the buttons and you should see some measurements printed on the console.
+![First Run](images/firstRun.png?raw=true "First run")
+
+> What is printed on the console is not what is actually measured by the automated benchmark driver. The benchmark driver extracts events from chrome's timeline to calculate the duration for the operations. What get's printed on the console above is an approximation of the actual duration which is pretty close to the actual duration.
+
+**For contributions it is sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional.**
+
+## To build the benchmarks for all frameworks:
 
 `npm install`
 or 
