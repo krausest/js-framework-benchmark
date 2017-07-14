@@ -72,7 +72,7 @@ Verify that the http-server works:
 Try to open [http://localhost:8080/index.html](http://localhost:8080/index.html). If you see something like that you're on the right track:
 ![Index.html](images/index.png?raw=true "Index.html")
 
-Now open a new terminal window and keep http-server in background running
+Now open a new terminal window and keep http-server running in background.
 
 ### 3. Building and running a single framework
 
@@ -102,7 +102,9 @@ Open the browser console and click a bit on the buttons and you should see some 
 
 For contributions it is basically sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional. Let's simulate that by copying vanillajs.
 ```
+cd ..
 cp -r vanillajs-keyed super-vanillajs-keyed
+cd super-vanillajs-keyed
 ```
 Then we edit super-vanillajs-keyed/index.html to have a correct index.html:
 ```
