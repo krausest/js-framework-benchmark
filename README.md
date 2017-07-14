@@ -177,6 +177,13 @@ npm run static-results
 ```
 Super-VanillaJS-keyed should now be listed in [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html)
 
+## Optional 6.2 Updating the index.html file 
+With
+```
+npm run index
+```
+you include Super-VanillaJS-keyed in [http://localhost:8080/index.html](http://localhost:8080/index.html)
+
 ## Optional 7. Building the interactive results table
 
 There's a nicer result table that allows filtering and sorting.
@@ -210,38 +217,26 @@ in the root directory.
 
 After that you can check all results in [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html).
 
+## Tips and tricks
 
-
-Single tests can be repeated easily. Just `cd webdriver-ts` and run the benchmarks and frameworks you want, e.g:
+* You can select multiple frameworks and benchmarks for running with prefixes like in the following example
 `npm run selenium -- --framework angular bob --benchmark 01_ 02_`
 runs the test for all frameworks that contain either angular or bob, which means all angular versions and bobril and all benchmarks whose id contain 01_ or 02_
-which means the create rows and replace all rows benchmarks.
-After that you'll want to update the result table with
-`npm run results`
+* If you can't get one framework to compile or run, just move it out of the root directory and remove it from common.ts, recompile and re-run
 
 ## How to contribute
 
 Contributions are very welcome. Please use the following rules:
-* Each contribution must be buildable by a "npm run build-prod" command in the directory. What build-prod does is up to you.
-* All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server should not be a local dependency. npm start in the root directory start a web server that can be used for all contributions.
-* Please use fixed version number, no ranges, as it turned out to break often. Updating works IMO best with npm-check-updates, which keeps the version format.
+* Name your directory [FrameworkName]-v[Version]-[keyed|non-keyed]
+* Each contribution must be buildable by `npm install` and `npm run build-prod` command in the directory. What build-prod does is up to you. Often there's an `npm run build-dev` that creates a development build
+* Every implementation must use bootstrap provided in the root css directory. 
+* All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server should not be a local dependency. It is installed from the root directory to allow access to bootstrap.
+* Please use fixed version number, no ranges, in package.json. Otherwise the build will break sooner or later - believe me. Updating works IMO best with npm-check-updates, which keeps the version format.
 * Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
-
-How to start submitting a new implementation:
-* Clone the repository. `npm install` would be next and will invoke install.js that in turn calls `npm install` in every folder. If you're not interested in mirroring npm just remove the folders for frameworks you're not interested in and run `npm install` then.
-* If something fails the easiest way is to move the folder that causes the problem somewhere else and run `npm install` (or `npm run build-prod` if you really want to build all benchmarks again). The install and build process prints the name of the folder it is currently working on so it should be simple to find which folder causes the problems.
-* Create a folder according to the naming scheme "framework-version"
-* cd into that folder
-* Create a package.json such that `npm install` installs *all* necessary dependencies including grunt, webpack, gulp and so on (the only thing you don't need is http-server).
-* Create a src directory and put your implementation there.
-* Take a look at some other framework you know like react or vue and start adapting the source code.
-* Copy the index.html from that implementation, copy the Store implementation. It might already contain all that is necessary and you might only have to bind the data and events in your index.html
 * Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
-* The package.json must support a build-prod task that assembles your application. Often you'd use webpack to do that.
-* Make sure your application compiles and runs in the browser. The easiest way to start a local server is by invoking npm start in the root dir and opening your application on http://localhost:8080/framework-version/index.html
-* Optional: Run it with the automated benchmarking tool. Add a new array entry to the frameworks array in webdriver-ts/src/common.ts. Compile the test driver in webdriver-ts with `npm run build-prod` and run it just with `npm run selenium -- --framework framework-version` if you want to run your version only or just `npm run selenium` if you have time, built everything and want to run the benchmarks for all frameworks. The results will be written in the directory webdriver-ts/results in JSON format. `npm run results` will create the results table that can be opened on http://localhost:8080/webdriver-ts/table.html. If you don't I'll update webdriver-ts for you ;-)
-* *If you have a conflict in index.html or common.ts you don't need to fix them. I'm fine with solving conflicts in those files.*.
-* *Currently we're experimenting with a travis-ci integration build. Currently pull requests seem to fail quite often. Please ignore that for now.*
+* You don't need to update /index.html. It's created with a script (see 6.2 above).
+* You don't need to edit webdriver-ts/common.ts. If you have a conflict in common.ts you don't need to resolve it. More often than not I'm just merging the pull request in the moment you're fixing the conflict.
+* Currently we're experimenting with a travis-ci integration build. Currently pull requests seem to fail quite often. Please ignore that for now.
 
 This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
 
