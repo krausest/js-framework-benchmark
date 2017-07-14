@@ -133,7 +133,7 @@ now run the benchmark driver for the vanillajs-keyed framework:
 ```
 npm run selenium -- --count 3 --framework vanillajs-keyed
 ```
-Just lean back and watch chrome running the benchmarks. It runs each benchmark 3 times for the vanillajs-keyed framework.
+Just lean back and watch chrome run the benchmarks. It runs each benchmark 3 times for the vanillajs-keyed framework.
 
 You should keep the chrome window visible since otherwise it seems like paint events can be skipped leading to wrong results. On the terminal will appear various log statements.  
 
@@ -225,6 +225,7 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
 `npm run selenium -- --framework angular bob --benchmark 01_ 02_`
 runs the test for all frameworks that contain either angular or bob, which means all angular versions and bobril and all benchmarks whose id contain 01_ or 02_
 * If you can't get one framework to compile or run, just move it out of the root directory and remove it from common.ts, recompile and re-run
+* To achieve good precision you should run each framework often enough. I recommend at least 10 times, more is better. The result table contains the mean and the standard deviation. You can seen the effect on the latter pretty well if you increase the count.
 
 ## How to contribute
 
