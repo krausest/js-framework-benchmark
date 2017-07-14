@@ -96,6 +96,10 @@ There should be no build errors and we can open the framework in the browser:
 Open the browser console and click a bit on the buttons and you should see some measurements printed on the console.
 ![First Run](images/firstRun.png?raw=true "First run")
 
+> What is printed on the console is not what is actually measured by the automated benchmark driver. The benchmark driver extracts events from chrome's timeline to calculate the duration for the operations. What get's printed on the console above is an approximation of the actual duration which is pretty close to the actual duration.
+
+**For contributions it is sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional.**
+
 ## To build the benchmarks for all frameworks:
 
 `npm install`
