@@ -98,7 +98,19 @@ Open the browser console and click a bit on the buttons and you should see some 
 
 > What is printed on the console is not what is actually measured by the automated benchmark driver. The benchmark driver extracts events from chrome's timeline to calculate the duration for the operations. What get's printed on the console above is an approximation of the actual duration which is pretty close to the actual duration.
 
-**For contributions it is sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional.**
+## Optional 3.1: Contributing a new implementation
+
+For contributions it is basically sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional. Let's simulate that by copying vanillajs.
+```
+cp -r vanillajs-keyed super-vanillajs-keyed
+```
+Then we edit super-vanillajs-keyed/index.html to have a correct index.html:
+```
+<title>Super-VanillaJS-"keyed"</title>
+...
+                    <h1>Super-VanillaJS-"keyed"</h1>
+```
+In most cases you'll need `npm install` and `npm run build-prod` and then check whether it works in the browser on [http://localhost:8080/super-vanillajs-keyed/](http://localhost:8080/super-vanillajs-keyed/).
 
 ## 4. Running a single framework with the automated benchmark driver
 
@@ -140,45 +152,65 @@ Now a static result table should have been created which can be opened on [http:
 There won't be much in table except for the column vanillajs-keyed at the right end of the first table.
 ![First Run Results](images/staticResults.png?raw=true "First Run Results")
 
-## 5. Building the benchmarks for all frameworks
+## Optional 6.1 Adding your new implementation to the results table.
 
-`npm install`
-or 
-`yarn`
+If you want to contribute a new framework and created a new directory in step 3, you'll need to add that framework to [webdriver-ts/src/common.ts](https://github.com/krausest/js-framework-benchmark/blob/master/webdriver-ts/src/common.ts#L35). The first parameter will be your directory name, the second whether the implementation is keyed and an optional third parameter if you need a special url or need to use shadow dom. So let's add:
+```javascript
+export let frameworks = [
+...
+f("vanillajs-non-keyed", false),
+f("super-vanillajs-keyed", true), // this line must be added now somewhere in the list
+f("vanillajs-keyed", true),
+...
+```
+then recompile in directory `webdriver-ts`
+```
+npm run build-prod
+```
+run the benchmark for super-vanillajs-keyed
+```
+npm run selenium -- --count 3 --framework super-vanillajs-keyed
+```
+and update the result table
+```
+npm run static-results
+```
+Super-VanillaJS-keyed should now be listed in [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html)
 
-`npm run build`
+## Optional 7. Building the interactive results table
 
-The latter calls npm build-prod in each subproject.
+There's a nicer result table that allows filtering and sorting.
+Before calling it the first time we have to install the dependencies. So we have to go to the `webdriver-ts-results` directory
+```
+cd ..
+cd webdriver-ts-results
+```
+and install the dependencies
+```
+npm install
+```
+Then we go back to `webdriver-ts`
+```
+cd ..
+cd webdriver-ts
+```
+and let it create the interactive table
+```
+npm run interactive-results
+```
+This will take a bit, but you should see no errors and be able to see the interactive results on [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html)
 
-* To build a single benchmark for a framework, e.g. aurelia
+## Optional 8. Building and running the benchmarks for all frameworks
 
-`cd aurelia`
-
-`npm install`
-or 
-`yarn`
-
-`npm run build-prod`
-
-## Running in the browser
-
-Execute `npm start` in the main directory to start a http-server for the web pages.
-Open [http://localhost:8080](http://localhost:8080/) and choose the directory for the framework you want to test.
-Most actions will try to measure the duration and print it to the console. Depending on the framework this might be more or less precise. To measure the exact numbers one needs to use e.g. the timeline from the chrome dev tools.
-
-## Execute the benchmarks with webdriver
-
-The former java test runner has been replaced with a typescript based test runner. The new test runner contains no timer based waits and is thus much faster.
-
-`npm start`
-
-which starts a web server
-
+This is not for the faint at heart. You can build all frameworks simply by issuing
+`npm run build-prod` in the root directory. After downloading the whole internet it starts building it. Basically there should be no errors during the build, but I can't guarantee that the dependencies won't break.
+You can now run selenium for all frameworks by invoking
 `npm run selenium`
+in the root directory.
 
-which runs the seleniums tests
+After that you can check all results in [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html).
 
-Open [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html) or the static version [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html) for the results
+
 
 Single tests can be repeated easily. Just `cd webdriver-ts` and run the benchmarks and frameworks you want, e.g:
 `npm run selenium -- --framework angular bob --benchmark 01_ 02_`
