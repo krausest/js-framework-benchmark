@@ -21,6 +21,8 @@ frameworks.forEach((framework, fIdx) => {
 			});
 			if (fIdx!==0 || bIdx!==0) resultJS += ',';
 			resultJS += '\n' + data;
+		} else {
+			console.log("MISSING FILE",file);
 		}
 	})
 });

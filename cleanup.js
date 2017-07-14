@@ -33,6 +33,8 @@ commandExists('yarn', function(err, commandExists) {
 					stdio: 'inherit'
 				});
 			}
+			rmIfExists(name, "package-lock.json");
+			rmIfExists(name, "yarn.lock");
 			rmIfExists(name, "dist");
 			rmIfExists(name, "elm-stuff");
 			rmIfExists(name, "bower_components");

@@ -197,13 +197,18 @@ function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchmark) : 
             return driver.get(`http://localhost:8080/${framework.uri}/`)
             .then(() => initBenchmark(driver, benchmark, framework))
             .then(() => runBenchmark(driver, benchmark, framework))
-            .catch((e) => takeScreenshotOnError(driver, 'error-'+framework+'-'+benchmark.id+'.png', e).then(
+            .catch((e) => takeScreenshotOnError(driver, 'error-'+framework.name+'-'+benchmark.id+'.png', e).then(
                     () => {throw e})
             );
         })
         .then(results => reduceBenchmarkResults(benchmark, results))
         .then(results => writeResult({framework: framework, results: results, benchmark: benchmark}, dir))
-        .then(() => {console.log("QUIT"); driver.quit();}, () => {console.log("QUIT after error"); driver.quit();})
+        .then(() => {console.log("QUIT"); driver.quit();}, 
+            () => {
+                console.log("QUIT after error"); 
+                return driver.quit().then(() => {if (config.EXIT_ON_ERROR) { throw "Benchmarking failed"}
+            });
+    })
 }
 
 function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmark) : promise.Promise<any> {
@@ -219,7 +224,7 @@ function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmark) : p
             // .then(() => driver.executeScript("return window.performance.timing.loadEventEnd - window.performance.timing.navigationStart"))
             // .then((duration) => console.log(duration, typeof duration))            
             .then(() => {console.log("QUIT"); driver.quit()},
-                (e) => takeScreenshotOnError(driver, 'error-'+framework+'-'+benchmark.id+'.png', e).then(
+                (e) => takeScreenshotOnError(driver, 'error-'+framework.name+'-'+benchmark.id+'.png', e).then(
                         () => {
                             return driver.quit().then(() => {throw e});
                         }
@@ -255,9 +260,10 @@ function runBench(frameworkNames: string[], benchmarkNames: string[], dir: strin
 }
 
 let args = yargs(process.argv)
-.usage("$0 [--framework Framework1,Framework2,...] [--benchmark Benchmark1,Benchmark2,...] [--count n]")
+.usage("$0 [--framework Framework1,Framework2,...] [--benchmark Benchmark1,Benchmark2,...] [--count n] [--exitOnError]")
 .help('help')
 .default('check','false')
+.default('exitOnError','false')
 .default('count', config.REPEAT_RUN)
 .array("framework").array("benchmark").argv;
 
@@ -270,8 +276,9 @@ let count = Number(args.count);
 config.REPEAT_RUN = count;
 
 let dir = args.check === 'true' ? "results_check" : "results"
+let exitOnError = args.exitOnError === 'true'
 
-console.log("target directory", dir);
+config.EXIT_ON_ERROR = exitOnError;
 
 if (!fs.existsSync(dir))
     fs.mkdirSync(dir);

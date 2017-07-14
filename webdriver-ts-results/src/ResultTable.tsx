@@ -26,12 +26,12 @@ const CpuResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData
                     <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksCPU[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksCPU[benchIdx].id)}}>{data.benchmarksCPU[benchIdx].label}</a>
                       <div className="rowCount">{data.benchmarksCPU[benchIdx].description}</div>
                     </th>
-                    {resultsForBenchmark.map(result => result == null ? null : result.render())}
+                    {resultsForBenchmark.map(result => result == null ? <td></td> : result.render())}
                 </tr>
               ))}                      
               <tr>
                 <th><a href='#' className={currentSortKey==SORT_BY_GEOMMEAN ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_GEOMMEAN)}}>slowdown geometric mean</a></th>
-                {data.geomMeanCPU.map(result => result == null ? null : result.render())}
+                {data.geomMeanCPU.map(result => result == null ? <td></td> : result.render())}
               </tr>                      
             </tbody>
           </table>
@@ -55,7 +55,7 @@ const MemResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData
                     <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksMEM[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksMEM[benchIdx].id)}}>{data.benchmarksMEM[benchIdx].label}</a>
                       <div className="rowCount">{data.benchmarksMEM[benchIdx].description}</div>
                     </th>
-                    {resultsForBenchmark.map(result => result == null ? null : result.render())}
+                    {resultsForBenchmark.map(result => result == null ? <td></td> : result.render())}
                 </tr>
               ))}                      
             </tbody>
