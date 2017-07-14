@@ -230,7 +230,7 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
 
 ## Tips and tricks
 
-* You can select multiple frameworks and benchmarks for running with prefixes like in the following example
+* You can select multiple frameworks and benchmarks for running with prefixes like in the following example:
 `npm run selenium -- --framework angular bob --benchmark 01_ 02_`
 runs the test for all frameworks that contain either angular or bob, which means all angular versions and bobril and all benchmarks whose id contain 01_ or 02_
 * If you can't get one framework to compile or run, just move it out of the root directory and remove it from common.ts, recompile and re-run
