@@ -69,7 +69,7 @@ We start the http-server in the root directory
 npm start
 ```
 Verify that the http-server works:
-Try to open (http://localhost:8080/index.html)[http://localhost:8080/index.html]. If you see something like that you're on the right track:
+Try to open [http://localhost:8080/index.html](http://localhost:8080/index.html). If you see something like that you're on the right track:
 ![Index.html](images/index.png?raw=true "Index.html")
 
 ### 3. Building and running a single framework
