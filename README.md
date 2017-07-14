@@ -112,6 +112,8 @@ Then we edit super-vanillajs-keyed/index.html to have a correct index.html:
 ```
 In most cases you'll need `npm install` and `npm run build-prod` and then check whether it works in the browser on [http://localhost:8080/super-vanillajs-keyed/](http://localhost:8080/super-vanillajs-keyed/).
 
+(Of course in reality you'd rather throw out the javascript source files and use your framework there instead of only changing the html file.)
+
 ## 4. Running a single framework with the automated benchmark driver
 
 As mentioned above the benchmark uses an automated benchmark driver using chromedriver to measure the duration for each operation using chrome's timeline. Here are the steps to run is for a single framework:
