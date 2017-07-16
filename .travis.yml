@@ -48,6 +48,7 @@ env:
   - JS_FRAMEWORK=react-v16.alpha.13-keyed
   - JS_FRAMEWORK=redom-v3.0.2-keyed
   - JS_FRAMEWORK=redom-v3.0.2-non-keyed
+  - JS_FRAMEWORK=reflex-dom-v0.4-non-keyed
   - JS_FRAMEWORK=riot-v3.5.0-non-keyed
   - JS_FRAMEWORK=rx-domh-v0.0.2-rxjs-v5.3.0-keyed
   - JS_FRAMEWORK=simulacra-v2.1.1-non-keyed
