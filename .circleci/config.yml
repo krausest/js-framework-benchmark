@@ -28,6 +28,8 @@ jobs:
 
       - run: yarn install
 
+      - run: npm run build-prod
+
       - save_cache:
           paths:
             - node_modules

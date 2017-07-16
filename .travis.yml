@@ -23,8 +23,7 @@ env:
   - JS_FRAMEWORK=hyperapp-v0.9.1-non-keyed
   - JS_FRAMEWORK=inferno-v3.1.2-keyed
   - JS_FRAMEWORK=inferno-v3.1.2-non-keyed
-  - JS_FRAMEWORK=ivi-v0.7.0
-  - JS_FRAMEWORK=kivi-v1.0.0-rc2
+  - JS_FRAMEWORK=ivi-v0.8.0-keyed
   - JS_FRAMEWORK=knockout-v3.4.1-keyed
   - JS_FRAMEWORK=marionette-v3.3.1-keyed
   - JS_FRAMEWORK=marko-v4.3.0-keyed
