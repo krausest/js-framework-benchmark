@@ -42,7 +42,7 @@ export let AppView = (app : App) =>
                 onClick = {(e : any) => e.target.matches('.delete') ? app.delete(rowId(e)) : app.select(rowId(e))}>
                 { TBody(app) }
             </table>
-            <span className="preloadicon glyphicon glyphicon-remove"></span>
+            <span className="preloadicon glyphicon glyphicon-remove" {...(el : HTMLSpanElement) => el.setAttribute("aria-hidden", "true")}></span>
         </div>,
     rowId = ({target: el} : {target : HTMLElement}) => { 
         while (el.tagName !== 'TR') el = el.parentElement!; 
@@ -66,15 +66,17 @@ export let AppView = (app : App) =>
 
             for (let i = 0; i < rows.length; i++) {
                 var row = rows[i],
+                    span : HTMLSpanElement = null!,
                     tr : RowTr | undefined = i < trs.length ? trs[i] : tbody.appendChild(
                         (<tr ref={tr}>
                             <td ref={tr!._id} className="col-md-1"></td>
                             <td className="col-md-4">
                                 <a ref={tr!._label} className="select"></a>
                             </td>
-                            <td className="col-md-1"><a className="delete"><span className="glyphicon glyphicon-remove delete"></span></a></td>
+                            <td className="col-md-1"><a className="delete"><span ref={span} className="glyphicon glyphicon-remove delete"></span></a></td>
                             <td className="col-md-6"></td>
-                        </tr> as RowTr,
+                         </tr> as RowTr,
+                        span.setAttribute("aria-hidden", "true"),
                         trs.push(tr!),
                         tr!));
 

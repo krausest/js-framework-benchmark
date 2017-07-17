@@ -40,7 +40,7 @@ export let AppView = (app : App) =>
                 onClick = {(e : any) => e.target.matches('.delete') ? app.delete(rowId(e)) : app.select(rowId(e))}>
                 { TBody(app) }
             </table>
-            <span className="preloadicon glyphicon glyphicon-remove"></span>
+            <span className="preloadicon glyphicon glyphicon-remove" {...(el : HTMLSpanElement) => el.setAttribute("aria-hidden", "true")}></span>
         </div>,
     rowId = ({target: el} : {target : HTMLElement}) => { 
         while (el.tagName !== 'TR') el = el.parentElement!; 
@@ -48,15 +48,19 @@ export let AppView = (app : App) =>
     },
     TBody = (app : App) => {
         const index = {} as { [id : number] : HTMLTableRowElement | undefined},
-            trs = mapSample(app.store.data, row =>
-                <tr ref={index[row.id]!}>
-                    <td className="col-md-1" innerText={row.id}></td>
-                    <td className="col-md-4">
-                        <a innerText={row.label()}></a>
-                    </td>
-                    <td className="col-md-1"><a><span className="glyphicon glyphicon-remove delete"></span></a></td>
-                    <td className="col-md-6"></td>
-                </tr>,
+            trs = mapSample(app.store.data, row => {
+                let span : HTMLSpanElement = null!, 
+                    tr = <tr ref={index[row.id]!}>
+                            <td className="col-md-1" innerText={row.id}></td>
+                            <td className="col-md-4">
+                                <a innerText={row.label()}></a>
+                            </td>
+                            <td className="col-md-1"><a><span ref={span} className="glyphicon glyphicon-remove delete"></span></a></td>
+                            <td className="col-md-6"></td>
+                        </tr>;
+                    span.setAttribute("aria-hidden", "true");
+                    return tr;
+                },
                 row => index[row.id] = undefined);
 
         S.on(app.store.selected, (tr? : HTMLTableRowElement) => {
