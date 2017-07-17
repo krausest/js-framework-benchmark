@@ -1,0 +1,9 @@
+machine:
+  java:
+    version: oraclejdk8
+  node:
+    version: v6.11.1
+
+test:
+  post:
+    - npm run build
