@@ -13,5 +13,7 @@ dependencies:
 
 test:
   post:
+    - npm start
+      background: true
     - npm run build
     - npm run check
