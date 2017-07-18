@@ -8,7 +8,7 @@
     "compile": "node install.js && node build.js",
     "start": "http-server -c-1 .",
     "selenium": "cd webdriver-ts && npm run selenium && npm run results",
-    "check": "cd webdriver-ts && npm run selenium -- count 1 --exitOnError true"
+    "check": "cd webdriver-ts && npm run selenium -- --count 1 --exitOnError true"
   },
   "keywords": [
     "benchmark",
