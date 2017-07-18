@@ -15,6 +15,6 @@ test:
   post:
     - npm install
     - npm start:
-      background: true
+        background: true
     - npm run build
     - npm run check
