@@ -4,7 +4,7 @@ import {config, FrameworkData} from './common'
 
 export enum BenchmarkType { CPU, MEM, STARTUP };
 
-const SHORT_TIMEOUT = 1000;
+const SHORT_TIMEOUT = 20 * 1000;
 
 export interface Benchmark {
     id: string;
