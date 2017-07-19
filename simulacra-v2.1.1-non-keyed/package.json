@@ -24,6 +24,6 @@
     "webpack": "2.5.1"
   },
   "dependencies": {
-    "simulacra": "^2.0.4"
+    "simulacra": "2.1.1"
   }
 }
