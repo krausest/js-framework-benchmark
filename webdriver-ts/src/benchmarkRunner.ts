@@ -78,25 +78,25 @@ function buildDriver() {
         .build();
 }
 
-function reduceBenchmarkResults(benchmark: Benchmark, results: Timingresult[][]): number[] {
+function reduceBenchmarkResults(benchmark: Benchmark, results: number[][]|Timingresult[][]): number[] {
         if (benchmark.type === BenchmarkType.CPU) {
-            if (results.some(val => val[0]==null || val[1]==null)) {
+            if ((results as Timingresult[][]).some(val => val[0]==null || val[1]==null)) {
                 console.log("data for CPU reduceBenchmarkResults", results);
                 throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser window was visible all the time the benchmark was running!`;
             }
-            return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat((val[1].end - val[0].ts)/1000.0), []);
+            return (results as Timingresult[][]).reduce((acc: number[], val: Timingresult[]): number[] => acc.concat((val[1].end - val[0].ts)/1000.0), []);
         } else if (benchmark.type === BenchmarkType.MEM) {
-            if (results.some(val => val[2]==null)) {
+            if ((results as Timingresult[][]).some(val => val[2]==null)) {
                 console.log("data for MEM reduceBenchmarkResults", results);
                 throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser window was visible all the time the benchmark was running!`;
             }
-            return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat([val[2].mem]), []);
+            return (results as Timingresult[][]).reduce((acc: number[], val: Timingresult[]): number[] => acc.concat([val[2].mem]), []);
         } else if (benchmark.type === BenchmarkType.STARTUP) {
-            if (results.some(val => val[1]==null || val[3]==null)) {
+            if ((results as number[][]).some(val => val[1]==null || val[3]==null)) {
                 console.log("data for STARTUP reduceBenchmarkResults", results);
                 throw `Data wasn't extracted from timeline as expected for ${benchmark.id}. Make sure that your browser window was visible all the time the benchmark was running!`;
             }
-            return results.reduce((acc: number[], val: Timingresult[]): number[] => acc.concat((val[1].end - val[3].ts)/1000.0), []);
+            return (results as number[][]).reduce((acc: number[], val: number[]): number[] => acc.concat(val[1] - val[3]), []);
         }
 }
 
@@ -113,7 +113,6 @@ function snapMemorySize(driver: WebDriver) {
             }
             
             let memory = self_size / 1024.0 / 1024.0;
-            console.log("!!! memory", memory);
         });
 }
 
@@ -213,16 +212,24 @@ function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchmark) : 
 
 function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmark) : promise.Promise<any> {
         console.log("benchmarking ", framework, benchmark.id);
-        let results : Timingresult[][] = [];
+        let results : number[][] = [];
+        let chromeDuration = 0;
         return forProm(0, config.REPEAT_RUN, () => {
             let driver = buildDriver();
             setUseShadowRoot(framework.useShadowRoot);
             return initBenchmark(driver, benchmark, framework)
             .then(() => runBenchmark(driver, benchmark, framework))
-            .then((res) => results.push(res))
+            .then(results => { chromeDuration = (results[1].end - results[3].ts)/1000.0; console.log("startup duration chrome log: ",chromeDuration) })
+            .then(() => driver.executeScript("return [null, window.performance.timing.loadEventEnd, null, window.performance.timing.navigationStart]"))
+            .then((res: number[]) => {
+                let navtime = res[1] - res[3];
+                if (Math.abs(navtime - chromeDuration) > 5) {
+                    console.log("*********** Large difference between navigation and chrome log", navtime, chromeDuration);
+                }
+                console.log("startup duration navigation timing", res[1] - res[3]); 
+                results.push(res); 
+            })
             // Check what we measured. Results are pretty similar, though we are measuring a bit longer until the final repaint happened.
-            // .then(() => driver.executeScript("return window.performance.timing.loadEventEnd - window.performance.timing.navigationStart"))
-            // .then((duration) => console.log(duration, typeof duration))            
             .then(() => {console.log("QUIT"); driver.quit()},
                 (e) => takeScreenshotOnError(driver, 'error-'+framework.name+'-'+benchmark.id+'.png', e).then(
                         () => {
