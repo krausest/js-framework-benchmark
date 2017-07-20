@@ -128,7 +128,10 @@ function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: Framew
             if (benchmark.type === BenchmarkType.MEM) {
                 // Without it angular v4.2.1 reports no MajorGC
                 return snapMemorySize(driver);
-            }            
+            } else if (benchmark.type === BenchmarkType.STARTUP) {
+                // Without it angular v4.2.1 reports no MajorGC
+                return driver.sleep(2000);
+            } 
         })
         .then(() => readLogs(driver))
         .then((results) => {if (config.LOG_PROGRESS) console.log(`result ${framework}_${benchmark.id}`, results); return results});
@@ -225,6 +228,9 @@ function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmark) : p
                 let navtime = res[1] - res[3];
                 if (Math.abs(navtime - chromeDuration) > 5) {
                     console.log("*********** Large difference between navigation and chrome log", navtime, chromeDuration);
+                }
+                if (chromeDuration<0) {
+                    console.log("*********** chromeDuration is negative", navtime, chromeDuration);                    
                 }
                 console.log("startup duration navigation timing", res[1] - res[3]); 
                 results.push(res); 
