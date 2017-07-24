@@ -32,7 +32,6 @@ interface ButtonConfig {
 }
 
 export class App extends WidgetBase {
-	private _start = 0;
 	private _store: Store = new Store();
 	private _buttonConfigs: ButtonConfig[] = [
 		{ id: 'run', label: 'Create 1,000 rows', onClick: this._run },
