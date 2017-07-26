@@ -37,7 +37,7 @@ function Jumbotron(vm) {
 		h(".jumbotron", [
 			h(".row", [
 				h(".col-md-6", [
-					h("h1", "domvm v3.0.1 (keyed)")
+					h("h1", "domvm v3.0.5 (keyed)")
 				]),
 				h(".col-md-6", [
 					h(".row", [
