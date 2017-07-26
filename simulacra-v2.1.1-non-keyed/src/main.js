@@ -29,20 +29,21 @@ var binding = [ '#main', {
     isSelected: function (node, value) {
       node.className = value ? 'danger' : ''
     }
-  }, bindEvents({
-    click: function (event, path) {
-      if (event.target.tagName === 'SPAN') {
-        bench('delete', function () {
-          var id = event.target.parentNode.parentNode
-            .parentNode.childNodes[1].textContent
+  }, function (node) {
+    bindEvents({
+      click: function (event, path) {
+        if (event.target.tagName === 'SPAN') {
+          bench('delete', function () {
+            var id = node.querySelector('td:nth-of-type(1)').textContent
 
-          path.root.rows.splice(path.root.rows.findIndex(function (obj) {
-            return obj.id === id
-          }), 1)
-        })
+            path.root.rows.splice(path.root.rows.findIndex(function (obj) {
+              return obj.id === id
+            }), 1)
+          })
+        }
       }
-    }
-  }) ]
+    }).apply(null, arguments)
+  } ]
 } ]
 
 var methods = {
