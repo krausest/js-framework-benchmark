@@ -46,8 +46,6 @@ export let frameworks = [
     f("dio-v7.0.1-keyed", true),
     f("dio-v7.0.1-non-keyed", false),
     f("dojo2-v2.0.0.beta2.5-keyed", true, {uri: "dojo2-v2.0.0.beta2.5-keyed/dist"}),
-    f("domvm-v3.0.1-non-keyed", false), // remove
-    f("domvm-v3.0.1-keyed", true), // remove
     f("domvm-v3.0.5-non-keyed", false),
     f("domvm-v3.0.5-keyed", true),
     f("elm-v0.18.0-keyed", true),
@@ -84,7 +82,7 @@ export let frameworks = [
     f("redom-v3.0.2-non-keyed", false),
     f("riot-v3.5.0-non-keyed", false),
     f("rx-domh-v0.0.2-rxjs-v5.3.0-keyed", true),
-    f("simulacra-v2.1.1-non-keyed", false),
+    f("simulacra-v2.1.5-non-keyed", false),
     f("slim-js-v2.9.1-non-keyed", false),
     f("stem-v0.2.70-non-keyed", false),
     f("surplus-v0.4.0-keyed", true),
