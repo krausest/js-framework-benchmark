@@ -45,6 +45,9 @@ export let frameworks = [
     f("datum-v0.8.0-non-keyed", false),
     f("dio-v7.0.1-keyed", true),
     f("dio-v7.0.1-non-keyed", false),
+    f("dojo2-v2.0.0.beta2.5-keyed", true, {uri: "dojo2-v2.0.0.beta2.5-keyed/dist"}),
+    f("domvm-v3.0.1-non-keyed", false), // remove
+    f("domvm-v3.0.1-keyed", true), // remove
     f("domvm-v3.0.5-non-keyed", false),
     f("domvm-v3.0.5-keyed", true),
     f("elm-v0.18.0-keyed", true),
