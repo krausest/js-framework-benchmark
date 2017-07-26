@@ -69,6 +69,8 @@ function buildDriver() {
     options = options.addArguments("--js-flags=--expose-gc");
     options = options.addArguments("--disable-infobars");
     options = options.addArguments("--disable-background-networking");
+    options = options.addArguments("--disable-cache");
+    options = options.addArguments("--disable-extensions");    
     options = options.setLoggingPrefs(logPref);
     options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
     // options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "v8,blink.console,disabled-by-default-devtools.timeline,devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
