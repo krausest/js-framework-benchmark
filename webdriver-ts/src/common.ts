@@ -64,6 +64,7 @@ export let frameworks = [
     f("moon-v0.11.0", false),
     f("nx-v1.0.0-beta.2.0.1-keyed", true),
     f("nx-v1.0.0-beta.2.0.1-non-keyed", false),
+    f("petit-dom-v0.0.5-keyed", true),
     f("pico-dom-v1.0.0-keyed", true),
     f("plastiq-v1.33.0-keyed", true),
     f("polymer-v2.0.0-non-keyed", false, {uri: "polymer-v2.0.0-non-keyed", useShadowRoot: true}),
