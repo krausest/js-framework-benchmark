@@ -5,7 +5,7 @@ var commandExists = require('command-exists');
 
 var installCommand = 'npm install';
 
-var excludedDirectories = ['css', 'dist','node_modules','webdriver-java'];
+var excludedDirectories = ['css', 'dist','node_modules','webdriver-java','images'];
 
 commandExists('yarn', function(err, commandExists) {
 
