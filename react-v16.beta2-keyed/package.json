@@ -27,7 +27,7 @@
     "jsx-loader": "0.13.2"
   },
   "dependencies": {
-    "react": "^16.0.0-alpha.13",
-    "react-dom": "^16.0.0-alpha.13"
+    "react": "16.0.0-beta.2",
+    "react-dom": "16.0.0-beta.2"
   }
 }
