@@ -62,3 +62,6 @@ angular-*/src/app.ngsummary.json
 #glimmer
 glimmer-*/dist
 glimmer-*/tmp
+
+# miso-ghcjs
+miso-ghcjs-keyed/.stack-work/
