@@ -27,6 +27,8 @@ data Action = CreateRows Int
             | ClearRows
             | SwapRows
             | NoOp
+            | HighlightRow Int
+            | RemoveRow Int
             | ChangeModel Model
             deriving (Show, Eq)
 
@@ -88,11 +90,15 @@ updateModel (SwapRows) model@Model{modelRows=currentRows} =
   then noEff model{modelRows=swappedRows}
   else noEff model
   where
-    -- fifthRow = currentRows V.! 4
-    -- tenthRow = currentRows V.! 9
-    -- swappedRows = V.modify (\v -> V.write v 9 fifthRow) (V.modify (\v -> V.write v 4 tenthRow) currentRows)
     swappedRows = V.modify (\v -> MV.swap v 4 9) currentRows
 
+--
+updateModel (HighlightRow idx) model = noEff model{modelHighlightedRowIndex=Just idx}
+
+--
+updateModel (RemoveRow idx) model@Model{modelRows=currentRows} = noEff model{modelRows=(firstPart V.++ (V.drop 1 remainingPart))}
+  where
+    (firstPart, remainingPart) = V.splitAt idx currentRows
 
 generateRows :: Int -> Int -> IO (V.Vector RowData)
 generateRows n lastIdx = V.generateM n $ \x -> do
@@ -105,32 +111,39 @@ generateRows n lastIdx = V.generateM n $ \x -> do
 viewModel :: Model -> View Action
 viewModel m = div_ [id_ "main"]
   [
-    div_ [class_ "container"] [viewJumbotron, (viewTable m)]
+    div_ [class_ "container"]
+    [
+      viewJumbotron
+    , (viewTable m)
+    , span_ [class_ "preloadicon glyphicon glyphicon-remove", textProp "aria-hidden" "true"] []
+    ]
   ]
 
 viewTable :: Model -> View Action
-viewTable m =
+viewTable m@Model{modelHighlightedRowIndex=idx} =
   table_ [class_ "table table-hover table-striped test-data"]
   [
-    tbody_ [id_ "tbody"] (V.toList $ V.map viewRow (modelRows m))
+    tbody_ [id_ "tbody"] (V.toList $ V.imap viewRow (modelRows m))
   ]
   where
-    viewRow r = tr_ []
+    viewRow i r = tr_ (conditionalDanger i)
       [
         td_ [class_ "col-md-1"] [text (show $ rowIdx r)]
       , td_ [class_ "col-md-4"]
         [
-          a_ [class_ "lbl"] [text (rowTitle r)]
+          a_ [class_ "lbl", onClick (HighlightRow i)] [text (rowTitle r)]
         ]
       , td_ [class_ "col-md-1"]
         [
           a_ [class_ "remove"]
           [
-            span_ [class_ "glyphicon glyphicon-remove remove"] []
+            span_ [class_ "glyphicon glyphicon-remove remove", onClick (RemoveRow i)] []
           ]
         ]
       , td_ [class_ "col-md-6"] []
       ]
+
+    conditionalDanger i = if (Just i==idx) then [class_ "danger"] else []
 
 
 viewJumbotron :: View Action

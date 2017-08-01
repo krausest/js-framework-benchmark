@@ -16,7 +16,7 @@ cabal-version:       >=1.10
 executable miso-ghcjs-exe
   hs-source-dirs:      app
   main-is:             Main.hs
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall -O2
   build-depends:       base
                      , miso
                      , vector
