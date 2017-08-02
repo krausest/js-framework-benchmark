@@ -10,6 +10,10 @@ import qualified Data.Vector.Mutable as MV
 import System.Random as R
 import Miso.String as MS
 import Data.Monoid ((<>))
+import Data.List as L
+
+-- foreign import javascript unsafe "Math.floor(Math.random() * ($2 - $1 + 1)) + $1" 
+--   getRandomInt :: Int -> Int -> IO Int
 
 data RowData = RowData
   {
@@ -17,12 +21,15 @@ data RowData = RowData
   , rowTitle :: MisoString
   } deriving (Show, Eq)
 
+
 data Model = Model
   {
-    modelRows :: V.Vector RowData
+    modelRows :: [RowData]
   , modelHighlightedRowIndex :: Maybe Int
   , modelLastIdx :: Int
+  , modelRandomSeed :: Int
   } deriving (Show, Eq)
+
 
 data Action = CreateRows Int
             | AppendRows Int
@@ -48,15 +55,18 @@ nouns :: V.Vector MisoString
 nouns = V.fromList ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
 main :: IO ()
-main = startApp App
-  {
-    initialAction = ClearRows
-  , model = Model{modelRows=V.empty, modelHighlightedRowIndex=Nothing, modelLastIdx=1}
-  , update = updateModel
-  , view = viewModel
-  , events = defaultEvents
-  , subs = []
-  }
+main = do
+  gen <- R.getStdGen
+  let (seed, _) = R.random gen
+  startApp App
+    {
+      initialAction = ClearRows
+    , model = Model{modelRows=[], modelHighlightedRowIndex=Nothing, modelLastIdx=1, modelRandomSeed=seed}
+    , update = updateModel
+    , view = viewModel
+    , events = defaultEvents
+    , subs = []
+    }
 
 
 
@@ -67,48 +77,52 @@ updateModel :: Action -> Model -> Effect Model Action
 updateModel (ChangeModel newModel) _ = noEff newModel
 
 --
-updateModel (CreateRows n) model@Model{modelLastIdx=lastIdx} = model <# do
-  newRows <- generateRows n lastIdx
-  pure $ ChangeModel model{modelRows=(newRows), modelLastIdx=(lastIdx + n)}
+updateModel (CreateRows n) model@Model{modelLastIdx=lastIdx, modelRandomSeed=seed} =
+  let (newSeed, newRows) = generateRows seed n lastIdx
+  in noEff model{modelRows=newRows, modelLastIdx=(lastIdx + n), modelRandomSeed=newSeed}
 
 --
-updateModel (AppendRows n) model@Model{modelRows=existingRows, modelLastIdx=lastIdx} = model <# do
-  newRows <- generateRows n (modelLastIdx model)
-  pure $ ChangeModel model{modelRows=(existingRows V.++ newRows), modelLastIdx=(lastIdx + n)}
+updateModel (AppendRows n) model@Model{modelRows=existingRows, modelLastIdx=lastIdx, modelRandomSeed=seed} =
+  let (newSeed, newRows) = generateRows seed n lastIdx
+  in noEff model{modelRows=(existingRows ++ newRows), modelLastIdx=(lastIdx + n), modelRandomSeed=newSeed}
 
 --
-updateModel (ClearRows) model = noEff model{modelRows=V.empty}
+updateModel (ClearRows) model = noEff model{modelRows=[]}
 
 --
 updateModel (UpdateRows n) model@Model{modelRows=currentRows} = noEff model{modelRows=updatedRows}
   where
-    updatedRows = V.accumulate
-      (\r@RowData{rowTitle=rt} s -> r{rowTitle=(rt <> s)})
-      currentRows
-      (V.generate (quot (V.length currentRows) n) (\x -> (x*n, MS.pack " !!!")))
+    updatedRows = L.zipWith (\r i -> if (rem i n ==0) then (updateRow r) else (r)) currentRows [1..]
+    updateRow r@RowData{rowTitle=rt} = r{rowTitle=(rt <> (MS.pack " !!!"))}
 
 --
 updateModel (SwapRows) model@Model{modelRows=currentRows} =
-  if (V.length currentRows >=10)
-  then noEff model{modelRows=swappedRows}
-  else noEff model
-  where
-    swappedRows = V.modify (\v -> MV.swap v 4 9) currentRows
+  let rowVector = V.fromList currentRows
+      swappedRows = V.toList $ V.modify (\v -> MV.swap v 4 9) rowVector
+  in if (V.length rowVector >=10)
+     then noEff model{modelRows=swappedRows}
+     else noEff model
 
 --
 updateModel (HighlightRow idx) model = noEff model{modelHighlightedRowIndex=Just idx}
 
 --
-updateModel (RemoveRow idx) model@Model{modelRows=currentRows} = noEff model{modelRows=(firstPart V.++ (V.drop 1 remainingPart))}
+updateModel (RemoveRow idx) model@Model{modelRows=currentRows} = noEff model{modelRows=(firstPart ++ (L.drop 1 remainingPart))}
   where
-    (firstPart, remainingPart) = V.splitAt idx currentRows
+    (firstPart, remainingPart) = L.splitAt idx currentRows
 
-generateRows :: Int -> Int -> IO (V.Vector RowData)
-generateRows n lastIdx = V.generateM n $ \x -> do
-  adjIdx <- R.randomRIO (0, (V.length adjectives) - 1)
-  colorIdx <- R.randomRIO (0, (V.length colours) - 1)
-  nounIdx <- R.randomRIO (0, (V.length nouns) - 1)
-  pure RowData{rowIdx=(lastIdx + x), rowTitle=(adjectives V.! adjIdx) <> (MS.pack " ") <> (colours V.! colorIdx) <> (MS.pack " ") <> (nouns V.! nounIdx)}
+generateRows :: Int -> Int -> Int -> (Int, [RowData])
+generateRows seed n lastIdx = (newSeed, L.reverse newRows)
+  where
+    (gen, newRows) = L.foldl' appendRow (R.mkStdGen seed, []) [1..n]
+    (newSeed, _) = R.random gen
+    appendRow :: (StdGen, [RowData]) -> Int -> (StdGen, [RowData])
+    appendRow (g, rs) x = let (adjIdx, g1) = R.randomR (0, (V.length adjectives) - 1) g
+                              (colorIdx, g2) = R.randomR  (0, (V.length colours) - 1) g1
+                              (nounIdx, g3) = R.randomR (0, (V.length nouns) - 1) g2
+                          in (g3, (RowData{rowIdx=(lastIdx + x)
+                                          ,rowTitle=(adjectives V.! adjIdx) <> (MS.pack " ") <> (colours V.! colorIdx) <> (MS.pack " ") <> (nouns V.! nounIdx)}):rs)
+
 
 
 viewModel :: Model -> View Action
@@ -126,10 +140,10 @@ viewTable :: Model -> View Action
 viewTable m@Model{modelHighlightedRowIndex=idx} =
   table_ [class_ "table table-hover table-striped test-data"]
   [
-    tbody_ [id_ "tbody"] (V.toList $ V.imap viewRow (modelRows m))
+    tbody_ [id_ "tbody"] (L.zipWith viewRow (modelRows m) [1..])
   ]
   where
-    viewRow i r = tr_ (conditionalDanger i)
+    viewRow r i = tr_ (conditionalDanger i)
       [
         td_ [class_ "col-md-1"] [text (show $ rowIdx r)]
       , td_ [class_ "col-md-4"]
