@@ -1,5 +1,6 @@
-{-# LANGUAGE ExtendedDefaultRules #-}
+{-# LANGUAGE ScopedTypeVariables    #-}
 {-# LANGUAGE OverloadedStrings    #-}
+{-# LANGUAGE ExtendedDefaultRules    #-}
 
 module Main where
 
@@ -7,11 +8,13 @@ import Miso
 import qualified Data.Vector as V
 import qualified Data.Vector.Mutable as MV
 import System.Random as R
+import Miso.String as MS
+import Data.Monoid ((<>))
 
 data RowData = RowData
   {
     rowIdx :: Int
-  , rowTitle :: String
+  , rowTitle :: MisoString
   } deriving (Show, Eq)
 
 data Model = Model
@@ -32,17 +35,17 @@ data Action = CreateRows Int
             | ChangeModel Model
             deriving (Show, Eq)
 
-adjectives :: [String]
-adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome",
-              "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful",
-              "mushy", "odd", "unsightly", "adorable", "important", "inexpensive",
-              "cheap", "expensive", "fancy"];
+adjectives :: V.Vector MisoString
+adjectives = V.fromList ["pretty", "large", "big", "small", "tall", "short", "long", "handsome",
+                         "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful",
+                         "mushy", "odd", "unsightly", "adorable", "important", "inexpensive",
+                         "cheap", "expensive", "fancy"];
 
-colours :: [String]
-colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+colours :: V.Vector MisoString
+colours = V.fromList ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
 
-nouns :: [String]
-nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+nouns :: V.Vector MisoString
+nouns = V.fromList ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
 main :: IO ()
 main = startApp App
@@ -80,9 +83,9 @@ updateModel (ClearRows) model = noEff model{modelRows=V.empty}
 updateModel (UpdateRows n) model@Model{modelRows=currentRows} = noEff model{modelRows=updatedRows}
   where
     updatedRows = V.accumulate
-      (\r@RowData{rowTitle=rt} s -> r{rowTitle=(rt ++ s)})
+      (\r@RowData{rowTitle=rt} s -> r{rowTitle=(rt <> s)})
       currentRows
-      (V.generate (quot (V.length currentRows) n) (\x -> (x*n, " !!!")))
+      (V.generate (quot (V.length currentRows) n) (\x -> (x*n, MS.pack " !!!")))
 
 --
 updateModel (SwapRows) model@Model{modelRows=currentRows} =
@@ -102,10 +105,10 @@ updateModel (RemoveRow idx) model@Model{modelRows=currentRows} = noEff model{mod
 
 generateRows :: Int -> Int -> IO (V.Vector RowData)
 generateRows n lastIdx = V.generateM n $ \x -> do
-  adjIdx <- R.randomRIO (0, (length adjectives) - 1)
-  colorIdx <- R.randomRIO (0, (length colours) - 1)
-  nounIdx <- R.randomRIO (0, (length nouns) - 1)
-  pure RowData{rowIdx=(lastIdx + x), rowTitle=(adjectives !! adjIdx) ++ " " ++ (colours !! colorIdx) ++ " " ++ (nouns !! nounIdx)}
+  adjIdx <- R.randomRIO (0, (V.length adjectives) - 1)
+  colorIdx <- R.randomRIO (0, (V.length colours) - 1)
+  nounIdx <- R.randomRIO (0, (V.length nouns) - 1)
+  pure RowData{rowIdx=(lastIdx + x), rowTitle=(adjectives V.! adjIdx) <> (MS.pack " ") <> (colours V.! colorIdx) <> (MS.pack " ") <> (nouns V.! nounIdx)}
 
 
 viewModel :: Model -> View Action
