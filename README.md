@@ -248,7 +248,7 @@ Contributions are very welcome. Please use the following rules:
 * Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
 * You don't need to update /index.html. It's created with a script (see 6.2 above).
 * You don't need to edit webdriver-ts/common.ts. If you have a conflict in common.ts you don't need to resolve it. More often than not I'm just merging the pull request in the moment you're fixing the conflict.
-* Currently we're experimenting with a travis-ci integration build. Currently pull requests seem to fail quite often. Please ignore that for now.
+* Currently we're experimenting with a circleci integration build.
 
 This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
 
