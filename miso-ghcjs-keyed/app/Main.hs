@@ -10,8 +10,6 @@ import qualified Data.Vector.Mutable as MV
 import System.Random as R
 import Miso.String as MS
 import Data.Monoid ((<>))
-import Control.Monad.Random
-import Debug.Trace
 
 data RowData = RowData
   {
@@ -24,24 +22,7 @@ data Model = Model
     modelRows :: V.Vector RowData
   , modelHighlightedRowIndex :: Maybe Int
   , modelLastIdx :: Int
-  , modelRandomGen :: R.StdGen
-  } deriving (Show)
-
-instance Eq Model where
-  (==)
-    Model{modelRows=rows1, modelHighlightedRowIndex=hidx1, modelLastIdx=lastIdx1, modelRandomGen=_}
-    Model{modelRows=rows2, modelHighlightedRowIndex=hidx2, modelLastIdx=lastIdx2, modelRandomGen=_}
-    = (rows1 == rows2)
-      && (hidx1 == hidx2)
-      && (lastIdx1 == lastIdx2)
-
-  (/=)
-    Model{modelRows=rows1, modelHighlightedRowIndex=hidx1, modelLastIdx=lastIdx1, modelRandomGen=_}
-    Model{modelRows=rows2, modelHighlightedRowIndex=hidx2, modelLastIdx=lastIdx2, modelRandomGen=_}
-    = (rows1 /= rows2)
-      || (hidx1 /= hidx2)
-      || (lastIdx1 /= lastIdx2)
-
+  } deriving (Show, Eq)
 
 data Action = CreateRows Int
             | AppendRows Int
@@ -67,17 +48,15 @@ nouns :: V.Vector MisoString
 nouns = V.fromList ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
 main :: IO ()
-main = do
-  gen <- R.getStdGen
-  startApp App
-    {
-      initialAction = ClearRows
-    , model = Model{modelRows=V.empty, modelHighlightedRowIndex=Nothing, modelLastIdx=1, modelRandomGen=gen}
-    , update = updateModel
-    , view = viewModel
-    , events = defaultEvents
-    , subs = []
-    }
+main = startApp App
+  {
+    initialAction = ClearRows
+  , model = Model{modelRows=V.empty, modelHighlightedRowIndex=Nothing, modelLastIdx=1}
+  , update = updateModel
+  , view = viewModel
+  , events = defaultEvents
+  , subs = []
+  }
 
 
 
@@ -88,14 +67,14 @@ updateModel :: Action -> Model -> Effect Model Action
 updateModel (ChangeModel newModel) _ = noEff newModel
 
 --
-updateModel (CreateRows n) model@Model{modelLastIdx=lastIdx, modelRandomGen=gen} = 
-  let (newRows, newGen) = generateRows gen n lastIdx
-  in noEff model{modelRows=newRows, modelLastIdx=(lastIdx + n), modelRandomGen=newGen}
+updateModel (CreateRows n) model@Model{modelLastIdx=lastIdx} = model <# do
+  newRows <- generateRows n lastIdx
+  pure $ ChangeModel model{modelRows=(newRows), modelLastIdx=(lastIdx + n)}
 
 --
-updateModel (AppendRows n) model@Model{modelRows=existingRows, modelLastIdx=lastIdx, modelRandomGen=gen} =
-  let (newRows, newGen) = generateRows gen n lastIdx
-  in noEff model{modelRows=(existingRows V.++ newRows), modelLastIdx=(lastIdx + n), modelRandomGen=newGen}
+updateModel (AppendRows n) model@Model{modelRows=existingRows, modelLastIdx=lastIdx} = model <# do
+  newRows <- generateRows n (modelLastIdx model)
+  pure $ ChangeModel model{modelRows=(existingRows V.++ newRows), modelLastIdx=(lastIdx + n)}
 
 --
 updateModel (ClearRows) model = noEff model{modelRows=V.empty}
@@ -124,14 +103,13 @@ updateModel (RemoveRow idx) model@Model{modelRows=currentRows} = noEff model{mod
   where
     (firstPart, remainingPart) = V.splitAt idx currentRows
 
-generateRows :: R.StdGen -> Int -> Int -> (V.Vector RowData, R.StdGen)
-generateRows gen n lastIdx = runRand rowGenerator gen
-  where
-    rowGenerator = V.generateM n $ \x -> do
-      adjIdx <- getRandomR (0, (V.length adjectives) - 1)
-      colorIdx <- getRandomR (0, (V.length colours) - 1)
-      nounIdx <- getRandomR (0, (V.length nouns) - 1)
-      pure RowData{rowIdx=(lastIdx + x), rowTitle=(adjectives V.! adjIdx) <> (MS.pack " ") <> (colours V.! colorIdx) <> (MS.pack " ") <> (nouns V.! nounIdx)}
+generateRows :: Int -> Int -> IO (V.Vector RowData)
+generateRows n lastIdx = V.generateM n $ \x -> do
+  adjIdx <- R.randomRIO (0, (V.length adjectives) - 1)
+  colorIdx <- R.randomRIO (0, (V.length colours) - 1)
+  nounIdx <- R.randomRIO (0, (V.length nouns) - 1)
+  pure RowData{rowIdx=(lastIdx + x), rowTitle=(adjectives V.! adjIdx) <> (MS.pack " ") <> (colours V.! colorIdx) <> (MS.pack " ") <> (nouns V.! nounIdx)}
+
 
 viewModel :: Model -> View Action
 viewModel m = div_ [id_ "main"]
