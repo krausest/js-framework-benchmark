@@ -64,4 +64,4 @@ glimmer-*/dist
 glimmer-*/tmp
 
 # miso-ghcjs
-miso-ghcjs-keyed/.stack-work/
+miso-non-official-v0.4.0.0-non-keyed/.stack-work/
