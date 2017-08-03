@@ -1,6 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables    #-}
 {-# LANGUAGE OverloadedStrings    #-}
 {-# LANGUAGE ExtendedDefaultRules    #-}
+{-# LANGUAGE BangPatterns      #-}
 
 module Main where
 
@@ -13,26 +14,26 @@ import Data.Monoid ((<>))
 
 data RowData = RowData
   {
-    rowIdx :: Int
-  , rowTitle :: MisoString
+    rowIdx :: !Int
+  , rowTitle :: !MisoString
   } deriving (Show, Eq)
 
 data Model = Model
   {
-    modelRows :: V.Vector RowData
-  , modelHighlightedRowIndex :: Maybe Int
-  , modelLastIdx :: Int
+    modelRows :: !(V.Vector RowData)
+  , modelHighlightedRowIndex :: !(Maybe Int)
+  , modelLastIdx :: !Int
   } deriving (Show, Eq)
 
-data Action = CreateRows Int
-            | AppendRows Int
-            | UpdateRows Int
+data Action = CreateRows !Int
+            | AppendRows !Int
+            | UpdateRows !Int
             | ClearRows
             | SwapRows
             | NoOp
-            | HighlightRow Int
-            | RemoveRow Int
-            | ChangeModel Model
+            | HighlightRow !Int
+            | RemoveRow !Int
+            | ChangeModel !Model
             deriving (Show, Eq)
 
 adjectives :: V.Vector MisoString
