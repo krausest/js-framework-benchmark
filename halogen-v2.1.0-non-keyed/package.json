@@ -1,0 +1,28 @@
+{
+    "name": "js-framework-benchmark-pux",
+    "version": "1.0.0",
+    "description": "Purescript Halogen JS Benchmark",
+    "main": "index.js",
+    "scripts": {
+        "postinstall": "bower install",
+        "clean": "rm -rf output bower_components node_modules",
+        "build-dev": "pulp build --to output/bundle.js",
+        "build-prod": "pulp build --optimise --to output/bundle.js"
+    },
+    "keywords": [
+        "purescript",
+        "pux"
+    ],
+    "author": "Thomas Honeyman <hello@thomashoneyman.com>",
+    "license": "ISC",
+    "homepage": "https://github.com/krausest/js-framework-benchmark",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/krausest/js-framework-benchmark.git"
+    },
+    "devDependencies": {
+        "bower": "1.8.0",
+        "pulp": "11.0.0",
+        "purescript": "0.11.6"
+    }
+}
