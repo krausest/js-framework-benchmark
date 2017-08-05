@@ -8,7 +8,6 @@ import Control.Monad.Eff.Console (CONSOLE, log)
 import Control.Monad.Eff.Random (RANDOM, randomInt)
 import Control.Monad.Rec.Class (Step(..), tailRecM2)
 import DOM.HTML.Indexed.ButtonType (ButtonType(..))
-import Data.Array (mapWithIndex)
 import Data.Array hiding (init)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Halogen as H
@@ -43,17 +42,17 @@ app =
 -- State
 
 type State =
-  { rows   :: Array Row
-  , lastId :: Int }
+  { rows     :: Array Row
+  , selected :: Maybe Int
+  , lastId   :: Int }
 
 type Row =
   { rid        :: Int
-  , label      :: String
-  , isSelected :: Boolean }
+  , label      :: String }
 
 init :: State
 init =
-  { rows: [], lastId: 1 }
+  { rows: [], selected: Nothing, lastId: 1 }
 
 
 
@@ -86,7 +85,7 @@ eval = case _ of
   Append i next -> do
     st   <- H.get
     rows <- H.liftEff $ createRandomNRows i st.lastId
-    H.modify (\st -> st { rows = rows <> st.rows, lastId = st.lastId + i})
+    H.modify (\st -> st { rows = st.rows <> rows, lastId = st.lastId + i})
     pure next
 
   UpdateEvery i next -> do
@@ -104,9 +103,10 @@ eval = case _ of
         H.modify (\st -> st { rows = arr })
     pure next
 
+  -- If the row is already selected, deselect, else set it as the selected row.
   Select i next -> do
     st <- H.get
-    H.modify (\st -> st { rows = fromMaybe st.rows $ updateRowSelected i st.rows })
+    H.modify (\st -> st { selected = if (Just i) == st.selected then Nothing else Just i })
     pure next
 
   Remove i next -> do
@@ -142,8 +142,7 @@ createAndAppendRow :: Array Row -> Int -> Int -> String -> Array Row
 createAndAppendRow arr index lastId s =
   cons
   ({ rid: lastId + index
-    , label: s
-    , isSelected: false })
+   , label: s })
   arr
 
 
@@ -164,24 +163,6 @@ updateRowLabel interval ix row =
   if ix `mod` interval == 0
   then row { label = row.label <> " !!!" }
   else row
-
-
--- | Update the status of a particular row.
---   Only one row is selected at any time
-updateRowSelected :: Int -> Array Row -> Maybe (Array Row)
-updateRowSelected pos arr = do
-  let s' = findIndex (\x -> x.isSelected) arr
-  case s' of
-    Nothing -> do
-      i <- findIndex (\x -> x.rid == pos) arr
-      modifyAt i (\x -> x { isSelected = true }) arr
-    Just s  -> do
-      i <- findIndex (\x -> x.rid == pos) arr
-      if s == i
-         then pure arr
-         else do
-            deselect <- modifyAt s (\x -> x { isSelected = false }) arr
-            modifyAt i (\x -> x { isSelected = true }) deselect
 
 
 -- | Remove a status a particular row.
@@ -239,17 +220,21 @@ render state =
       , HH.table
         [ HP.classes [ HH.ClassName "table table-hover table-striped test-data" ] ]
         [ HH.tbody_
-          $ map renderRow state.rows ]
+          $ map (renderRow state.selected) state.rows ]
       ]
 
 
-renderRow :: Row -> H.ComponentHTML Query
-renderRow { rid, label, isSelected } =
+renderRow :: Maybe Int -> Row -> H.ComponentHTML Query
+renderRow mi { rid, label } =
   let
     checkSelected =
-      if isSelected
-      then HH.tr [ HP.classes [ HH.ClassName "danger"], HP.attr (HH.AttrName "selected") "true" ]
-      else HH.tr_
+      case mi of
+        Nothing -> HH.tr_
+        Just i  ->
+          if rid == i
+          then HH.tr [ HP.classes [ HH.ClassName "danger"]
+                     , HP.attr (HH.AttrName "selected") "true" ]
+          else HH.tr_
   in
    checkSelected
      [

@@ -6,8 +6,8 @@
     "scripts": {
         "postinstall": "bower install",
         "clean": "rm -rf output bower_components node_modules",
-        "build-dev": "pulp build --to output/bundle.js",
-        "build-prod": "pulp build --optimise --to output/bundle.js"
+        "build-dev": "pulp browserify --to output/bundle.js",
+        "build-prod": "pulp browserify --optimise --to output/bundle.js"
     },
     "keywords": [
         "purescript",
