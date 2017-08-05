@@ -56,7 +56,7 @@ export let frameworks = [
     f("inferno-v3.1.2-keyed", true),
     f("ivi-v0.8.0-keyed", true),
     f("knockout-v3.4.1-keyed", true),
-    f("marionette-v3.3.1-keyed", true),
+    f("marionette-v3.4.0-keyed", true),
     f("marko-v4.3.0-keyed", true),
     f("mithril-v1.1.1-keyed", true),
     f("moon-v0.11.0", false),
