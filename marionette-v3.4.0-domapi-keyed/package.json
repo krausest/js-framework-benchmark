@@ -1,0 +1,24 @@
+{
+  "name": "js-framework-benchmark-marionette",
+  "version": "1.0.0",
+  "description": "Marionette v3.4.0 Dom API",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
+  },
+  "devDependencies": {
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
+    "babel-preset-es2015": "6.24.1",
+    "webpack": "2.5.1"
+  },
+  "dependencies": {
+    "backbone": "1.3.3",
+    "backbone.marionette": "3.4.0",
+    "backbone.radio": "2.0.0",
+    "jquery": "3.2.1",
+    "morphdom": "^2.3.3",
+    "underscore": "1.8.3"
+  }
+}
