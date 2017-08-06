@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  build:
+    machine:
+      java:
+        version: oraclejdk8
+      node:
+        version: v6.11.1
+
+    steps:
+      - checkout
+      - run: |
+          curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome.deb
+          sudo sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
+          rm google-chrome.deb
+      - run: npm install
+      - run:
+          name: Start http-server
+          command: npm start
+          background: true
+      - run: npm run build
+      - run: npm run check
