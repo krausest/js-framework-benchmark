@@ -1,0 +1,4 @@
+{
+    "plugins": ["handlebars-inline-precompile"],
+    "presets" : [ "babel-preset-es2015"]
+}
