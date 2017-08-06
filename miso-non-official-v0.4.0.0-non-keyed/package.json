@@ -1,0 +1,21 @@
+{
+  "name": "js-framework-benchmark-miso-non-official",
+  "version": "1.0.0",
+  "description": "Miso GHCJS (Non official benchmark)",
+  "main": "index.js",
+  "scripts": {
+    "install": "stack setup",
+    "build-prod": "stack build && cp $(stack path --local-install-root)/bin/miso-ghcjs-exe.jsexe/all.js dist/"
+  },
+  "keywords": [
+    "Miso",
+    "GHCJS"
+  ],
+  "author": "Saurabh Nanda",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/vacationlabs/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vacationlabs/js-framework-benchmark.git"
+  }
+}
