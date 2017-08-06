@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-pux",
+  "description": "Purescript Halogen JS Benchmark",
+  "main": "index.js",
+  "authors": [
+    "Thomas Honeyman <hello@thomashoneyman.com>"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "purescript",
+    "halogen"
+  ],
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "purescript-prelude": "3.1.0",
+    "purescript-halogen": "2.1.0",
+    "purescript-random": "3.0.0",
+    "purescript-tailrec": "^3.3.0"
+  }
+}
