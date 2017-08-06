@@ -13,15 +13,15 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@angular/common": "4.1.2",
-    "@angular/compiler": "4.1.2",
-    "@angular/compiler-cli": "4.1.2",
-    "@angular/core": "4.1.2",
-    "@angular/platform-browser": "4.1.2",
-    "@angular/platform-browser-dynamic": "4.1.2",
+    "@angular/common": "4.3.3",
+    "@angular/compiler": "4.3.3",
+    "@angular/compiler-cli": "4.3.3",
+    "@angular/core": "4.3.3",
+    "@angular/platform-browser": "4.3.3",
+    "@angular/platform-browser-dynamic": "4.3.3",
     "core-js": "2.4.1",
-    "rxjs": "5.4.0",
-    "zone.js": "0.8.10"
+    "rxjs": "5.4.2",
+    "zone.js": "0.8.16"
   },
   "devDependencies": {
     "google-closure-compiler": "20170409.0.0",

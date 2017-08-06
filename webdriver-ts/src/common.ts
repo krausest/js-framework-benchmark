@@ -34,9 +34,9 @@ function f(name: string, keyed: boolean, options: Options = {uri: null, useShado
 
 export let frameworks = [
     f("angular-v1.6.3-keyed", true),
-    f("angular-v4.1.2-keyed", true),
-    f("angular-v4.1.2-no-zone-keyed", true),
-    f("angular-v4.1.2-non-keyed", false),
+    f("angular-v4.3.3-keyed", true),
+    f("angular-v4.3.3-no-zone-keyed", true),
+    f("angular-v4.3.3-non-keyed", false),
     f("aurelia-v1.1.2-non-keyed", false, {uri: "aurelia-v1.1.2-non-keyed/dist"}),
     f("binding.scala-v10.0.1-keyed", true, {uri: "binding.scala-v10.0.1-keyed/target/web/stage"}),
     f("bobril-v7.1.2-keyed", true),
