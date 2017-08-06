@@ -18,19 +18,19 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/lodash": "^4.14.55",
-    "@types/node": "^7.0.8",
-    "@types/selenium-webdriver": "^3.0.0",
-    "@types/yargs": "^6.6.0",
-    "typescript": "2.4.1"
+    "@types/lodash": "^4.14.71",
+    "@types/node": "^8.0.19",
+    "@types/selenium-webdriver": "^3.0.4",
+    "@types/yargs": "^8.0.2",
+    "typescript": "2.4.2"
   },
   "dependencies": {
-    "chromedriver": "2.28.0",
-    "dot": "1.1.1",
-    "jstat": "1.6.2",
+    "chromedriver": "2.31.0",
+    "dot": "1.1.2",
+    "jstat": "1.7.0",
     "lodash": "4.17.4",
     "rgba-convert": "0.3.0",
-    "selenium-webdriver": "^3.3.0",
-    "yargs": "7.0.2"
+    "selenium-webdriver": "^3.5.0",
+    "yargs": "8.0.2"
   }
 }

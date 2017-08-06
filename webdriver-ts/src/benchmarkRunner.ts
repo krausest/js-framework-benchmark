@@ -123,7 +123,10 @@ function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: Framew
         .then(() => {
             if (config.LOG_PROGRESS) console.log("after run ",benchmark.id, benchmark.type, framework.name);
             if (benchmark.type === BenchmarkType.MEM) {
-                return driver.executeScript("window.gc();");
+                if (framework.name.startsWith("angular-v4")) {
+                    console.log("WARN: skipping window.gc for angular 4 - doesn't work currently");
+                    return null;
+                } else return driver.executeScript("window.gc();");
             }            
         })
         .then(() => {
@@ -131,7 +134,6 @@ function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: Framew
                 // Without it angular v4.2.1 reports no MajorGC
                 return snapMemorySize(driver);
             } else if (benchmark.type === BenchmarkType.STARTUP) {
-                // Without it angular v4.2.1 reports no MajorGC
                 return driver.sleep(2000);
             } 
         })
@@ -144,7 +146,10 @@ function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework: Frame
     .then(() => {
         if (config.LOG_PROGRESS) console.log("after initialized ",benchmark.id, benchmark.type, framework.name);                                 
         if (benchmark.type === BenchmarkType.MEM) {
-            return driver.executeScript("window.gc();");
+            if (framework.name.startsWith("angular-v4")) {
+                console.log("WARN: skipping window.gc for angular 4 - doesn't work currently");
+                return null;
+            } else return driver.executeScript("window.gc();");
         }
     })
     .then(() => clearLogs(driver))
@@ -184,7 +189,7 @@ function writeResult(res: Result, dir: string) {
 }
 
 function takeScreenshotOnError(driver: WebDriver, fileName: string, error: string): promise.Promise<any> {
-    console.error("Benchmark failed");
+    console.error("Benchmark failed",error);
     return driver.takeScreenshot().then(
         function(image) {
             console.error(`Writing screenshot ${fileName}`);

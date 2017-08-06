@@ -51,6 +51,7 @@ export let frameworks = [
     f("elm-v0.18.0-keyed", true),
     f("ember-v2.13.0-keyed", true, {uri: "ember-v2.13.0-keyed/dist"}),
     f("glimmer-v0.3.10-keyed", true, {uri: "glimmer-v0.3.10-keyed/dist"}),
+    f("halogen-v2.1.0-non-keyed", false),
     f("hyperapp-v0.9.1-non-keyed", false),
     f("halogen-v2.1.0-non-keyed", false),
     f("inferno-v3.1.2-non-keyed", false),
