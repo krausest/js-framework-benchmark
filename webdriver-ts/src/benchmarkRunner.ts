@@ -213,8 +213,8 @@ function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchmark) : 
         .then(results => reduceBenchmarkResults(benchmark, results))
         .then(results => writeResult({framework: framework, results: results, benchmark: benchmark}, dir))
         .then(() => {console.log("QUIT"); driver.quit();}, 
-            () => {
-                console.log("QUIT after error"); 
+            (err) => {
+                console.log("QUIT after error", err); 
                 return driver.quit().then(() => {if (config.EXIT_ON_ERROR) { throw "Benchmarking failed"}
             });
     })
