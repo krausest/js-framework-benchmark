@@ -25,12 +25,12 @@
     "typescript": "2.4.2"
   },
   "dependencies": {
-    "chromedriver": "2.31.0",
-    "dot": "1.1.2",
-    "jstat": "1.7.0",
+    "chromedriver": "2.28.0",
+    "dot": "1.1.1",
+    "jstat": "1.6.2",
     "lodash": "4.17.4",
     "rgba-convert": "0.3.0",
-    "selenium-webdriver": "^3.5.0",
-    "yargs": "8.0.2"
+    "selenium-webdriver": "^3.3.0",
+    "yargs": "7.0.2"
   }
 }
