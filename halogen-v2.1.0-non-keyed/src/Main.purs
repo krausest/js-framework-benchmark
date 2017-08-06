@@ -221,6 +221,10 @@ render state =
         [ HP.classes [ HH.ClassName "table table-hover table-striped test-data" ] ]
         [ HH.tbody_
           $ map (renderRow state.selected) state.rows ]
+      ,  HH.span
+        [ HP.classes [ HH.ClassName "preloadicon glyphicon glyphicon-remove" ] 
+          , HP.attr (HH.AttrName "aria-hidden") "true" ]
+        [ HH.text "" ]
       ]
 
 
