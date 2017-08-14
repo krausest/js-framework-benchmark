@@ -1,0 +1,20 @@
+{
+  "name": "dojo2-v2.0.0-beta2.6-keyed",
+  "version": "1.0.0",
+  "scripts": {
+    "build-prod": "./node_modules/.bin/dojo build"
+  },
+  "dependencies": {
+    "@dojo/core": "2.0.0-beta2.3",
+    "@dojo/has": "2.0.0-beta2.2",
+    "@dojo/shim": "2.0.0-beta2.3",
+    "@dojo/widget-core": "2.0.0-beta2.6",
+    "@dojo/i18n": "2.0.0-beta2.2"
+  },
+  "devDependencies": {
+    "@dojo/cli": "2.0.0-beta2.2",
+    "@dojo/cli-build-webpack": "2.0.0-beta2.4",
+    "@dojo/interfaces": "2.0.0-beta2.3",
+    "typescript": "2.4.2"
+  }
+}
