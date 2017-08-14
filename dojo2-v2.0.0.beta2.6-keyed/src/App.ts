@@ -119,7 +119,7 @@ export class App extends WidgetBase {
 			v('div', { classes: { jumbotron: true } }, [
 				v('div', { classes: { row: true } }, [
 					v('div', { classes: { 'col-md-6': true } }, [
-						v('h1', ['Dojo2 v2.0.0.beta2.5'])
+						v('h1', ['Dojo2 v2.0.0.beta2.6'])
 					]),
 					v('div', { classes: { 'col-md-6': true } }, this._buttonConfigs.map(({ id, label, onClick }) => {
 						return w(Button, { key: id, id, label, onClick });
