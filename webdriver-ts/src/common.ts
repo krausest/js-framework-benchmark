@@ -50,6 +50,8 @@ export let frameworks = [
     f("domvm-v3.0.5-keyed", true),
     f("elm-v0.18.0-keyed", true),
     f("ember-v2.13.0-keyed", true, {uri: "ember-v2.13.0-keyed/dist"}),
+    f("etch-v0.12.5-keyed", true),
+    f("etch-v0.12.5-non-keyed", false),
     f("glimmer-v0.3.10-keyed", true, {uri: "glimmer-v0.3.10-keyed/dist"}),
     f("halogen-v2.1.0-non-keyed", false),
     f("hyperapp-v0.9.1-non-keyed", false),
