@@ -185,10 +185,6 @@ const CollectionView = Mn.NextCollectionView.extend({
         }
         const curSelected = this.children.findByModel(selected);
         curSelected.$el.removeClass('danger');
-    },
-    onBeforeDestroyChildren() {
-        // Handles bugfix coming in v3.4.1
-        this.Dom.detachContents(this.el, this.$el);
     }
 });
 
