@@ -18,11 +18,9 @@ var startMeasure = function(name) {
 var stopMeasure = function() {
     var last = lastMeasure;
     if (lastMeasure) {
-        // console.profileEnd(lastMeasure);
         window.setTimeout(function () {
             lastMeasure = null;
             var stop = performance.now();
-            var duration = 0;
             console.log(last+" took "+(stop-startTime));
         }, 0);
     }
@@ -104,6 +102,7 @@ const Store = Bb.Collection.extend({
 const store = new Store();
 
 const ChildView = Mn.View.extend({
+    el: document.createElement('div'),
     monitorViewEvents: false,
     template: rowTemplate
 });
@@ -175,10 +174,6 @@ const CollectionView = Mn.NextCollectionView.extend({
         }
         const curSelected = this.children.findByModel(selected);
         curSelected.$el.removeClass('danger');
-    },
-    onBeforeDestroyChildren() {
-        // Handles bugfix coming in v3.4.1
-        this.Dom.detachContents(this.el, this.$el);
     }
 });
 
