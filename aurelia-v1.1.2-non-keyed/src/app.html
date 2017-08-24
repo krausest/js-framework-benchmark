@@ -30,11 +30,13 @@
         <table class="table table-hover table-striped test-data">
             <tbody>
                 <tr repeat.for="item of store.data" class-name.bind="item.id === store.selected ? 'danger' : ''">
-                    <td class="col-md-1">${item.id}</td>
+                    <td class="col-md-1">${item.id & oneTime}</td>
                     <td class="col-md-4">
                         <a click.delegate="select(item)">${item.label}</a>
                     </td>
-                    <td class="col-md-1"><a click.delegate="remove(item)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                    <td class="col-md-1"><a click.delegate="remove(item)">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                    </td>
                     <td class="col-md-6"></td>
                 </tr>
             </tbody>
