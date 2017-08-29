@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
-import easyState from 'react-easy-state'
+import { easyComp } from 'react-easy-state/dist/esm.es6'
+import store from './store'
 
-@easyState
-export default class Row extends Component {
+class Row extends Component {
 	onDelete () {
-		const { row, onDelete } = this.props
-		onDelete(row)
+		store.delete(this.props.row)
 	}
 
 	onClick () {
-		const { row, onClick } = this.props
-		onClick(row)
+		store.select(this.props.row)
 	}
 
 	render() {
-		const { row, styleClass } = this.props
+		const { row } = this.props
+		const styleClass = row.selected ? 'danger' : ''
 
 		return (
 			<tr className={styleClass}>
@@ -28,3 +27,5 @@ export default class Row extends Component {
 		)
 	}
 }
+
+export default easyComp(Row)

@@ -4,13 +4,14 @@ import babel from 'rollup-plugin-babel'
 import replace from 'rollup-plugin-replace'
 
 export default {
-  entry: 'src/Main.jsx',
-  format: 'iife',
-  moduleName: 'reactEasyState',
-  dest: 'dist/main.js',
-  sourceMap: 'inline',
+  input: 'src/index.jsx',
+  output: {
+    file: 'dist/bundle.js',
+    format: 'iife'
+  },
+  sourcemap: 'inline',
   plugins: [
-    resolve({ jsnext: true, main: true, extensions: [ '.js', '.json', '.jsx' ] }),
+    resolve({ extensions: [ '.js', '.json', '.jsx' ] }),
     commonjs({
       namedExports: { 'node_modules/react/react.js': ['Component'] }
     }),
