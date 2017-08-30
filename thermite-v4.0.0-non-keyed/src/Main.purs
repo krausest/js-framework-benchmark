@@ -231,7 +231,7 @@ createRandomNRows n lastId = tailRecM2 f [] n
 -- | Create a single row
 createAndAppendRow :: Array Row -> Int -> Int -> String -> Array Row
 createAndAppendRow xs index lastId s =
-  A.cons { rid: lastId + index, label: s } xs
+  A.cons { rid: lastId + index - 1, label: s } xs
 
 
 -- | For use in iterating through rows
