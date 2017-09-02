@@ -30,7 +30,7 @@
 <table class="table table-hover table-striped test-data">
     <tbody>
     {{#each rows.data key="id" as |row|}}
-        <tr class={{if (eq row.id rows.selected) 'danger'}}>
+        <tr class={{if-eq row.id rows.selected 'danger'}}>
             <td class="col-md-1">{{row.id}}</td>
             <td class="col-md-4">
                 <a onclick={{action select row.id}}>{{row.label}}</a>
