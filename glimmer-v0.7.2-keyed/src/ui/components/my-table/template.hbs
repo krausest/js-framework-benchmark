@@ -1,0 +1,44 @@
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Glimmer 0.7.2</h1>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="run" onclick={{action run}}>Create 1,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="runlots" onclick={{action runLots}}>Create 10,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="add" onclick={{action add}}>Append 1,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="update" onclick={{action update}}>Update every 10th row</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="clear" onclick={{action clear}}>Clear</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="swaprows" onclick={{action swapRows}}>Swap Rows</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-hover table-striped test-data">
+    <tbody>
+    {{#each rows.data key="id" as |row|}}
+        <tr class={{if-eq row.id rows.selected 'danger'}}>
+            <td class="col-md-1">{{row.id}}</td>
+            <td class="col-md-4">
+                <a onclick={{action select row.id}}>{{row.label}}</a>
+            </td>
+            <td class="col-md-1"><a onclick={{action delete row.id}}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+            <td class="col-md-6"></td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
