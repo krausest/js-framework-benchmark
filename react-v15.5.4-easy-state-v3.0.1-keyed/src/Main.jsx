@@ -1,5 +1,5 @@
 import React from 'react'
-import { easyComp } from 'react-easy-state/dist/esm.es6'
+import { easyComp } from 'react-easy-state/dist/es.es6'
 import Row from './Row'
 import store from './store'
 
@@ -11,7 +11,7 @@ function Main () {
       <div className="jumbotron">
         <div className="row">
           <div className="col-md-6">
-            <h1>React v15.5.4 + Easy State 3.0.0</h1>
+            <h1>React v15.5.4 + Easy State 3.0.1</h1>
           </div>
           <div className="col-md-6">
             <div className="row">

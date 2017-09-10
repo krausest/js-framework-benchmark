@@ -11,7 +11,7 @@ export default {
     format: 'iife'
   },
   plugins: [
-    resolve({ /*remove this*/ module: false, extensions: [ '.js', '.json', '.jsx' ] }),
+    resolve({ extensions: [ '.js', '.json', '.jsx' ] }),
     commonjs({
       namedExports: { 'node_modules/react/react.js': ['Component'] }
     }),

@@ -1,4 +1,4 @@
-import { easyStore } from 'react-easy-state/dist/esm.es6'
+import { easyStore } from 'react-easy-state/dist/es.es6'
 import randomSentence from './randomSentence'
 import { startMeasure, stopMeasure } from './logPerf'
 
