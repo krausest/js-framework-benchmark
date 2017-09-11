@@ -1,0 +1,37 @@
+{
+  "name": "glimmer-app",
+  "version": "0.0.0",
+  "description": "A brand new Glimmer app.",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "ember build -e production",
+    "start": "ember server",
+    "test": "ember test",
+    "build-dev": "ember build",
+    "build-prod": "ember build --environment=production"
+  },
+  "devDependencies": {
+    "@glimmer/application": "^0.7.2",
+    "@glimmer/application-pipeline": "^0.8.0",
+    "@glimmer/blueprint": "^0.5.0",
+    "@glimmer/inline-precompile": "^1.0.0",
+    "@glimmer/resolver": "^0.3.0",
+    "@glimmer/test-helpers": "^0.30.0",
+    "@types/qunit": "^2.0.31",
+    "broccoli-asset-rev": "^2.5.0",
+    "ember-cli": "^2.14.0",
+    "ember-cli-dependency-checker": "^2.0.1",
+    "ember-cli-inject-live-reload": "^1.6.1",
+    "ember-cli-sass": "^6.2.0",
+    "ember-cli-uglify": "^2.0.0-beta.1",
+    "qunitjs": "^2.3.3",
+    "typescript": "^2.2.2"
+  },
+  "engines": {
+    "node": ">= 4.0"
+  },
+  "private": true
+}
