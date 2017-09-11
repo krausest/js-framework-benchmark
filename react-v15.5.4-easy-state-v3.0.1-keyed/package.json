@@ -2,7 +2,7 @@
   "name": "js-framework-benchmark-react-easy-state",
   "version": "1.0.0",
   "description": "React Easy State demo",
-  "main": "src/Main.jsx",
+  "main": "src/index.jsx",
   "scripts": {
     "build-prod": "rollup -c rollup.config.prod.js",
     "build-dev": "rollup -w -c rollup.config.dev.js"
@@ -19,23 +19,20 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "babel-core": "6.24.1",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-decorators-legacy": "1.3.4",
+    "babel-core": "6.26.0",
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
-    "babili": "0.1.2",
-    "rollup": "0.41.6",
-    "rollup-plugin-babel": "2.7.1",
-    "rollup-plugin-babili": "3.0.0",
-    "rollup-plugin-commonjs": "8.0.2",
+    "babili": "0.1.4",
+    "rollup": "0.49.1",
+    "rollup-plugin-babel": "3.0.2",
+    "rollup-plugin-babili": "3.1.1",
+    "rollup-plugin-commonjs": "8.2.0",
     "rollup-plugin-node-resolve": "3.0.0",
     "rollup-plugin-replace": "1.1.1",
-    "rollup-watch": "3.2.2",
-    "webpack": "2.5.1"
+    "rollup-watch": "4.3.1"
   },
   "dependencies": {
-    "react-easy-state": "1.0.3",
+    "react-easy-state": "3.0.1",
     "react": "15.5.4",
     "react-dom": "15.5.4"
   }
