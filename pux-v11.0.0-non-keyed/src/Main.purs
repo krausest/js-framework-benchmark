@@ -248,7 +248,7 @@ view = memoize \st ->
     div ! className "jumbotron" $ do
       div ! className "row" $ do
         div ! className "col-md-6" $ do
-          h1 $ text "Pux 10.0.0"
+          h1 $ text "Pux 11.0.0"
         div ! className "col-md-6" $ do
           traverse_ viewButton buttons
 
