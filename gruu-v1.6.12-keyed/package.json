@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-gruu",
+  "version": "1.0.0",
+  "description": "Gruu demo",
+  "main": "src/main.es6.js",
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
+  },
+  "keywords": [
+    "gruu",
+    "webpack"
+  ],
+  "author": "Marek Łabuz",
+  "devDependencies": {
+    "babel-core": "6.24.0",
+    "babel-loader": "7.0.0",
+    "babel-plugin-gruu": "1.0.5",
+    "babel-preset-es2015": "6.24.1",
+    "webpack": "2.5.1"
+  },
+  "dependencies": {
+    "gruujs": "1.6.12"
+  }
+}
