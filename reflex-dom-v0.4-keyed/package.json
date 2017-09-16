@@ -3,21 +3,21 @@
   "version": "1.0.0",
   "description": "Benchmark for reflex-dom",
   "author": "Alexandre Esteves <alexandre.fmp.esteves@gmail.com>",
-  "contributors": ["Ryan Trinkle <ryan.trinkle@gmail.com>"],
+  "contributors": [
+    "Ryan Trinkle <ryan.trinkle@gmail.com>"
+  ],
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "license": "ISC",
-
   "scripts": {
-    "install": "./clone-reflex.sh",
-    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the binaries are already provided. && echo Run \"'npm run build-prod-force'\" if you really want to rebuild from source.",
+    "install": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to clone reflex-dom\\'s benchmark and build system use: && echo npm run install-force",
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "install-force": "./clone-reflex.sh",
     "build-prod-force": "./build.sh"
   },
-
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
-
   "keywords": [
     "reflex",
     "reflex-frp",
