@@ -6,4 +6,6 @@ if [ ! -d "$R" ]; then
     git fetch --all
     git checkout 13d8daf368cb370d07743123d1fe66e19961c2ed
     ./hack-on reflex-dom
+    cd reflex-dom/reflex-dom
+    ../../work-on ghcjs ./. --command "cabal configure --ghcjs --enable-benchmarks"
 fi
