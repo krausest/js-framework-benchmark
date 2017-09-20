@@ -1,5 +1,5 @@
 
-import { Component, NgModule, AfterViewChecked, VERSION } from '@angular/core';
+import { Component, NgModule, AfterViewChecked, VERSION, ChangeDetectorRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser'
 
 interface Data {
@@ -31,7 +31,7 @@ let stopMeasure = function () {
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Angular v4.3.3</h1>
+                <h1>Angular v4.4.3 (no Zone.js)</h1>
             </div>
             <div class="col-md-6">
                 <div class="col-sm-6 smallpad">
@@ -57,7 +57,7 @@ let stopMeasure = function () {
     </div>
     <table class="table table-hover table-striped test-data">
         <tbody>
-            <tr [class.danger]="item.id === selected" *ngFor="let item of data trackBy itemByIndex">
+            <tr [class.danger]="item.id === selected" *ngFor="let item of data trackBy itemById">
                 <td class="col-md-1">{{item.id}}</td>
                 <td class="col-md-4">
                     <a href="#" (click)="select(item, $event)">{{item.label}}</a>
@@ -76,7 +76,7 @@ export class App implements AfterViewChecked {
     id: number = 1;
     backup: Array<Data> = undefined;
 
-    constructor() {
+    constructor(private changeDetector: ChangeDetectorRef) {
         console.info(VERSION.full);
     }
 
@@ -96,14 +96,15 @@ export class App implements AfterViewChecked {
         return Math.round(Math.random() * 1000) % max;
     }
 
-    itemByIndex(index: number, item: Data) {
-      return index; 
+    itemById(index: number, item: Data) {
+        return item.id;
     }
 
     select(item: Data, event: Event) {
         startMeasure("select");
         event.preventDefault();
         this.selected = item.id;
+        this.changeDetector.detectChanges();
     }
 
     delete(item: Data, event: Event) {
@@ -115,16 +116,19 @@ export class App implements AfterViewChecked {
                 break;
             }
         }
+        this.changeDetector.detectChanges();
     }
 
     run() {
         startMeasure("run");
         this.data = this.buildData();
+        this.changeDetector.detectChanges();
     }
 
     add() {
         startMeasure("add");
         this.data = this.data.concat(this.buildData(1000));
+        this.changeDetector.detectChanges();
     }
 
     update() {
@@ -132,16 +136,19 @@ export class App implements AfterViewChecked {
         for (let i = 0; i < this.data.length; i += 10) {
             this.data[i].label += ' !!!';
         }
+        this.changeDetector.detectChanges();
     }
     runLots() {
         startMeasure("runLots");
         this.data = this.buildData(10000);
         this.selected = undefined;
+        this.changeDetector.detectChanges();
     }
     clear() {
         startMeasure("clear");
         this.data = [];
         this.selected = undefined;
+        this.changeDetector.detectChanges();
     }
     swapRows() {
         startMeasure("swapRows");
@@ -150,7 +157,9 @@ export class App implements AfterViewChecked {
             this.data[4] = this.data[9];
             this.data[9] = a;
         }
+        this.changeDetector.detectChanges();
     }
+
     ngAfterViewChecked() {
         stopMeasure();
     }
@@ -159,6 +168,6 @@ export class App implements AfterViewChecked {
 @NgModule({
     imports: [BrowserModule],
     declarations: [App],
-    bootstrap: [App]
+    bootstrap: [App],
 })
 export class AppModule { }
