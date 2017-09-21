@@ -1,0 +1,28 @@
+{
+  "name": "js-framework-benchmark-vue",
+  "version": "1.0.0",
+  "description": "Benchmark for san framework",
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
+  },
+  "keywords": [
+    "san"
+  ],
+  "author": "zhangsiyuan",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
+    "babel-preset-env": "^1.6.0",
+    "webpack": "^3.6.0"
+  },
+  "dependencies": {
+    "san": "3.2.3"
+  }
+}
