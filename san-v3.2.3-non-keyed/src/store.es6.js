@@ -20,13 +20,20 @@ export class Store {
         return data;
     }
     updateData(mod = 10) {
-        for (let i=0;i<this.data.length;i+=10) {
-            this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+        // Just assigning setting each tenth this.data doesn't cause a redraw, the following does:
+        var newData = [];
+        for (let i = 0; i < this.data.length; i ++) {
+            if (i%10===0) {
+                newData[i] = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+            } else {
+                newData[i] = this.data[i];
+            }
         }
+        this.data = newData;
     }
     delete(id) {
         const idx = this.data.findIndex(d => d.id==id);
-        this.data.splice(idx, 1);
+        this.data = this.data.slice(0, idx).concat(this.data.slice(idx + 1))
     }
     run() {
         this.data = this.buildData();
@@ -51,9 +58,19 @@ export class Store {
     }
     swapRows() {
         if(this.data.length > 10) {
-            var a = this.data[4];
-            this.data[4] = this.data[9];
-            this.data[9] = a;
+            let d4 = this.data[4];
+            let d9 = this.data[9];
+
+            var newData = this.data.map(function(data, i) {
+                if(i === 4) {
+                    return d9;
+                }
+                else if(i === 9) {
+                    return d4;
+                }
+                return data;
+            });
+            this.data = newData;
         }
     }
 }

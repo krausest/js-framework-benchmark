@@ -1,5 +1,5 @@
 import {Store} from './store.es6';
-import san from 'san';
+import san from 'san/dist/san.dev.js';
 
 var store = new Store();
 
@@ -51,7 +51,7 @@ export default san.defineComponent({
                 </div>
             </div>
         </div>
-        <table class="table table-hover table-striped test-data" @click="handleClick">
+        <table class="table table-hover table-striped test-data" on-click="handleClick($event)">
             <tbody>
                 <tr s-for="item in rows" class="{{item.id === selected? 'danger':''}}">
                     <td class="col-md-1">{{item.id}}</td>
@@ -79,6 +79,9 @@ export default san.defineComponent({
         if (action && id) {
             this[action](id);
         }
+    },
+    ccc(){
+        console.log(this.data.get(''));
     },
     add() {
         startMeasure("add");
