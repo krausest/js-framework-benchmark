@@ -1,5 +1,6 @@
 import {Store} from './store.es6';
-import san from 'san/dist/san.dev.js';
+import san from 'san/dist/san.spa.js';
+
 
 var store = new Store();
 
@@ -80,6 +81,9 @@ export default san.defineComponent({
             this[action](id);
         }
     },
+    attached() {
+        window.app = this
+    },
     ccc(){
         console.log(this.data.get(''));
     },
@@ -132,8 +136,13 @@ export default san.defineComponent({
         stopMeasure();
     },
     sync() {
-        this.data.set('rows', store.data);
+        for (let i = 0; i < store.ops.length; i++) {
+            let op = store.ops[i];
+            this.data[op.type](op.name, op.arg);
+        }
 
-        this.data.set('selected', store.selected);
+        store.ops.length = 0;
     }
 });
+
+

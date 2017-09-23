@@ -9,6 +9,7 @@ export class Store {
         this.data = [];
         this.selected = undefined;
         this.id = 1;
+        this.ops = [];
     }
     buildData(count = 1000) {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
@@ -24,7 +25,13 @@ export class Store {
         var newData = [];
         for (let i = 0; i < this.data.length; i ++) {
             if (i%10===0) {
-                newData[i] = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+                let newRow = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+                newData[i] = newRow;
+                this.ops.push({
+                    type: 'set',
+                    name: 'rows[' + i + ']',
+                    arg: newRow
+                });
             } else {
                 newData[i] = this.data[i];
             }
@@ -34,27 +41,83 @@ export class Store {
     delete(id) {
         const idx = this.data.findIndex(d => d.id==id);
         this.data = this.data.slice(0, idx).concat(this.data.slice(idx + 1))
+        this.ops.push(
+            {
+                type: 'removeAt',
+                name: 'rows',
+                arg: index
+            }
+        );
     }
     run() {
         this.data = this.buildData();
-        this.selected = undefined;
+        this.selected = null;
+        this.ops.push(
+            {
+                type: 'set',
+                name: 'rows',
+                arg: this.data
+            },
+            {
+                type: 'set',
+                name: 'selected',
+                arg: null
+            }
+        );
     }
     add() {
-        this.data = this.data.concat(this.buildData(1000));
+        var addData = this.buildData(1000);
+        var len = this.data.length;
+        this.data = this.data.concat(addData);
+
+        this.ops.push({
+            type: 'splice',
+            name: 'rows',
+            arg: [len, 0].concat(addData)
+        });
     }
     update() {
         this.updateData();
     }
     select(id) {
         this.selected = id;
+        this.ops.push({
+            type: 'set',
+            name: 'selected',
+            arg: id
+        });
     }
     runLots() {
         this.data = this.buildData(10000);
-        this.selected = undefined;
+        this.selected = null;
+        this.ops.push(
+            {
+                type: 'set',
+                name: 'rows',
+                arg: this.data
+            },
+            {
+                type: 'set',
+                name: 'selected',
+                arg: null
+            }
+        );
     }
     clear() {
         this.data = [];
-        this.selected = undefined;
+        this.selected = null;
+        this.ops.push(
+            {
+                type: 'set',
+                name: 'rows',
+                arg: this.data
+            },
+            {
+                type: 'set',
+                name: 'selected',
+                arg: null
+            }
+        );
     }
     swapRows() {
         if(this.data.length > 10) {
@@ -71,6 +134,18 @@ export class Store {
                 return data;
             });
             this.data = newData;
+            this.ops.push(
+                {
+                    type: 'splice',
+                    name: 'rows',
+                    arg: [9, 1, d4]
+                },
+                {
+                    type: 'splice',
+                    name: 'rows',
+                    arg: [4, 1, d9]
+                }
+            );
         }
     }
 }
