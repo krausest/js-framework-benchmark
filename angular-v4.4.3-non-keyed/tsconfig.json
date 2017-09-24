@@ -16,7 +16,8 @@
   },
   "angularCompilerOptions": {
     "annotationsAs": "static fields",
-    "annotateForClosureCompiler": true
+    "annotateForClosureCompiler": true,
+    "preserveWhitespaces": false
   },
   "exclude": [
     "node_modules",
