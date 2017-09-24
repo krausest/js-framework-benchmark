@@ -3,7 +3,7 @@
         <div class="jumbotron">
             <div class="row">
                 <div class="col-md-6">
-                    <h1>Vue.js v2.3.3</h1>
+                    <h1>Vue.js v2.4.4 (non-keyed)</h1>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
@@ -31,7 +31,7 @@
         </div>
         <table class="table table-hover table-striped test-data" @click="handleClick">
             <tbody>
-                <tr v-for="item in rows" :key="item.id" :class="{'danger': item.id == selected}">
+                <tr v-for="item in rows" :class="{'danger': item.id == selected}">
                     <td class="col-md-1">{{item.id}}</td>
                     <td class="col-md-4">
                         <a data-action="select" :data-id="item.id">{{item.label}}</a>
