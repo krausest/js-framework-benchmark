@@ -40,7 +40,7 @@ module.exports = [{
         ],
         extensions: extensions,
         alias: {
-            'san': 'san/dist/san.dev.js'
+            'san': 'san/dist/san.spa.js'
         }
     },
     plugins: [
