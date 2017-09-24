@@ -94,7 +94,7 @@ export class Main extends React.Component{
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>React v16.beta2</h1>
+                        <h1>React v16.rc3</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
