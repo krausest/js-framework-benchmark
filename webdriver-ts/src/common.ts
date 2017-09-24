@@ -88,6 +88,7 @@ export let frameworks = [
     f("react-v16.rc3", true),   
     f("redom-v3.0.2-keyed", true),
     f("redom-v3.0.2-non-keyed", false),
+    f("reflex-dom-v0.4-keyed", true, {uri: "reflex-dom-v0.4-keyed/dist"}),
     f("riot-v3.5.0-non-keyed", false),
     f("rx-domh-v0.0.2-rxjs-v5.3.0-keyed", true),
     f("simulacra-v2.1.5-non-keyed", false),
