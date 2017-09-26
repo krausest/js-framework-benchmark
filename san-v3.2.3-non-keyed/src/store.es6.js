@@ -45,7 +45,7 @@ export class Store {
             {
                 type: 'removeAt',
                 name: 'rows',
-                arg: index
+                arg: idx
             }
         );
     }
