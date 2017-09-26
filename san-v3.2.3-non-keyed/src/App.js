@@ -101,7 +101,7 @@ export default san.defineComponent({
     },
     select(id) {
         startMeasure("select");
-        store.select(id);
+        store.select(+id);
         this.sync();
         stopMeasure();
     },
