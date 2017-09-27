@@ -1,36 +1,51 @@
 'use strict';
 
-function _random (max) {
-  return Math.round(Math.random() * 1000) % max;
+const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
+const colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
+const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
+
+function random (max) {
+  return Math.round(Math.random() * max);
+}
+
+function randomItem (arr) {
+  return arr[random(arr.length)];
 }
 
 export class Store {
   constructor () {
     this.data = [];
-    this.selected = undefined;
+    this.selected = null;
     this.id = 1;
   }
   buildData (count = 1000) {
-    var adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
-    var colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
-    var nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
-    var data = [];
-    for (var i = 0; i < count; i++) { data.push({id: this.id++, label: adjectives[_random(adjectives.length)] + ' ' + colours[_random(colours.length)] + ' ' + nouns[_random(nouns.length)] }); }
+    const data = new Array(count);
+
+    for (let i = 0; i < count; i++) {
+      data[i] = {
+        id: this.id++,
+        label: randomItem(adjectives) + ' ' + randomItem(colours) + ' ' + randomItem(nouns)
+      };
+    }
+
     return data;
   }
   updateData (mod = 10) {
     for (let i = 0; i < this.data.length; i += 10) {
-      this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+      this.data[i].label += ' !!!';
     }
   }
   delete (id) {
-    const idx = this.data.findIndex(d => d.id == id);
-    this.data = this.data.filter((e, i) => i != idx);
+    for (let i = 0; i < this.data.length; i++) {
+      if (this.data[i].id === id) {
+        this.data.splice(i--, 1);
+      }
+    }
     return this;
   }
   run () {
     this.data = this.buildData();
-    this.selected = undefined;
+    this.selected = null;
   }
   add () {
     this.data = this.data.concat(this.buildData(1000));
@@ -44,24 +59,24 @@ export class Store {
   hideAll () {
     this.backup = this.data;
     this.data = [];
-    this.selected = undefined;
+    this.selected = null;
   }
   showAll () {
     this.data = this.backup;
     this.backup = null;
-    this.selected = undefined;
+    this.selected = null;
   }
   runLots () {
     this.data = this.buildData(10000);
-    this.selected = undefined;
+    this.selected = null;
   }
   clear () {
     this.data = [];
-    this.selected = undefined;
+    this.selected = null;
   }
   swapRows () {
     if (this.data.length > 10) {
-      var a = this.data[4];
+      const a = this.data[4];
       this.data[4] = this.data[9];
       this.data[9] = a;
     }
