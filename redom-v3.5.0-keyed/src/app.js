@@ -1,13 +1,10 @@
 import { el, list } from 'redom';
 
-const performance = window.performance;
-const setTimeout = window.setTimeout;
-
 let startTime;
 let lastMeasure;
 
 const startMeasure = (name) => {
-  startTime = performance.now();
+  startTime = window.performance.now();
   lastMeasure = name;
 };
 
@@ -15,9 +12,9 @@ const stopMeasure = () => {
   const last = lastMeasure;
 
   if (lastMeasure) {
-    setTimeout(() => {
+    window.setTimeout(() => {
       lastMeasure = null;
-      const stop = performance.now();
+      const stop = window.performance.now();
       console.log(last + ' took ' + (stop - startTime));
     }, 0);
   }
