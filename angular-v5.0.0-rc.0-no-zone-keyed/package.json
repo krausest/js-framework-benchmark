@@ -1,37 +1,36 @@
 {
-  "name": "angular2-webpack",
+  "name": "angular-closure",
   "version": "1.0.0",
-  "description": "A webpack starter for angular 2",
+  "description": "An angular app using closure compiler",
   "scripts": {
-    "start": "npm run build-dev && npm run serve",
+    "start": "echo 'please start in root project'",
     "test": "karma start",
     "ngc": "ngc",
     "preclosure": "rm -rf dist",
     "closure": "java -jar node_modules/google-closure-compiler/compiler.jar --flagfile closure.conf",
     "build-prod": "npm run ngc && npm run closure",
-    "rollup": "rollup -c rollup.config.aot.js",
+    "rollup": "rollup -c rollup.config.js",
     "build-dev": "npm run ngc && npm run rollup"
   },
   "license": "MIT",
   "dependencies": {
-    "@angular/common": "4.4.3",
-    "@angular/compiler": "4.4.3",
-    "@angular/compiler-cli": "4.4.3",
-    "@angular/core": "4.4.3",
-    "@angular/platform-browser": "4.4.3",
-    "@angular/platform-browser-dynamic": "4.4.3",
+    "@angular/common": "5.0.0-rc.0",
+    "@angular/compiler": "5.0.0-rc.0",
+    "@angular/compiler-cli": "5.0.0-rc.0",
+    "@angular/core": "5.0.0-rc.0",
+    "@angular/platform-browser": "5.0.0-rc.0",
     "core-js": "2.4.1",
     "rxjs": "5.4.3",
     "zone.js": "0.8.17"
   },
   "devDependencies": {
-    "google-closure-compiler": "20170409.0.0",
+    "google-closure-compiler": "git+https://github.com/alexeagle/closure-compiler.git#packagejson.dist",
     "http-server": "0.9.0",
     "rollup": "0.41.6",
     "rollup-plugin-commonjs": "8.0.2",
     "rollup-plugin-node-resolve": "2.0.0",
     "rollup-plugin-uglify": "1.0.1",
-    "typescript": "2.3.2",
+    "typescript": "2.4.2",
     "typings": "2.1.0",
     "yargs": "7.0.2"
   }
