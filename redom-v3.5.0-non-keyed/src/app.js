@@ -1,10 +1,13 @@
 import { el, list } from 'redom';
 
+const performance = window.performance;
+const setTimeout = window.setTimeout;
+
 let startTime;
 let lastMeasure;
 
 const startMeasure = (name) => {
-  startTime = window.performance.now();
+  startTime = performance.now();
   lastMeasure = name;
 };
 
@@ -12,9 +15,9 @@ const stopMeasure = () => {
   const last = lastMeasure;
 
   if (lastMeasure) {
-    window.setTimeout(() => {
+    setTimeout(() => {
       lastMeasure = null;
-      const stop = window.performance.now();
+      const stop = performance.now();
       console.log(last + ' took ' + (stop - startTime));
     }, 0);
   }
@@ -66,7 +69,7 @@ export class App {
         )
       ),
       el('table.table.table-hover.table-striped.test-data',
-        this.table = list('tbody', Tr, 'id', { app: this, store })
+        this.table = list('tbody', Tr, null, { app: this, store })
       ),
       el('span.preloadicon.glyphicon.glyphicon-remove', { 'aria-hidden': true })
     );
@@ -145,8 +148,10 @@ class Tr {
     const { id, label } = data;
     const { selected } = this.store;
 
-    this.id.textContent = id;
-    this.label.textContent = label;
+    if (data !== this.data) {
+      this.id.textContent = id;
+      this.label.textContent = label;
+    }
 
     if (id === selected) {
       this.el.classList.add('danger');
