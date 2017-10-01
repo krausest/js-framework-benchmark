@@ -1,6 +1,5 @@
-
 import { Component, NgModule, AfterViewChecked, VERSION, ChangeDetectorRef } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser'
+import { BrowserModule } from '@angular/platform-browser';
 
 interface Data {
     id: number;
@@ -31,7 +30,7 @@ let stopMeasure = function () {
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Angular v4.4.3 (no Zone.js)</h1>
+                <h1>Angular v5.0.0-rc.0 (no Zone.js)</h1>
             </div>
             <div class="col-md-6">
                 <div class="col-sm-6 smallpad">
@@ -70,7 +69,7 @@ let stopMeasure = function () {
     <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 </div>`
 })
-export class App implements AfterViewChecked {
+export class AppComponent implements AfterViewChecked {
     data: Array<Data> = [];
     selected: number = undefined;
     id: number = 1;
@@ -167,7 +166,7 @@ export class App implements AfterViewChecked {
 
 @NgModule({
     imports: [BrowserModule],
-    declarations: [App],
-    bootstrap: [App],
+    declarations: [AppComponent],
+    bootstrap: [AppComponent],
 })
 export class AppModule { }
