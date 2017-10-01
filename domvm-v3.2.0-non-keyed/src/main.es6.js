@@ -37,7 +37,7 @@ function Jumbotron(vm) {
 		h(".jumbotron", [
 			h(".row", [
 				h(".col-md-6", [
-					h("h1", "domvm v3.0.5 (keyed)")
+					h("h1", "domvm v3.2.0 (non-keyed)")
 				]),
 				h(".col-md-6", [
 					h(".row", [
@@ -67,17 +67,17 @@ function Jumbotron(vm) {
 
 function Table(vm) {
 	let select = (e, node) => {
-		while (node.key == null)
+		while (node.data == null)
 			node = node.parent;
-		store.select(node.key);
+		store.select(node.data);
 		vm.redraw();
 		return false;
 	};
 
 	let remove = (e, node) => {
-		while (node.key == null)
+		while (node.data == null)
 			node = node.parent;
-		store.delete(node.key);
+		store.delete(node.data);
 		vm.redraw();
 		return false;
 	};
@@ -90,13 +90,12 @@ function Table(vm) {
 
 	return _ => {
 		var items = domvm.lazyList(store.data, {
-			key:  item => item.id,
-			diff: item => [item.label, item.id === store.selected],
+			diff: item => [item.label, item.id === store.selected, item.id],
 		});
 
 		return h("table.table.table-hover.table-striped.test-data", {onclick: tableClick}, [
-			h("tbody", {_flags: domvm.LAZY_LIST | domvm.KEYED_LIST}, items.map(item =>
-				h("tr", {_key: item.id, class: item.id === store.selected ? 'danger' : null}, [
+			h("tbody", {_flags: domvm.LAZY_LIST}, items.map(item =>
+				h("tr", {_data: item.id, class: item.id === store.selected ? 'danger' : null}, [
 					h("td.col-md-1", item.id),
 					h("td.col-md-4", [
 						h("a.lbl", item.label)
