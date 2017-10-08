@@ -213,6 +213,8 @@ function buildDriver() {
     // options = options.setChromeBinaryPath("/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome");
     // options = options.setChromeBinaryPath("/Applications/Chromium.app/Contents/MacOS/Chromium");
     // options = options.setChromeBinaryPath("/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary");
+    if(args.headless)
+	options = options.addArguments("--headless");
     options = options.addArguments("--js-flags=--expose-gc");
     options = options.addArguments("--disable-infobars");
     options = options.addArguments("--disable-background-networking");
@@ -397,6 +399,7 @@ let args = yargs(process.argv)
 .default('check','false')
 .default('exitOnError','false')
 .default('count', config.REPEAT_RUN)
+.boolean('headless')
 .array("framework").array("benchmark").argv;
 
 console.log(args);
