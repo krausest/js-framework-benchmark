@@ -25,6 +25,6 @@
     "css-loader": "0.28.1"
   },
   "dependencies": {
-    "san": "3.2.5"
+    "san": "^3.2.6"
   }
 }
