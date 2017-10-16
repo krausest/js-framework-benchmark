@@ -1,0 +1,18 @@
+{
+  "name": "js-framework-benchmark-domvm-keyed",
+  "version": "3.2.0-keyed",
+  "description": "Benchmark for domvm framework (keyed)",
+  "scripts": {
+    "build-dev": "node build.js",
+    "build-prod": "node build.js"
+  },
+  "devDependencies": {
+    "rollup": "*",
+    "rollup-plugin-buble": "*",
+    "rollup-plugin-commonjs": "*",
+    "rollup-plugin-uglify": "*"
+  },
+  "dependencies": {
+    "domvm": "git://github.com/leeoniya/domvm.git#bdff6e7af158a97297ff850934a746ff36e45bb2"
+  }
+}

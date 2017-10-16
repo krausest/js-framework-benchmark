@@ -42,7 +42,7 @@ function findByXPath(node: WebElement, path: string): promise.Promise<WebElement
      let n = promise.fulfilled(node);
      for (let p of paths) {
          // n = n.then(nd => nd.findElements(By.tagName(p.tagName))).then(elems => { // costly since it fetches all elements
-         n = n.then(nd => nd.findElements(By.css(p.tagName+":nth-child("+(p.index)+")"))).then(elems => {
+         n = n.then(nd => (nd===null) ? null : nd.findElements(By.css(p.tagName+":nth-child("+(p.index)+")"))).then(elems => {
              if (elems==null || elems.length==0) { console.log("not found"); return null}; 
              return elems[0];
          }).catch(e => {console.log("REJECTED PROMISE",e); return null;});
