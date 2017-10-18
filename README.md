@@ -39,7 +39,7 @@ There are currently ~60 framework entries in this repository. Installing (and ma
 
 ### 1. Prerequisites
 
-Have *node.js (>=7.0)* installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node 7.0.
+Have *node.js (>=7.6)* installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node 8.4.0.
 For some frameworks you'll also need *java* (>=8, e.g. openjdk-8-jre on ubuntu).
 Please make sure that the following command work before trying to build:
 ```

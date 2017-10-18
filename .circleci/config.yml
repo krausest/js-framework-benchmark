@@ -5,7 +5,7 @@ jobs:
       java:
         version: oraclejdk8
       node:
-        version: v6.11.1
+        version: v8.2.0
 
     steps:
       - checkout
