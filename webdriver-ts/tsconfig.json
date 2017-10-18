@@ -5,7 +5,7 @@
         "noImplicitAny": true,
         "module": "commonjs",
         "moduleResolution": "node",
-        "target": "es6",
+        "target": "es2017",
         "noLib": false,
         "allowJs": false
     },

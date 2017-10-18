@@ -3,18 +3,22 @@ import {Builder, WebDriver, promise, logging} from 'selenium-webdriver'
 import * as yargs from 'yargs'; 
 var chromedriver:any = require('chromedriver');
 import {BenchmarkType, Benchmark, benchmarks, fileName} from './benchmarks'
-import {setUseShadowRoot, testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, forProm} from './webdriverAccess'
+import {setUseShadowRoot, testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath} from './webdriverAccess'
 import {JSONResult, config, FrameworkData, frameworks} from './common'
 
 function buildDriver() {
     let logPref = new logging.Preferences();
     logPref.setLevel(logging.Type.PERFORMANCE, logging.Level.ALL);
+    logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
     let options = new chrome.Options();
     options = options.addArguments("--js-flags=--expose-gc");
+    options = options.addArguments("--disable-infobars");
+    options = options.addArguments("--disable-background-networking");
+    options = options.addArguments("--disable-cache");
+    options = options.addArguments("--disable-extensions");    
     options = options.setLoggingPrefs(logPref);
-    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "browser,devtools.timeline,devtools", bufferUsageReportingInterval: 1000});
-
+    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
     return new Builder()
         .forBrowser('chrome')
         .setChromeOptions(options)    
@@ -104,58 +108,56 @@ function isNonKeyedSwapRow(result: any): boolean {
     return true;
 }
 
-function runBench(frameworkNames: string[]) {
+async function runBench(frameworkNames: string[]) {
     let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.name.indexOf(name)>-1));
     console.log("Frameworks that will be checked", runFrameworks.map(f => f.name));
 
     let frameworkMap = new Map<String, FrameworkData>();
     frameworks.forEach(f => frameworkMap.set(f.name, f));
 
-    return forProm(0, runFrameworks.length, (i) => {
-        let framework = runFrameworks[i];
-        let driver = buildDriver();
-        let text: string;
-        let nonKeyedRun = false, nonKeyedRemove = false, nonKeyedSwap = false;
-        setUseShadowRoot(framework.useShadowRoot);
-        return driver.get(`http://localhost:8080/${framework.uri}/`)
-            .then(() => testElementLocatedById(driver, "add"))
-            .then(() => clickElementById(driver,'run'))
-            .then(() => testTextContains(driver,'//tbody/tr[1000]/td[1]','1000'))
-            .then(() => driver.executeScript(init))
-            .then(() => driver.executeScript(`window.nonKeyedDetector_setUseShadowDom(${framework.useShadowRoot});`))
-            .then(() => driver.executeScript('window.nonKeyedDetector_instrument()'))
+    for (let i=0;i<runFrameworks.length;i++) {
+        let driver = await buildDriver();
+        try {
+            let framework = runFrameworks[i];
+            setUseShadowRoot(framework.useShadowRoot);
+            await driver.get(`http://localhost:8080/${framework.uri}/`);
+            await testElementLocatedById(driver, "add");
+            await clickElementById(driver,'run');
+            await testTextContains(driver,'//tbody/tr[1000]/td[1]','1000');
+            await driver.executeScript(init);
+            await driver.executeScript(`window.nonKeyedDetector_setUseShadowDom(${framework.useShadowRoot});`);
+            await driver.executeScript('window.nonKeyedDetector_instrument()');
             // swap
-            .then(() => clickElementById(driver,'swaprows'))
-            .then(() => testTextContains(driver,'//tbody/tr[10]/td[1]','5'))
-            .then(() => driver.executeScript('return nonKeyedDetector_result()'))
-            .then(res => {nonKeyedSwap =isNonKeyedSwapRow(res); /*console.log(res);*/ })
+            await clickElementById(driver,'swaprows');
+            await testTextContains(driver,'//tbody/tr[10]/td[1]','5');
+            let res = await driver.executeScript('return nonKeyedDetector_result()');
+            let nonKeyedSwap = isNonKeyedSwapRow(res); 
             // run
-            .then(() => driver.executeScript('window.nonKeyedDetector_reset()'))
-            .then(() => clickElementById(driver,'run'))
-            .then(() => testTextContains(driver,'//tbody/tr[1000]/td[1]','2000'))
-            .then(() => driver.executeScript('return nonKeyedDetector_result()'))
-            .then(res => {nonKeyedRun =isNonKeyedRun(res); /*console.log(res);*/ })
+            await driver.executeScript('window.nonKeyedDetector_reset()');
+            await clickElementById(driver,'run');
+            await testTextContains(driver,'//tbody/tr[1000]/td[1]','2000');
+            res = await driver.executeScript('return nonKeyedDetector_result()');
+            let nonKeyedRun =isNonKeyedRun(res); 
             // remove
-            .then(() => driver.executeScript('nonKeyedDetector_storeTr()'))
-            .then(() => getTextByXPath(driver, `//tbody/tr[2]/td[2]/a`))
-            .then(val => {text = val;} )
-            .then(() => driver.executeScript('window.nonKeyedDetector_reset()'))
-            .then(() => clickElementByXPath(driver, `//tbody/tr[2]/td[3]/a/span[1]`))
-            .then(() => testTextNotContained(driver, `//tbody/tr[2]/td[2]/a`, text))
-            .then(() => driver.executeScript('return nonKeyedDetector_result()'))
-            .then(res => {nonKeyedRemove =isNonKeyedRemove(res); /*console.log(res);*/ })
-            .then(() => {
-                    let nonKeyed = nonKeyedRemove || nonKeyedRun || nonKeyedSwap;
-                    console.log(framework.name +" is "+(nonKeyedRun ? "non-keyed" : "keyed")+" for 'run benchmark' and " 
-                    + (nonKeyedRemove ? "non-keyed" : "keyed") + " for 'remove row benchmark' "
-                    + (nonKeyedSwap ? "non-keyed" : "keyed") + " for 'swap rows benchmark' "
-                    +". It'll appear as "+(nonKeyed ? "non-keyed" : "keyed")+" in the results");
-                    if (frameworkMap.get(framework.name).keyed === nonKeyed) {
-                        console.log("ERROR: Framework "+framework.name+" is not correctly categorized in commons.ts");
-                    }
-            })        
-            .then(() => {driver.quit();}, () => {driver.quit();})
-    })
+            await driver.executeScript('nonKeyedDetector_storeTr()');
+            let text = await getTextByXPath(driver, `//tbody/tr[2]/td[2]/a`);
+            await driver.executeScript('window.nonKeyedDetector_reset()');
+            await clickElementByXPath(driver, `//tbody/tr[2]/td[3]/a/span[1]`);
+            await testTextNotContained(driver, `//tbody/tr[2]/td[2]/a`, text);
+            res = await driver.executeScript('return nonKeyedDetector_result()');
+            let nonKeyedRemove =isNonKeyedRemove(res); 
+            let nonKeyed = nonKeyedRemove || nonKeyedRun || nonKeyedSwap;
+            console.log(framework.name +" is "+(nonKeyedRun ? "non-keyed" : "keyed")+" for 'run benchmark' and " 
+            + (nonKeyedRemove ? "non-keyed" : "keyed") + " for 'remove row benchmark' "
+            + (nonKeyedSwap ? "non-keyed" : "keyed") + " for 'swap rows benchmark' "
+            +". It'll appear as "+(nonKeyed ? "non-keyed" : "keyed")+" in the results");
+            if (frameworkMap.get(framework.name).keyed === nonKeyed) {
+                console.log("ERROR: Framework "+framework.name+" is not correctly categorized in commons.ts");
+            }
+        } finally {
+            await driver.quit();
+        }
+    }
 }
 
 let args = yargs(process.argv)
@@ -171,16 +173,4 @@ if (args.help) {
 } else {
     runBench(runFrameworks);
 }
-// console.log(promise.Promise);
-//         let driver = buildDriver();
-// forProm(1, 10, (idx) => {
-//     return new promise.Promise((resolve, reject) => {
-//         console.log("starting ",idx);
-//         setTimeout(() => {
-//             console.log("resolve ",idx);            
-//             resolve(idx);
-//         }, Math.random()*1000);
-//     })
-// }).then(val => {    
-//     console.log(val);
-// })
+
