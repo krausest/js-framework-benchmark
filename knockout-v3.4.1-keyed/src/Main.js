@@ -56,7 +56,7 @@ var HomeViewModel = function () {
 
     self.add = function () {
         startMeasure("add");
-        ko.utils.arrayPushAll(self.data, buildData(1000));
+        self.data.push.apply(self.data, buildData(1000));
         stopMeasure();
     };
 
