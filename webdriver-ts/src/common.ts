@@ -58,7 +58,6 @@ export let frameworks = [
     f("gruu-v1.6.12-keyed", true),
     f("halogen-v2.1.0-non-keyed", false),
     f("hyperapp-v0.9.1-non-keyed", false),
-    f("halogen-v2.1.0-non-keyed", false),
     f("inferno-v3.1.2-non-keyed", false),
     f("inferno-v3.1.2-keyed", true),
     f("ivi-v0.8.0-keyed", true),
