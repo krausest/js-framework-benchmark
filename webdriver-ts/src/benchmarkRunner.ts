@@ -42,6 +42,16 @@ function extractRelevantEvents(entries: logging.Entry[]) {
     return filteredEvents;
 }
 
+async function fetchEventsFromPerformanceLog(driver: WebDriver): Promise<Timingresult[]> {
+    let filteredEvents : Timingresult[] = [];
+    let entries = [];
+    do {        
+        entries = await driver.manage().logs().get(logging.Type.PERFORMANCE);
+        filteredEvents = filteredEvents.concat(extractRelevantEvents(entries));
+    } while (entries.length > 0);
+    return filteredEvents;
+}
+
 function type_eq(requiredType: string) {
     return (e: Timingresult) => e.type=== requiredType;
 }
@@ -56,13 +66,7 @@ function asString(res: Timingresult[]): string {
 async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
-    let filteredEvents : Timingresult[] = [];
-    let entries = [];
-    let cont = true;
-    do {        
-        entries = await driver.manage().logs().get(logging.Type.PERFORMANCE);
-        filteredEvents = filteredEvents.concat(extractRelevantEvents(entries));
-    } while (entries.length > 0);
+    let filteredEvents = await fetchEventsFromPerformanceLog(driver);
 
     if (config.LOG_DEBUG) console.log("filteredEvents ", asString(filteredEvents));
 
@@ -119,10 +123,8 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
 async function computeResultsMEM(driver: WebDriver): Promise<number[]> {
     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
-    let entries = await driver.manage().logs().get(logging.Type.PERFORMANCE);
-
-    let filteredEvents = extractRelevantEvents(entries);
-
+    let filteredEvents = await fetchEventsFromPerformanceLog(driver);
+    
     if (config.LOG_DEBUG) console.log("filteredEvents ", filteredEvents);
 
     let remaining  = R.dropWhile(type_eq('initBenchmark'))(filteredEvents);
@@ -156,9 +158,7 @@ async function computeResultsStartup(driver: WebDriver): Promise<number> {
     
     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
-    let entries = await driver.manage().logs().get(logging.Type.PERFORMANCE);
-
-    let filteredEvents = extractRelevantEvents(entries);
+    let filteredEvents = await fetchEventsFromPerformanceLog(driver);
 
     if (config.LOG_DEBUG) console.log("filteredEvents ", filteredEvents);
 
@@ -227,6 +227,17 @@ function buildDriver() {
         .build();
 }
 
+async function forceGC(framework: FrameworkData, driver: WebDriver): Promise<any> {
+    if (framework.name.startsWith("angular-v4")) {
+        // workaround for window.gc for angular 4 - closure rewrites windows.gc");
+        await driver.executeScript("window.Angular4PreservedGC();");
+    } else {
+        for (let i=0;i<5;i++) {
+            await driver.executeScript("window.gc();");
+        }
+    }
+}
+
 async function snapMemorySize(driver: WebDriver): Promise<number> {
 	let heapSnapshot: any = await driver.executeScript(":takeHeapSnapshot");
     let node_fields: any = heapSnapshot.snapshot.meta.node_fields;
@@ -247,14 +258,7 @@ async function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: 
     await benchmark.run(driver, framework);
     if (config.LOG_PROGRESS) console.log("after run ",benchmark.id, benchmark.type, framework.name);
     if (benchmark.type === BenchmarkType.MEM) {
-        if (framework.name.startsWith("angular-v4")) {
-            console.log("WARN: skipping window.gc for angular 4 - doesn't work currently");
-            return null;
-        } else {
-            for (let i=0;i<5;i++) {
-                await driver.executeScript("window.gc();");
-            }
-        }
+        await forceGC(framework, driver);
     }            
     // console.log("Check Mem: ",await snapMemorySize(driver));
 }
@@ -263,14 +267,7 @@ async function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework:
     await benchmark.init(driver, framework)
     if (config.LOG_PROGRESS) console.log("after initialized ",benchmark.id, benchmark.type, framework.name);                                 
     if (benchmark.type === BenchmarkType.MEM) {
-        if (framework.name.startsWith("angular-v4")) {
-            console.log("WARN: skipping window.gc for angular 4 - doesn't work currently");
-            return null;
-        } else {
-            for (let i=0;i<5;i++) {
-                await driver.executeScript("window.gc();");
-            }
-        }
+        await forceGC(framework, driver);
     }
 }
 
