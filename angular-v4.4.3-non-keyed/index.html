@@ -5,6 +5,11 @@
   <title>Angular v4.4.3 (AOT)</title>
   <meta charset="utf-8" />
   <link href="/css/currentStyle.css" rel="stylesheet" />
+  <script>
+        // Workaround for Angular 4 + Closure. Windows.gc is currently overwritten.
+        // see https://github.com/krausest/js-framework-benchmark/pull/225
+        window.Angular4PreservedGC = window.gc;
+    </script>
 </head>
 
 <body>
