@@ -4,16 +4,22 @@ jobs:
     machine:
       java:
         version: oraclejdk8
-      node:
-        version: v8.2.0
 
     steps:
       - checkout
+
       - run: |
           curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo dpkg -i google-chrome.deb
           sudo sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
           rm google-chrome.deb
+
+      - run: |
+          source $NVM_DIR/nvm.sh
+          nvm uninstall default
+          curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+
       - run: npm install
       - run:
           name: Start http-server
