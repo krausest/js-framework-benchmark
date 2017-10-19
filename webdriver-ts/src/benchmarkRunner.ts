@@ -24,6 +24,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
     let filteredEvents: Timingresult[] = [];
     entries.forEach(x => {
         let e = JSON.parse(x.message).message;
+        if (config.LOG_DETAILS) console.log(JSON.stringify(e));
         if (e.params.name==='EventDispatch') {
             if (e.params.args.data.type==="click") {
                 filteredEvents.push({type:'click', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur});
@@ -36,7 +37,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         } else if (e.params.name==='Paint') {
             filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur});
         } else if (e.params.name==='MajorGC' && e.params.args.usedHeapSizeAfter) {
-            filteredEvents.push({type:'gc', ts: +e.params.ts, end:1, mem: Number(e.params.args.usedHeapSizeAfter)/1024/1024});
+            filteredEvents.push({type:'gc', ts: +e.params.ts, end:+e.params.ts, mem: Number(e.params.args.usedHeapSizeAfter)/1024/1024});
         }
     });
     return filteredEvents;
@@ -96,9 +97,10 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
                 throw "at least one paint event is expected after the click event";
             }
 
-            let upperBoundForSoundnessCheck = (evts[1][0].end - eventsDuringBenchmark[0].ts)/1000.0;
+            let upperBoundForSoundnessCheck = (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts)/1000.0;
             let duration = (R.last(paints).end - clicks[0].ts)/1000.0;
 
+            console.log("*** duraton", duration, "upper bound ", upperBoundForSoundnessCheck);            
             if (duration<0) {
                 console.log("soundness check failed. reported duration is less 0", asString(eventsDuringBenchmark));
                 throw "soundness check failed. reported duration is less 0";                    
@@ -108,7 +110,6 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
                 console.log("soundness check failed. reported duration is bigger than whole benchmark duration", asString(eventsDuringBenchmark));
                 throw "soundness check failed. reported duration is bigger than whole benchmark duration";
             }
-            console.log("*** duraton", duration, "upper bound ", upperBoundForSoundnessCheck);            
             results.push(duration);
         }
         remaining = R.drop(1, evts[1]);
@@ -218,6 +219,7 @@ function buildDriver() {
     options = options.addArguments("--disable-background-networking");
     options = options.addArguments("--disable-cache");
     options = options.addArguments("--disable-extensions");    
+    options = options.addArguments("--window-size=1200,800")
     options = options.setLoggingPrefs(logPref);
     options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
     // options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "v8,blink.console,disabled-by-default-devtools.timeline,devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
@@ -260,7 +262,7 @@ async function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: 
     if (benchmark.type === BenchmarkType.MEM) {
         await forceGC(framework, driver);
     }            
-    // console.log("Check Mem: ",await snapMemorySize(driver));
+    await driver.sleep(1000);
 }
 
 async function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework: FrameworkData): Promise<any> {
@@ -269,6 +271,7 @@ async function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework:
     if (benchmark.type === BenchmarkType.MEM) {
         await forceGC(framework, driver);
     }
+    await driver.sleep(1000);
 }
 
 interface Result {
@@ -284,7 +287,7 @@ function writeResult(res: Result, dir: string) {
         data = data.slice(0).sort((a:number,b:number) => a-b);
         // data = data.slice(0, config.REPEAT_RUN - config.DROP_WORST_RUN);
         let s = jStat(data);
-        console.log(`result ${fileName(res.framework, benchmark)}`, s.min(), s.max(), s.mean(), s.stdev());
+        console.log(`result ${fileName(res.framework, benchmark)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
         let result: JSONResult = {
             "framework": framework,
             "benchmark": benchmark.id,
