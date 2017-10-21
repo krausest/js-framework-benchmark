@@ -85,14 +85,14 @@ var initialState = fromJS({
 let id = 1;
 
 function buildData(count = 1000) {
-  let output = [];
-  for(let i=0;i<count;i++){
-    output.push({
+  let output = fromJS([]);
+  new Array(count).fill(' ').forEach(() => {
+    output = output.push(fromJS({
       id: id++,
       label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)]
-    });
-  } 
-  return fromJS(output);
+    }));
+  });
+  return output;
 }
 
 function dataStore(state = initialState, action) {
