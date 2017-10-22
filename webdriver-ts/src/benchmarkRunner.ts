@@ -18,6 +18,7 @@ interface Timingresult {
     dur?: number;
     end?: number;
     mem?: number;
+    evt?: any;
 }
 
 function extractRelevantEvents(entries: logging.Entry[]) {
@@ -30,12 +31,20 @@ function extractRelevantEvents(entries: logging.Entry[]) {
                 filteredEvents.push({type:'click', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur});
             }
         } else if (e.params.name==='TimeStamp' && 
-            (e.params.args.data.message==='finishedBenchmark' || e.params.args.data.message==='runBenchmark' || e.params.args.data.message==='initBenchmark')) {
+            (e.params.args.data.message==='afterBenchmark' || e.params.args.data.message==='finishedBenchmark' || e.params.args.data.message==='runBenchmark' || e.params.args.data.message==='initBenchmark')) {
             filteredEvents.push({type: e.params.args.data.message, ts: +e.params.ts, dur: 0, end: +e.params.ts});
         } else if (e.params.name==='navigationStart') {
             filteredEvents.push({type:'navigationStart', ts: +e.params.ts, dur: 0, end: +e.params.ts});
         } else if (e.params.name==='Paint') {
-            filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur});
+            filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur, evt: JSON.stringify(e)});
+        // } else if (e.params.name==='Rasterize') {
+        //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur, evt: JSON.stringify(e)});
+        // } else if (e.params.name==='CompositeLayers') {
+        //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts, evt: JSON.stringify(e)});
+        // } else if (e.params.name==='Layout') {
+        //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: e.params.ts, evt: JSON.stringify(e)});
+        // } else if (e.params.name==='UpdateLayerTree') {
+        //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur, evt: JSON.stringify(e)});
         } else if (e.params.name==='MajorGC' && e.params.args.usedHeapSizeAfter) {
             filteredEvents.push({type:'gc', ts: +e.params.ts, end:+e.params.ts, mem: Number(e.params.args.usedHeapSizeAfter)/1024/1024});
         }
@@ -97,8 +106,10 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
                 throw "at least one paint event is expected after the click event";
             }
 
+            let lastPaint = R.reduce((max, elem) => max.end > elem.end ? max : elem, {end: 0}, paints);
+
             let upperBoundForSoundnessCheck = (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts)/1000.0;
-            let duration = (R.last(paints).end - clicks[0].ts)/1000.0;
+            let duration = (lastPaint.end - clicks[0].ts)/1000.0;
 
             console.log("*** duraton", duration, "upper bound ", upperBoundForSoundnessCheck);            
             if (duration<0) {
@@ -163,7 +174,11 @@ async function computeResultsStartup(driver: WebDriver): Promise<number> {
 
     if (config.LOG_DEBUG) console.log("filteredEvents ", filteredEvents);
 
-    let eventsDuringBenchmark  = R.dropWhile(type_neq('runBenchmark'))(filteredEvents);
+    let eventsDuringBenchmark  = 
+        R.pipe(
+            R.dropWhile(type_neq('runBenchmark')),
+            R.takeWhile(type_neq('finishedBenchmark'))   
+        )(filteredEvents);
 
     if (config.LOG_DEBUG) console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
             
@@ -221,8 +236,7 @@ function buildDriver() {
     options = options.addArguments("--disable-extensions");    
     options = options.addArguments("--window-size=1200,800")
     options = options.setLoggingPrefs(logPref);
-    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
-    // options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "v8,blink.console,disabled-by-default-devtools.timeline,devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
+    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline, disabled-by-default-devtools.timeline,blink.user_timing"});
     return new Builder()
         .forBrowser('chrome')
         .setChromeOptions(options)    
@@ -262,7 +276,13 @@ async function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: 
     if (benchmark.type === BenchmarkType.MEM) {
         await forceGC(framework, driver);
     }            
-    await driver.sleep(1000);
+}
+
+async function afterBenchmark(driver: WebDriver, benchmark: Benchmark, framework: FrameworkData) : Promise<any> {
+    if (benchmark.after) {
+        await benchmark.after(driver, framework);
+        if (config.LOG_PROGRESS) console.log("after benchmark ",benchmark.id, benchmark.type, framework.name);
+    }
 }
 
 async function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework: FrameworkData): Promise<any> {
@@ -271,7 +291,6 @@ async function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework:
     if (benchmark.type === BenchmarkType.MEM) {
         await forceGC(framework, driver);
     }
-    await driver.sleep(1000);
 }
 
 interface Result {
@@ -323,6 +342,8 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
                 await driver.executeScript("console.timeStamp('runBenchmark')");
                 await runBenchmark(driver, benchmark, framework);
                 await driver.executeScript("console.timeStamp('finishedBenchmark')");
+                await afterBenchmark(driver, benchmark, framework);
+                await driver.executeScript("console.timeStamp('afterBenchmark')");
             } catch (e) {
                 await takeScreenshotOnError(driver, 'error-'+framework.name+'-'+benchmark.id+'.png', e);
                 throw e;
@@ -354,6 +375,8 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
                 await driver.executeScript("console.timeStamp('runBenchmark')");
                 await runBenchmark(driver, benchmark, framework);
                 await driver.executeScript("console.timeStamp('finishedBenchmark')");
+                await afterBenchmark(driver, benchmark, framework);
+                await driver.executeScript("console.timeStamp('afterBenchmark')");
                 results.push(await computeResultsStartup(driver));
             } catch (e) {
                 await takeScreenshotOnError(driver, 'error-'+framework.name+'-'+benchmark.id+'.png', e);
