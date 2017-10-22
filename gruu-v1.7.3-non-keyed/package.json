@@ -20,6 +20,6 @@
     "webpack": "2.5.1"
   },
   "dependencies": {
-    "gruujs": "1.6.12"
+    "gruujs": "1.7.3"
   }
 }
