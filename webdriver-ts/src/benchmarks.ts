@@ -13,6 +13,7 @@ export interface Benchmark {
     description: string;
     init(driver: WebDriver, framework: FrameworkData) : Promise<any>;
     run(driver: WebDriver, framework: FrameworkData) : Promise<any>;
+    after?(driver: WebDriver, framework: FrameworkData) : Promise<any>;
 }
 
 const benchRun: Benchmark = {
@@ -47,12 +48,12 @@ const benchReplaceAll: Benchmark = {
 const benchUpdate: Benchmark = { 
     id:"03_update10th1k",
     label: "partial update",
-    description: "Time to update the text of every 10th row (with "+config.WARMUP_COUNT+" warmup iterations).",
+    description: "Time to update the text of every 10th row (with "+config.WARMUP_COUNT+" warmup iterations) for a table with 10k rows.",
     type: BenchmarkType.CPU,
     init: async function (driver: WebDriver) {
-            await testElementLocatedById(driver,"run", SHORT_TIMEOUT);
-            await clickElementById(driver,'run');
-            for (let i=0; i<=config.WARMUP_COUNT; i++) {
+            await testElementLocatedById(driver,"runlots", SHORT_TIMEOUT);
+            await clickElementById(driver,'runlots');
+            for (let i=0; i<config.WARMUP_COUNT; i++) {
                 await clickElementById(driver,'update');
             }
     },
@@ -182,6 +183,10 @@ const benchReadyMemory: Benchmark = {
     },
     run: async function(driver: WebDriver) { 
         await testElementNotLocatedByXPath(driver, "//tbody/tr[1]");
+    },
+    after: async function(driver: WebDriver, framework: FrameworkData) {
+        await clickElementById(driver, 'run');
+        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
     }
 }
 
@@ -199,6 +204,57 @@ const benchRunMemory: Benchmark = {
     }
 }
 
+const benchUpdate5Memory: Benchmark = { 
+    id: "23_update5-memory",
+    label: "update eatch 10th row for 1k rows (5 cycles)",
+    description: "Memory usage after clicking update every 10th row 5 times",
+    type: BenchmarkType.MEM,
+    init: async function(driver: WebDriver) {
+        await testElementLocatedById(driver, "add", SHORT_TIMEOUT);
+    },
+    run: async function(driver: WebDriver) {
+        await clickElementById(driver, 'run');
+        for (let i=0; i<5; i++) {
+            await clickElementById(driver,'update');
+            await testTextContains(driver,'//tbody/tr[1]/td[2]/a', ' !!!'.repeat(i));            
+        }
+    }
+}
+
+const benchReplace5Memory: Benchmark = { 
+    id: "24_run5-memory",
+    label: "replace 1k rows (5 cycles)",
+    description: "Memory usage after clicking create 1000 rows 5 times",
+    type: BenchmarkType.MEM,
+    init: async function(driver: WebDriver) {
+        await testElementLocatedById(driver, "add", SHORT_TIMEOUT);
+    },
+    run: async function(driver: WebDriver) {
+        for (let i=0;i<5;i++) {
+            await clickElementById(driver, 'run');
+            await testTextContains(driver, "//tbody/tr[1000]/td[1]", (1000*(i+1)).toFixed());
+        }
+    }
+}
+
+const benchCreateClear5Memory: Benchmark = { 
+    id: "25_run-clear-memory",
+    label: "creating/clearing 1k rows (5 cycles)",
+    description: "Memory usage after creating and clearing 1000 rows 5 times",
+    type: BenchmarkType.MEM,
+    init: async function(driver: WebDriver) {
+        await testElementLocatedById(driver, "add", SHORT_TIMEOUT);
+    },
+    run: async function(driver: WebDriver) {
+        for (let i=0;i<5;i++) {
+            await clickElementById(driver, 'run');
+            await testTextContains(driver, "//tbody/tr[1000]/td[1]", (1000*(i+1)).toFixed());
+            await clickElementById(driver, 'clear');
+            await testElementNotLocatedByXPath(driver, "//tbody/tr[1000]/td[1]");
+        }
+    }
+}
+
 const benchStartup: Benchmark = { 
     id: "30_startup",
     label: "startup time",
@@ -210,6 +266,10 @@ const benchStartup: Benchmark = {
     run: async function(driver: WebDriver, framework: FrameworkData) {
         await driver.get(`http://localhost:8080/${framework.uri}/`);
         await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
+    },
+    after: async function(driver: WebDriver, framework: FrameworkData) {
+        await clickElementById(driver, 'run');
+        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
     }
 }
 
@@ -225,6 +285,9 @@ export let benchmarks : [ Benchmark ] = [
     benchClear,
     benchReadyMemory,
     benchRunMemory,
+    benchUpdate5Memory,
+    benchReplace5Memory,
+    benchCreateClear5Memory,
     benchStartup
     ];
 
