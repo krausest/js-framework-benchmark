@@ -11,7 +11,7 @@
   "scripts": {
     "install": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to clone reflex-dom\\'s benchmark and build system use: && echo npm run install-force",
     "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
-    "install-force": "./clone-reflex.sh",
+    "install-force": "./install.sh",
     "build-prod-force": "./build.sh"
   },
   "repository": {
