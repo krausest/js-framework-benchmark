@@ -49,9 +49,10 @@ export class Row extends React.Component {
         this.del = this.del.bind(this);
     }
     shouldComponentUpdate(nextProps, nextState) {
-        const data=this.props.data;
+        const {data,styleClass}=this.props;
+        const nextStyleClass=nextProps.styleClass;
         const nextData= nextProps.data;
-        return !data.equals(nextData)
+        return !data.equals(nextData)||styleClass!=nextStyleClass
     }
     click() {
         this.props.onClick(this.props.data.get('id'));
@@ -136,9 +137,10 @@ export class Controller extends React.Component{
         this.props.swapRows();
     }
     render () {
+        const selected = this.props.selected;
         var rows = this.props.data.map((d,i) => {
             const id = d.get('id');
-            var className = id === this.props.selected ? 'danger':'';
+            var className = id === selected ? 'danger':'';
             return <Row key={id} data={d} onClick={this.select} onDelete={this.delete} styleClass={className}></Row>
         }).toArray();
         return (<div className="container">
@@ -180,10 +182,12 @@ export class Controller extends React.Component{
 }
 
 export default connect(
-  state => ({
+  state => {
+      return ({
     data: state.store.get('data'),
     selected: state.store.get('selected')
-  }),
+  })
+},
   {
     buildData: () => buildData(),
     remove: id => remove(id),
