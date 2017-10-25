@@ -43,6 +43,7 @@ export let frameworks = [
     f("binding.scala-v10.0.1-keyed", true, {uri: "binding.scala-v10.0.1-keyed/target/web/stage"}),
     f("bobril-v7.1.2-keyed", true),
     f("choo-v5.4.0-non-keyed", false),
+    f("choo-v6.5.0-non-keyed", false),
     f("cyclejs-dom-v17.1.0-non-keyed", false),
     f("datum-v0.8.0-non-keyed", false),
     f("dio-v7.0.1-keyed", true),
