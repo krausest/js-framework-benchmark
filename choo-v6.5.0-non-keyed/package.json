@@ -1,5 +1,5 @@
 {
-  "name": "choo-v4.1.0",
+  "name": "choo-v6.5.0",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
@@ -13,16 +13,16 @@
   "author": "Rahul Chanila",
   "license": "MIT",
   "dependencies": {
-    "browserify": "^14.3.0",
-    "choo": "^5.4.0",
-    "cross-env": "^5.0.0",
-    "envify": "^4.0.0",
+    "browserify": "^14.5.0",
+    "choo": "^6.5.0",
+    "cross-env": "^5.1.0",
+    "envify": "^4.1.0",
     "es2020": "^1.1.9",
     "mkdirp": "^0.5.1",
-    "rimraf": "^2.6.1",
-    "uglify-js": "^3.0.4",
-    "uglifyify": "^3.0.4",
-    "unassertify": "^2.0.4",
-    "yo-yoify": "^3.7.3"
+    "rimraf": "^2.6.2",
+    "uglify-js": "^3.1.4",
+    "uglifyify": "^4.0.4",
+    "unassertify": "^2.0.5",
+    "yo-yoify": "^4.0.0"
   }
 }
