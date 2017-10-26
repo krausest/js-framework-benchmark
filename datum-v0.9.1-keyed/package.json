@@ -18,6 +18,6 @@
     "webpack": "1.13.3"
   },
   "dependencies": {
-    "Datum": "0.8.0"
+    "Datum": "0.9.1"
   }
 }
