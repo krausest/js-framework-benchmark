@@ -7,7 +7,6 @@
     ]
   },
   "builds": [{
-    "preset": "es6-bundled",
-    "basePath": true
+    "preset": "es6-bundled"
   }]
 }
