@@ -1,8 +1,11 @@
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="shared-styles.html">
+
 <dom-module id="main-element">
-    <link rel="import" href="shared-styles.html">
     <template>
-        <style include="shared-styles"></style>        
+        <style include="shared-styles"></style>
         <div class="container" >
             <div class="jumbotron">
                 <div class="row">
@@ -55,65 +58,66 @@
         </div>
     </template>
     <script>
-var startTime;
-var lastMeasure;
+    var startTime;
+    var lastMeasure;
 
-var startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-};
-var stopMeasure = function() {
-    window.setTimeout(function() {
-        var stop = performance.now();
-        console.log(lastMeasure+" took "+(stop-startTime));
-    }, 0);
-};
+    var startMeasure = function(name) {
+        startTime = performance.now();
+        lastMeasure = name;
+    };
+    var stopMeasure = function() {
+        window.setTimeout(function() {
+            var stop = performance.now();
+            console.log(lastMeasure+" took "+(stop-startTime));
+        }, 0);
+    };
 
-HTMLImports.whenReady(function () {
-    Polymer({
-        is: 'main-element',
-        properties: {
-            data: {
-                type: Array,
-                value: function() { return []; }
-            },
-            did: {
-                type: Number,
-                value: 1,
-            },
-            selected: Number
-        },
-        add: function() {
+    class MainElement extends Polymer.GestureEventListeners(Polymer.Element) {
+        static get is() { return 'main-element' }
+        static get properties() {
+            return {
+                data: {
+                    type: Array,
+                    value: function() { return []; },
+                },
+                did: {
+                    type: Number,
+                    value: 1,
+                },
+                selected: Number
+            }
+        }
+        add() {
             startMeasure("add");
             this.data = this.data.concat(this.buildData(1000));
             stopMeasure();
-        },
-        run: function() {
+        }
+        run() {
             startMeasure("run");
             this.data = this.buildData(1000);
             stopMeasure();
-        },
-        runLots: function() {
+        }
+        runLots() {
             startMeasure("runLots");
             this.data = this.buildData(10000);
             stopMeasure();
-        },
-        clear: function() {
+        }
+        clear() {
             startMeasure("clear");
             this.data = [];
             stopMeasure();
-        },
-        del: function(e) {
+        }
+        del(e) {
             startMeasure("delete");
             this.splice("data", e.model.index, 1);
             stopMeasure();
-        },
-        select: function(e) {
+        }
+        select(e) {
             startMeasure("select");
             this.selected = e.model.item.id;
             stopMeasure();
-        },
-        swapRows: function() {
+        }
+        swapRows() {
             startMeasure("swapRows");
             if(this.data.length > 10) {
                 var a = this.data[4];
@@ -123,18 +127,18 @@ HTMLImports.whenReady(function () {
                 this.set(["data", 9], a);
             }
             stopMeasure();
-        },
-        update: function() {
+        }
+        update() {
             startMeasure("update");
             for (let i=0;i<this.data.length;i+=10) {
                 this.set(["data", i, "label"], this.data[i].label + ' !!!');
             }
             stopMeasure();
-        },
-        rowClass: function(id, selected) {
+        }
+        rowClass(id, selected) {
             return id == selected ? "danger" : null;
-        },
-        buildData: function(count) {
+        }
+        buildData(count) {
             var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
             var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
             var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
@@ -143,11 +147,11 @@ HTMLImports.whenReady(function () {
                 data.push({ id: this.did++, label: adjectives[this._random(adjectives.length)] + " " + colours[this._random(colours.length)] + " " + nouns[this._random(nouns.length)] });
             }
             return data;
-        },
-        _random: function(max) {
+        }
+        _random(max) {
             return Math.round(Math.random() * 1000) % max;
         }
-    });
-});
+    }
+    window.customElements.define(MainElement.is, MainElement);
     </script>
 </dom-module>

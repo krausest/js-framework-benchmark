@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "bower install",
     "build-dev": "polymer build",
-    "build-prod": "polymer build --js-minify --css-minify --html-minify"
+    "build-prod": "polymer build"
   },
   "keywords": [
     "polymer"

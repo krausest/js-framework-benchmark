@@ -7,8 +7,7 @@
     ]
   },
   "builds": [{
-    "js": {"minify": true},
-    "css": {"minify": true},
-    "html": {"minify": true}
+    "preset": "es6-bundled",
+    "basePath": true
   }]
 }
