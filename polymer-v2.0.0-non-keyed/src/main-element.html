@@ -43,7 +43,7 @@
             <table class="table table-hover table-striped test-data">
                 <tbody>
                     <template is="dom-repeat" items="[[data]]">
-                        <tr class$="{{rowClass(item.id, selected)}}">
+                        <tr class$="[[rowClass(item.id, selected)]]">
                             <td class="col-md-1">[[item.id]]</td>
                             <td class="col-md-4">
                                 <a on-tap="select">[[item.label]]</a>
@@ -120,11 +120,9 @@
         swapRows() {
             startMeasure("swapRows");
             if(this.data.length > 10) {
-                var a = this.data[4];
-                var b = this.data[9];
-                this.set(["data", 9], null);
-                this.set(["data", 4], b);
-                this.set(["data", 9], a);
+                var tmp = this.data[4];
+                this.set(["data", 4], this.data[9]);
+                this.set(["data", 9], tmp);
             }
             stopMeasure();
         }
@@ -136,7 +134,7 @@
             stopMeasure();
         }
         rowClass(id, selected) {
-            return id == selected ? "danger" : null;
+            return id === selected ? "danger" : '';
         }
         buildData(count) {
             var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
