@@ -2,31 +2,34 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
-const {Row} = require('./Row');
-const {Store} = require('./Store');
-
+const { Row } = require('./Row');
+const { run, runLots, add, update, swapRows, deleteRow } = require('./utils')
 var startTime;
 var lastMeasure;
-var startMeasure = function(name) {
+var startMeasure = function (name) {
     startTime = performance.now();
     lastMeasure = name;
 }
-var stopMeasure = function() {
+var stopMeasure = function () {
     var last = lastMeasure;
     if (lastMeasure) {
         window.setTimeout(function () {
             lastMeasure = null;
             var stop = performance.now();
             var duration = 0;
-            console.log(last+" took "+(stop-startTime));
+            console.log(last + " took " + (stop - startTime));
         }, 0);
     }
 }
 
-export class Main extends React.Component{
+export class Main extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {store: new Store()};
+        this.state = {
+            data: [],
+            selected: undefined,
+            id: 1
+        };
         this.select = this.select.bind(this);
         this.delete = this.delete.bind(this);
         this.add = this.add.bind(this);
@@ -48,47 +51,55 @@ export class Main extends React.Component{
     }
     run() {
         startMeasure("run");
-        this.state.store.run();
-        this.setState({store: this.state.store});
+        const { id } = this.state;
+        const obj = run(id);
+        this.setState({ data: obj.data, id: obj.id, selected: undefined });
     }
     add() {
         startMeasure("add");
-        this.state.store.add();
-        this.setState({store: this.state.store});
+        const { id } = this.state;
+        const obj = add(id, this.state.data);
+        this.setState({ data: obj.data, id: obj.id});
     }
     update() {
         startMeasure("update");
-        this.state.store.update();
-        this.setState({store: this.state.store});
+        const data = update(this.state.data);
+        this.setState({ data: data });
     }
     select(id) {
         startMeasure("select");
-        this.state.store.select(id);
-        this.setState({store: this.state.store});
+        this.setState({ selected: id });
     }
     delete(id) {
         startMeasure("delete");
-        this.state.store.delete(id);
-        this.setState({store: this.state.store});
+        const data = deleteRow(this.state.data, id);
+        this.setState({ data: data });
     }
     runLots() {
         startMeasure("runLots");
-        this.state.store.runLots();
-        this.setState({store: this.state.store});
+        const { id } = this.state;
+        const obj = runLots(id);
+        this.setState({ data: obj.data, id: obj.id, selected: undefined });
     }
     clear() {
         startMeasure("clear");
-        this.state.store.clear();
-        this.setState({store: this.state.store});
+        this.setState({ data: [], selected: undefined });
     }
     swapRows() {
         startMeasure("swapRows");
-        this.state.store.swapRows();
-        this.setState({store: this.state.store});
+        const data = swapRows(this.state.data);
+        this.setState({ data: data });
     }
-    render () {
-        let rows = this.state.store.data.map((d,i) => {
-            return <Row key={d.id} data={d} onClick={this.select} onDelete={this.delete} styleClass={d.id === this.state.store.selected ? 'danger':''}></Row>
+
+    shouldComponentUpdate(nextProps, nextState) {
+        const { data, selected } = this.state;
+        const nextData = nextState.data;
+        const nextSelected = nextState.selected;
+        return !(data.length === nextData.length && data.every((v, i) => v === nextData[i])) || selected != nextSelected;
+    }
+    render() {
+        let rows = this.state.data.map((d, i) => {
+            return <Row key={i} data={d} onClick={this.select} onDelete={this.delete} styleClass={d.id === this.state.selected ? 'danger':''}></Row>
         });
         return (<div className="container">
             <div className="jumbotron">
@@ -126,6 +137,6 @@ export class Main extends React.Component{
                 </tbody>
             </table>
             <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </div>);
+        </div>);
     }
 }
