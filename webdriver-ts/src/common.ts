@@ -72,7 +72,7 @@ export let frameworks = [
     f("petit-dom-v0.0.5-keyed", true),
     f("pico-dom-v1.0.0-keyed", true),
     f("plastiq-v1.33.0-keyed", true),
-    f("polymer-v2.0.0-non-keyed", false, {uri: "polymer-v2.0.0-non-keyed", useShadowRoot: true}),
+    f("polymer-v2.0.0-non-keyed", false, {uri: "polymer-v2.0.0-non-keyed/build/es6-bundled", useShadowRoot: true}),
     f("preact-v7.1.0-keyed", true),
     f("pux-v11.0.0-non-keyed", false),
     f("ractive-v0.8.12-keyed", true),
