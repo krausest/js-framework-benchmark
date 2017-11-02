@@ -1,0 +1,37 @@
+{
+  "name": "js-framework-benchmark-surplus",
+  "version": "0.5.0-beta1",
+  "description": "Surplus js-framework-benchmark implementation",
+  "main": "dist/main.js",
+  "scripts": {
+    "build-dev": "tsc && rollup -c",
+    "build-prod": "tsc && rollup -c --environment production"
+  },
+  "keywords": [
+    "s.js",
+    "surplus",
+    "javascript",
+    "framework",
+    "benchmark"
+  ],
+  "author": "Adam Haile",
+  "contributors": "Adriano Grieb (https://github.com/griebd)",
+  "license": "MIT",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "s-js": "latest",
+    "s-array": "latest",
+    "surplus": "beta"
+  },
+  "devDependencies": {
+    "rollup": "latest",
+    "rollup-plugin-node-resolve": "latest",
+    "rollup-plugin-surplus": "beta",
+    "rollup-plugin-uglify": "latest",
+    "typescript": "latest"
+  }
+}
