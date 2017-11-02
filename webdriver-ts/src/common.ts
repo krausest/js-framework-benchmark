@@ -62,6 +62,7 @@ export let frameworks = [
     f("inferno-v3.1.2-keyed", true),
     f("ivi-v0.8.0-keyed", true),
     f("knockout-v3.4.1-keyed", true),
+    f("lit-html-v0.7.1-non-keyed", false),
     f("marionette-v3.4.2-domapi-keyed", true),
     f("marionette-v3.4.2-keyed", true),
     f("marko-v4.3.0-keyed", true),
