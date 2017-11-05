@@ -14,14 +14,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@angular/common": "5.0.0-rc.0",
-    "@angular/compiler": "5.0.0-rc.0",
-    "@angular/compiler-cli": "5.0.0-rc.0",
-    "@angular/core": "5.0.0-rc.0",
-    "@angular/platform-browser": "5.0.0-rc.0",
-    "core-js": "2.4.1",
-    "rxjs": "5.4.3",
-    "zone.js": "0.8.17"
+    "@angular/common": "5.0.0",
+    "@angular/compiler": "5.0.0",
+    "@angular/compiler-cli": "5.0.0",
+    "@angular/core": "5.0.0",
+    "@angular/platform-browser": "5.0.0",
+    "core-js": "2.5.1",
+    "rxjs": "5.5.2",
+    "zone.js": "0.8.18"
   },
   "devDependencies": {
     "google-closure-compiler": "git+https://github.com/alexeagle/closure-compiler.git#packagejson.dist",
