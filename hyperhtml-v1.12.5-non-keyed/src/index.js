@@ -9,7 +9,6 @@ app(renderOnMain, store);
 
 //
 
-const table = hyper.wire();
 function app(render) {
   render`
     <div class="container">
