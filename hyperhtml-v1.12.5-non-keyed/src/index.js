@@ -1,10 +1,10 @@
-import hyper from "hyperhtml";
+import { bind, wire } from "hyperhtml";
 
 import { startMeasure, stopMeasure } from "./utils";
 import { Store } from "./store";
 
 const store = new Store();
-const renderOnMain = hyper(document.querySelector("#main"));
+const renderOnMain = bind(document.querySelector("#main"));
 app(renderOnMain, store);
 
 //
@@ -104,7 +104,7 @@ function select(id) {
 function row(state) {
   const { id, label } = state;
   const className = classNameSelected(store.selected);
-  return hyper(state, ":row")`
+  return wire(state, ":row")`
   <tr class=${className(id)}>
     <td class="col-md-1">${id}</td>
     <td class="col-md-4">
