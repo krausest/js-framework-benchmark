@@ -11,7 +11,5 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {},
-  "dependencies": {
-    "slim-js": "3.0.2"
-  }
+  "dependencies": {}
 }

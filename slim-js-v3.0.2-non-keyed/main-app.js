@@ -125,7 +125,7 @@ Slim.tag('main-app',
         </div>
         <table class="table table-hover table-striped test-data">
             <tbody id="tbody">
-                <tr s:repeat="items as data" bind:class="isSelected(data)">
+                <tr s:repeat="items as data">
                     <td class="col-md-1" bind>{{data.id}}</td>
                     <td class="col-md-4">
                         <a bind:marker="data.id" click="doSelect" bind>{{data.label}}</a>
@@ -149,23 +149,25 @@ class extends Slim {
     onBeforeCreated() {
         this.items = [];
         this.store = new Store();
+        this.selectedNode = null;
     }
 
     doSelect(e) {
         startMeasure('select');
         this.store.select(e.target.getAttribute('marker'));
-        this.items = this.store.data;
+        this.selectedNode && this.selectedNode.classList.remove('danger');
+        this.selectedNode = e.target.parentElement.parentElement;
+        this.selectedNode.classList.add('danger');
         stopMeasure();
-    }
-
-    isSelected(data) {
-        if (!data) return '';
-        return this.store.selected === data.id ? 'danger' : '';
     }
 
     deleteOne(e) {
         startMeasure('delete');
         this.store.delete(e.target.getAttribute('marker'));
+        if (e.target.parentElement.parentElement.parentElement === this.selectedNode) {
+            this.selectedNode.classList.remove('danger');
+            this.selectedNode = null;
+        }
         this.items = this.store.data;
         stopMeasure();
     }
