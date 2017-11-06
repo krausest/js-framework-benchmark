@@ -47,12 +47,12 @@ class Store {
         this.data = this.data.filter((e,i) => i!=idx);
         return this;
     }
-    run() {
-        this.data = this.buildData();
+    run(amount) {
+        this.data = this.buildData(amount);
         this.selected = null;
     }
-    add() {
-        this.data = this.data.concat(this.buildData(1000));
+    add(amount) {
+        this.data = this.data.concat(this.buildData(amount));
         this.selected = null;
     }
     update() {
@@ -125,10 +125,10 @@ Slim.tag('main-app',
         </div>
         <table class="table table-hover table-striped test-data">
             <tbody id="tbody">
-                <tr slim-repeat="items" slim-repeat-adjacent="true" class="[[isSelected(data)]]">
-                    <td class="col-md-1" bind>[[data.id]]</td>
+                <tr s:repeat="items as data">
+                    <td class="col-md-1" bind>{{data.id}}</td>
                     <td class="col-md-4">
-                        <a click="doSelect" bind>[[data.label]]</a>
+                        <a click="doSelect" bind>{{data.label}}</a>
                     </td>
                     <td class="col-md-1">
                         <a>
@@ -139,7 +139,7 @@ Slim.tag('main-app',
                     </td>
                 </tr>
             </tbody>
-        </table>
+        </div>
         <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
     </div>
 </div>
@@ -186,7 +186,7 @@ class extends Slim {
 
     append1k() {
         startMeasure('add');
-        this.store.add();
+        this.store.add(1000);
         this.items = this.store.data;
         stopMeasure();
     }
@@ -208,7 +208,7 @@ class extends Slim {
 
     create1k() {
         this.store.clear();
-        this.store.run();
+        this.store.run(1000);
         startMeasure('run');
         this.items = this.store.data;
         stopMeasure();

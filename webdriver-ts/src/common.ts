@@ -94,7 +94,7 @@ export let frameworks = [
     f("riot-v3.5.0-non-keyed", false),
     f("rx-domh-v0.0.2-rxjs-v5.3.0-keyed", true),
     f("simulacra-v2.1.5-non-keyed", false),
-    f("slim-js-v2.9.1-non-keyed", false),
+    f("slim-js-v3.0.2-non-keyed", false),
     f("stem-v0.2.70-non-keyed", false),
     f("surplus-v0.4.0-keyed", true),
     f("surplus-v0.4.0-non-keyed", false),
