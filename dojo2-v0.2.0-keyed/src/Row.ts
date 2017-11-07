@@ -1,8 +1,6 @@
 import { DNode } from '@dojo/widget-core/interfaces';
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
-import { v, HNODE } from '@dojo/widget-core/d';
-
-import { Data } from './Store';
+import { v } from '@dojo/widget-core/d';
 
 export interface RowProperties {
 	onRowSelected: (id: number) => void;
@@ -27,73 +25,24 @@ export class Row extends WidgetBase<RowProperties> {
 	protected render(): DNode {
 		const { id, selected, label } = this.properties;
 
-		return {
-			type: HNODE,
-			tag: 'tr',
-			properties: {
+		return v('tr', {
 				classes: [ selected ? 'danger' : null ]
-			},
-			children: [
-				{
-					type: HNODE,
-					tag: 'td',
-					properties: {
-						classes: [ 'col-md-1' ]
-					},
-					children: [ `${id}` ]
-				},
-				{
-					type: HNODE,
-					tag: 'td',
-					properties: {
-						classes: [ 'col-md-4' ]
-					},
-					children: [
-						{
-							type: HNODE,
-							tag: 'a',
-							properties: {
-								onclick: this._onClick
-							},
-							children: [ label ]
-						}
-					]
-				},
-				{
-					type: HNODE,
-					tag: 'td',
-					properties: {
-						classes: [ 'col-md-1' ]
-					},
-					children: [
-						{
-							type: HNODE,
-							tag: 'a',
-							properties: {
-								onclick: this._onDelete
-							},
-							children: [
-								{
-									type: HNODE,
-									tag: 'span',
-									properties: {
-										'aria-hidden': true,
-										classes: [ 'glyphicon', 'glyphicon-remove' ]
-									}
-								}
-							]
-						}
-					]
-				},
-				{
-					type: HNODE,
-					tag: 'td',
-					properties: {
-						classes: [ 'col-md-6' ]
-					}
-				}
+			}, [
+				v('td', { classes: [ 'col-md-1' ] }, [ `${id}` ]),
+				v('td', { classes: [ 'col-md-4' ] }, [
+					v('a', { onclick: this._onClick }, [ label ])
+				]),
+				v('td', { classes: [ 'col-md-1' ] }, [
+					v('a', { onclick: this._onDelete }, [
+						v('span', {
+							'aria-hidden': true,
+							classes: [ 'glyphicon', 'glyphicon-remove' ]
+						})
+					])
+				]),
+				v('td', { classes: [ 'col-md-6' ] })
 			]
-		};
+		);
 	}
 }
 
