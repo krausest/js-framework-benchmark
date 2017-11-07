@@ -152,7 +152,7 @@
         }
     
         static qSelectAll(target, selector) {
-          return Array.prototype.slice.call(target.querySelectorAll(selector))
+          return [...target.querySelectorAll(selector)]
         }
     
         static unbind (source, target) {
@@ -175,7 +175,7 @@
             collection.push(node)
             const allow = !(node instanceof Slim) || (node instanceof Slim && !node.template) || force
             if (allow) {
-              Array.prototype.slice.call(node.children).forEach(childNode => {
+              [...node.children].forEach(childNode => {
                 search(childNode, force)
               })
             }
@@ -256,9 +256,9 @@
           if (prop) {
             (target[_$].inbounds[prop] || []).forEach(x => x())
           } else {
-            for (let key in target[_$].inbounds) {
+            Object.keys(target[_$].inbounds).forEach(key => {
               (target[_$].inbounds[key] || []).forEach(x => x())
-            }
+            })
           }
         }
     
@@ -327,12 +327,10 @@
           if (prop) {
             all = {[prop]: true}
           }
-          for (let pName in all) {
+          Object.keys(all).forEach(pName => {
             const o = this[_$].bindings[pName]
-            o && o.chain.forEach(binding => {
-              binding()
-            })
-          }
+            o && o.chain.forEach(binding => binding())
+          })
         }
     
         _bindChildren(children) {
@@ -376,12 +374,13 @@
           this[_$].rootElement.innerHTML = ''
           const template = this[_$].hasCustomTemplate || this.template
           if (template && typeof template === 'string') {
-            const frag = document.createElement('slim-root-fragment')
-            frag.innerHTML = template || ''
+            const frag = document.createRange().createContextualFragment(template || '')
+            // frag.innerHTML = template || ''
             const scopedChildren = Slim.qSelectAll(frag, '*')
             this._bindChildren(scopedChildren)
             Slim.asap( () => {
-              Slim.moveChildren(frag, this[_$].rootElement || this)
+              this[_$].rootElement.appendChild(frag)
+              // Slim.moveChildren(frag, this[_$].rootElement || this)
               this._executeBindings()
               this.onRender()
               Slim.executePlugins('afterRender', this)
@@ -501,24 +500,22 @@
         })
         Slim.bind(source, hook, path, () => {
           const dataSource = Slim.lookup(source, path) || []
-          const guid = Slim.createUniqueIndex()
-          templateNode.setAttribute('repeat-unique-id', guid)
           let offset = 0
           let restOfData = []
           if (dataSource.length < clones.length) {
             const disposables = clones.splice(dataSource.length)
             disposables.forEach(c => c.remove())
             clones.forEach((c, i) => {
+              if (c[_$].repeater[tProp] === dataSource[i]) return
               [c].concat(Slim.qSelectAll(c, '*')).forEach(t => {
-                if (t[_$].repeater[tProp] !== dataSource[i]) {
-                  t[_$].repeater[tProp] = dataSource[i]
-                  Slim.commit(t, tProp)
-                }
+                t[_$].repeater[tProp] = dataSource[i]
+                Slim.commit(t, tProp)
               })
             })
           } else if (dataSource.length >= clones.length) {
             // recycle
             clones.forEach((c, i) => {
+              if (c[_$].repeater[tProp] === dataSource[i]) return
               [c].concat(Slim.qSelectAll(c, '*')).forEach(t => {
                 Slim._$(t).repeater[tProp] = dataSource[i]
                 Slim.commit(t, tProp)
@@ -527,14 +524,14 @@
             restOfData = dataSource.slice(clones.length)
             offset = clones.length
           }
+          if (!restOfData.length) return
           // build rest
-          let html = ''
-          restOfData.forEach(() => {
-            html += templateNode.outerHTML
-          })
-          hook.insertAdjacentHTML('beforeBegin', html)
+          const range = document.createRange()
+          range.setStartBefore(hook)
+          let html = Array(restOfData.length).fill(templateNode.outerHTML).join('')
+          const frag = range.createContextualFragment(html)
           let all = []
-          source.findAll(`${templateNode.localName}[repeat-unique-id="${guid}"]`).forEach((e, index) => {
+          Array.from(frag.children).forEach((e, index) => {
             clones.push(e)
             all.push(e)
             Slim._$(e).repeater[tProp] = dataSource[index + offset]
@@ -552,6 +549,7 @@
               t[tProp] = t[_$].repeater[tProp]
             }
           })
+          hook.parentElement.insertBefore(frag, hook)
         })
       }, true)
     

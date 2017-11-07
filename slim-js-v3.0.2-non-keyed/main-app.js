@@ -38,7 +38,8 @@ class Store {
     }
     updateData(mod = 10) {
         for (let i=0;i<this.data.length;i+=10) {
-            this.data[i].label += ' !!!';
+            // this.data[i].label += ' !!!';
+            this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label +' !!!'});
         }
     }
     delete(id) {
