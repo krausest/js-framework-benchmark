@@ -1,60 +1,17 @@
 {
-  "env": {
-    "webpack": {
-      "plugins": [
-        "transform-decorators-legacy",
-        "transform-class-properties"
-      ],
-      "presets": [
-        [
-          "env",
-          {
-            "targets": {
-              "browsers": [
-                "last 2 versions",
-                "not ie <= 10"
-              ]
-            },
-            "loose": true,
-            "modules": false
-          }
-        ]
-      ]
-    },
-    "e2e": {
-      "plugins": [
-        "transform-decorators-legacy",
-        "transform-class-properties"
-      ],
-      "presets": [
-        [
-          "env",
-          {
-            "targets": {
-              "browsers": [
-                "last 2 versions",
-                "not ie <= 10"
-              ]
-            },
-            "loose": true,
-            "modules": "commonjs"
-          }
-        ]
-      ]
-    },
-    "node": {
-      "presets": [
-        [
-          "env",
-          {
-            "targets": {
-              "node": 4
-            },
-            "loose": true,
-            "modules": "commonjs"
-          }
-        ]
-      ]
-    }
-  }
+  "sourceMap": true,
+  "sourceRoot": "src",
+  "moduleIds": false,
+  "comments": false,
+  "compact": false,
+  "code": true,
+  "presets": [
+    ["es2015", {"loose": true}],
+    "stage-1"
+  ],
+  "plugins": [
+    "syntax-flow",
+    "transform-decorators-legacy",
+    "transform-flow-strip-types"
+  ]
 }
