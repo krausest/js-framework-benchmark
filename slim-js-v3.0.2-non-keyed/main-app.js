@@ -38,21 +38,22 @@ class Store {
     }
     updateData(mod = 10) {
         for (let i=0;i<this.data.length;i+=10) {
-            this.data[i].label += ' !!!';
-            // this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label +' !!!'});
+            // this.data[i].label += ' !!!';
+            this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label +' !!!'});
         }
     }
     delete(id) {
+        id = parseInt(id);
         const idx = this.data.findIndex(d => d.id==id);
         this.data = this.data.filter((e,i) => i!=idx);
         return this;
     }
-    run() {
-        this.data = this.buildData();
+    run(amount) {
+        this.data = this.buildData(amount);
         this.selected = null;
     }
-    add() {
-        this.data = this.data.concat(this.buildData(1000));
+    add(amount) {
+        this.data = this.data.concat(this.buildData(amount));
         this.selected = null;
     }
     update() {
@@ -60,7 +61,7 @@ class Store {
         this.selected = null;
     }
     select(id) {
-        this.selected = id;
+        this.selected = parseInt(id);
     }
     hideAll() {
         this.backup = this.data;
@@ -125,21 +126,21 @@ Slim.tag('main-app',
         </div>
         <table class="table table-hover table-striped test-data">
             <tbody id="tbody">
-                <tr slim-repeat="items" slim-repeat-adjacent="true" class="[[isSelected(data)]]">
-                    <td class="col-md-1" bind>[[data.id]]</td>
+                <tr s:repeat="items as data">
+                    <td class="col-md-1" bind>{{data.id}}</td>
                     <td class="col-md-4">
-                        <a click="doSelect" bind>[[data.label]]</a>
+                        <a bind:marker="data.id" click="doSelect" bind>{{data.label}}</a>
                     </td>
                     <td class="col-md-1">
                         <a>
-                            <span click="deleteOne" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            <span click="deleteOne" bind:marker="data.id" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td class="col-md-6">
                     </td>
                 </tr>
             </tbody>
-        </table>
+        </div>
         <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
     </div>
 </div>
@@ -149,23 +150,25 @@ class extends Slim {
     onBeforeCreated() {
         this.items = [];
         this.store = new Store();
+        this.selectedNode = null;
     }
 
     doSelect(e) {
         startMeasure('select');
-        this.store.select(e.target.data.id);
-        this.items = this.store.data;
+        this.store.select(e.target.getAttribute('marker'));
+        this.selectedNode && this.selectedNode.classList.remove('danger');
+        this.selectedNode = e.target.parentElement.parentElement;
+        this.selectedNode.classList.add('danger');
         stopMeasure();
-    }
-
-    isSelected(data) {
-        if (!data) return '';
-        return this.store.selected === data.id ? 'danger' : '';
     }
 
     deleteOne(e) {
         startMeasure('delete');
-        this.store.delete(e.target.data.id);
+        this.store.delete(e.target.getAttribute('marker'));
+        if (e.target.parentElement.parentElement.parentElement === this.selectedNode) {
+            this.selectedNode.classList.remove('danger');
+            this.selectedNode = null;
+        }
         this.items = this.store.data;
         stopMeasure();
     }
@@ -186,7 +189,7 @@ class extends Slim {
 
     append1k() {
         startMeasure('add');
-        this.store.add();
+        this.store.add(1000);
         this.items = this.store.data;
         stopMeasure();
     }
@@ -208,7 +211,7 @@ class extends Slim {
 
     create1k() {
         this.store.clear();
-        this.store.run();
+        this.store.run(1000);
         startMeasure('run');
         this.items = this.store.data;
         stopMeasure();

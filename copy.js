@@ -95,5 +95,5 @@ _.each(fs.readdirSync('.'), function(name) {
 });
 
 fs.copySync("stem-v0.2.70-non-keyed/node_modules/babel-polyfill/dist/polyfill.min.js","dist/stem-v0.2.70/node_modules/babel-polyfill/dist");
-fs.copySync("slim-js-v2.9.1-non-keyed/node_modules/slim-js/src/Slim.js","dist/slim-js-v2.9.1/node_modules/slim-js/src/Slim.js");
+fs.copySync("slim-js-v3.0.2-non-keyed/node_modules/slim-js/src/Slim.js","dist/slim-js-v3.0.2/node_modules/slim-js/src/Slim.js");
 
