@@ -6,7 +6,6 @@ function random(max: number) {
 
 export interface Data {
 	id: number;
-	key: string;
 	label: string;
 }
 
@@ -88,7 +87,7 @@ export class Store {
 			const colour = colours[random(colours.length)];
 			const noun = nouns[random(nouns.length)];
 			const label = `${adjective} ${colour} ${noun}`;
-			data.push({id: this._id, key: `${this._id}`, label });
+			data.push({id: this._id, label });
 			this._id++;
 		}
 		return data;
