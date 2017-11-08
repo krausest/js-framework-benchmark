@@ -39,7 +39,7 @@ export let frameworks = [
     f("angular-v5.0.0-rc.0-keyed", true),
     f("angular-v5.0.0-rc.0-no-zone-keyed", true),
     f("angular-v5.0.0-rc.0-non-keyed", false),
-    f("aurelia-v1.1.2-non-keyed", false, {uri: "aurelia-v1.1.2-non-keyed/dist"}),
+    f("aurelia-v1.1.2-non-keyed", false),
     f("binding.scala-v10.0.1-keyed", true, {uri: "binding.scala-v10.0.1-keyed/target/web/stage"}),
     f("bobril-v7.1.2-keyed", true),
     f("choo-v6.5.0-non-keyed", false),
