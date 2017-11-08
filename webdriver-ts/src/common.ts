@@ -44,7 +44,7 @@ export let frameworks = [
     f("bobril-v7.1.2-keyed", true),
     f("choo-v6.5.0-non-keyed", false),
     f("cyclejs-dom-v17.1.0-non-keyed", false),
-    f("datum-v0.9.2-keyed", true),
+    f("datum-v0.10.0-keyed", true),
     f("dio-v7.0.1-keyed", true),
     f("dio-v7.0.1-non-keyed", false),
     f("dojo2-v0.2.0-non-keyed", false, {uri: "dojo2-v0.2.0-non-keyed/dist"}),
