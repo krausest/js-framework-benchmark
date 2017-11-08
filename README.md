@@ -91,7 +91,7 @@ npm run build-prod
 There should be no build errors and we can open the framework in the browser:
 [http://localhost:8080/vanillajs-keyed/](http://localhost:8080/vanillajs-keyed/)
 
-Some frameworks like aurelia, binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a third parameter in [common.ts](https://github.com/krausest/js-framework-benchmark/blob/master/webdriver-ts/src/common.ts#L38-L42) that represents the url.
+Some frameworks like binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a third parameter in [common.ts](https://github.com/krausest/js-framework-benchmark/blob/master/webdriver-ts/src/common.ts#L38-L42) that represents the url.
 
 Open the browser console and click a bit on the buttons and you should see some measurements printed on the console.
 ![First Run](images/firstRun.png?raw=true "First run")
