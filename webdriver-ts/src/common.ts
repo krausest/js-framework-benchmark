@@ -46,8 +46,10 @@ export let frameworks = [
     f("cyclejs-dom-v17.1.0-non-keyed", false),  // remove
     f("cyclejs-dom-v19.3.0-non-keyed", false),
     f("datum-v0.10.0-keyed", true),
-    f("dio-v7.0.1-keyed", true),
-    f("dio-v7.0.1-non-keyed", false),
+    f("dio-v7.0.1-keyed", true),    // remove
+    f("dio-v7.0.1-non-keyed", false),   // remove
+    f("dio-v8.0.3-keyed", true),
+    f("dio-v8.0.3-non-keyed", false),
     f("dojo2-v0.2.0-non-keyed", false, {uri: "dojo2-v0.2.0-non-keyed/dist"}),
     f("domvm-v3.2.0-non-keyed", false),
     f("domvm-v3.2.0-keyed", true),
