@@ -43,7 +43,8 @@ export let frameworks = [
     f("bobril-v7.1.2-keyed", true),     // remove
     f("bobril-v8.0.1-keyed", true),
     f("choo-v6.5.0-non-keyed", false),
-    f("cyclejs-dom-v17.1.0-non-keyed", false),
+    f("cyclejs-dom-v17.1.0-non-keyed", false),  // remove
+    f("cyclejs-dom-v19.3.0-non-keyed", false),
     f("datum-v0.10.0-keyed", true),
     f("dio-v7.0.1-keyed", true),
     f("dio-v7.0.1-non-keyed", false),
