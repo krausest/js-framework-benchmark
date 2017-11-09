@@ -71,7 +71,7 @@ const Header = b.createComponent<IHeaderData>({
         const d = ctx.data;
         me.className = "jumbotron";
         me.children = divWithClass("row", [
-            divWithClass("col-md-6", { tag: 'h1', children: "Bobril v7.1.2" }),
+            divWithClass("col-md-6", { tag: 'h1', children: "Bobril v8.0.1" }),
             divWithClass("col-md-6", [
                 divWithClass("col-sm-6 smallpad", Button({ id: "run", action: () => store.run() }, "Create 1,000 rows")),
                 divWithClass("col-sm-6 smallpad", Button({ id: "runlots", action: () => store.runLots() }, "Create 10,000 rows")),

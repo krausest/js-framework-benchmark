@@ -19,14 +19,14 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "bobril-build": "0.70.0",
+    "bobril-build": "0.79.1",
     "uglify-js": "^3.0.4"
   },
   "dependencies": {
-    "bobril": "7.1.2"
+    "bobril": "8.0.1"
   },
   "bobril": {
-    "title": "Bobril v7.1.2",
+    "title": "Bobril v8.0.1",
     "dir": ".",
     "dependencies": "disable",
     "head": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
@@ -45,7 +45,7 @@
     "colors": "1.1.2",
     "esprima": "2.7.3",
     "fs-extra": "1.0.0",
-    "bobril": "7.1.2",
+    "bobril": "8.0.1",
     "request": "2.79.0"
   }
 }

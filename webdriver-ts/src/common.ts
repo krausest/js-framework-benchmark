@@ -34,14 +34,14 @@ function f(name: string, keyed: boolean, options: Options = {uri: null, useShado
 
 export let frameworks = [
     f("angular-v1.6.3-keyed", true),
-    f("angular-v4.4.3-keyed", true),
-    f("angular-v4.4.3-non-keyed", false),
     f("angular-v5.0.0-keyed", true),
     f("angular-v5.0.0-no-zone-keyed", true),
     f("angular-v5.0.0-non-keyed", false),
-    f("aurelia-v1.1.2-non-keyed", false),
+    f("aurelia-v1.1.2-non-keyed", false),   // remove
+    f("aurelia-v1.1.5-non-keyed", false),
     f("binding.scala-v10.0.1-keyed", true, {uri: "binding.scala-v10.0.1-keyed/target/web/stage"}),
-    f("bobril-v7.1.2-keyed", true),
+    f("bobril-v7.1.2-keyed", true),     // remove
+    f("bobril-v8.0.1-keyed", true),
     f("choo-v6.5.0-non-keyed", false),
     f("cyclejs-dom-v17.1.0-non-keyed", false),
     f("datum-v0.10.0-keyed", true),
