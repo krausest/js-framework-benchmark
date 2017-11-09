@@ -37,17 +37,12 @@ export let frameworks = [
     f("angular-v5.0.0-keyed", true),
     f("angular-v5.0.0-no-zone-keyed", true),
     f("angular-v5.0.0-non-keyed", false),
-    f("aurelia-v1.1.2-non-keyed", false),   // remove
     f("aurelia-v1.1.5-non-keyed", false),
     f("binding.scala-v10.0.1-keyed", true, {uri: "binding.scala-v10.0.1-keyed/target/web/stage"}),
-    f("bobril-v7.1.2-keyed", true),     // remove
     f("bobril-v8.0.1-keyed", true),
     f("choo-v6.5.0-non-keyed", false),
-    f("cyclejs-dom-v17.1.0-non-keyed", false),  // remove
     f("cyclejs-dom-v19.3.0-non-keyed", false),
     f("datum-v0.10.0-keyed", true),
-    f("dio-v7.0.1-keyed", true),    // remove
-    f("dio-v7.0.1-non-keyed", false),   // remove
     f("dio-v8.0.3-keyed", true),
     f("dio-v8.0.3-non-keyed", false),
     f("dojo2-v0.2.0-non-keyed", false, {uri: "dojo2-v0.2.0-non-keyed/dist"}),
