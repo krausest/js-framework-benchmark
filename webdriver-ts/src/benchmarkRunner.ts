@@ -229,8 +229,10 @@ function buildDriver() {
     // options = options.setChromeBinaryPath("/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome");
     // options = options.setChromeBinaryPath("/Applications/Chromium.app/Contents/MacOS/Chromium");
     // options = options.setChromeBinaryPath("/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary");
-    if(args.headless)
+    if(args.headless) {
 	options = options.addArguments("--headless");
+	options = options.addArguments("--disable-gpu");
+    }
     options = options.addArguments("--js-flags=--expose-gc");
     options = options.addArguments("--disable-infobars");
     options = options.addArguments("--disable-background-networking");
