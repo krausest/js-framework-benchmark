@@ -123,13 +123,13 @@ const actions = {
         }
     },
 
-    select: (state, actions, data) => ({
+    select: state => id => ({
             data: state.data,
-            selected: data.id
+            selected: id
     }),
 
-    delete: (state, actions, data) => ({
-        data: state.data.filter(d => d.id !== data.id)
+    delete: state => id => ({
+        data: state.data.filter(d => d.id !== id)
     })
 }
 

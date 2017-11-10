@@ -17,16 +17,16 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "babel-core": "6.24.1",
-    "babel-loader": "7.0.0",
-    "babel-plugin-inferno": "3.2.0",
+    "babel-core": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-plugin-inferno": "3.3.0",
     "babel-plugin-syntax-jsx": "6.18.0",
     "babel-preset-es2015": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
-    "webpack": "2.5.1"
+    "webpack": "3.8.1"
   },
   "dependencies": {
-    "inferno": "3.1.2",
-    "inferno-component": "3.1.2"
+    "inferno": "3.10.1",
+    "inferno-component": "3.10.1"
   }
 }
