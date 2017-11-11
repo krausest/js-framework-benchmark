@@ -39,9 +39,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export default {
-    entry: path.join(__dirname, 'src/client.js'),
-    format: 'iife',
-    moduleName: 'app',
+    input: path.join(__dirname, 'src/client.js'),
+    name: 'app',
     plugins: plugins,
-    dest: path.join(__dirname, 'dist/bundle.js')
+    output: {
+        format: 'iife',
+        file: path.join(__dirname, 'dist/bundle.js')        
+    }
 };
