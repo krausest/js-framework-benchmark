@@ -101,7 +101,7 @@ var ractive = window.r = new Ractive({
     `<div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Ractive v0.8.12 non-keyed</h1>
+                <h1>Ractive non-keyed</h1>
             </div>
             <div class="col-md-6">
                 <div class="row">
@@ -130,7 +130,7 @@ var ractive = window.r = new Ractive({
     <table class="table table-hover table-striped test-data">
         <tbody>
             {{#each data}}
-            <tr class-danger="{{~/selected === .id}}">
+            <tr class-danger="~/selected === .id">
                 <td class="col-md-1">{{.id}}</td>
                 <td class="col-md-4">
                     <a on-click="@this.select(.id)">{{label}}</a>
