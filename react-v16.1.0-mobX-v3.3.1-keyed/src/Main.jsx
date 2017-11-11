@@ -91,7 +91,7 @@ export class Main extends React.Component{
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>React v15.5.4 + Mobx 3.1.9</h1>
+                        <h1>React + Mobx</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
