@@ -105,7 +105,7 @@ export class Main extends React.Component {
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>React v16.0.0</h1>
+                        <h1>React keyed</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
