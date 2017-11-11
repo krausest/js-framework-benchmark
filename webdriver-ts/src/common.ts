@@ -106,4 +106,5 @@ export let frameworks = [
     f("san-v3.2.6-non-keyed", false),
     f("vue-v2.4.4-keyed", true),
     f("vue-v2.4.4-non-keyed", false),
+    f("vuera-v0.1.3-non-keyed", false),
 ]
