@@ -75,7 +75,7 @@ export let frameworks = [
     f("preact-v8.2.6-keyed", true),
     f("pux-v11.0.0-non-keyed", false),
     f("ractive-v0.9.9-keyed", true),
-    f("ractive-v0.8.12-non-keyed", false),
+    f("ractive-v0.9.9-non-keyed", false),
     f("ractive-edge-keyed", true),
     f("ractive-edge-non-keyed", false),
     f("react-lite-v0.15.30-keyed", true),
