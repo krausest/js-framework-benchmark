@@ -18,7 +18,7 @@ class Row extends Component {
       h.td("col-md-1").children(item.id),
       h.td("col-md-4").children(h.a().events(this.click).children(item.label)),
       h.td("col-md-1").children(
-        h.a().events(this.del).children(h.span("glyphicon glyphicon-remove").props(HiddenAttributes))
+        h.a().events(this.del).children(h.span("glyphicon glyphicon-remove").attrs(HiddenAttributes))
       ),
       h.td("col-md-6")
     );
@@ -52,7 +52,7 @@ function button(text, id) {
   return h.div("col-sm-6 smallpad").children(
     h.button("btn btn-primary btn-block")
       .events(Events.onClick(() => { store.dispatch({ type: id }); }))
-      .props({ "type": "button", "id": id })
+      .attrs({ "type": "button", "id": id })
       .children(text)
   );
 }
@@ -61,7 +61,7 @@ render(
   h.div("container").children(
     h.div("jumbotron").children(
       h.div("row").children(
-        h.div("col-md-6").children(h.h1().children("ivi v0.8.0")),
+        h.div("col-md-6").children(h.h1().children("ivi v0.9.1")),
         h.div("col-md-6").children(
           h.div("row").children(
             button("Create 1,000 rows", "run"),
@@ -75,7 +75,7 @@ render(
       )
     ),
     h.table("table table-hover table-striped test-data").children(rowList()),
-    h.span("preloadicon glyphicon glyphicon-remove").props(HiddenAttributes)
+    h.span("preloadicon glyphicon glyphicon-remove").attrs(HiddenAttributes)
   ),
   document.getElementById("main")
 );

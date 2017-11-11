@@ -1,9 +1,9 @@
 const gulp = require('gulp');
 const del = require('del');
 const rollup = require('rollup');
-const rollupReplace = require('rollup-plugin-replace');
 const rollupNodeResolve = require('rollup-plugin-node-resolve');
-const closureCompiler = require('google-closure-compiler-js').gulp();
+const rollupAlias = require('rollup-plugin-alias');
+const closureCompiler = require('google-closure-compiler').gulp();
 
 gulp.task('clean', function () {
   return del(['build', 'dist']);
@@ -11,23 +11,17 @@ gulp.task('clean', function () {
 
 gulp.task('bundle', ['clean'], function (done) {
   return rollup.rollup({
-    format: 'es6',
-    entry: 'src/main.js',
+    input: 'src/main.js',
     plugins: [
-      rollupNodeResolve({
-        module: true,
+      rollupAlias({
+        'ivi-vars': __dirname + '/node_modules/ivi-vars/evergreen-browser',
       }),
-      rollupReplace({
-        values: {
-          __IVI_DEV__: false,
-          __IVI_BROWSER__: true
-        }
-      })
+      rollupNodeResolve(),
     ]
   }).then(function (bundle) {
     return bundle.write({
       format: 'es',
-      dest: 'build/bundle.js'
+      file: 'build/bundle.js'
     });
   });
 });
@@ -37,13 +31,14 @@ gulp.task('build', ['bundle'], function () {
     .pipe(closureCompiler({
       js_output_file: 'main.js',
       compilation_level: 'ADVANCED',
-      language_in: 'ECMASCRIPT6_STRICT',
+      language_in: 'ECMASCRIPT_2017',
       language_out: 'ECMASCRIPT5_STRICT',
       use_types_for_optimization: true,
       assume_function_wrapper: true,
-      output_wrapper: '(function(){%output%}).call(this);',
+      isolation_mode: "IIFE",
       warning_level: 'QUIET',
-      rewrite_polyfills: false
+      rewrite_polyfills: false,
+      new_type_inf: true
     }))
     .pipe(gulp.dest('dist'));
 });
