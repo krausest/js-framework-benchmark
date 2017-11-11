@@ -1,19 +1,20 @@
 {
-  "name": "petit-dom-v0.0.5-js-benchmark",
+  "name": "petit-dom-js-benchmark",
   "version": "1.0.0",
-  "description": "petit-dom-v0.0.5 js benchmark",
+  "description": "petit-dom js benchmark",
   "main": "index.js",
   "dependencies": {
-    "petit-dom": "0.0.5"
+    "petit-dom": "0.0.11"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-es2015-rollup": "^3.0.0",
-    "rollup": "^0.41.6",
-    "rollup-plugin-babel": "^2.7.1",
+    "rollup": "^0.51.3",
+    "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-uglify": "^1.0.2",
-    "rollup-watch": "^3.2.2"
+    "rollup-plugin-uglify": "^2.0.1",
+    "rollup-watch": "^4.3.1"
   },
   "scripts": {
     "build-prod": "rollup -cf iife -i src/index.js -o dist/index.js",
