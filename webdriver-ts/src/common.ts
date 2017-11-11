@@ -74,7 +74,7 @@ export let frameworks = [
     f("polymer-v2.0.0-non-keyed", false, {uri: "polymer-v2.0.0-non-keyed/build/es6-bundled", useShadowRoot: true}),
     f("preact-v8.2.6-keyed", true),
     f("pux-v11.0.0-non-keyed", false),
-    f("ractive-v0.8.12-keyed", true),
+    f("ractive-v0.9.9-keyed", true),
     f("ractive-v0.8.12-non-keyed", false),
     f("ractive-edge-keyed", true),
     f("ractive-edge-non-keyed", false),
