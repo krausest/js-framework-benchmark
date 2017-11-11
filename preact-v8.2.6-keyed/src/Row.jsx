@@ -4,9 +4,6 @@
 var preact = require('preact');
 var { render, h, Component } = preact;
 
-window.rowsUpdated = 0;
-window.rowsMounted = 0;
-
 export class Row extends Component {
 	constructor(props) {
 		super(props);
@@ -16,12 +13,6 @@ export class Row extends Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		return nextProps.data !== this.props.data || nextProps.styleClass !== this.props.styleClass;
 	}
-//	componentDidUpdate() {
-//		window.rowsUpdated++;
-//	}
-//	componentDidMount() {
-//		window.rowsMounted++;
-//	}
 
 	onDelete() {
 		this.props.onDelete(this.props.data.id);
