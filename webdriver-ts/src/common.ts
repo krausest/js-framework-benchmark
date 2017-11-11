@@ -94,7 +94,7 @@ export let frameworks = [
     f("stem-v0.2.70-non-keyed", false),
     f("surplus-v0.4.0-keyed", true),
     f("surplus-v0.4.0-non-keyed", false),
-    f("svelte-v1.20.2-keyed", true),
+    f("svelte-v1.41.2-keyed", true),
     f("svelte-v1.20.2-non-keyed", false),
     f("tsers-v1.0.0-non-keyed", false),
     f("thermite-v4.0.0-non-keyed", false),

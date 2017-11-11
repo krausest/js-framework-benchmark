@@ -1,7 +1,7 @@
 <div class="jumbotron">
     <div class="row">
         <div class="col-md-6">
-            <h1>Svelte v1.20.2 (non-keyed)</h1>
+            <h1>Svelte (keyed)</h1>
         </div>
         <div class="col-md-6">
             <div class="row">
@@ -29,7 +29,7 @@
 </div>
 <table class="table table-hover table-striped test-data">
     <tbody>
-        {{#each store.data as row, num}}
+        {{#each store.data as row, num @id}}
             <tr class="{{selected === row.id ? 'danger' : ''}}">
                 <td class="col-md-1">{{row.id}}</td>
                 <td class="col-md-4">
