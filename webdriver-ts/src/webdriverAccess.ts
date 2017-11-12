@@ -42,7 +42,7 @@ async function findByXPath(node: WebElement, path: string): Promise<WebElement> 
         for (let p of paths) {
             // n = n.then(nd => nd.findElements(By.tagName(p.tagName))).then(elems => { // costly since it fetches all elements
            let elems = await n.findElements(By.css(p.tagName+":nth-child("+(p.index)+")"));
-           if (elems==null || elems.length==0) { console.log("not found"); return null}; 
+           if (elems==null || elems.length==0) { return null}; 
            n = elems[0];
         }   
      } catch (e) {
