@@ -269,7 +269,7 @@ const benchStartup: Benchmark = {
     },
     after: async function(driver: WebDriver, framework: FrameworkData) {
         await clickElementById(driver, 'run');
-        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
+        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a");
     }
 }
 
