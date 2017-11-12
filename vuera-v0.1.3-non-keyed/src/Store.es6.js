@@ -58,9 +58,19 @@ export class Store {
     }
     swapRows() {
     	if(this.data.length > 10) {
-    		var a = this.data[4];
-    		this.data[4] = this.data[9];
-    		this.data[9] = a;
+    		let d4 = this.data[4];
+			let d9 = this.data[9];
+
+			var newData = this.data.map(function(data, i) {
+				if(i === 4) {
+					return d9;
+				}
+				else if(i === 9) {
+					return d4;
+				}
+				return data;
+			});
+			this.data = newData;
     	}
     }
 }
