@@ -68,12 +68,12 @@ export let frameworks = [
     f("moon-v0.11.0", false),
     f("nx-v1.0.0-beta.2.0.1-keyed", true),
     f("nx-v1.0.0-beta.2.0.1-non-keyed", false),
-    // f("petit-dom-v0.0.11-keyed", true), // disabled, see https://github.com/krausest/js-framework-benchmark/issues/293
+    f("petit-dom-v0.0.11-keyed", true), 
     f("pico-dom-v1.0.0-keyed", true),
     f("plastiq-v1.33.0-keyed", true),
     f("polymer-v2.0.0-non-keyed", false, {uri: "polymer-v2.0.0-non-keyed/build/es6-bundled", useShadowRoot: true}),
     f("preact-v8.2.6-keyed", true),
-    // f("pux-v11.0.0-non-keyed", false),   // due to https://github.com/krausest/js-framework-benchmark/issues/294
+    f("pux-v11.0.0-non-keyed", false),   
     f("ractive-v0.9.9-keyed", true),
     f("ractive-v0.9.9-non-keyed", false),
     f("ractive-edge-keyed", true),
@@ -97,7 +97,7 @@ export let frameworks = [
     f("svelte-v1.41.2-keyed", true),
     f("svelte-v1.41.2-non-keyed", false),
     f("tsers-v1.0.0-non-keyed", false),
-    // f("thermite-v4.0.0-non-keyed", false),   // due to https://github.com/krausest/js-framework-benchmark/issues/294
+    f("thermite-v4.0.0-non-keyed", false), 
     f("vanillajs-non-keyed", false),
     f("vanillajs-keyed", true),
     f("vidom-v0.9.8-keyed", true),
