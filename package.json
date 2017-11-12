@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Simple Benchmark for Javascript client side rendering",
   "scripts": {
+    "clean": "node cleanup.js",
     "build": "node install.js && node build.js",
     "build-prod": "node install.js && node build.js",
     "compile": "node install.js && node build.js",
