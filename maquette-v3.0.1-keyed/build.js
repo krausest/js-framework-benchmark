@@ -8,7 +8,8 @@ rollup({
 	plugins: [
 		commonjs(),
 		buble(),
-		uglify(),
+//  Somehow uglify makes erronous code, needs investigation
+//		uglify(),
 	]
 }).then(bundle => bundle.write({
 	file: 'dist/bundle.js',

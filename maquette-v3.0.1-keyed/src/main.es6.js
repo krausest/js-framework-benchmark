@@ -1,8 +1,7 @@
-import maquette from './maquette.umd.js';
+import {h, createProjector} from '../node_modules/maquette/dist/maquette.cjs.js';
 import {Store} from './store.es6';
 
-const h = maquette.h;
-const projector = maquette.createProjector();
+let projector = createProjector({});
 
 const store = new Store();
 const app = App();
