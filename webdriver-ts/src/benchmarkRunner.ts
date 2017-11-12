@@ -236,7 +236,7 @@ function buildDriver() {
     options = options.addArguments("--disable-cache");
     options = options.addArguments("--disable-extensions");    
     options = options.addArguments("--window-size=1200,800")
-    options = options.setChromeBinaryPath(args.chromeBinary);
+    if (args.chromeBinary) options = options.setChromeBinaryPath(args.chromeBinary);
     options = options.setLoggingPrefs(logPref);
     options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline, disabled-by-default-devtools.timeline,blink.user_timing"});
     return new Builder()
