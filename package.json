@@ -4,9 +4,9 @@
   "description": "Simple Benchmark for Javascript client side rendering",
   "scripts": {
     "clean": "node cleanup.js",
-    "build": "node install.js && node build.js",
-    "build-prod": "node install.js && node build.js",
-    "compile": "node install.js && node build.js",
+    "build": "node build.js",
+    "build-prod": "node build.js",
+    "compile": "node build.js",
     "start": "http-server -c-1 .",
     "selenium": "cd webdriver-ts && npm run selenium && npm run results",
     "check": "cd webdriver-ts && npm run selenium -- --count 1 --exitOnError true"
