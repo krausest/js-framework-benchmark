@@ -239,10 +239,9 @@ function buildDriver() {
     if (args.chromeBinary) options = options.setChromeBinaryPath(args.chromeBinary);
     options = options.setLoggingPrefs(logPref);
     options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline, disabled-by-default-devtools.timeline,blink.user_timing"});
-    return new Builder()
-        .forBrowser('chrome')
-        .setChromeOptions(options)    
-        .build();
+
+    let service = new chrome.ServiceBuilder(args.chromeDriver).build();
+    return chrome.Driver.createSession(options, service);
 }
 
 async function forceGC(framework: FrameworkData, driver: WebDriver): Promise<any> {
@@ -426,6 +425,7 @@ let args = yargs(process.argv)
 .default('exitOnError','false')
 .default('count', config.REPEAT_RUN)
 .string('chromeBinary')
+.string('chromeDriver')
 .boolean('headless')
 .array("framework").array("benchmark").argv;
 
