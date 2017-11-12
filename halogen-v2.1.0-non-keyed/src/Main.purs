@@ -185,8 +185,8 @@ swapRows arr index1 index2 = do
   rowB <- arr !! index2
 
   let diff = index2 - index1
-  arrA <- updateAt index1 rowB { rid = rowB.rid - diff } arr
-  arrB <- updateAt index2 rowA { rid = rowA.rid + diff } arrA
+  arrA <- updateAt index1 rowB arr
+  arrB <- updateAt index2 rowA arrA
 
   pure arrB
 
