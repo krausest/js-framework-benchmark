@@ -4,8 +4,8 @@
   "description": "React Easy State demo",
   "main": "src/index.jsx",
   "scripts": {
-    "build-prod": "rollup -c rollup.config.prod.js",
-    "build-dev": "rollup -w -c rollup.config.dev.js"
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
   },
   "keywords": [
     "react",
@@ -20,20 +20,15 @@
   },
   "devDependencies": {
     "babel-core": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-preset-es2015": "6.24.1",
     "babel-preset-react": "6.24.1",
-    "babel-preset-stage-0": "6.24.1",
-    "babili": "0.1.4",
-    "rollup": "0.49.1",
-    "rollup-plugin-babel": "3.0.2",
-    "rollup-plugin-babili": "3.1.1",
-    "rollup-plugin-commonjs": "8.2.0",
-    "rollup-plugin-node-resolve": "3.0.0",
-    "rollup-plugin-replace": "1.1.1",
-    "rollup-watch": "4.3.1"
+    "jsx-loader": "0.13.2",
+    "webpack": "3.8.1"
   },
   "dependencies": {
     "react-easy-state": "3.0.1",
-    "react": "15.5.4",
-    "react-dom": "15.5.4"
+    "react": "16.1.0",
+    "react-dom": "16.1.0"
   }
 }

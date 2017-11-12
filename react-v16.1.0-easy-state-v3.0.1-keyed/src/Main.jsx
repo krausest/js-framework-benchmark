@@ -11,7 +11,7 @@ function Main () {
       <div className="jumbotron">
         <div className="row">
           <div className="col-md-6">
-            <h1>React v15.5.4 + Easy State 3.0.1</h1>
+            <h1>React Easy State</h1>
           </div>
           <div className="col-md-6">
             <div className="row">
