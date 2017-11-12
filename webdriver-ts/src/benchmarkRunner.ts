@@ -226,9 +226,6 @@ function buildDriver() {
     logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
     let options = new chrome.Options();
-    // options = options.setChromeBinaryPath("/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome");
-    // options = options.setChromeBinaryPath("/Applications/Chromium.app/Contents/MacOS/Chromium");
-    // options = options.setChromeBinaryPath("/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary");
     if(args.headless) {
 	options = options.addArguments("--headless");
 	options = options.addArguments("--disable-gpu");
@@ -239,6 +236,7 @@ function buildDriver() {
     options = options.addArguments("--disable-cache");
     options = options.addArguments("--disable-extensions");    
     options = options.addArguments("--window-size=1200,800")
+    if (args.chromeBinary) options = options.setChromeBinaryPath(args.chromeBinary);
     options = options.setLoggingPrefs(logPref);
     options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline, disabled-by-default-devtools.timeline,blink.user_timing"});
     return new Builder()
@@ -427,6 +425,7 @@ let args = yargs(process.argv)
 .default('check','false')
 .default('exitOnError','false')
 .default('count', config.REPEAT_RUN)
+.string('chromeBinary')
 .boolean('headless')
 .array("framework").array("benchmark").argv;
 
