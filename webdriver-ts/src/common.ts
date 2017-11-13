@@ -54,7 +54,7 @@ export let frameworks = [
     f("etch-v0.12.5-non-keyed", false),
     f("glimmer-v0.8.0-keyed", true, {uri: "glimmer-v0.8.0-keyed/dist"}),
     f("gruu-v1.7.3-non-keyed", false),
-    // f("halogen-v2.1.0-non-keyed", false),    // https://github.com/krausest/js-framework-benchmark/issues/294
+    f("halogen-v2.1.0-non-keyed", false),    
     f("hyperapp-v0.16.0-non-keyed", false), 
     f("inferno-v3.10.1-keyed", true),       
     f("inferno-v3.10.1-non-keyed", false),
@@ -68,7 +68,7 @@ export let frameworks = [
     f("moon-v0.11.0", false),
     f("nx-v1.0.0-beta.2.0.1-keyed", true),
     f("nx-v1.0.0-beta.2.0.1-non-keyed", false),
-    f("petit-dom-v0.0.11-keyed", true), 
+    // f("petit-dom-v0.0.11-keyed", true),  // https://github.com/krausest/js-framework-benchmark/issues/293
     f("pico-dom-v1.0.0-keyed", true),
     f("plastiq-v1.33.0-keyed", true),
     f("polymer-v2.0.0-non-keyed", false, {uri: "polymer-v2.0.0-non-keyed/build/es6-bundled", useShadowRoot: true}),
