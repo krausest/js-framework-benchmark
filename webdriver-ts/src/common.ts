@@ -40,11 +40,11 @@ export let frameworks = [
     f("aurelia-v1.1.5-non-keyed", false),
     f("binding.scala-v10.0.1-keyed", true, {uri: "binding.scala-v10.0.1-keyed/target/web/stage"}),
     f("bobril-v8.0.1-keyed", true),
-    f("choo-v6.5.0-non-keyed", false),
+    f("choo-v6.5.0-keyed", false),
     f("cyclejs-dom-v19.3.0-non-keyed", false),
     f("datum-v0.10.0-keyed", true),
     f("dio-v8.0.3-keyed", true),
-    f("dio-v8.0.3-non-keyed", false),
+    // f("dio-v8.0.3-non-keyed", false),    // https://github.com/krausest/js-framework-benchmark/issues/298
     f("dojo2-v0.2.0-non-keyed", false, {uri: "dojo2-v0.2.0-non-keyed/dist"}),
     f("domvm-v3.2.2-non-keyed", false),
     f("domvm-v3.2.2-keyed", true),
