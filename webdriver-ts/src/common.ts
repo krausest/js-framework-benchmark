@@ -64,6 +64,7 @@ export let frameworks = [
     f("marionette-v3.5.1-domapi-keyed", true),
     f("marionette-v3.5.1-keyed", true),
     f("marko-v4.5.6-keyed", true),
+    f("maquette-v3.0.1-keyed", true),
     f("mithril-v1.1.1-keyed", true),
     f("moon-v0.11.0", false),
     f("nx-v1.0.0-beta.2.0.1-keyed", true),
