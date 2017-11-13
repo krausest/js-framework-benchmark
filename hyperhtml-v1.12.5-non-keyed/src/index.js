@@ -1,8 +1,9 @@
-import { bind, wire } from "hyperhtml";
+import hyperhtml from "hyperhtml";
 
 import { startMeasure, stopMeasure } from "./utils";
 import { Store } from "./store";
 
+const { bind, wire } = hyperhtml;
 const store = new Store();
 const renderOnMain = bind(document.querySelector("#main"));
 app(renderOnMain, store);
