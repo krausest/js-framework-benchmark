@@ -12,8 +12,10 @@ if (process.env.production) {
 }
 
 export default {
-	entry: 'es/main.js',
-	dest: 'dist/main.js',
-	format: 'iife',
+	input: 'es/main.js',
+	output: {
+		file: 'dist/main.js',
+		format: 'iife'
+	},
 	plugins
 };
