@@ -168,54 +168,56 @@ async function computeResultsStartup(driver: WebDriver): Promise<number> {
     let durationJSArr : number[] = await driver.executeScript("return [window.performance.timing.loadEventEnd, window.performance.timing.navigationStart]") as number[];
     let durationJS = (durationJSArr[0] as number) - (durationJSArr[1] as number);
     
-    let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
-    if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
-    let filteredEvents = await fetchEventsFromPerformanceLog(driver);
+    if (config.STARTUP_DURATION_FROM_EVENTLOG) {
+        let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
+        if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
+        let filteredEvents = await fetchEventsFromPerformanceLog(driver);
 
-    if (config.LOG_DEBUG) console.log("filteredEvents ", filteredEvents);
+        if (config.LOG_DEBUG) console.log("filteredEvents ", filteredEvents);
 
-    let eventsDuringBenchmark  = 
-        R.pipe(
-            R.dropWhile(type_neq('runBenchmark')),
-            R.takeWhile(type_neq('finishedBenchmark'))   
-        )(filteredEvents);
+        let eventsDuringBenchmark  = 
+            R.pipe(
+                R.dropWhile(type_neq('runBenchmark')),
+                R.takeWhile(type_neq('finishedBenchmark'))   
+            )(filteredEvents);
 
-    if (config.LOG_DEBUG) console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
-            
-    let navigationStarts = R.filter(type_eq('navigationStart'))(eventsDuringBenchmark)
-    if (navigationStarts.length !== 1) {
-        console.log("exactly one navigationStart event is expected", eventsDuringBenchmark); 
-        throw "exactly one navigationStart event is expected";
-    }
+        if (config.LOG_DEBUG) console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
+                
+        let navigationStarts = R.filter(type_eq('navigationStart'))(eventsDuringBenchmark)
+        if (navigationStarts.length !== 1) {
+            console.log("exactly one navigationStart event is expected", eventsDuringBenchmark); 
+            throw "exactly one navigationStart event is expected";
+        }
 
-    let eventsAfterNavigationStart = (R.dropWhile(type_neq('navigationStart'))(eventsDuringBenchmark));
+        let eventsAfterNavigationStart = (R.dropWhile(type_neq('navigationStart'))(eventsDuringBenchmark));
 
-    if (config.LOG_DEBUG) console.log("eventsAfterNavigationStart", eventsAfterNavigationStart);
+        if (config.LOG_DEBUG) console.log("eventsAfterNavigationStart", eventsAfterNavigationStart);
 
-    let paints = R.filter(type_eq('paint'))(eventsAfterNavigationStart);
-    if (paints.length == 0) {
-        console.log("at least one paint event is expected after the navigationStart event", asString(filteredEvents)); 
-        throw "at least one paint event is expected after the navigationStart event";
-    }
-    let lastPaint = R.last(paints);
+        let paints = R.filter(type_eq('paint'))(eventsAfterNavigationStart);
+        if (paints.length == 0 || true===true) {
+            console.log("at least one paint event is expected after the navigationStart event", asString(filteredEvents)); 
+            throw "at least one paint event is expected after the navigationStart event";
+        }
+        let lastPaint = R.last(paints);
 
-    let upperBoundForSoundnessCheck = (lastPaint.end - eventsDuringBenchmark[0].ts)/1000.0;
-    let duration = (lastPaint.end - navigationStarts[0].ts)/1000.0;
+        let upperBoundForSoundnessCheck = (lastPaint.end - eventsDuringBenchmark[0].ts)/1000.0;
+        let duration = (lastPaint.end - navigationStarts[0].ts)/1000.0;
 
-    console.log("*** duration", duration, "upper bound ", upperBoundForSoundnessCheck,"durationJS", durationJS);            
+        console.log("*** duration", duration, "upper bound ", upperBoundForSoundnessCheck,"durationJS", durationJS);            
 
-    if (duration<0) {
-        console.log("soundness check failed. reported duration is less 0", asString(eventsDuringBenchmark));
-        throw "soundness check failed. reported duration is less 0";                    
-    }
+        if (duration<0) {
+            console.log("soundness check failed. reported duration is less 0", asString(eventsDuringBenchmark));
+            throw "soundness check failed. reported duration is less 0";                    
+        }
 
-    if (duration > upperBoundForSoundnessCheck) {
-        console.log("soundness check failed. reported duration is bigger than whole benchmark duration", asString(eventsDuringBenchmark));
-        throw "soundness check failed. reported duration is bigger than whole benchmark duration";
-    }
+        if (duration > upperBoundForSoundnessCheck) {
+            console.log("soundness check failed. reported duration is bigger than whole benchmark duration", asString(eventsDuringBenchmark));
+            throw "soundness check failed. reported duration is bigger than whole benchmark duration";
+        }
 
-    if (Math.abs(duration - durationJS) > 5) {
-        console.log("WARN: soundness check failed. reported duration is much bigger than JS comparison", asString(eventsDuringBenchmark));
+        if (Math.abs(duration - durationJS) > 5) {
+            console.log("WARN: soundness check failed. reported duration is much bigger than JS comparison", asString(eventsDuringBenchmark));
+        }
     }
     return durationJS;
 }
@@ -231,6 +233,7 @@ function buildDriver() {
 	options = options.addArguments("--disable-gpu");
     }
     options = options.addArguments("--js-flags=--expose-gc");
+    options = options.addArguments("--no-sandbox");
     options = options.addArguments("--disable-infobars");
     options = options.addArguments("--disable-background-networking");
     options = options.addArguments("--disable-cache");

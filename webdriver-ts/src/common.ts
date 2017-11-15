@@ -12,7 +12,8 @@ export let config = {
     LOG_PROGRESS: true,
     LOG_DETAILS: false,
     LOG_DEBUG: false,
-    EXIT_ON_ERROR: false
+    EXIT_ON_ERROR: false,
+    STARTUP_DURATION_FROM_EVENTLOG: false
 }
 
 export interface FrameworkData {
