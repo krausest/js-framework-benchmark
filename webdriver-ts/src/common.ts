@@ -44,7 +44,7 @@ export let frameworks = [
     f("cyclejs-dom-v19.3.0-non-keyed", false),
     f("datum-v0.10.0-keyed", true),
     f("dio-v8.0.3-keyed", true),
-    // f("dio-v8.0.3-non-keyed", false),    // https://github.com/krausest/js-framework-benchmark/issues/298
+    f("dio-v8.0.3-non-keyed", false),  
     f("dojo2-v0.2.0-non-keyed", false, {uri: "dojo2-v0.2.0-non-keyed/dist"}),
     f("domvm-v3.2.2-non-keyed", false),
     f("domvm-v3.2.2-keyed", true),
@@ -69,7 +69,7 @@ export let frameworks = [
     f("moon-v0.11.0", false),
     f("nx-v1.0.0-beta.2.0.1-keyed", true),
     f("nx-v1.0.0-beta.2.0.1-non-keyed", false),
-    // f("petit-dom-v0.0.11-keyed", true),  // https://github.com/krausest/js-framework-benchmark/issues/293
+    f("petit-dom-v0.0.12-keyed", true),  
     f("pico-dom-v1.0.0-keyed", true),
     f("plastiq-v1.33.0-keyed", true),
     f("polymer-v2.0.0-non-keyed", false, {uri: "polymer-v2.0.0-non-keyed/build/es6-bundled", useShadowRoot: true}),
