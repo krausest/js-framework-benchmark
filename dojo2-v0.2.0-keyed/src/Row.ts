@@ -26,7 +26,6 @@ export class Row extends WidgetBase<RowProperties> {
 		const { id, selected, label } = this.properties;
 
 		return v('tr', {
-				key: id,
 				classes: [ selected ? 'danger' : null ]
 			}, [
 				v('td', { classes: [ 'col-md-1' ] }, [ `${id}` ]),

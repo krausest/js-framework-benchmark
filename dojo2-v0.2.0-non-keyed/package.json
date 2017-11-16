@@ -2,18 +2,18 @@
   "name": "dojo2-v0.2.0-keyed",
   "version": "1.0.0",
   "scripts": {
-    "build-prod": "dojo build"
+    "build-prod": "./node_modules/.bin/dojo build"
   },
   "dependencies": {
-    "@dojo/core": "0.1.0",
+    "@dojo/core": "0.2.1",
     "@dojo/has": "0.1.0",
-    "@dojo/i18n": "0.1.0",
-    "@dojo/shim": "0.1.0",
-    "@dojo/widget-core": "0.2.0"
+    "@dojo/i18n": "0.2.0",
+    "@dojo/shim": "0.2.2",
+    "@dojo/widget-core": "0.3.0"
   },
   "devDependencies": {
-    "@dojo/cli": "0.1.0",
-    "@dojo/cli-build-webpack": "0.1.0",
+    "@dojo/cli": "0.2.0",
+    "@dojo/cli-build-webpack": "0.2.0",
     "@dojo/interfaces": "0.1.0",
     "typescript": "2.5.2"
   }
