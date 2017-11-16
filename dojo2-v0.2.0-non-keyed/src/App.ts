@@ -25,12 +25,6 @@ function stopMeasure() {
 	}
 }
 
-class Container extends WidgetBase {
-	render() {
-		return v('table', { classes: [ 'table', 'table-hover', 'table-striped', 'test-data' ] }, [ v('tbody', {}, this.children) ]);
-	}
-}
-
 export class App extends WidgetBase {
 	private _store: Store = new Store();
 
