@@ -9,7 +9,7 @@
     "@dojo/has": "0.1.0",
     "@dojo/i18n": "0.2.0",
     "@dojo/shim": "0.2.2",
-    "@dojo/widget-core": "0.3.0"
+    "@dojo/widget-core": "~0.3.0"
   },
   "devDependencies": {
     "@dojo/cli": "0.2.0",

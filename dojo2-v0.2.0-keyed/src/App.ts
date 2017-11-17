@@ -102,7 +102,7 @@ export class App extends WidgetBase {
 		const rows = _store.data.map(({ id, label }, index) => {
 			return w(Row, {
 				id,
-				key: index,
+				key: id,
 				label,
 				onRowSelected: _select,
 				onRowDeleted: _delete,
