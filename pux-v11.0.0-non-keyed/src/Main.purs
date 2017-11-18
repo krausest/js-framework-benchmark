@@ -95,7 +95,7 @@ foldp (MergeRows Append arr i) st =
 
 -- Clear all rows from the screen and reset the last id to 1
 foldp (Clear ev) st =
-  { state: st { rows = [], lastId = 1 }, effects: [ liftEff (preventDefault ev) *> pure Nothing] }
+  { state: st { rows = [], lastId = st.lastId }, effects: [ liftEff (preventDefault ev) *> pure Nothing] }
 
 -- Create the specified number of rows and prevent the browser
 -- from receiving the click event. Depending on the provided

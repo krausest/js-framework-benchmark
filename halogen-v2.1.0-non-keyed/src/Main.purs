@@ -73,7 +73,7 @@ eval :: forall eff. Query ~> H.ComponentDSL State Query Void (Aff (random :: RAN
 eval = case _ of
 
   Clear next -> do
-    H.put init
+    H.modify (\st -> st { rows = [], lastId = st.lastId })
     pure next
 
   Create i next -> do

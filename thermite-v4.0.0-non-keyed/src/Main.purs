@@ -97,7 +97,7 @@ header = T.simpleSpec perform render
       rows <- liftEff $ createRandomNRows i st.lastId
       T.writeState $ st { rows = st.rows <> L.fromFoldable rows, lastId = st.lastId + i }
 
-    Clear -> void $ T.writeState initialState
+    Clear -> void $ T.writeState $ st { rows = L.Nil, lastId = st.lastId }
 
     UpdateEvery i -> void $ T.modifyState
       \st -> st { rows = L.mapWithIndex (updateRowLabel i) st.rows }
