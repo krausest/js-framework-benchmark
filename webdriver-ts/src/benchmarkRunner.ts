@@ -243,8 +243,13 @@ function buildDriver() {
     options = options.setLoggingPrefs(logPref);
     options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline, disabled-by-default-devtools.timeline,blink.user_timing"});
 
-    let service = new chrome.ServiceBuilder(args.chromeDriver).build();
-    return chrome.Driver.createSession(options, service);
+    // Do the following lines really cause https://github.com/krausest/js-framework-benchmark/issues/303 ?
+    // let service = new chrome.ServiceBuilder(args.chromeDriver).build();
+    // return chrome.Driver.createSession(options, service);
+    return new Builder()
+        .forBrowser('chrome')
+        .setChromeOptions(options)    
+        .build();
 }
 
 async function forceGC(framework: FrameworkData, driver: WebDriver): Promise<any> {
