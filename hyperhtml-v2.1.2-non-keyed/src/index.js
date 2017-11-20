@@ -1,9 +1,8 @@
-import hyperhtml from "hyperhtml";
+import { bind, wire } from "hyperhtml/esm";
 
 import { startMeasure, stopMeasure } from "./utils";
 import { Store } from "./store";
 
-const { bind, wire } = hyperhtml;
 const store = new Store();
 const renderOnMain = bind(document.querySelector("#main"));
 app(renderOnMain, store);
@@ -16,7 +15,7 @@ function app(render) {
       <div class="jumbotron">
         <div class="row">
           <div class="col-md-6">
-            <h1>HyperHTML v1.12.5</h1>
+            <h1>hyper(HTML) v2.1.2</h1>
           </div>
         <div class="col-md-6">
           <div class="row">
@@ -104,9 +103,8 @@ function select(id) {
 
 function row(state) {
   const { id, label } = state;
-  const className = classNameSelected(store.selected);
   return wire(state, ":row")`
-  <tr class=${className(id)}>
+  <tr class=${className(id, store.selected)}>
     <td class="col-md-1">${id}</td>
     <td class="col-md-4">
       <a onclick=${() => select(id)}>${label}</a>
@@ -121,6 +119,6 @@ function row(state) {
   `;
 }
 
-function classNameSelected(selected) {
-  return id => (id === selected ? "danger" : "");
+function className(id, selected) {
+  return id === selected ? "danger" : "";
 }
