@@ -153,15 +153,15 @@ class App extends React.Component<{}, State> {
   }
   render() {
     let disclaimer = (false) ? (<div>
-          <h2>Results for js web frameworks benchmark – round 6</h2>
-          <p>Go here for the accompanying article <a href="http://www.stefankrause.net/wp/?p=431">http://www.stefankrause.net/wp/?p=431</a>. Source code can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>	
+          <h2>Results for js web frameworks benchmark – round 7</h2>
+          <p>Go here for the accompanying article <a href="http://www.stefankrause.net/wp/?p=454">http://www.stefankrause.net/wp/?p=454</a>. Source code can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>	
         </div>) :
         (<p>Warning: These results are preliminary - use with caution (they may e.g. be from different browser versions).Official results are published on my <a href="http://www.stefankrause.net/">blog</a>.</p>);
 
     return (
       <div>   
         {disclaimer}
-        <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.12.5, Chrome 58.0.3029.110 (64-bit))</p>        
+        <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.13.1, Chrome 62.0.3202.94 (64-bit))</p>        
         <SelectBar  benchmarksCPU={this.state.benchmarksCPU} 
                     benchmarksMEM={this.state.benchmarksMEM} 
                     frameworksKeyed={this.state.frameworksKeyed} 
