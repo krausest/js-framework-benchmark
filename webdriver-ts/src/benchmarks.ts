@@ -46,7 +46,7 @@ const benchReplaceAll: Benchmark = {
 }
 
 const benchUpdate: Benchmark = { 
-    id:"03_update10th1k",
+    id:"03_update10th1k",   // FIXME rename to now 03_update10th10k
     label: "partial update",
     description: "Time to update the text of every 10th row (with "+config.WARMUP_COUNT+" warmup iterations) for a table with 10k rows.",
     type: BenchmarkType.CPU,
