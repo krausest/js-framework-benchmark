@@ -3,9 +3,10 @@ import { bind, wire } from "hyperhtml/esm";
 import { startMeasure, stopMeasure } from "./utils";
 import { Store } from "./store";
 
+const rows = new WeakMap;
 const store = new Store();
-const renderOnMain = bind(document.querySelector("#main"));
-app(renderOnMain, store);
+const render = bind(document.querySelector("#main"));
+app(render);
 
 //
 
@@ -15,7 +16,7 @@ function app(render) {
       <div class="jumbotron">
         <div class="row">
           <div class="col-md-6">
-            <h1>hyper(HTML) v2.1.2</h1>
+            <h1>hyper(HTML) v2.1.3</h1>
           </div>
         <div class="col-md-6">
           <div class="row">
@@ -47,8 +48,7 @@ function app(render) {
        </tbody>
      </table>
      <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
-    </div>
-  `;
+    </div>`;
 
   stopMeasure();
 }
@@ -56,61 +56,61 @@ function app(render) {
 function run() {
   startMeasure("run");
   store.run();
-  app(renderOnMain, store);
+  app(render);
 }
 
 function runLots() {
   startMeasure("runLots");
   store.runLots();
-  app(renderOnMain, store);
+  app(render);
 }
 
 function add() {
   startMeasure("add");
   store.add();
-  app(renderOnMain, store);
+  app(render);
 }
 
 function update() {
   startMeasure("update");
   store.update();
-  app(renderOnMain, store);
+  app(render);
 }
 
 function clear() {
   startMeasure("clear");
   store.clear();
-  app(renderOnMain, store);
+  app(render);
 }
 
 function swapRows() {
   startMeasure("swapRows");
   store.swapRows();
-  app(renderOnMain, store);
+  app(render);
 }
 
 function remove(id) {
   startMeasure("delete");
   store.delete(id);
-  app(renderOnMain, store);
+  app(render);
 }
 
 function select(id) {
   startMeasure("select");
   store.select(id);
-  app(renderOnMain, store);
+  app(render);
 }
 
 function row(state) {
-  const { id, label } = state;
-  return wire(state, ":row")`
-  <tr class=${className(id, store.selected)}>
-    <td class="col-md-1">${id}</td>
+  const view = rows.get(state) || createRow(state);
+  return view.render`
+  <tr class=${view.class(store.selected)}>
+    <td class="col-md-1">${state.id}</td>
     <td class="col-md-4">
-      <a onclick=${() => select(id)}>${label}</a>
+      <a onclick=${view.onselect}>${state.label}</a>
     </td>
     <td class="col-md-1">
-      <a onclick=${() => remove(id)}>
+      <a onclick=${view.onremove}>
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
       </a>
     </td>
@@ -119,6 +119,19 @@ function row(state) {
   `;
 }
 
-function className(id, selected) {
-  return id === selected ? "danger" : "";
+function createRow(state) {
+  const row = {
+    render: wire(),
+    class(selected) {
+      return state.id === selected ? 'danger' : '';
+    },
+    onremove() {
+      remove(state.id);
+    },
+    onselect() {
+      select(state.id);
+    }
+  };
+  rows.set(state, row);
+  return row;
 }
