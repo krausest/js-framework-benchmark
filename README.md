@@ -12,7 +12,7 @@ The following operations are benchmarked for each framework:
 
 * create rows: Duration for creating 1000 rows after the page loaded.
 * replace all rows: Duration for updating all 1000 rows of the table (with 5 warmup iterations).
-* partial update: Time to update the text of every 10th row (with 5 warmup iterations).
+* partial update: Time to update the text of every 10th row for a table with 10000 rows (with 5 warmup iterations).
 * select row: Duration to highlight a row in response to a click on the row. (with 5 warmup iterations).
 * swap rows: Time to swap 2 rows on a 1K table. (with 5 warmup iterations).
 * remove row: Duration to remove a row. (with 5 warmup iterations).

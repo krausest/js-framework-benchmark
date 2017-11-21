@@ -222,7 +222,7 @@ render state =
         [ HH.tbody_
           $ map (renderRow state.selected) state.rows ]
       ,  HH.span
-        [ HP.classes [ HH.ClassName "preloadicon glyphicon glyphicon-remove" ] 
+        [ HP.classes [ HH.ClassName "preloadicon glyphicon glyphicon-remove" ]
           , HP.attr (HH.AttrName "aria-hidden") "true" ]
         [ HH.text "" ]
       ]
@@ -287,7 +287,7 @@ buttons =
   , { bid: "add",      str: "Append 1,000 Rows",     q: Append 1000    }
   , { bid: "update",   str: "Update Every 10th Row", q: UpdateEvery 10 }
   , { bid: "clear",    str: "Clear",                 q: Clear          }
-  , { bid: "swaprows", str: "Swap Rows",             q: Swap 4 9       } ]
+  , { bid: "swaprows", str: "Swap Rows",             q: Swap 1 998     } ]
 
 
 

@@ -129,9 +129,9 @@ function dataStore(state = initialState, action) {
       })
     case SWAP_ROWS:
       return state.withMutations(original => {
-        const a = original.getIn(['data', 4]);
-        original.setIn(['data', 4], original.getIn(['data', 9]));
-        original.setIn(['data', 9], a);
+        const a = original.getIn(['data', 1]);
+        original.setIn(['data', 1], original.getIn(['data', 998]));
+        original.setIn(['data', 998], a);
       });
     default:
       return state;

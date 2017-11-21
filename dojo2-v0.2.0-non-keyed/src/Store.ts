@@ -134,9 +134,9 @@ export class Store {
 
 	public swapRows() {
 		if (this._data.length > 10) {
-			const row = this._data[4];
-			this._data[4] = this._data[9];
-			this._data[9] = row;
+			const row = this._data[1];
+			this._data[1] = this._data[998];
+			this._data[998] = row;
 		}
 	}
 }

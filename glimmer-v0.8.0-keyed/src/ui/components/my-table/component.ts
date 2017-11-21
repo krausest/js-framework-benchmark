@@ -80,9 +80,9 @@ export default class Glimmerjs extends Component {
         startMeasure("swapRows");
         if(this.rows.data.length > 10) {
             let data = this.rows.data;
-            let d4 = data[4];
-            data[4] = data[9];
-            data[9] = d4;
+            let d1 = data[1];
+            data[1] = data[998];
+            data[998] = d1;
             this.rows = { ...this.rows, data }
         }
         stopMeasure();

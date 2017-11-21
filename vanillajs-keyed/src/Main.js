@@ -84,9 +84,9 @@ class Store {
     }
     swapRows() {
         if(this.data.length > 10) {
-            var a = this.data[4];
-            this.data[4] = this.data[9];
-            this.data[9] = a;
+            var a = this.data[1];
+            this.data[1] = this.data[998];
+            this.data[998] = a;
         }
     }
 }
@@ -290,20 +290,20 @@ class Main {
             this.unselect();
             stopMeasure();
         });
-    }    
+    }
     swapRows() {
         startMeasure("swapRows");
         if (this.data.length>10) {
             this.store.swapRows();
-            this.data[4] = this.store.data[4]; 
-            this.data[9] = this.store.data[9]; 
+            this.data[1] = this.store.data[1];
+            this.data[998] = this.store.data[998];
 
-            this.tbody.insertBefore(this.rows[9], this.rows[5])
-            this.tbody.insertBefore(this.rows[4], this.rows[10])
+            this.tbody.insertBefore(this.rows[998], this.rows[2])
+            this.tbody.insertBefore(this.rows[1], this.rows[999])
 
-            let tmp = this.rows[9];
-            this.rows[9] = this.rows[4];
-            this.rows[4] = tmp;
+            let tmp = this.rows[998];
+            this.rows[998] = this.rows[1];
+            this.rows[1] = tmp;
         }
 
 

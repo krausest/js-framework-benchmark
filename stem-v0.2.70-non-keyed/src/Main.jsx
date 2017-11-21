@@ -71,8 +71,8 @@ class BenchmarkElement extends UI.Element {
     swapRows() {
         startMeasure("swapRows");
 
-        const i = 4;
-        const j = 9;
+        const i = 1;
+        const j = 998;
 
         let obj_i = this.tbody.getGivenChildren()[i];
         let obj_j = this.tbody.getGivenChildren()[j];

@@ -82,10 +82,10 @@ function setup (elem, state) {
     state.swapRows = function swapRows () {
         timer.startMeasure('swapRows')
         if (10 < state.rows.length) {
-          const item4 = state.rows[4]
-          const item9 = state.rows[9]
-          state.rows[4] = item9
-          state.rows[9] = item4
+          const item1 = state.rows[1]
+          const item998 = state.rows[998]
+          state.rows[1] = item998
+          state.rows[998] = item1
         }
         timer.stopMeasure()
     }
