@@ -66,7 +66,7 @@ Store.prototype = {
     this.selected = null
   },
   swapRows: function() {
-    if(this.data.length > 10) {
+    if(this.data.length > 998) {
       var a = this.data[1]
       this.data[1] = this.data[998]
       this.data[998] = a

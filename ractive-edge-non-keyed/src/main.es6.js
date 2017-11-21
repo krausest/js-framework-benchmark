@@ -76,7 +76,7 @@ var ractive = window.r = new Ractive({
         });
         this.on('swapRows', function (event) {
             startMeasure("swapRows");
-            if(this.get('data').length > 10) {
+            if(this.get('data').length > 998) {
                 var a = this.get('data')[1];
                 this.set('data[1]', this.get('data')[998]);
                 this.set('data[998]', a);

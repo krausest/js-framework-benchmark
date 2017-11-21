@@ -146,7 +146,7 @@ new Moon({
     },
     swap: function() {
       var data = this.get("data");
-      if (data.length > 10) {
+      if (data.length > 998) {
         startMeasure("swap");
         var tmp = data[1];
         data[1] = data[998];

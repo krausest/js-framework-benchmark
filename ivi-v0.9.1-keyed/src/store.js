@@ -50,7 +50,7 @@ export const store = createStore(
       case "clear":
         return { data: mut([]), selected: null };
       case "swaprows":
-        if (data.length > 10) {
+        if (data.length > 998) {
           const a = data[1];
           data[1] = data[998];
           data[998] = a;

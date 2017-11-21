@@ -126,7 +126,7 @@ export class Store {
     }
     swapRows() {
         let data = this.data();
-        if (data.length > 10) {
+        if (data.length > 998) {
             var a = data[1];
             data[1] = data[998];
             data[998] = a;

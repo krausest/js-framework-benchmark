@@ -79,7 +79,7 @@ var HomeViewModel = function () {
     self.swapRows = function () {
         startMeasure("swapRows");
         var tmp = self.data();
-        if (tmp.length > 10) {
+        if (tmp.length > 998) {
             var a = tmp[1];
             tmp[1] = tmp[998];
             tmp[998] = a;

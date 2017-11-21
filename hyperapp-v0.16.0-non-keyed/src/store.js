@@ -109,7 +109,7 @@ const actions = {
     },
 
     swapRows: state => {
-        if (state.data.length <= 10) {
+        if (state.data.length <= 998) {
             return state
         }
 

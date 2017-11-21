@@ -74,7 +74,7 @@ module.exports = {
         startMeasure("swapRows");
         let data = this.state.data;
 
-    	if(data.length > 10) {
+    	if(data.length > 998) {
     		var a = data[1];
     		data[1] = data[998];
     		data[998] = a;

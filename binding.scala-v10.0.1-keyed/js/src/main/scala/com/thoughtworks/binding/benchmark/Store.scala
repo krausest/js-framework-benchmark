@@ -127,7 +127,7 @@ final class Store {
 
   def swapRows() = {
     val buffer = data.get
-    if (buffer.length >= 10) {
+    if (buffer.length > 998) {
       val row1 = buffer(1)
       val row998 = buffer(998)
       buffer(998) = row1

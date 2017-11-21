@@ -61,7 +61,7 @@ export default easyStore({
   },
   swapRows() {
     startMeasure('swapRows')
-    if (this.rows.length > 10) {
+    if (this.rows.length > 998) {
       const temp = this.rows[1]
       this.rows[1] = this.rows[998]
       this.rows[998] = temp

@@ -100,7 +100,7 @@ const Store = Bb.Collection.extend({
     },
     swapRows() {
         startMeasure("swapRows");
-        if (this.length > 10) {
+        if (this.length > 998) {
             const a = this.models[1];
             this.models[1] = this.models[998];
             this.models[998] = a;

@@ -265,7 +265,7 @@ update msg model =
             ( { model | rows = [] }, Cmd.none )
 
         Swap ->
-            if List.length model.rows >= 10 then
+            if List.length model.rows > 998 then
                 let
                     arr =
                         model.rows

@@ -86,7 +86,7 @@ export default Ember.Service.extend({
   },
   swapRows() {
   	startMeasure("swapRows");
-    if(this.data.length > 10) {
+    if(this.data.length > 998) {
 	  let d1 = this.data[1];
 	  let d998 = this.data[998];
 

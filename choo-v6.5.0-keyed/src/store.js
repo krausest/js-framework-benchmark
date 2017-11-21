@@ -36,7 +36,7 @@ module.exports = function(state, emitter) {
   });
 
   emitter.on('swapRows', function() {
-    if (state.data.length > 10) {
+    if (state.data.length > 998) {
       const a = state.data[1];
       state.data[1] = state.data[998];
       state.data[998] = a;

@@ -70,23 +70,23 @@ class BenchmarkElement extends UI.Element {
     }
     swapRows() {
         startMeasure("swapRows");
+        if (this.tbody.getGivenChildren().length > 998) {
+            const i = 1;
+            const j = 998;
 
-        const i = 1;
-        const j = 998;
+            let obj_i = this.tbody.getGivenChildren()[i];
+            let obj_j = this.tbody.getGivenChildren()[j];
 
-        let obj_i = this.tbody.getGivenChildren()[i];
-        let obj_j = this.tbody.getGivenChildren()[j];
+            let obj_i_opts = obj_i.options;
+            let obj_j_opts = obj_j.options;
 
-        let obj_i_opts = obj_i.options;
-        let obj_j_opts = obj_j.options;
+            let aux_obj = obj_i_opts.rowObject;
+            obj_i_opts.rowObject = obj_j_opts.rowObject;
+            obj_j_opts.rowObject = aux_obj;
 
-        let aux_obj = obj_i_opts.rowObject;
-        obj_i_opts.rowObject = obj_j_opts.rowObject;
-        obj_j_opts.rowObject = aux_obj;
-
-        obj_i.refresh();
-        obj_j.refresh();
-
+            obj_i.refresh();
+            obj_j.refresh();
+        }
         this.printDuration();
     }
 

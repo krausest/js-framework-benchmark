@@ -38,7 +38,7 @@ const Operations = {
 	Clear: state => ({items: [], selected: null}),
 	SwapRows: state => {
 		let d = state.items.splice(0);
-		if(d.length > 10) {
+		if(d.length > 998) {
 			var a = d[1];
 			d[1] = d[998];
 			d[998] = a;

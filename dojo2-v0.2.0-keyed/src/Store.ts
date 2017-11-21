@@ -133,7 +133,7 @@ export class Store {
 	}
 
 	public swapRows() {
-		if (this._data.length > 10) {
+		if (this._data.length > 998) {
 			const row = this._data[1];
 			this._data[1] = this._data[998];
 			this._data[998] = row;

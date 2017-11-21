@@ -128,6 +128,7 @@ function dataStore(state = initialState, action) {
         original.set('selected', undefined);
       })
     case SWAP_ROWS:
+      if (state.get('data').size <= 998) return state;
       return state.withMutations(original => {
         const a = original.getIn(['data', 1]);
         original.setIn(['data', 1], original.getIn(['data', 998]));
