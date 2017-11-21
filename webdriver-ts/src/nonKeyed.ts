@@ -129,7 +129,7 @@ async function runBench(frameworkNames: string[]) {
             await driver.executeScript('window.nonKeyedDetector_instrument()');
             // swap
             await clickElementById(driver,'swaprows');
-            await testTextContains(driver,'//tbody/tr[10]/td[1]','5');
+            await testTextContains(driver,'//tbody/tr[2]/td[1]','999');
             let res = await driver.executeScript('return nonKeyedDetector_result()');
             let nonKeyedSwap = isNonKeyedSwapRow(res); 
             // run
