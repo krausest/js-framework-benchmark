@@ -278,16 +278,16 @@ public class App {
             clickElementById(driver,"run");
             testElementLocatedByXpath(driver,"//tbody/tr[1]/td[2]/a");
             for (int i = 0; i< WARMUP_COUNT; i++) {
-                String val = getTextByXPath(driver,"//tbody/tr[5]/td[2]/a");
+                String val = getTextByXPath(driver,"//tbody/tr[2]/td[2]/a");
                 clickElementById(driver,"swaprows");
-                testTextContains(driver,"//tbody/tr[10]/td[2]/a", val);
+                testTextContains(driver,"//tbody/tr[999]/td[2]/a", val);
             }
         }
 
         public void test(WebDriver driver) {
-            String text = getTextByXPath(driver,"//tbody/tr[5]/td[2]/a");
+            String text = getTextByXPath(driver,"//tbody/tr[2]/td[2]/a");
             clickElementById(driver,"swaprows");
-            testTextContains(driver,"//tbody/tr[10]/td[2]/a", text);
+            testTextContains(driver,"//tbody/tr[999]/td[2]/a", text);
         }
 
         public String getName() {

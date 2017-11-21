@@ -84,9 +84,9 @@ class Store {
     }
     swapRows() {
         if(this.data.length > 10) {
-            var a = this.data[4];
-            this.data[4] = this.data[9];
-            this.data[9] = a;
+            var a = this.data[1];
+            this.data[1] = this.data[998];
+            this.data[998] = a;
         }
     }
 }
@@ -300,7 +300,7 @@ class Main {
             this.unselect();
             stopMeasure();
         });
-    }    
+    }
     swapRows() {
         startMeasure("swapRows");
         let old_selection = this.store.selected;

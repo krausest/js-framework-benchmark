@@ -120,9 +120,9 @@
         swapRows() {
             startMeasure("swapRows");
             if(this.data.length > 10) {
-                var tmp = this.data[4];
-                this.set(["data", 4], this.data[9]);
-                this.set(["data", 9], tmp);
+                var tmp = this.data[1];
+                this.set(["data", 1], this.data[998]);
+                this.set(["data", 998], tmp);
             }
             stopMeasure();
         }

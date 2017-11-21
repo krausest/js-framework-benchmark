@@ -75,9 +75,9 @@ module.exports = {
         let data = this.state.data;
 
     	if(data.length > 10) {
-    		var a = data[4];
-    		data[4] = data[9];
-    		data[9] = a;
+    		var a = data[1];
+    		data[1] = data[998];
+    		data[998] = a;
         }
         this.forceUpdate();
     },

@@ -37,9 +37,9 @@ export const update = (data) => {
 export const swapRows = (data) => {
     const newData = [...data];
     if (newData.length > 10) {
-        let temp = newData[4];
-        newData[4] = newData[9];
-        newData[9] = temp;
+        let temp = newData[1];
+        newData[1] = newData[998];
+        newData[998] = temp;
     }
     return newData;
 }

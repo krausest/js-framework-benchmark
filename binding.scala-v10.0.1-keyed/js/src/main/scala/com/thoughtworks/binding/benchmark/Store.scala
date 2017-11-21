@@ -128,10 +128,10 @@ final class Store {
   def swapRows() = {
     val buffer = data.get
     if (buffer.length >= 10) {
-      val row4 = buffer(4)
-      val row9 = buffer(9)
-      buffer(9) = row4
-      buffer(4) = row9
+      val row1 = buffer(1)
+      val row998 = buffer(998)
+      buffer(998) = row1
+      buffer(1) = row998
     }
   }
 

@@ -148,9 +148,9 @@ new Moon({
       var data = this.get("data");
       if (data.length > 10) {
         startMeasure("swap");
-        var tmp = data[4];
-        data[4] = data[9];
-        data[9] = tmp;
+        var tmp = data[1];
+        data[1] = data[998];
+        data[998] = tmp;
         this.set("data", data);
         stopMeasure("swap");
       }

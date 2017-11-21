@@ -51,9 +51,9 @@ export const store = createStore(
         return { data: mut([]), selected: null };
       case "swaprows":
         if (data.length > 10) {
-          const a = data[4];
-          data[4] = data[9];
-          data[9] = a;
+          const a = data[1];
+          data[1] = data[998];
+          data[998] = a;
         }
         return { data: mut(data), selected: state.selected };
     }

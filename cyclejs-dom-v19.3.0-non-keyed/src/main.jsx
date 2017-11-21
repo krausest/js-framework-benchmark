@@ -17,14 +17,14 @@ let nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 
 
 function buildData(count = 1000) {
 	var data = [];
-	
+
 	for(var i = 0; i < count; i++) {
 		data.push({
 			id: id++,
 			label: adjectives[_random(adjectives.length)] + ' ' + colours[_random(colours.length)] + ' ' + nouns[_random(nouns.length)]
 		});
 	}
-	
+
 	return data;
 };
 
@@ -39,9 +39,9 @@ const Operations = {
 	SwapRows: state => {
 		let d = state.items.splice(0);
 		if(d.length > 10) {
-			var a = d[4];
-			d[4] = d[9];
-			d[9] = a;
+			var a = d[1];
+			d[1] = d[998];
+			d[998] = a;
 		}
 		return {items: d, selected: state.selected};
 	}
@@ -58,23 +58,23 @@ function intent(DOMSource) {
 		DOMSource.select('.remove').events('click').map(evt => {
 			evt.preventDefault();
 			evt.stopPropagation();
-			
+
 			let el = evt.target;
 			while(el && !el.id) {
 				el = el.parentNode;
 			}
-			
+
 			return Operations.RemoveItem(parseInt(el.id));
 		}),
 		DOMSource.select('.select').events('click').map(evt => {
 			evt.preventDefault();
 			evt.stopPropagation();
-			
+
 			let el = evt.target;
 			while(el && !el.id) {
 				el = el.parentNode;
 			}
-			
+
 			return Operations.SelectItem(parseInt(el.id));
 		})
 	);
@@ -143,7 +143,7 @@ function view(state$) {
 
 function main(sources) {
 	const state$ = model(intent(sources.DOM));
-	
+
 	return {
 		DOM: view(state$)
 	}
