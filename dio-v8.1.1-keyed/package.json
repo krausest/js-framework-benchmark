@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-dio",
-  "version": "8.0.3",
+  "version": "8.1.1",
   "description": "DIO demo",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,6 @@
     "jsx-loader": "0.13.2"
   },
   "dependencies": {
-    "dio.js": "8.0.3"
+    "dio.js": "8.1.1"
   }
 }
