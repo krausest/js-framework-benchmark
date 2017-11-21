@@ -295,7 +295,7 @@ buttons =
   , { bid: "add",      str: "Append 1,000 Rows",     ev: Create Append  1000  }
   , { bid: "update",   str: "Update Every 10th Row", ev: UpdateEvery 10 }
   , { bid: "clear",    str: "Clear",                 ev: Clear }
-  , { bid: "swaprows", str: "Swap Rows",             ev: Swap 4 9 } ]
+  , { bid: "swaprows", str: "Swap Rows",             ev: Swap 1 998 } ]
 
 
 
