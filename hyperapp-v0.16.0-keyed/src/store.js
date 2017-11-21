@@ -113,9 +113,9 @@ const actions = {
             return state
         }
 
-        const temp = state.data[4]
-        state.data[4] = state.data[9]
-        state.data[9] = temp
+        const temp = state.data[1]
+        state.data[1] = state.data[998]
+        state.data[998] = temp
 
         return {
             data: state.data,

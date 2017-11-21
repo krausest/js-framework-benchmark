@@ -193,7 +193,7 @@ buttons =
   , { bid: "add",      str: "Append 1,000 Rows",     a: Append 1000    }
   , { bid: "update",   str: "Update Every 10th Row", a: UpdateEvery 10 }
   , { bid: "clear",    str: "Clear",                 a: Clear          }
-  , { bid: "swaprows", str: "Swap Rows",             a: Swap 4 9       } ]
+  , { bid: "swaprows", str: "Swap Rows",             a: Swap 1 998     } ]
 
 renderButton :: _
              -> { bid :: String, str :: String, a :: Action }

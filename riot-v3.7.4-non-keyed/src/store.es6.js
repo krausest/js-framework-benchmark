@@ -59,15 +59,15 @@ export default class Store {
     }
     swapRows() {
         if(this.data.length > 10) {
-            let d4 = this.data[4]
-            let d9 = this.data[9]
+            let d1 = this.data[1]
+            let d998 = this.data[998]
 
             var newData = this.data.map(function(data, i) {
-                if(i === 4) {
-                    return d9
+                if(i === 1) {
+                    return d998
                 }
-                else if(i === 9) {
-                    return d4
+                else if(i === 998) {
+                    return d1
                 }
                 return data
             })

@@ -79,9 +79,9 @@ class MainElement extends HTMLElement {
     swapRows() {
         startMeasure("swapRows");
         if(this.data.length > 10) {
-            var tmp = this.data[4];
-            this.data[4] = this.data[9];
-            this.data[9] = tmp;
+            var tmp = this.data[1];
+            this.data[1] = this.data[998];
+            this.data[998] = tmp;
         }
         this.render();
         stopMeasure();
