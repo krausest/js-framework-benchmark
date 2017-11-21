@@ -3,7 +3,6 @@
 import * as path from "path";
 import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
-import commonjs from "rollup-plugin-commonjs";
 import uglify from "rollup-plugin-uglify";
 import { minify } from "uglify-es";
 
@@ -12,8 +11,7 @@ export default {
   output: {
     file: "dist/index.min.js",
     format: "iife",
-    name: "app",
-    sourcemap: true
+    name: "app"
   },
   plugins: [
     resolve({
@@ -28,7 +26,6 @@ export default {
       runtimeHelpers: true,
       babelrc: false
     }),
-    commonjs(),
     uglify({}, minify)
   ]
 };
