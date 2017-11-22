@@ -59,7 +59,6 @@ export let frameworks = [
     f("halogen-v2.1.0-non-keyed", false),
     f("hyperapp-v0.16.0-non-keyed", false),
     f("hyperapp-v0.16.0-keyed", true),
-    f("hyperhtml-v2.1.2-non-keyed", false),
     f("hyperhtml-v2.1.3-keyed", true),
     f("inferno-v3.10.1-keyed", true),
     f("inferno-v3.10.1-non-keyed", false),
