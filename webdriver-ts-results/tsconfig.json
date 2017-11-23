@@ -21,7 +21,7 @@
     "build",
     "scripts",
     "acceptance-tests",
-    "webpack",
+    "webpack"
   ],
   "types": [
     "typePatches"

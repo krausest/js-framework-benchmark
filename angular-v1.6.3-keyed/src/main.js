@@ -1,4 +1,3 @@
-import { default as jQuery } from 'jquery';
 import { default as angular } from 'angular';
 import { HomeController } from './home.controller';
 

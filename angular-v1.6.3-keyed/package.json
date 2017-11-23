@@ -23,7 +23,6 @@
     "webpack": "2.2.1"
   },
   "dependencies": {
-    "angular": "1.6.3",
-    "jquery": "3.2.1"
+    "angular": "1.6.3"
   }
 }
