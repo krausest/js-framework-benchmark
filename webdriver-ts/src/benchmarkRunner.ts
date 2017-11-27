@@ -194,7 +194,7 @@ async function computeResultsStartup(driver: WebDriver): Promise<number> {
         if (config.LOG_DEBUG) console.log("eventsAfterNavigationStart", eventsAfterNavigationStart);
 
         let paints = R.filter(type_eq('paint'))(eventsAfterNavigationStart);
-        if (paints.length == 0 || true===true) {
+        if (paints.length == 0) {
             console.log("at least one paint event is expected after the navigationStart event", asString(filteredEvents)); 
             throw "at least one paint event is expected after the navigationStart event";
         }
