@@ -167,6 +167,7 @@ async function computeResultsMEM(driver: WebDriver): Promise<number[]> {
 async function computeResultsStartup(driver: WebDriver): Promise<number> {
     let durationJSArr : number[] = await driver.executeScript("return [window.performance.timing.loadEventEnd, window.performance.timing.navigationStart]") as number[];
     let durationJS = (durationJSArr[0] as number) - (durationJSArr[1] as number);
+    let reportedDuration = durationJS;
     
     if (config.STARTUP_DURATION_FROM_EVENTLOG) {
         let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
@@ -218,8 +219,9 @@ async function computeResultsStartup(driver: WebDriver): Promise<number> {
         if (Math.abs(duration - durationJS) > 5) {
             console.log("WARN: soundness check failed. reported duration is much bigger than JS comparison", asString(eventsDuringBenchmark));
         }
+        reportedDuration = duration;
     }
-    return durationJS;
+    return reportedDuration;
 }
 
 function buildDriver() {

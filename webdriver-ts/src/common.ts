@@ -13,7 +13,8 @@ export let config = {
     LOG_DETAILS: false,
     LOG_DEBUG: false,
     EXIT_ON_ERROR: false,
-    STARTUP_DURATION_FROM_EVENTLOG: false
+    STARTUP_DURATION_FROM_EVENTLOG: true,
+    STARTUP_SLEEP_DURATION: 1000
 }
 
 export interface FrameworkData {
