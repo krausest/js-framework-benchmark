@@ -4,7 +4,7 @@ if [ ! -d "$R" ]; then
     cd $R
     git remote add alexfmpe https://github.com/alexfmpe/reflex-platform.git
     git fetch --all
-    git checkout 13d8daf368cb370d07743123d1fe66e19961c2ed
+    git checkout 5ab2608fb4c7b24dd42fdf2ffa0e231f07435ea4
     ./hack-on reflex-dom
     cd reflex-dom/reflex-dom
     ../../work-on ghcjs ./. --command "cabal configure --ghcjs --enable-benchmarks"
