@@ -66,6 +66,8 @@ export let frameworks = [
     f("ivi-v0.9.1-keyed", true),
     f("knockout-v3.4.1-keyed", true),
     f("lit-html-v0.7.1-non-keyed", false),
+    f("maik-h-v2.5.2-keyed", true),
+    f("maik-h-v2.5.2-non-keyed", false),
     f("marionette-v3.5.1-domapi-keyed", true),
     f("marionette-v3.5.1-keyed", true),
     f("marko-v4.5.6-keyed", true),
