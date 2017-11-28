@@ -1,5 +1,6 @@
-import { default as angular } from 'angular';
-import { HomeController } from './home.controller';
+import angular from 'angular';
+import controller from './home.controller';
+import template from './home.template.html';
 
 angular
     .module('app', [])
@@ -9,4 +10,11 @@ angular
     .run(() => {
         console.info(angular.version.full);
     })
-    .controller('HomeController', HomeController);
+    .component('home', {
+        controller,
+        template,
+    });
+
+angular.element(document).ready(() => {
+    angular.bootstrap(document.body, ['app'], { strictDi: true });
+});
