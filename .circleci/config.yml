@@ -16,9 +16,13 @@ jobs:
 
       - run: |
           source $NVM_DIR/nvm.sh
-          nvm uninstall default
-          curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-          sudo apt-get install -y nodejs
+          nvm install v8.9.1
+          nvm use v8.9.1
+          nvm alias default v8.9.1
+          node -v
+#          nvm uninstall default
+#          curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+#          sudo apt-get install -y nodejs
 
       - run: npm install
       - run:
