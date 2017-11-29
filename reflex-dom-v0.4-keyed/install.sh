@@ -1,3 +1,4 @@
+if [ ! -d "dist" ]; then cp -R bundled-dist dist; fi
 R=reflex-platform
 rm -rf $R
 git clone https://github.com/reflex-frp/reflex-platform.git
