@@ -3,6 +3,10 @@ import {Builder, WebDriver, promise, logging} from 'selenium-webdriver'
 import {BenchmarkType, Benchmark, benchmarks, fileName} from './benchmarks'
 import {setUseShadowRoot} from './webdriverAccess'
 
+const lighthouse = require('lighthouse');
+const columnify = require('columnify');
+
+import {lhConfig} from './lighthouseConfig';
 import * as fs from 'fs';
 import * as yargs from 'yargs'; 
 import {JSONResult, config, FrameworkData, frameworks} from './common'
@@ -23,10 +27,16 @@ interface Timingresult {
 
 function extractRelevantEvents(entries: logging.Entry[]) {
     let filteredEvents: Timingresult[] = [];
+    let protocolEvents: any[] = [];
     entries.forEach(x => {
         let e = JSON.parse(x.message).message;
         if (config.LOG_DETAILS) console.log(JSON.stringify(e));
-        if (e.params.name==='EventDispatch') {
+        if (e.method === 'Tracing.dataCollected') {
+            protocolEvents.push(e)
+        }
+        if (e.method && (e.method.startsWith('Page') || e.method.startsWith('Network'))) {
+            protocolEvents.push(e)
+        } else if (e.params.name==='EventDispatch') {
             if (e.params.args.data.type==="click") {
                 filteredEvents.push({type:'click', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur});
             }
@@ -49,17 +59,20 @@ function extractRelevantEvents(entries: logging.Entry[]) {
             filteredEvents.push({type:'gc', ts: +e.params.ts, end:+e.params.ts, mem: Number(e.params.args.usedHeapSizeAfter)/1024/1024});
         }
     });
-    return filteredEvents;
+    return {filteredEvents, protocolEvents};
 }
 
-async function fetchEventsFromPerformanceLog(driver: WebDriver): Promise<Timingresult[]> {
-    let filteredEvents : Timingresult[] = [];
+async function fetchEventsFromPerformanceLog(driver: WebDriver): Promise<{timingResults: Timingresult[], protocolResults: any[]}> {
+    let timingResults : Timingresult[] = [];
+    let protocolResults : any[] = [];
     let entries = [];
-    do {        
+    do {
         entries = await driver.manage().logs().get(logging.Type.PERFORMANCE);
-        filteredEvents = filteredEvents.concat(extractRelevantEvents(entries));
+        const {filteredEvents, protocolEvents} = extractRelevantEvents(entries);
+        timingResults = timingResults.concat(filteredEvents);
+        protocolResults = protocolResults.concat(protocolEvents);
     } while (entries.length > 0);
-    return filteredEvents;
+    return {timingResults, protocolResults};
 }
 
 function type_eq(requiredType: string) {
@@ -73,10 +86,96 @@ function asString(res: Timingresult[]): string {
     return res.reduce((old, cur) => old + "\n" + JSON.stringify(cur), "");
 }
 
+async function runLighthouse(protocolResults: any[]): Promise<any> {
+    const traceEvents = protocolResults.filter(e => e.method === 'Tracing.dataCollected').map(e => e.params);
+    const devtoolsLogs = protocolResults.filter(e => e.method.startsWith('Page') || e.method.startsWith('Network'));
+
+    const filenamePrefix = `${process.cwd()}/${Date.now()}`;
+    const traceFilename = `${filenamePrefix}.trace.json`;
+    const devtoolslogsFilename = `${filenamePrefix}.devtoolslogs.json`;
+
+    fs.writeFileSync(traceFilename, JSON.stringify({traceEvents}));
+    fs.writeFileSync(devtoolslogsFilename, JSON.stringify(devtoolsLogs));
+    lhConfig.artifacts.traces = {defaultPass: traceFilename};
+    lhConfig.artifacts.devtoolsLogs = {defaultPass: devtoolslogsFilename};
+
+    const lhResults = await lighthouse('http://example.com/thispage', {}, lhConfig);
+    fs.unlinkSync(traceFilename);
+    fs.unlinkSync(devtoolslogsFilename);
+
+    const audits = lhResults.audits;
+    const metricResults = [
+        {
+            title: '=================',
+            value: `======`
+        },
+        {
+            title: 'First Contentful Paint',
+            value: `${audits['first-meaningful-paint'].extendedInfo.value.timings.fCP.toLocaleString()} ms`
+        },
+        {
+            title: 'First Meaningful Paint',
+            value: `${audits['first-meaningful-paint'].extendedInfo.value.timings.fMP.toLocaleString()} ms`
+        },
+        {
+            title: 'Onload',
+            value: `${audits['first-meaningful-paint'].extendedInfo.value.timings.onLoad.toLocaleString()} ms`
+        },
+        {
+            title: 'First Interactive',
+            value: `${audits['first-interactive'].extendedInfo.value.timeInMs.toLocaleString()} ms`
+        },
+        {
+            title: 'Time to Consistently Interactive',
+            value: `${audits['consistently-interactive'].extendedInfo.value.timeInMs.toLocaleString()} ms`
+        },
+        {
+            title: '------------------',
+            value: `------`
+        },
+        {
+            title: 'Script boot-up time',
+            value: `${audits['bootup-time'].rawValue.toLocaleString()} ms`
+        },
+        {
+            title: 'Main thread work cost',
+            value: `${audits['mainthread-work-breakdown'].rawValue.toLocaleString()} ms`
+        },
+        {
+            title: 'Estimated Input Latency (main thread busyness)',
+            value: `${audits['estimated-input-latency'].rawValue.toLocaleString()} ms`
+        },
+        {
+            title: '------------------',
+            value: `------`
+        },
+        {
+            title: 'Total byte weight',
+            value: `${audits['total-byte-weight'].rawValue.toLocaleString()} kB`
+        },
+        {
+            title: '=================',
+            value: `======`
+        },
+    ];
+
+    console.log(
+        'load metrics from lighthouse:\n',
+        columnify(metricResults, {
+            columns: ['value', 'title'],
+            config: {value: {align: 'right'}}
+        })
+    );
+}
+
 async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
-    let filteredEvents = await fetchEventsFromPerformanceLog(driver);
+    const perfLogEvents = (await fetchEventsFromPerformanceLog(driver));
+    let filteredEvents = perfLogEvents.timingResults;
+    let protocolResults = perfLogEvents.protocolResults;
+
+    await runLighthouse(protocolResults);
 
     if (config.LOG_DEBUG) console.log("filteredEvents ", asString(filteredEvents));
 
@@ -135,7 +234,7 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
 async function computeResultsMEM(driver: WebDriver): Promise<number[]> {
     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
-    let filteredEvents = await fetchEventsFromPerformanceLog(driver);
+    let filteredEvents = (await fetchEventsFromPerformanceLog(driver)).timingResults;
     
     if (config.LOG_DEBUG) console.log("filteredEvents ", filteredEvents);
 
@@ -172,7 +271,7 @@ async function computeResultsStartup(driver: WebDriver): Promise<number> {
     if (config.STARTUP_DURATION_FROM_EVENTLOG) {
         let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
         if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
-        let filteredEvents = await fetchEventsFromPerformanceLog(driver);
+        let filteredEvents = (await fetchEventsFromPerformanceLog(driver)).timingResults;
 
         if (config.LOG_DEBUG) console.log("filteredEvents ", filteredEvents);
 
@@ -243,7 +342,11 @@ function buildDriver() {
     options = options.addArguments("--window-size=1200,800")
     if (args.chromeBinary) options = options.setChromeBinaryPath(args.chromeBinary);
     options = options.setLoggingPrefs(logPref);
-    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline, disabled-by-default-devtools.timeline,blink.user_timing"});
+
+    options = options.setPerfLoggingPrefs(<any>{
+        enableNetwork: true, enablePage: true, enableTimeline: false,
+        traceCategories: lighthouse.traceCategories.join(", ")
+    });
 
     // Do the following lines really cause https://github.com/krausest/js-framework-benchmark/issues/303 ?
     // let service = new chrome.ServiceBuilder(args.chromeDriver).build();
@@ -340,6 +443,8 @@ async function takeScreenshotOnError(driver: WebDriver, fileName: string, error:
     fs.writeFileSync(fileName, image, {encoding: 'base64'});
 }
 
+const wait = (delay = 1000) => new Promise(res => setTimeout(res, delay));
+
 async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, dir: string) {
         console.log("benchmarking ", framework, benchmark.id);
         let driver = buildDriver();
@@ -355,6 +460,7 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
                 await driver.executeScript("console.timeStamp('finishedBenchmark')");
                 await afterBenchmark(driver, benchmark, framework);
                 await driver.executeScript("console.timeStamp('afterBenchmark')");
+                await wait(5000);
             } catch (e) {
                 await takeScreenshotOnError(driver, 'error-'+framework.name+'-'+benchmark.id+'.png', e);
                 throw e;
