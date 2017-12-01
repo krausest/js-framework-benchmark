@@ -236,10 +236,16 @@ function buildDriver() {
     }
     options = options.addArguments("--js-flags=--expose-gc");
     options = options.addArguments("--no-sandbox");
+    options = options.addArguments("--no-first-run");
+    options = options.addArguments("--enable-automation");
     options = options.addArguments("--disable-infobars");
     options = options.addArguments("--disable-background-networking");
+    options = options.addArguments("--disable-background-timer-throttling");
     options = options.addArguments("--disable-cache");
+    options = options.addArguments("--disable-translate");
+    options = options.addArguments("--disable-sync");
     options = options.addArguments("--disable-extensions");    
+    options = options.addArguments("--disable-default-apps");
     options = options.addArguments("--window-size=1200,800")
     if (args.chromeBinary) options = options.setChromeBinaryPath(args.chromeBinary);
     options = options.setLoggingPrefs(logPref);
