@@ -4,7 +4,6 @@ import {BenchmarkType, Benchmark, benchmarks, fileName, LighthouseData} from './
 import {setUseShadowRoot} from './webdriverAccess'
 
 const lighthouse = require('lighthouse');
-const columnify = require('columnify');
 
 import {lhConfig} from './lighthouseConfig';
 import * as fs from 'fs';

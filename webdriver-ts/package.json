@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "chromedriver": "2.33.2",
-    "columnify": "^1.5.4",
     "dot": "1.1.2",
     "jstat": "1.7.1",
     "lighthouse": "^2.6.0",
