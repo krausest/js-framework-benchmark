@@ -1,6 +1,5 @@
 *~
 reflex-platform
-!dist
-dist/*.webapp
-dist/*.stats
+*.webapp
+*.stats
 

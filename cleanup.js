@@ -6,7 +6,7 @@ const path = require('path');
 
 var installCommand = 'npm install';
 
-var excludedDirectories = ['css', 'dist','node_modules','webdriver-java', 'reflex-dom-v0.4-keyed'];
+var excludedDirectories = ['css', 'dist','node_modules','webdriver-java'];
 
 function rmIfExists(base, name) {
 	let dir = path.join(base, name);
