@@ -14,7 +14,7 @@ let resultJS = "export let results=[";
 let allBenchmarks : BenchmarkInfo[] = [];
 
 benchmarks.forEach((benchmark, bIdx) => {
-    let r = benchmark.results || [benchmark];
+    let r = benchmark.resultKinds ? benchmark.resultKinds() : [benchmark];
     r.forEach((benchmarkInfo) => {
         allBenchmarks.push(benchmarkInfo);
     });

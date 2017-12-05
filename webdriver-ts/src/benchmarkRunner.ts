@@ -322,30 +322,28 @@ interface Result<T> {
 
 function writeResult<T>(res: Result<T>, dir: string) {
     let benchmark = res.benchmark;
-        let framework = res.framework.name;
+    let framework = res.framework.name;
 
-        let benchmarkResults = res.benchmark.extractResults(res.results);
-        for (let singleResult of benchmarkResults) {
-            let data = singleResult.results;
-            console.log("singleResult.benchmarkInfo ",singleResult.benchmarkInfo)
-            data = data.slice(0).sort((a:number,b:number) => a-b);
-            // data = data.slice(0, config.REPEAT_RUN - config.DROP_WORST_RUN);
-            let s = jStat(data);
-            console.log(`result ${fileName(res.framework, singleResult.benchmarkInfo)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
-            let result: JSONResult = {
-                "framework": framework,
-                "benchmark": singleResult.benchmarkInfo.id,
-                "type": benchmark.type === BenchmarkType.CPU ? "cpu" : "memory",
-                "min": s.min(),
-                "max": s.max(),
-                "mean": s.mean(),
-                "median": s.median(),
-                "geometricMean": s.geomean(),
-                "standardDeviation": s.stdev(),
-                "values": data
-            }
-            fs.writeFileSync(`${dir}/${fileName(res.framework, singleResult.benchmarkInfo)}`, JSON.stringify(result), {encoding: "utf8"});    
+    for (let resultKind of benchmark.resultKinds()) {
+        let data = benchmark.extractResult(res.results, resultKind);
+        data = data.slice(0).sort((a:number,b:number) => a-b);
+        // data = data.slice(0, config.REPEAT_RUN - config.DROP_WORST_RUN);
+        let s = jStat(data);
+        console.log(`result ${fileName(res.framework, resultKind)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
+        let result: JSONResult = {
+            "framework": framework,
+            "benchmark": resultKind.id,
+            "type": benchmark.type === BenchmarkType.CPU ? "cpu" : "memory",
+            "min": s.min(),
+            "max": s.max(),
+            "mean": s.mean(),
+            "median": s.median(),
+            "geometricMean": s.geomean(),
+            "standardDeviation": s.stdev(),
+            "values": data
         }
+        fs.writeFileSync(`${dir}/${fileName(res.framework, resultKind)}`, JSON.stringify(result), {encoding: "utf8"});    
+    }
 }
 
 async function takeScreenshotOnError(driver: WebDriver, fileName: string, error: string) {
