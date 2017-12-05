@@ -29,7 +29,7 @@ export abstract class Benchmark {
     after(driver: WebDriver, framework: FrameworkData): Promise<any> { return null; }
     // Good fit for a single result creating Benchmark
     resultKinds(): Array<BenchmarkInfo> { return [this.benchmarkInfo]; }
-    extractResult(results: any[], resultType: BenchmarkInfo): number[] { return results; };
+    extractResult(results: any[], resultKind: BenchmarkInfo): number[] { return results; };
 }
 
 export interface LighthouseData {
