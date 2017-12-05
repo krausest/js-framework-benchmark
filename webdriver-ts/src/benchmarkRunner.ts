@@ -327,6 +327,7 @@ function writeResult<T>(res: Result<T>, dir: string) {
         let benchmarkResults = res.benchmark.extractResults(res.results);
         for (let singleResult of benchmarkResults) {
             let data = singleResult.results;
+            console.log("singleResult.benchmarkInfo ",singleResult.benchmarkInfo)
             data = data.slice(0).sort((a:number,b:number) => a-b);
             // data = data.slice(0, config.REPEAT_RUN - config.DROP_WORST_RUN);
             let s = jStat(data);
