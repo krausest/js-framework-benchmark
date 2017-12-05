@@ -53,7 +53,7 @@ const benchRun: Benchmark= {
         await clickElementById(driver,"add");
         await testElementLocatedByXpath(driver,"//tbody/tr[1000]/td[2]/a");
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo: this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo: benchRun, results: results}]; },
     results: null
 }
 
@@ -72,7 +72,7 @@ const benchReplaceAll: Benchmark= {
         await clickElementById(driver,'run');
         await testTextContains(driver,'//tbody/tr[1]/td[1]','5001');
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchReplaceAll, results: results}]; },
     results: null
 }
 
@@ -92,7 +92,7 @@ const benchUpdate: Benchmark= {
             await clickElementById(driver,'update');
             await testTextContains(driver,'//tbody/tr[1]/td[2]/a', ' !!!'.repeat(config.WARMUP_COUNT+1));
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchUpdate, results: results}]; },
     results: null
 }
 
@@ -113,7 +113,7 @@ const benchSelect: Benchmark= {
         await clickElementByXPath(driver,"//tbody/tr[2]/td[2]/a");
         await testClassContains(driver,"//tbody/tr[2]", "danger");
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchSelect, results: results}]; },
     results: null
 }
 
@@ -137,7 +137,7 @@ const benchSwapRows: Benchmark= {
         await clickElementById(driver,'swaprows');
         await testTextContains(driver,"//tbody/tr[999]/td[2]/a", text);
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchSwapRows, results: results}]; },
     results: null
 }
 
@@ -162,7 +162,7 @@ const benchRemove: Benchmark= {
         await clickElementByXPath(driver, "//tbody/tr[4]/td[3]/a/span[1]");
         await testTextContains(driver, '//tbody/tr[4]/td[1]', '10');
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchRemove, results: results}]; },
     results: null
 }
 
@@ -178,7 +178,7 @@ const benchRunBig: Benchmark= {
         await clickElementById(driver, 'runlots');
         await testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a");
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchRunBig, results: results}]; },
     results: null
 }
 
@@ -196,7 +196,7 @@ const benchAppendToManyRows: Benchmark= {
         await clickElementById(driver, 'add');
         await testElementLocatedByXpath(driver, "//tbody/tr[11000]/td[2]/a");
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchAppendToManyRows, results: results}]; },
     results: null
 }
 
@@ -214,7 +214,7 @@ const benchClear: Benchmark= {
         await clickElementById(driver, 'clear');
         await testElementNotLocatedByXPath(driver, "//tbody/tr[1]");
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchClear, results: results}]; },
     results: null
 }
 
@@ -233,7 +233,7 @@ const benchReadyMemory: Benchmark= {
         await clickElementById(driver, 'run');
         await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchReadyMemory, results: results}]; },
     results: null
 }
 
@@ -249,7 +249,7 @@ const benchRunMemory: Benchmark= {
         await clickElementById(driver, 'run');
         await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchRunMemory, results: results}]; },
     results: null
 }
 
@@ -268,7 +268,7 @@ const benchUpdate5Memory: Benchmark= {
             await testTextContains(driver,'//tbody/tr[1]/td[2]/a', ' !!!'.repeat(i));
         }
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchUpdate5Memory, results: results}]; },
     results: null
 }
 
@@ -286,7 +286,7 @@ const benchReplace5Memory: Benchmark= {
             await testTextContains(driver, "//tbody/tr[1000]/td[1]", (1000*(i+1)).toFixed());
         }
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchReplace5Memory, results: results}]; },
     results: null
 }
 
@@ -306,7 +306,7 @@ const benchCreateClear5Memory: Benchmark= {
             await testElementNotLocatedByXPath(driver, "//tbody/tr[1000]/td[1]");
         }
     },
-    extractResults: (results: number[]) => { return [{benchmarkInfo:this, results: results}]; },
+    extractResults: (results: number[]) => { return [{benchmarkInfo:benchCreateClear5Memory, results: results}]; },
     results: null
 }
 
