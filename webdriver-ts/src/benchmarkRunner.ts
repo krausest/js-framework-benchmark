@@ -1,6 +1,6 @@
 import * as chrome from 'selenium-webdriver/chrome'
 import {Builder, WebDriver, promise, logging} from 'selenium-webdriver'
-import {BenchmarkType, Benchmark, benchmarks, fileName} from './benchmarks'
+import {BenchmarkType, Benchmark, benchmarks, fileName, LighthouseData} from './benchmarks'
 import {setUseShadowRoot} from './webdriverAccess'
 
 const lighthouse = require('lighthouse');
@@ -86,7 +86,7 @@ function asString(res: Timingresult[]): string {
     return res.reduce((old, cur) => old + "\n" + JSON.stringify(cur), "");
 }
 
-async function runLighthouse(protocolResults: any[]): Promise<any> {
+async function runLighthouse(protocolResults: any[]): Promise<LighthouseData> {
     const traceEvents = protocolResults.filter(e => e.method === 'Tracing.dataCollected').map(e => e.params);
     const devtoolsLogs = protocolResults.filter(e => e.method.startsWith('Page') || e.method.startsWith('Network'));
 
@@ -104,68 +104,19 @@ async function runLighthouse(protocolResults: any[]): Promise<any> {
     fs.unlinkSync(devtoolslogsFilename);
 
     const audits = lhResults.audits;
-    const metricResults = [
-        {
-            title: '=================',
-            value: `======`
-        },
-        {
-            title: 'First Contentful Paint',
-            value: `${audits['first-meaningful-paint'].extendedInfo.value.timings.fCP.toLocaleString()} ms`
-        },
-        {
-            title: 'First Meaningful Paint',
-            value: `${audits['first-meaningful-paint'].extendedInfo.value.timings.fMP.toLocaleString()} ms`
-        },
-        {
-            title: 'Onload',
-            value: `${audits['first-meaningful-paint'].extendedInfo.value.timings.onLoad.toLocaleString()} ms`
-        },
-        {
-            title: 'First Interactive',
-            value: `${audits['first-interactive'].extendedInfo.value.timeInMs.toLocaleString()} ms`
-        },
-        {
-            title: 'Time to Consistently Interactive',
-            value: `${audits['consistently-interactive'].extendedInfo.value.timeInMs.toLocaleString()} ms`
-        },
-        {
-            title: '------------------',
-            value: `------`
-        },
-        {
-            title: 'Script boot-up time',
-            value: `${audits['bootup-time'].rawValue.toLocaleString()} ms`
-        },
-        {
-            title: 'Main thread work cost',
-            value: `${audits['mainthread-work-breakdown'].rawValue.toLocaleString()} ms`
-        },
-        {
-            title: 'Estimated Input Latency (main thread busyness)',
-            value: `${audits['estimated-input-latency'].rawValue.toLocaleString()} ms`
-        },
-        {
-            title: '------------------',
-            value: `------`
-        },
-        {
-            title: 'Total byte weight',
-            value: `${audits['total-byte-weight'].rawValue.toLocaleString()} kB`
-        },
-        {
-            title: '=================',
-            value: `======`
-        },
-    ];
+    let LighthouseData: LighthouseData = {
+        FirstContentfulPaint: audits['first-meaningful-paint'].extendedInfo.value.timings.fCP,
+        FirstMeaningfulPaint: audits['first-meaningful-paint'].extendedInfo.value.timings.fMP,
+        Onload: audits['first-meaningful-paint'].extendedInfo.value.timings.onLoad,
+        FirstInteractive: audits['first-interactive'].extendedInfo.value.timeInMs,
+        TimeToConsistentlyInteractive: audits['consistently-interactive'].extendedInfo.value.timeInMs,
+        ScriptBootUpTtime: audits['bootup-time'].rawValue,
+        MainThreadWorkCost: audits['mainthread-work-breakdown'].rawValue,
+        EstimatedInputLatency: audits['estimated-input-latency'].rawValue,
+        TotalByteWeight: audits['total-byte-weight'].rawValue,
+    };
 
-    console.log(
-        'load metrics from lighthouse:\n',
-        columnify(metricResults, {
-            columns: ['value', 'title'],
-            config: {value: {align: 'right'}}
-        })
-    );
+    return LighthouseData;
 }
 
 async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
@@ -173,10 +124,7 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
     const perfLogEvents = (await fetchEventsFromPerformanceLog(driver));
     let filteredEvents = perfLogEvents.timingResults;
-    let protocolResults = perfLogEvents.protocolResults;
-
-    await runLighthouse(protocolResults);
-
+    
     if (config.LOG_DEBUG) console.log("filteredEvents ", asString(filteredEvents));
 
     let remaining  = R.dropWhile(type_eq('initBenchmark'))(filteredEvents);
@@ -263,64 +211,18 @@ async function computeResultsMEM(driver: WebDriver): Promise<number[]> {
     return results;
 }
 
-async function computeResultsStartup(driver: WebDriver): Promise<number> {
+async function computeResultsStartup(driver: WebDriver): Promise<LighthouseData> {
     let durationJSArr : number[] = await driver.executeScript("return [window.performance.timing.loadEventEnd, window.performance.timing.navigationStart]") as number[];
     let durationJS = (durationJSArr[0] as number) - (durationJSArr[1] as number);
     let reportedDuration = durationJS;
     
-    if (config.STARTUP_DURATION_FROM_EVENTLOG) {
-        let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
-        if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
-        let filteredEvents = (await fetchEventsFromPerformanceLog(driver)).timingResults;
+    let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
+    if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
 
-        if (config.LOG_DEBUG) console.log("filteredEvents ", filteredEvents);
-
-        let eventsDuringBenchmark  = 
-            R.pipe(
-                R.dropWhile(type_neq('runBenchmark')),
-                R.takeWhile(type_neq('finishedBenchmark'))   
-            )(filteredEvents);
-
-        if (config.LOG_DEBUG) console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
-                
-        let navigationStarts = R.filter(type_eq('navigationStart'))(eventsDuringBenchmark)
-        if (navigationStarts.length !== 1) {
-            console.log("exactly one navigationStart event is expected", eventsDuringBenchmark); 
-            throw "exactly one navigationStart event is expected";
-        }
-
-        let eventsAfterNavigationStart = (R.dropWhile(type_neq('navigationStart'))(eventsDuringBenchmark));
-
-        if (config.LOG_DEBUG) console.log("eventsAfterNavigationStart", eventsAfterNavigationStart);
-
-        let paints = R.filter(type_eq('paint'))(eventsAfterNavigationStart);
-        if (paints.length == 0) {
-            console.log("at least one paint event is expected after the navigationStart event", asString(filteredEvents)); 
-            throw "at least one paint event is expected after the navigationStart event";
-        }
-        let lastPaint = R.last(paints);
-
-        let upperBoundForSoundnessCheck = (lastPaint.end - eventsDuringBenchmark[0].ts)/1000.0;
-        let duration = (lastPaint.end - navigationStarts[0].ts)/1000.0;
-
-        console.log("*** duration", duration, "upper bound ", upperBoundForSoundnessCheck,"durationJS", durationJS);            
-
-        if (duration<0) {
-            console.log("soundness check failed. reported duration is less 0", asString(eventsDuringBenchmark));
-            throw "soundness check failed. reported duration is less 0";                    
-        }
-
-        if (duration > upperBoundForSoundnessCheck) {
-            console.log("soundness check failed. reported duration is bigger than whole benchmark duration", asString(eventsDuringBenchmark));
-            throw "soundness check failed. reported duration is bigger than whole benchmark duration";
-        }
-
-        if (Math.abs(duration - durationJS) > 5) {
-            console.log("WARN: soundness check failed. reported duration is much bigger than JS comparison", asString(eventsDuringBenchmark));
-        }
-        reportedDuration = duration;
-    }
-    return reportedDuration;
+    const perfLogEvents = (await fetchEventsFromPerformanceLog(driver));
+    let filteredEvents = perfLogEvents.timingResults;
+    let protocolResults = perfLogEvents.protocolResults;
+    return runLighthouse(protocolResults);
 }
 
 function buildDriver() {
@@ -413,33 +315,37 @@ async function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework:
     }
 }
 
-interface Result {
+interface Result<T> {
     framework: FrameworkData;
-    results: number[];
+    results: T[];
     benchmark: Benchmark    
 }
 
-function writeResult(res: Result, dir: string) {
+function writeResult<T>(res: Result<T>, dir: string) {
     let benchmark = res.benchmark;
         let framework = res.framework.name;
-        let data = res.results;
-        data = data.slice(0).sort((a:number,b:number) => a-b);
-        // data = data.slice(0, config.REPEAT_RUN - config.DROP_WORST_RUN);
-        let s = jStat(data);
-        console.log(`result ${fileName(res.framework, benchmark)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
-        let result: JSONResult = {
-            "framework": framework,
-            "benchmark": benchmark.id,
-            "type": benchmark.type === BenchmarkType.CPU ? "cpu" : "memory",
-            "min": s.min(),
-            "max": s.max(),
-            "mean": s.mean(),
-            "median": s.median(),
-            "geometricMean": s.geomean(),
-            "standardDeviation": s.stdev(),
-            "values": res.results
+
+        let benchmarkResults = res.benchmark.extractResults(res.results);
+        for (let singleResult of benchmarkResults) {
+            let data = singleResult.results;
+            data = data.slice(0).sort((a:number,b:number) => a-b);
+            // data = data.slice(0, config.REPEAT_RUN - config.DROP_WORST_RUN);
+            let s = jStat(data);
+            console.log(`result ${fileName(res.framework, singleResult.benchmarkInfo)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
+            let result: JSONResult = {
+                "framework": framework,
+                "benchmark": singleResult.benchmarkInfo.id,
+                "type": benchmark.type === BenchmarkType.CPU ? "cpu" : "memory",
+                "min": s.min(),
+                "max": s.max(),
+                "mean": s.mean(),
+                "median": s.median(),
+                "geometricMean": s.geomean(),
+                "standardDeviation": s.stdev(),
+                "values": data
+            }
+            fs.writeFileSync(`${dir}/${fileName(res.framework, singleResult.benchmarkInfo)}`, JSON.stringify(result), {encoding: "utf8"});    
         }
-        fs.writeFileSync(`${dir}/${fileName(res.framework, benchmark)}`, JSON.stringify(result), {encoding: "utf8"});
 }
 
 async function takeScreenshotOnError(driver: WebDriver, fileName: string, error: string) {
@@ -466,7 +372,6 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
                 await driver.executeScript("console.timeStamp('finishedBenchmark')");
                 await afterBenchmark(driver, benchmark, framework);
                 await driver.executeScript("console.timeStamp('afterBenchmark')");
-                await wait(5000);
             } catch (e) {
                 await takeScreenshotOnError(driver, 'error-'+framework.name+'-'+benchmark.id+'.png', e);
                 throw e;
@@ -486,7 +391,7 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
 
 async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmark, dir: string) {
     console.log("benchmarking startup", framework, benchmark.id);
-    let results : number[] = [];
+    let results : LighthouseData[] = [];
     let chromeDuration = 0;
     try {
         for (let i = 0; i<config.REPEAT_RUN; i++) {
@@ -500,6 +405,7 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
                 await driver.executeScript("console.timeStamp('finishedBenchmark')");
                 await afterBenchmark(driver, benchmark, framework);
                 await driver.executeScript("console.timeStamp('afterBenchmark')");
+                await wait(5000);
                 results.push(await computeResultsStartup(driver));
             } catch (e) {
                 await takeScreenshotOnError(driver, 'error-'+framework.name+'-'+benchmark.id+'.png', e);
@@ -525,7 +431,7 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
     let data : [[FrameworkData, Benchmark]] = <any>[];
     for (let i=0;i<runFrameworks.length;i++) {
        for (let j=0;j<runBenchmarks.length;j++) {
-           data.push( [runFrameworks[i], runBenchmarks[j]] );
+            data.push( [runFrameworks[i], runBenchmarks[j]] );
        }
     }
 
