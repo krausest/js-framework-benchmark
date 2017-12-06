@@ -38,6 +38,31 @@ const CpuResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData
         </div>);
 };
 
+const StartupResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void}) => {
+  return data.resultsStartup.length==0 ? null :
+        (<div>
+          <h3>Startup metrics</h3>
+          <table className='results'>
+            <thead>
+              <tr>
+                <th className='benchname'><a href='#' className={currentSortKey==SORT_BY_NAME ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_NAME)}}>Name</a></th>
+                {data.frameworks.map(f => <th key={f.name}>{f.name}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {data.resultsStartup.map((resultsForBenchmark, benchIdx) => 
+                (<tr key={data.benchmarksStartup[benchIdx].id}>
+                    <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksStartup[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksStartup[benchIdx].id)}}>{data.benchmarksStartup[benchIdx].label}</a>
+                      <div className="rowCount">{data.benchmarksStartup[benchIdx].description}</div>
+                    </th>
+                    {resultsForBenchmark.map(result => result == null ? <td></td> : result.render())}
+                </tr>
+              ))}                      
+            </tbody>
+          </table>
+        </div>);                
+};
+
 const MemResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void}) => {
   return data.resultsMEM.length==0 ? null :
         (<div>
@@ -80,11 +105,12 @@ export class ResultTable extends React.Component<Props, {}> {
       return (
         <div>
           { this.props.data.map((data, idx) => {
-            return ( data.frameworks.length===0 || data.benchmarksCPU.length==0 && data.benchmarksMEM.length==0 ? null : 
+            return ( data.frameworks.length===0 || data.benchmarksCPU.length==0 && data.benchmarksStartup.length==0 && data.benchmarksMEM.length==0 ? null : 
               <div key={texts[idx].label}>
                 <h1>{texts[idx].label}</h1>
                 <p>{texts[idx].description}</p>
                 <CpuResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data}/>
+                <StartupResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data}/>
                 <MemResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data}/>
               </div>
             )})}

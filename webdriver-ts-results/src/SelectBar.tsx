@@ -10,6 +10,7 @@ export interface Props {
   frameworkSelectKeyed: DropdownCallback<Framework>;
   frameworkSelectNonKeyed: DropdownCallback<Framework>;
   benchSelectCpu: DropdownCallback<Benchmark>;
+  benchSelectStartup: DropdownCallback<Benchmark>;
   benchSelectMem: DropdownCallback<Benchmark>;
   selectFramework: (framework: Framework, value: boolean) => void;
   selectBenchmark: (benchmark: Benchmark, value: boolean) => void;
@@ -18,6 +19,7 @@ export interface Props {
   frameworksKeyed: Array<Framework>;
   frameworksNonKeyed: Array<Framework>;
   benchmarksCPU: Array<Benchmark>;
+  benchmarksStartup: Array<Benchmark>;
   benchmarksMEM: Array<Benchmark>;
   compareWith: Framework | undefined;
   selectComparison: (framework: string) => void;
@@ -25,11 +27,24 @@ export interface Props {
   selectMedian: (value: boolean) => void;
 }
 
+const SelectCategory = ({benchmarks, select, benchSelect, label} :
+            {benchmarks: Array<Benchmark>, select: (benchmark: Benchmark, value: boolean) => void, benchSelect: DropdownCallback<Benchmark>, label: string} ) => {
+        return (<DropDownContents {...benchSelect}>
+            <h3>{label}</h3>
+            <div>
+            <SelectBarBenchmarks isSelected={benchSelect.isSelected} select={select} benchmarks={benchmarks} />
+            </div>
+        </DropDownContents>);
+}
+
+
+
 export class SelectBar extends React.Component<Props, {}> {
     render() {
     let   {frameworkSelectKeyed,
           frameworkSelectNonKeyed,
           benchSelectCpu,
+          benchSelectStartup,
           benchSelectMem,
           selectFramework,
           selectBenchmark,
@@ -38,6 +53,7 @@ export class SelectBar extends React.Component<Props, {}> {
           frameworksKeyed,
           frameworksNonKeyed,
           benchmarksCPU,
+          benchmarksStartup,
           benchmarksMEM,
           compareWith,
           selectComparison,
@@ -63,18 +79,9 @@ export class SelectBar extends React.Component<Props, {}> {
               </DropDown>
               <div className="hspan"/>
               <DropDown label="Which benchmarks?" width='300px'>
-                <DropDownContents {...benchSelectCpu}>
-                  <h3>Time:</h3>
-                  <div>
-                    <SelectBarBenchmarks isSelected={benchSelectCpu.isSelected} select={selectBenchmark} benchmarks={benchmarksCPU} />
-                  </div>
-                </DropDownContents>
-                <DropDownContents {...benchSelectMem}>
-                  <h3>Memory:</h3>
-                  <div>
-                    <SelectBarBenchmarks isSelected={benchSelectMem.isSelected} select={selectBenchmark} benchmarks={benchmarksMEM} />
-                  </div>
-                </DropDownContents>
+                <SelectCategory benchmarks={benchmarksCPU} select={selectBenchmark} benchSelect={benchSelectCpu} label="Duration"/>
+                <SelectCategory benchmarks={benchmarksStartup} select={selectBenchmark} benchSelect={benchSelectStartup} label="Startup"/>
+                <SelectCategory benchmarks={benchmarksMEM} select={selectBenchmark} benchSelect={benchSelectMem} label="Memory"/>
               </DropDown>
               <div className="hspan"/>
               <div className="checkbox" style={{display:"inline-block"}}>
@@ -90,18 +97,10 @@ export class SelectBar extends React.Component<Props, {}> {
                     <select className="form-control" value={compareWith ? compareWith.name : ''} onChange={(evt) => selectComparison(evt.target.value)}>
                       <option value=''>Compare with ...</option>                        
                       <optgroup label="Keyed">
-                        {
-                          frameworksKeyed.map(f => 
-                              <option key={f.name} value={f.name}>{f.name}</option>                        
-                          )
-                        }
+                        { frameworksKeyed.map(f => <option key={f.name} value={f.name}>{f.name}</option>) }
                       </optgroup>
                       <optgroup label="Non-keyed">
-                        {
-                          frameworksNonKeyed.map(f => 
-                              <option key={f.name} value={f.name}>{f.name}</option>                        
-                          )
-                        }
+                        { frameworksNonKeyed.map(f => <option key={f.name} value={f.name}>{f.name}</option>) }
                       </optgroup>
                     </select>
                 </div>

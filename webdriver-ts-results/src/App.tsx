@@ -12,6 +12,7 @@ import "bootstrap/dist/css/bootstrap.css";
 interface State {
   benchmarks: Array<Benchmark>;
   benchmarksCPU: Array<Benchmark>;
+  benchmarksStartup: Array<Benchmark>;
   benchmarksMEM: Array<Benchmark>;
   frameworks: Array<Framework>;
   frameworksKeyed: Array<Framework>;
@@ -34,25 +35,25 @@ let _allFrameworks = allFrameworks();
 let resultLookup = convertToMap(results);
 
 class App extends React.Component<{}, State> {
-    benchSelect = (memBenchmarks: boolean) => ({
+    benchSelect = (benchmarkType: BenchmarkType) => ({
       selectAll: (event: React.SyntheticEvent<any>) => {    
         event.preventDefault();
         let set = this.state.selectedBenchmarks;
-        benchmarks.forEach(b => {if ((b.type === BenchmarkType.MEM) === memBenchmarks) set.add(b);});
+        benchmarks.forEach(b => {if (b.type === benchmarkType) set.add(b);});
         this.nextState.selectedBenchmarks = set;
         this.setState({selectedBenchmarks: set, resultTables: this.updateResultTable()});
       },
       selectNone: (event: React.SyntheticEvent<any>) => {    
         event.preventDefault();
         let set = this.state.selectedBenchmarks;
-        benchmarks.forEach(b => {if ((b.type === BenchmarkType.MEM) === memBenchmarks) set.delete(b);});
+        benchmarks.forEach(b => {if (b.type === benchmarkType) set.delete(b);});
         this.nextState.selectedBenchmarks = set;
         this.nextState.sortKey = SORT_BY_NAME;
         this.setState({selectedBenchmarks: set, sortKey: SORT_BY_NAME, resultTables: this.updateResultTable()});
       },
-      areAllSelected: () => benchmarks.filter(b => memBenchmarks ? b.type === BenchmarkType.MEM : b.type !== BenchmarkType.MEM)
+      areAllSelected: () => benchmarks.filter(b => b.type === benchmarkType)
                               .every(b => this.state.selectedBenchmarks.has(b)),
-      isNoneSelected: () => benchmarks.filter(b => memBenchmarks ? b.type === BenchmarkType.MEM : b.type !== BenchmarkType.MEM)
+      isNoneSelected: () => benchmarks.filter(b => b.type === benchmarkType)
                               .every(b => !this.state.selectedBenchmarks.has(b)),
       isSelected: (benchmark: Benchmark) => this.state.selectedBenchmarks.has(benchmark)
   })
@@ -75,8 +76,9 @@ class App extends React.Component<{}, State> {
       isNoneSelected: () => frameworks.filter(f => f.keyed===keyed).every(f => !this.state.selectedFrameworks.has(f)),
       isSelected: (framework: Framework) => this.state.selectedFrameworks.has(framework)
   });
-  benchSelectCpu = this.benchSelect(false);
-  benchSelectMem = this.benchSelect(true);
+  benchSelectCpu = this.benchSelect(BenchmarkType.CPU);
+  benchSelectStartup = this.benchSelect(BenchmarkType.STARTUP);
+  benchSelectMem = this.benchSelect(BenchmarkType.MEM);
   frameworkSelectKeyed = this.frameworkSelect(true);
   frameworkSelectNonKeyed = this.frameworkSelect(false);
   nextState: State;
@@ -84,7 +86,8 @@ class App extends React.Component<{}, State> {
   constructor(props: object) {
     super(props);
     this.nextState = {benchmarks, 
-                  benchmarksCPU: benchmarks.filter(b => b.type !== BenchmarkType.MEM),
+                  benchmarksCPU: benchmarks.filter(b => b.type === BenchmarkType.CPU),
+                  benchmarksStartup: benchmarks.filter(b => b.type === BenchmarkType.STARTUP),
                   benchmarksMEM: benchmarks.filter(b => b.type === BenchmarkType.MEM),
                   frameworks,
                   frameworksKeyed: frameworks.filter(f => f.keyed === true),
@@ -163,12 +166,14 @@ class App extends React.Component<{}, State> {
         {disclaimer}
         <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.13.1, Chrome 62.0.3202.94 (64-bit))</p>        
         <SelectBar  benchmarksCPU={this.state.benchmarksCPU} 
+                    benchmarksStartup={this.state.benchmarksStartup}
                     benchmarksMEM={this.state.benchmarksMEM} 
                     frameworksKeyed={this.state.frameworksKeyed} 
                     frameworksNonKeyed={this.state.frameworksNonKeyed} 
                     frameworkSelectKeyed={this.frameworkSelectKeyed}
                     frameworkSelectNonKeyed={this.frameworkSelectNonKeyed}
                     benchSelectCpu={this.benchSelectCpu}
+                    benchSelectStartup={this.benchSelectStartup}
                     benchSelectMem={this.benchSelectMem}
                     selectBenchmark={this.selectBenchmark}
                     selectFramework={this.selectFramework}
