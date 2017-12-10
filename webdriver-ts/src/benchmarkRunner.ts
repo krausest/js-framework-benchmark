@@ -362,7 +362,7 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
             for (let i = 0; i<config.REPEAT_RUN; i++) {
             try {
                 setUseShadowRoot(framework.useShadowRoot);
-                await driver.get(`http://localhost:8080/${framework.uri}/`);
+                await driver.get(`http://localhost:` + args.port + `/${framework.uri}/`);
                 await driver.executeScript("console.timeStamp('initBenchmark')");
                 await initBenchmark(driver, benchmark, framework);
                 await driver.executeScript("console.timeStamp('runBenchmark')");
@@ -450,6 +450,7 @@ let args = yargs(process.argv)
 .default('check','false')
 .default('exitOnError','false')
 .default('count', config.REPEAT_RUN)
+.default('port', config.PORT)
 .string('chromeBinary')
 .string('chromeDriver')
 .boolean('headless')
@@ -460,6 +461,7 @@ console.log(args);
 let runBenchmarks = args.benchmark && args.benchmark.length>0 ? args.benchmark : [""];
 let runFrameworks = args.framework && args.framework.length>0 ? args.framework : [""];
 let count = Number(args.count);
+let port = Number(args.port);
 
 config.REPEAT_RUN = count;
 
