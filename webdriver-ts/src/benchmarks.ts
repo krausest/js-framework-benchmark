@@ -33,14 +33,9 @@ export abstract class Benchmark {
 }
 
 export interface LighthouseData {
-    FirstContentfulPaint: number;
-    FirstMeaningfulPaint: number;
-    Onload: number;
-    FirstInteractive: number;
     TimeToConsistentlyInteractive: number;
     ScriptBootUpTtime: number;
     MainThreadWorkCost: number;
-    EstimatedInputLatency: number;
     TotalByteWeight: number;
     [propName: string]: number;
 }
@@ -344,38 +339,6 @@ const benchCreateClear5Memory = new class extends Benchmark {
     }
 }
 
-const benchStartupFcp: StartupBenchmarkResult = {
-    id: "30_startup-fcp",
-    label: "first contentful paint",
-    description: "",
-    type: BenchmarkType.STARTUP,
-    property: "FirstContentfulPaint"
-}
-
-const benchStartupFmp: StartupBenchmarkResult = {
-    id: "30_startup-fmp",
-    label: "first meaningful paint",
-    description: "The paint following the most significant layout during load.",
-    type: BenchmarkType.STARTUP,
-    property: "FirstMeaningfulPaint"
-}
-
-const benchStartupOnload: StartupBenchmarkResult = {
-    id: "30_startup-onload",
-    label: "onload",
-    description: "Page onload",
-    type: BenchmarkType.STARTUP,
-    property: "Onload"
-}
-
-const benchStartupFirstInteractive: StartupBenchmarkResult = {
-    id: "30_startup-fi",
-    label: "first interactive",
-    description: "an optimistic TTI - the first moment the main thread stays idle for a little bit.",
-    type: BenchmarkType.STARTUP,
-    property: "FirstInteractive"
-}
-
 const benchStartupConsistentlyInteractive: StartupBenchmarkResult = {
     id: "30_startup-ci",
     label: "consistently interactive",
@@ -398,14 +361,6 @@ const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
     description: "total amount of time spent doing work on the main thread. includes style/layout/etc.",
     type: BenchmarkType.STARTUP,
     property: "MainThreadWorkCost"
-}
-
-const benchStartupEstimatedInputLatency: StartupBenchmarkResult = {
-    id: "30_startup-eil",
-    label: "estimated input latency",
-    description: "kind of represents how slammed the main thread was. higher numbers are bad.",
-    type: BenchmarkType.STARTUP,
-    property: "EstimatedInputLatency"
 }
 
 const benchStartupTotalBytes: StartupBenchmarkResult = {
@@ -436,14 +391,9 @@ class BenchStartup extends Benchmark {
     }
     resultKinds() {
         return [
-            benchStartupFcp,
-            benchStartupFmp,
-            benchStartupOnload,
-            benchStartupFirstInteractive,
             benchStartupConsistentlyInteractive,
             benchStartupBootup,
             benchStartupMainThreadWorkCost,
-            benchStartupEstimatedInputLatency,
             benchStartupTotalBytes,
         ];
     }
