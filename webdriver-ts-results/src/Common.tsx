@@ -236,7 +236,7 @@ export class ResultTableData {
             if (result === null) return null;
             else {
                 let mean = this.useMedian ? result.median : result.mean;
-                let factor = clamp ? Math.max(16, mean) / Math.max(16, min) : mean/min;
+                let factor = clamp && (mean - min < 16.667/2) ? 1 : mean/min;
                 let standardDeviation = result.standardDeviation;
 
                 let statisticalResult = undefined;
