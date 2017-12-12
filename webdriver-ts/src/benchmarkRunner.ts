@@ -7,7 +7,7 @@ const lighthouse = require('lighthouse');
 
 import {lhConfig} from './lighthouseConfig';
 import * as fs from 'fs';
-import * as yargs from 'yargs'; 
+import * as yargs from 'yargs';
 import {JSONResult, config, FrameworkData, frameworks} from './common'
 import * as R from 'ramda';
 var chromedriver:any = require('chromedriver');
@@ -39,7 +39,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
             if (e.params.args.data.type==="click") {
                 filteredEvents.push({type:'click', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur});
             }
-        } else if (e.params.name==='TimeStamp' && 
+        } else if (e.params.name==='TimeStamp' &&
             (e.params.args.data.message==='afterBenchmark' || e.params.args.data.message==='finishedBenchmark' || e.params.args.data.message==='runBenchmark' || e.params.args.data.message==='initBenchmark')) {
             filteredEvents.push({type: e.params.args.data.message, ts: +e.params.ts, dur: 0, end: +e.params.ts});
         } else if (e.params.name==='navigationStart') {
@@ -104,14 +104,9 @@ async function runLighthouse(protocolResults: any[]): Promise<LighthouseData> {
 
     const audits = lhResults.audits;
     let LighthouseData: LighthouseData = {
-        FirstContentfulPaint: audits['first-meaningful-paint'].extendedInfo.value.timings.fCP,
-        FirstMeaningfulPaint: audits['first-meaningful-paint'].extendedInfo.value.timings.fMP,
-        Onload: audits['first-meaningful-paint'].extendedInfo.value.timings.onLoad,
-        FirstInteractive: audits['first-interactive'].extendedInfo.value.timeInMs,
         TimeToConsistentlyInteractive: audits['consistently-interactive'].extendedInfo.value.timeInMs,
         ScriptBootUpTtime: audits['bootup-time'].rawValue,
         MainThreadWorkCost: audits['mainthread-work-breakdown'].rawValue,
-        EstimatedInputLatency: audits['estimated-input-latency'].rawValue,
         TotalByteWeight: audits['total-byte-weight'].rawValue,
     };
 
@@ -123,22 +118,22 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
     const perfLogEvents = (await fetchEventsFromPerformanceLog(driver));
     let filteredEvents = perfLogEvents.timingResults;
-    
+
     if (config.LOG_DEBUG) console.log("filteredEvents ", asString(filteredEvents));
 
     let remaining  = R.dropWhile(type_eq('initBenchmark'))(filteredEvents);
     let results = [];
 
     while (remaining.length >0) {
-        let evts = R.splitWhen(type_eq('finishedBenchmark'))(remaining);            
+        let evts = R.splitWhen(type_eq('finishedBenchmark'))(remaining);
         if (R.find(type_neq('runBenchmark'))(evts[0]) && evts[1].length>0) {
             let eventsDuringBenchmark = R.dropWhile(type_neq('runBenchmark'))(evts[0]);
 
             if (config.LOG_DEBUG) console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
-            
+
             let clicks = R.filter(type_eq('click'))(eventsDuringBenchmark)
             if (clicks.length !== 1) {
-                console.log("exactly one click event is expected", eventsDuringBenchmark); 
+                console.log("exactly one click event is expected", eventsDuringBenchmark);
                 throw "exactly one click event is expected";
             }
 
@@ -148,7 +143,7 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
 
             let paints = R.filter(type_eq('paint'))(eventsAfterClick);
             if (paints.length == 0) {
-                console.log("at least one paint event is expected after the click event", eventsAfterClick); 
+                console.log("at least one paint event is expected after the click event", eventsAfterClick);
                 throw "at least one paint event is expected after the click event";
             }
 
@@ -160,7 +155,7 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
             console.log("*** duration", duration, "upper bound ", upperBoundForSoundnessCheck);
             if (duration<0) {
                 console.log("soundness check failed. reported duration is less 0", asString(eventsDuringBenchmark));
-                throw "soundness check failed. reported duration is less 0";                    
+                throw "soundness check failed. reported duration is less 0";
             }
 
             if (duration > upperBoundForSoundnessCheck) {
@@ -173,7 +168,7 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
     }
     if (results.length !== config.REPEAT_RUN) {
         console.log(`soundness check failed. number or results isn't ${config.REPEAT_RUN}`, results, asString(filteredEvents));
-        throw `soundness check failed. number or results isn't ${config.REPEAT_RUN}`;    
+        throw `soundness check failed. number or results isn't ${config.REPEAT_RUN}`;
     }
     return results;
 }
@@ -182,30 +177,30 @@ async function computeResultsMEM(driver: WebDriver): Promise<number[]> {
     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
     let filteredEvents = (await fetchEventsFromPerformanceLog(driver)).timingResults;
-    
+
     if (config.LOG_DEBUG) console.log("filteredEvents ", filteredEvents);
 
     let remaining  = R.dropWhile(type_eq('initBenchmark'))(filteredEvents);
     let results = [];
 
     while (remaining.length >0) {
-        let evts = R.splitWhen(type_eq('finishedBenchmark'))(remaining);            
+        let evts = R.splitWhen(type_eq('finishedBenchmark'))(remaining);
         if (R.find(type_neq('runBenchmark'))(evts[0]) && evts[1].length>0) {
             let eventsDuringBenchmark = R.dropWhile(type_neq('runBenchmark'))(evts[0]);
 
             if (config.LOG_DEBUG) console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
-            
+
             let gcs = R.filter(type_eq('gc'))(eventsDuringBenchmark);
-            
+
             let mem = R.last(gcs).mem;
-            console.log("*** memory", mem);            
+            console.log("*** memory", mem);
             results.push(mem);
         }
         remaining = R.drop(1, evts[1]);
     }
     if (results.length !== config.REPEAT_RUN) {
         console.log(`soundness check failed. number or results isn't ${config.REPEAT_RUN}`, results, asString(filteredEvents));
-        throw `soundness check failed. number or results isn't ${config.REPEAT_RUN}`;    
+        throw `soundness check failed. number or results isn't ${config.REPEAT_RUN}`;
     }
     return results;
 }
@@ -214,7 +209,7 @@ async function computeResultsStartup(driver: WebDriver): Promise<LighthouseData>
     let durationJSArr : number[] = await driver.executeScript("return [window.performance.timing.loadEventEnd, window.performance.timing.navigationStart]") as number[];
     let durationJS = (durationJSArr[0] as number) - (durationJSArr[1] as number);
     let reportedDuration = durationJS;
-    
+
     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
 
@@ -244,7 +239,7 @@ function buildDriver() {
     options = options.addArguments("--disable-cache");
     options = options.addArguments("--disable-translate");
     options = options.addArguments("--disable-sync");
-    options = options.addArguments("--disable-extensions");    
+    options = options.addArguments("--disable-extensions");
     options = options.addArguments("--disable-default-apps");
     options = options.addArguments("--window-size=1200,800")
     if (args.chromeBinary) options = options.setChromeBinaryPath(args.chromeBinary);
@@ -260,7 +255,7 @@ function buildDriver() {
     // return chrome.Driver.createSession(options, service);
     return new Builder()
         .forBrowser('chrome')
-        .setChromeOptions(options)    
+        .setChromeOptions(options)
         .build();
 }
 
@@ -279,14 +274,14 @@ async function snapMemorySize(driver: WebDriver): Promise<number> {
 	let heapSnapshot: any = await driver.executeScript(":takeHeapSnapshot");
     let node_fields: any = heapSnapshot.snapshot.meta.node_fields;
     let nodes: any = heapSnapshot.nodes;
-    
+
     let k = node_fields.indexOf("self_size");
 
     let self_size = 0;
     for(let l = nodes.length, d = node_fields.length; k < l; k += d) {
         self_size += nodes[k];
     }
-    
+
     let memory = self_size / 1024.0 / 1024.0;
     return memory;
 }
@@ -296,7 +291,7 @@ async function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: 
     if (config.LOG_PROGRESS) console.log("after run ",benchmark.id, benchmark.type, framework.name);
     if (benchmark.type === BenchmarkType.MEM) {
         await forceGC(framework, driver);
-    }            
+    }
 }
 
 async function afterBenchmark(driver: WebDriver, benchmark: Benchmark, framework: FrameworkData) : Promise<any> {
@@ -308,7 +303,7 @@ async function afterBenchmark(driver: WebDriver, benchmark: Benchmark, framework
 
 async function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework: FrameworkData): Promise<any> {
     await benchmark.init(driver, framework)
-    if (config.LOG_PROGRESS) console.log("after initialized ",benchmark.id, benchmark.type, framework.name);                                 
+    if (config.LOG_PROGRESS) console.log("after initialized ",benchmark.id, benchmark.type, framework.name);
     if (benchmark.type === BenchmarkType.MEM) {
         await forceGC(framework, driver);
     }
@@ -317,7 +312,7 @@ async function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework:
 interface Result<T> {
     framework: FrameworkData;
     results: T[];
-    benchmark: Benchmark    
+    benchmark: Benchmark
 }
 
 function writeResult<T>(res: Result<T>, dir: string) {
@@ -342,7 +337,7 @@ function writeResult<T>(res: Result<T>, dir: string) {
             "standardDeviation": s.stdev(),
             "values": data
         }
-        fs.writeFileSync(`${dir}/${fileName(res.framework, resultKind)}`, JSON.stringify(result), {encoding: "utf8"});    
+        fs.writeFileSync(`${dir}/${fileName(res.framework, resultKind)}`, JSON.stringify(result), {encoding: "utf8"});
     }
 }
 
@@ -377,11 +372,11 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
         }
         let results = benchmark.type === BenchmarkType.CPU ? await computeResultsCPU(driver) : await computeResultsMEM(driver);
         await writeResult({framework: framework, results: results, benchmark: benchmark}, dir);
-        console.log("QUIT"); 
+        console.log("QUIT");
         await driver.quit();
     } catch (e) {
-        console.log("ERROR:", e); 
-        console.log("QUIT"); 
+        console.log("ERROR:", e);
+        console.log("QUIT");
         await driver.quit();
         if (config.EXIT_ON_ERROR) { throw "Benchmarking failed"}
     }
@@ -414,10 +409,10 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
         }
         await writeResult({framework: framework, results: results, benchmark: benchmark}, dir);
     } catch (e) {
-        console.log("ERROR:", e); 
-        console.log("QUIT"); 
+        console.log("ERROR:", e);
+        console.log("QUIT");
         if (config.EXIT_ON_ERROR) { throw "Benchmarking failed"}
-    }                
+    }
 }
 
 async function runBench(frameworkNames: string[], benchmarkNames: string[], dir: string) {
