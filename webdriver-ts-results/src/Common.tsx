@@ -70,7 +70,7 @@ export class TableResultValueEntry implements TableResultEntry {
         let col = this.statisticalCol === undefined ? this.color : this.statisticalCol[0];
         let textCol = this.statisticalCol === undefined ? '#000' : this.statisticalCol[1];
         return (<td key={this.key} style={{backgroundColor:col, color: textCol}}>
-                    <span className="mean">{this.mean.toFixed(1)}</span>
+                    <span className="mean">{this.mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true})}</span>
                     <span className="deviation">{this.standardDeviation.toFixed(1)}</span>
                     <br />
                     <span className="factor">({this.factor.toFixed(1)})</span>
