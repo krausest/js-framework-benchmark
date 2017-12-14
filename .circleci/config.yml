@@ -21,4 +21,4 @@ jobs:
           npm install
           npm start -- -p 8081 &
           npm run build
-          npm run check -- -port 8081
+          npm run check -- --port 8081

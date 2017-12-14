@@ -287,7 +287,7 @@ async function snapMemorySize(driver: WebDriver): Promise<number> {
 }
 
 async function runBenchmark(driver: WebDriver, benchmark: Benchmark, framework: FrameworkData) : Promise<any> {
-    await benchmark.run(driver, framework);
+    await benchmark.run(driver, framework, port);
     if (config.LOG_PROGRESS) console.log("after run ",benchmark.id, benchmark.type, framework.name);
     if (benchmark.type === BenchmarkType.MEM) {
         await forceGC(framework, driver);
@@ -302,7 +302,7 @@ async function afterBenchmark(driver: WebDriver, benchmark: Benchmark, framework
 }
 
 async function initBenchmark(driver: WebDriver, benchmark: Benchmark, framework: FrameworkData): Promise<any> {
-    await benchmark.init(driver, framework)
+    await benchmark.init(driver, framework, port)
     if (config.LOG_PROGRESS) console.log("after initialized ",benchmark.id, benchmark.type, framework.name);
     if (benchmark.type === BenchmarkType.MEM) {
         await forceGC(framework, driver);

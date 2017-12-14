@@ -24,8 +24,8 @@ export abstract class Benchmark {
         this.label = benchmarkInfo.label;
         this.description = benchmarkInfo.description;
     }
-    abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
-    abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
+    abstract init(driver: WebDriver, framework: FrameworkData, port: number): Promise<any>;
+    abstract run(driver: WebDriver, framework: FrameworkData, port: number): Promise<any>;
     after(driver: WebDriver, framework: FrameworkData): Promise<any> { return null; }
     // Good fit for a single result creating Benchmark
     resultKinds(): Array<BenchmarkInfo> { return [this.benchmarkInfo]; }
@@ -380,9 +380,9 @@ class BenchStartup extends Benchmark {
             type: BenchmarkType.STARTUP,
         })
     }
-    async init(driver: WebDriver) { await driver.get(`http://localhost:8080/`); }
-    async run(driver: WebDriver, framework: FrameworkData) {
-        await driver.get(`http://localhost:8080/${framework.uri}/`);
+    async init(driver: WebDriver, framework: FrameworkData, port: number) { await driver.get(`http://localhost:` + port + `/`); }
+    async run(driver: WebDriver, framework: FrameworkData, port: number) {
+        await driver.get(`http://localhost:` + port + `/${framework.uri}/`);
         await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
         return driver.sleep(config.STARTUP_SLEEP_DURATION);
     }
