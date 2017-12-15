@@ -108,7 +108,7 @@ function isNonKeyedSwapRow(result: any): boolean {
     return true;
 }
 
-async function runBench(frameworkNames: string[]) {
+async function runBench(frameworkNames: string[], port: number) {
     let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.name.indexOf(name)>-1));
     console.log("Frameworks that will be checked", runFrameworks.map(f => f.name));
 
@@ -120,7 +120,7 @@ async function runBench(frameworkNames: string[]) {
         try {
             let framework = runFrameworks[i];
             setUseShadowRoot(framework.useShadowRoot);
-            await driver.get(`http://localhost:8080/${framework.uri}/`);
+            await driver.get(`http://localhost:` + port + `/${framework.uri}/`);
             await testElementLocatedById(driver, "add");
             await clickElementById(driver,'run');
             await testTextContains(driver,'//tbody/tr[1000]/td[1]','1000');
@@ -164,13 +164,15 @@ let args = yargs(process.argv)
 .usage("$0 [--framework Framework1,Framework2,...]")
 .help('help')
 .default('check','false')
+.default('port', config.PORT)
 .array("framework").array("benchmark").argv;
 
 let runFrameworks = args.framework && args.framework.length>0 ? args.framework : [""];
+let port = Number(args.port);
 
 if (args.help) {
     yargs.showHelp();
 } else {
-    runBench(runFrameworks);
+    runBench(runFrameworks, port);
 }
 
