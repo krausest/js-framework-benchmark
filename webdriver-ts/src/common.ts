@@ -112,4 +112,5 @@ export let frameworks = [
     f("vue-v2.5.3-keyed", true),
     f("vue-v2.5.3-non-keyed", false),
     f("vuera-v0.1.3-non-keyed", false),
+    f("reagent-v0.8-keyed", true)
 ]
