@@ -18,21 +18,18 @@
                      (.log js/console (str last " took " (- stop @start-time)))))
                  0)))
 
-(defn row [props]
-  (let [data (:data props)]
-    [:tr
-     {:class (:style-class props)}
-     [:td.col-md-1 (:id data)]
-     [:td.col-md-4
-      [:a {:on-click (fn [e]
-                       ((:on-click props) (:id data)))}
-       (:label data)]]
-     [:td.col-md-1
-      [:a {:on-click (fn [e]
-                       ((:on-delete props) (:id data)))}
-       [:span.glyphicon.glyphicon-remove
-        {:aria-hidden "true"}]]]
-     [:td.col-md-6]]))
+(defn row [data selected? on-click on-delete]
+  [:tr
+   {:class (if selected? "danger")}
+   [:td.col-md-1 (:id data)]
+   [:td.col-md-4
+    [:a {:on-click (fn [e] (on-click (:id data)))}
+     (:label data)]]
+   [:td.col-md-1
+    [:a {:on-click (fn [e] (on-delete (:id data)))}
+     [:span.glyphicon.glyphicon-remove
+      {:aria-hidden "true"}]]]
+   [:td.col-md-6]])
 
 (defn main []
   (let [id-atom (atom 0)
@@ -44,12 +41,12 @@
         run
         (fn run [_]
           (start-measure "run")
-          (reset! data (u/build-data id-atom 1000))
+          (reset! data (vec (u/build-data id-atom 1000)))
           (reset! selected nil))
         run-lots
         (fn run-lots [_]
           (start-measure "runLots")
-          (reset! data (u/build-data id-atom 10000))
+          (reset! data (vec (u/build-data id-atom 10000)))
           (reset! selected nil))
         add
         (fn add [_]
@@ -130,10 +127,10 @@
               (for [d @data]
                 ^{:key (:id d)}
                 [row
-                 {:data d
-                  :on-click select
-                  :on-delete delete
-                  :style-class (if (= (:id d) s) "danger")}]))]]
+                 d
+                 (identical? (:id d) s)
+                 select
+                 delete]))]]
           [:span.preloadicon.glyphicon.glyphicon-remove
            {:aria-hidden "true"}]])})))
 

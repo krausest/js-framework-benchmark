@@ -32,5 +32,6 @@
                 :optimizations :advanced
                 :elide-asserts true
                 :pretty-print false
+                :fn-invoke-direct true
                 :output-to "dist/main.js"
                 :output-dir "out"}}}})
