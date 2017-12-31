@@ -25,6 +25,6 @@
     "webpack": "^2.6.1"
   },
   "dependencies": {
-    "apprun": "^1.7.5"
+    "apprun": "^1.7.7"
   }
 }
