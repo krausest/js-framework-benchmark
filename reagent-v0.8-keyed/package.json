@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "scripts": {
+    "build-dev": "./lein cljsbuild auto",
+    "build-prod": "./lein cljsbuild once prod"
+  }
+}
