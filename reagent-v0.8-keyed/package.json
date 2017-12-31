@@ -1,7 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "build-dev": "./lein cljsbuild auto",
-    "build-prod": "./lein cljsbuild once prod"
+    "build-dev": "LEIN_VERSION=2.8.1 lein cljsbuild auto",
+    "build-prod": "LEIN_VERSION=2.8.1 lein cljsbuild once prod"
+  },
+  "dependencies": {
+    "lein-bin": "0.1.0"
   }
 }
