@@ -3,14 +3,15 @@ function _random(max) {
   return Math.round(Math.random()*1000)%max
 }
 
-export function Store() {
+module.exports = Store
+
+function Store() {
   this.data = []
   this.backup = null
   this.selected = null
   this.id = 1
 }
 Store.prototype = {
-  constructor: Store,
   buildData: function(count) {
     if (!(count >=0)) count = 1000
     var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"]
@@ -28,8 +29,8 @@ Store.prototype = {
     }
   },
   delete: function(id) {
-    var idx = this.data.findIndex(function(d) { return d.id == id }) //eslint-disable-line eqeqeq
-    this.data = this.data.filter(function(e,i) { return i != idx }) //eslint-disable-line eqeqeq
+    var idx = this.data.findIndex(function(d) { return d.id == id })
+    this.data = this.data.filter(function(e,i) { return i != idx })
     return this
   },
   run: function() {

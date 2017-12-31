@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "Benchmark for picoDom 1.0.0",
   "scripts": {
-    "build-dev": "rollup -c -w",
-    "build-prod": "rollup -c && uglifyjs ./dist/main.js -c -m -o ./dist/main.js"
+    "build-dev": "node -e \"require('@hugov/cjs-to-iife')('./index.js').then(code => {if (!fs.existsSync('./dist')) {fs.mkdirSync('./dist');} fs.writeFileSync('./dist/main.js', code); })\"",
+    "build-prod": "npm run build-dev && uglifyjs ./dist/main.js -c -m -o ./dist/main.js"
   },
   "author": "Hugo Villeneuve",
   "license": "Apache-2.0",
@@ -14,11 +14,11 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "rollup": "0.41.6",
-    "rollup-plugin-node-resolve": "3.0.0",
+    "@hugov/cjs-to-iife": "^0.1.1",
+    "@types/node": "^8.5.1",
     "uglify-js": "3.0.12"
   },
   "dependencies": {
-    "pico-dom": "1.0.0"
+    "attodom": "0.4.0"
   }
 }
