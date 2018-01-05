@@ -1,7 +1,8 @@
-import Ember from 'ember';
+import { inject as service } from '@ember/service';
+import Component from '@ember/component';
 
-export default Ember.Component.extend({
-  rows: Ember.inject.service(),
+export default Component.extend({
+  rows: service(),
   actions: {
     add: function() {
       //console.log('add');

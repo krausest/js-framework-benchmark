@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import Service from '@ember/service';
 
 function _random(max) {
   return Math.round(Math.random() * 1000) % max;
@@ -13,11 +13,11 @@ var startMeasure = function(name) {
 var stopMeasure = function() {
   window.setTimeout(function() {
     var stop = performance.now();
-    console.log(lastMeasure + ' took ' + (stop - startTime));
+    console.log(lastMeasure + ' took ' + (stop - startTime)); // eslint-disable-line no-console
   }, 0);
 };
 
-export default Ember.Service.extend({
+export default Service.extend({
   data: [],
   selected: undefined,
   id: 1,
