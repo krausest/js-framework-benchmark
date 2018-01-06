@@ -41,6 +41,8 @@ export let frameworks = [
     f("angular-v5.0.0-no-zone-keyed", true),
     f("angular-v5.0.0-non-keyed", false),
     f("aurelia-v1.1.5-non-keyed", false),
+    f("apprun-v1.7.0-keyed", true),
+    f("apprun-v1.7.0-non-keyed", false),
     f("attodom-v0.4.0-keyed", true),
     f("binding.scala-v10.0.1-keyed", true, {uri: "binding.scala-v10.0.1-keyed/target/web/stage"}),
     f("bobril-v8.0.1-keyed", true),
@@ -68,6 +70,8 @@ export let frameworks = [
     f("ivi-v0.9.1-keyed", true),
     f("knockout-v3.4.1-keyed", true),
     f("lit-html-v0.7.1-non-keyed", false),
+    f("maik-h-v2.5.2-keyed", true),
+    f("maik-h-v2.5.2-non-keyed", false),
     f("marionette-v3.5.1-domapi-keyed", true),
     f("marionette-v3.5.1-keyed", true),
     f("marko-v4.5.6-keyed", true),
@@ -113,4 +117,5 @@ export let frameworks = [
     f("vue-v2.5.3-keyed", true),
     f("vue-v2.5.3-non-keyed", false),
     f("vuera-v0.1.3-non-keyed", false),
+    f("reagent-v0.8-keyed", true)
 ]

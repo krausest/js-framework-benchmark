@@ -120,7 +120,7 @@ async function runBench(frameworkNames: string[]) {
         try {
             let framework = runFrameworks[i];
             setUseShadowRoot(framework.useShadowRoot);
-            await driver.get(`http://localhost:8080/${framework.uri}/`);
+            await driver.get(`http://localhost:${config.PORT}/${framework.uri}/`);
             await testElementLocatedById(driver, "add");
             await clickElementById(driver,'run');
             await testTextContains(driver,'//tbody/tr[1000]/td[1]','1000');
@@ -164,7 +164,10 @@ let args = yargs(process.argv)
 .usage("$0 [--framework Framework1,Framework2,...]")
 .help('help')
 .default('check','false')
+.default('port', config.PORT)
 .array("framework").array("benchmark").argv;
+
+config.PORT = Number(args.port);
 
 let runFrameworks = args.framework && args.framework.length>0 ? args.framework : [""];
 

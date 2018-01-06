@@ -380,9 +380,9 @@ class BenchStartup extends Benchmark {
             type: BenchmarkType.STARTUP,
         })
     }
-    async init(driver: WebDriver) { await driver.get(`http://localhost:8080/`); }
+    async init(driver: WebDriver) { await driver.get(`http://localhost:${config.PORT}/`); }
     async run(driver: WebDriver, framework: FrameworkData) {
-        await driver.get(`http://localhost:8080/${framework.uri}/`);
+        await driver.get(`http://localhost:${config.PORT}/${framework.uri}/`);
         await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
         return driver.sleep(config.STARTUP_SLEEP_DURATION);
     }

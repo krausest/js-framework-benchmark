@@ -314,6 +314,10 @@ interface Result<T> {
     results: T[];
     benchmark: Benchmark
 }
+interface BenchmarkError {
+    imageFile : string;
+    exception : string
+}
 
 function writeResult<T>(res: Result<T>, dir: string) {
     let benchmark = res.benchmark;
@@ -341,11 +345,13 @@ function writeResult<T>(res: Result<T>, dir: string) {
     }
 }
 
-async function takeScreenshotOnError(driver: WebDriver, fileName: string, error: string) {
+async function registerError(driver: WebDriver, framework: FrameworkData, benchmark: Benchmark, error: string) {
+    let fileName = 'error-' + framework.name + '-' + benchmark.id + '.png';
     console.error("Benchmark failed",error);
     let image = await driver.takeScreenshot();
     console.error(`Writing screenshot ${fileName}`);
     fs.writeFileSync(fileName, image, {encoding: 'base64'});
+    errors.push({imageFile: fileName, exception: error});
 }
 
 const wait = (delay = 1000) => new Promise(res => setTimeout(res, delay));
@@ -366,7 +372,7 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
                 await afterBenchmark(driver, benchmark, framework);
                 await driver.executeScript("console.timeStamp('afterBenchmark')");
             } catch (e) {
-                await takeScreenshotOnError(driver, 'error-'+framework.name+'-'+benchmark.id+'.png', e);
+                await registerError(driver, framework, benchmark, e);
                 throw e;
             }
         }
@@ -401,7 +407,7 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
                 await wait(5000);
                 results.push(await computeResultsStartup(driver));
             } catch (e) {
-                await takeScreenshotOnError(driver, 'error-'+framework.name+'-'+benchmark.id+'.png', e);
+                await registerError(driver, framework, benchmark, e);
                 throw e;
             } finally {
                 await driver.quit();
@@ -437,6 +443,19 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
             await runMemOrCPUBenchmark(framework, benchmark, dir);
         }
     }
+
+    if(errors.length == 0) return;
+
+    console.log("================================");
+    console.log("The following benchmarks failed:");
+    console.log("================================");
+
+    errors.forEach(e => {
+	console.log("[" + e.imageFile + "]");
+	console.log(e.exception);
+	console.log();
+    });
+    throw "Benchmarking failed with errors";
 }
 
 let args = yargs(process.argv)
@@ -456,8 +475,7 @@ console.log(args);
 let runBenchmarks = args.benchmark && args.benchmark.length>0 ? args.benchmark : [""];
 let runFrameworks = args.framework && args.framework.length>0 ? args.framework : [""];
 let count = Number(args.count);
-let port = Number(args.port);
-
+config.PORT = Number(args.port);
 config.REPEAT_RUN = count;
 
 let dir = args.check === 'true' ? "results_check" : "results"
@@ -468,6 +486,7 @@ config.EXIT_ON_ERROR = exitOnError;
 if (!fs.existsSync(dir))
     fs.mkdirSync(dir);
 
+var errors: BenchmarkError[] = [];
 if (args.help) {
     yargs.showHelp();
 } else {
