@@ -117,4 +117,13 @@ var ItemViewModel = function (data, parent) {
     };
 };
 
+// use this directive as al-text="item.label" to see the slowdown
+alight.directives.al.text = function(scope, element, expression, env) {
+    // Track the given expression
+    this.watch(expression, function(value) {
+        // set a text to the DOM-element
+        element.innerText = value
+    });
+};
+
 alight(document.body, new TableViewModel());
