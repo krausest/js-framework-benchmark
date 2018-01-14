@@ -12,14 +12,10 @@ var loaders = [
 	{
 		test: /\.es6\.js$/,
 		loader: 'babel-loader'
-	},
-	{
-		test: /\.css$/,
-		loader: 'style-loader!css-loader'
 	}
 ];
 var extensions = [
-	'.js', '.jsx', '.es6.js', '.msx'
+	 '.mjs', '.js', '.jsx', '.es6.js', '.msx'
 ];
 
 module.exports = [{
