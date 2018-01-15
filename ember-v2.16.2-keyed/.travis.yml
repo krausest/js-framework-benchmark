@@ -1,24 +1,28 @@
 ---
 language: node_js
 node_js:
-  - "4"
+  - "6"
 
 sudo: false
+dist: trusty
+
+addons:
+  chrome: stable
 
 cache:
-  directories:
-    - node_modules
+  yarn: true
+
+env:
+  global:
+    # See https://git.io/vdao3 for details.
+    - JOBS=1
 
 before_install:
-  - npm config set spin false
-  - npm install -g bower
-  - bower --version
-  - npm install phantomjs-prebuilt
-  - node_modules/phantomjs-prebuilt/bin/phantomjs --version
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH=$HOME/.yarn/bin:$PATH
 
 install:
-  - npm install
-  - bower install
+  - yarn install --non-interactive
 
 script:
-  - npm test
+  - yarn test

@@ -1,11 +1,12 @@
-/* jshint node: true */
+/* eslint-env node */
+'use strict';
 
 module.exports = function(environment) {
-  var ENV = {
+  let ENV = {
     modulePrefix: 'ember-temp',
-    environment: environment,
-    locationType: 'auto',
+    environment,
     rootURL: '/ember-v2.16.2-keyed/dist/',
+    locationType: 'auto',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -33,6 +34,7 @@ module.exports = function(environment) {
 
   if (environment === 'test') {
     ENV.rootURL = '/';
+
     // Testem prefers this...
     ENV.locationType = 'none';
 
@@ -44,7 +46,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    // here you can enable a production-specific feature
   }
 
   return ENV;
