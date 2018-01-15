@@ -33,24 +33,6 @@ var stopMeasure = function() {
     }
 }
 
-function handleClick(e) {
-    let func;
-    let id;
-    let val = e.target.defaultValue;
-
-    if (val) {
-        func = val.func;
-        id = val.id;
-    } else {
-        val = e.target.parentNode.defaultValue;
-        if (val) {
-            func = val.func;
-            id = val.id;
-        }
-    }
-    func && func(id);
-}
-
 const span = <span className="glyphicon glyphicon-remove" aria-hidden="true" noNormalize></span>;
 const td = <td className="col-md-6" noNormalize></td>;
 
