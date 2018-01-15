@@ -12,14 +12,10 @@ var loaders = [
 	{
 		test: /\.es6\.js$/,
 		loader: 'babel-loader'
-	},
-	{
-		test: /\.css$/,
-		loader: 'style-loader!css-loader'
 	}
 ];
 var extensions = [
-	'.js', '.jsx', '.es6.js', '.msx'
+	  '.dev.mjs', '.mjs', '.js', '.jsx', '.es6.js', '.msx'
 ];
 
 module.exports = [{
@@ -41,6 +37,10 @@ module.exports = [{
 			path.resolve(__dirname, "src"),
 			"node_modules"
 		],
-		extensions: extensions
+		extensions: extensions,
+    /* When doing development workflow we want to make sure webpack picks up development build of inferno */
+		alias: {
+			inferno: __dirname + "/node_modules/inferno/dist/index.dev.mjs"
+		}
 	}
 }];
