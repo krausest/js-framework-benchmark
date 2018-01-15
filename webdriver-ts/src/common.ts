@@ -36,6 +36,7 @@ function f(name: string, keyed: boolean, options: Options = {uri: null, useShado
 }
 
 export let frameworks = [
+    f("angular-light-v0.14.1-keyed", true),
     f("angular-v1.6.3-keyed", true),
     f("angular-v5.0.0-keyed", true),
     f("angular-v5.0.0-no-zone-keyed", true),
@@ -100,6 +101,7 @@ export let frameworks = [
     f("redom-v3.7.0-non-keyed", false),
     f("reflex-dom-v0.4-keyed", true, {uri: "reflex-dom-v0.4-keyed/bundled-dist"}),
     f("riot-v3.7.4-non-keyed", false),
+    f("rivets-v0.9.6-non-keyed", false),
     f("rx-domh-v0.0.2-rxjs-v5.3.0-keyed", true),
     f("simulacra-v2.1.5-non-keyed", false),
     f("slim-js-v3.0.2-non-keyed", false),
