@@ -27,7 +27,7 @@
     "webpack": "3.8.1"
   },
   "dependencies": {
-    "react-easy-state": "3.0.1",
+    "react-easy-state": "4.0.1",
     "react": "16.1.0",
     "react-dom": "16.1.0"
   }

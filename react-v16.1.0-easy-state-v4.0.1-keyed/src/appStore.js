@@ -1,10 +1,10 @@
-import { easyStore } from 'react-easy-state/dist/es.es6'
+import { store } from 'react-easy-state/dist/es.es6'
 import randomSentence from './randomSentence'
 import { startMeasure, stopMeasure } from './logPerf'
 
 let idCounter = 1
 
-export default easyStore({
+export default store({
   rows: [],
   deselectAll () {
     if (this.selectedRow) {

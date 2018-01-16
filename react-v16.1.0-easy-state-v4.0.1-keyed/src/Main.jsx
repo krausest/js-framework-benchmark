@@ -1,10 +1,10 @@
 import React from 'react'
-import { easyComp } from 'react-easy-state/dist/es.es6'
+import { view } from 'react-easy-state/dist/es.es6'
 import Row from './Row'
-import store from './store'
+import appStore from './appStore'
 
 function Main () {
-  const { rows, selected, run, runLots, add, update, clear, swapRows } = store
+  const { rows, selected, run, runLots, add, update, clear, swapRows } = appStore
 
   return (
     <div className="container">
@@ -47,4 +47,4 @@ function Main () {
   )
 }
 
-export default easyComp(Main)
+export default view(Main)
