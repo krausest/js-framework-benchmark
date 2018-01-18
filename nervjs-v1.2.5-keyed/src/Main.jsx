@@ -32,7 +32,6 @@ function shouldRowUpdate(prevProps, nextProps) {
 
 function selectOnClick(onSelect, id) {
   return () => {
-    console.log(id);
     onSelect(id);
   };
 }
