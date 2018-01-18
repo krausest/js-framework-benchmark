@@ -4,6 +4,10 @@ function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
 
+var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+
 export class Store {
     constructor() {
         this.data = [];
@@ -11,9 +15,6 @@ export class Store {
         this.id = 1;
 	}
     buildData(count = 1000) {
-        var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-        var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-        var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
         var data = [];
         for (var i = 0; i < count; i++)
             data.push({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
@@ -50,10 +51,11 @@ export class Store {
         this.selected = undefined;
     }
     swapRows() {
-    	if(this.data.length > 10) {
-    		var a = this.data[4];
-    		this.data[4] = this.data[9];
-    		this.data[9] = a;
+	let data = this.data;
+    	if (data.length > 998) {
+      	    const a = data[1];
+      	    data[1] = data[998];
+            data[998] = a;
     	}
     }
 }
