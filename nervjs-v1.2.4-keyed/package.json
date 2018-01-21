@@ -1,0 +1,32 @@
+{
+  "name": "js-framework-benchmark-react",
+  "version": "1.1.1",
+  "description": "React demo",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
+  },
+  "keywords": [
+    "react",
+    "webpack"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.0.0-beta.37",
+    "@babel/plugin-transform-react-jsx": "7.0.0-beta.37",
+    "@babel/preset-env": "7.0.0-beta.37",
+    "babel-loader": "8.0.0-beta.0",
+    "babel-plugin-syntax-jsx": "^6.18.0",
+    "webpack": "3.10.0"
+  },
+  "dependencies": {
+    "nervjs": "1.2.4"
+  }
+}
