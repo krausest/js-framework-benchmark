@@ -44,7 +44,7 @@ export let frameworks = [
     f("aurelia-v1.1.5-non-keyed", false),
     f("apprun-v1.7.0-keyed", true),
     f("apprun-v1.7.0-non-keyed", false),
-    f("attodom-v0.4.0-keyed", true),
+    f("attodom-v0.5.2-keyed", true),
     f("binding.scala-v10.0.1-keyed", true, {uri: "binding.scala-v10.0.1-keyed/target/web/stage"}),
     f("bobril-v8.0.1-keyed", true),
     f("choo-v6.5.0-keyed", true),
