@@ -14,7 +14,7 @@ module.exports = el('div', {class: 'jumbotron'},
       el('div', {class: 'row', onclick: handleClick},
         createButton('run', 'Create 1,000 rows'),
         createButton('runlots', 'Create 10,000 rows'), //TODO error
-        createButton('add', 'child 1,000 rows'),
+        createButton('add', 'Append 1,000 rows'),
         createButton('update', 'Update every 10th row'),
         createButton('clear', 'Clear'),
         createButton('swaprows', 'Swap Rows')
