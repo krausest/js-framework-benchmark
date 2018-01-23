@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import { easyComp } from 'react-easy-state/dist/es.es6'
-import store from './store'
+import { view } from 'react-easy-state/dist/es.es6'
+import appStore from './appStore'
 
 class Row extends Component {
 	onDelete () {
-		store.delete(this.props.row)
+		appStore.delete(this.props.row)
 	}
 
 	onClick () {
-		store.select(this.props.row)
+		appStore.select(this.props.row)
 	}
 
 	render() {
@@ -28,4 +28,4 @@ class Row extends Component {
 	}
 }
 
-export default easyComp(Row)
+export default view(Row)
