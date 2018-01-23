@@ -134,10 +134,10 @@ class Tr {
     this.el = el('tr',
       this.id = el('td.col-md-1'),
       el('td.col-md-4',
-        this.label = el('a', { onclick: e => this.app.select(this.data.id) })
+        this.label = el('a', { onclick: e => app.select(this.data.id) })
       ),
       el('td.col-md-1',
-        this.remove = el('a', { onclick: e => this.app.remove(this.data.id) },
+        this.remove = el('a', { onclick: e => app.remove(this.data.id) },
           el('span.glyphicon.glyphicon-remove', { 'aria-hidden': true })
         )
       ),
