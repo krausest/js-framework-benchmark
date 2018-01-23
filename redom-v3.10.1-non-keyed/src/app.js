@@ -69,7 +69,7 @@ export class App {
         )
       ),
       el('table.table.table-hover.table-striped.test-data',
-        this.table = list('tbody', Tr, 'id', { app: this, store })
+        this.table = list('tbody', Tr, null, { app: this, store })
       ),
       el('span.preloadicon.glyphicon.glyphicon-remove', { 'aria-hidden': true })
     );
@@ -129,6 +129,7 @@ export class App {
 
 class Tr {
   constructor ({ app, store }) {
+    this.data = {};
     this.app = app;
     this.store = store;
     this.el = el('tr',
@@ -148,8 +149,11 @@ class Tr {
     const { id, label } = data;
     const { selected } = this.store;
 
-    if (data !== this.data) {
+    if (id !== this.data.id) {
       this.id.textContent = id;
+    }
+
+    if (label !== this.data.label) {
       this.label.textContent = label;
     }
 
@@ -159,6 +163,6 @@ class Tr {
       this.el.classList.remove('danger');
     }
 
-    this.data = data;
+    this.data = { id, label };
   }
 }
