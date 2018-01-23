@@ -1,4 +1,5 @@
-/*eslint indent:0, quotes:0, no-console:0*/
+/*eslint indent: ["warn", 2, { "VariableDeclarator": 2 }]*/
+
 var startTime
 var lastMeasure
 
@@ -13,7 +14,7 @@ module.exports = {
       window.setTimeout(function () {
         lastMeasure = null
         var stop = performance.now()
-        console.log(last+" took "+(stop-startTime))
+        console.log(last+' took '+(stop-startTime)) //eslint-disable-line
       }, 0)
     }
   }
