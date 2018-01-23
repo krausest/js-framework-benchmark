@@ -85,7 +85,6 @@ export let frameworks = [
     f("nx-v1.0.0-beta.2.0.1-keyed", true),
     f("nx-v1.0.0-beta.2.0.1-non-keyed", false),
     f("petit-dom-v0.0.12-keyed", true),
-    f("pico-dom-v1.0.0-keyed", true),
     f("plastiq-v1.33.0-keyed", true),
     f("polymer-v2.0.0-non-keyed", false, {uri: "polymer-v2.0.0-non-keyed/build/es6-bundled", useShadowRoot: true}),
     f("preact-v8.2.6-keyed", true),
