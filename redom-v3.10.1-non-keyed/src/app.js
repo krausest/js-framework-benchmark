@@ -1,6 +1,6 @@
 import { el, list } from 'redom';
 
-const { performance, setTimeout } = window.performance;
+const { performance, setTimeout } = window;
 
 let startTime;
 let lastMeasure;
