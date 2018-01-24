@@ -19,12 +19,12 @@
     "url": "https://github.com/yysun/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "json-loader": "^0.5.4",
-    "ts-loader": "^2.1.0",
-    "typescript": "^2.3.4",
-    "webpack": "^2.6.1"
+    "json-loader": "0.5.4",
+    "ts-loader": "2.1.0",
+    "typescript": "2.3.4",
+    "webpack": "2.6.1"
   },
   "dependencies": {
-    "apprun": "^1.7.8"
+    "apprun": "1.8.3"
   }
 }
