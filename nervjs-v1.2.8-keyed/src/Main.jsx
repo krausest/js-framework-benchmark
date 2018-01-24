@@ -4,29 +4,10 @@ const React = require("nervjs");
 const { render, createElement, Component } = React;
 const { Store } = require("./Store");
 
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-  //console.timeStamp(name);
-  startTime = performance.now();
-  lastMeasure = name;
-};
-var stopMeasure = function() {
-  var last = lastMeasure;
-  if (lastMeasure) {
-    window.setTimeout(function() {
-      lastMeasure = null;
-      var stop = performance.now();
-      var duration = 0;
-      console.log(last + " took " + (stop - startTime));
-    }, 0);
-  }
-};
-
 function shouldRowUpdate(prevProps, nextProps) {
   return (
     prevProps.data !== nextProps.data ||
-    nextProps.selected !== prevProps.selected
+    nextProps.styleClass !== prevProps.styleClass
   );
 }
 
@@ -54,7 +35,7 @@ function createRows(store, onSelect, onDelete) {
         key={id}
         data={d}
         id={id}
-        selected={selected}
+        styleClass={id === selected ? "danger" : null}
         onDelete={onDelete}
         onSelect={onSelect}
         onShouldComponentUpdate={shouldRowUpdate}
@@ -66,9 +47,9 @@ function createRows(store, onSelect, onDelete) {
 const span = <span className="glyphicon glyphicon-remove" aria-hidden="true" />;
 const td = <td className="col-md-6" />;
 
-function Row({ data, id, onSelect, onDelete, selected }) {
+function Row({ data, id, onSelect, onDelete, styleClass }) {
   return (
-    <tr className={id === selected ? "danger" : ""}>
+    <tr className={styleClass}>
       <td className="col-md-1">{id + ""}</td>
       <td className="col-md-4">
         <a onClick={selectOnClick(onSelect, id)}>{data.label}</a>
@@ -86,7 +67,7 @@ function Jumbotron(run, runLots, add, update, clear, swapRows) {
     <div className="jumbotron">
       <div className="row">
         <div className="col-md-6">
-          <h1>nerv v1.2.4</h1>
+          <h1>nerv v1.2.8</h1>
         </div>
         <div className="col-md-6">
           <div className="row">
@@ -184,52 +165,36 @@ export class Main extends Component {
 
     window.app = this;
   }
-  printDuration() {
-    stopMeasure();
-  }
-  componentDidUpdate() {
-    this.printDuration();
-  }
-  componentDidMount() {
-    this.printDuration();
-  }
+
   run() {
-    startMeasure("run");
     this.state.store.run();
     this.setState({ store: this.state.store });
   }
   add() {
-    startMeasure("add");
     this.state.store.add();
     this.setState({ store: this.state.store });
   }
   update() {
-    startMeasure("update");
     this.state.store.update();
     this.setState({ store: this.state.store });
   }
   select(id) {
-    startMeasure("select");
     this.state.store.select(id);
     this.setState({ store: this.state.store });
   }
   delete(id) {
-    startMeasure("delete");
     this.state.store.delete(id);
     this.setState({ store: this.state.store });
   }
   runLots() {
-    startMeasure("runLots");
     this.state.store.runLots();
     this.setState({ store: this.state.store });
   }
   clear() {
-    startMeasure("clear");
     this.state.store.clear();
     this.setState({ store: this.state.store });
   }
   swapRows() {
-    startMeasure("swapRows");
     this.state.store.swapRows();
     this.setState({ store: this.state.store });
   }
