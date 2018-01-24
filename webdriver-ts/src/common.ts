@@ -81,7 +81,7 @@ export let frameworks = [
     f("maquette-v3.0.1-keyed", true),
     f("mithril-v1.1.1-keyed", true),
     f("moon-v0.11.0", false),
-    f("nervjs-v1.2.4-keyed", true),
+    f("nervjs-v1.2.8-keyed", true),
     f("nx-v1.0.0-beta.2.0.1-keyed", true),
     f("nx-v1.0.0-beta.2.0.1-non-keyed", false),
     f("petit-dom-v0.0.12-keyed", true),
