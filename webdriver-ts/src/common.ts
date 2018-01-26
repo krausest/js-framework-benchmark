@@ -38,9 +38,9 @@ function f(name: string, keyed: boolean, options: Options = {uri: null, useShado
 export let frameworks = [
     f("angular-light-v0.14.1-keyed", true),
     f("angular-v1.6.3-keyed", true),
-    f("angular-v5.0.0-keyed", true),
-    f("angular-v5.0.0-no-zone-keyed", true),
-    f("angular-v5.0.0-non-keyed", false),
+    f("angular-v5.2.2-keyed", true),
+    f("angular-v5.2.2-no-zone-keyed", true),
+    f("angular-v5.2.2-non-keyed", false),
     f("aurelia-v1.1.5-non-keyed", false),
     f("apprun-v1.8.3-keyed", true),
     f("apprun-v1.8.3-non-keyed", false),
