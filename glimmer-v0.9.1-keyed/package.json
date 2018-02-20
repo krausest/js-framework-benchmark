@@ -14,13 +14,13 @@
     "build-prod": "ember build --environment=production"
   },
   "devDependencies": {
-    "@glimmer/application": "^0.8.0",
-    "@glimmer/application-pipeline": "^0.9.1",
-    "@glimmer/blueprint": "^0.6.4",
-    "@glimmer/component": "^0.8.0",
+    "@glimmer/application": "^0.9.1",
+    "@glimmer/application-pipeline": "^0.11.0",
+    "@glimmer/blueprint": "^0.9.1",
+    "@glimmer/component": "^0.9.1",
     "@glimmer/inline-precompile": "^1.0.1",
     "@glimmer/resolver": "^0.4.1",
-    "@glimmer/test-helpers": "^0.30.1",
+    "@glimmer/test-helpers": "^0.30.3",
     "@types/qunit": "^2.0.31",
     "broccoli-asset-rev": "^2.6.0",
     "ember-cli": "^2.16.2",
@@ -29,7 +29,7 @@
     "ember-cli-sass": "^7.0.0",
     "ember-cli-uglify": "^2.0.0",
     "qunitjs": "^2.4.1",
-    "typescript": "^2.6.1"
+    "typescript": "~2.6.0"
   },
   "engines": {
     "node": ">= 4.0"

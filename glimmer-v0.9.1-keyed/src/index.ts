@@ -14,6 +14,6 @@ app.registerInitializer({
   }
 });
 
-app.renderComponent('my-table', containerElement, null);
+app.renderComponent('Table', containerElement, null);
 
 app.boot();
