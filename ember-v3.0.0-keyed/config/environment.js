@@ -1,11 +1,10 @@
-/* eslint-env node */
 'use strict';
 
 module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'ember-temp',
     environment,
-    rootURL: '/ember-v2.16.2-keyed/dist/',
+    rootURL: '/ember-v3.0.0-keyed/dist/',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
@@ -43,6 +42,7 @@ module.exports = function(environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
+    ENV.APP.autoboot = false;
   }
 
   if (environment === 'production') {
