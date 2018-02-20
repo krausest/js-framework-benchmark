@@ -27,10 +27,10 @@
     "typescript": "2.5.3"
   },
   "dependencies": {
-    "chromedriver": "2.33.2",
+    "chromedriver": "2.34.1",
     "dot": "1.1.2",
     "jstat": "1.7.1",
-    "lighthouse": "^2.6.0",
+    "lighthouse": "2.8.0",
     "lodash": "4.17.4",
     "ramda": "^0.25.0",
     "selenium-webdriver": "3.6.0",

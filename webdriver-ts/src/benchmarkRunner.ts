@@ -246,7 +246,7 @@ function buildDriver() {
     options = options.setLoggingPrefs(logPref);
 
     options = options.setPerfLoggingPrefs(<any>{
-        enableNetwork: true, enablePage: true, enableTimeline: false,
+        enableNetwork: true, enablePage: true, 
         traceCategories: lighthouse.traceCategories.join(", ")
     });
 

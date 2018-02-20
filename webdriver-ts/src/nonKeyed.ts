@@ -18,7 +18,7 @@ function buildDriver() {
     options = options.addArguments("--disable-cache");
     options = options.addArguments("--disable-extensions");    
     options = options.setLoggingPrefs(logPref);
-    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, enableTimeline: false, traceCategories: "devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
+    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, traceCategories: "devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
     return new Builder()
         .forBrowser('chrome')
         .setChromeOptions(options)    
