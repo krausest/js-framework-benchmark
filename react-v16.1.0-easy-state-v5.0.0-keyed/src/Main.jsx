@@ -1,5 +1,5 @@
 import React from 'react'
-import { view } from 'react-easy-state/dist/es.es6'
+import { view } from 'react-easy-state'
 import Row from './Row'
 import appStore from './appStore'
 

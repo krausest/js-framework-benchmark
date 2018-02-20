@@ -1,71 +1,73 @@
-import { store } from 'react-easy-state/dist/es.es6'
+import { store } from 'react-easy-state'
 import randomSentence from './randomSentence'
 import { startMeasure, stopMeasure } from './logPerf'
 
 let idCounter = 1
 
-export default store({
+const appStore = store({
   rows: [],
   deselectAll () {
-    if (this.selectedRow) {
-      this.selectedRow.selected = false
-      this.selectedRow = undefined
+    if (appStore.selectedRow) {
+      appStore.selectedRow.selected = false
+      appStore.selectedRow = undefined
     }
   },
   buildRows (numOfRows) {
     for (let i = 0; i < numOfRows; i++) {
-      this.rows.push({ id: idCounter++, label: randomSentence() })
+      appStore.rows.push({ id: idCounter++, label: randomSentence() })
     }
-    this.deselectAll()
+    appStore.deselectAll()
   },
   run () {
     startMeasure('run')
-    this.rows = []
-    this.buildRows(1000)
+    appStore.rows = []
+    appStore.buildRows(1000)
     stopMeasure('run')
   },
   add () {
     startMeasure('add')
-    this.buildRows(1000)
+    appStore.buildRows(1000)
     stopMeasure('add')
   },
   update () {
     startMeasure('update')
-    for (let i = 0; i < this.rows.length; i += 10) {
-      this.rows[i].label += ' !!!'
+    for (let i = 0; i < appStore.rows.length; i += 10) {
+      appStore.rows[i].label += ' !!!'
     }
     stopMeasure('update')
   },
   select (row) {
     startMeasure('select')
-    this.deselectAll()
-    this.selectedRow = row
+    appStore.deselectAll()
+    appStore.selectedRow = row
     row.selected = true
     stopMeasure('select')
   },
   delete (row) {
     startMeasure('delete')
-    this.rows.splice(this.rows.indexOf(row), 1)
+    appStore.rows.splice(appStore.rows.indexOf(row), 1)
     stopMeasure('delete')
   },
   runLots () {
     startMeasure('runLots')
-    this.rows = []
-    this.buildRows(10000)
+    appStore.rows = []
+    appStore.buildRows(10000)
     stopMeasure('runLots')
   },
   clear() {
     startMeasure('clear')
-    this.rows = []
+    appStore.rows = []
     startMeasure('clear')
   },
   swapRows() {
     startMeasure('swapRows')
-    if (this.rows.length > 998) {
-      const temp = this.rows[1]
-      this.rows[1] = this.rows[998]
-      this.rows[998] = temp
+    if (appStore.rows.length > 998) {
+      const temp = appStore.rows[1]
+      appStore.rows[1] = appStore.rows[998]
+      appStore.rows[998] = temp
     }
     stopMeasure('swapRows')
   }
 })
+
+export default appStore

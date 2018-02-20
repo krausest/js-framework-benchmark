@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
-import { view } from 'react-easy-state/dist/es.es6'
+import { view } from 'react-easy-state'
 import appStore from './appStore'
 
 class Row extends Component {
+	constructor (props) {
+		super(props)
+
+		this.onDelete = this.onDelete.bind(this)
+		this.onClick = this.onClick.bind(this)
+	}
+
 	onDelete () {
 		appStore.delete(this.props.row)
 	}
