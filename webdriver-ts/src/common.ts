@@ -96,7 +96,7 @@ export let frameworks = [
     f("react-lite-v0.15.30-keyed", true),
     f("react-v16.1.0-keyed", true),
     f("react-v16.1.0-non-keyed", false),
-    f("react-v16.1.0-easy-state-v4.0.1-keyed", true),
+    f("react-v16.1.0-easy-state-v5.0.0-keyed", true),
     f("react-v16.1.0-mobX-v3.3.1-keyed", true),
     f("react-v16.1.0-redux-v3.7.2-keyed", true),
     f("redom-v3.10.1-keyed", true),

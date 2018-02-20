@@ -3,7 +3,7 @@ require("babel-plugin-syntax-jsx")
 var path = require('path')
 var webpack = require('webpack')
 var cache = {};
-var loaders = [
+var rules = [
 	{
 		test: /\.jsx$/,
 		loader: 'babel-loader'
@@ -24,7 +24,7 @@ var extensions = [
 module.exports = [{
 	cache: cache,
 	module: {
-		loaders: loaders
+		rules
 	},
 	entry: {
 		main: './src/index.jsx',
@@ -39,11 +39,15 @@ module.exports = [{
 			__dirname,
 			path.resolve(__dirname, "src"),
 			"node_modules"
-		]
+		],
+		alias: {
+			'react-easy-state': 'react-easy-state/dist/es.es6',
+			'@nx-js/observer-util': '@nx-js/observer-util/dist/es.es6'
+		}
 	},
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': '"production"'
 		})
-	]	
+	]
 }];
