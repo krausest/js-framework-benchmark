@@ -5,17 +5,16 @@ import { linkEvent, Component, render, createTextVNode } from 'inferno'
 
 function Row({ d, id, styleClass, deleteFunc, selectFunc }) {
   /*
-   * Only <td className="col-md-1"> and  <a onClick={linkEvent(id, selectFunc)}/>, nodes needs $NoNormalize flags
-   * Because they have dynamic children. We can pre-define children type by using $NoNormalize
-   * default value for Non-normalized vNode is another vNode so we need to create virtual text node by hand
+   * Only <td className="col-md-1"> and  <a onClick={linkEvent(id, selectFunc)}/>, nodes needs children shape flags
+   * Because they have dynamic children. We can pre-define children type by using $HasVNodeChildren
    *
    * other elements don't have children so $NoNormalize is not needed there
    */
   return (
     <tr className={styleClass}>
-      <td className="col-md-1" $NoNormalize>{createTextVNode(id + '')}</td>
+      <td className="col-md-1" $HasVNodeChildren>{createTextVNode(id + '')}</td>
       <td className="col-md-4">
-        <a onClick={linkEvent(id, selectFunc)} $NoNormalize>{createTextVNode(d.label)}</a>
+        <a onClick={linkEvent(id, selectFunc)} $HasVNodeChildren>{createTextVNode(d.label)}</a>
       </td>
       <td className="col-md-1">
         <a onClick={linkEvent(id, deleteFunc)}>
@@ -43,6 +42,7 @@ function createRows(store, deleteFunc, selectFunc) {
     rows.push(
       <Row
         styleClass={id === selected ? 'danger' : null}
+        key={id}
         d={d}
         id={id}
         selected={selected}
@@ -55,10 +55,10 @@ function createRows(store, deleteFunc, selectFunc) {
 
   /*
    * We can optimize rendering rows by pre-defining children types.
-   * In this case all children are non-keyed: so we add flag $HasNonKeyedChildren and $NoNormalize
-   * when $NoNormalize is used we need to make sure there are no holes in the array or nested arrays
+   * In this case all children are keyed: so we add flag $HasKeyedChildren and $NoNormalize
+   * when specific shape is used we need to make sure there are no holes in the array and are keys are unique
    */
-  return <tbody $HasNonKeyedChildren $NoNormalize>{rows}</tbody>;
+  return <tbody $HasKeyedChildren>{rows}</tbody>;
 }
 
 export class Controller extends Component {
@@ -126,14 +126,14 @@ export class Controller extends Component {
 
   render() {
     /*
-     * Only <table> needs $NoNormalize flag everything else is static
+     * Only <table> needs $HasVNodeChildren flag everything else is static
      * tables children is tbody so another vNode, no other flags needed
      */
     return (<div className="container">
       <div className="jumbotron">
         <div className="row">
           <div className="col-md-6">
-            <h1>Inferno - non keyed</h1>
+            <h1>Inferno - keyed</h1>
           </div>
           <div className="col-md-6">
             <div className="row">
@@ -170,7 +170,7 @@ export class Controller extends Component {
           </div>
         </div>
       </div>
-      <table className="table table-hover table-striped test-data" $NoNormalize>
+      <table className="table table-hover table-striped test-data" $HasVNodeChildren>
         {createRows(this.state.store, this.delete, this.select)}
       </table>
       <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"/>

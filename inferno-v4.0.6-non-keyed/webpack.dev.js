@@ -1,28 +1,28 @@
 'use strict';
-require("babel-plugin-syntax-jsx")
-require("babel-plugin-inferno")
-var path = require('path')
+require("babel-plugin-syntax-jsx");
+require("babel-plugin-inferno");
+var path = require('path');
 
 var cache = {};
-var loaders = [
-	{
-		test: /\.jsx$/,
-		loader: 'babel-loader'
-	},
-	{
-		test: /\.es6\.js$/,
-		loader: 'babel-loader'
-	}
-];
 var extensions = [
 	  '.dev.mjs', '.mjs', '.js', '.jsx', '.es6.js', '.msx'
 ];
 
 module.exports = [{
 	cache: cache,
-	module: {
-		loaders: loaders
-	},
+    module: {
+        rules: [
+            {
+                test: /\.jsx$/,
+                use: [ 'babel-loader' ],
+            },
+            {
+                test: /\.es6\.js$/,
+                use: [ 'babel-loader' ],
+            }
+        ]
+    },
+	mode: 'development',
 	entry: {
 		main: './src/main',
 	},
