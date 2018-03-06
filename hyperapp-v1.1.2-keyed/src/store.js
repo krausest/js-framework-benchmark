@@ -76,27 +76,27 @@ const state = {
 }
 
 const actions = {
-    run: state => ({
+    run: () => state => ({
         data: buildData(1000),
         selected: undefined
     }),
 
-    add: state => ({
+    add: () => state => ({
         data: state.data.concat(buildData(1000)),
         selected: undefined
     }),
 
-    runLots: state => ({
+    runLots: () => state => ({
         data: buildData(10000),
         selected: undefined
     }),
 
-    clear: state => ({
+    clear: () => state => ({
         data: [],
         selected: undefined
     }),
 
-    update: state => {
+    update: () => state => {
         return {
             data: state.data.map((d, i) => {
                 if (i % 10 === 0) {
@@ -108,7 +108,7 @@ const actions = {
         }
     },
 
-    swapRows: state => {
+    swapRows: () => state => {
         if (state.data.length <= 998) {
             return state
         }
@@ -123,12 +123,12 @@ const actions = {
         }
     },
 
-    select: state => id => ({
+    select: id => state => ({
             data: state.data,
             selected: id
     }),
 
-    delete: state => id => ({
+    delete: id => state => ({
         data: state.data.filter(d => d.id !== id)
     })
 }
