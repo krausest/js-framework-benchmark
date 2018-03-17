@@ -73,55 +73,84 @@ export class Controller extends Component {
     this.runLots = this.runLots.bind(this);
     this.clear = this.clear.bind(this);
     this.swapRows = this.swapRows.bind(this);
-    this.start = 0;
+    this.startTime = null;
+    this.lastMeasure = "";
+  }
+
+  startMeasure(name) {
+    this.startTime = performance.now();
+    this.lastMeasure = name;
+  };
+
+  stopMeasure() {
+    window.setTimeout(() => {
+      let stop = performance.now();
+      console.log(this.lastMeasure+" took "+(stop-this.startTime));
+    }, 0);
   }
 
   run() {
+    this.startMeasure("run");
     event.stopPropagation();
     this.state.store.run();
     this.setState({ store: this.state.store });
+    this.stopMeasure();
   }
 
   add() {
+    this.startMeasure("add");
     event.stopPropagation();
     this.state.store.add();
     this.setState({ store: this.state.store });
+    this.stopMeasure();
   }
 
   update() {
+    this.startMeasure("update");
     event.stopPropagation();
     this.state.store.update();
     this.setState({ store: this.state.store });
+    this.stopMeasure();
   }
 
   select(id, event) {
+    this.startMeasure("select");
     event.stopPropagation();
     this.state.store.select(id);
     this.setState({ store: this.state.store });
+    this.stopMeasure();
   }
 
   delete(id, event) {
+    this.startMeasure("delete");
     event.stopPropagation();
     this.state.store.delete(id);
     this.setState({ store: this.state.store });
+    this.stopMeasure();
   }
 
   runLots() {
+    this.startMeasure("runLots");
     event.stopPropagation();
     this.state.store.runLots();
     this.setState({ store: this.state.store });
+    this.stopMeasure();
   }
 
   clear(event) {
+    this.startMeasure("clear");
     event.stopPropagation();
     this.state.store.clear();
     this.setState({ store: this.state.store });
+    this.stopMeasure();
   }
 
   swapRows() {
+    this.startMeasure("swapRows");
     event.stopPropagation();
     this.state.store.swapRows();
     this.setState({ store: this.state.store });
+    this.stopMeasure();
   }
 
   render() {
