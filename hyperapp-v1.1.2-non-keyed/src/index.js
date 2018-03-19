@@ -122,9 +122,4 @@ function view(state, actions) {
     )
 }
 
-app({
-    root: document.getElementById("main"),
-    state,
-    actions,
-    view
-})
+app(state, actions, view, document.getElementById("main"))
