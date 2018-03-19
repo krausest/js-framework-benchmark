@@ -7,13 +7,15 @@ const plugins = [
     buble()
 ];
 
-if ( process.env.production ) {
-    plugins.push( uglify() );
+if (process.env.production) {
+    plugins.push(uglify());
 }
 
 export default {
-    entry: 'src/main.es6.js',
-    dest: 'dist/main.js',
-    format: 'iife',
+    input: 'src/main.es6.js',
+    output: {
+        file: 'dist/main.js',
+        format: 'iife'
+    },
     plugins
 };
