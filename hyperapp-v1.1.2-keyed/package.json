@@ -1,10 +1,10 @@
 {
-  "name": "hyperapp-v0.6.0-js-benchmark",
+  "name": "hyperapp-v1.1.2-js-benchmark",
   "version": "1.0.0",
-  "description": "hyperapp v0.6.0 js benchmark",
+  "description": "hyperapp v1.1.2 js benchmark",
   "main": "index.js",
   "dependencies": {
-    "hyperapp": "0.16.0"
+    "hyperapp": "1.1.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
