@@ -1,3 +1,5 @@
+import san from 'san/dist/san.spa.modern.js';
+
 'use strict';
 
 function _random(max) {
@@ -22,20 +24,26 @@ export class Store {
     }
     updateData(mod = 10) {
         // Just assigning setting each tenth this.data doesn't cause a redraw, the following does:
-        var newData = [];
-        for (let i = 0; i < this.data.length; i ++) {
-            if (i%10===0) {
-                let newRow = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
-                newData[i] = newRow;
-                this.ops.push({
-                    type: 'set',
-                    name: 'rows[' + i + ']',
-                    arg: newRow
-                });
-            } else {
-                newData[i] = this.data[i];
-            }
+        var newData = this.data.slice(0);
+        var expr = san.parseExpr('rows[0].label');
+        for (let i = 0; i < this.data.length; i += mod) {
+            let newRow = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+            newData[i] = newRow;
+            this.ops.push({
+                type: 'set',
+                name: {
+                    type: expr.type,
+                    paths: [
+                        expr.paths[0], 
+                        {type: expr.paths[1].type, value: i}, 
+                        expr.paths[2]
+                    ],
+                    raw: 'rows[' + i + '].label'
+                },
+                arg: newRow.label
+            });
         }
+
         this.data = newData;
     }
     delete(id) {
@@ -55,13 +63,13 @@ export class Store {
         this.ops.push(
             {
                 type: 'set',
-                name: 'rows',
-                arg: this.data
+                name: 'selected',
+                arg: null
             },
             {
                 type: 'set',
-                name: 'selected',
-                arg: null
+                name: 'rows',
+                arg: this.data
             }
         );
     }
@@ -93,14 +101,15 @@ export class Store {
         this.ops.push(
             {
                 type: 'set',
-                name: 'rows',
-                arg: this.data
+                name: 'selected',
+                arg: null
             },
             {
                 type: 'set',
-                name: 'selected',
-                arg: null
+                name: 'rows',
+                arg: this.data
             }
+            
         );
     }
     clear() {

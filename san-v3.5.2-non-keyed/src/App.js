@@ -1,5 +1,5 @@
 import {Store} from './store.es6';
-import san from 'san/dist/san.spa.js';
+import san from 'san/dist/san.spa.modern.js';
 
 
 var store = new Store();
@@ -27,7 +27,7 @@ export default san.defineComponent({
         <div class="jumbotron">
             <div class="row">
                 <div class="col-md-6">
-                    <h1>san v3.2.6</h1>
+                    <h1>san v3.5.2</h1>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
@@ -84,6 +84,7 @@ export default san.defineComponent({
     },
     attached() {
         window.app = this
+        // console.log(this.aNode)
     },
     ccc(){
         console.log(this.data.get(''));
