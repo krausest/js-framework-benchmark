@@ -4,7 +4,8 @@
   "description": "Benchmark for miso",
   "author": "Saurabh Nanda",
   "contributors": [
-    "Jens Krause"
+    "Jens Krause",
+    "David Johnson"
   ],
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {

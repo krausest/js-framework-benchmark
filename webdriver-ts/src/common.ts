@@ -78,7 +78,7 @@ export let frameworks = [
     f("marionette-v3.5.1-keyed", true),
     f("marko-v4.5.6-keyed", true),
     f("maquette-v3.0.1-keyed", true),
-    f("miso-0.15.0.0-keyed", true, {uri: "miso-0.15.0.0-keyed/dist-bundle"}),
+    f("miso-0.18.0.0-keyed", true, {uri: "miso-0.18.0.0-keyed/dist-bundle"}),
     f("mithril-v1.1.1-keyed", true),
     f("moon-v0.11.0", false),
     f("nervjs-v1.2.8-keyed", true),
