@@ -1,37 +1,39 @@
 {-# LANGUAGE ScopedTypeVariables    #-}
+{-# LANGUAGE BangPatterns    #-}
 {-# LANGUAGE OverloadedStrings    #-}
 {-# LANGUAGE ExtendedDefaultRules    #-}
 
 module Main where
 
-import Data.Monoid ((<>))
+import           Data.Monoid         ((<>))
 
-import           Miso
-import           System.Random
-import qualified Data.Vector as V
+import qualified Data.Map            as M
+import qualified Data.Vector         as V
 import qualified Data.Vector.Mutable as MV
-import           Miso.String (MisoString)
-import qualified Miso.String as S
+import           Miso
+import           Miso.String         (MisoString)
+import qualified Miso.String         as S
+import           System.Random
 
 data Row = Row
-  { rowIdx :: Int
-  , rowTitle :: MisoString
+  { rowIdx :: !Int
+  , rowTitle :: !MisoString
   } deriving (Eq)
 
 data Model = Model
-  { rows :: V.Vector Row
-  , selectedId :: Maybe Int
-  , lastId :: Int
+  { rows :: !(V.Vector Row)
+  , selectedId :: !(Maybe Int)
+  , lastId :: !Int
   } deriving (Eq)
 
-data Action = Create Int
-            | Append Int
-            | Update Int
-            | Remove Int
+data Action = Create !Int
+            | Append !Int
+            | Update !Int
+            | Remove !Int
             | Clear
             | Swap
-            | Select Int
-            | ChangeModel Model
+            | Select !Int
+            | ChangeModel !Model
             | NoOp
 
 adjectives :: V.Vector MisoString
@@ -98,7 +100,7 @@ main = startApp App
   , model = initialModel
   , update = updateModel
   , view = viewModel
-  , events = defaultEvents
+  , events = M.singleton "click" True
   , subs = []
   , mountPoint = Nothing
   }
@@ -230,7 +232,7 @@ viewJumbotron =
         [ class_ "col-md-6" ]
         [ h1_
             []
-            [ text "miso-0.15.0.0-keyed" ]
+            [ text "miso-0.18.0.0-keyed" ]
         ]
       , div_
           [ class_ "col-md-6" ]
