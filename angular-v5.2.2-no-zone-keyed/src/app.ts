@@ -1,4 +1,4 @@
-import { AfterViewChecked, ApplicationRef, ChangeDetectorRef, Component, NgModule, VERSION } from '@angular/core';
+import { AfterViewChecked, ApplicationRef, Component, NgModule, VERSION } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 interface Data {
@@ -88,7 +88,7 @@ export class AppComponent implements AfterViewChecked {
   id: number = 1;
   backup: Array<Data> = undefined;
 
-  constructor(private changeDetector: ChangeDetectorRef, private appRef: ApplicationRef) {
+  constructor(private appRef: ApplicationRef) {
     console.info(VERSION.full);
   }
 
@@ -119,7 +119,6 @@ export class AppComponent implements AfterViewChecked {
     startMeasure('select');
     event.preventDefault();
     this.selected = item.id;
-    this.changeDetector.detectChanges();
     this.appRef.tick();
   }
 
@@ -132,21 +131,18 @@ export class AppComponent implements AfterViewChecked {
         break;
       }
     }
-    this.changeDetector.detectChanges();
     this.appRef.tick();
   }
 
   run() {
     startMeasure('run');
     this.data = this.buildData();
-    this.changeDetector.detectChanges();
     this.appRef.tick();
   }
 
   add() {
     startMeasure('add');
     this.data = this.data.concat(this.buildData(1000));
-    this.changeDetector.detectChanges();
     this.appRef.tick();
   }
 
@@ -155,7 +151,6 @@ export class AppComponent implements AfterViewChecked {
     for (let i = 0; i < this.data.length; i += 10) {
       this.data[i].label += ' !!!';
     }
-    this.changeDetector.detectChanges();
     this.appRef.tick();
   }
 
@@ -163,7 +158,6 @@ export class AppComponent implements AfterViewChecked {
     startMeasure('runLots');
     this.data = this.buildData(10000);
     this.selected = undefined;
-    this.changeDetector.detectChanges();
     this.appRef.tick();
   }
 
@@ -171,7 +165,6 @@ export class AppComponent implements AfterViewChecked {
     startMeasure('clear');
     this.data = [];
     this.selected = undefined;
-    this.changeDetector.detectChanges();
     this.appRef.tick();
   }
 
@@ -182,7 +175,6 @@ export class AppComponent implements AfterViewChecked {
       this.data[1] = this.data[998];
       this.data[998] = a;
     }
-    this.changeDetector.detectChanges();
     this.appRef.tick();
   }
 
