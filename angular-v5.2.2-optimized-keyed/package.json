@@ -1,0 +1,38 @@
+{
+  "name": "angular-closure",
+  "version": "1.0.0",
+  "description": "An angular app using closure compiler",
+  "scripts": {
+    "start": "echo 'please start in root project'",
+    "test": "karma start",
+    "ngc": "ngc",
+    "preclosure": "rm -rf dist",
+    "closure": "java -jar node_modules/google-closure-compiler/compiler.jar --flagfile closure.conf",
+    "build-prod": "npm run ngc && npm run closure",
+    "rollup": "rollup -c rollup.config.js",
+    "build-dev": "npm run ngc && npm run rollup"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@angular-contrib/core": "0.0.1-alpha.10",
+    "@angular/common": "5.2.2",
+    "@angular/compiler": "5.2.2",
+    "@angular/compiler-cli": "5.2.2",
+    "@angular/core": "5.2.2",
+    "@angular/platform-browser": "5.2.2",
+    "core-js": "2.5.3",
+    "rxjs": "5.5.6",
+    "zone.js": "0.8.18"
+  },
+  "devDependencies": {
+    "google-closure-compiler": "git+https://github.com/alexeagle/closure-compiler.git#packagejson.dist",
+    "http-server": "0.11.1",
+    "rollup": "0.55.0",
+    "rollup-plugin-commonjs": "8.2.6",
+    "rollup-plugin-node-resolve": "3.0.2",
+    "rollup-plugin-uglify": "3.0.0",
+    "typescript": "2.6.2",
+    "typings": "2.1.1",
+    "yargs": "11.0.0"
+  }
+}
