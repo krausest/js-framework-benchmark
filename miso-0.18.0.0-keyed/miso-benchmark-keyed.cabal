@@ -1,0 +1,22 @@
+name:                miso-benchmark-keyed
+version:             0.1.0.0
+synopsis:            Benchmark of miso
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+
+extra-source-files:  index.html
+
+executable miso-benchmark-keyed
+  main-is:            Main.hs
+  if !impl(ghcjs)
+    Buildable: False
+  else
+    hs-source-dirs:     src
+    ghcjs-options:      -DGHCJS_BROWSER -O2 -fspecialise-aggressively
+    build-depends:      base < 5
+                      , containers
+                      , random
+                      , miso
+                      , vector
+    default-language:   Haskell2010

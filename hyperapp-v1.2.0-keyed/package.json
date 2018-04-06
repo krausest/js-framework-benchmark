@@ -1,0 +1,28 @@
+{
+  "name": "hyperapp-v1.2.0-js-benchmark",
+  "version": "1.0.0",
+  "description": "hyperapp v1.2.0 js benchmark",
+  "main": "index.js",
+  "dependencies": {
+    "hyperapp": "1.2.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "rollup": "^0.51.3",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^2.0.1",
+    "rollup-watch": "^4.3.1"
+  },
+  "scripts": {
+    "build-prod": "rollup -cf iife -i src/index.js -o dist/index.js",
+    "build-dev": "rollup -w -cf iife -m inline -i src/index.js -o dist/index.js"
+  },
+  "keywords": [
+    "hyperapp"
+  ],
+  "author": "Jorge Bucaran",
+  "license": "MIT"
+}
