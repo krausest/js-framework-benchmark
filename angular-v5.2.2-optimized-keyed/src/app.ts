@@ -1,5 +1,6 @@
-import { AfterViewChecked, ApplicationRef, Component, NgModule, VERSION } from '@angular/core';
+import { AfterViewChecked, ApplicationRef, Component, NgModule, IterableDiffers, VERSION } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FastIterableDifferFactory } from '@angular-contrib/core';
 
 interface Data {
   id: number;
@@ -31,7 +32,7 @@ let stopMeasure = function () {
           <div class="jumbotron">
               <div class="row">
                   <div class="col-md-6">
-                      <h1>Angular v5.2.2 (no Zone.js)</h1>
+                      <h1>Angular v5.2.2 (Optimized)</h1>
                   </div>
                   <div class="col-md-6">
                       <div class="col-sm-6 smallpad">
@@ -68,15 +69,18 @@ let stopMeasure = function () {
           </div>
           <table class="table table-hover table-striped test-data">
               <tbody>
-              <tr [class.danger]="item.id === selected" *ngFor="let item of data; trackBy: itemById">
-                  <td class="col-md-1">{{item.id}}</td>
-                  <td class="col-md-4">
-                      <a href="#" (click)="select(item, $event)">{{item.label}}</a>
-                  </td>
-                  <td class="col-md-1"><a href="#" (click)="delete(item, $event)"><span
-                          class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-                  <td class="col-md-6"></td>
-              </tr>
+                  <tr *ngFor="let item of data; trackBy: itemById" [class.danger]="item.id === selected">
+                      <td class="col-md-1">{{item.id}}</td>
+                      <td class="col-md-4">
+                          <a href="#" (click)="select(item, $event)">{{item.label}}</a>
+                      </td>
+                      <td class="col-md-1">
+                        <a href="#" (click)="delete(item, $event)">
+                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a>
+                      </td>
+                      <td class="col-md-6"></td>
+                  </tr>
               </tbody>
           </table>
           <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -88,8 +92,11 @@ export class AppComponent implements AfterViewChecked {
   id: number = 1;
   backup: Array<Data> = undefined;
 
-  constructor(private appRef: ApplicationRef) {
+  constructor(private appRef: ApplicationRef, differs: IterableDiffers, fastDifferFactory: FastIterableDifferFactory) {
     console.info(VERSION.full);
+
+    // TODO: remove this. The normal setup does not work in Closure Compiler "ADVANCED" mode, figure it out.
+    differs.factories.unshift(fastDifferFactory);
   }
 
   buildData(count: number = 1000): Array<Data> {
@@ -186,7 +193,8 @@ export class AppComponent implements AfterViewChecked {
 @NgModule({
   imports: [BrowserModule],
   declarations: [AppComponent],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [FastIterableDifferFactory]
 })
 export class AppModule {
 }
