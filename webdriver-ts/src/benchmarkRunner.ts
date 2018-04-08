@@ -325,8 +325,6 @@ function writeResult<T>(res: Result<T>, dir: string) {
 
     for (let resultKind of benchmark.resultKinds()) {
         let data = benchmark.extractResult(res.results, resultKind);
-        data = data.slice(0).sort((a:number,b:number) => a-b);
-        // data = data.slice(0, config.REPEAT_RUN - config.DROP_WORST_RUN);
         let s = jStat(data);
         console.log(`result ${fileName(res.framework, resultKind)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
         let result: JSONResult = {
