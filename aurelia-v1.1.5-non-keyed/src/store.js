@@ -65,11 +65,13 @@ export class Store {
         this.selected = undefined;
     }
     swapRows() {
-        if(this.data.length > 998) {
-            var a = this.data[1];
-            var b = this.data[998];
-            this.data.splice(1, 1, b);
-            this.data.splice(998, 1, a);
+        if (this.data.length > 998) {
+            let newData = this.data.slice();
+            var temp = this.data[1];            
+            var temp2 = this.data[998];  
+            newData[1] = temp2
+            newData[998] = temp;            
+            this.data = newData;
         }
     }
 
