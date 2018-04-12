@@ -42,7 +42,7 @@ export let frameworks = [
     f("angular-v5.2.2-no-zone-keyed", true),
     f("angular-v5.2.2-non-keyed", false),
     f("angular-v5.2.2-optimized-keyed", true),
-    f("aurelia-v1.1.5-non-keyed", false),
+    f("aurelia-v1.2.0-non-keyed", false),
     f("aurelia-v1.2.0-keyed", true),
     f("apprun-v1.8.3-keyed", true),
     f("apprun-v1.8.3-non-keyed", false),
