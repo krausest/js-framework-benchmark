@@ -6,7 +6,7 @@
     "start": "echo 'please start in root project'",
     "test": "karma start",
     "ngc": "ngc",
-    "preclosure": "rm -rf dist",
+    "preclosure": "rimraf dist",
     "closure": "java -jar node_modules/google-closure-compiler/compiler.jar --flagfile closure.conf",
     "build-prod": "npm run ngc && npm run closure",
     "rollup": "rollup -c rollup.config.js",

@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "postinstall": "bower install",
-        "clean": "rm -rf output bower_components node_modules",
+        "clean": "rimraf output bower_components node_modules",
         "build-dev": "pulp browserify --to output/bundle.js",
         "build-prod": "pulp browserify --optimise --to output/bundle.js"
     },
@@ -25,6 +25,7 @@
         "pulp": "11.0.0",
         "purescript": "0.11.6",
         "react": "15.6.1",
-        "react-dom": "15.6.1"
+        "react-dom": "15.6.1",
+        "rimraf": "2.5.4"
     }
 }
