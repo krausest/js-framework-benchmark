@@ -4,8 +4,12 @@ var path = require('path')
 var cache = {};
 var loaders = [
   {
-    test: /\.es6\.js$/,
+    test: /\.ractive\.html$/,
     loader: 'babel-loader'
+  },
+  {
+    test: /\.ractive\.html$/,
+    loader: 'ractive-bin-loader'
   },
   {
     test: /\.css$/,
@@ -13,7 +17,7 @@ var loaders = [
   }
 ];
 var extensions = [
-  '.js', '.es6.js'
+  '.ractive.html'
 ];
 
 module.exports = [{
