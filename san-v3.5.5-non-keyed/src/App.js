@@ -27,7 +27,7 @@ export default san.defineComponent({
         <div class="jumbotron">
             <div class="row">
                 <div class="col-md-6">
-                    <h1>san v3.5.2</h1>
+                    <h1>san v3.5.5</h1>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
