@@ -377,10 +377,12 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
         let results = benchmark.type === BenchmarkType.CPU ? await computeResultsCPU(driver) : await computeResultsMEM(driver);
         await writeResult({framework: framework, results: results, benchmark: benchmark}, dir);
         console.log("QUIT");
+        await driver.close();
         await driver.quit();
     } catch (e) {
         console.log("ERROR:", e);
         console.log("QUIT");
+        await driver.close();
         await driver.quit();
         if (config.EXIT_ON_ERROR) { throw "Benchmarking failed"}
     }
@@ -408,6 +410,7 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
                 await registerError(driver, framework, benchmark, e);
                 throw e;
             } finally {
+                await driver.close();
                 await driver.quit();
             }
         }
