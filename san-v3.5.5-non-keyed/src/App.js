@@ -1,5 +1,5 @@
 import {Store} from './store.es6';
-import san from 'san/dist/san.spa.js';
+import san from 'san/dist/san.spa.modern.js';
 
 
 var store = new Store();
@@ -27,7 +27,7 @@ export default san.defineComponent({
         <div class="jumbotron">
             <div class="row">
                 <div class="col-md-6">
-                    <h1>san v3.2.6</h1>
+                    <h1>san v3.5.2</h1>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
@@ -84,6 +84,7 @@ export default san.defineComponent({
     },
     attached() {
         window.app = this
+        // console.log(this.aNode)
     },
     ccc(){
         console.log(this.data.get(''));
@@ -139,10 +140,15 @@ export default san.defineComponent({
     sync() {
         for (let i = 0; i < store.ops.length; i++) {
             let op = store.ops[i];
-            this.data[op.type](op.name, op.arg);
+            this.data[op.type](op.name, op.arg, op.options);
+        }
+
+        for (let i = 0; i < store.fires.length; i++) {
+            this.data.fire(store.fires[i])
         }
 
         store.ops.length = 0;
+        store.fires.length = 0;
     }
 });
 
