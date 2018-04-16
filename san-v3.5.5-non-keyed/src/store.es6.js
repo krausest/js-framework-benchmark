@@ -1,3 +1,5 @@
+import san from 'san/dist/san.spa.modern.js';
+
 'use strict';
 
 function _random(max) {
@@ -10,6 +12,7 @@ export class Store {
         this.selected = undefined;
         this.id = 1;
         this.ops = [];
+        this.fires = [];
     }
     buildData(count = 1000) {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
@@ -22,20 +25,34 @@ export class Store {
     }
     updateData(mod = 10) {
         // Just assigning setting each tenth this.data doesn't cause a redraw, the following does:
-        var newData = [];
-        for (let i = 0; i < this.data.length; i ++) {
-            if (i%10===0) {
-                let newRow = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
-                newData[i] = newRow;
-                this.ops.push({
-                    type: 'set',
-                    name: 'rows[' + i + ']',
-                    arg: newRow
-                });
-            } else {
-                newData[i] = this.data[i];
-            }
+        var newData = this.data.slice(0);
+        var expr = san.parseExpr('rows[0].label');
+        for (let i = 0; i < this.data.length; i += mod) {
+            let newRow = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
+            newData[i] = newRow;
+            this.fires.push({
+                type: 1,
+                expr: {
+                    type: expr.type,
+                    paths: [
+                        expr.paths[0], 
+                        {type: expr.paths[1].type, value: i}, 
+                        expr.paths[2]
+                    ],
+                    raw: 'rows[' + i + '].label'
+                },
+                value: newRow.label,
+                option: {}
+            });
         }
+
+        this.ops.push({
+            type: 'set',
+            name: 'rows',
+            arg: newData,
+            options: {silent: 1}
+        });
+
         this.data = newData;
     }
     delete(id) {
@@ -55,13 +72,13 @@ export class Store {
         this.ops.push(
             {
                 type: 'set',
-                name: 'rows',
-                arg: this.data
+                name: 'selected',
+                arg: null
             },
             {
                 type: 'set',
-                name: 'selected',
-                arg: null
+                name: 'rows',
+                arg: this.data
             }
         );
     }
@@ -93,14 +110,15 @@ export class Store {
         this.ops.push(
             {
                 type: 'set',
-                name: 'rows',
-                arg: this.data
+                name: 'selected',
+                arg: null
             },
             {
                 type: 'set',
-                name: 'selected',
-                arg: null
+                name: 'rows',
+                arg: this.data
             }
+            
         );
     }
     clear() {
