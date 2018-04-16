@@ -1,5 +1,49 @@
-'use strict';
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Ractive v0.9 non-keyed</h1>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="run" on-click="run">Create 1,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="runlots" on-click="runLots">Create 10,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="add" on-click="add">Append 1,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="update" on-click="partialUpdate">Update every 10th row</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="clear" on-click="clear">Clear</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button type="button" class="btn btn-primary btn-block" id="swaprows" on-click="swapRows">Swap Rows</button>
+                </div>
+           </div>
+        </div>
+    </div>
+</div>
+<table class="table table-hover table-striped test-data">
+    <tbody>
+        {{#each data}}
+        <tr class-danger="~/selected === .id">
+            <td class="col-md-1">{{.id}}</td>
+            <td class="col-md-4">
+                <a on-click="@this.select(.id)">{{label}}</a>
+            </td>
+            <td class="col-md-1"><a on-click="@this.remove(@index)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+            <td class="col-md-6"></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 
+<script>
 const Ractive = require('ractive');
 Ractive.DEBUG = /unminified/.test(function(){/*unminified*/});
 
@@ -52,10 +96,12 @@ var ractive = window.r = new Ractive({
         });
         this.on( 'partialUpdate', function ( event) {
            startMeasure("update");
-           let data = this.get('data');
-            for (let i=0;i<data.length;i+=10) {
-                this.set(`data.${i}.label`, data[i].label + ' !!!');
-            }
+           const data = this.get('data');
+           const sets = {};
+           for (let i=0;i<data.length;i+=10) {
+               sets[`data.${i}.label`] = data[i].label + ' !!!';
+           }
+           this.set(sets);
            stopMeasure();
         });
         this.on('select', function (event, id) {
@@ -97,56 +143,10 @@ var ractive = window.r = new Ractive({
         stopMeasure();
     },
     el: "#main",
-    template:
-    `<div class="jumbotron">
-        <div class="row">
-            <div class="col-md-6">
-                <h1>Ractive edge non-keyed</h1>
-            </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-sm-6 smallpad">
-                        <button type="button" class="btn btn-primary btn-block" id="run" on-click="run">Create 1,000 rows</button>
-                    </div>
-                    <div class="col-sm-6 smallpad">
-                        <button type="button" class="btn btn-primary btn-block" id="runlots" on-click="runLots">Create 10,000 rows</button>
-                    </div>
-                    <div class="col-sm-6 smallpad">
-                        <button type="button" class="btn btn-primary btn-block" id="add" on-click="add">Append 1,000 rows</button>
-                    </div>
-                    <div class="col-sm-6 smallpad">
-                        <button type="button" class="btn btn-primary btn-block" id="update" on-click="partialUpdate">Update every 10th row</button>
-                    </div>
-                    <div class="col-sm-6 smallpad">
-                        <button type="button" class="btn btn-primary btn-block" id="clear" on-click="clear">Clear</button>
-                    </div>
-                    <div class="col-sm-6 smallpad">
-                        <button type="button" class="btn btn-primary btn-block" id="swaprows" on-click="swapRows">Swap Rows</button>
-                    </div>
-               </div>
-            </div>
-        </div>
-    </div>
-    <table class="table table-hover table-striped test-data">
-        <tbody>
-            {{#each data}}
-            <tr class-danger="~/selected === .id">
-                <td class="col-md-1">{{.id}}</td>
-                <td class="col-md-4">
-                    <a on-click="@this.select(.id)">{{label}}</a>
-                </td>
-                <td class="col-md-1"><a on-click="@this.remove(@index)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-                <td class="col-md-6"></td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
-    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
-    `
-    ,
+    template: $TEMPLATE,
     data: {
         data: [],
         selected: undefined
     }
 });
-
+</script>
