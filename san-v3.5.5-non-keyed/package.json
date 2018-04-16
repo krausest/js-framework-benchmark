@@ -1,6 +1,6 @@
 {
-  "name": "js-framework-benchmark-vue",
-  "version": "1.0.0",
+  "name": "js-framework-benchmark-san",
+  "version": "3.5.5",
   "description": "Benchmark for san framework",
   "scripts": {
     "build-dev": "webpack -w -d",
@@ -25,6 +25,6 @@
     "css-loader": "0.28.1"
   },
   "dependencies": {
-    "san": "^3.2.6"
+    "san": "3.5.5"
   }
 }
