@@ -4,6 +4,18 @@ export interface JSONResult {
         standardDeviation: number, median: number, values: Array<number>
 }
 
+export interface BenchmarkError {
+    imageFile : string;
+    exception : string
+}
+
+export interface BenchmarkOptions {
+    outputDirectory: string;
+    port: string;
+    headless?: boolean;
+    chromeBinaryPath?: string;
+}
+
 export let config = {
     PORT: 8080,
     REPEAT_RUN: 10,

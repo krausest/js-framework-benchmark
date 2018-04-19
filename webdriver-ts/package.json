@@ -19,18 +19,18 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/lodash": "4.14.104",
-    "@types/node": "9.4.6",
-    "@types/ramda": "^0.25.19",
+    "@types/lodash": "4.14.107",
+    "@types/node": "9.6.5",
+    "@types/ramda": "^0.25.23",
     "@types/selenium-webdriver": "3.0.8",
     "@types/yargs": "11.0.0",
-    "typescript": "2.7.2"
+    "typescript": "2.8.1"
   },
   "dependencies": {
-    "chromedriver": "2.36.0",
+    "chromedriver": "2.37.0",
     "dot": "1.1.2",
     "jstat": "1.7.1",
-    "lighthouse": "2.9.1",
+    "lighthouse": "2.9.4",
     "lodash": "4.17.5",
     "ramda": "^0.25.0",
     "selenium-webdriver": "4.0.0-alpha.1",
