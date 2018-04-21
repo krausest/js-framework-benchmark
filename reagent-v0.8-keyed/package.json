@@ -1,10 +1,11 @@
 {
   "private": true,
   "scripts": {
-    "build-dev": "LEIN_VERSION=2.8.1 lein cljsbuild auto",
-    "build-prod": "LEIN_VERSION=2.8.1 lein cljsbuild once prod"
+    "build-dev" : "cross-env LEIN_VERSION=2.8.1 lein self-install && lein cljsbuild auto",
+    "build-prod": "cross-env LEIN_VERSION=2.8.1 lein self-install && lein cljsbuild once prod"
   },
   "dependencies": {
-    "lein-bin": "0.1.0"
+    "cross-env": "5.1.4",
+    "lein-bin" : "0.1.0"
   }
 }
