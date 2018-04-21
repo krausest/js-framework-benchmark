@@ -425,7 +425,7 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
     return errors;
 }
 
-export async function runBench(frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<BenchmarkError[]> {
+export async function executeBenchmark(frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<BenchmarkError[]> {
     let runFrameworks = frameworks.filter(f => frameworkName === f.name);
     let runBenchmarks = benchmarks.filter(b => benchmarkName === b.id);
     if (runFrameworks.length!=1) throw `Framework name ${frameworkName} is not unique`;
@@ -451,7 +451,7 @@ process.on('message', (msg) => {
     if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
 
     try {
-        let errorsPromise = runBench(frameworkName, benchmarkName, benchmarkOptions);
+        let errorsPromise = executeBenchmark(frameworkName, benchmarkName, benchmarkOptions);
         errorsPromise.then(errors => {
             if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errors);
             process.send({errors});

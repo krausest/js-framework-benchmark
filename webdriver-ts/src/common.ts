@@ -27,7 +27,8 @@ export let config = {
     LOG_DEBUG: false,
     EXIT_ON_ERROR: false,
     STARTUP_DURATION_FROM_EVENTLOG: true,
-    STARTUP_SLEEP_DURATION: 1000
+    STARTUP_SLEEP_DURATION: 1000,
+    FORK_CHROMEDRIVER: true
 }
 
 export interface FrameworkData {
