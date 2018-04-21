@@ -14,6 +14,7 @@ export interface BenchmarkOptions {
     port: string;
     headless?: boolean;
     chromeBinaryPath?: string;
+    numIterationsForAllBenchmarks: number;
 }
 
 export let config = {

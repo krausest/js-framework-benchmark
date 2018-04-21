@@ -358,7 +358,7 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
     console.log("benchmarking ", framework, benchmark.id);
     let driver = buildDriver(benchmarkOptions);
     try {
-        for (let i = 0; i < config.REPEAT_RUN; i++) {
+        for (let i = 0; i <benchmarkOptions.numIterationsForAllBenchmarks; i++) {
             try {
                 setUseShadowRoot(framework.useShadowRoot);
                 await driver.get(`http://localhost:` + benchmarkOptions.port + `/${framework.uri}/`);
@@ -396,7 +396,7 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
 
     let chromeDuration = 0;
     try {
-        for (let i = 0; i<config.REPEAT_RUN; i++) {
+        for (let i = 0; i<benchmarkOptions.numIterationsForAllBenchmarks; i++) {
             let driver = buildDriver(benchmarkOptions);
             try {
                 setUseShadowRoot(framework.useShadowRoot);
