@@ -227,7 +227,7 @@ function buildDriver(benchmarkOptions: BenchmarkOptions) {
     let options = new chrome.Options();
     if(benchmarkOptions.headless) {
         options = options.addArguments("--headless");
-        options = options.addArguments("--disable-gpu");
+        options = options.addArguments("--disable-gpu"); // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
     }
     options = options.addArguments("--js-flags=--expose-gc");
     options = options.addArguments("--no-sandbox");
