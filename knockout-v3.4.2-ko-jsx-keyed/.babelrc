@@ -1,0 +1,3 @@
+{
+    "plugins": [["jsx-dom-expressions", {"noWhitespaceOnly": true}]]
+}
