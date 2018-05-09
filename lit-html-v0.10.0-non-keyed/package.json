@@ -22,15 +22,15 @@
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
     "@webcomponents/webcomponentsjs": "git://github.com/webcomponents/webcomponentsjs.git#no-html-imports",
-    "lit-html": "^0.9.0"
+    "lit-html": "^0.10.0"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-es2016": "^6.24.1",
-    "rollup": "^0.56.3",
-    "rollup-plugin-babel": "^3.0.3",
-    "rollup-plugin-node-resolve": "^3.0.3",
+    "rollup": "^0.58.2",
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-uglify": "^3.0.0",
     "uglify-es": "^3.3.9"
   }
