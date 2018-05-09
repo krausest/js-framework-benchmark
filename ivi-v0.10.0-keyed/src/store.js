@@ -1,5 +1,5 @@
 import { updateNextFrame } from "ivi";
-import { createStore, mut } from "ivi-state";
+import { createStore, createBox } from "ivi-state";
 
 function random(max) {
   return Math.round(Math.random() * 1000) % max;
@@ -26,17 +26,17 @@ function buildData(count = 1000) {
 }
 
 export const store = createStore(
-  { data: mut([]), selected: null },
+  { data: createBox([]), selected: null },
   function (state, action) {
-    const data = state.data.ref;
+    const data = state.data.value;
     switch (action.type) {
       case "delete":
         data.splice(data.indexOf(action.item), 1);
-        return { data: mut(data), selected: state.selected };
+        return { data: createBox(data), selected: state.selected };
       case "run":
-        return { data: mut(buildData(1000)), selected: null };
+        return { data: createBox(buildData(1000)), selected: null };
       case "add":
-        return { data: mut(state.data.ref.concat(buildData(1000))), selected: state.selected };
+        return { data: createBox(state.data.value.concat(buildData(1000))), selected: state.selected };
       case "update":
         for (let i = 0; i < data.length; i += 10) {
           const r = data[i];
@@ -46,18 +46,18 @@ export const store = createStore(
       case "select":
         return { data: state.data, selected: action.item };
       case "runlots":
-        return { data: mut(buildData(10000)), selected: null };
+        return { data: createBox(buildData(10000)), selected: null };
       case "clear":
-        return { data: mut([]), selected: null };
+        return { data: createBox([]), selected: null };
       case "swaprows":
         if (data.length > 998) {
           const a = data[1];
           data[1] = data[998];
           data[998] = a;
         }
-        return { data: mut(data), selected: state.selected };
+        return { data: createBox(data), selected: state.selected };
     }
     return state;
   },
-  updateNextFrame
+  updateNextFrame,
 );

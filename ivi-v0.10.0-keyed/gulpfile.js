@@ -1,8 +1,7 @@
 const gulp = require('gulp');
 const del = require('del');
 const rollup = require('rollup');
-const rollupNodeResolve = require('rollup-plugin-node-resolve');
-const rollupAlias = require('rollup-plugin-alias');
+const rollupNodeResolve = require('rollup-plugin-node-resolve-main-fields');
 const closureCompiler = require('google-closure-compiler').gulp();
 
 gulp.task('clean', function () {
@@ -13,10 +12,9 @@ gulp.task('bundle', ['clean'], function (done) {
   return rollup.rollup({
     input: 'src/main.js',
     plugins: [
-      rollupAlias({
-        'ivi-vars': __dirname + '/node_modules/ivi-vars/evergreen-browser',
+      rollupNodeResolve({
+        mainFields: ['es2016', 'module', 'main'],
       }),
-      rollupNodeResolve(),
     ]
   }).then(function (bundle) {
     return bundle.write({
@@ -27,7 +25,7 @@ gulp.task('bundle', ['clean'], function (done) {
 });
 
 gulp.task('build', ['bundle'], function () {
-  return gulp.src(['build/bundle.js'])
+  return gulp.src(['src/env.js', 'build/bundle.js'])
     .pipe(closureCompiler({
       js_output_file: 'main.js',
       compilation_level: 'ADVANCED',
