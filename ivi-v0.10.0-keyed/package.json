@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "js-framework-benchmark-ivi",
-  "version": "0.9.1",
+  "version": "1.0.0",
   "description": "Benchmark for ivi",
   "author": "Stefan Krause",
   "license": "Apache-2",
@@ -13,21 +13,18 @@
     "build-prod": "gulp build"
   },
   "dependencies": {
-    "ivi-core": "0.2.0",
-    "ivi-dom": "0.2.0",
-    "ivi-scheduler": "0.2.0",
-    "ivi-html": "0.2.0",
-    "ivi-events": "0.2.0",
-    "ivi-state": "0.2.0",
-    "ivi-vars": "0.1.1",
-    "ivi": "0.9.1"
+    "ivi-core": "0.10.0",
+    "ivi-scheduler": "0.10.0",
+    "ivi-html": "0.10.0",
+    "ivi-events": "0.10.0",
+    "ivi-state": "0.10.0",
+    "ivi": "0.10.0"
   },
   "devDependencies": {
     "del": "3.0.0",
-    "google-closure-compiler": "20171023.0.1",
+    "google-closure-compiler": "20180402.0.0",
     "gulp": "3.9.1",
-    "rollup": "0.51.3",
-    "rollup-plugin-node-resolve": "3.0.0",
-    "rollup-plugin-alias": "1.4.0"
+    "rollup": "0.58.2",
+    "rollup-plugin-node-resolve-main-fields": "3.3.0"
   }
 }
