@@ -1,0 +1,30 @@
+{
+  "name": "js-framework-benchmark-ko-jsx",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "rollup -c",
+    "build-prod": "rollup -c --environment production"
+  },
+  "author": "Ryan Carniato",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "knockout": "3.4.2",
+    "ko-jsx": "^0.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "*",
+    "@babel/plugin-syntax-jsx": "*",
+    "babel-plugin-jsx-dom-expressions": "0.0.11",
+    "rollup": "^0.58.2",
+    "rollup-plugin-babel": "beta",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^3.0.0"
+  }
+}
