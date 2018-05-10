@@ -30,8 +30,10 @@ bower_components
 dist
 
 .idea
+.vscode
 .DS_Store
 *.iml
+TODO.txt
 */dist/
 angular*/app/app.js
 angular*/app/app.js.map
@@ -40,8 +42,11 @@ tests/results/completed/
 target/
 webdriver-java/chromedriver
 webdriver-java/results/
-webdriver-ts/results/
-webdriver-ts/typings/
+webdriver-ts/results*
+webdriver-ts-results/table_*.html
+webdriver-ts/table_*.html
+webdriver-ts/error-*.png
+webdriver-ts/log*
 webdriver-ts/.vscode/
 marko-*/.cache
 marko-*/static
