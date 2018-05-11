@@ -1,6 +1,6 @@
 {
-  "name": "js-framework-benchmark-domvm-keyed",
-  "version": "3.2.4-non-keyed",
+  "name": "js-framework-benchmark-domvm-non-keyed",
+  "version": "3.3.1-non-keyed",
   "description": "Benchmark for domvm framework (non-keyed)",
   "scripts": {
     "build-dev": "node build.js",
@@ -9,10 +9,12 @@
   "devDependencies": {
     "rollup": "*",
     "rollup-plugin-buble": "*",
+    "rollup-plugin-node-resolve": "*",
     "rollup-plugin-commonjs": "*",
-    "rollup-plugin-uglify": "*"
+    "rollup-plugin-closure-compiler-js": "*",
+    "google-closure-compiler-js": "*"
   },
   "dependencies": {
-    "domvm": "^3.2.4"
+    "domvm": "git://github.com/leeoniya/domvm.git#3.3.1"
   }
 }
