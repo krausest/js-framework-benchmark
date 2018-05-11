@@ -147,6 +147,10 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
                 throw "at least one paint event is expected after the click event";
             }
 
+            console.log("# of paint events ",paints.length);
+            paints.forEach(p => {
+                console.log("duration to paint ",((p.end - clicks[0].ts)/1000.0));
+            })
             let lastPaint = R.reduce((max, elem) => max.end > elem.end ? max : elem, {end: 0} as Timingresult, paints);
 
             let upperBoundForSoundnessCheck = (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts)/1000.0;
