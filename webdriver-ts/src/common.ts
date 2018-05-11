@@ -116,6 +116,7 @@ export let frameworks = [
     f("react-v16.1.0-mobX-v3.3.1-keyed", true),
     f("react-v16.1.0-non-keyed", false),
     f("react-v16.1.0-redux-v3.7.2-keyed", true),
+    f("react-v16.1.0-redux-combiner-v0.4.1-keyed", true),
     f("reagent-v0.8-keyed", true),
     f("redom-v3.10.1-keyed", true),
     f("redom-v3.10.1-non-keyed", false),
