@@ -1,13 +1,13 @@
 import {BenchmarkType, Benchmark, benchmarks, fileName, LighthouseData} from './benchmarks'
 import * as fs from 'fs';
 import * as yargs from 'yargs';
-import {JSONResult, config, FrameworkData, frameworks, BenchmarkError, BenchmarkOptions} from './common'
+import {JSONResult, config, FrameworkData, frameworks, BenchmarkError, ErrorsAndWarning, BenchmarkOptions} from './common'
 import * as R from 'ramda';
 import { fork } from 'child_process';
 import {executeBenchmark} from './forkedBenchmarkRunner';
 
 
-function forkedRun(frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<BenchmarkError[]> {    
+function forkedRun(frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {    
     if (config.FORK_CHROMEDRIVER) {
         return new Promise(function(resolve, reject) {
             const forked = fork('dist/forkedBenchmarkRunner.js');
@@ -15,7 +15,7 @@ function forkedRun(frameworkName: string, benchmarkName: string, benchmarkOption
             forked.send({frameworkName, benchmarkName, benchmarkOptions});
                 forked.on('message', (msg) => {
                     if (config.LOG_DEBUG) console.log("main process got message from child", msg);
-                    resolve(msg.errors);
+                    resolve(msg);
             });
         });
     } else {
@@ -27,7 +27,9 @@ function forkedRun(frameworkName: string, benchmarkName: string, benchmarkOption
 
 
 async function runBench(frameworkNames: string[], benchmarkNames: string[], dir: string) {
-    var errors: BenchmarkError[] = [];
+    let errors: BenchmarkError[] = [];
+    let warnings: String[] = [];
+
     let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.name.indexOf(name)>-1));
     let runBenchmarks = benchmarks.filter(b => benchmarkNames.some(name => b.id.toLowerCase().indexOf(name)>-1));
     console.log("Frameworks that will be benchmarked", runFrameworks);
@@ -54,24 +56,36 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
         }
 
         try {
-            errors.splice(errors.length, 0, ...await forkedRun(framework.name, benchmark.id, benchmarkOptions));
+            let errorsAndWarnings: ErrorsAndWarning = await forkedRun(framework.name, benchmark.id, benchmarkOptions);
+            errors.splice(errors.length, 0, ...errorsAndWarnings.errors);
+            warnings.splice(warnings.length, 0, ...errorsAndWarnings.warnings);
         } catch (err) {
             console.log(`Error executing benchmark ${framework.name} and benchmark ${benchmark.id}`);
         }
     }
 
-    if(errors.length == 0) return;
+    if(warnings.length >0) {
+        console.log("================================");
+        console.log("The following warnings were logged:");
+        console.log("================================");
+    
+        warnings.forEach(e => {
+        console.log(e);
+        });
+    }
 
-    console.log("================================");
-    console.log("The following benchmarks failed:");
-    console.log("================================");
-
-    errors.forEach(e => {
-	console.log("[" + e.imageFile + "]");
-	console.log(e.exception);
-	console.log();
-    });
-    throw "Benchmarking failed with errors";
+    if(errors.length >0) {
+        console.log("================================");
+        console.log("The following benchmarks failed:");
+        console.log("================================");
+    
+        errors.forEach(e => {
+        console.log("[" + e.imageFile + "]");
+        console.log(e.exception);
+        console.log();
+        });
+        throw "Benchmarking failed with errors";    
+    }
 }
 
 let args = yargs(process.argv)

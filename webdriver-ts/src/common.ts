@@ -9,6 +9,11 @@ export interface BenchmarkError {
     exception : string
 }
 
+export interface ErrorsAndWarning {
+    errors: BenchmarkError[];
+    warnings: String[];
+}
+
 export interface BenchmarkOptions {
     outputDirectory: string;
     port: string;
