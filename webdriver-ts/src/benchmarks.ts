@@ -93,13 +93,15 @@ const benchUpdate = new class extends Benchmark {
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "runlots", SHORT_TIMEOUT);
         await clickElementById(driver, 'runlots');
+        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a");
         for (let i = 0; i < config.WARMUP_COUNT; i++) {
             await clickElementById(driver, 'update');
+            await testTextContains(driver, '//tbody/tr[9991]/td[2]/a', ' !!!'.repeat(i + 1));
         }
     }
     async run(driver: WebDriver) {
         await clickElementById(driver, 'update');
-        await testTextContains(driver, '//tbody/tr[1]/td[2]/a', ' !!!'.repeat(config.WARMUP_COUNT + 1));
+        await testTextContains(driver, '//tbody/tr[9991]/td[2]/a', ' !!!'.repeat(config.WARMUP_COUNT + 1));
     }
 }
 
