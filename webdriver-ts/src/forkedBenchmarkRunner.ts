@@ -37,25 +37,34 @@ function extractRelevantEvents(entries: logging.Entry[]) {
             protocolEvents.push(e)
         } else if (e.params.name==='EventDispatch') {
             if (e.params.args.data.type==="click") {
+                if (config.LOG_TIMELINE) console.log("CLICK ",JSON.stringify(e));
                 filteredEvents.push({type:'click', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur});
             }
         } else if (e.params.name==='TimeStamp' &&
             (e.params.args.data.message==='afterBenchmark' || e.params.args.data.message==='finishedBenchmark' || e.params.args.data.message==='runBenchmark' || e.params.args.data.message==='initBenchmark')) {
             filteredEvents.push({type: e.params.args.data.message, ts: +e.params.ts, dur: 0, end: +e.params.ts});
+            if (config.LOG_TIMELINE) console.log("TIMESTAMP ",JSON.stringify(e));
         } else if (e.params.name==='navigationStart') {
             filteredEvents.push({type:'navigationStart', ts: +e.params.ts, dur: 0, end: +e.params.ts});
+            if (config.LOG_TIMELINE) console.log("NAVIGATION START ",JSON.stringify(e));
         } else if (e.params.name==='Paint') {
+            if (config.LOG_TIMELINE) console.log("PAINT ",JSON.stringify(e));
             filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur, evt: JSON.stringify(e)});
         // } else if (e.params.name==='Rasterize') {
+        //     console.log("RASTERIZE ",JSON.stringify(e));
         //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur, evt: JSON.stringify(e)});
         // } else if (e.params.name==='CompositeLayers') {
+        //     console.log("COMPOSITE ",JSON.stringify(e));
         //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts, evt: JSON.stringify(e)});
         // } else if (e.params.name==='Layout') {
+        //     console.log("LAYOUT ",JSON.stringify(e));
         //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: e.params.ts, evt: JSON.stringify(e)});
         // } else if (e.params.name==='UpdateLayerTree') {
+        //     console.log("UPDATELAYER ",JSON.stringify(e));
         //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur, evt: JSON.stringify(e)});
         } else if (e.params.name==='MajorGC' && e.params.args.usedHeapSizeAfter) {
             filteredEvents.push({type:'gc', ts: +e.params.ts, end:+e.params.ts, mem: Number(e.params.args.usedHeapSizeAfter)/1024/1024});
+            if (config.LOG_TIMELINE) console.log("GC ",JSON.stringify(e));
         }
     });
     return {filteredEvents, protocolEvents};
@@ -113,7 +122,7 @@ async function runLighthouse(protocolResults: any[]): Promise<LighthouseData> {
     return LighthouseData;
 }
 
-async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
+async function computeResultsCPU(driver: WebDriver, benchmarkOptions: BenchmarkOptions): Promise<number[]> {
     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
     const perfLogEvents = (await fetchEventsFromPerformanceLog(driver));
@@ -148,6 +157,9 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
             }
 
             console.log("# of paint events ",paints.length);
+            if (paints.length>2) {
+                console.log("*** WARNING: NUmber of paint calls >2. Please check whether that's plausible");
+            }
             paints.forEach(p => {
                 console.log("duration to paint ",((p.end - clicks[0].ts)/1000.0));
             })
@@ -170,14 +182,14 @@ async function computeResultsCPU(driver: WebDriver): Promise<number[]> {
         }
         remaining = R.drop(1, evts[1]);
     }
-    if (results.length !== config.REPEAT_RUN) {
-        console.log(`soundness check failed. number or results isn't ${config.REPEAT_RUN}`, results, asString(filteredEvents));
-        throw `soundness check failed. number or results isn't ${config.REPEAT_RUN}`;
+    if (results.length !== benchmarkOptions.numIterationsForAllBenchmarks) {
+        console.log(`soundness check failed. number or results isn't ${benchmarkOptions.numIterationsForAllBenchmarks}`, results, asString(filteredEvents));
+        throw `soundness check failed. number or results isn't ${benchmarkOptions.numIterationsForAllBenchmarks}`;
     }
     return results;
 }
 
-async function computeResultsMEM(driver: WebDriver): Promise<number[]> {
+async function computeResultsMEM(driver: WebDriver, benchmarkOptions: BenchmarkOptions): Promise<number[]> {
     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
     let filteredEvents = (await fetchEventsFromPerformanceLog(driver)).timingResults;
@@ -202,9 +214,9 @@ async function computeResultsMEM(driver: WebDriver): Promise<number[]> {
         }
         remaining = R.drop(1, evts[1]);
     }
-    if (results.length !== config.REPEAT_RUN) {
-        console.log(`soundness check failed. number or results isn't ${config.REPEAT_RUN}`, results, asString(filteredEvents));
-        throw `soundness check failed. number or results isn't ${config.REPEAT_RUN}`;
+    if (results.length !== benchmarkOptions.numIterationsForAllBenchmarks) {
+        console.log(`soundness check failed. number or results isn't ${benchmarkOptions.numIterationsForAllBenchmarks}`, results, asString(filteredEvents));
+        throw `soundness check failed. number or results isn't ${benchmarkOptions.numIterationsForAllBenchmarks}`;
     }
     return results;
 }
@@ -378,7 +390,7 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
                 throw e;
             }
         }
-        let results = benchmark.type === BenchmarkType.CPU ? await computeResultsCPU(driver) : await computeResultsMEM(driver);
+        let results = benchmark.type === BenchmarkType.CPU ? await computeResultsCPU(driver, benchmarkOptions) : await computeResultsMEM(driver, benchmarkOptions);
         await writeResult({ framework: framework, results: results, benchmark: benchmark }, benchmarkOptions.outputDirectory);
         console.log("QUIT");
         await driver.close();

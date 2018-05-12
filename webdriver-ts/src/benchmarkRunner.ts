@@ -50,7 +50,7 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
             port: config.PORT.toFixed(),
             headless: args.headless,
             chromeBinaryPath: args.chromeBinary,
-            numIterationsForAllBenchmarks: config.REPEAT_RUN
+            numIterationsForAllBenchmarks: config.REPEAT_RUN,
         }
 
         try {

@@ -26,6 +26,7 @@ export let config = {
     LOG_PROGRESS: true,
     LOG_DETAILS: false,
     LOG_DEBUG: false,
+    LOG_TIMELINE: false,
     EXIT_ON_ERROR: false,
     STARTUP_DURATION_FROM_EVENTLOG: true,
     STARTUP_SLEEP_DURATION: 1000,
