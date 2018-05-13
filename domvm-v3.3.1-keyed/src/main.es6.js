@@ -1,11 +1,21 @@
-import domvm from '../node_modules/domvm/dist/nano/domvm.nano.min.js';
+import {
+	createView,
+	defineElement,
+	defineView,
+	FIXED_BODY,
+	KEYED_LIST,
+	LAZY_LIST,
+	lazyList
+} from '../node_modules/domvm/dist/nano/domvm.nano.es.js';
+
+const h = (tag, arg1, arg2) => defineElement(tag, arg1, arg2, FIXED_BODY);
+const v = defineView;
+
 import {Store} from './store.es6';
 
-const h = (tag, arg1, arg2) => domvm.defineElement(tag, arg1, arg2, domvm.FIXED_BODY);
-const v = domvm.defineView;
 const store = new Store();
 
-domvm.createView(App).mount(document.body);
+createView(App).mount(document.body);
 
 function App(vm) {
 	return _ =>
@@ -89,13 +99,13 @@ function Table(vm) {
 	};
 
 	return _ => {
-		var items = domvm.lazyList(store.data, {
+		var items = lazyList(store.data, {
 			key:  item => item.id,
 			diff: item => [item.label, item.id === store.selected],
 		});
 
 		return h("table.table.table-hover.table-striped.test-data", {onclick: tableClick}, [
-			h("tbody", {_flags: domvm.LAZY_LIST | domvm.KEYED_LIST}, items.map(item =>
+			h("tbody", {_flags: LAZY_LIST | KEYED_LIST}, items.map(item =>
 				h("tr", {_key: item.id, class: item.id === store.selected ? 'danger' : null}, [
 					h("td.col-md-1", item.id),
 					h("td.col-md-4", [
