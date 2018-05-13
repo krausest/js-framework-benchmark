@@ -1,16 +1,22 @@
 const rollup = require('rollup').rollup;
 const buble = require('rollup-plugin-buble');
-const uglify = require('rollup-plugin-uglify');
+const closure = require('rollup-plugin-closure-compiler-js');
+const resolve =  require('rollup-plugin-node-resolve');
 const commonjs = require('rollup-plugin-commonjs');
 
 rollup({
 	input: 'src/main.es6.js',
 	plugins: [
+		resolve(),
 		commonjs(),
 		buble(),
-		uglify(),
+		closure({
+			rewritePolyfills: false
+		}),
 	]
-}).then(bundle => bundle.write({
+})
+.then(bundle => bundle.write({
 	file: 'dist/bundle.js',
 	format: 'iife'
-})).catch(err => console.log(err.stack));
+}))
+.catch(err => console.log(err.stack));
