@@ -51,7 +51,7 @@ interface Options {
 }
 
 function f(name: string, keyed: boolean, options: Options = {uri: null, useShadowRoot: false}): FrameworkData {
-    let ret = {name, keyed, uri: options.uri ? options.uri : name, useShadowRoot: options.useShadowRoot};
+    let ret = {name, keyed, uri: 'frameworks/' + (options.uri ? options.uri : name), useShadowRoot: options.useShadowRoot};
     return ret;
 }
 
