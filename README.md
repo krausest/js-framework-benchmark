@@ -121,7 +121,7 @@ In most cases you'll need `npm install` and `npm run build-prod` and then check 
 As mentioned above the benchmark uses an automated benchmark driver using chromedriver to measure the duration for each operation using chrome's timeline. Here are the steps to run is for a single framework:
 
 ```
-cd ..
+cd ../..
 cd webdriver-ts
 ```
 and install the dependencies
