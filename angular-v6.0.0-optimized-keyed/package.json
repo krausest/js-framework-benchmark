@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@angular-contrib/core": "0.0.1",
+    "@angular-contrib/core": "0.0.2",
     "@angular/common": "6.0.0",
     "@angular/compiler": "6.0.0",
     "@angular/compiler-cli": "6.0.0",
