@@ -78,7 +78,7 @@ Now open a new terminal window and keep http-server running in background.
 
 We now try to build the first framework. Go to the vanillajs reference implementation
 ```
-cd vanillajs-keyed
+cd frameworks/vanillajs-keyed
 ```
 and install the dependencies
 ```
@@ -89,7 +89,7 @@ and build the framework
 npm run build-prod
 ```
 There should be no build errors and we can open the framework in the browser:
-[http://localhost:8080/vanillajs-keyed/](http://localhost:8080/vanillajs-keyed/)
+[http://localhost:8080/frameworks/vanillajs-keyed/](http://localhost:8080/frameworks/vanillajs-keyed/)
 
 Some frameworks like binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a third parameter in [common.ts](https://github.com/krausest/js-framework-benchmark/blob/master/webdriver-ts/src/common.ts#L38-L42) that represents the url.
 
@@ -102,7 +102,7 @@ Open the browser console and click a bit on the buttons and you should see some 
 
 For contributions it is basically sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional. Let's simulate that by copying vanillajs.
 ```
-cd ..
+cd ../frameworks
 cp -r vanillajs-keyed super-vanillajs-keyed
 cd super-vanillajs-keyed
 ```
@@ -112,7 +112,7 @@ Then we edit super-vanillajs-keyed/index.html to have a correct index.html:
 ...
                     <h1>Super-VanillaJS-"keyed"</h1>
 ```
-In most cases you'll need `npm install` and `npm run build-prod` and then check whether it works in the browser on [http://localhost:8080/super-vanillajs-keyed/](http://localhost:8080/super-vanillajs-keyed/).
+In most cases you'll need `npm install` and `npm run build-prod` and then check whether it works in the browser on [http://localhost:8080/frameworks/super-vanillajs-keyed/](http://localhost:8080/frameworks/super-vanillajs-keyed/).
 
 (Of course in reality you'd rather throw out the javascript source files and use your framework there instead of only changing the html file.)
 
@@ -240,7 +240,7 @@ runs the test for all frameworks that contain either angular or bob, which means
 ## How to contribute
 
 Contributions are very welcome. Please use the following rules:
-* Name your directory [FrameworkName]-v[Version]-[keyed|non-keyed]
+* Name your directory frameworks/[FrameworkName]-v[Version]-[keyed|non-keyed]
 * Each contribution must be buildable by `npm install` and `npm run build-prod` command in the directory. What build-prod does is up to you. Often there's an `npm run build-dev` that creates a development build
 * Every implementation must use bootstrap provided in the root css directory. 
 * All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server should not be a local dependency. It is installed from the root directory to allow access to bootstrap.
