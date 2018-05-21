@@ -379,7 +379,7 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
         for (let i = 0; i <benchmarkOptions.numIterationsForAllBenchmarks; i++) {
             try {
                 setUseShadowRoot(framework.useShadowRoot);
-                await driver.get(`http://localhost:` + benchmarkOptions.port + `/${framework.uri}/`);
+                await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/`);
                 await driver.executeScript("console.timeStamp('initBenchmark')");
                 await initBenchmark(driver, benchmark, framework);
                 await driver.executeScript("console.timeStamp('runBenchmark')");
