@@ -133,6 +133,7 @@ export let frameworks = [
     f("san-v3.5.5-non-keyed", false),
     f("simulacra-v2.1.5-non-keyed", false),
     f("slim-js-v3.0.2-non-keyed", false),
+    f("solid-js-v0.0.8-keyed", true),
     f("stem-v0.2.70-non-keyed", false),
     f("surplus-v0.5.0-keyed", true),
     f("surplus-v0.5.0-non-keyed", false),
