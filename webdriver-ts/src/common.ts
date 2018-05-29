@@ -90,7 +90,7 @@ export let frameworks = [
     f("hyperhtml-v2.4.0-keyed", true),
     f("inferno-v4.0.6-keyed", true),
     f("inferno-v4.0.6-non-keyed", false),
-    f("ivi-v0.10.0-keyed", true),
+    f("ivi-v0.13.0-keyed", true),
     f("knockout-v3.4.1-keyed", true),
     f("knockout-v3.4.2-ko-jsx-keyed", true),
     f("lit-html-v0.10.0-keyed", true),
