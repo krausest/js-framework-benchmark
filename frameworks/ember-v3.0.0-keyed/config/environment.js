@@ -4,7 +4,7 @@ module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'ember-temp',
     environment,
-    rootURL: '/ember-v3.0.0-keyed/dist/',
+    rootURL: '/frameworks/ember-v3.0.0-keyed/dist/',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
