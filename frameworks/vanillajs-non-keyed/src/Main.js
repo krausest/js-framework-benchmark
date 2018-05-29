@@ -295,11 +295,12 @@ class Main {
         this.store.clear();
         this.rows = [];
         this.data = [];
-        requestAnimationFrame(() => {
+        // 165 to 175 msecs, but feels like cheating
+        // requestAnimationFrame(() => {
             this.removeAllRows();
             this.unselect();
             stopMeasure();
-        });
+        // });
     }
     swapRows() {
         startMeasure("swapRows");        

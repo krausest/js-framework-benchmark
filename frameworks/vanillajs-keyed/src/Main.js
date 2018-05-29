@@ -285,11 +285,12 @@ class Main {
         this.store.clear();
         this.rows = [];
         this.data = [];
-        requestAnimationFrame(() => {
+        // This is actually a bit faster, but close to cheating
+        // requestAnimationFrame(() => {
             this.removeAllRows();
             this.unselect();
             stopMeasure();
-        });
+        // });
     }
     swapRows() {
         startMeasure("swapRows");
