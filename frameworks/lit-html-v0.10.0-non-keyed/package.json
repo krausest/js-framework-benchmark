@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "@webcomponents/webcomponentsjs": "git://github.com/webcomponents/webcomponentsjs.git#no-html-imports",
     "lit-html": "^0.10.0"
   },
   "devDependencies": {

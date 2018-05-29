@@ -169,4 +169,4 @@ class MainElement extends HTMLElement {
     }
 }
 
-export default () => window.customElements.define('html-element', MainElement);
+window.customElements.define('html-element', MainElement);
