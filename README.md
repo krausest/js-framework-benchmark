@@ -250,6 +250,7 @@ Contributions are very welcome. Please use the following rules:
 * You don't need to update /index.html. It's created with a script (see 6.2 above).
 * You don't need to edit webdriver-ts/common.ts. If you have a conflict in common.ts you don't need to resolve it. More often than not I'm just merging the pull request in the moment you're fixing the conflict.
 * Please don't commit any of the result file webdriver-ts/table.html, webdriver-ts-results/src/results.ts or webdriver-ts-results/table.html. I use to run the benchmarks after merging and publish updated (temporary) results.
+* The latest stable chrome can be used regarding web features and language level (babel-preset-env "last 1 chrome versions")
 
 This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
 
