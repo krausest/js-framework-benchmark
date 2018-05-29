@@ -1,4 +1,4 @@
-import { updateNextFrame } from "ivi";
+import { update } from "ivi";
 import { createStore, createBox } from "ivi-state";
 
 function random(max) {
@@ -59,5 +59,5 @@ export const store = createStore(
     }
     return state;
   },
-  updateNextFrame,
+  update,
 );
