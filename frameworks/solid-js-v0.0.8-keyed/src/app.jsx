@@ -163,7 +163,7 @@ export default class App {
 
   swapRows(e) {
     e.stopPropagation();
-    if (this.state.data.length >= 998) {
+    if (this.state.data.length > 998) {
       this.state.set('data', {
         1: this.state.data[998],
         998: this.state.data[1]
