@@ -33,9 +33,9 @@ class Store {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
         var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
         var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-        var data = [];
+        var data = new Array(count);
         for (var i = 0; i < count; i++)
-            data.push({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
+            data[i] = {id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] };
         return data;
     }
     updateData(mod = 10) {
@@ -208,7 +208,7 @@ class Main {
         startMeasure("update");
         this.store.update();
         for (let i=0;i<this.data.length;i+=10) {
-            this.rows[i].childNodes[1].childNodes[0].innerText = this.store.data[i].label;
+            this.rows[i].childNodes[1].childNodes[0].firstChild.data = this.store.data[i].label;
         }
         stopMeasure();
     }
@@ -346,7 +346,7 @@ class Main {
         let tr = document.createElement("tr");
         tr.data_id = data.id;
         let td1 = td("col-md-1");
-        td1.innerText = data.id;
+        td1.textContent = data.id;
         tr.appendChild(td1);
 
         let td2 = td("col-md-4")
@@ -354,7 +354,7 @@ class Main {
         let a2 = document.createElement("a");
         a2.className = "lbl";
         td2.appendChild(a2);
-        a2.innerText = data.label;
+        a2.textContent = data.label;
 
         let td3 = td("col-md-1");
         tr.appendChild(td3);
