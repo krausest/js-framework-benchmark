@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc",
     "build-prod": "tsc",
-    "selenium": "node dist/benchmarkRunner.js",
+    "selenium": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
     "checkSelenium": "node dist/benchmarkRunner.js --check true",
     "results": "npm run interactive-results",
     "static-results": "echo \"no longer supported\" && exit 1",
@@ -27,6 +27,7 @@
     "typescript": "2.8.3"
   },
   "dependencies": {
+    "cross-env": "5.1.1",
     "chromedriver": "2.38.3",
     "dot": "1.1.2",
     "jstat": "1.7.1",
