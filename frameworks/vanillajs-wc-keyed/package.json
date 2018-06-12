@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "js-framework-benchmark-vanillajs-wc",
+  "version": "1.0.0",
+  "description": "Vanilla.JS WebComponent demo",
+  "scripts": {
+    "build-dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "devDependencies": {}
+}

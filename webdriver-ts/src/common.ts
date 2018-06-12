@@ -143,6 +143,7 @@ export let frameworks = [
     f("tsers-v1.0.0-non-keyed", false),
     f("vanillajs-keyed", true),
     f("vanillajs-non-keyed", false),
+    f("vanillajs-wc-keyed", true),
     f("vidom-v0.9.8-keyed", true),
     f("vuera-v0.1.3-non-keyed", false),
     f("vue-v2.5.3-keyed", true),
