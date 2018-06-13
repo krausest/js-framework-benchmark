@@ -146,6 +146,6 @@ export let frameworks = [
     f("vanillajs-wc-keyed", true),
     f("vidom-v0.9.8-keyed", true),
     f("vuera-v0.1.3-non-keyed", false),
-    f("vue-v2.5.3-keyed", true),
-    f("vue-v2.5.3-non-keyed", false)
+    f("vue-v2.5.16-keyed", true),
+    f("vue-v2.5.16-non-keyed", false)
 ]
