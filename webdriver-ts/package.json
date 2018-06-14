@@ -8,13 +8,13 @@
     "compile": "tsc",
     "build-prod": "tsc",
     "selenium": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
-    "checkSelenium": "node dist/benchmarkRunner.js --check true",
+    "checkSelenium": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js --check true",
     "results": "npm run interactive-results",
     "static-results": "echo \"no longer supported\" && exit 1",
     "interactive-results": "node dist/createResultJS.js && cd .. && cd webdriver-ts-results && npm run build-prod",
     "index": "node dist/createIndex.js",
     "check": "node dist/runCheck.js",
-    "nonKeyed": "node dist/nonKeyed.js"
+    "nonKeyed": "cross-env LANG=\"en_US.UTF-8\" node dist/nonKeyed.js"
   },
   "author": "",
   "license": "Apache-2.0",
