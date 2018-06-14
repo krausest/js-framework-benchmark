@@ -21,13 +21,10 @@ export class Store {
     }
     updateData(mod = 10) {
         // Just assigning setting each tenth this.data doesn't cause a redraw, the following does:
-        var newData = [];
-        for (let i = 0; i < this.data.length; i ++) {
-            if (i%10===0) {
-                newData[i] = Object.assign({}, this.data[i], {label: this.data[i].label + ' !!!'});
-            } else {
-                newData[i] = this.data[i];
-            }
+        var newData = [...this.data];
+
+        for (let i = 0; i < newData.length; i += 10) {
+            newData[i].label += ' !!!';
         }
         this.data = newData;
     }
