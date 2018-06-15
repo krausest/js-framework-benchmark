@@ -342,7 +342,7 @@ const benchCreateClear5Memory = new class extends Benchmark {
 }
 
 const benchStartupConsistentlyInteractive: StartupBenchmarkResult = {
-    id: "30_startup-ci",
+    id: "31_startup-ci",
     label: "consistently interactive",
     description: "a pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)",
     type: BenchmarkType.STARTUP,
@@ -350,7 +350,7 @@ const benchStartupConsistentlyInteractive: StartupBenchmarkResult = {
 }
 
 const benchStartupBootup: StartupBenchmarkResult = {
-    id: "30_startup-bt",
+    id: "32_startup-bt",
     label: "script bootup time",
     description: "the total ms required to parse/compile/evaluate all the page's scripts",
     type: BenchmarkType.STARTUP,
@@ -358,7 +358,7 @@ const benchStartupBootup: StartupBenchmarkResult = {
 }
 
 const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
-    id: "30_startup-mainthreadcost",
+    id: "33_startup-mainthreadcost",
     label: "main thread work cost",
     description: "total amount of time spent doing work on the main thread. includes style/layout/etc.",
     type: BenchmarkType.STARTUP,
@@ -366,7 +366,7 @@ const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
 }
 
 const benchStartupTotalBytes: StartupBenchmarkResult = {
-    id: "30_startup-totalbytes",
+    id: "34_startup-totalbytes",
     label: "total byte weight",
     description: "network transfer cost (post-compression) of all the resources loaded into the page.",
     type: BenchmarkType.STARTUP,
