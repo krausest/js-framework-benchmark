@@ -2,11 +2,7 @@ import _ from 'underscore';
 
 export default {
     getEl(selector) {
-        if (_.isObject(selector)) {
-            return [selector]
-        }  else {
-            return document.querySelectorAll(selector);
-        }
+        return [selector];
     },
 
     findEl(el, selector) {
@@ -22,7 +18,7 @@ export default {
     },
 
     setContents(el, html) {
-        if (html) el.innerHTML = html
+        el.innerHTML = html
     },
 
     appendContents(el, contents) {
@@ -30,8 +26,6 @@ export default {
     },
 
     detachContents(el) {
-        // Handles bugfix coming in v3.4.1
-        if (!el) return;
         while (el.firstChild) {
             el.removeChild(el.firstChild);
         }

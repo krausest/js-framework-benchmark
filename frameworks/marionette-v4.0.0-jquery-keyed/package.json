@@ -1,7 +1,7 @@
 {
   "name": "js-framework-benchmark-marionette",
   "version": "1.0.0",
-  "description": "Marionette v3.4.2 Dom API",
+  "description": "Marionette v4.0.0 with jQuery",
   "main": "index.js",
   "scripts": {
     "build-dev": "webpack -w -d",
@@ -15,10 +15,9 @@
   },
   "dependencies": {
     "backbone": "1.3.3",
-    "backbone.marionette": "3.5.1",
+    "backbone.marionette": "4.0.0-alpha.1",
     "backbone.radio": "2.0.0",
-    "jquery": "3.2.1",
-    "morphdom": "^2.3.3",
+    "jquery": "3.3.1",
     "underscore": "1.8.3"
   }
 }

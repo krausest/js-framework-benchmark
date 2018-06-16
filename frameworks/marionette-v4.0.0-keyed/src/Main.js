@@ -2,12 +2,13 @@
 
 import _ from 'underscore';
 import Bb from 'backbone';
-import Mn from 'backbone.marionette';
+import { View, CollectionView, setDomApi } from 'backbone.marionette';
+import './mn-native-view';
 import morphdomRenderer from './mn-morphdom-renderer';
 import rowTemplate from './rowtemplate';
 import DomApi from './mn-domapi';
 
-Mn.setDomApi(DomApi);
+setDomApi(DomApi);
 
 var startTime;
 var lastMeasure;
@@ -101,7 +102,7 @@ const Store = Bb.Collection.extend({
 
 const store = new Store();
 
-const ChildView = Mn.View.extend({
+const ChildView = View.extend({
     el: document.createElement('div'),
     monitorViewEvents: false,
     template: rowTemplate
@@ -109,11 +110,10 @@ const ChildView = Mn.View.extend({
 
 ChildView.setRenderer(morphdomRenderer);
 
-const CollectionView = Mn.NextCollectionView.extend({
-    childViewEventPrefix: false,
+const MyCollectionView = CollectionView.extend({
     monitorViewEvents: false,
     viewComparator: false,
-    el: '#tbody',
+    el: [document.querySelector('#tbody')],
     childView: ChildView,
     collectionEvents() {
         return {
@@ -131,12 +131,12 @@ const CollectionView = Mn.NextCollectionView.extend({
         return target.parentNode.parentNode.dataset.id;
     },
     onSelectRow(e) {
-        const rowId = this._getRowId(e.currentTarget);
+        const rowId = this._getRowId(e.target);
         // setSelected(rowId);  // moved to collection for measuring
         this.collection.select(rowId, this);
     },
     onDeleteRow(e) {
-        const rowId = this._getRowId(e.currentTarget);
+        const rowId = this._getRowId(e.target.parentNode);
         // this.removeRow(rowId);  // moved to collection for measuring
         this.collection.delete(rowId, this);
     },
@@ -144,22 +144,22 @@ const CollectionView = Mn.NextCollectionView.extend({
         this.clearSelected();
 
         const model = this.collection.get(id);
-        const view = this.children.findByModel(model);
-        view.$el.addClass('danger');
+        const view = this.children.findByModelCid(model.cid);
+        view.el.classList.add('danger');
     },
     removeRow(id) {
         const model = this.collection.get(id);
-        const view = this.children.findByModel(model);
+        const view = this.children.findByModelCid(model.cid);
         this.removeChildView(view);
     },
     onSwapRows(model1, model2) {
-        var view1 = this.children.findByModel(model1);
-        var view2 = this.children.findByModel(model2);
+        var view1 = this.children.findByModelCid(model1.cid);
+        var view2 = this.children.findByModelCid(model2.cid);
 
         this.swapChildViews(view1, view2);
     },
     onChangeLabel(model) {
-        const view = this.children.findByModel(model);
+        const view = this.children.findByModelCid(model.cid);
         view.render();
     },
     onRender() {
@@ -172,19 +172,19 @@ const CollectionView = Mn.NextCollectionView.extend({
         if (!selected) {
             return;
         }
-        const curSelected = this.children.findByModel(selected);
-        curSelected.$el.removeClass('danger');
+        const curSelected = this.children.findByModelCid(selected.cid);
+        curSelected.el.classList.remove('danger');
     }
 });
 
-const collectionView = new CollectionView({
+const collectionView = new MyCollectionView({
     collection: store
 });
 
 collectionView.render();
 
-const MainView = Mn.View.extend({
-    el : '.jumbotron',
+const MainView = View.extend({
+    el: [document.querySelector('.jumbotron')],
     events: {
         'click #run'() { store.run(); },
         'click #runlots'() { store.runLots(); },

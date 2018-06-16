@@ -38,5 +38,9 @@ module.exports = [{
 		extensions: extensions,
 		alias: {
 		}
+	},
+	externals: {
+		'jquery': 'Array',
+		'backbone.radio': 'Array'
 	}
 }];

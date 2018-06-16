@@ -2,21 +2,8 @@
 
 import _ from 'underscore';
 import Bb from 'backbone';
-import Mn from 'backbone.marionette';
-import hbs from 'handlebars-inline-precompile';
-
-const rowTemplate = hbs`
-<td class="col-md-1">{{ id }}</td>
-<td class="col-md-4">
-<a class="js-link">{{ label }}</a>
-</td>
-<td class="col-md-1">
-<a class="js-del">
-<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-</a>
-</td>
-<td class="col-md-6"></td>
-`;
+import { View, CollectionView } from 'backbone.marionette';
+import rowTemplate from './row.tpl';
 
 var startTime;
 var lastMeasure;
@@ -112,7 +99,7 @@ const Store = Bb.Collection.extend({
 
 const store = new Store();
 
-const ChildView = Mn.View.extend({
+const ChildView = View.extend({
     tagName: 'tr',
     attributes() {
         return {
@@ -123,8 +110,7 @@ const ChildView = Mn.View.extend({
     template: rowTemplate
 });
 
-const CollectionView = Mn.NextCollectionView.extend({
-    childViewEventPrefix: false,
+const MyCollectionView = CollectionView.extend({
     monitorViewEvents: false,
     viewComparator: false,
     el: '#tbody',
@@ -155,22 +141,22 @@ const CollectionView = Mn.NextCollectionView.extend({
         this.clearSelected();
 
         const model = this.collection.get(id);
-        const view = this.children.findByModel(model);
+        const view = this.children.findByModelCid(model.cid);
         view.$el.addClass('danger');
     },
     removeRow(id) {
         const model = this.collection.get(id);
-        const view = this.children.findByModel(model);
+        const view = this.children.findByModelCid(model.cid);
         this.removeChildView(view);
     },
     onSwapRows(model1, model2) {
-        var view1 = this.children.findByModel(model1);
-        var view2 = this.children.findByModel(model2);
+        var view1 = this.children.findByModelCid(model1.cid);
+        var view2 = this.children.findByModelCid(model2.cid);
 
         this.swapChildViews(view1, view2);
     },
     onChangeLabel(model) {
-        const view = this.children.findByModel(model);
+        const view = this.children.findByModelCid(model.cid);
         view.render();
     },
     onRender() {
@@ -183,18 +169,18 @@ const CollectionView = Mn.NextCollectionView.extend({
         if (!selected) {
             return;
         }
-        const curSelected = this.children.findByModel(selected);
+        const curSelected = this.children.findByModelCid(selected.cid);
         curSelected.$el.removeClass('danger');
     }
 });
 
-const collectionView = new CollectionView({
+const collectionView = new MyCollectionView({
     collection: store
 });
 
 collectionView.render();
 
-const MainView = Mn.View.extend({
+const MainView = View.extend({
     el : '.jumbotron',
     events: {
         'click #run'() { store.run(); },
