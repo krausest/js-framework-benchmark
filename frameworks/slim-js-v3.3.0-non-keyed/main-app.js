@@ -7,7 +7,7 @@ var startMeasure = function(name) {
 var stopMeasure = function() {
     var last = lastMeasure;
     if (lastMeasure) {
-        window.setTimeout(function () {
+        setTimeout(function () {
             lastMeasure = null;
             var stop = performance.now();
             var duration = 0;
@@ -82,7 +82,7 @@ class Store {
         this.selected = null;
     }
     swapRows() {
-        if(this.data.length > 998) {
+        if(this.data.length > 10) {
             var a = this.data[1];
             this.data[1] = this.data[998];
             this.data[998] = a;
@@ -92,7 +92,7 @@ class Store {
 
 Slim.tag('main-app',
 
-`
+/*html*/`
 <div id='main'>
     <div class="container">
         <div class="jumbotron">
@@ -103,7 +103,7 @@ Slim.tag('main-app',
                 <div class="col-md-6">
                     <div class="row">
                         <div class="col-sm-6 smallpad">
-                            <button click="create1k" type='button' class='btn btn-primary btn-block' id='run'>Create 1,000 rows</button>
+                            <button click="create1k" type='button' class='btn btn-primary btn-block' id='run'>{{c1kmsg}}</button>
                         </div>
                         <div class="col-sm-6 smallpad">
                             <button click="create10k" type='button' class='btn btn-primary btn-block' id='runlots'>Create 10,000 rows</button>
@@ -125,15 +125,15 @@ Slim.tag('main-app',
             </div>
         </div>
         <table class="table table-hover table-striped test-data">
-            <tbody id="tbody">
+            <tbody id="tbody" click="handleClick">
                 <tr s:repeat="items as data">
-                    <td class="col-md-1" bind>{{data.id}}</td>
+                    <td class="col-md-1">{{data.id}}</td>
                     <td class="col-md-4">
-                        <a bind:marker="data.id" click="doSelect" bind>{{data.label}}</a>
+                        <a role="select" >{{data.label}}</a>
                     </td>
                     <td class="col-md-1">
                         <a>
-                            <span click="deleteOne" bind:marker="data.id" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            <span role="delete" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td class="col-md-6">
@@ -147,28 +147,42 @@ Slim.tag('main-app',
 `,
 
 class extends Slim {
+
     onBeforeCreated() {
         this.items = [];
         this.store = new Store();
         this.selectedNode = null;
+        this.test = [1,2,3,4,5];
+        this.c1kmsg = 'Create 1,000 rows';
+        window.x = this;
+    }
+
+    handleClick(e) {
+        switch (e.target.getAttribute('role')) {
+            case 'select':
+                this.doSelect(e);
+            break;
+            case 'delete':
+                this.deleteOne(e);
+            break;
+        }
     }
 
     doSelect(e) {
         startMeasure('select');
-        this.store.select(e.target.getAttribute('marker'));
+        this.store.select(Slim._$(e.target).repeater['data'].id);
         this.selectedNode && this.selectedNode.classList.remove('danger');
-        this.selectedNode = e.target.parentElement.parentElement;
+        this.selectedNode = Slim._$(e.target).repeater.__node;
         this.selectedNode.classList.add('danger');
         stopMeasure();
     }
 
     deleteOne(e) {
         startMeasure('delete');
-        this.store.delete(e.target.getAttribute('marker'));
-        if (e.target.parentElement.parentElement.parentElement === this.selectedNode) {
-            this.selectedNode.classList.remove('danger');
-            this.selectedNode = null;
-        }
+        this.store.delete(Slim._$(e.target).repeater['data'].id);
+        const node = Slim._$(e.target).repeater.__node;
+        node.classList.remove('danger');
+        this.selectedNode = null;
         this.items = this.store.data;
         stopMeasure();
     }
@@ -202,6 +216,7 @@ class extends Slim {
     }
 
     create10k() {
+        console.log('10k');
         this.store.clear();
         this.store.runLots();
         startMeasure('runLots');
