@@ -9,14 +9,15 @@
 
     {{content-for "head"}}
 
-    <link rel="stylesheet" href="{{rootURL}}app.css">
+    <!-- <link rel="stylesheet" href="{{rootURL}}app.css"> -->
+    <link rel="stylesheet" href="/css/currentStyle.css">
 
     {{content-for "head-footer"}}
   </head>
   <body>
     {{content-for "body"}}
 
-    <div id="app"></div>
+    <div id="app"  class="container"></div>
     <script src="{{rootURL}}app.js"></script>
 
     {{content-for "body-footer"}}

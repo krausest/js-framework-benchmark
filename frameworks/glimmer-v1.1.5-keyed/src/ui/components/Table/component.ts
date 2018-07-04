@@ -42,11 +42,15 @@ export default class Table extends Component {
 
     patchRows({selected,data}) {
         let newData = data.map((item, index)=>{
+            let key = index;
+            if (key === item.key && item.isSelected === (item.id === selected)) {
+                return item;
+            }
             return {
                 id: item.id,
                 isSelected: item.id === selected,
                 label: item.label,
-                key: item.label + '--' + item.id + '--' + item.id === selected + '--' + index
+                key: key
             };
         })
         return {selected, data:newData};
@@ -69,6 +73,7 @@ export default class Table extends Component {
         this.rows = this.patchRows({ ...this.rows, data: this.rows.data.concat(this.buildData(1000)) });
         stopMeasure();
     }
+
 
     update() {
         startMeasure("update");
@@ -95,7 +100,7 @@ export default class Table extends Component {
             let d1 = data[1];
             data[1] = data[998];
             data[998] = d1;
-            this.rows = { ...this.rows, data }
+            this.rows = this.patchRows({ ...this.rows, data });
         }
         stopMeasure();
     }
