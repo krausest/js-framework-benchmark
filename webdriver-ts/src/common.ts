@@ -83,6 +83,7 @@ export let frameworks = [
     f("etch-v0.12.5-keyed", true),
     f("etch-v0.12.5-non-keyed", false),
     f("glimmer-v0.9.1-keyed", true, {uri: "glimmer-v0.9.1-keyed/dist"}),
+    f("glimmer-v1.1.5-keyed", true, {uri: "glimmer-v1.1.5-keyed/dist"}),
     f("gruu-v1.7.3-non-keyed", false),
     f("halogen-v2.1.0-non-keyed", false),
     f("hyperapp-v1.2.0-keyed", true),
