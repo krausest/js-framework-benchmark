@@ -2,14 +2,14 @@ module Main where
 
 import Prelude
 
-import Control.Monad.Aff (Aff)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, log)
-import Control.Monad.Eff.Random (RANDOM, randomInt)
+import Effect (Effect)
+import Effect.Aff (Aff)
+import Effect.Console (log)
+import Effect.Random (randomInt)
 import Control.Monad.Rec.Class (Step(..), tailRecM2)
 import DOM.HTML.Indexed.ButtonType (ButtonType(..))
-import Data.Array hiding (init)
-import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Array (cons, deleteAt, findIndex, index, length, mapWithIndex, updateAt, (!!))
+import Data.Maybe (Maybe(..))
 import Halogen as H
 import Halogen.Aff as HA
 import Halogen.HTML as HH
@@ -22,13 +22,13 @@ import Halogen.VDom.Driver (runUI)
 -- Main Entry
 
 -- Start and run the application
-main :: Eff (HA.HalogenEffects (random :: RANDOM, console :: CONSOLE)) Unit
+main :: Effect Unit
 main = HA.runHalogenAff $ do
   body <- HA.awaitBody
   runUI app unit body
 
 -- The top level component to render to the <body> element
-app :: forall eff. H.Component HH.HTML Query Unit Void (Aff (random :: RANDOM, console :: CONSOLE | eff))
+app :: H.Component HH.HTML Query Unit Void Aff
 app =
   H.component
     { initialState: const init
@@ -69,49 +69,49 @@ data Query a
   | Select Int a
 
 
-eval :: forall eff. Query ~> H.ComponentDSL State Query Void (Aff (random :: RANDOM, console :: CONSOLE | eff))
+eval :: Query ~> H.ComponentDSL State Query Void Aff
 eval = case _ of
 
   Clear next -> do
-    H.modify (\st -> st { rows = [], lastId = st.lastId })
+    H.modify_ (\st -> st { rows = [], lastId = st.lastId })
     pure next
 
   Create i next -> do
     st   <- H.get
-    rows <- H.liftEff $ createRandomNRows i st.lastId
-    H.modify (\st -> st { rows = rows, lastId = st.lastId + i })
+    rows <- H.liftEffect $ createRandomNRows i st.lastId
+    H.modify_ (\st' -> st' { rows = rows, lastId = st'.lastId + i })
     pure next
 
   Append i next -> do
     st   <- H.get
-    rows <- H.liftEff $ createRandomNRows i st.lastId
-    H.modify (\st -> st { rows = st.rows <> rows, lastId = st.lastId + i})
+    rows <- H.liftEffect $ createRandomNRows i st.lastId
+    H.modify_ (\st' -> st' { rows = st'.rows <> rows, lastId = st'.lastId + i})
     pure next
 
   UpdateEvery i next -> do
     st  <- H.get
     let rows = mapWithIndex (updateRowLabel i) st.rows
-    H.modify (\st -> st { rows = rows } )
+    H.modify_ (\st' -> st' { rows = rows } )
     pure next
 
   Swap i0 i1 next -> do
     st <- H.get
     case swapRows st.rows i0 i1 of
       Nothing  ->
-        H.liftEff $ log "Failed to swap rows."
+        H.liftEffect $ log "Failed to swap rows."
       Just arr ->
-        H.modify (\st -> st { rows = arr })
+        H.modify_ (\st' -> st' { rows = arr })
     pure next
 
   -- If the row is already selected, deselect, else set it as the selected row.
   Select i next -> do
     st <- H.get
-    H.modify (\st -> st { selected = if (Just i) == st.selected then Nothing else Just i })
+    H.modify_ (\st' -> st' { selected = if (Just i) == st'.selected then Nothing else Just i })
     pure next
 
   Remove i next -> do
     st <- H.get
-    H.modify (\st -> st { rows = deleteRow i st.rows })
+    H.modify_ (\st' -> st' { rows = deleteRow i st'.rows })
     pure next
 
 
@@ -122,19 +122,19 @@ eval = case _ of
 
 -- | Create new batch of random rows
 -- | Note: use `tailRecM` to ensure proper tail recursion in monadic code
-createRandomNRows :: forall e. Int -> Int -> Eff ( random :: RANDOM | e) (Array Row)
+createRandomNRows :: Int -> Int -> Effect (Array Row)
 createRandomNRows n lastId = tailRecM2 f [] n
   where
     f arr 0 = pure (Done arr)
-    f arr n = do
+    f arr n' = do
       str <- selectConcatItems
 
       let str' = case str of
             Nothing -> ""
             Just s  -> s
 
-      pure (Loop $ { a: (createAndAppendRow arr (n - 1) lastId str')
-                   , b: (n - 1) })
+      pure (Loop $ { a: (createAndAppendRow arr (n' - 1) lastId str')
+                   , b: (n' - 1) })
 
 
 -- | Create a single row
@@ -148,7 +148,7 @@ createAndAppendRow arr index lastId s =
 
 -- | Select a random element from each array of strings,
 -- | and then concatenate them into a string value.
-selectConcatItems :: forall e. Eff ( random :: RANDOM | e) (Maybe String)
+selectConcatItems :: Effect (Maybe String)
 selectConcatItems = do
   adj <- index adjectives <$> (randomInt 1 $ length adjectives - 1)
   clr <- index colours    <$> (randomInt 1 $ length colours - 1)
