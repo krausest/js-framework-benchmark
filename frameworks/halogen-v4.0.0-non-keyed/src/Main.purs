@@ -211,7 +211,7 @@ render state =
           [ HH.div
             [ HP.classes [ HH.ClassName "col-md-6" ] ]
             [ HH.h1_
-              [ HH.text "Halogen 2.1.0" ] ]
+              [ HH.text "Halogen 4.0.0" ] ]
           , HH.div
             [ HP.classes [ HH.ClassName "col-md-6" ] ]
             $ map renderButton buttons
