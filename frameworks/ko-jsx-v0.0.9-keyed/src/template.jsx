@@ -29,10 +29,10 @@ export default function({data, selected, run, runLots, add, update, clear, swapR
       </div></div>
       <table class='table table-hover table-striped test-data'><tbody>{
         data.map(row =>
-          <tr classList={{danger: row.id === selected()}}>
-            <td class='col-md-1'>{row.id}</td>
-            <td class='col-md-4'><a onClick={select.bind(this, row.id)}>{row.label}</a></td>
-            <td class='col-md-1'><a onClick={del.bind(this, row)}><span class='delete glyphicon glyphicon-remove' /></a></td>
+          <tr /*@on(selected)*/ classList={{danger: row.id === selected()}}>
+            <td class='col-md-1'>{/*@skip*/row.id}</td>
+            <td class='col-md-4'><a /*@delegate(row.id)*/ onClick={select}>{row.label}</a></td>
+            <td class='col-md-1'><a /*@delegate(row.id)*/ onClick={del}><span class='delete glyphicon glyphicon-remove' /></a></td>
             <td class='col-md-6'/>
           </tr>
         )
