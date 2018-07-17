@@ -263,7 +263,7 @@ function buildDriver(benchmarkOptions: BenchmarkOptions) {
     options = options.setLoggingPrefs(logPref);
 
     options = options.setPerfLoggingPrefs(<any>{
-        enableNetwork: true, enablePage: true, 
+        enableNetwork: true, enablePage: true,
         traceCategories: lighthouse.traceCategories.join(", ")
     });
 
@@ -288,7 +288,7 @@ async function forceGC(framework: FrameworkData, driver: WebDriver): Promise<any
 }
 
 async function snapMemorySize(driver: WebDriver): Promise<number> {
-	let heapSnapshot: any = await driver.executeScript(":takeHeapSnapshot");
+    let heapSnapshot: any = await driver.executeScript(":takeHeapSnapshot");
     let node_fields: any = heapSnapshot.snapshot.meta.node_fields;
     let nodes: any = heapSnapshot.nodes;
 
@@ -336,6 +336,13 @@ interface Result<T> {
 function writeResult<T>(res: Result<T>, dir: string) {
     let benchmark = res.benchmark;
     let framework = res.framework.name;
+    let type = null;
+
+    switch (benchmark.type) {
+        case BenchmarkType.CPU: type = "cpu"; break;
+        case BenchmarkType.MEM: type = "memory"; break;
+        case BenchmarkType.STARTUP: type = "startup"; break;
+    }
 
     for (let resultKind of benchmark.resultKinds()) {
         let data = benchmark.extractResult(res.results, resultKind);
@@ -344,7 +351,7 @@ function writeResult<T>(res: Result<T>, dir: string) {
         let result: JSONResult = {
             "framework": framework,
             "benchmark": resultKind.id,
-            "type": benchmark.type === BenchmarkType.CPU ? "cpu" : "memory",
+            "type": type,
             "min": s.min(),
             "max": s.max(),
             "mean": s.mean(),
@@ -476,12 +483,11 @@ process.on('message', (msg) => {
             process.send(errorsAndWarnings);
             process.exit(0);
         }).catch(err => {
-            console.log("error running benchmark", err);            
+            console.log("error running benchmark", err);
             process.exit(1);
         });
     } catch (err) {
-        console.log("error running benchmark", err);            
+        console.log("error running benchmark", err);
         process.exit(1);
-    }    
+    }
   });
-  
