@@ -1,5 +1,5 @@
 
-import domc from './domc.js'
+import domc from 'domc'
 
 var startTime;
 var lastMeasure;
