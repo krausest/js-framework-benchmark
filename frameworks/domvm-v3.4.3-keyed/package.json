@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-domvm-keyed",
-  "version": "3.4.2-keyed",
+  "version": "3.4.3-keyed",
   "description": "Benchmark for domvm framework (keyed)",
   "scripts": {
     "build-dev": "node build.js",
@@ -12,6 +12,6 @@
     "rollup-plugin-buble": "*"
   },
   "dependencies": {
-    "domvm": "git://github.com/domvm/domvm.git#3.4.2"
+    "domvm": "git://github.com/domvm/domvm.git#3.4.3"
   }
 }
