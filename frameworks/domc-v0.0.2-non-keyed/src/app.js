@@ -97,11 +97,11 @@ const _random = (max) => {
 
 const parent = document.querySelector('tbody')
 
+const scope = {rowClass, selected: 0, del, select, item: undefined}
+
 let template = parent.firstElementChild
 parent.removeChild(template)
-template = domc.compile(template)
-
-const scope = {rowClass, selected: 0, del, select}
+template = domc.compile(template, scope)
 
 let nodes = []
 
