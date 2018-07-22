@@ -1,9 +1,9 @@
 /*eslint indent: ["warn", 2, { "VariableDeclarator": 2 }]*/
 var el = require('attodom/el'),
     time = require('./time'),
-    root = require('attodom/root')
+    core = require('attodom/core')
 
-var TITLE = 'attodom v0.5.2'
+var TITLE = 'attodom v0.6.1'
 
 module.exports = el('div', {class: 'jumbotron'},
   el('div', {class: 'row'},
@@ -31,7 +31,7 @@ function createButton(id, tx) {
 
 function handleClick(e) {
   var key = e.target.id,
-      store = root.store
+      store = core.store
   if (!key) return
 
   e.preventDefault()
@@ -57,6 +57,6 @@ function handleClick(e) {
   case 'swaprows':
     if (store.data.length>10) store.swapRows()
   }
-  root.update()
+  core.update()
   time.stop()
 }
