@@ -1,5 +1,5 @@
 export interface JSONResult {
-    framework: string, benchmark: string, type: string, min: number,
+    framework: string, keyed: boolean, benchmark: string, type: string, min: number,
         max: number, mean: number, geometricMean: number,
         standardDeviation: number, median: number, values: Array<number>
 }

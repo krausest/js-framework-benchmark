@@ -336,6 +336,7 @@ interface Result<T> {
 function writeResult<T>(res: Result<T>, dir: string) {
     let benchmark = res.benchmark;
     let framework = res.framework.name;
+    let keyed = res.framework.keyed;
     let type = null;
 
     switch (benchmark.type) {
@@ -350,6 +351,7 @@ function writeResult<T>(res: Result<T>, dir: string) {
         console.log(`result ${fileName(res.framework, resultKind)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
         let result: JSONResult = {
             "framework": framework,
+            "keyed": keyed,
             "benchmark": resultKind.id,
             "type": type,
             "min": s.min(),
