@@ -2,6 +2,7 @@ import ko from 'knockout'
 import r from 'ko-jsx'
 
 export default function({data, selected, run, runLots, add, update, clear, swapRows, select, del}) {
+  const delegateSelected = r.delegateOn(selected);
   return (
     <div class='container'>
       <div class='jumbotron'><div class='row'>
@@ -29,10 +30,10 @@ export default function({data, selected, run, runLots, add, update, clear, swapR
       </div></div>
       <table class='table table-hover table-striped test-data'><tbody>{
         data.map(row =>
-          <tr /*@on(selected)*/ classList={{danger: row.id === selected()}}>
-            <td class='col-md-1'>{/*@skip*/row.id}</td>
-            <td class='col-md-4'><a /*@delegate(row.id)*/ onClick={select}>{row.label}</a></td>
-            <td class='col-md-1'><a /*@delegate(row.id)*/ onClick={del}><span class='delete glyphicon glyphicon-remove' /></a></td>
+          <tr /*@custom(delegateSelected(row.id))*/ classList={{danger: row.id === selected()}}>
+            <td class='col-md-1'>{/*@static*/ row.id}</td>
+            <td class='col-md-4'><a onClick={r.linkEvent(row.id, select)}>{row.label}</a></td>
+            <td class='col-md-1'><a onClick={r.linkEvent(row.id, del)}><span class='delete glyphicon glyphicon-remove' /></a></td>
             <td class='col-md-6'/>
           </tr>
         )

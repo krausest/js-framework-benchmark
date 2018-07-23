@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-ko-jsx",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "index.js",
   "scripts": {
     "build-dev": "rollup -c",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "knockout": "3.4.2",
-    "ko-jsx": "0.0.9"
+    "ko-jsx": "0.0.10"
   },
   "devDependencies": {
     "@babel/core": "*",
