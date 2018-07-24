@@ -76,6 +76,7 @@ export let frameworks = [
     f("dio-v8.1.1-non-keyed", false),
     f("dojo2-rc-keyed", true, {uri: "dojo2-rc-keyed/output/dist"}),
     f("dojo2-rc-non-keyed", false, {uri: "dojo2-rc-non-keyed/output/dist"}),
+    f("domc-v0.0.2-non-keyed", false),
     f("domvm-v3.4.3-keyed", true),
     f("domvm-v3.4.3-non-keyed", false),
     f("elm-v0.18.0-keyed", true),
