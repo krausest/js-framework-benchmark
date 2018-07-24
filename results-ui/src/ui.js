@@ -23,13 +23,13 @@ function hash(str) {
 function decodeBench(arr) {
 	return {
 	    name: arr[0],
-	    min: arr[1],
-	    max: arr[2],
-	    mean: arr[3],
-	    median: arr[4],
-	    geoMean: arr[5],
-	    stdDev: arr[6],
-	    values: arr[7],
+//	    min: arr[1],
+//	    max: arr[2],
+	    mean: arr[1],
+//	    median: arr[4],
+//	    geoMean: arr[5],
+	    stdDev: arr[2],
+//	    values: arr[3],
 
 	    factor: 0,
 	};

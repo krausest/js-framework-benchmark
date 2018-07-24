@@ -11,13 +11,13 @@ const RESULTS_PATH = path.resolve(__dirname + '/../../webdriver-ts/results');
 function encodeBench(obj) {
 	return [
 		obj.benchmark.substr(0,2),
-		+obj.min.toFixed(2),
-		+obj.max.toFixed(2),
+	//	+obj.min.toFixed(2),
+	//	+obj.max.toFixed(2),
 		+obj.mean.toFixed(2),
-		+obj.median.toFixed(2),
-		+obj.geometricMean.toFixed(2),
+	//	+obj.median.toFixed(2),
+	//	+obj.geometricMean.toFixed(2),
 		+obj.standardDeviation.toFixed(2),
-		obj.values.map(v => +v.toFixed(2)),
+	//	obj.values.map(v => +v.toFixed(2)),
 	];
 }
 
