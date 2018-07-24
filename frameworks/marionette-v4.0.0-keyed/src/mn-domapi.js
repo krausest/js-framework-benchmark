@@ -26,8 +26,6 @@ export default {
     },
 
     detachContents(el) {
-        while (el.firstChild) {
-            el.removeChild(el.firstChild);
-        }
+        el.textContent = '';
     }
 };
