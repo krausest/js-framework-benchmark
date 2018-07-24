@@ -95,10 +95,10 @@ var HomeViewModel = function () {
         stopMeasure();
     };
 
-    self.del = function (item) {
+    self.del = function (id) {
         startMeasure("delete");
         var tmp = self.data();
-        const idx = tmp.findIndex(d => d.id === item.id);
+        const idx = tmp.findIndex(d => d.id === id);
         self.data.splice(idx, 1);
         stopMeasure();
     };
