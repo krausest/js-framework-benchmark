@@ -19,6 +19,6 @@
     "uglify-js": "3.0.12"
   },
   "dependencies": {
-    "attodom": "0.5.2"
+    "attodom": "0.6.1"
   }
 }
