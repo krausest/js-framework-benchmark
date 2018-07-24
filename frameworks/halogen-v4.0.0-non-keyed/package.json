@@ -21,9 +21,9 @@
         "url": "https://github.com/krausest/js-framework-benchmark.git"
     },
     "devDependencies": {
-        "bower": "1.8.0",
-        "pulp": "11.0.0",
-        "purescript": "0.11.6",
+        "bower": "1.8.4",
+        "pulp": "12.3.0",
+        "purescript": "0.12.0",
         "rimraf": "2.5.4"
     }
 }

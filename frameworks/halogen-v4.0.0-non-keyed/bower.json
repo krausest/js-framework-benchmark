@@ -17,9 +17,9 @@
     "bower_components"
   ],
   "dependencies": {
-    "purescript-prelude": "3.1.0",
-    "purescript-halogen": "2.1.0",
-    "purescript-random": "3.0.0",
-    "purescript-tailrec": "^3.3.0"
+    "purescript-prelude": "^4.0.1",
+    "purescript-halogen": "^4.0.0",
+    "purescript-random": "^4.0.0",
+    "purescript-tailrec": "^4.0.0"
   }
 }
