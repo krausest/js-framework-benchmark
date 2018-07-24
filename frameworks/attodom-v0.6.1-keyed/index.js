@@ -1,13 +1,13 @@
 /*eslint indent: ["warn", 2, { "VariableDeclarator": 2 }]*/
 
 var el = require('attodom/el'),
-    root = require('attodom/root'),
+    core = require('attodom/core'),
     Store = require('./src/store'),
     menu = require('./src/menu'),
     table = require('./src/table')
 
-root.store = new Store
-root.update()
+core.store = new Store
+core.update()
 
 document.body.appendChild(
   el('div', {id: 'main'},

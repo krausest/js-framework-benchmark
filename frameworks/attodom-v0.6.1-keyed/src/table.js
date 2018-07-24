@@ -1,21 +1,21 @@
 /*eslint indent: ["warn", 2, { "VariableDeclarator": 2 }]*/
 var list = require('attodom/list'),
     el = require('attodom/el'),
-    co = require('attodom/co'),
+    update = require('attodom/update'),
     createRow = require('./create-row'),
-    root = require('attodom/root'),
+    core = require('attodom/core'),
     time = require('./time')
 
-var body = co(el('tbody', {id: 'tbody', onclick: clickHandler}),
-  list(createRow, function(v) { return v.id })
-)
+var rows = list(createRow, function(v) { return v.id })
 
-root.update = function() {
-  body.update(root.store.data)
+core.update = function() {
+  //@ts-ignore
+  update(rows, core.store.data)
 }
 
-module.exports = el('table', {class: 'table table-hover table-striped test-data'}, body)
-
+module.exports = el('table', {class: 'table table-hover table-striped test-data'},
+  el('tbody', {id: 'tbody', onclick: clickHandler}, rows)
+)
 
 function clickHandler(e) {
   var tgt = e.target,
@@ -27,7 +27,7 @@ function clickHandler(e) {
   var key = +tgt.firstChild.textContent
   e.preventDefault()
   time.start(act)
-  root.store[act](key)
-  root.update()
+  core.store[act](key)
+  core.update()
   time.stop()
 }

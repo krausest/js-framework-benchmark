@@ -64,7 +64,7 @@ export let frameworks = [
     f("angular-v6.0.0-optimized-keyed", true),
     f("apprun-v1.8.3-keyed", true),
     f("apprun-v1.8.3-non-keyed", false),
-    f("attodom-v0.5.2-keyed", true),
+    f("attodom-v0.6.1-keyed", true),
     f("aurelia-v1.2.0-keyed", true),
     f("aurelia-v1.2.0-non-keyed", false),
     f("binding.scala-v10.0.1-keyed", true, {uri: "binding.scala-v10.0.1-keyed/target/web/stage"}),

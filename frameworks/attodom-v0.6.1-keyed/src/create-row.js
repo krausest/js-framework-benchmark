@@ -1,13 +1,12 @@
 /*eslint indent: ["warn", 2, { "VariableDeclarator": 2 }]*/
 var el = require('attodom/el'),
-    co = require('attodom/co'),
-    root = require('attodom/root')
+    core = require('attodom/core')
 
 module.exports = function(rec) {
-  var label = el('a', {class: 'lbl'}, rec.label)
-  return co(el('tr'), {key: rec.id, update: updateRow, label: label},
+  return el('tr', {id: rec.id},
+    updateRow,
     el('td', {class: 'col-md-1'}, rec.id),
-    el('td', {class: 'col-md-4'}, label),
+    el('td', {class: 'col-md-4'}, el('a', {class: 'lbl'}, rec.label)),
     el('td', {class: 'col-md-1'},
       el('a', {class: 'remove'},
         el('span', {class: 'glyphicon glyphicon-remove remove', 'aria-hidden': ''})
@@ -17,7 +16,7 @@ module.exports = function(rec) {
   )
 }
 
-function updateRow(v) {
-  this.label.textContent = v.label
-  this.node.className = (this.key === root.store.selected) ? 'danger' : ''
+function updateRow(tr, v) {
+  tr.firstChild.nextSibling.firstChild.textContent = v.label
+  tr.className = (tr.id === ''+core.store.selected) ? 'danger' : ''
 }
