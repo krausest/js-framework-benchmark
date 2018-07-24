@@ -64,6 +64,7 @@ const Store = Bb.Collection.extend({
     },
     run() {
         startMeasure("run");
+        if(this.model.length) this._clear();
         this.reset(this.buildData());
         stopMeasure();
     },
@@ -80,12 +81,18 @@ const Store = Bb.Collection.extend({
     },
     runLots() {
         startMeasure("runLots");
+        if(this.model.length) this._clear();
         this.reset(this.buildData(10000));
         stopMeasure();
     },
+    _clear() {
+        _.each(this.models, model => model.off());
+        this._reset();
+    },
     clear() {
         startMeasure("clear");
-        this.reset();
+        this._clear();
+        this.trigger('reset', this);
         stopMeasure();
     },
     swapRows() {
