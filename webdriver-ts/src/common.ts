@@ -120,11 +120,9 @@ export function initializeFrameworks() {
             }
 
             let opts = {uri, useShadowRoot};
-            let match = framework.match(/^(.*?)(-non)?-keyed$/);
-            // let resultFileName = match[1]+"v"+version+(keyed ? "-keyed" : "-non-keyed");
-            // console.log("resultFileName", resultFileName);
-            // Temporary fix: Leave version empty until renaming finished, don't compute result file name
-            let fd  = f(framework, "", framework, keyed, opts);
+            let resultFileName = framework+(version ? "-v"+version : "")+(keyed ? "-keyed" : "-non-keyed");
+            console.log("resultFileName", resultFileName);
+            let fd  = f(framework, version, resultFileName, keyed, opts);
             if (addFramework) frameworks.push(fd);
         }
     }

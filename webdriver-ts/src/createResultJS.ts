@@ -37,7 +37,7 @@ frameworks.forEach((framework, fIdx) => {
 
 
 resultJS += '];\n';
-resultJS += 'export let frameworks = '+JSON.stringify(frameworks)+";\n";
+resultJS += 'export let frameworks = '+JSON.stringify(frameworks.map(f => ({name: f.resultFileName, keyed: f.keyed})))+";\n";
 resultJS += 'export let benchmarks = '+JSON.stringify(allBenchmarks)+";\n";
 
 fs.writeFileSync('../webdriver-ts-results/src/results.ts', resultJS, {encoding: 'utf-8'});

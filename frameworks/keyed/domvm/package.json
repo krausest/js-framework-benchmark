@@ -3,7 +3,7 @@
   "version": "3.4.3-keyed",
   "description": "Benchmark for domvm framework (keyed)",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "domvm"
+    "frameworkVersion": "3.4.3"
   },
   "scripts": {
     "build-dev": "node build.js",

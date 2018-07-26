@@ -421,5 +421,5 @@ export let benchmarks : Array<Benchmark> = [
 ];
 
 export function fileName(framework: FrameworkData, benchmark: BenchmarkInfo) {
-    return `${framework.name}_${benchmark.id}.json`;
+    return `${framework.resultFileName}_${benchmark.id}.json`;
 }

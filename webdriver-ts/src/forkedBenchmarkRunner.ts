@@ -350,7 +350,7 @@ function writeResult<T>(res: Result<T>, dir: string) {
         let s = jStat(data);
         console.log(`result ${fileName(res.framework, resultKind)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
         let result: JSONResult = {
-            "framework": framework,
+            "framework": res.framework.resultFileName,
             "keyed": keyed,
             "benchmark": resultKind.id,
             "type": type,
@@ -453,8 +453,8 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
     return {errors, warnings};
 }
 
-export async function executeBenchmark(frameworks: FrameworkData[], frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {
-    let runFrameworks = frameworks.filter(f => frameworkName === f.name);
+export async function executeBenchmark(frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {
+    let runFrameworks = frameworks.filter(f => f.keyed === keyed).filter(f => frameworkName === f.name);
     let runBenchmarks = benchmarks.filter(b => benchmarkName === b.id);
     if (runFrameworks.length!=1) throw `Framework name ${frameworkName} is not unique`;
     if (runBenchmarks.length!=1) throw `Benchmark name ${benchmarkName} is not unique`;
@@ -475,11 +475,11 @@ export async function executeBenchmark(frameworks: FrameworkData[], frameworkNam
 process.on('message', (msg) => {
     if (config.LOG_DEBUG) console.log("child process got message", msg);
 
-    let {frameworks, frameworkName, benchmarkName, benchmarkOptions} : {frameworks: FrameworkData[], frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions} = msg;
+    let {frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions} : {frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions} = msg;
     if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
 
     try {
-        let errorsPromise = executeBenchmark(frameworks, frameworkName, benchmarkName, benchmarkOptions);
+        let errorsPromise = executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
         errorsPromise.then(errorsAndWarnings => {
             if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorsAndWarnings);
             process.send(errorsAndWarnings);

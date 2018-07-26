@@ -3,7 +3,6 @@ var jStat:any = require('jStat').jStat;
 
 export interface Framework {
     name: string;
-    uri: string;
     keyed: boolean;
 }
 
@@ -101,7 +100,7 @@ export function convertToMap(results: Array<Result>): ResultLookup {
     return (benchmark: Benchmark, framework: Framework) => {
         let m = resultMap.get(benchmark.id);
         if (!m) return null;
-        let v = m.get(framework.name);        
+        let v = m.get(framework.name);
         if (!v) return null;
         return v;
     }
@@ -110,7 +109,7 @@ export function convertToMap(results: Array<Result>): ResultLookup {
 let statisticComputeColor = function(sign: number, pValue: number): [string, string] {
     if (pValue < 0.90) {
         return ['#fff','#000'];
-    } 
+    }
     if (sign < 0) {
         let a = (pValue - 0.9) * 10.0;
         let r = 0;
@@ -139,7 +138,7 @@ export class ResultTableData {
     resultsStartup: Array<Array<TableResultValueEntry|null>>;
     resultsMEM: Array<Array<TableResultValueEntry|null>>;
 
-    constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup, 
+    constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup,
         public selectedFrameworks: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, nonKeyed: boolean|undefined, sortKey: string,
         public compareWith: Framework|undefined,
         public useMedian: boolean) {
@@ -173,10 +172,10 @@ export class ResultTableData {
         this.resultsStartup = this.benchmarksStartup.map(benchmark => this.computeFactors(benchmark, true));
         this.resultsMEM = this.benchmarksMEM.map(benchmark => this.computeFactors(benchmark, false));
 
-        this.geomMeanCPU = this.frameworks.map((framework, idx) => { 
+        this.geomMeanCPU = this.frameworks.map((framework, idx) => {
             let resultsForFramework = this.resultsCPU.map(arr => arr[idx]);
             return this.computeGeometricMean(framework, this.benchmarksCPU, resultsForFramework);
-        });        
+        });
         this.sortBy(sortKey);
     }
     sortBy(sortKey: string) {
@@ -190,8 +189,8 @@ export class ResultTableData {
                 console.log("startupIdx", startupIdx);
                 let memIdx = this.benchmarksMEM.findIndex(b => b.id === sortKey);
                 if (cpuIdx>-1) sortValue = this.resultsCPU[cpuIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsCPU[cpuIdx][frameworkIndex]!.mean;
-                else if (startupIdx>-1) sortValue = this.resultsStartup[startupIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsStartup[startupIdx][frameworkIndex]!.mean;    
-                else if (memIdx>-1) sortValue = this.resultsMEM[memIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsMEM[memIdx][frameworkIndex]!.mean;    
+                else if (startupIdx>-1) sortValue = this.resultsStartup[startupIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsStartup[startupIdx][frameworkIndex]!.mean;
+                else if (memIdx>-1) sortValue = this.resultsMEM[memIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsMEM[memIdx][frameworkIndex]!.mean;
                 else throw `sortKey ${sortKey} not found`;
             }
             return {
@@ -250,7 +249,7 @@ export class ResultTableData {
                     console.log("n+m-2",n+m-2);
                     let s2 = (n-1)*Math.pow(result.standardDeviation,2) + (m-1)*Math.pow(compareWithResults.standardDeviation,2) / (n+m-2)
                     let s = Math.sqrt(s2);
-                    let t = Math.sqrt((n * m) / (n + m))*(mean - compareWithMean - 0)/s;                            
+                    let t = Math.sqrt((n * m) / (n + m))*(mean - compareWithMean - 0)/s;
                     let talpha = jStat.studentt.inv( 0.975, n + m - 2);
                     console.log("talpha",talpha, "t", t);
                     statisticalResult = t.toFixed(3) + ": " +talpha.toFixed(3);
