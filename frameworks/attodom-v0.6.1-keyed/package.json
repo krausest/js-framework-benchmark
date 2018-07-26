@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-attodom-v0.5.2",
   "version": "0.1.0",
   "description": "Benchmark for attoDom 0.5.2",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "attodom"
+  },
   "scripts": {
     "build-dev": "node -e \"require('@hugov/cjs-to-iife')('./index.js').then(code => {if (!fs.existsSync('./dist')) {fs.mkdirSync('./dist');} fs.writeFileSync('./dist/main.js', code); })\"",
     "build-prod": "npm run build-dev && uglifyjs ./dist/main.js -c -m -o ./dist/main.js"

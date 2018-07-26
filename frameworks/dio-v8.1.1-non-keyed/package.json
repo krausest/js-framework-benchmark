@@ -3,6 +3,9 @@
   "version": "8.1.1",
   "description": "DIO demo",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "dio.js"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

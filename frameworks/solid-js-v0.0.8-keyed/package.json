@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-solid-js",
   "version": "0.0.8",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "solid-js"
+  },
   "scripts": {
     "build-dev": "rollup -c",
     "build-prod": "rollup -c --environment production"

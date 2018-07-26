@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "petit-dom js benchmark",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "petit-dom"
+  },
   "dependencies": {
     "petit-dom": "0.0.12"
   },

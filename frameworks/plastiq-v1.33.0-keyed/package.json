@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-plastiq",
   "version": "1.0.0",
   "description": "Benchmark for plastiq framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "plastiq"
+  },
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",
     "build-prod": "webpack -p -c webpack.config.js"

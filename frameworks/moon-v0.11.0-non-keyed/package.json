@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-moon",
   "version": "1.0.0",
   "description": "Benchmark for Moon framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "moonjs"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

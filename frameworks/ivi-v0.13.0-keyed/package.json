@@ -8,6 +8,9 @@
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": "https://github.com/krausest/js-framework-benchmark",
   "keywords": [],
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "ivi-core"
+  },
   "scripts": {
     "build-dev": "rollup -c rollup.config.js",
     "build-prod": "rollup -c rollup.config.js"

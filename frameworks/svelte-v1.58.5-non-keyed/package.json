@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-svelte",
   "version": "1.0.0",
   "description": "Boilerplate for Svelte",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "svelte"
+  },
   "scripts": {
     "build-dev": "rollup -c -w",
     "build-prod": "rollup -c --environment production"
@@ -21,6 +24,6 @@
     "rollup-plugin-buble": "0.19.2",
     "rollup-plugin-svelte": "4.0.0",
     "rollup-plugin-uglify": "3.0.0",
-    "svelte": "^1.58.5"
+    "svelte": "1.58.5"
   }
 }

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "React+redux-combiner demo",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "16.1.0 + 0.4.1"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

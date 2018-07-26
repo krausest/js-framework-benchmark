@@ -1,5 +1,8 @@
 {
   "private": true,
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.8"
+  },
   "scripts": {
     "build-dev": "LEIN_VERSION=2.8.1 lein cljsbuild auto",
     "build-prod": "LEIN_VERSION=2.8.1 lein cljsbuild once prod"

@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-react-lite",
   "version": "1.0.0",
   "description": "Benchmark for react-lite framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "react-lite"
+  },
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",
     "build-prod": "webpack -p -c webpack.config.js"

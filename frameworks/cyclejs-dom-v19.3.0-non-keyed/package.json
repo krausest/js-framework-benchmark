@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-cyclejs",
   "version": "1.0.0",
   "description": "Benchmark for Cycle.js framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@cycle/dom"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-maquette-keyed",
   "version": "3.0.1-keyed",
   "description": "Benchmark for maquette framework (keyed)",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "maquette"
+  },
   "scripts": {
     "build-dev": "node build.js",
     "build-prod": "node build.js"

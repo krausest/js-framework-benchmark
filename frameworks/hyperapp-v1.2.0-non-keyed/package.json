@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "hyperapp v1.2.0 js benchmark",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "hyperapp"
+  },
   "dependencies": {
     "hyperapp": "1.2.0"
   },

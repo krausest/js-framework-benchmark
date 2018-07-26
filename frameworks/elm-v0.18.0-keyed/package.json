@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Elm demo",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "elm"
+  },
   "scripts": {
     "postinstall": "elm-package install -y",
     "build-prod": "elm-make src/Main.elm --output=dist/main.js"

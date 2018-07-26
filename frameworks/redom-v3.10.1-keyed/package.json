@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "redom"
+  },
   "scripts": {
     "build-dev": "rollup -f iife -c rollup.config.dev.js src/main.js -o dist/main.js",
     "build-prod": "rollup -f iife -c rollup.config.js src/main.js -o dist/main.js"
@@ -10,10 +13,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "redom": "~3.10.1",
-    "rollup": "~0.54.1",
-    "rollup-plugin-buble": "~0.18.0",
-    "rollup-plugin-node-resolve": "~3.0.2",
-    "rollup-plugin-uglify": "~3.0.0"
+    "redom": "3.10.1",
+    "rollup": "0.54.1",
+    "rollup-plugin-buble": "0.18.0",
+    "rollup-plugin-node-resolve": "3.0.2",
+    "rollup-plugin-uglify": "3.0.0"
   }
 }

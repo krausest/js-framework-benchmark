@@ -1,6 +1,9 @@
 {
   "name": "angular-closure",
   "version": "1.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@angular/core"
+  },
   "description": "An angular app using closure compiler",
   "scripts": {
     "start": "echo 'please start in root project'",

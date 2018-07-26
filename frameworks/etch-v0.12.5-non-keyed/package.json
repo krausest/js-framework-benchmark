@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-etch-non-keyed",
   "version": "1.0.0",
   "description": "Etch non-keyed demo",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "etch"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

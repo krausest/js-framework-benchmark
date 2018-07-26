@@ -7,6 +7,11 @@
     "build-dev": "polymer build",
     "build-prod": "polymer build"
   },
+  "js-framework-benchmark": {
+    "frameworkVersion": "2.0.0",
+    "customURL": "/build/es6-bundled",
+    "useShadowRoot": true
+  },
   "keywords": [
     "polymer"
   ],
@@ -19,7 +24,7 @@
   },
   "devDependencies": {
     "bower": "1.8.4",
-    "polymer-cli": "^1.0.0"
+    "polymer-cli": "1.0.0"
   },
   "dependencies": {}
 }

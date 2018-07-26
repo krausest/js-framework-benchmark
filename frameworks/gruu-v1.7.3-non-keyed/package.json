@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Gruu demo",
   "main": "src/main.es6.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "gruujs"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

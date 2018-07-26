@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "redom"
+  },
   "scripts": {
     "build-dev": "rollup -f iife -c rollup.config.dev.js src/main.js -o dist/main.js",
     "build-prod": "rollup -f iife -c rollup.config.js src/main.js -o dist/main.js"

@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-san",
   "version": "3.5.5",
   "description": "Benchmark for san framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "san"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

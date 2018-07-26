@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-riot",
   "version": "1.0.0",
   "description": "Benchmark for riot framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "riot"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "React Easy State demo",
   "main": "src/index.jsx",
+  "js-framework-benchmark": {
+    "frameworkVersion": "16.1.0 + 5.0.0"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

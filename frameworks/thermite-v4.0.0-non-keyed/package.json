@@ -3,6 +3,9 @@
     "version": "1.0.0",
     "description": "Purescript Thermite JS Benchmark",
     "main": "index.js",
+    "js-framework-benchmark": {
+        "frameworkVersion": "4.0.0"
+    },
     "scripts": {
         "postinstall": "bower install",
         "clean": "rimraf output bower_components node_modules",

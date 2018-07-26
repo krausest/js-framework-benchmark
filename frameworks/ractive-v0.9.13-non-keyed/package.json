@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-ractive",
   "version": "1.0.0",
   "description": "Boilerplate for Ractive.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "ractive"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

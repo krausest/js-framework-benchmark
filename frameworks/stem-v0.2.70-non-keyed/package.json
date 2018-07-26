@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "None",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.2.70"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd src && rollup -c",

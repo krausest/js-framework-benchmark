@@ -1,7 +1,10 @@
 {
   "name": "js-framework-benchmark-knockoutjs",
   "version": "1.0.0",
-  "description": "Rivets demo",
+  "description": "Angular light demo",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "alight"
+  },
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",
     "build-prod": "webpack -p -c webpack.config.js"

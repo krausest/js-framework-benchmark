@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Benchmark for reflex-dom",
   "author": "Alexandre Esteves <alexandre.fmp.esteves@gmail.com>",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.4",
+    "customURL": "/bundled-dist"
+  },
   "contributors": [
     "Ryan Trinkle <ryan.trinkle@gmail.com>"
   ],

@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-inferno",
   "version": "1.0.0",
   "description": "Benchmark for inferno framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "inferno"
+  },
   "scripts": {
     "build-dev": "webpack --config webpack.dev.js -w -d",
     "build-prod": "webpack --config webpack.prod.js -p"

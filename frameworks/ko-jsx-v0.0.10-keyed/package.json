@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-ko-jsx",
   "version": "0.0.10",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "knockout"
+  },
   "scripts": {
     "build-dev": "rollup -c",
     "build-prod": "rollup -c --environment production"

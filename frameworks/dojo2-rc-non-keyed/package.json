@@ -1,6 +1,10 @@
 {
   "name": "dojo2-rc-nonkeyed",
   "version": "1.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@dojo/core",
+    "customURL": "/output/dist"
+  },
   "scripts": {
     "build-prod": "./node_modules/.bin/dojo build"
   },

@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-tsers",
   "version": "1.0.0",
   "description": "Benchmark for TSERS framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@tsers/core"
+  },
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",
     "build-prod": "webpack -p -c webpack.config.js"

@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-aurelia",
   "version": "1.0.0",
   "description": "Benchmark for aurelia framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "aurelia-framework"
+  },
   "keywords": [
     "aurelia"
   ],

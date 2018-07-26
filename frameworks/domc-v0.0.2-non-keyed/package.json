@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "domc demo",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "domc"
+  },
   "scripts": {
     "build-dev": "rollup -c -w",
     "build-prod": "rollup -c"

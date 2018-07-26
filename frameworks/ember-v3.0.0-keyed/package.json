@@ -5,6 +5,10 @@
   "description": "Small description for ember-temp goes here",
   "license": "MIT",
   "author": "",
+  "js-framework-benchmark": {
+    "frameworkVersion": "3.0.0",
+    "customURL": "/dist"
+  },
   "directories": {
     "doc": "doc",
     "test": "tests"

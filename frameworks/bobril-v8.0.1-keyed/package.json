@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Bobril demo",
   "main": "src/app.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "bobril"
+  },
   "scripts": {
     "build-dev": "bb",
     "build-prod": "bb b -v dist"

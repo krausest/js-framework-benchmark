@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-marko",
   "version": "1.1.1",
   "description": "Marko.JS demo",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "marko"
+  },
   "scripts": {
     "build-dev": "rollup -c rollup.config.js",
     "build-prod": "cross-env NODE_ENV=production rollup -c rollup.config.js"

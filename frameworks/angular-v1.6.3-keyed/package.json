@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-angular",
   "version": "1.0.0",
   "description": "Boilerplate for Angular.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "angular"
+  },
   "scripts": {
     "build-dev": "webpack -w",
     "build-prod": "webpack -p"

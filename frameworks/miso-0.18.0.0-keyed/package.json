@@ -7,6 +7,10 @@
     "Jens Krause",
     "David Johnson"
   ],
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.18.0.0",
+    "customURL": "/dist-bundle"
+  },
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {
     "type": "git",

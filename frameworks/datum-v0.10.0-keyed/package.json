@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-Datumjs",
   "version": "1.0.0",
   "description": "Benchmark for Datum v0.8",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "Datum"
+  },
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",
     "build-prod": "webpack -p -c webpack.config.js"

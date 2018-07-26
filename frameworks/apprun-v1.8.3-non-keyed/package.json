@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "AppRun demo",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "apprun"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"

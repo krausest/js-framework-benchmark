@@ -3,22 +3,25 @@
   "version": "1.0.0",
   "description": "hyper(HTML) demo",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "hyperhtml"
+  },
   "scripts": {
     "build-dev": "rollup -c -w",
     "build-prod": "rollup -c"
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "hyperhtml": "^2.4.0"
+    "hyperhtml": "2.4.0"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-es2016": "^6.24.1",
-    "rollup": "^0.50.0",
-    "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-uglify": "^2.0.1",
-    "uglify-es": "^3.1.6"
+    "babel-core": "6.26.0",
+    "babel-plugin-external-helpers": "6.22.0",
+    "babel-preset-es2016": "6.24.1",
+    "rollup": "0.50.0",
+    "rollup-plugin-babel": "3.0.2",
+    "rollup-plugin-node-resolve": "3.0.0",
+    "rollup-plugin-uglify": "2.0.1",
+    "uglify-es": "3.1.6"
   }
 }

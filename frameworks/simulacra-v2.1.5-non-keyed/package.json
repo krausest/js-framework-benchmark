@@ -2,6 +2,9 @@
   "name": "js-framework-benchmark-simulacra",
   "version": "1.0.0",
   "description": "Benchmark for simulacra.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "simulacra"
+  },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"
