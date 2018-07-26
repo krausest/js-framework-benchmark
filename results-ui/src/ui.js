@@ -175,7 +175,7 @@ function setFactors() {
 	// set factors
 	eachEnabledLib((implType, lib) => {
 		eachEnabledBench(lib, (benchType, res) => {
-			var typeMins = mins[implType][benchType];
+            var typeMins = mins[implType][benchType];
 			res.factor = clampMin(res[STORE.metric], STORE.clamp[benchType]) / typeMins[res.name];
 		});
 	});
@@ -188,7 +188,7 @@ function setFactors() {
 			for (var num in lib.bench[benchType]) {
 				if (benchEnabled(benchType, num)) {
 					i++;
-					lib.factors[benchType] += lib.bench[benchType][num].factor;
+                    lib.factors[benchType] += lib.bench[benchType][num].factor;
 				}
 			}
 			lib.factors[benchType] /= i;
@@ -249,11 +249,17 @@ function render(implType, benchType, aggr) {
 					el("a", {href: "#", onclick: [sortBy, benchType + "." + num, nextSortDir(benchType + "." + num)]}, benchDescr[num]),
 				]),
 				STORE.results[implType].map(lib =>
-					frameworkEnabled(implType, lib.name) && el("td", {class: colorClass(lib.bench[benchType][num].factor)}, [
-						el("div", {class: "value"}, lib.bench[benchType][num][STORE.metric].toFixed(1)),
-						el("div", {class: "stddev"}, lib.bench[benchType][num].stdDev.toFixed(1)),
-						el("div", {class: "factor"}, lib.bench[benchType][num].factor.toFixed(1)),
-					])
+					{
+                        if (!lib.bench[benchType][num]) {
+                            return frameworkEnabled(implType, lib.name) && el("td", "-");
+                        } else {
+                            return frameworkEnabled(implType, lib.name) && el("td", {class: colorClass(lib.bench[benchType][num].factor)}, [
+                            el("div", {class: "value"}, lib.bench[benchType][num][STORE.metric].toFixed(1)),
+                            el("div", {class: "stddev"}, lib.bench[benchType][num].stdDev.toFixed(1)),
+                            el("div", {class: "factor"}, lib.bench[benchType][num].factor.toFixed(1)),
+                            ])
+                        }
+                    }
 				)
 			])
 		),
