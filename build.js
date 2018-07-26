@@ -8,7 +8,9 @@ var path = require('path');
 var restartWithFramework = '';
 var build = !restartWithFramework ? true : false;
 
-var directories = ["webdriver-ts", "webdriver-ts-results"].concat(fs.readdirSync('./frameworks').map(f => 'frameworks/' + f));
+var directories = ["webdriver-ts", "webdriver-ts-results"]
+    .concat(fs.readdirSync('./frameworks/keyed').map(f => 'frameworks/keyed/' + f))
+    .concat(fs.readdirSync('./frameworks/non-keyed').map(f => 'frameworks/non-keyed/' + f));
 
 _.each(directories, function(name) {
 	if(fs.statSync(name).isDirectory() && fs.existsSync(path.join(name, "package.json"))) {
