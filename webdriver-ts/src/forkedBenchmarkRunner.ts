@@ -7,7 +7,7 @@ const lighthouse = require('lighthouse');
 
 import {lhConfig} from './lighthouseConfig';
 import * as fs from 'fs';
-import {JSONResult, config, FrameworkData, frameworks, BenchmarkError, ErrorsAndWarning, BenchmarkOptions} from './common'
+import {JSONResult, config, FrameworkData, BenchmarkError, ErrorsAndWarning, BenchmarkOptions} from './common'
 import * as R from 'ramda';
 
 var chromedriver:any = require('chromedriver');
@@ -263,7 +263,7 @@ function buildDriver(benchmarkOptions: BenchmarkOptions) {
     options = options.setLoggingPrefs(logPref);
 
     options = options.setPerfLoggingPrefs(<any>{
-        enableNetwork: true, enablePage: true, 
+        enableNetwork: true, enablePage: true,
         traceCategories: lighthouse.traceCategories.join(", ")
     });
 
@@ -288,7 +288,7 @@ async function forceGC(framework: FrameworkData, driver: WebDriver): Promise<any
 }
 
 async function snapMemorySize(driver: WebDriver): Promise<number> {
-	let heapSnapshot: any = await driver.executeScript(":takeHeapSnapshot");
+    let heapSnapshot: any = await driver.executeScript(":takeHeapSnapshot");
     let node_fields: any = heapSnapshot.snapshot.meta.node_fields;
     let nodes: any = heapSnapshot.nodes;
 
@@ -336,6 +336,14 @@ interface Result<T> {
 function writeResult<T>(res: Result<T>, dir: string) {
     let benchmark = res.benchmark;
     let framework = res.framework.name;
+    let keyed = res.framework.keyed;
+    let type = null;
+
+    switch (benchmark.type) {
+        case BenchmarkType.CPU: type = "cpu"; break;
+        case BenchmarkType.MEM: type = "memory"; break;
+        case BenchmarkType.STARTUP: type = "startup"; break;
+    }
 
     for (let resultKind of benchmark.resultKinds()) {
         let data = benchmark.extractResult(res.results, resultKind);
@@ -343,8 +351,9 @@ function writeResult<T>(res: Result<T>, dir: string) {
         console.log(`result ${fileName(res.framework, resultKind)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
         let result: JSONResult = {
             "framework": framework,
+            "keyed": keyed,
             "benchmark": resultKind.id,
-            "type": benchmark.type === BenchmarkType.CPU ? "cpu" : "memory",
+            "type": type,
             "min": s.min(),
             "max": s.max(),
             "mean": s.mean(),
@@ -444,7 +453,7 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
     return {errors, warnings};
 }
 
-export async function executeBenchmark(frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {
+export async function executeBenchmark(frameworks: FrameworkData[], frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {
     let runFrameworks = frameworks.filter(f => frameworkName === f.name);
     let runBenchmarks = benchmarks.filter(b => benchmarkName === b.id);
     if (runFrameworks.length!=1) throw `Framework name ${frameworkName} is not unique`;
@@ -466,22 +475,21 @@ export async function executeBenchmark(frameworkName: string, benchmarkName: str
 process.on('message', (msg) => {
     if (config.LOG_DEBUG) console.log("child process got message", msg);
 
-    let {frameworkName, benchmarkName, benchmarkOptions} : {frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions} = msg;
+    let {frameworks, frameworkName, benchmarkName, benchmarkOptions} : {frameworks: FrameworkData[], frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions} = msg;
     if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
 
     try {
-        let errorsPromise = executeBenchmark(frameworkName, benchmarkName, benchmarkOptions);
+        let errorsPromise = executeBenchmark(frameworks, frameworkName, benchmarkName, benchmarkOptions);
         errorsPromise.then(errorsAndWarnings => {
             if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorsAndWarnings);
             process.send(errorsAndWarnings);
             process.exit(0);
         }).catch(err => {
-            console.log("error running benchmark", err);            
+            console.log("error running benchmark", err);
             process.exit(1);
         });
     } catch (err) {
-        console.log("error running benchmark", err);            
+        console.log("error running benchmark", err);
         process.exit(1);
-    }    
+    }
   });
-  
