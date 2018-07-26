@@ -1,10 +1,12 @@
 import * as chrome from 'selenium-webdriver/chrome'
 import {Builder, WebDriver, promise, logging} from 'selenium-webdriver'
-import * as yargs from 'yargs'; 
+import * as yargs from 'yargs';
 var chromedriver:any = require('chromedriver');
 import {BenchmarkType, Benchmark, benchmarks, fileName} from './benchmarks'
 import {setUseShadowRoot, testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath} from './webdriverAccess'
-import {JSONResult, config, FrameworkData, frameworks} from './common'
+import {JSONResult, config, FrameworkData, initializeFrameworks} from './common'
+
+let frameworks = initializeFrameworks();
 
 function buildDriver() {
     let logPref = new logging.Preferences();
@@ -16,12 +18,12 @@ function buildDriver() {
     options = options.addArguments("--disable-infobars");
     options = options.addArguments("--disable-background-networking");
     options = options.addArguments("--disable-cache");
-    options = options.addArguments("--disable-extensions");    
+    options = options.addArguments("--disable-extensions");
     options = options.setLoggingPrefs(logPref);
     options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, traceCategories: "devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
     return new Builder()
         .forBrowser('chrome')
-        .setChromeOptions(options)    
+        .setChromeOptions(options)
         .build();
 }
 
@@ -61,23 +63,23 @@ window.nonKeyedDetector_instrument = function() {
         nodeList.forEach(n => {
             if (n==window.storedTr) {
                 trFoundCount +=1;
-            }                        
-        });       
-        return trFoundCount; 
+            }
+        });
+        return trFoundCount;
     }
 
     var observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
-            if (mutation.type === 'childList') { 
+            if (mutation.type === 'childList') {
                 nonKeyedDetector_tradded += countTRInNodeList(mutation.addedNodes);
                 nonKeyedDetector_trremoved += countTRInNodeList(mutation.removedNodes);
                 nonKeyedDetector_removedStoredTr += countSelectedTRInNodeList(mutation.removedNodes)
             }
             // console.log(mutation.type, mutation.addedNodes.length, mutation.removedNodes.length, mutation);
-        });    
+        });
     });
     var config = { childList:true, attributes: true, subtree: true, characterData: true };
-    
+
     observer.observe(target, config);
     return true;
 }
@@ -131,13 +133,13 @@ async function runBench(frameworkNames: string[]) {
             await clickElementById(driver,'swaprows');
             await testTextContains(driver,'//tbody/tr[2]/td[1]','999');
             let res = await driver.executeScript('return nonKeyedDetector_result()');
-            let nonKeyedSwap = isNonKeyedSwapRow(res); 
+            let nonKeyedSwap = isNonKeyedSwapRow(res);
             // run
             await driver.executeScript('window.nonKeyedDetector_reset()');
             await clickElementById(driver,'run');
             await testTextContains(driver,'//tbody/tr[1000]/td[1]','2000');
             res = await driver.executeScript('return nonKeyedDetector_result()');
-            let nonKeyedRun =isNonKeyedRun(res); 
+            let nonKeyedRun =isNonKeyedRun(res);
             // remove
             await driver.executeScript('nonKeyedDetector_storeTr()');
             let text = await getTextByXPath(driver, `//tbody/tr[2]/td[2]/a`);
@@ -145,9 +147,9 @@ async function runBench(frameworkNames: string[]) {
             await clickElementByXPath(driver, `//tbody/tr[2]/td[3]/a/span[1]`);
             await testTextNotContained(driver, `//tbody/tr[2]/td[2]/a`, text);
             res = await driver.executeScript('return nonKeyedDetector_result()');
-            let nonKeyedRemove =isNonKeyedRemove(res); 
+            let nonKeyedRemove =isNonKeyedRemove(res);
             let nonKeyed = nonKeyedRemove || nonKeyedRun || nonKeyedSwap;
-            console.log(framework.name +" is "+(nonKeyedRun ? "non-keyed" : "keyed")+" for 'run benchmark' and " 
+            console.log(framework.name +" is "+(nonKeyedRun ? "non-keyed" : "keyed")+" for 'run benchmark' and "
             + (nonKeyedRemove ? "non-keyed" : "keyed") + " for 'remove row benchmark' "
             + (nonKeyedSwap ? "non-keyed" : "keyed") + " for 'swap rows benchmark' "
             +". It'll appear as "+(nonKeyed ? "non-keyed" : "keyed")+" in the results");

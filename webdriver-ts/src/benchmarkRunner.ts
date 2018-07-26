@@ -1,25 +1,26 @@
 import {BenchmarkType, Benchmark, benchmarks, fileName, LighthouseData} from './benchmarks'
 import * as fs from 'fs';
 import * as yargs from 'yargs';
-import {JSONResult, config, FrameworkData, frameworks, BenchmarkError, ErrorsAndWarning, BenchmarkOptions} from './common'
+import {JSONResult, config, FrameworkData, initializeFrameworks, BenchmarkError, ErrorsAndWarning, BenchmarkOptions} from './common'
 import * as R from 'ramda';
 import { fork } from 'child_process';
 import {executeBenchmark} from './forkedBenchmarkRunner';
 
+let frameworks = initializeFrameworks();
 
-function forkedRun(frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {    
+function forkedRun(frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {
     if (config.FORK_CHROMEDRIVER) {
         return new Promise(function(resolve, reject) {
             const forked = fork('dist/forkedBenchmarkRunner.js');
             if (config.LOG_DEBUG) console.log("forked child process");
-            forked.send({frameworkName, benchmarkName, benchmarkOptions});
+            forked.send({frameworks, frameworkName, benchmarkName, benchmarkOptions});
                 forked.on('message', (msg) => {
                     if (config.LOG_DEBUG) console.log("main process got message from child", msg);
                     resolve(msg);
             });
         });
     } else {
-        return executeBenchmark(frameworkName, benchmarkName, benchmarkOptions);
+        return executeBenchmark(frameworks, frameworkName, benchmarkName, benchmarkOptions);
     }
 }
 
@@ -68,7 +69,7 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
         console.log("================================");
         console.log("The following warnings were logged:");
         console.log("================================");
-    
+
         warnings.forEach(e => {
         console.log(e);
         });
@@ -78,13 +79,13 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
         console.log("================================");
         console.log("The following benchmarks failed:");
         console.log("================================");
-    
+
         errors.forEach(e => {
         console.log("[" + e.imageFile + "]");
         console.log(e.exception);
         console.log();
         });
-        throw "Benchmarking failed with errors";    
+        throw "Benchmarking failed with errors";
     }
 }
 
