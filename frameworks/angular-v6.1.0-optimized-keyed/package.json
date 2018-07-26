@@ -1,10 +1,10 @@
 {
   "name": "angular-closure",
   "version": "1.0.0",
+  "description": "An angular app using closure compiler",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@angular/core"
   },
-  "description": "An angular app using closure compiler",
   "scripts": {
     "start": "echo 'please start in root project'",
     "test": "karma start",
@@ -17,6 +17,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@angular-contrib/core": "0.0.2",
     "@angular/common": "6.0.0",
     "@angular/compiler": "6.0.0",
     "@angular/compiler-cli": "6.0.0",
@@ -35,7 +36,6 @@
     "rollup-plugin-node-resolve": "3.0.2",
     "rollup-plugin-uglify": "3.0.0",
     "typescript": "2.7.2",
-    "typings": "2.1.1",
     "yargs": "11.0.0"
   }
 }

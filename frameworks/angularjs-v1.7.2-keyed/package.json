@@ -27,6 +27,6 @@
     "webpack": "2.2.1"
   },
   "dependencies": {
-    "angular": "1.6.3"
+    "angular": "1.7.2"
   }
 }
