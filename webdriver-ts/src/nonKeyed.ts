@@ -112,10 +112,10 @@ function isNonKeyedSwapRow(result: any): boolean {
 
 async function runBench(frameworkNames: string[]) {
     let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.name.indexOf(name)>-1));
-    console.log("Frameworks that will be checked", runFrameworks.map(f => f.name));
+    console.log("Frameworks that will be checked", runFrameworks.map(f => f.resultFileName));
 
     let frameworkMap = new Map<String, FrameworkData>();
-    frameworks.forEach(f => frameworkMap.set(f.name, f));
+    frameworks.forEach(f => frameworkMap.set(f.resultFileName, f));
 
     for (let i=0;i<runFrameworks.length;i++) {
         let driver = await buildDriver();
@@ -149,12 +149,12 @@ async function runBench(frameworkNames: string[]) {
             res = await driver.executeScript('return nonKeyedDetector_result()');
             let nonKeyedRemove =isNonKeyedRemove(res);
             let nonKeyed = nonKeyedRemove || nonKeyedRun || nonKeyedSwap;
-            console.log(framework.name +" is "+(nonKeyedRun ? "non-keyed" : "keyed")+" for 'run benchmark' and "
+            console.log(framework.resultFileName +" is "+(nonKeyedRun ? "non-keyed" : "keyed")+" for 'run benchmark' and "
             + (nonKeyedRemove ? "non-keyed" : "keyed") + " for 'remove row benchmark' "
             + (nonKeyedSwap ? "non-keyed" : "keyed") + " for 'swap rows benchmark' "
             +". It'll appear as "+(nonKeyed ? "non-keyed" : "keyed")+" in the results");
-            if (frameworkMap.get(framework.name).keyed === nonKeyed) {
-                console.log("ERROR: Framework "+framework.name+" is not correctly categorized in commons.ts");
+            if (frameworkMap.get(framework.resultFileName).keyed === nonKeyed) {
+                console.log("ERROR: Framework "+framework.resultFileName+" is not correctly categorized in commons.ts");
             }
         } finally {
             await driver.quit();
