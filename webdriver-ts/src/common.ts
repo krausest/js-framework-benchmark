@@ -60,7 +60,7 @@ export let frameworks = [
     f("angular-v1.6.3-keyed", true),
     f("angular-v6.1.0-keyed", true),
     f("angular-v6.0.0-non-keyed", false),
-    f("angular-v6.0.0-no-zone-keyed", true),
+    f("angular-v6.1.0-noopzone-keyed", true),
     f("angular-v6.0.0-optimized-keyed", true),
     f("angular-v6.1.0-ivy-keyed", true),
     f("apprun-v1.8.3-keyed", true),
