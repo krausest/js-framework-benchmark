@@ -35,7 +35,6 @@
     "rollup-plugin-node-resolve": "3.0.2",
     "rollup-plugin-uglify": "3.0.0",
     "typescript": "2.7.2",
-    "typings": "2.1.1",
     "yargs": "11.0.0"
   }
 }
