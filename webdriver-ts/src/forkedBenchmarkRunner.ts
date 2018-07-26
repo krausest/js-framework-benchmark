@@ -288,7 +288,7 @@ async function forceGC(framework: FrameworkData, driver: WebDriver): Promise<any
 }
 
 async function snapMemorySize(driver: WebDriver): Promise<number> {
-	let heapSnapshot: any = await driver.executeScript(":takeHeapSnapshot");
+    let heapSnapshot: any = await driver.executeScript(":takeHeapSnapshot");
     let node_fields: any = heapSnapshot.snapshot.meta.node_fields;
     let nodes: any = heapSnapshot.nodes;
 
@@ -336,6 +336,14 @@ interface Result<T> {
 function writeResult<T>(res: Result<T>, dir: string) {
     let benchmark = res.benchmark;
     let framework = res.framework.name;
+    let keyed = res.framework.keyed;
+    let type = null;
+
+    switch (benchmark.type) {
+        case BenchmarkType.CPU: type = "cpu"; break;
+        case BenchmarkType.MEM: type = "memory"; break;
+        case BenchmarkType.STARTUP: type = "startup"; break;
+    }
 
     for (let resultKind of benchmark.resultKinds()) {
         let data = benchmark.extractResult(res.results, resultKind);
@@ -343,8 +351,9 @@ function writeResult<T>(res: Result<T>, dir: string) {
         console.log(`result ${fileName(res.framework, resultKind)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
         let result: JSONResult = {
             "framework": framework,
+            "keyed": keyed,
             "benchmark": resultKind.id,
-            "type": benchmark.type === BenchmarkType.CPU ? "cpu" : "memory",
+            "type": type,
             "min": s.min(),
             "max": s.max(),
             "mean": s.mean(),
