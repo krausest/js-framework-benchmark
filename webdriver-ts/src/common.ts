@@ -59,7 +59,7 @@ export let frameworks = [
     f("angular-light-v0.14.1-keyed", true),
     f("angular-v1.6.3-keyed", true),
     f("angular-v6.1.0-keyed", true),
-    f("angular-v6.0.0-non-keyed", false),
+    f("angular-v6.1.0-non-keyed", false),
     f("angular-v6.1.0-noopzone-keyed", true),
     f("angular-v6.0.0-optimized-keyed", true),
     f("angular-v6.1.0-ivy-keyed", true),
