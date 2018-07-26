@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es2015",
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "types": [
+      "qunit"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "tmp",
+    "dist"
+  ]
+}
