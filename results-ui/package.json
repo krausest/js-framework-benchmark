@@ -1,0 +1,24 @@
+{
+  "name": "results-ui",
+  "version": "1.0.0",
+  "description": "js-framework-benchmark results ui",
+  "main": "index.js",
+  "scripts": {
+    "build-prod": "node ./src/build.js"
+  },
+  "keywords": [],
+  "author": "Leon Sorokin",
+  "license": "MIT",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "domvm": "git://github.com/domvm/domvm.git#3.4.3",
+    "rollup": "*",
+    "rollup-plugin-buble": "*",
+    "rollup-plugin-uglify": "*"
+  },
+  "dependencies": {}
+}
