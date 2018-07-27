@@ -350,7 +350,7 @@ function writeResult<T>(res: Result<T>, dir: string) {
         let s = jStat(data);
         console.log(`result ${fileName(res.framework, resultKind)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
         let result: JSONResult = {
-            "framework": res.framework.resultFileName,
+            "framework": res.framework.fullNameWithKeyedAndVersion,
             "keyed": keyed,
             "benchmark": resultKind.id,
             "type": type,

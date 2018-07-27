@@ -17,7 +17,7 @@
         <div class="panel-body">
             <ul class="nav nav-pills nav-stacked">
 				{{~it.frameworks :framwork}}
-                <li><a href="/{{=framwork.uri}}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> {{=framwork.name}}</a></li>
+                <li><a href="/{{=framwork.uri}}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> {{=framwork.fullNameWithKeyedAndVersion}}</a></li>
 				{{~}}
             </ul>
         </div>

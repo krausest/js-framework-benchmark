@@ -31,7 +31,7 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
     let errors: BenchmarkError[] = [];
     let warnings: String[] = [];
 
-    let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.name.indexOf(name) > -1));
+    let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name) > -1));
     let runBenchmarks = benchmarks.filter(b => benchmarkNames.some(name => b.id.toLowerCase().indexOf(name) > -1));
     console.log("Frameworks that will be benchmarked", runFrameworks);
     console.log("Benchmarks that will be run", runBenchmarks.map(b => b.id));

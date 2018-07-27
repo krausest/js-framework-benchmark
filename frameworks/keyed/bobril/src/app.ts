@@ -2,7 +2,7 @@ import * as b from "bobril";
 import { Store } from "./store";
 
 // For who ever will read this: in Bobril you normally don't use bootstrap or class names directly, you use b.styleDef instead.
-b.asset("../../../css/currentStyle.css");
+b.asset("../../../../css/currentStyle.css");
 
 var startTime: number;
 var lastMeasure: string;

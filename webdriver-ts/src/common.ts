@@ -43,8 +43,7 @@ export let config = {
 
 export interface FrameworkData {
     name: string;
-    version: string;
-    resultFileName: string;
+    fullNameWithKeyedAndVersion: string;
     uri: string;
     keyed: boolean;
     useShadowRoot: boolean;
@@ -56,8 +55,8 @@ interface Options {
 }
 
 export function initializeFrameworks() {
-    function f(name: string, version:string, resultFileName:string, keyed: boolean, options: Options = {uri: null, useShadowRoot: false}): FrameworkData {
-        let ret = {name, version, keyed, resultFileName, uri: 'frameworks/' + (keyed ? 'keyed/' : 'non-keyed/') + (options.uri ? options.uri : name), useShadowRoot: options.useShadowRoot};
+    function f(name: string, fullNameWithKeyedAndVersion:string, keyed: boolean, options: Options = {uri: null, useShadowRoot: false}): FrameworkData {
+        let ret = {name, fullNameWithKeyedAndVersion, keyed, uri: 'frameworks/' + (keyed ? 'keyed/' : 'non-keyed/') + (options.uri ? options.uri : name), useShadowRoot: options.useShadowRoot};
         return ret;
     }
 
@@ -120,14 +119,13 @@ export function initializeFrameworks() {
             }
 
             let opts = {uri, useShadowRoot};
-            let resultFileName = framework+(version ? "-v"+version : "")+(keyed ? "-keyed" : "-non-keyed");
-            console.log("resultFileName", resultFileName);
-            let fd  = f(framework, version, resultFileName, keyed, opts);
+            let fullNameWithKeyedAndVersion = framework+(version ? "-v"+version : "")+(keyed ? "-keyed" : "-non-keyed");
+            let fd  = f(framework, fullNameWithKeyedAndVersion, keyed, opts);
             if (addFramework) frameworks.push(fd);
         }
     }
     console.log("All available frameworks: ")
-    console.log(frameworks.map(fd => fd.name));
+    console.log(frameworks.map(fd => fd.fullNameWithKeyedAndVersion));
     return frameworks;
 }
 
