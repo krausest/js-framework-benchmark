@@ -11,6 +11,7 @@ export interface BenchmarkInfo {
     type: BenchmarkType;
     label: string;
     description: string;
+    dynamicCountMultiplicity?: number
 }
 
 export abstract class Benchmark {
@@ -18,11 +19,14 @@ export abstract class Benchmark {
     type: BenchmarkType;
     label: string;
     description: string;
+    dynamicCountMultiplicity?: number
+
     constructor(public benchmarkInfo: BenchmarkInfo) {
         this.id = benchmarkInfo.id;
         this.type = benchmarkInfo.type;
         this.label = benchmarkInfo.label;
         this.description = benchmarkInfo.description;
+        this.dynamicCountMultiplicity = benchmarkInfo.dynamicCountMultiplicity;
     }
     abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
     abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
@@ -50,7 +54,8 @@ const benchRun = new class extends Benchmark {
             id: "01_run1k",
             label: "create rows",
             description: "Duration for creating 1000 rows after the page loaded.",
-            type: BenchmarkType.CPU
+            type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 3
         })
     }
     async init(driver: WebDriver) { await testElementLocatedById(driver, "add", SHORT_TIMEOUT); }
@@ -67,6 +72,7 @@ const benchReplaceAll = new class extends Benchmark {
             label: "replace all rows",
             description: "Duration for updating all 1000 rows of the table (with " + config.WARMUP_COUNT + " warmup iterations).",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 3
         })
     }
     async init(driver: WebDriver) {
@@ -88,6 +94,7 @@ const benchUpdate = new class extends Benchmark {
             label: "partial update",
             description: "Time to update the text of every 10th row (with " + config.WARMUP_COUNT + " warmup iterations) for a table with 10k rows.",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 3
         })
     }
     async init(driver: WebDriver) {
@@ -112,6 +119,7 @@ const benchSelect = new class extends Benchmark {
             label: "select row",
             description: "Duration to highlight a row in response to a click on the row. (with " + config.WARMUP_COUNT + " warmup iterations).",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 6
         })
     }
     async init(driver: WebDriver) {
@@ -135,6 +143,7 @@ const benchSwapRows = new class extends Benchmark {
             label: "swap rows",
             description: "Time to swap 2 rows on a 1K table. (with " + config.WARMUP_COUNT + " warmup iterations).",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 6
         })
     }
     async init(driver: WebDriver) {
@@ -161,6 +170,7 @@ const benchRemove = new class extends Benchmark {
             label: "remove row",
             description: "Duration to remove a row. (with " + config.WARMUP_COUNT + " warmup iterations).",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 4
         })
     }
     async init(driver: WebDriver) {
@@ -188,6 +198,7 @@ const benchRunBig = new class extends Benchmark {
             label: "create many rows",
             description: "Duration to create 10,000 rows",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 1
         })
     }
     async init(driver: WebDriver) {
@@ -206,6 +217,7 @@ const benchAppendToManyRows = new class extends Benchmark {
             label: "append rows to large table",
             description: "Duration for adding 1000 rows on a table of 10,000 rows.",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 1
         })
     }
     async init(driver: WebDriver) {
@@ -226,6 +238,7 @@ const benchClear = new class extends Benchmark {
             label: "clear rows",
             description: "Duration to clear the table filled with 10.000 rows.",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 3
         })
     }
     async init(driver: WebDriver) {
