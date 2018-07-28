@@ -109,17 +109,17 @@ Open the browser console and click a bit on the buttons and you should see some 
 
 For contributions it is basically sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional. Let's simulate that by copying vanillajs.
 ```
-cd ../frameworks
-cp -r vanillajs-keyed super-vanillajs-keyed
-cd super-vanillajs-keyed
+cd ../frameworks/keyed
+cp -r vanillajs super-vanillajs
+cd super-vanillajs
 ```
-Then we edit super-vanillajs-keyed/index.html to have a correct index.html:
+Then we edit super-vanillajs/index.html to have a correct index.html:
 ```
 <title>Super-VanillaJS-"keyed"</title>
 ...
                     <h1>Super-VanillaJS-"keyed"</h1>
 ```
-In most cases you'll need `npm install` and `npm run build-prod` and then check whether it works in the browser on [http://localhost:8080/frameworks/super-vanillajs-keyed/](http://localhost:8080/frameworks/super-vanillajs-keyed/).
+In most cases you'll need `npm install` and `npm run build-prod` and then check whether it works in the browser on [http://localhost:8080/frameworks/keyed/super-vanillajs/](http://localhost:8080/frameworks/keyed/super-vanillajs/).
 
 (Of course in reality you'd rather throw out the javascript source files and use your framework there instead of only changing the html file.)
 
