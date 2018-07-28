@@ -135,7 +135,7 @@ and install the dependencies
 ```
 npm install
 ```
-and build the benchmark drivernpm
+and build the benchmark driver
 ```
 npm run build-prod
 ```
