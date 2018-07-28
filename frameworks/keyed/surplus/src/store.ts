@@ -83,58 +83,64 @@ export class Row {
     }
 }
 
-export class Store {
-    data = S.data<Row[]>([]);
-    selected = S.value<number | undefined>(undefined);
+export type Store = ReturnType<typeof Store>;
+export const Store = () => {
+    const data = S.data<Row[]>([]),
+        selected = S.value<number | undefined>(undefined),
+        updateData = (mod = 10) => {
+            let _data = data();
+            S.freeze(() => {
+                for (let i = 0; i < _data.length; i += 10) {
+                    _data[i].label(_data[i].label() + " !!!");
+                }
+            });
+        };
 
-    updateData(mod = 10) {
-        let data = this.data();
-        S.freeze(() => {
-            for (let i = 0; i < data.length; i += 10) {
-                data[i].label(data[i].label() + " !!!");
+    return {
+        data,
+        selected,
+        
+        delete(id: number) {
+            const _data = data(),
+                idx = _data.findIndex(d => d.id === id);
+            _data.splice(idx, 1);
+            data(_data);
+        },
+        run() {
+            S.freeze(() => {
+                data(buildData(1000));
+                selected(undefined);
+            });
+        },
+        add() {
+            data(data().concat(buildData(1000)));
+        },
+        update() {
+            updateData();
+        },
+        select(id: number) {
+            selected(id);
+        },
+        runLots() {
+            S.freeze(() => {
+                data(buildData(10000));
+                selected(undefined);
+            });
+        },
+        clear() {
+            S.freeze(() => {
+                data([]);
+                selected(undefined);
+            });
+        },
+        swapRows() {
+            let _data = data();
+            if (_data.length > 998) {
+                var a = _data[1];
+                _data[1] = _data[998];
+                _data[998] = a;
             }
-        });
-    }
-    delete(id: number) {
-        const data = this.data().slice(0),
-            idx = (data as any).findIndex((d: Row) => d.id == id);
-        data.splice(idx, 1);
-        this.data(data);
-    }
-    run() {
-        S.freeze(() => {
-            this.data(buildData(1000));
-            this.selected(undefined);
-        });
-    }
-    add() {
-        this.data(this.data().concat(buildData(1000)));
-    }
-    update() {
-        this.updateData();
-    }
-    select(id: number) {
-        this.selected(id);
-    }
-    runLots() {
-        S.freeze(() => {
-            this.data(buildData(10000));
-            this.selected(undefined);
-        });
-    }
-    clear() {
-        S.freeze(() => {
-            this.data([]);
-            this.selected(undefined);
-        });
-    }
-    swapRows() {
-        let data = this.data();
-        if (data.length > 998) {
-            var a = data[1];
-            data[1] = data[998];
-            data[998] = a;
+            data(_data);
         }
-        this.data(data);
-    }
+    };
 }
