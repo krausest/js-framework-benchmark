@@ -10,19 +10,26 @@ This is a simple benchmark for several javascript frameworks. The benchmarks cre
 
 The following operations are benchmarked for each framework:
 
-* create rows: Duration for creating 1000 rows after the page loaded.
-* replace all rows: Duration for updating all 1000 rows of the table (with 5 warmup iterations).
-* partial update: Time to update the text of every 10th row for a table with 10000 rows (with 5 warmup iterations).
+* create rows: Duration for creating 1,000 rows after the page loaded (no warmup).
+* replace all rows: Duration for replacing all 1,000 rows of the table (with 5 warmup iterations).
+* partial update: Time to update the text of every 10th row for a table with 10,000 rows (with 5 warmup iterations).
 * select row: Duration to highlight a row in response to a click on the row. (with 5 warmup iterations).
-* swap rows: Time to swap 2 rows on a 1K table. (with 5 warmup iterations).
-* remove row: Duration to remove a row. (with 5 warmup iterations).
-* create many rows: Duration to create 10,000 rows
-* append rows to large table: Duration for adding 1000 rows on a table of 10,000 rows.
-* clear rows: Duration to clear the table filled with 10.000 rows.
-* clear rows a 2nd time: Time to clear the table filled with 10.000 rows. But warmed up with only one iteration.
+* swap rows: Time to swap 2 rows on a table with 1,000 rows. (with 5 warmup iterations).
+* remove row: Duration to remove a row for a table with 1,000 rows. (with 5 warmup iterations).
+* create many rows: Duration to create 10,000 rows (no warmup)
+* append rows to large table: Duration for adding 1,000 rows on a table of 10,000 rows (no warmup).
+* clear rows: Duration to clear the table filled with 10,000 rows. (no warmup)
 * ready memory: Memory usage after page load.
-* run memory: Memory usage after adding 1000 rows.
+* run memory: Memory usage after adding 1,000 rows.
+* update memory: Memory usage after clicking 5 times update for a table with 1,000 rows.
+* replace memory: Memory usage after clicking 5 times create 1,000 rows.
+* repeated clear memory: Memory usage after creating and clearing 1,000 rows for 5 times.
+* update memory: Memory usage after clicking 5 times update for a table with 1,000 rows.
 * startup time: Duration for loading and parsing the javascript code and rendering the page.
+* consistently interactive: The lighthouse metric TimeToConsistentlyInteractive: A pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)
+* script bootup time: The lighthouse metric ScriptBootUpTtime: The total ms required to parse/compile/evaluate all the page's scripts
+* main thread work cost: The lighthouse metric MainThreadWorkCost: Total amount of time spent doing work on the main thread. includes style/layout/etc.
+* total byte weight: The lighthouse metric TotalByteWeight: Network transfer cost (post-compression) of all the resources loaded into the page.
 
 For all benchmarks the duration is measured including rendering time. You can read some details on this [article](http://www.stefankrause.net/wp/?p=218).
 The results of this benchmark is outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316), [round 5](http://www.stefankrause.net/wp/?p=392), [round 6](http://www.stefankrause.net/wp/?p=431) and [round 7](http://www.stefankrause.net/wp/?p=454)).
@@ -78,7 +85,7 @@ Now open a new terminal window and keep http-server running in background.
 
 We now try to build the first framework. Go to the vanillajs reference implementation
 ```
-cd frameworks/vanillajs-keyed
+cd frameworks/keyed/vanillajs
 ```
 and install the dependencies
 ```
@@ -89,9 +96,9 @@ and build the framework
 npm run build-prod
 ```
 There should be no build errors and we can open the framework in the browser:
-[http://localhost:8080/frameworks/vanillajs-keyed/](http://localhost:8080/frameworks/vanillajs-keyed/)
+[http://localhost:8080/frameworks/keyed/vanillajs/](http://localhost:8080/frameworks/keyed/vanillajs/)
 
-Some frameworks like binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a third parameter in [common.ts](https://github.com/krausest/js-framework-benchmark/blob/master/webdriver-ts/src/common.ts#L38-L42) that represents the url.
+Some frameworks like binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a customURL property under js-framework-benchmark in the [package.json](https://github.com/krausest/js-framework-benchmark/blob/master/frameworks/keyed/ember/package.json#L10) that represents the url.
 
 Open the browser console and click a bit on the buttons and you should see some measurements printed on the console.
 ![First Run](images/firstRun.png?raw=true "First run")
@@ -102,17 +109,17 @@ Open the browser console and click a bit on the buttons and you should see some 
 
 For contributions it is basically sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional. Let's simulate that by copying vanillajs.
 ```
-cd ../frameworks
-cp -r vanillajs-keyed super-vanillajs-keyed
-cd super-vanillajs-keyed
+cd ../frameworks/keyed
+cp -r vanillajs super-vanillajs
+cd super-vanillajs
 ```
-Then we edit super-vanillajs-keyed/index.html to have a correct index.html:
+Then we edit super-vanillajs/index.html to have a correct index.html:
 ```
 <title>Super-VanillaJS-"keyed"</title>
 ...
                     <h1>Super-VanillaJS-"keyed"</h1>
 ```
-In most cases you'll need `npm install` and `npm run build-prod` and then check whether it works in the browser on [http://localhost:8080/frameworks/super-vanillajs-keyed/](http://localhost:8080/frameworks/super-vanillajs-keyed/).
+In most cases you'll need `npm install` and `npm run build-prod` and then check whether it works in the browser on [http://localhost:8080/frameworks/keyed/super-vanillajs/](http://localhost:8080/frameworks/keyed/super-vanillajs/).
 
 (Of course in reality you'd rather throw out the javascript source files and use your framework there instead of only changing the html file.)
 
@@ -121,7 +128,7 @@ In most cases you'll need `npm install` and `npm run build-prod` and then check 
 As mentioned above the benchmark uses an automated benchmark driver using chromedriver to measure the duration for each operation using chrome's timeline. Here are the steps to run is for a single framework:
 
 ```
-cd ../..
+cd ../../..
 cd webdriver-ts
 ```
 and install the dependencies
