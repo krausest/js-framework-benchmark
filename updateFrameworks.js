@@ -32,18 +32,15 @@ async function main() {
                                     loglevel: 'silent'
                                 });
                                 if (upgraded) {
-                                    // console.log('ncu result', upgraded);
                                     let newVersion = upgraded[packageName];
+                                    if (newVersion && newVersion.startsWith('^')) newVersion = newVersion.substring(1);
+                                    if (newVersion &&  newVersion.startsWith('~')) newVersion = newVersion.substring(1);
                                     if (newVersion) {
-                                        console.log('new version', newVersion);
                                         if (!semver.satisfies(newVersion, '~'+version)) {
-                                            console.log(`Update ${packageName} old version is ${version}, new version ${newVersion}`);
+                                            console.log(`*** Update ${packageName} old version is ${version}, new version ${newVersion}`);
                                             mustRebuildFrameworks.push(p);
                                             await ncu.run({
                                                 packageFile: packageJSONFile,
-                                                silent: true,
-                                                jsonUpgraded: true,
-                                                loglevel: 'silent',
                                                 upgrade: true
                                             });
                                         }
