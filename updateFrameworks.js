@@ -2,8 +2,18 @@ const fs = require('fs');
 const path = require('path');
 const ncu = require('npm-check-updates');
 const semver = require('semver');
+const yargs = require('yargs');
 
+let updageLog = [];
 let mustRebuildFrameworks = [];
+let couldNotBeCheckedFrameworks = [];
+
+let args = yargs(process.argv)
+    .usage("$0 --updade true|false")
+    .default('update', 'true')
+    .boolean('update').argv;
+
+let updatePackages = args.update;
 
 async function main() {
     for (let keyedType of ['keyed', 'non-keyed']) {
@@ -37,12 +47,15 @@ async function main() {
                                     if (newVersion &&  newVersion.startsWith('~')) newVersion = newVersion.substring(1);
                                     if (newVersion) {
                                         if (!semver.satisfies(newVersion, '~'+version)) {
-                                            console.log(`*** Update ${packageName} old version is ${version}, new version ${newVersion}`);
-                                            mustRebuildFrameworks.push(p);
-                                            await ncu.run({
-                                                packageFile: packageJSONFile,
-                                                upgrade: true
-                                            });
+                                            updageLog.push(`Update ${keyedType}/${dir} ${packageName}: old ${version}, new ${newVersion}`);
+                                            mustRebuildFrameworks.push({keyedType, newVersion, directory: dir});
+
+                                            if (updatePackages) {
+                                                    await ncu.run({
+                                                    packageFile: packageJSONFile,
+                                                    upgrade: true
+                                                });
+                                            }
                                         }
                                     }
                                 }
@@ -53,7 +66,7 @@ async function main() {
                             }
                         }
                     } else {
-                        console.log(`WARN: Can't check framework ${p} due to absence fo frameworkVersionFromPackage in package.json`);
+                        couldNotBeCheckedFrameworks.push({keyedType, directory: dir});
                     }
                 } else {
                     console.log(`ERROR: Property 'js-framework-benchmark' in package.json in ${p} is missing`);
@@ -66,12 +79,34 @@ async function main() {
         }
     }
 
-    console.log("Rebuilding is required for", mustRebuildFrameworks);
+    console.log("\nThe following frameworks were updated");
+    updageLog.forEach(l => {
+        console.log(l);
+    });
+    console.log("\nRebuilding is required:");
+    mustRebuildFrameworks.forEach((f) => {
+        let prefix = `frameworks/${f.keyedType}/${f.directory}/`;
+        console.log(`cd ${prefix}`);
+        console.log(`rm -r node_modules package-lock.json dist elm-stuff bower_components`);
+        console.log(`npm install && npm run build-prod`);
+        console.log(`cd ../..`);
+    })
+    console.log("\nRerunning those frameworks is required:");
+
+    console.log(`cd webdriver-ts`);
+    let frameworkList = mustRebuildFrameworks.reduce(
+        (prev, cur) => prev+ " "+cur.directory+"-"+cur.newVersion+"-"+cur.keyedType, ""
+    );
+    console.log(`npm run selenium -- --framework ${frameworkList}`);
+
+    console.log("\nThe following frameworks must be checked manually:");
+    couldNotBeCheckedFrameworks.forEach(({keyedType, directory}) => {
+        console.log(keyedType+"/"+directory);
+    });
 }
 
 main()
     .then(text => {
-        console.log('finished');
     })
     .catch(err => {
         console.log('error', err);
