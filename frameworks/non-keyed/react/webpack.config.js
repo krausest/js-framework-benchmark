@@ -24,7 +24,7 @@ var extensions = [
 module.exports = [{
 	cache: cache,
 	module: {
-		loaders: loaders
+		rules: loaders
 	},
 	entry: {
 		main: './src/main.es6.js',
@@ -45,5 +45,5 @@ module.exports = [{
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': '"production"'
 		})
-	]	
+	]
 }];

@@ -16,25 +16,29 @@ var loaders = [
     loader: "style-loader!css-loader"
   }
 ];
-var extensions = ["", ".js", ".jsx", ".es6.js", ".msx"];
+var extensions = [".js", ".jsx", ".es6.js", ".msx"];
 
 module.exports = [
   {
     cache: cache,
     module: {
-      loaders: loaders
+      rules: loaders
     },
     entry: {
       main: "./src/Main.jsx"
     },
     output: {
-      path: "./dist",
+	  path: path.resolve(__dirname, "dist"),
       filename: "[name].js",
       sourceMapFilename: "[file].map"
     },
     resolve: {
       extensions: extensions,
-      root: [__dirname, __dirname + "/src"],
+      modules: [
+        __dirname,
+        path.resolve(__dirname, "src"),
+        "node_modules"
+      ],
       alias: {
         nervjs: path.resolve(
           __dirname,

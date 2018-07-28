@@ -5,7 +5,7 @@ import markoify from 'markoify';
 import envify from 'envify';
 import minpropsify from 'minprops/browserify';
 import path from 'path';
-import uglify from 'rollup-plugin-uglify';
+import {uglify} from 'rollup-plugin-uglify';
 import buble from 'rollup-plugin-buble';
 
 var browserifyPlugins = [
@@ -44,6 +44,6 @@ export default {
     plugins: plugins,
     output: {
         format: 'iife',
-        file: path.join(__dirname, 'dist/bundle.js')        
+        file: path.join(__dirname, 'dist/bundle.js')
     }
 };

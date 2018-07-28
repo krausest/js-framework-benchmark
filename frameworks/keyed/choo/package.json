@@ -16,16 +16,16 @@
   "author": "Rahul Chanila",
   "license": "MIT",
   "dependencies": {
-    "browserify": "14.5.0",
-    "choo": "6.5.0",
-    "cross-env": "5.1.0",
+    "browserify": "16.2.2",
+    "choo": "6.13.0",
+    "cross-env": "5.2.0",
     "envify": "4.1.0",
     "es2020": "1.1.9",
     "mkdirp": "0.5.1",
     "rimraf": "2.6.2",
-    "uglify-js": "3.1.4",
-    "uglifyify": "4.0.4",
-    "unassertify": "2.0.5",
-    "yo-yoify": "4.0.0"
+    "uglify-js": "3.4.6",
+    "uglifyify": "5.0.1",
+    "unassertify": "2.1.1",
+    "yo-yoify": "4.3.0"
   }
 }

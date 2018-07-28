@@ -10,12 +10,12 @@
     "build-prod": "node build.js"
   },
   "devDependencies": {
-    "rollup": "0.51.1",
-    "rollup-plugin-buble": "0.17.0",
-    "rollup-plugin-commonjs": "8.2.6",
-    "rollup-plugin-uglify": "2.0.1"
+    "rollup": "0.63.4",
+    "rollup-plugin-buble": "0.19.2",
+    "rollup-plugin-commonjs": "9.1.4",
+    "rollup-plugin-uglify": "4.0.0"
   },
   "dependencies": {
-    "maquette": "3.0.1"
+    "maquette": "3.3.0"
   }
 }

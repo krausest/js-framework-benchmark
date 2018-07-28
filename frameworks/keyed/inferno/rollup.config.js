@@ -3,7 +3,7 @@ const nodeResolvePlugin = require('rollup-plugin-node-resolve');
 const babelPlugin = require('rollup-plugin-babel');
 const path = require('path');
 const replace = require('rollup-plugin-replace');
-const uglify = require('rollup-plugin-uglify');
+import { uglify } from 'rollup-plugin-uglify';
 const alias = require('rollup-plugin-alias');
 
 const isProduction = process.env.production;

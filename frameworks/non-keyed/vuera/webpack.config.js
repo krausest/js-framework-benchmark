@@ -2,6 +2,8 @@
 require("babel-plugin-syntax-jsx")
 var path = require('path')
 var webpack = require('webpack')
+var VueLoaderPlugin = require('vue-loader/lib/plugin')
+
 var cache = {};
 var loaders = [
 	{
@@ -31,7 +33,7 @@ var extensions = [
 module.exports = [{
 	cache: cache,
 	module: {
-		loaders: loaders
+		rules: loaders
 	},
 	entry: {
 		main: './src/main.es6.js',
@@ -51,6 +53,7 @@ module.exports = [{
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': '"development"'
-		})
+        }),
+        new VueLoaderPlugin()
 	]
 }];
