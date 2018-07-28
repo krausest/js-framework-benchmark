@@ -1,7 +1,9 @@
 import * as Surplus from 'surplus'; Surplus;
 import S from 's-js';
 import { mapSample } from 's-array';
-import { Store } from './store';
+import { Store, Row } from './store';
+
+type Tr = HTMLTableRowElement & { model : Row };
 
 export const 
     AppView = (store : Store) => 
@@ -9,55 +11,53 @@ export const
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>Surplus v0.5.0</h1>
+                        <h1>Surplus Keyed</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
                             <div className="col-sm-6 smallpad">
-                                <button type="button" className="btn btn-primary btn-block" id="run" onClick={e => store.run()}>Create 1,000 rows</button>
+                                <button type="button" className="btn btn-primary btn-block" id="run" onClick={store.run}>Create 1,000 rows</button>
                             </div>
                             <div className="col-sm-6 smallpad">
-                                <button type="button" className="btn btn-primary btn-block" id="runlots" onClick={e => store.runLots()}>Create 10,000 rows</button>
+                                <button type="button" className="btn btn-primary btn-block" id="runlots" onClick={store.runLots}>Create 10,000 rows</button>
                             </div>
                             <div className="col-sm-6 smallpad">
-                                <button type="button" className="btn btn-primary btn-block" id="add" onClick={e => store.add()}>Append 1,000 rows</button>
+                                <button type="button" className="btn btn-primary btn-block" id="add" onClick={store.add}>Append 1,000 rows</button>
                             </div>
                             <div className="col-sm-6 smallpad">
-                                <button type="button" className="btn btn-primary btn-block" id="update" onClick={e => store.update()}>Update every 10th row</button>
+                                <button type="button" className="btn btn-primary btn-block" id="update" onClick={store.update}>Update every 10th row</button>
                             </div>
                             <div className="col-sm-6 smallpad">
-                                <button type="button" className="btn btn-primary btn-block" id="clear" onClick={e => store.clear()}>Clear</button>
+                                <button type="button" className="btn btn-primary btn-block" id="clear" onClick={store.clear}>Clear</button>
                             </div>
                             <div className="col-sm-6 smallpad">
-                                <button type="button" className="btn btn-primary btn-block" id="swaprows" onClick={e => store.swapRows()}>Swap Rows</button>
+                                <button type="button" className="btn btn-primary btn-block" id="swaprows" onClick={store.swapRows}>Swap Rows</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <table className="table table-hover table-striped test-data">
-                <tbody onClick={(e : any) => e.target.matches('.delete') ? store.delete(rowId(e)) : store.select(rowId(e))}>
-                    {clearAfterAnimationRequest(mapSample(store.data, row => 
-                        <tr className={row.id === store.selected() ? 'danger' : ''}>
+                <tbody onClick={({ target } : any, m = model(target)) => target.matches('.delete') ? store.delete(m.id) : store.select(m.id)}>
+                    {// to avoid creating N computations watching one piece of state (selected()), lift className computation out of loop
+                     (trs => (S((tr? : Tr) => {
+                         const s = store.selected() as any; 
+                         if (tr) tr.className = '';
+                         if (tr = s && trs().find(tr => tr.model.id === s)) tr.className = 'danger';
+                         return tr; 
+                     }), trs))
+                     (mapSample<Row, Tr>(store.data, row => 
+                        <tr model={row}>
                             <td className="col-md-1">{row.id}</td>
                             <td className="col-md-4">
                                 <a>{row.label()}</a>
                             </td>
                             <td className="col-md-1"><a><span className="glyphicon glyphicon-remove delete" aria-hidden="true"></span></a></td>
                             <td className="col-md-6"></td>
-                        </tr>
+                        </tr> as Tr
                     ))}
                 </tbody>
             </table>
             <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>,
-    rowId = (e : any) => +e.target.closest('tr').firstChild.textContent,
-    // For not well understood reasons, Chrome runs DOM clear operations a good bit faster when they're
-    // deferred until after an animation frame.  So we buffer the row signal in a data signal and delay
-    // its update when the signal would clear the contents.
-    clearAfterAnimationRequest = function deferAF<T>(s : () => T[]) {
-        var data = S.data(S.sample(s)),
-            updater = () => data(s());
-        S(() => s().length === 0 ? requestAnimationFrame(updater) : updater());
-        return () => data();
-    };
+    model = (el : any) : Row => el && (el.model || model(el.parentNode))
