@@ -85,7 +85,7 @@ Now open a new terminal window and keep http-server running in background.
 
 We now try to build the first framework. Go to the vanillajs reference implementation
 ```
-cd frameworks/vanillajs-keyed
+cd frameworks/keyed/vanillajs
 ```
 and install the dependencies
 ```
@@ -96,9 +96,9 @@ and build the framework
 npm run build-prod
 ```
 There should be no build errors and we can open the framework in the browser:
-[http://localhost:8080/frameworks/vanillajs-keyed/](http://localhost:8080/frameworks/vanillajs-keyed/)
+[http://localhost:8080/frameworks/keyed/vanillajs/](http://localhost:8080/frameworks/keyed/vanillajs/)
 
-Some frameworks like binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a third parameter in [common.ts](https://github.com/krausest/js-framework-benchmark/blob/master/webdriver-ts/src/common.ts#L38-L42) that represents the url.
+Some frameworks like binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a customURL property under js-framework-benchmark in the [package.json](https://github.com/krausest/js-framework-benchmark/blob/master/frameworks/keyed/ember/package.json#L10) that represents the url.
 
 Open the browser console and click a bit on the buttons and you should see some measurements printed on the console.
 ![First Run](images/firstRun.png?raw=true "First run")
