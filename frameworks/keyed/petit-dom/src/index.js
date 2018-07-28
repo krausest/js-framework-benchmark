@@ -63,63 +63,63 @@ main.appendChild(el)
 function render() {
   //console.log('render')
     return (
-        <div className="container">
-            <div className="jumbotron">
-                <div className="row">
-                    <div className="col-md-6">
+        <div class="container">
+            <div class="jumbotron">
+                <div class="row">
+                    <div class="col-md-6">
                         <h1>petit-dom</h1>
                     </div>
-                    <div className="col-md-6">
-                        <div className="row">
-                            <div className="col-sm-6 smallpad">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-sm-6 smallpad">
                                 <button
                                     type="button"
-                                    className="btn btn-primary btn-block"
+                                    class="btn btn-primary btn-block"
                                     id="run"
                                     onclick={runAction}>
                                     Create 1,000 rows
                                 </button>
                             </div>
-                            <div className="col-sm-6 smallpad">
+                            <div class="col-sm-6 smallpad">
                                 <button
                                     type="button"
-                                    className="btn btn-primary btn-block"
+                                    class="btn btn-primary btn-block"
                                     id="runlots"
                                     onclick={runLotsAction}>
                                     Create 10,000 rows
                                 </button>
                             </div>
-                            <div className="col-sm-6 smallpad">
+                            <div class="col-sm-6 smallpad">
                                 <button
                                     type="button"
-                                    className="btn btn-primary btn-block"
+                                    class="btn btn-primary btn-block"
                                     id="add"
                                     onclick={addAction}>
                                     Append 1,000 rows
                                 </button>
                             </div>
-                            <div className="col-sm-6 smallpad">
+                            <div class="col-sm-6 smallpad">
                                 <button
                                     type="button"
-                                    className="btn btn-primary btn-block"
+                                    class="btn btn-primary btn-block"
                                     id="update"
                                     onclick={updateAction}>
                                     Update every 10th row
                                 </button>
                             </div>
-                            <div className="col-sm-6 smallpad">
+                            <div class="col-sm-6 smallpad">
                                 <button
                                     type="button"
-                                    className="btn btn-primary btn-block"
+                                    class="btn btn-primary btn-block"
                                     id="clear"
                                     onclick={clearAction}>
                                     Clear
                                 </button>
                             </div>
-                            <div className="col-sm-6 smallpad">
+                            <div class="col-sm-6 smallpad">
                                 <button
                                     type="button"
-                                    className="btn btn-primary btn-block"
+                                    class="btn btn-primary btn-block"
                                     id="swaprows"
                                     onclick={swapRowsAction}>
                                     Swap Rows
@@ -129,13 +129,13 @@ function render() {
                     </div>
                 </div>
             </div>
-            <table className="table table-hover table-striped test-data">
+            <table class="table table-hover table-striped test-data">
                 <tbody>
                   {renderAllRows(store.data)}
                 </tbody>
             </table>
             <span
-                className="preloadicon glyphicon glyphicon-remove"
+                class="preloadicon glyphicon glyphicon-remove"
                 aria-hidden="true"
             />
         </div>
@@ -160,18 +160,18 @@ function renderAllRows(data) {
 
 function Row({id, label, css}) {
   return (
-    <tr className={css}>
-        <td className="col-md-1">{id}</td>
-        <td className="col-md-4">
+    <tr class={css}>
+        <td class="col-md-1">{id}</td>
+        <td class="col-md-4">
             <a onclick={selectAction(id)}>{label}</a>
         </td>
-        <td className="col-md-1">
+        <td class="col-md-1">
             <a onclick={deleteAction(id)}>
-                <span className="glyphicon glyphicon-remove" aria-hidden="true">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true">
                 </span>
             </a>
         </td>
-        <td className="col-md-6"></td>
+        <td class="col-md-6"></td>
     </tr>
   )
 }
