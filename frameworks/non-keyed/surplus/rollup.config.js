@@ -1,6 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve';
 import surplus from 'rollup-plugin-surplus';
-import uglify from 'rollup-plugin-uglify';
+import { terser } from 'rollup-plugin-terser';
 
 const plugins = [
 	surplus(),
@@ -8,7 +8,23 @@ const plugins = [
 ];
 
 if (process.env.production) {
-	plugins.push(uglify());
+	plugins.push(terser({
+		parse: {
+		  	ecma: 8,
+		},
+		compress: {
+		  	ecma: 5,
+		  	inline: true,
+		  	reduce_funcs: false,
+		  	passes: 5,
+		},
+		output: {
+		  	ecma: 5,
+		  	comments: false,
+		},
+		toplevel: true,
+		module: true,
+	}));
 }
 
 export default {

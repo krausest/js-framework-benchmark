@@ -25,15 +25,15 @@
     "url": "https://github.com/curveship/js-framework-benchmark.git"
   },
   "dependencies": {
-    "s-js": "0.4.7",
-    "s-array": "0.4.9",
-    "surplus": "0.5.0-beta3"
+    "s-array": "0.4.10",
+    "s-js": "0.4.9",
+    "surplus": "0.5.3"
   },
   "devDependencies": {
-    "rollup": "0.51.5",
-    "rollup-plugin-node-resolve": "3.0.0",
-    "rollup-plugin-surplus": "0.5.0-beta1",
-    "rollup-plugin-uglify": "1.0.2",
-    "typescript": "2.6.1"
+    "rollup": "^0.63.4",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-surplus": "^0.5.0",
+    "rollup-plugin-terser": "^1.0.1",
+    "typescript": "^2.9.2"
   }
 }
