@@ -10,19 +10,26 @@ This is a simple benchmark for several javascript frameworks. The benchmarks cre
 
 The following operations are benchmarked for each framework:
 
-* create rows: Duration for creating 1000 rows after the page loaded.
-* replace all rows: Duration for updating all 1000 rows of the table (with 5 warmup iterations).
-* partial update: Time to update the text of every 10th row for a table with 10000 rows (with 5 warmup iterations).
+* create rows: Duration for creating 1,000 rows after the page loaded (no warmup).
+* replace all rows: Duration for replacing all 1,000 rows of the table (with 5 warmup iterations).
+* partial update: Time to update the text of every 10th row for a table with 10,000 rows (with 5 warmup iterations).
 * select row: Duration to highlight a row in response to a click on the row. (with 5 warmup iterations).
-* swap rows: Time to swap 2 rows on a 1K table. (with 5 warmup iterations).
-* remove row: Duration to remove a row. (with 5 warmup iterations).
-* create many rows: Duration to create 10,000 rows
-* append rows to large table: Duration for adding 1000 rows on a table of 10,000 rows.
-* clear rows: Duration to clear the table filled with 10.000 rows.
-* clear rows a 2nd time: Time to clear the table filled with 10.000 rows. But warmed up with only one iteration.
+* swap rows: Time to swap 2 rows on a table with 1,000 rows. (with 5 warmup iterations).
+* remove row: Duration to remove a row for a table with 1,000 rows. (with 5 warmup iterations).
+* create many rows: Duration to create 10,000 rows (no warmup)
+* append rows to large table: Duration for adding 1,000 rows on a table of 10,000 rows (no warmup).
+* clear rows: Duration to clear the table filled with 10,000 rows. (no warmup)
 * ready memory: Memory usage after page load.
-* run memory: Memory usage after adding 1000 rows.
+* run memory: Memory usage after adding 1,000 rows.
+* update memory: Memory usage after clicking 5 times update for a table with 1,000 rows.
+* replace memory: Memory usage after clicking 5 times create 1,000 rows.
+* repeated clear memory: Memory usage after creating and clearing 1,000 rows for 5 times.
+* update memory: Memory usage after clicking 5 times update for a table with 1,000 rows.
 * startup time: Duration for loading and parsing the javascript code and rendering the page.
+* consistently interactive: The lighthouse metric TimeToConsistentlyInteractive: A pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)
+* script bootup time: The lighthouse metric ScriptBootUpTtime: The total ms required to parse/compile/evaluate all the page's scripts
+* main thread work cost: The lighthouse metric MainThreadWorkCost: Total amount of time spent doing work on the main thread. includes style/layout/etc.
+* total byte weight: The lighthouse metric TotalByteWeight: Network transfer cost (post-compression) of all the resources loaded into the page.
 
 For all benchmarks the duration is measured including rendering time. You can read some details on this [article](http://www.stefankrause.net/wp/?p=218).
 The results of this benchmark is outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316), [round 5](http://www.stefankrause.net/wp/?p=392), [round 6](http://www.stefankrause.net/wp/?p=431) and [round 7](http://www.stefankrause.net/wp/?p=454)).
