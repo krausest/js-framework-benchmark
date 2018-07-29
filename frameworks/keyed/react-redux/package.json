@@ -4,7 +4,7 @@
   "description": "React demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": "16.1.0 + 3.7.2"
+    "frameworkVersionFromPackage": "react:redux"
   },
   "scripts": {
     "build-dev": "webpack -w -d",

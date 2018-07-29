@@ -32,12 +32,6 @@
     "fs-extra": "^0.30.0",
     "http-server": "^0.10.0",
     "lodash": "^4.15.0",
-    "rimraf": "^2.6.2",
-    "semver": "^5.5.0",
-    "yargs": "11.0.0"
-  },
-  "devDependencies": {
-    "npm-check-updates": "^2.14.2",
-    "yargs": "^6.6.0"
+    "rimraf": "^2.6.2"
   }
 }

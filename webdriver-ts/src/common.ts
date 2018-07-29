@@ -54,78 +54,165 @@ interface Options {
     useShadowRoot? : boolean;
 }
 
-export function initializeFrameworks() {
-    function f(name: string, fullNameWithKeyedAndVersion:string, keyed: boolean, options: Options = {uri: null, useShadowRoot: false}): FrameworkData {
-        let ret = {name, fullNameWithKeyedAndVersion, keyed, uri: 'frameworks/' + (keyed ? 'keyed/' : 'non-keyed/') + (options.uri ? options.uri : name), useShadowRoot: options.useShadowRoot};
-        return ret;
-    }
+type KeyedType = 'keyed' | 'non-keyed';
 
-    console.log("building framework list:");
-    let frameworks: FrameworkData[] = [];
-
-    for (let keyedType of ['keyed','non-keyed']) {
-        let directories = fs.readdirSync(path.resolve('..','frameworks',keyedType));
-
-        for (let dir of directories) {
-
-            let p = path.resolve('..', 'frameworks', keyedType, dir);
-
-            let framework = dir;
-
-            let keyed = 'keyed' === keyedType;
-
-            let useShadowRoot = false;
-            let uri = null;
-            let version = '';
-
-            let addFramework = true;
-
-            let packageJSONFile = path.resolve(p, 'package.json');
-            if (fs.existsSync(packageJSONFile)) {
-                let packageJSON = JSON.parse(fs.readFileSync(packageJSONFile, 'utf8'));
-                if (packageJSON['js-framework-benchmark']) {
-                    if (packageJSON['js-framework-benchmark'].frameworkVersionFromPackage) {
-                        let packageName = packageJSON['js-framework-benchmark'].frameworkVersionFromPackage;
-                        let packageLockJSONFile = path.resolve(p, 'package-lock.json');
-                        if (fs.existsSync(packageLockJSONFile)) {
-                            let packageLock = JSON.parse(fs.readFileSync(path.resolve(p, 'package-lock.json'), 'utf8'));
-                            if (packageLock.dependencies[packageName]) {
-                                version = packageLock.dependencies[packageName].version;
-                            } else {
-                                console.log(`ERROR: The package version could not be read from package-lock.json for ${p}`);
-                                throw `ERROR: The package version could not be read from package-lock.json for ${p}`;
-                            }
-                        } else {
-                            addFramework = false;
-                            console.log(`WARNING: No package-lock.json found in directory ${p}. You might need to run npm install first`);
-                        }
-                    } else if (packageJSON['js-framework-benchmark'].frameworkVersion) {
-                        version = packageJSON['js-framework-benchmark'].frameworkVersion;
-                    }
-
-                    if (packageJSON['js-framework-benchmark'].customURL) {
-                        uri = dir+packageJSON['js-framework-benchmark'].customURL;
-                    }
-                    if (packageJSON['js-framework-benchmark'].useShadowRoot) {
-                        useShadowRoot = packageJSON['js-framework-benchmark'].useShadowRoot;
-                    }
-                } else {
-                    console.log(`ERROR: Property 'js-framework-benchmark' in package.json in ${p} is missing`);
-                    throw `ERROR: Property 'js-framework-benchmark' in package.json in ${p} is missing`;
-                }
-            } else {
-                console.log("ERROR: No package.json in ${packageJSONFile} found");
-                throw "ERROR: No package.json in ${packageJSONFile} found";
-            }
-
-            let opts = {uri, useShadowRoot};
-            let fullNameWithKeyedAndVersion = framework+(version ? "-v"+version : "")+(keyed ? "-keyed" : "-non-keyed");
-            let fd  = f(framework, fullNameWithKeyedAndVersion, keyed, opts);
-            if (addFramework) frameworks.push(fd);
-        }
-    }
-    console.log("All available frameworks: ")
-    console.log(frameworks.map(fd => fd.fullNameWithKeyedAndVersion));
-    return frameworks;
+function computeHash(keyedType: KeyedType, directory: string) {
+    return keyedType+'/'+directory;
 }
 
+export interface FrameworkId {
+    keyedType: KeyedType;
+    directory: string;
+}
+
+
+abstract class FrameworkVersionInformationValid implements FrameworkId {
+    public url: string;
+    constructor(public keyedType: KeyedType, public directory: string, customURL: string|undefined, public useShadowRoot: boolean) {
+        this.keyedType = keyedType;
+        this.directory = directory;
+        this.url = 'frameworks/'+keyedType+'/'+directory + (customURL ? customURL : '');
+    }
+}
+
+export class FrameworkVersionInformationDynamic extends FrameworkVersionInformationValid  {
+    constructor(keyedType: KeyedType, directory: string, public packageNames: string[],
+        customURL: string|undefined, useShadowRoot: boolean = false) {
+            super(keyedType, directory, customURL, useShadowRoot);
+        }
+    }
+
+export class FrameworkVersionInformationStatic extends FrameworkVersionInformationValid  {
+    constructor(keyedType: KeyedType, directory: string, public frameworkVersion: string, customURL: string|undefined, useShadowRoot: boolean = false) {
+        super(keyedType, directory, customURL, useShadowRoot);
+    }
+    getFrameworkData(): FrameworkData {
+        return {name: this.directory,
+            fullNameWithKeyedAndVersion: this.directory+'-'+this.frameworkVersion+'-'+this.keyedType,
+            uri: this.url,
+            keyed: this.keyedType === 'keyed',
+            useShadowRoot: this.useShadowRoot
+        }
+    }
+}
+
+export class FrameworkVersionInformationError implements FrameworkId  {
+    constructor(public keyedType: KeyedType, public directory: string, public error: string) {}
+}
+
+export type FrameworkVersionInformation = FrameworkVersionInformationDynamic | FrameworkVersionInformationStatic | FrameworkVersionInformationError;
+
+export class PackageVersionInformationValid {
+    constructor(public packageName: string, public version: string) {}
+}
+
+export class PackageVersionInformationErrorUnknownPackage  {
+    constructor(public packageName: string) {}
+}
+
+export class PackageVersionInformationErrorNoPackageJSONLock  {
+    constructor() {}
+}
+
+export type PackageVersionInformation = PackageVersionInformationValid | PackageVersionInformationErrorUnknownPackage | PackageVersionInformationErrorNoPackageJSONLock;
+
+
+export function loadFrameworkVersionInformation(): FrameworkVersionInformation[] {
+    let result = new Array<FrameworkVersionInformation>();
+    let frameworksPath = path.resolve('..','frameworks');
+    ['keyed','non-keyed'].forEach((keyedType: KeyedType) => {
+        let directories = fs.readdirSync(path.resolve(frameworksPath, keyedType));
+
+        for (let directory of directories) {
+            let packageJSONPath = path.resolve(frameworksPath, keyedType, directory, 'package.json');
+            if (fs.existsSync(packageJSONPath)) {
+                let packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, 'utf8'));
+                if (packageJSON['js-framework-benchmark']) {
+                    if (packageJSON['js-framework-benchmark']['frameworkVersionFromPackage']) {
+                        result.push(new FrameworkVersionInformationDynamic(keyedType, directory,
+                            packageJSON['js-framework-benchmark']['frameworkVersionFromPackage'].split(':'),
+                            packageJSON['js-framework-benchmark']['customURL'],
+                            packageJSON['js-framework-benchmark']['useShadowRoot']
+                        ));
+                    } else if (typeof packageJSON['js-framework-benchmark']['frameworkVersion'] === 'string') {
+                        result.push(new FrameworkVersionInformationStatic(keyedType, directory,
+                            packageJSON['js-framework-benchmark']['frameworkVersion'],
+                            packageJSON['js-framework-benchmark']['customURL'],
+                            packageJSON['js-framework-benchmark']['useShadowRoot']
+                        ));
+                    } else {
+                        result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'frameworkVersionFromPackage\' or \'frameworkVersion\' in the \'js-framework-benchmark\'.property'));
+                    }
+                } else {
+                    result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'js-framework-benchmark\' property'));
+                }
+            } else {
+                result.push(new FrameworkVersionInformationError(keyedType, directory, 'No package.json found'));
+            }
+        }
+    });
+    return result;
+}
+
+export class PackageVersionInformationResult {
+    public versions: Array<PackageVersionInformation> = [];
+    constructor(public framework: FrameworkVersionInformationDynamic) {}
+    public add(packageVersionInformation: PackageVersionInformation) {
+        this.versions.push(packageVersionInformation);
+    }
+    public getVersionName(): string {
+        if (this.versions.filter(pi => pi instanceof PackageVersionInformationErrorNoPackageJSONLock).length>0) {
+            return "invalid (no package-lock)";
+        }
+        return this.versions.map(version => (version instanceof PackageVersionInformationValid) ? version.version : 'invalid').join(' + ');
+    }
+    getFrameworkData(): FrameworkData {
+        return {name: this.framework.directory,
+            fullNameWithKeyedAndVersion: this.framework.directory+'-'+this.getVersionName()+'-'+this.framework.keyedType,
+            uri: this.framework.url,
+            keyed: this.framework.keyedType === 'keyed',
+            useShadowRoot: this.framework.useShadowRoot
+        }
+    }
+}
+
+export function determineInstalledVersions(framework: FrameworkVersionInformationDynamic): PackageVersionInformationResult {
+    let frameworksPath = path.resolve('..','frameworks');
+    let packageLockJSONPath = path.resolve(frameworksPath, framework.keyedType, framework.directory, 'package-lock.json');
+    let versions = new PackageVersionInformationResult(framework);
+    if (fs.existsSync(packageLockJSONPath)) {
+        let packageLock = JSON.parse(fs.readFileSync(packageLockJSONPath, 'utf8'));
+        for (let packageName of framework.packageNames) {
+            if (packageLock.dependencies[packageName]) {
+                versions.add(new PackageVersionInformationValid(packageName, packageLock.dependencies[packageName].version));
+            } else {
+                versions.add(new PackageVersionInformationErrorUnknownPackage(packageName));
+            }
+        }
+    } else {
+        versions.add(new PackageVersionInformationErrorNoPackageJSONLock());
+    }
+    return versions;
+}
+
+export function initializeFrameworks(): FrameworkData[] {
+    let frameworkVersionInformations = loadFrameworkVersionInformation();
+
+    let frameworks = frameworkVersionInformations.map(frameworkVersionInformation => {
+        if (frameworkVersionInformation instanceof FrameworkVersionInformationDynamic) {
+            return determineInstalledVersions(frameworkVersionInformation).getFrameworkData();
+        } else if (frameworkVersionInformation instanceof FrameworkVersionInformationStatic) {
+            return frameworkVersionInformation.getFrameworkData();
+        } else {
+            console.log(`WARNING: Ignoring package ${frameworkVersionInformation.keyedType}/${frameworkVersionInformation.directory}: ${frameworkVersionInformation.error}`)
+            return null;
+        }
+    });
+
+    frameworks = frameworks.filter(f => f!==null);
+    if (config.LOG_DETAILS) {
+        console.log("All available frameworks: ");
+        console.log(frameworks.map(fd => fd.fullNameWithKeyedAndVersion));
+    }
+    return frameworks;
+}

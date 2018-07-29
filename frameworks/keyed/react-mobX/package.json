@@ -4,7 +4,7 @@
   "description": "React demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": "16.4.1 + 5.0.3"
+    "frameworkVersionFromPackage": "react:mobx"
   },
   "scripts": {
     "build-dev": "webpack -w -d",

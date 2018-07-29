@@ -19,6 +19,7 @@
         "./src/createResultJS.ts",
         "./src/createIndex.ts",
         "./src/runCheck.ts",
+        "./src/updateFrameworks.ts",
         "./src/nonKeyed.ts"
     ],
     "exclude": [
