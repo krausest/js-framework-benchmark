@@ -36,8 +36,8 @@ The results of this benchmark is outlined on my blog ([round 1](http://www.stefa
 
 ## Snapshot of the results
 
-Official results are posted on the blog mentioned above. The current snapshot that may not have the same quality (i.e. 
-results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html) 
+Official results are posted on the blog mentioned above. The current snapshot that may not have the same quality (i.e.
+results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
 [![Results](images/results.png?raw=true "Results")](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
 
 ## How to get started - building and running
@@ -145,7 +145,7 @@ npm run selenium -- --count 3 --framework vanillajs-keyed
 ```
 Just lean back and watch chrome run the benchmarks. It runs each benchmark 3 times for the vanillajs-keyed framework.
 
-You should keep the chrome window visible since otherwise it seems like paint events can be skipped leading to wrong results. On the terminal will appear various log statements.  
+You should keep the chrome window visible since otherwise it seems like paint events can be skipped leading to wrong results. On the terminal will appear various log statements.
 
 The results for that run will be saved in the `webdriver-ts/results` directory. We can take a look at the results of a single result:
 ```
@@ -158,40 +158,44 @@ As you can see the mean duration for create 1000 rows was 144 msecs.
 
 In the webdriver-ts directory issue the follwing command:
 ```
-npm run static-results
+npm run results
 ```
-Now a static result table should have been created which can be opened on [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html).
+Now a result table should have been created which can be opened on [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html).
 There's nothing in table except for the column vanillajs-keyed at the right end of the first table.
 ![First Run Results](images/staticResults.png?raw=true "First Run Results")
 
 ## Optional 6.1 Adding your new implementation to the results table.
 
-If you want to contribute a new framework and created a new directory in step 3, you'll need to add that framework to [webdriver-ts/src/common.ts](https://github.com/krausest/js-framework-benchmark/blob/master/webdriver-ts/src/common.ts#L35). The first parameter will be your directory name, the second whether the implementation is keyed and an optional third parameter if you need a special url or need to use shadow dom. So let's add:
-```javascript
-export let frameworks = [
-...
-f("vanillajs-non-keyed", false),
-f("super-vanillajs-keyed", true), // this line must be added now somewhere in the list
-f("vanillajs-keyed", true),
-...
-```
-then recompile in directory `webdriver-ts`
-```
-npm run build-prod
-```
-run the benchmark for super-vanillajs-keyed
-```
-npm run selenium -- --count 3 --framework super-vanillajs-keyed
-```
-and update the result table
-```
-npm run static-results
-```
-Super-VanillaJS-keyed should now be listed in [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html)
+(Notice: Updating common.ts is no longer necessary, super-vanillajs is visible in the result table)
 
-> If you compare the results chances are that one of both is significantly faster. This is due to the very low number of runs and maybe some distracting background processes. Try again with a much higher count and you'll see the numbers converge.
+Your package.json must include some information for the benchmark. Since you copied it, the important section is already there:
+```
+  ...
+  "js-framework-benchmark": {
+    "frameworkVersion": ""
+  },
+  ...
 
-## Optional 6.2 Updating the index.html file 
+```
+This one is a bit exceptional since vanillajs has no version. If you use a normal framework like react it carries a version information. For most frameworks you'll add a
+dependency to your framework in package.json. The benchmark can automatically determine the correct version information from package.json and package-lock.json if you specify the
+package name like that:
+```
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "react"
+  },
+```
+Now the benchmark will fetch the installed react version from package-lock.json in the react directory and use that version number to compute the correct version string.
+If your library has multiple important packages like react + redux you can put them separated with a colon there like "react:redux".
+If you don't pull your framework from npm you can hardcode a version like `"frameworkVersion": "0.0.1"`.
+The other important, but optional properties for js-framework-benchmark are shown in the following example:
+```
+"customURL": "/target/web/stage",
+"useShadowRoot": true
+````
+You can set an optional different URL if needed or specify that your DOM uses a shadow root.
+
+## Optional 6.2 Updating the index.html file
 With
 ```
 npm run index
@@ -223,7 +227,7 @@ This will take a bit, but you should see no errors besides some "MISSING FILE" m
 
 ## Optional 8. Building and running the benchmarks for all frameworks
 
-This is not for the faint at heart. You can build all frameworks simply by issuing 
+This is not for the faint at heart. You can build all frameworks simply by issuing
 ```
 cd ..
 npm run build-prod
@@ -249,7 +253,7 @@ runs the test for all frameworks that contain either angular or bob, which means
 Contributions are very welcome. Please use the following rules:
 * Name your directory frameworks/[FrameworkName]-v[Version]-[keyed|non-keyed]
 * Each contribution must be buildable by `npm install` and `npm run build-prod` command in the directory. What build-prod does is up to you. Often there's an `npm run build-dev` that creates a development build
-* Every implementation must use bootstrap provided in the root css directory. 
+* Every implementation must use bootstrap provided in the root css directory.
 * All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server should not be a local dependency. It is installed from the root directory to allow access to bootstrap.
 * Please use fixed version number, no ranges, in package.json. Otherwise the build will break sooner or later - believe me. Updating works IMO best with npm-check-updates, which keeps the version format.
 * Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
