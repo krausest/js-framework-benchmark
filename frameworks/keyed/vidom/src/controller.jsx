@@ -2,7 +2,7 @@
  * Created by stef on 17.11.15.
  */
 'use strict';
-var { node, Component, mount }  = require('vidom');
+const {Component, mount} = require('vidom');
 
 const {Store} = require('./store');
 
@@ -128,7 +128,7 @@ export class Controller extends Component{
             <div className="jumbotron">
                 <div className="row">
                     <div className="col-md-6">
-                        <h1>Vidom v0.9.8</h1>
+                        <h1>Vidom</h1>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
@@ -162,4 +162,4 @@ export class Controller extends Component{
  }
 }
 
-mount(document.getElementById('main'), node(Controller));
+mount(document.getElementById('main'), <Controller/>);

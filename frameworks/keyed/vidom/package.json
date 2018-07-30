@@ -20,14 +20,15 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "babel-core": "6.24.1",
-    "babel-loader": "7.0.0",
-    "babel-plugin-vidom-jsx": "0.5.1",
+    "babel-core": "6.26.3",
+    "babel-loader": "7.1.5",
+    "babel-plugin-vidom-jsx": "0.6.1",
     "babel-preset-es2015": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
-    "webpack": "2.5.1"
+    "webpack": "4.16.3",
+    "webpack-cli": "^3.1.0"
   },
   "dependencies": {
-    "vidom": "0.9.8"
+    "vidom": "0.10.2"
   }
 }
