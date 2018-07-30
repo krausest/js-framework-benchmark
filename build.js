@@ -5,8 +5,9 @@ var path = require('path');
 var yargs = require('yargs');
 
 let args = yargs(process.argv)
-    .usage("npm run build [-- [--skipIrrelevant]]")
+    .usage("npm run build [-- [--check] [--skipIrrelevant]]")
     .help('help')
+    .boolean('check')
     .boolean('skipIrrelevant')
     .argv;
 
@@ -16,13 +17,13 @@ var referenceBranch = "origin/master";
 // other frameworks that would be built before
 var restartWithFramework = '';
 
-var core = ["webdriver-ts", "webdriver-ts-results"]
+var core = ["webdriver-ts", "webdriver-ts-results"].map(f => ["", f]);
 
 var frameworks = [].concat(
-  fs.readdirSync('./frameworks/keyed').map(f => 'frameworks/keyed/' + f),
-  fs.readdirSync('./frameworks/non-keyed').map(f => 'frameworks/non-keyed/' + f));
+  fs.readdirSync('./frameworks/keyed').map(f => ['frameworks/keyed/', f]),
+  fs.readdirSync('./frameworks/non-keyed').map(f => ['frameworks/non-keyed/', f]));
 
-var notRestarter = name => !name.startsWith(restartWithFramework || undefined);
+var notRestarter = ([_, name]) => !name.startsWith(restartWithFramework || undefined);
 var [skippable, buildable] = !restartWithFramework
     ? [[],
        frameworks]
@@ -33,25 +34,38 @@ var relevant = args.skipIrrelevant && !_.some(core, isDifferent)
     ? _.filter(buildable, isDifferent)
     : buildable;
 
-_.each(skippable, name => console.log("*** Skipping " + name));
+_.each(skippable, ([dir,name]) => console.log("*** Skipping " + dir + name));
 
-_.each([].concat(relevant, core), function(name) {
-	if(fs.statSync(name).isDirectory() && fs.existsSync(path.join(name, "package.json"))) {
-            console.log("*** Executing npm install in "+name);
+_.each([].concat(relevant, core), function([dir,name]) {
+        let fullname = dir + name;
+	if(fs.statSync(fullname).isDirectory() && fs.existsSync(path.join(fullname, "package.json"))) {
+          console.log("*** Executing npm install in "+fullname);
             exec('npm install', {
-				cwd: name,
+				cwd: fullname,
 				stdio: 'inherit'
 			});
-			console.log("*** Executing npm run build-prod in "+name);
+			console.log("*** Executing npm run build-prod in "+fullname);
 			exec('npm run build-prod', {
-				cwd: name,
+				cwd: fullname,
 				stdio: 'inherit'
 			});
 	}
 });
 
-function isDifferent(name) {
-  try { exec('git diff --quiet ' + referenceBranch + ' -- ' + name); }
+var testable = args.check ? relevant : [];
+_.each(testable, function([dir,name]) {
+        let fullname = dir + name;
+	if(fs.statSync(fullname).isDirectory() && fs.existsSync(path.join(fullname, "package.json"))) {
+            console.log("*** Executing npm run selenium for "+fullname);
+            exec('npm run selenium -- --count 1 --fork false --framework ' + name, {
+				cwd: "webdriver-ts",
+				stdio: 'inherit'
+			});
+	}
+});
+
+function isDifferent([dir,name]) {
+  try { exec('git diff --quiet ' + referenceBranch + ' -- ' + dir + name); }
   catch(e) { return true; }
   return false;
 };
