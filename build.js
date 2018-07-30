@@ -4,19 +4,25 @@ var fs = require('fs');
 var path = require('path');
 
 // set the following variable to resume building with a framework and skip all
-// other frameworks that would be buils before
+// other frameworks that would be built before
 var restartWithFramework = '';
-var build = !restartWithFramework ? true : false;
 
 var directories = ["webdriver-ts", "webdriver-ts-results"]
     .concat(fs.readdirSync('./frameworks/keyed').map(f => 'frameworks/keyed/' + f))
     .concat(fs.readdirSync('./frameworks/non-keyed').map(f => 'frameworks/non-keyed/' + f));
 
-_.each(directories, function(name) {
+var notRestarter = name => !name.startsWith(restartWithFramework || undefined);
+var [skippable, buildable] = !restartWithFramework
+    ? [[],
+       directories]
+    : [_.takeWhile(directories, notRestarter),
+       _.dropWhile(directories, notRestarter)];
+
+_.each(skippable, name => console.log("*** Skipping " + name));
+
+_.each(buildable, function(name) {
 	if(fs.statSync(name).isDirectory() && fs.existsSync(path.join(name, "package.json"))) {
-		if (!build && name.startsWith(restartWithFramework)) build = true;
-		if (build) {
-			console.log("*** Executing npm install in "+name);
+            console.log("*** Executing npm install in "+name);
             exec('npm install', {
 				cwd: name,
 				stdio: 'inherit'
@@ -26,8 +32,5 @@ _.each(directories, function(name) {
 				cwd: name,
 				stdio: 'inherit'
 			});
-		} else {
-			console.log("*** Skipping "+name);
-		}
 	}
 });
