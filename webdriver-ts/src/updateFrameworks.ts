@@ -102,12 +102,12 @@ async function main() {
             for (let val of toBeUpdated) {
                 console.log("ACTION: Updating package.json for " +  val.framework.keyedType +'/' + val.framework.directory);
                 await ncuRunUpdate(val);
-                console.log("\nTODO: ebuilding is required:");
+                console.log("\nTODO: Rebuilding is required:");
                 let prefix = `frameworks/${val.framework.keyedType}/${val.framework.directory}/`;
                 console.log(`cd ${prefix}`);
-                console.log(`rm -r node_modules package-lock.json dist elm-stuff bower_components`);
+                console.log(`rm -rf node_modules package-lock.json dist elm-stuff bower_components`);
                 console.log(`npm install && npm run build-prod`);
-                console.log(`cd ../..`);
+                console.log(`cd ../../..`);
             }
 
             console.log("\nTODO: Rerunning those frameworks is required:");
