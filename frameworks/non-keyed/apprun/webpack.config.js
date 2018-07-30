@@ -1,8 +1,11 @@
+var path = require('path')
+
 module.exports = {
   entry: {
-    'dist/main': './src/main.tsx'
+    'main': './src/main.tsx',
   },
   output: {
+    path: path.resolve(__dirname, "dist"),
     filename: '[name].js'
   },
   resolve: {
