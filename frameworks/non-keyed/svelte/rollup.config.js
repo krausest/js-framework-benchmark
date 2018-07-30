@@ -1,6 +1,6 @@
 import svelte from 'rollup-plugin-svelte';
 import buble from 'rollup-plugin-buble';
-import uglify from 'rollup-plugin-uglify';
+import {uglify} from 'rollup-plugin-uglify';
 
 const plugins = [
     svelte(),

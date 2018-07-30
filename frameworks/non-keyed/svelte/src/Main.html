@@ -29,16 +29,16 @@
 </div>
 <table class="table table-hover table-striped test-data">
     <tbody>
-        {{#each store.data as row, num}}
-            <tr class="{{selected === row.id ? 'danger' : ''}}">
-                <td class="col-md-1">{{row.id}}</td>
+        {#each store.data as row, num}
+            <tr class="{selected === row.id ? 'danger' : ''}">
+                <td class="col-md-1">{row.id}</td>
                 <td class="col-md-4">
-                    <a on:click="select(row.id)">{{row.label}}</a>
+                    <a on:click="select(row.id)">{row.label}</a>
                 </td>
                 <td class="col-md-1"><a on:click="remove(num)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
                 <td class="col-md-6"></td>
             </tr>
-        {{/each}}
+        {/each}
     </tbody>
 </table>
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
