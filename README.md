@@ -202,30 +202,7 @@ npm run index
 ```
 you include Super-VanillaJS-keyed in [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
-## Optional 7. Building the interactive results table
-
-There's a nicer result table that allows filtering and sorting.
-Before calling it the first time we have to install the dependencies. So we have to go to the `webdriver-ts-results` directory
-```
-cd ..
-cd webdriver-ts-results
-```
-and install the dependencies
-```
-npm install
-```
-Then we go back to `webdriver-ts`
-```
-cd ..
-cd webdriver-ts
-```
-and let it create the interactive table
-```
-npm run interactive-results
-```
-This will take a bit, but you should see no errors besides some "MISSING FILE" messages and be able to see the interactive results on [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html). The "MISSING FILE" warnings will disappear if the results for all frameworks are available.
-
-## Optional 8. Building and running the benchmarks for all frameworks
+## Optional 7. Building and running the benchmarks for all frameworks
 
 This is not for the faint at heart. You can build all frameworks simply by issuing
 ```
