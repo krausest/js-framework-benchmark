@@ -12,7 +12,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "hyperhtml": "2.12.0"
+    "hyperhtml": "2.13.0"
   },
   "devDependencies": {
     "babel-core": "6.26.3",
