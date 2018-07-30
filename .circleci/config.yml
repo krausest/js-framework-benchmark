@@ -18,5 +18,4 @@ jobs:
 
           npm install
           npm start &
-          npm run build
-          npm run check
+          npm run build -- --skipIrrelevant --check
