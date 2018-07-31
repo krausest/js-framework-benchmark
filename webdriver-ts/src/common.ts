@@ -88,7 +88,7 @@ export class FrameworkVersionInformationStatic extends FrameworkVersionInformati
     }
     getFrameworkData(): FrameworkData {
         return {name: this.directory,
-            fullNameWithKeyedAndVersion: this.directory+'-'+this.frameworkVersion+'-'+this.keyedType,
+            fullNameWithKeyedAndVersion: this.directory+'-v'+this.frameworkVersion+'-'+this.keyedType,
             uri: this.url,
             keyed: this.keyedType === 'keyed',
             useShadowRoot: this.useShadowRoot
@@ -168,7 +168,7 @@ export class PackageVersionInformationResult {
     }
     getFrameworkData(): FrameworkData {
         return {name: this.framework.directory,
-            fullNameWithKeyedAndVersion: this.framework.directory+'-'+this.getVersionName()+'-'+this.framework.keyedType,
+            fullNameWithKeyedAndVersion: this.framework.directory+'-v'+this.getVersionName()+'-'+this.framework.keyedType,
             uri: this.framework.url,
             keyed: this.framework.keyedType === 'keyed',
             useShadowRoot: this.framework.useShadowRoot
