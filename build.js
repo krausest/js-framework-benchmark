@@ -5,17 +5,16 @@ var path = require('path');
 var yargs = require('yargs');
 
 let args = yargs(process.argv)
-    .usage("npm run build [-- [--check] [--skipIrrelevant]]")
+    .usage("npm run build [-- [--check] [--skipIrrelevant] [--restartWith]]")
     .help('help')
     .boolean('check')
     .boolean('skipIrrelevant')
+    .string('restartWith')
     .argv;
 
 var referenceBranch = "origin/master";
 
-// set the following variable to resume building with a framework and skip all
-// other frameworks that would be built before
-var restartWithFramework = '';
+var restartWithFramework = args.restartWith || '';
 
 var core = ["webdriver-ts", "webdriver-ts-results"].map(f => ["", f]);
 
