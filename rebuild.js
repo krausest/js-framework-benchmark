@@ -14,7 +14,7 @@ for (let framework of args.framework) {
     else {
         console.log("running rm -rf package-lock.json yarn.lock dist elm-stuff bower_components node_modules");
         try {
-            exec('rm -r package-lock.json yarn.lock dist elm-stuff bower_components node_modules', {
+            exec('rm -rf package-lock.json yarn.lock dist elm-stuff bower_components node_modules', {
                 cwd: dir,
                 stdio: 'inherit'
             });
