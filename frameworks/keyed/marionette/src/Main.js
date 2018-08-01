@@ -165,9 +165,9 @@ const MyCollectionView = CollectionView.extend({
 
         this.swapChildViews(view1, view2);
     },
-    onChangeLabel(model) {
+    onChangeLabel(model, label) {
         const view = this.children.findByModelCid(model.cid);
-        view.render();
+        view.el.querySelectorAll('.js-link')[0].textContent = label;
     },
     onRender() {
         this.clearSelected();
