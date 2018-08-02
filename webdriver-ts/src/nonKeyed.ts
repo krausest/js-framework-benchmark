@@ -98,7 +98,7 @@ window.nonKeyedDetector_reset();
 `;
 
 function isNonKeyedRun(result: any): boolean {
-    if (result.tradded>0 && result.trremoved>0) return false;
+    if (result.tradded>0 && result.trremoved>0 && result.removedStoredTr>0) return false;
     return true;
 }
 function isNonKeyedRemove(result: any): boolean {
@@ -111,7 +111,8 @@ function isNonKeyedSwapRow(result: any): boolean {
 }
 
 async function runBench(frameworkNames: string[]) {
-    let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.name.indexOf(name)>-1));
+    let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name)>-1));
+    runFrameworks = runFrameworks.filter(f => f.keyed);
     console.log("Frameworks that will be checked", runFrameworks.map(f => f.fullNameWithKeyedAndVersion));
 
     let frameworkMap = new Map<String, FrameworkData>();
@@ -130,11 +131,13 @@ async function runBench(frameworkNames: string[]) {
             await driver.executeScript(`window.nonKeyedDetector_setUseShadowDom(${framework.useShadowRoot});`);
             await driver.executeScript('window.nonKeyedDetector_instrument()');
             // swap
+            await driver.executeScript('nonKeyedDetector_storeTr()');
             await clickElementById(driver,'swaprows');
             await testTextContains(driver,'//tbody/tr[2]/td[1]','999');
             let res = await driver.executeScript('return nonKeyedDetector_result()');
             let nonKeyedSwap = isNonKeyedSwapRow(res);
             // run
+            await driver.executeScript('nonKeyedDetector_storeTr()');
             await driver.executeScript('window.nonKeyedDetector_reset()');
             await clickElementById(driver,'run');
             await testTextContains(driver,'//tbody/tr[1000]/td[1]','2000');
@@ -156,6 +159,8 @@ async function runBench(frameworkNames: string[]) {
             if (frameworkMap.get(framework.fullNameWithKeyedAndVersion).keyed === nonKeyed) {
                 console.log("ERROR: Framework "+framework.fullNameWithKeyedAndVersion+" is not correctly categorized in commons.ts");
             }
+        } catch(e) {
+            console.log("ERROR running "+runFrameworks[i].fullNameWithKeyedAndVersion, e);
         } finally {
             await driver.quit();
         }
