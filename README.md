@@ -228,15 +228,15 @@ runs the test for all frameworks that contain either angular or bob, which means
 ## How to contribute
 
 Contributions are very welcome. Please use the following rules:
-* Name your directory frameworks/[FrameworkName]-v[Version]-[keyed|non-keyed]
+* Name your directory frameworks/[keyed|non-keyed][FrameworkName]
 * Each contribution must be buildable by `npm install` and `npm run build-prod` command in the directory. What build-prod does is up to you. Often there's an `npm run build-dev` that creates a development build
 * Every implementation must use bootstrap provided in the root css directory.
 * All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server should not be a local dependency. It is installed from the root directory to allow access to bootstrap.
-* Please use fixed version number, no ranges, in package.json. Otherwise the build will break sooner or later - believe me. Updating works IMO best with npm-check-updates, which keeps the version format.
+* Please use *fixed version* numbers, no ranges, in package.json. Otherwise the build will break sooner or later - believe me. Updating works IMO best with npm-check-updates, which keeps the version format.
 * Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
 * Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
 * You don't need to update /index.html. It's created with a script (see 6.2 above).
-* You don't need to edit webdriver-ts/common.ts. If you have a conflict in common.ts you don't need to resolve it. More often than not I'm just merging the pull request in the moment you're fixing the conflict.
+* You can assert the correct keyed or non-keyed behaviour by using the nonKeyed test tool. cd to webdriver-ts and call it like `npm run nonKeyed -- --framework [your framework]`. It'll print an error if your framework behaves other as specified.
 * Please don't commit any of the result file webdriver-ts/table.html, webdriver-ts-results/src/results.ts or webdriver-ts-results/table.html. I use to run the benchmarks after merging and publish updated (temporary) results.
 * The latest stable chrome can be used regarding web features and language level (babel-preset-env "last 1 chrome versions")
 
