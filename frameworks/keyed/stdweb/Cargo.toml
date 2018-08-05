@@ -1,0 +1,9 @@
+[package]
+name = "js-framework-benchmark-stdweb"
+version = "1.0.0"
+authors = ["Isamu Mogi <isamu@leafytree.jp>"]
+
+[dependencies]
+byteorder = { version = "1.2.4", features = [ "i128" ] }
+rand = { version = "0.5.4", features = [ "stdweb" ] }
+stdweb = "0.4.8"
