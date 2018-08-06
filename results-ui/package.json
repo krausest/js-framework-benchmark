@@ -15,7 +15,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "domvm": "git://github.com/domvm/domvm.git#3.4.3",
+    "domvm": "git://github.com/domvm/domvm.git#3.4.4",
+    "clean-css": "*",
     "rollup": "*",
     "rollup-plugin-buble": "*",
     "rollup-plugin-uglify": "*"
