@@ -73,6 +73,8 @@ export class TableResultValueEntry implements TableResultEntry {
                     <span className="deviation">{this.standardDeviation.toFixed(1)}</span>
                     <br />
                     <span className="factor">({this.factor.toFixed(1)})</span>
+                    <br/>
+                    <span className="factor">{this.statisticallySignificantFactor}</span>
                 </td>);
     }
 }
@@ -107,17 +109,17 @@ export function convertToMap(results: Array<Result>): ResultLookup {
 }
 
 let statisticComputeColor = function(sign: number, pValue: number): [string, string] {
-    if (pValue < 0.90) {
+    if (pValue > 0.10) {
         return ['#fff','#000'];
     }
     if (sign < 0) {
-        let a = (pValue - 0.9) * 10.0;
+        let a = (0.1 - pValue) * 10.0;
         let r = 0;
         let g = (1.0-a)* 255 + a * 160;
         let b = 0;
         return [`rgb(${r.toFixed(0)}, ${g.toFixed(0)}, ${b.toFixed(0)})`, '#fff'];
     } else  {
-        let a = (pValue - 0.9) * 10.0;
+        let a = (0.1 - pValue) * 10.0;
         let r = (1.0-a)* 255 + a * 160;
         let g = 0;
         let b = 0;
@@ -157,7 +159,7 @@ export class ResultTableData {
                     let vals = result.values.slice(0);
                     result.mean = jStat.mean(vals);
                     result.median = jStat.median(vals);
-                    result.standardDeviation = jStat.stdev(vals);
+                    result.standardDeviation = jStat.stdev(vals, true);
                     result.count = vals.length;
                 }
             });
@@ -244,29 +246,16 @@ export class ResultTableData {
                 // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
                 if (compareWithResults) {
                     let compareWithMean = this.useMedian ? compareWithResults.median : compareWithResults.mean;
+                    let stdDev = result.standardDeviation;
+                    let compareWithResultsStdDev = compareWithResults.standardDeviation;
                     let n = result.count || 20;
                     let m = compareWithResults.count || 20;
-                    console.log("n+m-2",n+m-2);
-                    let s2 = (n-1)*Math.pow(result.standardDeviation,2) + (m-1)*Math.pow(compareWithResults.standardDeviation,2) / (n+m-2)
+                    let s2 = ((n-1)*Math.pow(stdDev,2) + (m-1)*Math.pow(compareWithResultsStdDev,2)) / (n+m-2)
                     let s = Math.sqrt(s2);
                     let t = Math.sqrt((n * m) / (n + m))*(mean - compareWithMean - 0)/s;
-                    let talpha = jStat.studentt.inv( 0.975, n + m - 2);
-                    console.log("talpha",talpha, "t", t);
-                    statisticalResult = t.toFixed(3) + ": " +talpha.toFixed(3);
                     let p = jStat.studentt.cdf( Math.abs(t), n + m -2 );
-                    statisticalCol = statisticComputeColor(t, p);
-                    statisticalResult += ": " + p.toFixed(3) + ";" + statisticalCol;
-                    if (mean < compareWithMean) {
-                        // H0 X >= Y, H1 X < Y
-                        if (t < -talpha) {
-                            statisticalResult += " faster";
-                        }
-                    } else {
-                        // H0 X <= Y, H1 X > Y
-                        if (t > talpha) {
-                            statisticalResult += " slower";
-                        }
-                    }
+                    statisticalCol = statisticComputeColor(t, (1.0-p)*2);
+                    statisticalResult = ((1.0-p)*200).toFixed(3)+"%";
                 }
                 return new TableResultValueEntry(f.name, mean, standardDeviation, factor, statisticalResult, statisticalCol);
             }

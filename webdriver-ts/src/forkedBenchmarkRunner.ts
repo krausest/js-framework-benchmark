@@ -359,7 +359,7 @@ function writeResult<T>(res: Result<T>, dir: string) {
             "mean": s.mean(),
             "median": s.median(),
             "geometricMean": s.geomean(),
-            "standardDeviation": s.stdev(),
+            "standardDeviation": s.stdev(true),
             "values": data
         }
         fs.writeFileSync(`${dir}/${fileName(res.framework, resultKind)}`, JSON.stringify(result), {encoding: "utf8"});
