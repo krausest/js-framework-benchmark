@@ -12,7 +12,7 @@ fs.copySync("index.html", "dist"+path.sep+"index.html");
 fs.copySync("css", "dist"+path.sep+"css");
 
 var excludes = ["node_modules","elm-stuff","project",".DS_Store"]
-var excludedDirectories = ['css', 'dist','node_modules','webdriver-java', 'webdriver-ts'];
+var excludedDirectories = ['css', 'dist','node_modules','webdriver-ts'];
 
 // http://stackoverflow.com/questions/13786160/copy-folder-recursively-in-node-js
 function copyFileSync( source, target ) {
@@ -37,11 +37,11 @@ function include(name) {
 				}
 		}
 		if (excludes.every(ex => name.indexOf(ex)==-1)) {
-			// console.log("<- filter", name);					
+			// console.log("<- filter", name);
 			return true;
 		} else {
 			return false;
-		}	
+		}
 }
 
 function copyFolderRecursiveSync( source, target ) {
@@ -89,7 +89,7 @@ _.each(fs.readdirSync('.'), function(name) {
 		} else {
 			if (fs.existsSync(name+path.sep+"index.html")) {
 				fs.copySync(name+path.sep+"index.html", "dist"+path.sep+name+path.sep+"index.html");
-			}			
+			}
 		} */
 	}
 });
