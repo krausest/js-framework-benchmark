@@ -20,7 +20,7 @@
         "./src/createIndex.ts",
         "./src/runCheck.ts",
         "./src/updateFrameworks.ts",
-        "./src/nonKeyed.ts"
+        "./src/isKeyed.ts"
     ],
     "exclude": [
         "node_modules"

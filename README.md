@@ -223,7 +223,7 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
 runs the test for all frameworks that contain either angular or bob, which means all angular versions and bobril and all benchmarks whose id contain 01_ or 02_
 * If you can't get one framework to compile or run, just move it out of the root directory and remove it from common.ts, recompile and re-run
 * To achieve good precision you should run each framework often enough. I recommend at least 10 times, more is better. The result table contains the mean and the standard deviation. You can seen the effect on the latter pretty well if you increase the count.
-* One can check whether an implementation is keyed or non-keyed via `npm run nonKeyed` in the webdriver-ts directory. You can limit which frameworks to check in the same way as the webdriver test runner like e.g. `npm run nonKeyed -- --framework svelte`. The program will report an error if a benchmark implementation is incorrectly classified.
+* One can check whether an implementation is keyed or non-keyed via `npm run isKeyed` in the webdriver-ts directory. You can limit which frameworks to check in the same way as the webdriver test runner like e.g. `npm run isKeyed -- --framework svelte`. The program will report an error if a benchmark implementation is incorrectly classified.
 
 ## How to contribute
 
@@ -236,7 +236,7 @@ Contributions are very welcome. Please use the following rules:
 * Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
 * Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
 * You don't need to update /index.html. It's created with a script (see 6.2 above).
-* You can assert the correct keyed or non-keyed behaviour by using the nonKeyed test tool. cd to webdriver-ts and call it like `npm run nonKeyed -- --framework [your framework]`. It'll print an error if your framework behaves other as specified.
+* You can assert the correct keyed or non-keyed behaviour by using the isKeyed test tool. cd to webdriver-ts and call it like `npm run isKeyed -- --framework [your framework]`. It'll print an error if your framework behaves other as specified.
 * Please don't commit any of the result file webdriver-ts/table.html, webdriver-ts-results/src/results.ts or webdriver-ts-results/table.html. I use to run the benchmarks after merging and publish updated (temporary) results.
 * The latest stable chrome can be used regarding web features and language level (babel-preset-env "last 1 chrome versions")
 

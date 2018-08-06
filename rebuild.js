@@ -34,7 +34,7 @@ for (let framework of args.framework) {
         stdio: 'inherit'
     });
     let frameworkNames = args.framework.map(f => f.split("/")[1]).join(" ");
-    exec('npm run nonKeyed -- --framework '+frameworkNames, {
+    exec('npm run isKeyed -- --framework '+frameworkNames, {
         cwd: 'webdriver-ts',
         stdio: 'inherit'
     });

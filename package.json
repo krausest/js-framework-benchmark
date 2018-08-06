@@ -8,6 +8,7 @@
     "build-prod": "node build.js",
     "compile": "node build.js",
     "start": "http-server -c-1 .",
+    "bench": "cd webdriver-ts && npm run selenium && npm run results",
     "selenium": "cd webdriver-ts && npm run selenium && npm run results",
     "check": "cd webdriver-ts && npm run selenium -- --count 1 --exitOnError true --fork false"
   },

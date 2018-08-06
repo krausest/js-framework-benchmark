@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc",
     "build-prod": "tsc",
+    "bench": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
     "selenium": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
     "checkSelenium": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js --check true",
     "results": "npm run interactive-results",
@@ -15,7 +16,8 @@
     "index": "node dist/createIndex.js",
     "check": "node dist/runCheck.js",
     "update": "node dist/updateFrameworks.js",
-    "nonKeyed": "cross-env LANG=\"en_US.UTF-8\" node dist/nonKeyed.js"
+    "nonKeyed": "cross-env LANG=\"en_US.UTF-8\" node dist/isKeyed.js",
+    "isKeyed": "cross-env LANG=\"en_US.UTF-8\" node dist/isKeyed.js"
   },
   "author": "",
   "license": "Apache-2.0",

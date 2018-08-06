@@ -97,17 +97,14 @@ window.nonKeyedDetector_storeTr = function() {
 window.nonKeyedDetector_reset();
 `;
 
-function isNonKeyedRun(result: any): boolean {
-    if (result.tradded>0 && result.trremoved>0 && result.removedStoredTr>0) return false;
-    return true;
+function isKeyedRun(result: any): boolean {
+    return (result.tradded>0 && result.trremoved>0 && result.removedStoredTr>0);
 }
-function isNonKeyedRemove(result: any): boolean {
-    if (result.removedStoredTr>0) return false;
-    return true;
+function isKeyedRemove(result: any): boolean {
+    return (result.removedStoredTr>0);
 }
-function isNonKeyedSwapRow(result: any): boolean {
-    if (result.tradded>0 && result.trremoved>0) return false;
-    return true;
+function isKeyedSwapRow(result: any): boolean {
+    return (result.tradded>0 && result.trremoved>0);
 }
 
 async function runBench(frameworkNames: string[]) {
@@ -134,14 +131,14 @@ async function runBench(frameworkNames: string[]) {
             await clickElementById(driver,'swaprows');
             await testTextContains(driver,'//tbody/tr[2]/td[1]','999');
             let res = await driver.executeScript('return nonKeyedDetector_result()');
-            let nonKeyedSwap = isNonKeyedSwapRow(res);
+            let keyedSwap = isKeyedSwapRow(res);
             // run
             await driver.executeScript('nonKeyedDetector_storeTr()');
             await driver.executeScript('window.nonKeyedDetector_reset()');
             await clickElementById(driver,'run');
             await testTextContains(driver,'//tbody/tr[1000]/td[1]','2000');
             res = await driver.executeScript('return nonKeyedDetector_result()');
-            let nonKeyedRun =isNonKeyedRun(res);
+            let keyedRun =isKeyedRun(res);
             // remove
             await driver.executeScript('nonKeyedDetector_storeTr()');
             let text = await getTextByXPath(driver, `//tbody/tr[2]/td[2]/a`);
@@ -149,14 +146,14 @@ async function runBench(frameworkNames: string[]) {
             await clickElementByXPath(driver, `//tbody/tr[2]/td[3]/a/span[1]`);
             await testTextNotContained(driver, `//tbody/tr[2]/td[2]/a`, text);
             res = await driver.executeScript('return nonKeyedDetector_result()');
-            let nonKeyedRemove =isNonKeyedRemove(res);
-            let nonKeyed = nonKeyedRemove || nonKeyedRun || nonKeyedSwap;
-            console.log(framework.fullNameWithKeyedAndVersion +" is "+(nonKeyedRun ? "non-keyed" : "keyed")+" for 'run benchmark' and "
-            + (nonKeyedRemove ? "non-keyed" : "keyed") + " for 'remove row benchmark' "
-            + (nonKeyedSwap ? "non-keyed" : "keyed") + " for 'swap rows benchmark' "
-            +". It'll appear as "+(nonKeyed ? "non-keyed" : "keyed")+" in the results");
-            if (frameworkMap.get(framework.fullNameWithKeyedAndVersion).keyed === nonKeyed) {
-                console.log("ERROR: Framework "+framework.fullNameWithKeyedAndVersion+" is not correctly categorized in commons.ts");
+            let keyedRemove = isKeyedRemove(res);
+            let keyed = keyedRemove && keyedRun && keyedSwap;
+            console.log(framework.fullNameWithKeyedAndVersion +" is "+(keyed ? "keyed" : "non-keyed")+" for 'run benchmark' and "
+            + (keyedRemove ? "keyed" : "non-keyed") + " for 'remove row benchmark' "
+            + (keyedSwap ? "keyed" : "non-keyed") + " for 'swap rows benchmark' "
+            +". It'll appear as "+(keyed ? "keyed" : "non-keyed")+" in the results");
+            if (frameworkMap.get(framework.fullNameWithKeyedAndVersion).keyed !== keyed) {
+                console.log("ERROR: Framework "+framework.fullNameWithKeyedAndVersion+" is not correctly categorized");
             }
         } catch(e) {
             console.log("ERROR running "+runFrameworks[i].fullNameWithKeyedAndVersion, e);
