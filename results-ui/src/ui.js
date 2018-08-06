@@ -211,8 +211,17 @@ function sortBy(metric, sortDir) {
         var cmp = (a, b) => STORE.sortDir * a.name.localeCompare(b.name);
     else if (num == null)
         var cmp = (a, b) => STORE.sortDir * (a.factors[benchType] - b.factors[benchType]);
-    else
-        var cmp = (a, b) => STORE.sortDir * (a.bench[benchType][num][STORE.metric] - b.bench[benchType][num][STORE.metric]);
+    else {
+        var cmp = (a, b) => {
+            var aVals = a.bench[benchType][num],
+                bVals = b.bench[benchType][num];
+
+            return STORE.sortDir * (
+                (aVals ? aVals[STORE.metric] : 1e9) -
+                (bVals ? bVals[STORE.metric] : 1e9)
+            );
+        };
+    }
 
     STORE.results.keyed.sort(cmp);
     STORE.results.unkeyed.sort(cmp);

@@ -5,7 +5,6 @@ const uglify = require('rollup-plugin-uglify').uglify;
 const CleanCSS = require('clean-css');
 const path = require("path");
 
-
 const start = +new Date();
 
 const RESULTS_PATH = path.resolve(__dirname + '/../../webdriver-ts/results');
