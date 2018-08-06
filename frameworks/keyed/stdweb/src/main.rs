@@ -197,7 +197,7 @@ struct Main {
 }
 
 impl Main {
-    fn add_click_event_listener<F>(this: &Rc<RefCell<Main>>, element: Element, handler: F)
+    fn add_click_event_listener<F>(this: &Rc<RefCell<Main>>, element: &mut Element, handler: F)
     where
         F: Fn(RefMut<Main>, ClickEvent) + 'static,
     {
@@ -219,63 +219,51 @@ impl Main {
             tbody: document().get_element_by_id("tbody").unwrap(),
         }));
 
-        Main::add_click_event_listener(
-            &this,
-            document().get_element_by_id("add").unwrap(),
-            |mut this, e| {
-                e.prevent_default();
-                this.add();
-            },
-        );
+        let mut add_button = document().get_element_by_id("_add").unwrap();
+        Main::add_click_event_listener(&this, &mut add_button, |mut this, e| {
+            e.prevent_default();
+            this.add();
+        });
+        add_button.set_attribute("id", "add").unwrap();
+
+        let mut run_button = document().get_element_by_id("_run").unwrap();
+        Main::add_click_event_listener(&this, &mut run_button, |mut this, e| {
+            e.prevent_default();
+            this.run();
+        });
+        run_button.set_attribute("id", "run").unwrap();
+
+        let mut update_button = document().get_element_by_id("_update").unwrap();
+        Main::add_click_event_listener(&this, &mut update_button, |mut this, e| {
+            e.prevent_default();
+            this.update();
+        });
+        update_button.set_attribute("id", "update").unwrap();
+
+        let mut runlots_button = document().get_element_by_id("_runlots").unwrap();
+        Main::add_click_event_listener(&this, &mut runlots_button, |mut this, e| {
+            e.prevent_default();
+            this.runlots();
+        });
+        runlots_button.set_attribute("id", "runlots").unwrap();
+
+        let mut clear_button = document().get_element_by_id("_clear").unwrap();
+        Main::add_click_event_listener(&this, &mut clear_button, |mut this, e| {
+            e.prevent_default();
+            this.clear();
+        });
+        clear_button.set_attribute("id", "clear").unwrap();
+
+        let mut swaprows_button = document().get_element_by_id("_swaprows").unwrap();
+        Main::add_click_event_listener(&this, &mut swaprows_button, |mut this, e| {
+            e.prevent_default();
+            this.swaprows();
+        });
+        swaprows_button.set_attribute("id", "swaprows").unwrap();
 
         Main::add_click_event_listener(
             &this,
-            document().get_element_by_id("run").unwrap(),
-            |mut this, e| {
-                e.prevent_default();
-                this.run();
-            },
-        );
-
-        Main::add_click_event_listener(
-            &this,
-            document().get_element_by_id("update").unwrap(),
-            |mut this, e| {
-                e.prevent_default();
-                this.update();
-            },
-        );
-
-        Main::add_click_event_listener(
-            &this,
-            document().get_element_by_id("runlots").unwrap(),
-            |mut this, e| {
-                e.prevent_default();
-                this.runlots();
-            },
-        );
-
-        Main::add_click_event_listener(
-            &this,
-            document().get_element_by_id("clear").unwrap(),
-            |mut this, e| {
-                e.prevent_default();
-                this.clear();
-            },
-        );
-
-        Main::add_click_event_listener(
-            &this,
-            document().get_element_by_id("swaprows").unwrap(),
-            |mut this, e| {
-                e.prevent_default();
-                this.swaprows();
-            },
-        );
-
-        Main::add_click_event_listener(
-            &this,
-            document().get_element_by_id("tbody").unwrap(),
+            &mut document().get_element_by_id("tbody").unwrap(),
             |mut this, e| {
                 let target = match e.target() {
                     Some(x) => x,
