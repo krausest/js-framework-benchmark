@@ -7,8 +7,9 @@
     "frameworkVersion": "0.4.8"
   },
   "scripts": {
-    "build-dev": "node build.js web deploy --verbose",
-    "build-prod": "node build.js web deploy --verbose --release",
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "build-dev-force": "node build.js web deploy --verbose",
+    "build-prod-force": "node build.js web deploy --verbose --release",
     "start": "node build.js web start --verbose --open --auto-reload"
   },
   "repository": {
