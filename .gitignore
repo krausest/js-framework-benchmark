@@ -66,3 +66,8 @@ angular-*/src/app.ngsummary.json
 #glimmer
 glimmer-*/dist
 glimmer-*/tmp
+
+# rust
+.cargo/
+.rustup/
+Cargo.lock
