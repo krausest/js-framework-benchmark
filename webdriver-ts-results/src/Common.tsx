@@ -258,9 +258,9 @@ export class ResultTableData {
                     let ny = Math.pow(s1_2/n1 + s2_2/n2, 2) /
                             (s1_2*s1_2 / (n1*n1*(n1-1)) + s2_2*s2_2/(n2*n2*(n2-1)));
                     let t = (x1-x2)/Math.sqrt(s1_2/n1 + s2_2/n2);
-                    let p = jStat.studentt.cdf( Math.abs(t), ny );
-                    statisticalCol = statisticComputeColor(t, (1.0-p)*2);
-                    statisticalResult = ((1.0-p)*200).toFixed(3)+"%";
+                    let p = (1.0-jStat.studentt.cdf( Math.abs(t), ny ))*2;
+                    statisticalCol = statisticComputeColor(t, p);
+                    statisticalResult = (p*100).toFixed(3)+"%";
                 }
                 return new TableResultValueEntry(f.name, mean, standardDeviation, factor, statisticalResult, statisticalCol);
             }
