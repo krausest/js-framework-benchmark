@@ -236,7 +236,7 @@ export class ResultTableData {
             let result = this.results(benchmark, f);
             if (result === null) return null;
             else {
-                let mean = this.useMedian ? result.median : result.mean;
+                let mean = (this.useMedian && !compareWithResults) ? result.median : result.mean;
                 let factor = clamp ? Math.max(16, mean) / Math.max(16, min) : mean/min;
                 let standardDeviation = result.standardDeviation;
 
@@ -245,15 +245,20 @@ export class ResultTableData {
                 // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
                 // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
                 if (compareWithResults) {
-                    let compareWithMean = this.useMedian ? compareWithResults.median : compareWithResults.mean;
+                    let compareWithMean = compareWithResults.mean;
                     let stdDev = result.standardDeviation;
                     let compareWithResultsStdDev = compareWithResults.standardDeviation;
-                    let n = result.count || 20;
-                    let m = compareWithResults.count || 20;
-                    let s2 = ((n-1)*Math.pow(stdDev,2) + (m-1)*Math.pow(compareWithResultsStdDev,2)) / (n+m-2)
-                    let s = Math.sqrt(s2);
-                    let t = Math.sqrt((n * m) / (n + m))*(mean - compareWithMean - 0)/s;
-                    let p = jStat.studentt.cdf( Math.abs(t), n + m -2 );
+
+                    let x1 = mean;
+                    let x2 = compareWithMean;
+                    let s1_2 = stdDev*stdDev;
+                    let s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
+                    let n1 = 10;
+                    let n2 = 10;
+                    let ny = Math.pow(s1_2/n1 + s2_2/n2, 2) /
+                            (s1_2*s1_2 / (n1*n1*(n1-1)) + s2_2*s2_2/(n2*n2*(n2-1)));
+                    let t = (x1-x2)/Math.sqrt(s1_2/n1 + s2_2/n2);
+                    let p = jStat.studentt.cdf( Math.abs(t), ny );
                     statisticalCol = statisticComputeColor(t, (1.0-p)*2);
                     statisticalResult = ((1.0-p)*200).toFixed(3)+"%";
                 }

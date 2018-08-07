@@ -348,7 +348,7 @@ function writeResult<T>(res: Result<T>, dir: string) {
     for (let resultKind of benchmark.resultKinds()) {
         let data = benchmark.extractResult(res.results, resultKind);
         let s = jStat(data);
-        console.log(`result ${fileName(res.framework, resultKind)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev()}`);
+        console.log(`result ${fileName(res.framework, resultKind)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev(true)}`);
         let result: JSONResult = {
             "framework": res.framework.fullNameWithKeyedAndVersion,
             "keyed": keyed,
