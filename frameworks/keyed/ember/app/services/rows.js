@@ -1,8 +1,9 @@
 import Service from '@ember/service';
 
-function _random(max) {
-  return Math.round(Math.random() * 1000) % max;
-}
+
+import {
+  run, runLots, add, update, swapRows, deleteRow
+} from 'ember-temp/utils/benchmark-helpers';
 
 var startTime;
 var lastMeasure;
@@ -21,89 +22,80 @@ export default Service.extend({
   data: [],
   selected: undefined,
   id: 1,
-  buildData(count = 1000) {
-    var adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
-    var colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
-    var nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
-    var data = [];
-    for (var i = 0; i < count; i++) {
-      var row = {
-        identifier: this.id++,
-        label: adjectives[_random(adjectives.length)] + ' ' + colours[_random(colours.length)] + ' ' + nouns[_random(nouns.length)]
-      };
-      data.push(row);
-    }
-    return data;
-  },
-  updateData(mod = 10) {
-    var data = this.data.map(function(data, i) {
-      if (i % mod === 0) {
-        return Object.assign({}, data, { label: data.label + ' !!!' });
-      }
-      else {
-        return data;
-      }
-    });
-    return data;
-  },
+
   remove(id) {
     startMeasure('delete');
-    this.set('data', this.data.filter(function(d) {
-      return d.identifier !== id;
-    }));
-    this.set('selected', undefined);
+
+    this.setProperties({
+      data: deleteRow(this.data, this.id),
+      selelcted: undefined
+    });
+
     stopMeasure();
   },
+
   run() {
     startMeasure('run');
-    this.set('data', this.buildData());
-    this.set('selected', undefined);
+
+    this.setProperties({
+      data: run(this.id),
+      selected: undefined
+    });
+
     stopMeasure();
   },
+
   add() {
     startMeasure('add');
-    this.set('data', this.data.concat(this.buildData(1000)));
+
+    this.set('data', add(this.id, this.data).data);
+
     stopMeasure();
   },
+
   update() {
     startMeasure('update');
-    this.set('data', this.updateData());
+
+    this.set('data', update(this.data));
+
     stopMeasure();
   },
+
   select(id) {
     startMeasure('select');
+
     this.set('selected', id);
+
     stopMeasure();
   },
+
   runLots() {
     startMeasure('runLots');
-    this.set('data', this.buildData(10000));
-    this.set('selected', undefined);
+
+    this.setProperties({
+      data: runLots(this.id),
+      selected: undefined
+    });
+
     stopMeasure();
   },
+
   clear() {
     startMeasure('clear');
-    this.set('data', []);
-    this.set('selected', undefined);
+
+    this.setProperties({
+      data: [],
+      selected: undefined
+    });
+
     stopMeasure();
   },
+
   swapRows() {
     startMeasure('swapRows');
-    if (this.data.length > 998) {
-      var d1 = this.data[1];
-      var d998 = this.data[998];
 
-      var data = this.data.map(function(data, i) {
-        if (i === 1) {
-          return d998;
-        }
-        else if (i === 998) {
-          return d1;
-        }
-        return data;
-      });
-      this.set('data', data);
-    }
+    this.set('data', swapRows(this.data));
+
     stopMeasure();
   }
 });

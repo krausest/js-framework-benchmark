@@ -1,44 +1,45 @@
 <div class="jumbotron">
     <div class="row">
         <div class="col-md-6">
-            <h1>Ember v3.0.0</h1>
+            <h1>Ember v3.3.0</h1>
         </div>
         <div class="col-md-6">
             <div class="row">
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="run" {{action 'create'}}>Create 1,000 rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="run" {{action create}}>
+                      Create 1,000 rows
+                    </button>
                 </div>
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="runlots" {{action 'runLots'}}>Create 10,000 rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="runlots" {{action runLots}}>
+                      Create 10,000 rows
+                    </button>
                 </div>
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="add" {{action 'add'}}>Append 1,000 rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="add" {{action add}}>
+                      Append 1,000 rows
+                    </button>
                 </div>
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="update" {{action 'update'}}>Update every 10th row</button>
+                    <button type="button" class="btn btn-primary btn-block" id="update" {{action update}}>
+                      Update every 10th row
+                    </button>
                 </div>
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="clear" {{action 'clear'}}>Clear</button>
+                    <button type="button" class="btn btn-primary btn-block" id="clear" {{action clear}}>
+                      Clear
+                    </button>
                 </div>
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="swaprows" {{action 'swapRows'}}>Swap Rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="swaprows" {{action swapRows}}>
+                      Swap Rows
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<table class="table table-hover table-striped test-data">
-    <tbody>
-    {{#each rows.data key='identifier' as |item|}}
-        <tr class={{if (eq item.identifier rows.selected) 'danger' 'x'}}>
-            <td class="col-md-1">{{item.identifier}}</td>
-            <td class="col-md-4">
-                <a {{action 'select' item.identifier}}>{{item.label}}</a>
-            </td>
-            <td class="col-md-1"><a {{action 'remove' item.identifier}}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-            <td class="col-md-6"></td>
-        </tr>
-    {{/each}}
-    </tbody>
-</table>
+
+{{data-rows rowData=rows.data onSelect=(action select) onRemove=(action remove) selected=rows.selected}}
+
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
