@@ -5,29 +5,29 @@ import { action } from '@ember-decorators/object';
 export default class extends Component {
   @service rows;
 
-  @action create() {
+  @action async create() {
     this.rows.run();
   }
 
-  @action add() {
+  @action async add() {
     this.rows.add();
   }
-  @action update() {
+  @action async update() {
     this.rows.update();
   }
-  @action runLots() {
+  @action async runLots() {
     this.rows.runLots();
   }
-  @action clear() {
+  @action async clear() {
     this.rows.clear();
   }
-  @action swapRows() {
+  @action async swapRows() {
     this.rows.swapRows();
   }
-  @action remove(identifier) {
+  @action async remove(identifier) {
     this.rows.remove(identifier);
   }
-  @action select(identifier) {
+  @action async select(identifier) {
     this.rows.select(identifier);
   }
 }

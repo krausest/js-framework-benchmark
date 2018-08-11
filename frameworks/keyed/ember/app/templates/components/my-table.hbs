@@ -42,6 +42,8 @@
 
 {{!-- {{data-rows rowData=rows.data onSelect=(action select) onRemove=(action remove) selected=rows.selected}}
 --}}
+
+{{rows.data.length}}
 <table class="table table-hover table-striped test-data">
     <tbody>
     {{#each rows.data key='identifier' as |item|}}

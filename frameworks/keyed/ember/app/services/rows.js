@@ -7,16 +7,20 @@ import {
 
 var startTime;
 var lastMeasure;
-var startMeasure = function(name) {
-  startTime = performance.now();
-  lastMeasure = name;
-};
-var stopMeasure = function() {
-  window.setTimeout(function() {
-    var stop = performance.now();
-    console.log(lastMeasure + ' took ' + (stop - startTime)); // eslint-disable-line no-console
-  }, 0);
-};
+var startMeasure = function (name) {
+    startTime = performance.now();
+    lastMeasure = name;
+}
+var stopMeasure = function () {
+    var last = lastMeasure;
+    if (lastMeasure) {
+        window.setTimeout(function () {
+            lastMeasure = null;
+            var stop = performance.now();
+            console.log(last + " took " + (stop - startTime));
+        }, 0);
+    }
+}
 
 export default Service.extend({
   data: [],
@@ -38,7 +42,7 @@ export default Service.extend({
     startMeasure('run');
 
     this.setProperties({
-      data: run(this.id),
+      data: run(this.id).data,
       selected: undefined
     });
 
@@ -73,7 +77,7 @@ export default Service.extend({
     startMeasure('runLots');
 
     this.setProperties({
-      data: runLots(this.id),
+      data: runLots(this.id).data,
       selected: undefined
     });
 
