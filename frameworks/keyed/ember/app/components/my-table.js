@@ -84,9 +84,7 @@ export default class MyTable extends Component {
     this.set('data', swapRows(this.data));
   }
 
-  @action async remove(id) {
-    startMeasure('delete');
-
+  @action remove(id) {
     this.setProperties({
       data: deleteRow(this.data, id),
       selelcted: undefined
