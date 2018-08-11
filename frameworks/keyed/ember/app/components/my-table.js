@@ -10,7 +10,7 @@ export default class MyTable extends Component {
   data = [];
   selected = undefined;
 
-  @action async create() {
+  @action create() {
     const result = run(this.id);
 
     this.setProperties({
@@ -20,15 +20,15 @@ export default class MyTable extends Component {
     });
   }
 
-  @action async add() {
+  @action add() {
     this.set('data', add(this.id, this.data).data);
   }
 
-  @action async update() {
+  @action update() {
     this.set('data', update(this.data));
   }
 
-  @action async runLots() {
+  @action runLots() {
     const result = runLots(this.id);
 
     this.setProperties({
@@ -38,14 +38,14 @@ export default class MyTable extends Component {
     });
   }
 
-  @action async clear() {
+  @action clear() {
     this.setProperties({
       data: [],
       selected: undefined
     });
   }
 
-  @action async swapRows() {
+  @action swapRows() {
     this.set('data', swapRows(this.data));
   }
 
