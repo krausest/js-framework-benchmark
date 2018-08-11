@@ -15,6 +15,8 @@
   },
   "repository": "",
   "scripts": {
+    "ember": "node_modules/.bin/ember",
+    "ember-cli-update": "node_modules/.bin/ember-cli-update",
     "build": "ember build",
     "build-dev": "ember build --environment=production",
     "build-prod": "ember build --environment=production",
@@ -36,6 +38,7 @@
     "ember-cli-shims": "^1.2.0",
     "ember-cli-sri": "^2.1.0",
     "ember-cli-uglify": "^2.0.0",
+    "ember-cli-update": "^0.22.0",
     "ember-export-application-global": "^2.0.0",
     "ember-load-initializers": "^1.0.0",
     "ember-resolver": "^4.0.0",
