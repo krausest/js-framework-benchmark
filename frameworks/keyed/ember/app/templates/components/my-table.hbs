@@ -6,65 +6,45 @@
         <div class="col-md-6">
             <div class="row">
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="run" {{action create}}>
+                    {{#bs-button id='run' onClick=(action 'create')}}
                       Create 1,000 rows
-                    </button>
+                    {{/bs-button}}
                 </div>
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="runlots" {{action runLots}}>
+                    {{#bs-button id='runlots' onClick=(action runLots)}}
                       Create 10,000 rows
-                    </button>
+                    {{/bs-button}}
                 </div>
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="add" {{action add}}>
+                    {{#bs-button id='add' onClick=(action add)}}
                       Append 1,000 rows
-                    </button>
+                    {{/bs-button}}
                 </div>
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="update" {{action update}}>
+                    {{#bs-button id='update' onClick=(action update)}}
                       Update every 10th row
-                    </button>
+                    {{/bs-button}}
                 </div>
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="clear" {{action clear}}>
+                    {{#bs-button id='clear' onClick=(action clear)}}
                       Clear
-                    </button>
+                    {{/bs-button}}
                 </div>
                 <div class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="swaprows" {{action swapRows}}>
+                    {{#bs-button id='swaprows' onClick=(action swapRows)}}
                       Swap Rows
-                    </button>
+                    {{/bs-button}}
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-{{!-- {{data-rows rowData=rows.data onSelect=(action select) onRemove=(action remove) selected=rows.selected}}
---}}
+{{data-rows
+  data=data
+  onSelect=(action select)
+  onRemove=(action remove)
+  selected=rows.selected}}
 
-{{rows.data.length}}
-<table class="table table-hover table-striped test-data">
-    <tbody>
-    {{#each rows.data key='identifier' as |item|}}
 
-        <tr class={{if (eq item.identifier rows.selected) 'danger' 'x'}}>
-            <td class="col-md-1">{{item.identifier}}</td>
-
-            <td class="col-md-4">
-                <a {{action 'select' item.identifier}}>{{item.label}}</a>
-            </td>
-
-            <td class="col-md-1">
-
-              <a {{action 'remove' item.identifier}}>
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-              </a></td>
-
-            <td class="col-md-6"></td>
-        </tr>
-
-    {{/each}}
-    </tbody>
-</table>
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>

@@ -17,12 +17,12 @@
   "scripts": {
     "ember": "node_modules/.bin/ember",
     "ember-cli-update": "node_modules/.bin/ember-cli-update",
-    "build": "ember build",
-    "build-dev": "ember build --environment=production",
-    "build-prod": "ember build --environment=production",
+    "build": "yarn ember build",
+    "build-dev": "yarn ember build --environment=production",
+    "build-prod": "yarn ember build --environment=production",
     "lint:js": "eslint .",
-    "start": "ember serve",
-    "test": "ember test"
+    "start": "yarn ember serve",
+    "test": "yarn ember test"
   },
   "devDependencies": {
     "@ember-decorators/babel-transforms": "^2.0.0",

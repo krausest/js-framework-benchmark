@@ -1,33 +1,113 @@
 import Component from '@ember/component';
-import { service } from '@ember-decorators/service';
 import { action } from '@ember-decorators/object';
 
-export default class extends Component {
-  @service rows;
+import {
+  run, runLots, add, update, swapRows, deleteRow,
+} from 'ember-temp/utils/benchmark-helpers';
 
-  @action async create() {
-    this.rows.run();
+var startTime;
+var lastMeasure;
+var startMeasure = function (name) {
+    startTime = performance.now();
+    lastMeasure = name;
+}
+var stopMeasure = function () {
+    var last = lastMeasure;
+    if (lastMeasure) {
+        window.setTimeout(function () {
+            lastMeasure = null;
+            var stop = performance.now();
+            console.log(last + " took " + (stop - startTime));
+        }, 0);
+    }
+}
+
+export default class MyTable extends Component {
+  id = 1;
+  data = [];
+  selected = undefined;
+
+  didUpdate() {
+    // stopMeasure();
+    // printDuration();
+  }
+
+  @action create() {
+    startMeasure('run');
+
+    const result = run(this.id);
+
+    this.setProperties({
+      data: result.data,
+      id: result.id,
+      selected: undefined
+    });
+
+    stopMeasure();
   }
 
   @action async add() {
-    this.rows.add();
+    startMeasure('add');
+
+    this.set('data', add(this.id, this.data).data);
+
+    stopMeasure();
   }
+
   @action async update() {
-    this.rows.update();
+    startMeasure('update');
+
+    this.set('data', update(this.data));
+
+    stopMeasure();
   }
+
   @action async runLots() {
-    this.rows.runLots();
+    startMeasure('runLots');
+
+    this.setProperties({
+      data: runLots(this.id).data,
+      selected: undefined
+    });
+
+    stopMeasure();
   }
+
   @action async clear() {
-    this.rows.clear();
+    startMeasure('clear');
+
+    this.setProperties({
+      data: [],
+      selected: undefined
+    });
+
+    stopMeasure();
   }
+
   @action async swapRows() {
-    this.rows.swapRows();
+    startMeasure('swapRows');
+
+    this.set('data', swapRows(this.data));
+
+    stopMeasure();
   }
+
   @action async remove(identifier) {
-    this.rows.remove(identifier);
+    startMeasure('delete');
+
+    this.setProperties({
+      data: deleteRow(this.data, this.id),
+      selelcted: undefined
+    });
+
+    stopMeasure();
   }
-  @action async select(identifier) {
-    this.rows.select(identifier);
+
+  @action async select(id) {
+    startMeasure('select');
+
+    this.set('selected', id);
+
+    stopMeasure();
   }
 }
