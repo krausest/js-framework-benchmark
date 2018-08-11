@@ -7,12 +7,14 @@ import {
 
 var startTime;
 var lastMeasure;
-var startMeasure = function (name) {
+
+function startMeasure(name) {
     startTime = performance.now();
     lastMeasure = name;
 }
-var stopMeasure = function () {
+function stopMeasure() {
     var last = lastMeasure;
+
     if (lastMeasure) {
         window.setTimeout(function () {
             lastMeasure = null;
@@ -28,11 +30,10 @@ export default class MyTable extends Component {
   selected = undefined;
 
   didUpdate() {
-    // stopMeasure();
-    // printDuration();
+    stopMeasure();
   }
 
-  @action create() {
+  @action async create() {
     startMeasure('run');
 
     const result = run(this.id);
@@ -42,35 +43,30 @@ export default class MyTable extends Component {
       id: result.id,
       selected: undefined
     });
-
-    stopMeasure();
   }
 
   @action async add() {
     startMeasure('add');
 
     this.set('data', add(this.id, this.data).data);
-
-    stopMeasure();
   }
 
   @action async update() {
     startMeasure('update');
 
     this.set('data', update(this.data));
-
-    stopMeasure();
   }
 
   @action async runLots() {
     startMeasure('runLots');
 
+    const result = runLots(this.id);
+
     this.setProperties({
-      data: runLots(this.id).data,
+      data: result.data,
+      id: result.id,
       selected: undefined
     });
-
-    stopMeasure();
   }
 
   @action async clear() {
@@ -80,34 +76,26 @@ export default class MyTable extends Component {
       data: [],
       selected: undefined
     });
-
-    stopMeasure();
   }
 
   @action async swapRows() {
     startMeasure('swapRows');
 
     this.set('data', swapRows(this.data));
-
-    stopMeasure();
   }
 
-  @action async remove(identifier) {
+  @action async remove(id) {
     startMeasure('delete');
 
     this.setProperties({
-      data: deleteRow(this.data, this.id),
+      data: deleteRow(this.data, id),
       selelcted: undefined
     });
-
-    stopMeasure();
   }
 
-  @action async select(id) {
+  @action select(id) {
     startMeasure('select');
 
     this.set('selected', id);
-
-    stopMeasure();
   }
 }

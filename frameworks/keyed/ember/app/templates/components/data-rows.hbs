@@ -1,19 +1,23 @@
 <table class="table table-hover table-striped test-data">
     <tbody>
-    {{#each @data key='identifier' as |item|}}
+    {{#each @data key='id' as |item|}}
 
         <tr class={{if (eq item.id @selected) 'danger' 'x'}}>
             <td class="col-md-1">{{item.id}}</td>
 
             <td class="col-md-4">
-                <a {{action @onSelect item.id}}>{{item.label}}</a>
+                <a style='cursor: pointer'
+                  {{action @onSelect item.id}}>
+                  {{item.label}}
+                </a>
             </td>
 
             <td class="col-md-1">
 
               <a {{action @onRemove item.id}}>
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-              </a></td>
+              </a>
+            </td>
 
             <td class="col-md-6"></td>
         </tr>

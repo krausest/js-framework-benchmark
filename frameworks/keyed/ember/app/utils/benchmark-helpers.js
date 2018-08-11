@@ -4,22 +4,15 @@ const _random = (max) => {
 
 const updateData = (data, mod = 10) => {
     const newData = [...data];
+
     for (let i = 0; i < newData.length; i += 10) {
-        newData[i] = Object.assign({}, newData[i], { label: newData[i].label + ' !!!' });
+        newData[i] = Object.assign(
+          {},
+          newData[i],
+          { label: newData[i].label + ' !!!' }
+        );
     }
     return newData
-}
-
-export function measure(name, fnToMeasure) {
-  const startTime = performance.now();
-
-  fnToMeasure();
-
-  const endTime = performance.now();
-
-  const duration = endTime - startTime;
-
-  console.log(`${name} took ${duration}`);
 }
 
 export const buildData = (id, count = 1000) => {
