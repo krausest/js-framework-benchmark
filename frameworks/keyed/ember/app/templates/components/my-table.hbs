@@ -40,6 +40,29 @@
     </div>
 </div>
 
-{{data-rows rowData=rows.data onSelect=(action select) onRemove=(action remove) selected=rows.selected}}
+{{!-- {{data-rows rowData=rows.data onSelect=(action select) onRemove=(action remove) selected=rows.selected}}
+--}}
+<table class="table table-hover table-striped test-data">
+    <tbody>
+    {{#each rows.data key='identifier' as |item|}}
 
+        <tr class={{if (eq item.identifier rows.selected) 'danger' 'x'}}>
+            <td class="col-md-1">{{item.identifier}}</td>
+
+            <td class="col-md-4">
+                <a {{action 'select' item.identifier}}>{{item.label}}</a>
+            </td>
+
+            <td class="col-md-1">
+
+              <a {{action 'remove' item.identifier}}>
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              </a></td>
+
+            <td class="col-md-6"></td>
+        </tr>
+
+    {{/each}}
+    </tbody>
+</table>
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
