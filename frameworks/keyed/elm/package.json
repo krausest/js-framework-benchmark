@@ -8,7 +8,7 @@
   },
   "scripts": {
     "postinstall": "elm-package install -y",
-    "build-prod": "elm-make src/Main.elm --output=dist/main.js"
+    "build-prod": "elm-make src/Main.elm --output=dist/main.js && uglifyjs dist/main.js --compress --mangle --output=dist/main.js"
   },
   "keywords": [
     "elm"
@@ -21,6 +21,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "elm": "0.18.0"
+    "elm": "0.18.0",
+    "uglify-js": "3.4.7"
   }
 }
