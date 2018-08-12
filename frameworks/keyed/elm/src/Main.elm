@@ -1,13 +1,13 @@
 module Main exposing (..)
 
 import Array exposing (Array)
-import Html exposing (Html, Attribute, program, div, a, h1, span, button, table, td, tr, text)
-import Html.Attributes exposing (id, class, classList, attribute, type_, href)
+import Html exposing (Attribute, Html, a, button, div, h1, program, span, table, td, text, tr)
+import Html.Attributes exposing (attribute, class, classList, href, id, type_)
 import Html.Events exposing (onClick)
 import Html.Keyed
 import Html.Lazy
+import Random.Pcg exposing (Generator, Seed)
 import String
-import Random.Pcg exposing (Seed, Generator)
 
 
 main : Program Never Model Msg
@@ -86,10 +86,10 @@ nouns =
 
 buttons : List ( String, String, Msg )
 buttons =
-    [ ( "run", "Create 1,000 rows", (Create 1000) )
-    , ( "runlots", "Create 10,000 rows", (Create 10000) )
-    , ( "add", "Append 1,000 rows", (Append 1000) )
-    , ( "update", "Update every 10th row", (UpdateEvery 10) )
+    [ ( "run", "Create 1,000 rows", Create 1000 )
+    , ( "runlots", "Create 10,000 rows", Create 10000 )
+    , ( "add", "Append 1,000 rows", Append 1000 )
+    , ( "update", "Update every 10th row", UpdateEvery 10 )
     , ( "clear", "Clear", Clear )
     , ( "swaprows", "Swap Rows", Swap )
     ]
@@ -194,7 +194,7 @@ createRandomBatch maybeSeed amount lastId =
                 row =
                     createRow lastId
             in
-                ( List.indexedMap row list, newSeed )
+            ( List.indexedMap row list, newSeed )
 
         Nothing ->
             Debug.crash "Attempting to create values without a seed!"
@@ -221,7 +221,7 @@ type Msg
 
 get : Int -> Array a -> a
 get id arr =
-    case (Array.get id arr) of
+    case Array.get id arr of
         Just row ->
             row
 
@@ -237,26 +237,26 @@ update msg model =
                 ( newRows, seed ) =
                     createRandomBatch model.seed amount model.lastId
             in
-                ( { model
-                    | rows = newRows
-                    , seed = Just seed
-                    , lastId = model.lastId + amount
-                  }
-                , Cmd.none
-                )
+            ( { model
+                | rows = newRows
+                , seed = Just seed
+                , lastId = model.lastId + amount
+              }
+            , Cmd.none
+            )
 
         Append amount ->
             let
                 ( newRows, seed ) =
                     createRandomBatch model.seed amount model.lastId
             in
-                ( { model
-                    | rows = model.rows ++ newRows
-                    , seed = Just seed
-                    , lastId = model.lastId + amount
-                  }
-                , Cmd.none
-                )
+            ( { model
+                | rows = model.rows ++ newRows
+                , seed = Just seed
+                , lastId = model.lastId + amount
+              }
+            , Cmd.none
+            )
 
         UpdateEvery amount ->
             ( { model | rows = List.indexedMap updateRow model.rows }, Cmd.none )
@@ -277,15 +277,16 @@ update msg model =
                     to =
                         get 998 arr
                 in
-                    ( { model
-                        | rows =
-                            arr
-                                |> Array.set 1 to
-                                |> Array.set 998 from
-                                |> Array.toList
-                      }
-                    , Cmd.none
-                    )
+                ( { model
+                    | rows =
+                        arr
+                            |> Array.set 1 to
+                            |> Array.set 998 from
+                            |> Array.toList
+                  }
+                , Cmd.none
+                )
+
             else
                 ( model, Cmd.none )
 
@@ -303,6 +304,7 @@ updateRow : Int -> Row -> Row
 updateRow index row =
     if index % 10 == 0 then
         { row | label = row.label ++ " !!!" }
+
     else
         row
 
@@ -311,8 +313,10 @@ select : Int -> Row -> Row
 select targetId ({ id, label, selected } as row) =
     if id == targetId then
         Row id label True
+
     else if selected == True then
         Row id label False
+
     else
         row
 
@@ -337,7 +341,7 @@ init =
       , rows = []
       , lastId = 1
       }
-    , Random.Pcg.generate (UpdateSeed) (Random.Pcg.independentSeed)
+    , Random.Pcg.generate UpdateSeed Random.Pcg.independentSeed
     )
 
 
