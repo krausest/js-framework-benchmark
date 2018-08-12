@@ -1,8 +1,8 @@
 import ko from 'knockout'
-import r from 'ko-jsx'
+import { r, selectOn, delegateEvent } from 'ko-jsx'
 
 export default function({data, selected, run, runLots, add, update, clear, swapRows, select, del}) {
-  const delegateSelected = r.delegateOn(selected);
+  let selectClass, clickSelect, clickRemove, tbody;
   return (
     <div class='container'>
       <div class='jumbotron'><div class='row'>
@@ -28,15 +28,18 @@ export default function({data, selected, run, runLots, add, update, clear, swapR
           </div>
         </div></div>
       </div></div>
-      <table class='table table-hover table-striped test-data'><tbody>{
+      <table class='table table-hover table-striped test-data'><tbody ref={tbody}>{
+        (selectClass = selectOn(selected, (el, selected) => el.className = selected ? 'danger' : ''),
+        clickSelect = delegateEvent(tbody, 'click', select),
+        clickRemove = delegateEvent(tbody, 'click', del),
         data.map(row =>
-          <tr /*@custom(delegateSelected(row.id))*/ classList={{danger: row.id === selected()}}>
-            <td class='col-md-1'>{/*@static*/ row.id}</td>
-            <td class='col-md-4'><a onClick={r.linkEvent(row.id, select)}>{row.label}</a></td>
-            <td class='col-md-1'><a onClick={r.linkEvent(row.id, del)}><span class='delete glyphicon glyphicon-remove' /></a></td>
+          <tr $selectClass={row.id}>
+            <td class='col-md-1' textContent={((row.id))} />
+            <td class='col-md-4'><a $clickSelect={row.id}>{row.label}</a></td>
+            <td class='col-md-1'><a $clickRemove={row.id}><span class='delete glyphicon glyphicon-remove' /></a></td>
             <td class='col-md-6'/>
           </tr>
-        )
+        ))
       }</tbody></table>
       <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
     </div>

@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-solid-js",
-  "version": "0.0.11",
+  "version": "0.0.14",
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "solid-js"
@@ -17,12 +17,12 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "babel-plugin-jsx-dom-expressions": "0.0.23",
-    "solid-js": "0.0.11",
-    "s-js": "0.4.9"
+    "babel-plugin-jsx-dom-expressions": "0.0.28",
+    "s-js": "0.4.9",
+    "solid-js": "0.0.14"
   },
   "devDependencies": {
-    "@babel/core": "7.0.0-beta.54",
+    "@babel/core": "7.0.0-beta.56",
     "rollup": "0.63.4",
     "rollup-plugin-babel": "beta",
     "rollup-plugin-node-resolve": "3.3.0",
