@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Array exposing (Array)
+import Array.Hamt as Array exposing (Array)
 import Html exposing (Attribute, Html, a, button, div, h1, program, span, table, tbody, td, text, tr)
 import Html.Attributes exposing (attribute, class, classList, href, id, type_)
 import Html.Events exposing (onClick)
