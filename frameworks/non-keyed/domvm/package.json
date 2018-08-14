@@ -1,20 +1,20 @@
 {
   "name": "js-framework-benchmark-domvm-non-keyed",
-  "version": "3.4.3-non-keyed",
+  "version": "3.4.5-non-keyed",
   "description": "Benchmark for domvm framework (non-keyed)",
   "js-framework-benchmark": {
-    "frameworkVersion": "3.4.3"
+    "frameworkVersion": "3.4.5"
   },
   "scripts": {
     "build-dev": "node build.js",
     "build-prod": "node build.js"
   },
   "devDependencies": {
-    "closure-compiler-js-prebuilt": "git://github.com/domvm/closure-compiler-js-prebuilt.git#20180716.0.0",
+    "closure-compiler-js-prebuilt": "git://github.com/domvm/closure-compiler-js-prebuilt.git#20180805.0.0",
     "rollup": "*",
     "rollup-plugin-buble": "*"
   },
   "dependencies": {
-    "domvm": "git://github.com/domvm/domvm.git#3.4.3"
+    "domvm": "git://github.com/domvm/domvm.git#3.4.5"
   }
 }
