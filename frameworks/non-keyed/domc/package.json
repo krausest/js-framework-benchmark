@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "domc": "0.0.2"
+    "domc": "0.0.5"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
