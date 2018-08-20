@@ -10,9 +10,9 @@
     "build-prod": "node build.js"
   },
   "devDependencies": {
-    "closure-compiler-js-prebuilt": "git://github.com/domvm/closure-compiler-js-prebuilt.git#20180805.0.0",
-    "rollup": "*",
-    "rollup-plugin-buble": "*"
+    "rollup": "^0.64.1",
+    "rollup-plugin-buble": "^0.19.2",
+    "uglify-js": "^3.4.7"
   },
   "dependencies": {
     "domvm": "git://github.com/domvm/domvm.git#3.4.5"
