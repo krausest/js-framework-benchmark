@@ -1,5 +1,4 @@
-import ko from 'knockout'
-import { root } from 'ko-jsx'
+import { root, observable, observableArray } from 'ko-jsx'
 import template from './template'
 
 // var startTime;
@@ -39,8 +38,8 @@ var HomeViewModel = function () {
         return data;
     }
 
-    self.selected = ko.observable(null);
-    self.data = ko.observableArray();
+    self.selected = observable(null);
+    self.data = observableArray();
 
     self.run = function () {
         // startMeasure("run");
@@ -109,7 +108,7 @@ var ItemViewModel = function (data, parent) {
     var self = this;
 
     self.id = data.id;
-    self.label = ko.observable(data.label);
+    self.label = observable(data.label);
 };
 
 root(function () {

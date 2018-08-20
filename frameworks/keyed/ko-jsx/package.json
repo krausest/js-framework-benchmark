@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-ko-jsx",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ko-jsx"
@@ -17,9 +17,9 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
+    "@tko/computed": "4.0.0-alpha6.3",
     "babel-plugin-jsx-dom-expressions": "0.0.29",
-    "knockout": "3.4.2",
-    "ko-jsx": "0.0.17"
+    "ko-jsx": "0.0.18"
   },
   "devDependencies": {
     "@babel/core": "*",

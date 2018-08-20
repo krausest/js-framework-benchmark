@@ -1,4 +1,3 @@
-import ko from 'knockout'
 import { r, selectOn, delegateEvent } from 'ko-jsx'
 
 export default function({data, selected, run, runLots, add, update, clear, swapRows, select, del}) {
