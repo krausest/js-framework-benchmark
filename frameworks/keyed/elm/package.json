@@ -7,8 +7,7 @@
     "frameworkVersionFromPackage": "elm"
   },
   "scripts": {
-    "postinstall": "elm-package install -y",
-    "build-prod": "elm-make src/Main.elm --output=dist/main.js && uglifyjs dist/main.js --compress --mangle --output=dist/main.js"
+    "build-prod": "elm make src/Main.elm --optimize --output=dist/main.js && uglifyjs dist/main.js --compress 'pure_funcs=\"F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9\",pure_getters=true,keep_fargs=false,unsafe_comps=true,unsafe=true,passes=2' --output=dist/main.js && uglifyjs dist/main.js --mangle --output=dist/main.js"
   },
   "keywords": [
     "elm"
@@ -21,7 +20,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "elm": "0.18.0",
-    "uglify-js": "3.4.7"
+    "elm": "0.19.0-bugfix2",
+    "uglify-js": "3.4.8"
   }
 }

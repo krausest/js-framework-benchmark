@@ -1,18 +1,19 @@
-module Main exposing (..)
+module Main exposing (main)
 
-import Array.Hamt as Array exposing (Array)
-import Html exposing (Attribute, Html, a, button, div, h1, program, span, table, td, text, tr)
+import Array exposing (Array)
+import Browser
+import Html exposing (Attribute, Html, a, button, div, h1, span, table, td, text, tr)
 import Html.Attributes exposing (attribute, class, classList, href, id, type_)
 import Html.Events exposing (onClick)
 import Html.Keyed
-import Html.Lazy
-import Random.Pcg exposing (Generator, Seed)
+import Html.Lazy exposing (lazy, lazy2)
+import Random exposing (Generator, Seed)
 import String
 
 
-main : Program Never Model Msg
+main : Program Int Model Msg
 main =
-    program
+    Browser.element
         { view = view
         , update = update
         , init = init
@@ -20,76 +21,79 @@ main =
         }
 
 
-adjectives : List String
+adjectives : Generator String
 adjectives =
-    [ "pretty"
-    , "large"
-    , "big"
-    , "small"
-    , "tall"
-    , "short"
-    , "long"
-    , "handsome"
-    , "plain"
-    , "quaint"
-    , "clean"
-    , "elegant"
-    , "easy"
-    , "angry"
-    , "crazy"
-    , "helpful"
-    , "mushy"
-    , "odd"
-    , "unsightly"
-    , "adorable"
-    , "important"
-    , "inexpensive"
-    , "cheap"
-    , "expensive"
-    , "fancy"
-    ]
+    Random.uniform
+        "pretty"
+        [ "large"
+        , "big"
+        , "small"
+        , "tall"
+        , "short"
+        , "long"
+        , "handsome"
+        , "plain"
+        , "quaint"
+        , "clean"
+        , "elegant"
+        , "easy"
+        , "angry"
+        , "crazy"
+        , "helpful"
+        , "mushy"
+        , "odd"
+        , "unsightly"
+        , "adorable"
+        , "important"
+        , "inexpensive"
+        , "cheap"
+        , "expensive"
+        , "fancy"
+        ]
 
 
-colours : List String
+colours : Generator String
 colours =
-    [ "red"
-    , "yellow"
-    , "blue"
-    , "green"
-    , "pink"
-    , "brown"
-    , "purple"
-    , "brown"
-    , "white"
-    , "black"
-    , "orange"
-    ]
+    Random.uniform
+        "red"
+        [ "yellow"
+        , "blue"
+        , "green"
+        , "pink"
+        , "brown"
+        , "purple"
+        , "brown"
+        , "white"
+        , "black"
+        , "orange"
+        ]
 
 
-nouns : List String
+nouns : Generator String
 nouns =
-    [ "table"
-    , "chair"
-    , "house"
-    , "bbq"
-    , "desk"
-    , "car"
-    , "pony"
-    , "cookie"
-    , "sandwich"
-    , "burger"
-    , "pizza"
-    , "mouse"
-    , "keyboard"
-    ]
+    Random.uniform
+        "table"
+        [ "chair"
+        , "house"
+        , "bbq"
+        , "desk"
+        , "car"
+        , "pony"
+        , "cookie"
+        , "sandwich"
+        , "burger"
+        , "pizza"
+        , "mouse"
+        , "keyboard"
+        ]
 
 
 buttons : List ( String, String, Msg )
 buttons =
     [ ( "run", "Create 1,000 rows", Create 1000 )
     , ( "runlots", "Create 10,000 rows", Create 10000 )
-    , ( "add", "Append 1,000 rows", Append 1000 )
-    , ( "update", "Update every 10th row", UpdateEvery 10 )
+    , ( "add", "Append 1,000 rows", AppendOneThousand )
+    , ( "update", "Update every 10th row", UpdateEveryTenth )
     , ( "clear", "Clear", Clear )
     , ( "swaprows", "Swap Rows", Swap )
     ]
@@ -115,118 +119,136 @@ btnPrimaryBlock ( buttonId, labelText, msg ) =
         ]
 
 
-viewKeyedRow : Row -> ( String, Html Msg )
-viewKeyedRow row =
-    ( toString row.id, Html.Lazy.lazy viewRow row )
+viewKeyedRow : Int -> Row -> ( String, Html Msg )
+viewKeyedRow selectedId row =
+    ( String.fromInt row.id, lazy2 viewRow (selectedId == row.id) row )
 
 
-viewRow : Row -> Html Msg
-viewRow { id, label, selected } =
+viewRow : Bool -> Row -> Html Msg
+viewRow isSelected { id, label } =
     tr
-        [ classList [ ( "danger", selected ) ] ]
-        [ td [ class "col-md-1" ] [ text (toString id) ]
-        , td
-            [ class "col-md-4" ]
-            [ a
-                [ href "#"
-                , onClick (Select id)
-                ]
-                [ text label ]
-            ]
-        , td
-            [ class "col-md-1" ]
-            [ a
-                [ href "#"
-                , onClick (Remove id)
-                ]
-                [ span
-                    [ class "glyphicon glyphicon-remove"
-                    , attribute "aria-hidden" "true"
-                    ]
-                    []
-                ]
-            ]
-        , td [ class "col-md-6" ] []
+        [ classList [ ( "danger", isSelected ) ] ]
+        [ td colMd1
+            [ text (String.fromInt id) ]
+        , td colMd4
+            [ a [ onClick (Select id) ] [ text label ] ]
+        , td colMd1
+            [ a [ onClick (Remove id) ] removeIcon ]
+        , spacer
         ]
+
+
+removeIcon : List (Html msg)
+removeIcon =
+    [ span
+        [ class "glyphicon glyphicon-remove"
+        , attribute "aria-hidden" "true"
+        ]
+        []
+    ]
+
+
+colMd1 : List (Attribute msg)
+colMd1 =
+    [ class "col-md-1" ]
+
+
+colMd4 : List (Attribute msg)
+colMd4 =
+    [ class "col-md-4" ]
+
+
+spacer : Html msg
+spacer =
+    td [ class "col-md-6" ] []
 
 
 view : Model -> Html Msg
 view model =
-    div
-        [ class "container" ]
-        [ div
-            [ class "jumbotron" ]
-            [ div
-                [ class "row" ]
-                [ div
-                    [ class "col-md-6" ]
-                    [ h1
-                        []
-                        [ text "Elm 0.18.0" ]
-                    ]
-                , div
-                    [ class "col-md-6" ]
-                    (List.map btnPrimaryBlock buttons)
-                ]
+    div containerClasses
+        [ jumbotron
+        , table tableClasses
+            [ tbody []
+                (Array.foldr (viewRowHelp model.selectedId) [] model.rows)
             ]
-        , table
-            [ class "table table-hover table-striped test-data" ]
-            [ tbody
-                []
-                (List.map viewKeyedRow model.rows)
-            ]
-        , span
-            [ class "preloadicon glyphicon glyphicon-remove"
-            , attribute "aria-hidden" "true"
-            ]
-            []
+        , footer
         ]
 
 
-createRandomBatch : Maybe Seed -> Int -> Int -> ( List Row, Seed )
-createRandomBatch maybeSeed amount lastId =
-    case maybeSeed of
-        Just seed ->
-            let
-                ( list, newSeed ) =
-                    Random.Pcg.step (batch amount) seed
-
-                row =
-                    createRow lastId
-            in
-            ( List.indexedMap row list, newSeed )
-
-        Nothing ->
-            Debug.crash "Attempting to create values without a seed!"
+containerClasses : List (Attribute msg)
+containerClasses =
+    [ class "container" ]
 
 
-createRow : Int -> Int -> String -> Row
-createRow lastId index label =
-    { id = lastId + index
-    , label = label
-    , selected = False
-    }
+tableClasses : List (Attribute msg)
+tableClasses =
+    [ class "table table-hover table-striped test-data" ]
+
+
+footer : Html msg
+footer =
+    span
+        [ class "preloadicon glyphicon glyphicon-remove"
+        , attribute "aria-hidden" "true"
+        ]
+        []
+
+
+jumbotron : Html Msg
+jumbotron =
+    div
+        [ class "jumbotron" ]
+        [ div
+            [ class "row" ]
+            [ div
+                [ class "col-md-6" ]
+                [ h1 [] [ text "Elm 0.19.0 (keyed)" ] ]
+            , div
+                [ class "col-md-6" ]
+                (List.map btnPrimaryBlock buttons)
+            ]
+        ]
+
+
+viewRowHelp : Int -> Row -> List ( String, Html Msg ) -> List ( String, Html Msg )
+viewRowHelp selectedId row elems =
+    viewKeyedRow selectedId row :: elems
+
+
+appendRandomEntries : Int -> Int -> ( Array Row, Seed ) -> ( Array Row, Seed )
+appendRandomEntries amount lastId pair =
+    if amount == 0 then
+        pair
+
+    else
+        let
+            ( array, seed ) =
+                pair
+
+            ( label, newSeed ) =
+                Random.step generator seed
+
+            id =
+                lastId + 1
+
+            newArray =
+                Array.push
+                    { id = id
+                    , label = label
+                    }
+                    array
+        in
+        appendRandomEntries (amount - 1) id ( newArray, newSeed )
 
 
 type Msg
     = Create Int
-    | Append Int
-    | UpdateEvery Int
+    | AppendOneThousand
+    | UpdateEveryTenth
     | Clear
     | Swap
     | Remove Int
     | Select Int
-    | UpdateSeed Seed
-
-
-get : Int -> Array a -> a
-get id arr =
-    case Array.get id arr of
-        Just row ->
-            row
-
-        Nothing ->
-            Debug.crash "Attempted to retrieve non-existant element from array"
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -235,130 +257,108 @@ update msg model =
         Create amount ->
             let
                 ( newRows, seed ) =
-                    createRandomBatch model.seed amount model.lastId
+                    appendRandomEntries amount model.lastId ( Array.empty, model.seed )
             in
             ( { model
                 | rows = newRows
-                , seed = Just seed
+                , seed = seed
                 , lastId = model.lastId + amount
               }
             , Cmd.none
             )
 
-        Append amount ->
+        AppendOneThousand ->
             let
+                amount =
+                    1000
+
                 ( newRows, seed ) =
-                    createRandomBatch model.seed amount model.lastId
+                    appendRandomEntries amount model.lastId ( model.rows, model.seed )
             in
             ( { model
-                | rows = model.rows ++ newRows
-                , seed = Just seed
+                | rows = newRows
+                , seed = seed
                 , lastId = model.lastId + amount
               }
             , Cmd.none
             )
 
-        UpdateEvery amount ->
-            ( { model | rows = List.indexedMap updateRow model.rows }, Cmd.none )
+        UpdateEveryTenth ->
+            ( { model | rows = updateEveryTenth 0 model.rows }, Cmd.none )
 
         Clear ->
-            ( { model | rows = [] }, Cmd.none )
+            ( { model | rows = Array.empty }, Cmd.none )
 
         Swap ->
-            if List.length model.rows > 998 then
-                let
-                    arr =
-                        model.rows
-                            |> Array.fromList
+            let
+                rows =
+                    model.rows
+            in
+            if Array.length rows > 998 then
+                case ( Array.get 1 rows, Array.get 998 rows ) of
+                    ( Just from, Just to ) ->
+                        ( { model
+                            | rows =
+                                rows
+                                    |> Array.set 1 to
+                                    |> Array.set 998 from
+                          }
+                        , Cmd.none
+                        )
 
-                    from =
-                        get 1 arr
-
-                    to =
-                        get 998 arr
-                in
-                ( { model
-                    | rows =
-                        arr
-                            |> Array.set 1 to
-                            |> Array.set 998 from
-                            |> Array.toList
-                  }
-                , Cmd.none
-                )
+                    ( _, _ ) ->
+                        ( model, Cmd.none )
 
             else
                 ( model, Cmd.none )
 
         Remove id ->
-            ( { model | rows = List.filter (\r -> r.id /= id) model.rows }, Cmd.none )
+            ( { model | rows = Array.filter (\r -> r.id /= id) model.rows }, Cmd.none )
 
         Select id ->
-            ( { model | rows = List.map (select id) model.rows }, Cmd.none )
-
-        UpdateSeed seed ->
-            ( { model | seed = Just seed }, Cmd.none )
+            ( { model | selectedId = id }, Cmd.none )
 
 
-updateRow : Int -> Row -> Row
-updateRow index row =
-    if index % 10 == 0 then
-        { row | label = row.label ++ " !!!" }
+updateEveryTenth : Int -> Array Row -> Array Row
+updateEveryTenth index rows =
+    case Array.get index rows of
+        Just row ->
+            rows
+                |> Array.set index { row | label = row.label ++ " !!!" }
+                |> updateEveryTenth (index + 10)
 
-    else
-        row
-
-
-select : Int -> Row -> Row
-select targetId ({ id, label, selected } as row) =
-    if id == targetId then
-        Row id label True
-
-    else if selected == True then
-        Row id label False
-
-    else
-        row
+        Nothing ->
+            rows
 
 
 type alias Model =
-    { seed : Maybe Seed
-    , rows : List Row
+    { seed : Seed
+    , rows : Array Row
     , lastId : Int
+    , selectedId : Int
     }
 
 
 type alias Row =
     { id : Int
     , label : String
-    , selected : Bool
     }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( { seed = Nothing
-      , rows = []
-      , lastId = 1
+init : Int -> ( Model, Cmd Msg )
+init systemTime =
+    ( { seed = Random.initialSeed systemTime
+      , rows = Array.empty
+      , lastId = 0
+      , selectedId = 0
       }
-    , Random.Pcg.generate UpdateSeed Random.Pcg.independentSeed
+    , Cmd.none
     )
-
-
-batch : Int -> Generator (List String)
-batch n =
-    Random.Pcg.list n generator
 
 
 generator : Generator String
 generator =
-    Random.Pcg.map (Maybe.withDefault "")
-        (Random.Pcg.map3
-            (Maybe.map3 (\a c n -> String.join " " [ a, c, n ]))
-            (Random.Pcg.sample adjectives)
-            (Random.Pcg.sample colours)
-            (Random.Pcg.sample nouns)
-        )
+    Random.map3 (\a c n -> a ++ " " ++ c ++ " " ++ n) adjectives colours nouns
 
 
 subscriptions : Model -> Sub Msg

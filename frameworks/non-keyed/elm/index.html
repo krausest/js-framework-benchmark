@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Elm v0.18.0</title>
+  <title>Elm v0.19.0</title>
   <link href="/css/currentStyle.css" rel="stylesheet"/>
 </head>
 <body>
   <div id='main'></div>
   <script src='dist/main.js'></script>
   <script type="text/javascript">
-  	Elm.Main.embed(document.getElementById('main'));
+    Elm.Main.init({node:document.getElementById('main'), flags: Date.now()});
   </script>
 </body>
 </html>
