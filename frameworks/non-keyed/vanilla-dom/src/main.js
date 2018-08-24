@@ -58,7 +58,7 @@ class VanillaDomComponent {
   }
   del(e) {
       startMeasure("delete");
-      this.state.data.splice(e.currentTarget.dataset['index'], 1);
+      this.state.data.splice(e.target.dataset['index'], 1);
       this.render(this.state)
       stopMeasure();
   }
@@ -85,6 +85,14 @@ class VanillaDomComponent {
       }
       this.render(this.state)
       stopMeasure();
+  }
+  handleClick(e) {
+    if(e.target.matches('.select')) {
+      this.select(e)      
+    }
+    if(e.target.matches('.remove')) {
+      this.del(e)
+    }
   }
   itemClass(index) {
     return this.selected == index ? 'danger' : ''

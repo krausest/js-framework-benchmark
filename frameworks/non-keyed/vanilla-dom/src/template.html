@@ -29,12 +29,12 @@
 </div>
 <table class="table table-hover table-striped test-data">
   <tbody>
-    <tr repeat-for="{{st.data}}" class="{{this.itemClass(i)}}">
+    <tr repeat-for="{{st.data}}" class="{{this.itemClass(i)}}" on-click="this.handleClick">
       <td class="col-md-1">{{items[i].id}}</td>
       <td class="col-md-4">
-        <a on-click="this.select" data-index="{{i}}">{{items[i].label}}</a>
+        <a class="select" data-index="{{i}}">{{items[i].label}}</a>
       </td>
-      <td class="col-md-1"><a data-index="{{i}}" on-click="this.del"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+      <td class="col-md-1"><a><span data-index="{{i}}" class="glyphicon glyphicon-remove remove" aria-hidden="true"></span></a></td>
       <td class="col-md-6"></td>
     </tr>
   </tbody>
