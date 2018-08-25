@@ -1,6 +1,5 @@
 'use strict';
 
-var {observer} = require("mobx-react");
 var {observable, computed, action} = require ("mobx");
 
 function _random(max) {
@@ -43,21 +42,21 @@ export class Store {
             data.push(row(this, adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] ));
         return data;
     }
+
     @action updateData(mod = 10) {
         for (let i=0;i<this.data.length;i+=10) {
             this.data[i].label = this.data[i].label + ' !!!';
         }
     }
     @action delete(row) {
-        const idx = this.data.indexOf(row);
-        this.data.splice(idx, 1);
+        this.data.remove(row);
     }
     @action run() {
-        this.data = this.buildData();
+        this.data.replace(this.buildData());
         this.selected = undefined;
     }
     @action add() {
-        this.data = this.data.concat(this.buildData(1000));
+        this.data.spliceWithArray(this.data.length, 0, this.buildData(1000));
     }
     @action update() {
         this.updateData();
@@ -66,11 +65,11 @@ export class Store {
         this.selected = row;
     }
     @action runLots() {
-        this.data = this.buildData(10000);
+        this.data.replace(this.buildData(10000));
         this.selected = undefined;
     }
     @action clear() {
-        this.data = [];
+        this.data.clear();
         this.selected = undefined;
     }
     @action swapRows() {
