@@ -24,11 +24,7 @@ for (let framework of args.path) {
             cwd: dir,
             stdio: 'inherit'
         });
-        exec('npm install && npm run build-prod', {
-            cwd: dir,
-            stdio: 'inherit'
-        });
-        }
+    }
 }
 exec('npm run index', {
     cwd: 'webdriver-ts',
