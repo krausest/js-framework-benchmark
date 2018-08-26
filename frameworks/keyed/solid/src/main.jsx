@@ -1,4 +1,4 @@
-import { S, State, memo } from 'solid-js';
+import { State, root, memo } from 'solid-js';
 import { r, selectOn, delegateEvent } from 'solid-js/dom';
 
 function _random (max) {
@@ -22,7 +22,7 @@ function buildData(count) {
 }
 
 function App() {
-  let rowId, selectClass, linkSelect, linkRemove;
+  let rowId, selectClass, clickSelect, clickRemove, tbody;
   const state = new State({ data: [], selected: null });
 
   return <div class='container'>
@@ -49,16 +49,16 @@ function App() {
         </div>
       </div></div>
     </div></div>
-    <table class='table table-hover table-striped test-data'><tbody>{
+    <table class='table table-hover table-striped test-data'><tbody ref={ tbody }>{
       (selectClass = selectOn(() => state.selected, (el, selected) => el.className = selected ? 'danger' : ''),
-      linkSelect = delegateEvent('click', onSelect),
-      linkRemove = delegateEvent('click', onRemove),
+      clickSelect = delegateEvent(tbody, 'click', onSelect),
+      clickRemove = delegateEvent(tbody, 'click', onRemove),
       memo(row =>
         (rowId = row.sample('id'),
-        <tr fn={selectClass(rowId)}>
-          <td class='col-md-1'>{/*@static*/ rowId}</td>
-          <td class='col-md-4'><a fn={linkSelect(rowId)}>{row.label}</a></td>
-          <td class='col-md-1'><a fn={linkRemove(rowId)}><span class='delete glyphicon glyphicon-remove' /></a></td>
+        <tr $selectClass={ rowId }>
+          <td class='col-md-1' textContent={(( rowId ))} />
+          <td class='col-md-4'><a $clickSelect={ rowId }>{ row.label }</a></td>
+          <td class='col-md-1'><a $clickRemove={ rowId }><span class='delete glyphicon glyphicon-remove' /></a></td>
           <td class='col-md-6'/>
         </tr>)
       )(() => state.data))
@@ -129,4 +129,4 @@ function App() {
   }
 }
 
-S.root(() => document.getElementById("main").appendChild(<App />))
+root(() => document.getElementById("main").appendChild(<App />))

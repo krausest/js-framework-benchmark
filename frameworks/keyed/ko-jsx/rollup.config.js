@@ -1,11 +1,12 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
-import uglify from 'rollup-plugin-uglify';
+import { terser } from 'rollup-plugin-terser';
 
 const plugins = [
 	babel({
-    exclude: 'node_modules/**'
+		exclude: 'node_modules/**',
+		plugins: ["jsx-dom-expressions"]
   }),
 	resolve({ extensions: ['.js', '.jsx'] }),
 	commonjs({
@@ -14,7 +15,7 @@ const plugins = [
 ];
 
 if (process.env.production) {
-	plugins.push(uglify());
+	plugins.push(terser());
 }
 
 export default {
