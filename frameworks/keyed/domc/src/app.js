@@ -1,6 +1,6 @@
 
 import domc from 'domc'
-import '../node_modules/domc/vMap.js'
+import '../node_modules/domc/vFor.js'
 
 let did = 1
 const buildData = (count) => {
