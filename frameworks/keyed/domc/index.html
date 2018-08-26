@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>domc-non-keyed</title>
+    <title>domc-keyed</title>
     <link href="/css/currentStyle.css" rel="stylesheet"/>
     <script src='dist/app.min.js' type="module"></script>
 </head>
@@ -43,7 +43,7 @@
     </div>
     <table class="table table-hover table-striped test-data">
         <tbody>
-            <tr v-map="item of data" class="${item.id === selected ? 'danger' : ''}">
+            <tr v-for="item of data" class="${item.id === selected ? 'danger' : ''}">
                 <td class="col-md-1">${item.id}</td>
                 <td class="col-md-4">
                     <a onclick="${select(item)}">${item.label}</a>

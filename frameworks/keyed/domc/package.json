@@ -2,13 +2,13 @@
   "name": "js-framework-benchmark-domc",
   "version": "1.0.0",
   "description": "domc demo",
-  "main": "index.js",
-  "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "domc"
-  },
+  "main": "dist/app.min.js",
   "scripts": {
     "build-dev": "rollup -c -w",
     "build-prod": "rollup -c"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "domc"
   },
   "repository": {
     "type": "git",
