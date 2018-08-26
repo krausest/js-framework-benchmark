@@ -4,10 +4,15 @@ const buble = require('rollup-plugin-buble');
 const uglify = require('rollup-plugin-uglify').uglify;
 const CleanCSS = require('clean-css');
 const path = require("path");
+const yargs = require("yargs");
 
 const start = +new Date();
 
 const RESULTS_PATH = path.resolve(__dirname + '/../../webdriver-ts/results');
+
+let args = yargs(process.argv)
+    .usage("$0 [--framework Framework1 Framework2 ...]")
+    .array("framework").argv;
 
 function encodeBench(obj) {
     return [
@@ -28,7 +33,7 @@ let libs = {
 };
 
 // grab result files, group by framework, bench types and encode benches into arrays
-fs.readdirSync(RESULTS_PATH).filter(file => file.endsWith('.json')).forEach(file => {
+fs.readdirSync(RESULTS_PATH).filter(file => file.endsWith('.json')).filter(file => !args.framework || args.framework.length===0 || args.framework.some(f => file.indexOf(f)>-1)).forEach(file => {
     var r = JSON.parse(fs.readFileSync(RESULTS_PATH + "/" + file, 'utf8'));
     var implGroup = r.keyed ? libs.keyed : libs.unkeyed;
     var libName = r.framework;

@@ -19,7 +19,8 @@
     "clean-css": "*",
     "rollup": "*",
     "rollup-plugin-buble": "*",
-    "rollup-plugin-uglify": "*"
+    "rollup-plugin-uglify": "*",
+    "yargs": "^12.0.1"
   },
   "dependencies": {}
 }
