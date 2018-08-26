@@ -90,7 +90,7 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
 }
 
 let args = yargs(process.argv)
-    .usage("$0 [--framework Framework1,Framework2,...] [--benchmark Benchmark1,Benchmark2,...] [--count n] [--exitOnError]")
+    .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError]")
     .help('help')
     .default('check', 'false')
     .default('fork', 'true')
