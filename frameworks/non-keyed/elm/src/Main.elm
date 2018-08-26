@@ -2,10 +2,9 @@ module Main exposing (main)
 
 import Array exposing (Array)
 import Browser
-import Html exposing (Attribute, Html, a, button, div, h1, span, table, td, text, tr)
+import Html exposing (Attribute, Html, a, button, div, h1, span, table, tbody, td, text, tr)
 import Html.Attributes exposing (attribute, class, classList, href, id, type_)
 import Html.Events exposing (onClick)
-import Html.Keyed
 import Html.Lazy exposing (lazy, lazy2)
 import Random exposing (Generator, Seed)
 import String
@@ -99,11 +98,6 @@ buttons =
     ]
 
 
-tbody : List (Attribute msg) -> List ( String, Html msg ) -> Html msg
-tbody attrs children =
-    Html.Keyed.node "tbody" attrs children
-
-
 btnPrimaryBlock : ( String, String, Msg ) -> Html Msg
 btnPrimaryBlock ( buttonId, labelText, msg ) =
     div
@@ -119,9 +113,9 @@ btnPrimaryBlock ( buttonId, labelText, msg ) =
         ]
 
 
-viewKeyedRow : Int -> Row -> ( String, Html Msg )
-viewKeyedRow selectedId row =
-    ( String.fromInt row.id, lazy2 viewRow (selectedId == row.id) row )
+viewLazyRow : Int -> Row -> Html Msg
+viewLazyRow selectedId row =
+    lazy2 viewRow (selectedId == row.id) row
 
 
 viewRow : Bool -> Row -> Html Msg
@@ -202,7 +196,7 @@ jumbotron =
             [ class "row" ]
             [ div
                 [ class "col-md-6" ]
-                [ h1 [] [ text "Elm 0.19.0 (keyed)" ] ]
+                [ h1 [] [ text "Elm 0.19.0 (non-keyed)" ] ]
             , div
                 [ class "col-md-6" ]
                 (List.map btnPrimaryBlock buttons)
@@ -210,9 +204,9 @@ jumbotron =
         ]
 
 
-viewRowHelp : Int -> Row -> List ( String, Html Msg ) -> List ( String, Html Msg )
+viewRowHelp : Int -> Row -> List (Html Msg) -> List (Html Msg)
 viewRowHelp selectedId row elems =
-    viewKeyedRow selectedId row :: elems
+    viewLazyRow selectedId row :: elems
 
 
 appendRandomEntries : Int -> Int -> ( Array Row, Seed ) -> ( Array Row, Seed )
