@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-vanilla-dom",
+  "version": "1.0.0",
+  "description": "vanilla-dom demo",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
+  },
+  "author": "Maciej Gibas",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@vanilla-ftw/vanilla-dom"
+  },
+  "devDependencies": {
+    "@vanilla-ftw/vanilla-dom-loader": "0.0.10",
+    "webpack": "4.16.4",
+    "webpack-cli": "3.1.0"
+  }
+}
