@@ -7,17 +7,20 @@
         "moduleResolution": "node",
         "target": "es2017",
         "noLib": false,
-        "allowJs": false
+        "allowJs": false,
+        "typeRoots": ["node_modules/@types"]
     },
     "files": [
         "./src/common.ts",
         "./src/benchmarks.ts",
         "./src/webdriverAccess.ts",
         "./src/benchmarkRunner.ts",
+        "./src/forkedBenchmarkRunner.ts",
         "./src/createResultJS.ts",
         "./src/createIndex.ts",
         "./src/runCheck.ts",
-        "./src/nonKeyed.ts"
+        "./src/updateFrameworks.ts",
+        "./src/isKeyed.ts"
     ],
     "exclude": [
         "node_modules"

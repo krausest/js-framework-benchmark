@@ -1,7 +1,28 @@
+import * as fs from 'fs';
+import * as path from 'path';
+
 export interface JSONResult {
-    framework: string, benchmark: string, type: string, min: number,
+    framework: string, keyed: boolean, benchmark: string, type: string, min: number,
         max: number, mean: number, geometricMean: number,
         standardDeviation: number, median: number, values: Array<number>
+}
+
+export interface BenchmarkError {
+    imageFile : string;
+    exception : string
+}
+
+export interface ErrorsAndWarning {
+    errors: BenchmarkError[];
+    warnings: String[];
+}
+
+export interface BenchmarkOptions {
+    outputDirectory: string;
+    port: string;
+    headless?: boolean;
+    chromeBinaryPath?: string;
+    numIterationsForAllBenchmarks: number;
 }
 
 export let config = {
@@ -13,13 +34,16 @@ export let config = {
     LOG_PROGRESS: true,
     LOG_DETAILS: false,
     LOG_DEBUG: false,
+    LOG_TIMELINE: false,
     EXIT_ON_ERROR: false,
     STARTUP_DURATION_FROM_EVENTLOG: true,
-    STARTUP_SLEEP_DURATION: 1000
+    STARTUP_SLEEP_DURATION: 1000,
+    FORK_CHROMEDRIVER: true
 }
 
 export interface FrameworkData {
     name: string;
+    fullNameWithKeyedAndVersion: string;
     uri: string;
     keyed: boolean;
     useShadowRoot: boolean;
@@ -30,96 +54,165 @@ interface Options {
     useShadowRoot? : boolean;
 }
 
-function f(name: string, keyed: boolean, options: Options = {uri: null, useShadowRoot: false}): FrameworkData {
-    let ret = {name, keyed, uri: options.uri ? options.uri : name, useShadowRoot: options.useShadowRoot};
-    return ret;
+type KeyedType = 'keyed' | 'non-keyed';
+
+function computeHash(keyedType: KeyedType, directory: string) {
+    return keyedType+'/'+directory;
 }
 
-export let frameworks = [
-    f("angular-light-v0.14.1-keyed", true),
-    f("angular-v1.6.3-keyed", true),
-    f("angular-v5.2.2-keyed", true),
-    f("angular-v5.2.2-no-zone-keyed", true),
-    f("angular-v5.2.2-non-keyed", false),
-    f("aurelia-v1.1.5-non-keyed", false),
-    f("apprun-v1.8.3-keyed", true),
-    f("apprun-v1.8.3-non-keyed", false),
-    f("attodom-v0.5.2-keyed", true),
-    f("binding.scala-v10.0.1-keyed", true, {uri: "binding.scala-v10.0.1-keyed/target/web/stage"}),
-    f("bobril-v8.0.1-keyed", true),
-    f("choo-v6.5.0-keyed", true),
-    f("cyclejs-dom-v19.3.0-non-keyed", false),
-    f("datum-v0.10.0-keyed", true),
-    f("dio-v8.1.1-keyed", true),
-    f("dio-v8.1.1-non-keyed", false),
-    f("dojo2-rc-keyed", true, {uri: "dojo2-rc-keyed/output/dist"}),
-    f("dojo2-rc-non-keyed", false, {uri: "dojo2-rc-non-keyed/output/dist"}),
-    f("domvm-v3.2.4-non-keyed", false),
-    f("domvm-v3.2.4-keyed", true),
-    f("elm-v0.18.0-keyed", true),
-    f("ember-v3.0.0-keyed", true, {uri: "ember-v3.0.0-keyed/dist"}),
-    f("etch-v0.12.5-keyed", true),
-    f("etch-v0.12.5-non-keyed", false),
-    f("glimmer-v0.9.1-keyed", true, {uri: "glimmer-v0.9.1-keyed/dist"}),
-    f("gruu-v1.7.3-non-keyed", false),
-    f("halogen-v2.1.0-non-keyed", false),
-    f("hyperapp-v1.2.0-non-keyed", false),
-    f("hyperapp-v1.2.0-keyed", true),
-    f("hyperhtml-v2.4.0-keyed", true),
-    f("inferno-v4.0.6-keyed", true),
-    f("inferno-v4.0.6-non-keyed", false),
-    f("ivi-v0.9.1-keyed", true),
-    f("knockout-v3.4.1-keyed", true),
-    f("lit-html-v0.9.0-keyed", true),
-    f("lit-html-v0.9.0-non-keyed", false),
-    f("maik-h-v2.5.2-keyed", true),
-    f("maik-h-v2.5.2-non-keyed", false),
-    f("marionette-v3.5.1-domapi-keyed", true),
-    f("marionette-v3.5.1-keyed", true),
-    f("marko-v4.5.6-keyed", true),
-    f("maquette-v3.0.1-keyed", true),
-    f("miso-0.18.0.0-keyed", true, {uri: "miso-0.18.0.0-keyed/dist-bundle"}),
-    f("mithril-v1.1.1-keyed", true),
-    f("moon-v0.11.0", false),
-    f("nervjs-v1.2.8-keyed", true),
-    f("nx-v1.0.0-beta.2.0.1-keyed", true),
-    f("nx-v1.0.0-beta.2.0.1-non-keyed", false),
-    f("petit-dom-v0.0.12-keyed", true),
-    f("plastiq-v1.33.0-keyed", true),
-    f("polymer-v2.0.0-non-keyed", false, {uri: "polymer-v2.0.0-non-keyed/build/es6-bundled", useShadowRoot: true}),
-    f("preact-v8.2.6-keyed", true),
-    f("pux-v11.0.0-non-keyed", false),
-    f("ractive-v0.9.9-keyed", true),
-    f("ractive-v0.9.9-non-keyed", false),
-    f("ractive-edge-keyed", true),
-    f("ractive-edge-non-keyed", false),
-    f("react-lite-v0.15.30-keyed", true),
-    f("react-v16.1.0-keyed", true),
-    f("react-v16.1.0-non-keyed", false),
-    f("react-v16.1.0-easy-state-v5.0.0-keyed", true),
-    f("react-v16.1.0-mobX-v3.3.1-keyed", true),
-    f("react-v16.1.0-redux-v3.7.2-keyed", true),
-    f("redom-v3.10.1-keyed", true),
-    f("redom-v3.10.1-non-keyed", false),
-    f("reflex-dom-v0.4-keyed", true, {uri: "reflex-dom-v0.4-keyed/bundled-dist"}),
-    f("riot-v3.7.4-non-keyed", false),
-    f("rivets-v0.9.6-non-keyed", false),
-    f("rx-domh-v0.0.2-rxjs-v5.3.0-keyed", true),
-    f("simulacra-v2.1.5-non-keyed", false),
-    f("slim-js-v3.0.2-non-keyed", false),
-    f("stem-v0.2.70-non-keyed", false),
-    f("surplus-v0.5.0-keyed", true),
-    f("surplus-v0.5.0-non-keyed", false),
-    f("svelte-v1.58.5-keyed", true),
-    f("svelte-v1.58.5-non-keyed", false),
-    f("tsers-v1.0.0-non-keyed", false),
-    f("thermite-v4.0.0-non-keyed", false),
-    f("vanillajs-non-keyed", false),
-    f("vanillajs-keyed", true),
-    f("vidom-v0.9.8-keyed", true),
-    f("san-v3.2.6-non-keyed", false),
-    f("vue-v2.5.3-keyed", true),
-    f("vue-v2.5.3-non-keyed", false),
-    f("vuera-v0.1.3-non-keyed", false),
-    f("reagent-v0.8-keyed", true)
-]
+export interface FrameworkId {
+    keyedType: KeyedType;
+    directory: string;
+}
+
+
+abstract class FrameworkVersionInformationValid implements FrameworkId {
+    public url: string;
+    constructor(public keyedType: KeyedType, public directory: string, customURL: string|undefined, public useShadowRoot: boolean) {
+        this.keyedType = keyedType;
+        this.directory = directory;
+        this.url = 'frameworks/'+keyedType+'/'+directory + (customURL ? customURL : '');
+    }
+}
+
+export class FrameworkVersionInformationDynamic extends FrameworkVersionInformationValid  {
+    constructor(keyedType: KeyedType, directory: string, public packageNames: string[],
+        customURL: string|undefined, useShadowRoot: boolean = false) {
+            super(keyedType, directory, customURL, useShadowRoot);
+        }
+    }
+
+export class FrameworkVersionInformationStatic extends FrameworkVersionInformationValid  {
+    constructor(keyedType: KeyedType, directory: string, public frameworkVersion: string, customURL: string|undefined, useShadowRoot: boolean = false) {
+        super(keyedType, directory, customURL, useShadowRoot);
+    }
+    getFrameworkData(): FrameworkData {
+        return {name: this.directory,
+            fullNameWithKeyedAndVersion: this.directory+(this.frameworkVersion ? '-v'+this.frameworkVersion : '')+'-'+this.keyedType,
+            uri: this.url,
+            keyed: this.keyedType === 'keyed',
+            useShadowRoot: this.useShadowRoot
+        }
+    }
+}
+
+export class FrameworkVersionInformationError implements FrameworkId  {
+    constructor(public keyedType: KeyedType, public directory: string, public error: string) {}
+}
+
+export type FrameworkVersionInformation = FrameworkVersionInformationDynamic | FrameworkVersionInformationStatic | FrameworkVersionInformationError;
+
+export class PackageVersionInformationValid {
+    constructor(public packageName: string, public version: string) {}
+}
+
+export class PackageVersionInformationErrorUnknownPackage  {
+    constructor(public packageName: string) {}
+}
+
+export class PackageVersionInformationErrorNoPackageJSONLock  {
+    constructor() {}
+}
+
+export type PackageVersionInformation = PackageVersionInformationValid | PackageVersionInformationErrorUnknownPackage | PackageVersionInformationErrorNoPackageJSONLock;
+
+
+export function loadFrameworkVersionInformation(): FrameworkVersionInformation[] {
+    let result = new Array<FrameworkVersionInformation>();
+    let frameworksPath = path.resolve('..','frameworks');
+    ['keyed','non-keyed'].forEach((keyedType: KeyedType) => {
+        let directories = fs.readdirSync(path.resolve(frameworksPath, keyedType));
+
+        for (let directory of directories) {
+            let packageJSONPath = path.resolve(frameworksPath, keyedType, directory, 'package.json');
+            if (fs.existsSync(packageJSONPath)) {
+                let packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, 'utf8'));
+                if (packageJSON['js-framework-benchmark']) {
+                    if (packageJSON['js-framework-benchmark']['frameworkVersionFromPackage']) {
+                        result.push(new FrameworkVersionInformationDynamic(keyedType, directory,
+                            packageJSON['js-framework-benchmark']['frameworkVersionFromPackage'].split(':'),
+                            packageJSON['js-framework-benchmark']['customURL'],
+                            packageJSON['js-framework-benchmark']['useShadowRoot']
+                        ));
+                    } else if (typeof packageJSON['js-framework-benchmark']['frameworkVersion'] === 'string') {
+                        result.push(new FrameworkVersionInformationStatic(keyedType, directory,
+                            packageJSON['js-framework-benchmark']['frameworkVersion'],
+                            packageJSON['js-framework-benchmark']['customURL'],
+                            packageJSON['js-framework-benchmark']['useShadowRoot']
+                        ));
+                    } else {
+                        result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'frameworkVersionFromPackage\' or \'frameworkVersion\' in the \'js-framework-benchmark\'.property'));
+                    }
+                } else {
+                    result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'js-framework-benchmark\' property'));
+                }
+            } else {
+                result.push(new FrameworkVersionInformationError(keyedType, directory, 'No package.json found'));
+            }
+        }
+    });
+    return result;
+}
+
+export class PackageVersionInformationResult {
+    public versions: Array<PackageVersionInformation> = [];
+    constructor(public framework: FrameworkVersionInformationDynamic) {}
+    public add(packageVersionInformation: PackageVersionInformation) {
+        this.versions.push(packageVersionInformation);
+    }
+    public getVersionName(): string {
+        if (this.versions.filter(pi => pi instanceof PackageVersionInformationErrorNoPackageJSONLock).length>0) {
+            return "invalid (no package-lock)";
+        }
+        return this.versions.map(version => (version instanceof PackageVersionInformationValid) ? version.version : 'invalid').join(' + ');
+    }
+    getFrameworkData(): FrameworkData {
+        return {name: this.framework.directory,
+            fullNameWithKeyedAndVersion: this.framework.directory+'-v'+this.getVersionName()+'-'+this.framework.keyedType,
+            uri: this.framework.url,
+            keyed: this.framework.keyedType === 'keyed',
+            useShadowRoot: this.framework.useShadowRoot
+        }
+    }
+}
+
+export function determineInstalledVersions(framework: FrameworkVersionInformationDynamic): PackageVersionInformationResult {
+    let frameworksPath = path.resolve('..','frameworks');
+    let packageLockJSONPath = path.resolve(frameworksPath, framework.keyedType, framework.directory, 'package-lock.json');
+    let versions = new PackageVersionInformationResult(framework);
+    if (fs.existsSync(packageLockJSONPath)) {
+        let packageLock = JSON.parse(fs.readFileSync(packageLockJSONPath, 'utf8'));
+        for (let packageName of framework.packageNames) {
+            if (packageLock.dependencies[packageName]) {
+                versions.add(new PackageVersionInformationValid(packageName, packageLock.dependencies[packageName].version));
+            } else {
+                versions.add(new PackageVersionInformationErrorUnknownPackage(packageName));
+            }
+        }
+    } else {
+        versions.add(new PackageVersionInformationErrorNoPackageJSONLock());
+    }
+    return versions;
+}
+
+export function initializeFrameworks(): FrameworkData[] {
+    let frameworkVersionInformations = loadFrameworkVersionInformation();
+
+    let frameworks = frameworkVersionInformations.map(frameworkVersionInformation => {
+        if (frameworkVersionInformation instanceof FrameworkVersionInformationDynamic) {
+            return determineInstalledVersions(frameworkVersionInformation).getFrameworkData();
+        } else if (frameworkVersionInformation instanceof FrameworkVersionInformationStatic) {
+            return frameworkVersionInformation.getFrameworkData();
+        } else {
+            console.log(`WARNING: Ignoring package ${frameworkVersionInformation.keyedType}/${frameworkVersionInformation.directory}: ${frameworkVersionInformation.error}`)
+            return null;
+        }
+    });
+
+    frameworks = frameworks.filter(f => f!==null);
+    if (config.LOG_DETAILS) {
+        console.log("All available frameworks: ");
+        console.log(frameworks.map(fd => fd.fullNameWithKeyedAndVersion));
+    }
+    return frameworks;
+}

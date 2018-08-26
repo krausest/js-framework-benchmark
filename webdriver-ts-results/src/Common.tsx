@@ -3,7 +3,6 @@ var jStat:any = require('jStat').jStat;
 
 export interface Framework {
     name: string;
-    uri: string;
     keyed: boolean;
 }
 
@@ -74,6 +73,8 @@ export class TableResultValueEntry implements TableResultEntry {
                     <span className="deviation">{this.standardDeviation.toFixed(1)}</span>
                     <br />
                     <span className="factor">({this.factor.toFixed(1)})</span>
+                    <br/>
+                    <span className="factor">{this.statisticallySignificantFactor}</span>
                 </td>);
     }
 }
@@ -101,24 +102,24 @@ export function convertToMap(results: Array<Result>): ResultLookup {
     return (benchmark: Benchmark, framework: Framework) => {
         let m = resultMap.get(benchmark.id);
         if (!m) return null;
-        let v = m.get(framework.name);        
+        let v = m.get(framework.name);
         if (!v) return null;
         return v;
     }
 }
 
 let statisticComputeColor = function(sign: number, pValue: number): [string, string] {
-    if (pValue < 0.90) {
+    if (pValue > 0.10) {
         return ['#fff','#000'];
-    } 
+    }
     if (sign < 0) {
-        let a = (pValue - 0.9) * 10.0;
+        let a = (0.1 - pValue) * 10.0;
         let r = 0;
         let g = (1.0-a)* 255 + a * 160;
         let b = 0;
         return [`rgb(${r.toFixed(0)}, ${g.toFixed(0)}, ${b.toFixed(0)})`, '#fff'];
     } else  {
-        let a = (pValue - 0.9) * 10.0;
+        let a = (0.1 - pValue) * 10.0;
         let r = (1.0-a)* 255 + a * 160;
         let g = 0;
         let b = 0;
@@ -139,7 +140,7 @@ export class ResultTableData {
     resultsStartup: Array<Array<TableResultValueEntry|null>>;
     resultsMEM: Array<Array<TableResultValueEntry|null>>;
 
-    constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup, 
+    constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup,
         public selectedFrameworks: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, nonKeyed: boolean|undefined, sortKey: string,
         public compareWith: Framework|undefined,
         public useMedian: boolean) {
@@ -158,7 +159,7 @@ export class ResultTableData {
                     let vals = result.values.slice(0);
                     result.mean = jStat.mean(vals);
                     result.median = jStat.median(vals);
-                    result.standardDeviation = jStat.stdev(vals);
+                    result.standardDeviation = jStat.stdev(vals, true);
                     result.count = vals.length;
                 }
             });
@@ -173,25 +174,25 @@ export class ResultTableData {
         this.resultsStartup = this.benchmarksStartup.map(benchmark => this.computeFactors(benchmark, true));
         this.resultsMEM = this.benchmarksMEM.map(benchmark => this.computeFactors(benchmark, false));
 
-        this.geomMeanCPU = this.frameworks.map((framework, idx) => { 
+        this.geomMeanCPU = this.frameworks.map((framework, idx) => {
             let resultsForFramework = this.resultsCPU.map(arr => arr[idx]);
             return this.computeGeometricMean(framework, this.benchmarksCPU, resultsForFramework);
-        });        
+        });
         this.sortBy(sortKey);
     }
     sortBy(sortKey: string) {
         let zipped = this.frameworks.map((f,frameworkIndex) => {
             let sortValue;
             if (sortKey === SORT_BY_NAME) sortValue = f.name;
-            else if (sortKey === SORT_BY_GEOMMEAN) sortValue = this.geomMeanCPU[frameworkIndex]!.mean;
+            else if (sortKey === SORT_BY_GEOMMEAN) sortValue = this.geomMeanCPU[frameworkIndex]!.mean || Number.POSITIVE_INFINITY;
             else {
                 let cpuIdx = this.benchmarksCPU.findIndex(b => b.id === sortKey);
                 let startupIdx = this.benchmarksStartup.findIndex(b => b.id === sortKey);
                 console.log("startupIdx", startupIdx);
                 let memIdx = this.benchmarksMEM.findIndex(b => b.id === sortKey);
                 if (cpuIdx>-1) sortValue = this.resultsCPU[cpuIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsCPU[cpuIdx][frameworkIndex]!.mean;
-                else if (startupIdx>-1) sortValue = this.resultsStartup[startupIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsStartup[startupIdx][frameworkIndex]!.mean;    
-                else if (memIdx>-1) sortValue = this.resultsMEM[memIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsMEM[memIdx][frameworkIndex]!.mean;    
+                else if (startupIdx>-1) sortValue = this.resultsStartup[startupIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsStartup[startupIdx][frameworkIndex]!.mean;
+                else if (memIdx>-1) sortValue = this.resultsMEM[memIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsMEM[memIdx][frameworkIndex]!.mean;
                 else throw `sortKey ${sortKey} not found`;
             }
             return {
@@ -235,7 +236,7 @@ export class ResultTableData {
             let result = this.results(benchmark, f);
             if (result === null) return null;
             else {
-                let mean = this.useMedian ? result.median : result.mean;
+                let mean = (this.useMedian && !compareWithResults) ? result.median : result.mean;
                 let factor = clamp ? Math.max(16, mean) / Math.max(16, min) : mean/min;
                 let standardDeviation = result.standardDeviation;
 
@@ -244,30 +245,22 @@ export class ResultTableData {
                 // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
                 // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
                 if (compareWithResults) {
-                    let compareWithMean = this.useMedian ? compareWithResults.median : compareWithResults.mean;
-                    let n = result.count || 20;
-                    let m = compareWithResults.count || 20;
-                    console.log("n+m-2",n+m-2);
-                    let s2 = (n-1)*Math.pow(result.standardDeviation,2) + (m-1)*Math.pow(compareWithResults.standardDeviation,2) / (n+m-2)
-                    let s = Math.sqrt(s2);
-                    let t = Math.sqrt((n * m) / (n + m))*(mean - compareWithMean - 0)/s;                            
-                    let talpha = jStat.studentt.inv( 0.975, n + m - 2);
-                    console.log("talpha",talpha, "t", t);
-                    statisticalResult = t.toFixed(3) + ": " +talpha.toFixed(3);
-                    let p = jStat.studentt.cdf( Math.abs(t), n + m -2 );
+                    let compareWithMean = compareWithResults.mean;
+                    let stdDev = result.standardDeviation;
+                    let compareWithResultsStdDev = compareWithResults.standardDeviation;
+
+                    let x1 = mean;
+                    let x2 = compareWithMean;
+                    let s1_2 = stdDev*stdDev;
+                    let s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
+                    let n1 = 10;
+                    let n2 = 10;
+                    let ny = Math.pow(s1_2/n1 + s2_2/n2, 2) /
+                            (s1_2*s1_2 / (n1*n1*(n1-1)) + s2_2*s2_2/(n2*n2*(n2-1)));
+                    let t = (x1-x2)/Math.sqrt(s1_2/n1 + s2_2/n2);
+                    let p = (1.0-jStat.studentt.cdf( Math.abs(t), ny ))*2;
                     statisticalCol = statisticComputeColor(t, p);
-                    statisticalResult += ": " + p.toFixed(3) + ";" + statisticalCol;
-                    if (mean < compareWithMean) {
-                        // H0 X >= Y, H1 X < Y
-                        if (t < -talpha) {
-                            statisticalResult += " faster";
-                        }
-                    } else {
-                        // H0 X <= Y, H1 X > Y
-                        if (t > talpha) {
-                            statisticalResult += " slower";
-                        }
-                    }
+                    statisticalResult = (p*100).toFixed(3)+"%";
                 }
                 return new TableResultValueEntry(f.name, mean, standardDeviation, factor, statisticalResult, statisticalCol);
             }

@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "name": "js-framework-benchmark-ivi",
+  "version": "1.0.0",
+  "description": "Benchmark for ivi",
+  "author": "Stefan Krause",
+  "license": "Apache-2",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": "https://github.com/krausest/js-framework-benchmark",
+  "keywords": [],
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "ivi"
+  },
+  "scripts": {
+    "build-dev": "rollup -c rollup.config.js",
+    "build-prod": "rollup -c rollup.config.js"
+  },
+  "dependencies": {
+    "ivi-scheduler": "0.15.0",
+    "ivi-html": "0.15.0",
+    "ivi-state": "0.15.0",
+    "ivi": "0.15.0"
+  },
+  "devDependencies": {
+    "rollup": "0.63.5",
+    "rollup-plugin-node-resolve-main-fields": "3.3.0",
+    "rollup-plugin-replace": "2.0.0",
+    "rollup-plugin-terser": "1.0.1"
+  }
+}

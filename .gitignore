@@ -30,26 +30,32 @@ bower_components
 dist
 
 .idea
+.vscode
 .DS_Store
 *.iml
+TODO.txt
 */dist/
 angular*/app/app.js
 angular*/app/app.js.map
 angular*/src/app.ngsummary.json
 tests/results/completed/
 target/
-webdriver-java/chromedriver
-webdriver-java/results/
 webdriver-ts/results/
-webdriver-ts/typings/
+webdriver-ts/results*
+webdriver-ts-results/table_*.html
+webdriver-ts/table_*.html
+webdriver-ts/error-*.png
+webdriver-ts/log*
 webdriver-ts/.vscode/
+results-ui/table.html
+results-ui/src/data.js
 marko-*/.cache
 marko-*/static
 marko-*/build
 marko-*/src/xtable.marko
 
 # keep root yarn.lock in repo so that travis will install yarn
-yarn.lock 
+yarn.lock
 !/yarn.lock
 
 package-lock.json
@@ -62,3 +68,8 @@ angular-*/src/app.ngsummary.json
 #glimmer
 glimmer-*/dist
 glimmer-*/tmp
+
+# rust
+.cargo/
+.rustup/
+Cargo.lock

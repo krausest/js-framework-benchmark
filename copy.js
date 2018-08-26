@@ -12,7 +12,7 @@ fs.copySync("index.html", "dist"+path.sep+"index.html");
 fs.copySync("css", "dist"+path.sep+"css");
 
 var excludes = ["node_modules","elm-stuff","project",".DS_Store"]
-var excludedDirectories = ['css', 'dist','node_modules','webdriver-java', 'webdriver-ts'];
+var excludedDirectories = ['css', 'dist','node_modules','webdriver-ts'];
 
 // http://stackoverflow.com/questions/13786160/copy-folder-recursively-in-node-js
 function copyFileSync( source, target ) {
@@ -37,11 +37,11 @@ function include(name) {
 				}
 		}
 		if (excludes.every(ex => name.indexOf(ex)==-1)) {
-			// console.log("<- filter", name);					
+			// console.log("<- filter", name);
 			return true;
 		} else {
 			return false;
-		}	
+		}
 }
 
 function copyFolderRecursiveSync( source, target ) {
@@ -89,11 +89,11 @@ _.each(fs.readdirSync('.'), function(name) {
 		} else {
 			if (fs.existsSync(name+path.sep+"index.html")) {
 				fs.copySync(name+path.sep+"index.html", "dist"+path.sep+name+path.sep+"index.html");
-			}			
+			}
 		} */
 	}
 });
 
 fs.copySync("stem-v0.2.70-non-keyed/node_modules/babel-polyfill/dist/polyfill.min.js","dist/stem-v0.2.70/node_modules/babel-polyfill/dist");
-fs.copySync("slim-js-v3.0.2-non-keyed/node_modules/slim-js/src/Slim.js","dist/slim-js-v3.0.2/node_modules/slim-js/src/Slim.js");
+fs.copySync("slim-js-v3.3.0-non-keyed/node_modules/slim-js/src/Slim.js","dist/slim-js-v3.3.0/node_modules/slim-js/src/Slim.js");
 

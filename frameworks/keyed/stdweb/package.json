@@ -1,0 +1,19 @@
+{
+  "name": "js-framework-benchmark-stdweb",
+  "version": "1.0.0",
+  "description": "Benchmark for stdweb",
+  "license": "ISC",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.4.8"
+  },
+  "scripts": {
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "build-dev-force": "node build.js web deploy --verbose",
+    "build-prod-force": "node build.js web deploy --verbose --release",
+    "start": "node build.js web start --verbose --open --auto-reload"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}

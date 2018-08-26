@@ -1,11 +1,10 @@
 import * as _ from 'lodash'
 import * as fs from 'fs';
-import {JSONResult, config, frameworks, FrameworkData} from './common'
+import {JSONResult, config, FrameworkData, initializeFrameworks} from './common'
 import {BenchmarkType, Benchmark, benchmarks, fileName, BenchmarkInfo} from './benchmarks'
-import * as yargs from 'yargs'; 
+import * as yargs from 'yargs';
 
-let frameworkMap = new Map<string, FrameworkData>();
-frameworks.map(f => frameworkMap.set(f.name, f));
+let frameworks = initializeFrameworks();
 
 let results: Map<string, Map<string, JSONResult>> = new Map();
 
@@ -38,7 +37,7 @@ frameworks.forEach((framework, fIdx) => {
 
 
 resultJS += '];\n';
-resultJS += 'export let frameworks = '+JSON.stringify(frameworks)+";\n";
+resultJS += 'export let frameworks = '+JSON.stringify(frameworks.map(f => ({name: f.fullNameWithKeyedAndVersion, keyed: f.keyed})))+";\n";
 resultJS += 'export let benchmarks = '+JSON.stringify(allBenchmarks)+";\n";
 
 fs.writeFileSync('../webdriver-ts-results/src/results.ts', resultJS, {encoding: 'utf-8'});

@@ -11,6 +11,7 @@ export interface BenchmarkInfo {
     type: BenchmarkType;
     label: string;
     description: string;
+    dynamicCountMultiplicity?: number
 }
 
 export abstract class Benchmark {
@@ -18,11 +19,14 @@ export abstract class Benchmark {
     type: BenchmarkType;
     label: string;
     description: string;
+    dynamicCountMultiplicity?: number
+
     constructor(public benchmarkInfo: BenchmarkInfo) {
         this.id = benchmarkInfo.id;
         this.type = benchmarkInfo.type;
         this.label = benchmarkInfo.label;
         this.description = benchmarkInfo.description;
+        this.dynamicCountMultiplicity = benchmarkInfo.dynamicCountMultiplicity;
     }
     abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
     abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
@@ -50,7 +54,8 @@ const benchRun = new class extends Benchmark {
             id: "01_run1k",
             label: "create rows",
             description: "Duration for creating 1000 rows after the page loaded.",
-            type: BenchmarkType.CPU
+            type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 3
         })
     }
     async init(driver: WebDriver) { await testElementLocatedById(driver, "add", SHORT_TIMEOUT); }
@@ -67,6 +72,7 @@ const benchReplaceAll = new class extends Benchmark {
             label: "replace all rows",
             description: "Duration for updating all 1000 rows of the table (with " + config.WARMUP_COUNT + " warmup iterations).",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 3
         })
     }
     async init(driver: WebDriver) {
@@ -88,18 +94,21 @@ const benchUpdate = new class extends Benchmark {
             label: "partial update",
             description: "Time to update the text of every 10th row (with " + config.WARMUP_COUNT + " warmup iterations) for a table with 10k rows.",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 3
         })
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "runlots", SHORT_TIMEOUT);
         await clickElementById(driver, 'runlots');
+        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a");
         for (let i = 0; i < config.WARMUP_COUNT; i++) {
             await clickElementById(driver, 'update');
+            await testTextContains(driver, '//tbody/tr[9991]/td[2]/a', ' !!!'.repeat(i + 1));
         }
     }
     async run(driver: WebDriver) {
         await clickElementById(driver, 'update');
-        await testTextContains(driver, '//tbody/tr[1]/td[2]/a', ' !!!'.repeat(config.WARMUP_COUNT + 1));
+        await testTextContains(driver, '//tbody/tr[9991]/td[2]/a', ' !!!'.repeat(config.WARMUP_COUNT + 1));
     }
 }
 
@@ -110,6 +119,7 @@ const benchSelect = new class extends Benchmark {
             label: "select row",
             description: "Duration to highlight a row in response to a click on the row. (with " + config.WARMUP_COUNT + " warmup iterations).",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 6
         })
     }
     async init(driver: WebDriver) {
@@ -133,6 +143,7 @@ const benchSwapRows = new class extends Benchmark {
             label: "swap rows",
             description: "Time to swap 2 rows on a 1K table. (with " + config.WARMUP_COUNT + " warmup iterations).",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 6
         })
     }
     async init(driver: WebDriver) {
@@ -159,6 +170,7 @@ const benchRemove = new class extends Benchmark {
             label: "remove row",
             description: "Duration to remove a row. (with " + config.WARMUP_COUNT + " warmup iterations).",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 4
         })
     }
     async init(driver: WebDriver) {
@@ -186,6 +198,7 @@ const benchRunBig = new class extends Benchmark {
             label: "create many rows",
             description: "Duration to create 10,000 rows",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 1
         })
     }
     async init(driver: WebDriver) {
@@ -204,6 +217,7 @@ const benchAppendToManyRows = new class extends Benchmark {
             label: "append rows to large table",
             description: "Duration for adding 1000 rows on a table of 10,000 rows.",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 1
         })
     }
     async init(driver: WebDriver) {
@@ -224,6 +238,7 @@ const benchClear = new class extends Benchmark {
             label: "clear rows",
             description: "Duration to clear the table filled with 10.000 rows.",
             type: BenchmarkType.CPU,
+            dynamicCountMultiplicity: 3
         })
     }
     async init(driver: WebDriver) {
@@ -340,7 +355,7 @@ const benchCreateClear5Memory = new class extends Benchmark {
 }
 
 const benchStartupConsistentlyInteractive: StartupBenchmarkResult = {
-    id: "30_startup-ci",
+    id: "31_startup-ci",
     label: "consistently interactive",
     description: "a pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)",
     type: BenchmarkType.STARTUP,
@@ -348,7 +363,7 @@ const benchStartupConsistentlyInteractive: StartupBenchmarkResult = {
 }
 
 const benchStartupBootup: StartupBenchmarkResult = {
-    id: "30_startup-bt",
+    id: "32_startup-bt",
     label: "script bootup time",
     description: "the total ms required to parse/compile/evaluate all the page's scripts",
     type: BenchmarkType.STARTUP,
@@ -356,7 +371,7 @@ const benchStartupBootup: StartupBenchmarkResult = {
 }
 
 const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
-    id: "30_startup-mainthreadcost",
+    id: "33_startup-mainthreadcost",
     label: "main thread work cost",
     description: "total amount of time spent doing work on the main thread. includes style/layout/etc.",
     type: BenchmarkType.STARTUP,
@@ -364,7 +379,7 @@ const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
 }
 
 const benchStartupTotalBytes: StartupBenchmarkResult = {
-    id: "30_startup-totalbytes",
+    id: "34_startup-totalbytes",
     label: "total byte weight",
     description: "network transfer cost (post-compression) of all the resources loaded into the page.",
     type: BenchmarkType.STARTUP,
@@ -419,5 +434,5 @@ export let benchmarks : Array<Benchmark> = [
 ];
 
 export function fileName(framework: FrameworkData, benchmark: BenchmarkInfo) {
-    return `${framework.name}_${benchmark.id}.json`;
+    return `${framework.fullNameWithKeyedAndVersion}_${benchmark.id}.json`;
 }

@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "outDir": "./es/",
+        "strict": true,
+        "module": "es6",
+        "moduleResolution": "node",
+        "target": "es6",
+        "jsx": "preserve"
+    },
+    "files": [
+        "src/main.ts"
+    ]
+}

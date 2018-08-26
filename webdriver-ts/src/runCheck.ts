@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import {BenchmarkType, Benchmark, benchmarks, fileName} from './benchmarks'
-import {JSONResult, config, FrameworkData, frameworks} from './common'
+import {JSONResult, config, FrameworkData, initializeFrameworks} from './common'
+
+let frameworks = initializeFrameworks();
 
 const dots = require('dot').process({
 	path: './'
@@ -24,7 +26,7 @@ class CheckResultList {
 	constructor(benchmark: Benchmark, tests: Array<ResultCheck>) {
 		this.tests = tests;
 		this.name = benchmark.label;
-		this.description = benchmark.description;        
+		this.description = benchmark.description;
 	}
 }
 
@@ -58,7 +60,7 @@ for (let i= 0;i<benchmarks.length;i++) {
             let checkRun = parse(checkRunName);
             let difference = (checkRun.mean - origRun.mean) / ((origRun.mean + checkRun.mean) * 0.5);
             console.log("both files exist for ",framework.name, benchmark.id, difference, origRun.mean, checkRun.mean);
-            row.push(new ResultCheck((difference * 100).toFixed(1)+"%", color(Math.abs(difference)), origRun.mean.toFixed(0)+"±"+origRun.standardDeviation.toFixed(1), checkRun.mean.toFixed(0)+"±"+checkRun.standardDeviation.toFixed(1)));                              
+            row.push(new ResultCheck((difference * 100).toFixed(1)+"%", color(Math.abs(difference)), origRun.mean.toFixed(0)+"±"+origRun.standardDeviation.toFixed(1), checkRun.mean.toFixed(0)+"±"+checkRun.standardDeviation.toFixed(1)));
         } else if (fs.existsSync(origRunName)) {
             row.push(new ResultCheck("no file in results_check", "#f00", "", ""));
         } else if (fs.existsSync(checkRunName)) {

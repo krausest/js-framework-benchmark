@@ -1,0 +1,34 @@
+{
+  "name": "js-framework-benchmark-apprun-v1.7.0",
+  "version": "1.0.0",
+  "description": "AppRun demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "apprun"
+  },
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
+  },
+  "keywords": [
+    "apprun",
+    "js benmarks"
+  ],
+  "author": "Yiyi Sun <yiyisun@gmail.com",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/yysun/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yysun/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "json-loader": "0.5.7",
+    "ts-loader": "4.4.2",
+    "typescript": "3.0.1",
+    "webpack": "4.16.4",
+    "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "apprun": "1.15.2"
+  }
+}
