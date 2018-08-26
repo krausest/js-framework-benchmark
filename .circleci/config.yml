@@ -16,7 +16,6 @@ jobs:
           source $NVM_DIR/nvm.sh
           nvm install v8.9.1
 
-          npm install -g yarn
           npm install
           npm start &
           npm run build -- --skipIrrelevant --check
