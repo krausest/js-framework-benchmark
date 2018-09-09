@@ -113,7 +113,7 @@ async function runLighthouse(protocolResults: any[]): Promise<LighthouseData> {
 
     const audits = lhResults.audits;
     let LighthouseData: LighthouseData = {
-        TimeToConsistentlyInteractive: audits['consistently-interactive'].extendedInfo.value.timeInMs,
+        TimeToConsistentlyInteractive: 0, // temporarily disabled due to #458  audits['consistently-interactive'].extendedInfo.value.timeInMs,
         ScriptBootUpTtime: audits['bootup-time'].rawValue,
         MainThreadWorkCost: audits['mainthread-work-breakdown'].rawValue,
         TotalByteWeight: audits['total-byte-weight'].rawValue,
