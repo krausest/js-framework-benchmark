@@ -1,5 +1,5 @@
-import { State, root, memo } from 'solid-js';
-import { r, selectOn, delegateEvent } from 'solid-js/dom';
+import { State, root, each } from 'solid-js';
+import { r, selectWhen } from 'solid-js/dom';
 
 function _random (max) {
   return Math.round(Math.random() * 1000) % max;
@@ -22,7 +22,7 @@ function buildData(count) {
 }
 
 function App() {
-  let rowId, selectClass, clickSelect, clickRemove, tbody;
+  let rowId;
   const state = new State({ data: [], selected: null });
 
   return <div class='container'>
@@ -49,16 +49,14 @@ function App() {
         </div>
       </div></div>
     </div></div>
-    <table class='table table-hover table-striped test-data'><tbody ref={ tbody }>{
-      (selectClass = selectOn(() => state.selected, (el, selected) => el.className = selected ? 'danger' : ''),
-      clickSelect = delegateEvent(tbody, 'click', onSelect),
-      clickRemove = delegateEvent(tbody, 'click', onRemove),
-      memo(row =>
+    <table class='table table-hover table-striped test-data'><tbody onClick={ clickRow }>{
+      selectWhen(() => state.selected, (el, selected) => el.className = selected ? 'danger' : '')
+      (each(row =>
         (rowId = row.sample('id'),
-        <tr $selectClass={ rowId }>
+        <tr model={(( rowId ))}>
           <td class='col-md-1' textContent={(( rowId ))} />
-          <td class='col-md-4'><a $clickSelect={ rowId }>{ row.label }</a></td>
-          <td class='col-md-1'><a $clickRemove={ rowId }><span class='delete glyphicon glyphicon-remove' /></a></td>
+          <td class='col-md-4'><a>{ row.label }</a></td>
+          <td class='col-md-1'><a><span class='delete glyphicon glyphicon-remove' /></a></td>
           <td class='col-md-6'/>
         </tr>)
       )(() => state.data))
@@ -66,16 +64,13 @@ function App() {
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
 
-  function onRemove(id, e) {
+  function clickRow(e, id) {
     e.stopPropagation();
-    state.set({
-      data: state.data.filter(row => row.id !== id)
-    });
-  }
-
-  function onSelect(id, e) {
-    e.stopPropagation();
-    state.set({ selected: id });
+    if (e.target.matches('.delete')) {
+      state.set({
+        data: state.data.filter(row => row.id !== id)
+      });
+    } else state.set({ selected: id })
   }
 
   function run(e) {
