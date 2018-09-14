@@ -47,6 +47,7 @@ webdriver-ts/table_*.html
 webdriver-ts/error-*.png
 webdriver-ts/log*
 webdriver-ts/.vscode/
+webdriver-ts/prefs
 results-ui/table.html
 results-ui/src/data.js
 marko-*/.cache
