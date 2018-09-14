@@ -22,6 +22,9 @@ function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
 
+const rowTemplate = document.createElement("tr");
+rowTemplate.innerHTML = "<td class='col-md-1'></td><td class='col-md-4'><a class='lbl'></a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td>";
+
 class Store {
     constructor() {
         this.data = [];
@@ -89,12 +92,6 @@ class Store {
             this.data[998] = a;
         }
     }
-}
-
-var td=function(className) {
-    let td = document.createElement("td");
-    td.className = className;
-    return td;
 }
 
 var getParentId = function(elem) {
@@ -339,32 +336,12 @@ class Main {
         }
     }
     createRow(data) {
-        let tr = document.createElement("tr");
+        const tr = rowTemplate.cloneNode(true),
+            td1 = tr.firstChild,
+            a2 = td1.nextSibling.firstChild;
         tr.data_id = data.id;
-        let td1 = td("col-md-1");
-        td1.innerText = data.id;
-        tr.appendChild(td1);
-
-        let td2 = td("col-md-4")
-        tr.appendChild(td2);
-        let a2 = document.createElement("a");
-        a2.className = "lbl";
-        td2.appendChild(a2);
-        a2.innerText = data.label;
-
-        let td3 = td("col-md-1");
-        tr.appendChild(td3);
-        let a = document.createElement("a");
-        a.className = "remove";
-        td3.appendChild(a);
-        let span = document.createElement("span");
-        span.className = "glyphicon glyphicon-remove remove";
-        span.setAttribute("aria-hidden","true");
-        a.appendChild(span);
-
-        let td5 = td("col-md-6");
-        tr.appendChild(td5)
-
+        td1.textContent = data.id;
+        a2.textContent = data.label;
         return tr;
     }
 }
