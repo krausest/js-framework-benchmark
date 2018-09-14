@@ -4,10 +4,12 @@ import {BenchmarkType, Benchmark, benchmarks, fileName, LighthouseData} from './
 import {setUseShadowRoot} from './webdriverAccess'
 
 const lighthouse = require('lighthouse');
+const chromeLauncher = require('chrome-launcher');
 
 import {lhConfig} from './lighthouseConfig';
 import * as fs from 'fs';
-import {JSONResult, config, FrameworkData, BenchmarkError, ErrorsAndWarning, BenchmarkOptions} from './common'
+import * as path from 'path';
+import {JSONResult, config, FrameworkData, BenchmarkError, ErrorsAndWarning, BenchmarkOptions, BenchmarkDriverOptions} from './common'
 import * as R from 'ramda';
 
 var chromedriver:any = require('chromedriver');
@@ -94,32 +96,118 @@ function asString(res: Timingresult[]): string {
     return res.reduce((old, cur) => old + "\n" + JSON.stringify(cur), "");
 }
 
-async function runLighthouse(protocolResults: any[]): Promise<LighthouseData> {
-    const traceEvents = protocolResults.filter(e => e.method === 'Tracing.dataCollected').map(e => e.params);
-    const devtoolsLogs = protocolResults.filter(e => e.method.startsWith('Page') || e.method.startsWith('Network'));
+// async function runLighthouse(protocolResults: any[]): Promise<LighthouseData> {
+//     const traceEvents = protocolResults.filter(e => e.method === 'Tracing.dataCollected').map(e => e.params);
+//     const devtoolsLogs = protocolResults.filter(e => e.method.startsWith('Page') || e.method.startsWith('Network'));
 
-    const filenamePrefix = `${process.cwd()}/${Date.now()}`;
-    const traceFilename = `${filenamePrefix}.trace.json`;
-    const devtoolslogsFilename = `${filenamePrefix}.devtoolslogs.json`;
+//     const filenamePrefix = `${process.cwd()}/${Date.now()}`;
+//     const traceFilename = `${filenamePrefix}.trace.json`;
+//     const devtoolslogsFilename = `${filenamePrefix}.devtoolslogs.json`;
 
-    fs.writeFileSync(traceFilename, JSON.stringify({traceEvents}));
-    fs.writeFileSync(devtoolslogsFilename, JSON.stringify(devtoolsLogs));
-    lhConfig.artifacts.traces = {defaultPass: traceFilename};
-    lhConfig.artifacts.devtoolsLogs = {defaultPass: devtoolslogsFilename};
+//     fs.writeFileSync(traceFilename, JSON.stringify({traceEvents}));
+//     fs.writeFileSync(devtoolslogsFilename, JSON.stringify(devtoolsLogs));
+//     lhConfig.artifacts.traces = {defaultPass: traceFilename};
+//     lhConfig.artifacts.devtoolsLogs = {defaultPass: devtoolslogsFilename};
 
-    const lhResults = await lighthouse('http://example.com/thispage', {}, lhConfig);
-    fs.unlinkSync(traceFilename);
-    fs.unlinkSync(devtoolslogsFilename);
+//     const lhResults = await lighthouse('http://example.com/thispage', {}, lhConfig);
+//     fs.unlinkSync(traceFilename);
+//     fs.unlinkSync(devtoolslogsFilename);
 
-    const audits = lhResults.audits;
-    let LighthouseData: LighthouseData = {
-        TimeToConsistentlyInteractive: 0, // temporarily disabled due to #458  audits['consistently-interactive'].extendedInfo.value.timeInMs,
-        ScriptBootUpTtime: audits['bootup-time'].rawValue,
-        MainThreadWorkCost: audits['mainthread-work-breakdown'].rawValue,
-        TotalByteWeight: audits['total-byte-weight'].rawValue,
+//     const audits = lhResults.audits;
+//     let LighthouseData: LighthouseData = {
+//         TimeToConsistentlyInteractive: 0, // temporarily disabled due to #458  audits['consistently-interactive'].extendedInfo.value.timeInMs,
+//         ScriptBootUpTtime: audits['bootup-time'].rawValue,
+//         MainThreadWorkCost: audits['mainthread-work-breakdown'].rawValue,
+//         TotalByteWeight: audits['total-byte-weight'].rawValue,
+//     };
+
+//     return LighthouseData;
+// }
+
+// async function computeResultsStartup(driver: WebDriver, framework: FrameworkData, benchmark: Benchmark, warnings: String[]): Promise<LighthouseData> {
+//     let durationJSArr : number[] = await driver.executeScript("return [window.performance.timing.loadEventEnd, window.performance.timing.navigationStart]") as number[];
+//     let durationJS = (durationJSArr[0] as number) - (durationJSArr[1] as number);
+//     let reportedDuration = durationJS;
+
+//     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
+//     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
+
+//     const perfLogEvents = (await fetchEventsFromPerformanceLog(driver));
+//     let filteredEvents = perfLogEvents.timingResults;
+//     let protocolResults = perfLogEvents.protocolResults;
+//     return runLighthouse(protocolResults);
+// }
+
+
+function extractRawValue(results: any, id: string) {
+    let audits = results.audits;
+    if (!audits) return null;
+    let audit_with_id = audits[id];
+    if (typeof audit_with_id === 'undefined') return null;
+    if (typeof audit_with_id.rawValue === 'undefined') return null;
+    return audit_with_id.rawValue;
+}
+
+ function rmDir(dirPath: string) {
+    try { var files = fs.readdirSync(dirPath); }
+    catch(e) { return; }
+    if (files.length > 0)
+      for (var i = 0; i < files.length; i++) {
+        var filePath = path.join(dirPath, files[i]);
+        if (fs.statSync(filePath).isFile())
+          fs.unlinkSync(filePath);
+        else
+          rmDir(filePath);
+      }
+    fs.rmdirSync(dirPath);
+  };
+
+async function runLighthouse(framework: FrameworkData, benchmarkOptions: BenchmarkOptions): Promise<LighthouseData> {
+    const opts = {
+        chromeFlags:
+        [
+            "--headless",
+            "--no-sandbox",
+            "--no-first-run",
+            "--enable-automation",
+            "--disable-infobars",
+            "--disable-background-networking",
+            "--disable-background-timer-throttling",
+            "--disable-cache",
+            "--disable-translate",
+            "--disable-sync",
+            "--disable-extensions",
+            "--disable-default-apps",
+            "--window-size=1200,800"
+        ],
+        onlyCategories: ['performance'],
+        port: ''
     };
 
-    return LighthouseData;
+    try {
+        if (fs.existsSync('prefs')) rmDir('prefs');
+        fs.mkdirSync('prefs');
+        fs.mkdirSync('prefs/Default');
+        fs.copyFileSync('chromePreferences.json', 'prefs/Default/Preferences');
+
+        let options : any = {chromeFlags: opts.chromeFlags, logLevel: "verbose", userDataDir: "prefs"};
+        if (benchmarkOptions.chromeBinaryPath) options.chromePath = benchmarkOptions.chromeBinaryPath;
+        let chrome = await chromeLauncher.launch(options);
+        opts.port = chrome.port;
+        let results = await lighthouse(`http://localhost:${benchmarkOptions.port}/${framework.uri}/`, opts, null);
+        await chrome.kill();
+
+        let LighthouseData: LighthouseData = {
+            TimeToConsistentlyInteractive: extractRawValue(results.lhr, 'interactive'),
+            ScriptBootUpTtime: extractRawValue(results.lhr, 'bootup-time'),
+            MainThreadWorkCost: extractRawValue(results.lhr, 'mainthread-work-breakdown'),
+            TotalByteWeight: extractRawValue(results.lhr, 'total-byte-weight')
+        };
+        return LighthouseData;
+    } catch (error) {
+        console.log("error running lighthouse", error);
+        throw error;
+    }
 }
 
 async function computeResultsCPU(driver: WebDriver, benchmarkOptions: BenchmarkOptions, framework: FrameworkData, benchmark: Benchmark, warnings: String[]): Promise<number[]> {
@@ -222,21 +310,7 @@ async function computeResultsMEM(driver: WebDriver, benchmarkOptions: BenchmarkO
     return results;
 }
 
-async function computeResultsStartup(driver: WebDriver, framework: FrameworkData, benchmark: Benchmark, warnings: String[]): Promise<LighthouseData> {
-    let durationJSArr : number[] = await driver.executeScript("return [window.performance.timing.loadEventEnd, window.performance.timing.navigationStart]") as number[];
-    let durationJS = (durationJSArr[0] as number) - (durationJSArr[1] as number);
-    let reportedDuration = durationJS;
-
-    let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
-    if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
-
-    const perfLogEvents = (await fetchEventsFromPerformanceLog(driver));
-    let filteredEvents = perfLogEvents.timingResults;
-    let protocolResults = perfLogEvents.protocolResults;
-    return runLighthouse(protocolResults);
-}
-
-function buildDriver(benchmarkOptions: BenchmarkOptions) {
+function buildDriver(benchmarkOptions: BenchmarkDriverOptions) {
     let logPref = new logging.Preferences();
     logPref.setLevel(logging.Type.PERFORMANCE, logging.Level.ALL);
     logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
@@ -418,39 +492,53 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
 async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmark, benchmarkOptions: BenchmarkOptions ): Promise<ErrorsAndWarning>
 {
     console.log("benchmarking startup", framework, benchmark.id);
-    let results : LighthouseData[] = [];
-    let errors: BenchmarkError[] = [];
-    let warnings: String[] = [];
 
-    let chromeDuration = 0;
-    try {
-        for (let i = 0; i<benchmarkOptions.numIterationsForAllBenchmarks; i++) {
-            let driver = buildDriver(benchmarkOptions);
-            try {
-                setUseShadowRoot(framework.useShadowRoot);
-                await driver.executeScript("console.timeStamp('initBenchmark')");
-                await initBenchmark(driver, benchmark, framework);
-                await driver.executeScript("console.timeStamp('runBenchmark')");
-                await runBenchmark(driver, benchmark, framework);
-                await driver.executeScript("console.timeStamp('finishedBenchmark')");
-                await afterBenchmark(driver, benchmark, framework);
-                await driver.executeScript("console.timeStamp('afterBenchmark')");
-                await wait(5000);
-                results.push(await computeResultsStartup(driver, framework, benchmark, warnings));
-            } catch (e) {
-                errors.push(await registerError(driver, framework, benchmark, e));
-                throw e;
-            } finally {
-                await driver.close();
-                await driver.quit();
-            }
+    let errors: BenchmarkError[] = [];
+    let results: LighthouseData[] = [];
+    for (let i = 0; i <benchmarkOptions.numIterationsForAllBenchmarks; i++) {
+        try {
+            results.push(await runLighthouse(framework, benchmarkOptions));
+        } catch (error) {
+            errors.push({imageFile: null, exception: error});
+            throw error;
         }
-        await writeResult({framework: framework, results: results, benchmark: benchmark}, benchmarkOptions.outputDirectory);
-    } catch (e) {
-        console.log("ERROR:", e);
-        if (config.EXIT_ON_ERROR) { throw "Benchmarking failed"}
     }
-    return {errors, warnings};
+    await writeResult({framework: framework, results: results, benchmark: benchmark}, benchmarkOptions.outputDirectory);
+    return {errors, warnings: []};
+
+    // let results : LighthouseData[] = [];
+    // let errors: BenchmarkError[] = [];
+    // let warnings: String[] = [];
+
+    // let chromeDuration = 0;
+    // try {
+    //     for (let i = 0; i<benchmarkOptions.numIterationsForAllBenchmarks; i++) {
+    //         let driver = buildDriver(benchmarkOptions);
+    //         try {
+    //             setUseShadowRoot(framework.useShadowRoot);
+    //             await driver.executeScript("console.timeStamp('initBenchmark')");
+    //             await initBenchmark(driver, benchmark, framework);
+    //             await driver.executeScript("console.timeStamp('runBenchmark')");
+    //             await runBenchmark(driver, benchmark, framework);
+    //             await driver.executeScript("console.timeStamp('finishedBenchmark')");
+    //             await afterBenchmark(driver, benchmark, framework);
+    //             await driver.executeScript("console.timeStamp('afterBenchmark')");
+    //             await wait(5000);
+    //             results.push(await computeResultsStartup(driver, framework, benchmark, warnings));
+    //         } catch (e) {
+    //             errors.push(await registerError(driver, framework, benchmark, e));
+    //             throw e;
+    //         } finally {
+    //             await driver.close();
+    //             await driver.quit();
+    //         }
+    //     }
+    //     await writeResult({framework: framework, results: results, benchmark: benchmark}, benchmarkOptions.outputDirectory);
+    // } catch (e) {
+    //     console.log("ERROR:", e);
+    //     if (config.EXIT_ON_ERROR) { throw "Benchmarking failed"}
+    // }
+    // return {errors, warnings};
 }
 
 export async function executeBenchmark(frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {

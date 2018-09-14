@@ -22,8 +22,8 @@ export interface Result {
     min: number;
     max: number;
     mean: number;
-    geometricMean: number;
-    standardDeviation: number;
+    geometricMean: number|null;
+    standardDeviation: number|null;
     median: number;
     values: number[];
     count?: number;
@@ -246,8 +246,8 @@ export class ResultTableData {
                 // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
                 if (compareWithResults) {
                     let compareWithMean = compareWithResults.mean;
-                    let stdDev = result.standardDeviation;
-                    let compareWithResultsStdDev = compareWithResults.standardDeviation;
+                    let stdDev = result.standardDeviation || 0;
+                    let compareWithResultsStdDev = compareWithResults.standardDeviation || 0;
 
                     let x1 = mean;
                     let x2 = compareWithMean;
@@ -262,7 +262,7 @@ export class ResultTableData {
                     statisticalCol = statisticComputeColor(t, p);
                     statisticalResult = (p*100).toFixed(3)+"%";
                 }
-                return new TableResultValueEntry(f.name, mean, standardDeviation, factor, statisticalResult, statisticalCol);
+                return new TableResultValueEntry(f.name, mean, standardDeviation || 0, factor, statisticalResult, statisticalCol);
             }
         });
     }
