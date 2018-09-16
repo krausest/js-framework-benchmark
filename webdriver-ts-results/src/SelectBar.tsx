@@ -25,6 +25,8 @@ export interface Props {
   selectComparison: (framework: string) => void;
   useMedian: boolean;
   selectMedian: (value: boolean) => void;
+  highlightVariance: boolean;
+  selectHighlightVariance: (value: boolean) => void;
 }
 
 const SelectCategory = ({benchmarks, select, benchSelect, label} :
@@ -58,7 +60,9 @@ export class SelectBar extends React.Component<Props, {}> {
           compareWith,
           selectComparison,
           useMedian,
-          selectMedian
+          selectMedian,
+          highlightVariance,
+          selectHighlightVariance
       } = this.props;
         return (
           <div>
@@ -95,7 +99,7 @@ export class SelectBar extends React.Component<Props, {}> {
                 <div className="form-group">
                     <div className="hspan"/>
                     <select className="form-control" value={compareWith ? compareWith.name : ''} onChange={(evt) => selectComparison(evt.target.value)}>
-                      <option value=''>Compare with ...</option>                        
+                      <option value=''>Compare with ...</option>
                       <optgroup label="Keyed">
                         { frameworksKeyed.map(f => <option key={f.name} value={f.name}>{f.name}</option>) }
                       </optgroup>
@@ -110,6 +114,13 @@ export class SelectBar extends React.Component<Props, {}> {
                   <label>
                     <input type="checkbox" onChange={(evt) => selectMedian(evt.target.checked)} checked={useMedian} />
                     Use median instead of mean
+                  </label>
+              </div>
+              <div className="hspan"/>
+              <div className="checkbox" style={{display:"inline-block"}}>
+                  <label>
+                    <input type="checkbox" onChange={(evt) => selectHighlightVariance(evt.target.checked)} checked={highlightVariance} />
+                    Highlight variance
                   </label>
               </div>
             </div>

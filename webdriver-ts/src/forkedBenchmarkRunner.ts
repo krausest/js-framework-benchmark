@@ -190,7 +190,7 @@ async function runLighthouse(framework: FrameworkData, benchmarkOptions: Benchma
         fs.mkdirSync('prefs/Default');
         fs.copyFileSync('chromePreferences.json', 'prefs/Default/Preferences');
 
-        let options : any = {chromeFlags: opts.chromeFlags, logLevel: "verbose", userDataDir: "prefs"};
+        let options : any = {chromeFlags: opts.chromeFlags, logLevel: "info", userDataDir: "prefs"};
         if (benchmarkOptions.chromeBinaryPath) options.chromePath = benchmarkOptions.chromeBinaryPath;
         let chrome = await chromeLauncher.launch(options);
         opts.port = chrome.port;
@@ -199,7 +199,7 @@ async function runLighthouse(framework: FrameworkData, benchmarkOptions: Benchma
 
         let LighthouseData: LighthouseData = {
             TimeToConsistentlyInteractive: extractRawValue(results.lhr, 'interactive'),
-            ScriptBootUpTtime: extractRawValue(results.lhr, 'bootup-time'),
+            ScriptBootUpTtime: Math.max(16, extractRawValue(results.lhr, 'bootup-time')),
             MainThreadWorkCost: extractRawValue(results.lhr, 'mainthread-work-breakdown'),
             TotalByteWeight: extractRawValue(results.lhr, 'total-byte-weight')
         };
@@ -495,7 +495,7 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
 
     let errors: BenchmarkError[] = [];
     let results: LighthouseData[] = [];
-    for (let i = 0; i <benchmarkOptions.numIterationsForAllBenchmarks; i++) {
+    for (let i = 0; i <benchmarkOptions.numIterationsForStartupBenchmark; i++) {
         try {
             results.push(await runLighthouse(framework, benchmarkOptions));
         } catch (error) {

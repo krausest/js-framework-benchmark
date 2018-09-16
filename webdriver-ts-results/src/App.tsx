@@ -24,6 +24,7 @@ interface State {
   sortKey: string;
   compareWith: Framework | undefined;
   useMedian: boolean;
+  highlightVariance: boolean;
 }
 
 let allBenchmarks = () => benchmarks.reduce((set, b) => set.add(b), new Set() );
@@ -36,14 +37,14 @@ let resultLookup = convertToMap(results);
 
 class App extends React.Component<{}, State> {
     benchSelect = (benchmarkType: BenchmarkType) => ({
-      selectAll: (event: React.SyntheticEvent<any>) => {    
+      selectAll: (event: React.SyntheticEvent<any>) => {
         event.preventDefault();
         let set = this.state.selectedBenchmarks;
         benchmarks.forEach(b => {if (b.type === benchmarkType) set.add(b);});
         this.nextState.selectedBenchmarks = set;
         this.setState({selectedBenchmarks: set, resultTables: this.updateResultTable()});
       },
-      selectNone: (event: React.SyntheticEvent<any>) => {    
+      selectNone: (event: React.SyntheticEvent<any>) => {
         event.preventDefault();
         let set = this.state.selectedBenchmarks;
         benchmarks.forEach(b => {if (b.type === benchmarkType) set.delete(b);});
@@ -58,14 +59,14 @@ class App extends React.Component<{}, State> {
       isSelected: (benchmark: Benchmark) => this.state.selectedBenchmarks.has(benchmark)
   })
   frameworkSelect = (keyed: boolean) => ({
-      selectAll: (event: React.SyntheticEvent<any>) => {    
+      selectAll: (event: React.SyntheticEvent<any>) => {
         event.preventDefault();
         let set = this.state.selectedFrameworks;
         frameworks.forEach(framework => {if (framework.keyed === keyed && !set.has(framework)) set.add(framework);});
         this.nextState.selectedFrameworks = set;
         this.setState({selectedFrameworks: set, resultTables: this.updateResultTable()});
       },
-      selectNone: (event: React.SyntheticEvent<any>) => {    
+      selectNone: (event: React.SyntheticEvent<any>) => {
         event.preventDefault();
         let set = this.state.selectedFrameworks;
         set.forEach(framework => {if (framework.keyed === keyed) set.delete(framework);});
@@ -85,7 +86,7 @@ class App extends React.Component<{}, State> {
 
   constructor(props: object) {
     super(props);
-    this.nextState = {benchmarks, 
+    this.nextState = {benchmarks,
                   benchmarksCPU: benchmarks.filter(b => b.type === BenchmarkType.CPU),
                   benchmarksStartup: benchmarks.filter(b => b.type === BenchmarkType.STARTUP),
                   benchmarksMEM: benchmarks.filter(b => b.type === BenchmarkType.MEM),
@@ -99,6 +100,7 @@ class App extends React.Component<{}, State> {
                   sortKey: SORT_BY_GEOMMEAN,
                   compareWith: undefined,
                   useMedian: false,
+                  highlightVariance: false
                 };
     this.nextState.resultTables = this.updateResultTable();
     this.state = this.nextState;
@@ -122,7 +124,7 @@ class App extends React.Component<{}, State> {
     else set.add(framework);
     this.nextState.selectedFrameworks = set;
     this.setState({selectedFrameworks: set, resultTables: this.updateResultTable()});
-  }  
+  }
   selectSeparateKeyedAndNonKeyed = (value: boolean): void => {
     this.nextState.separateKeyedAndNonKeyed = value;
     this.setState({separateKeyedAndNonKeyed: value, resultTables: this.updateResultTable()});
@@ -131,12 +133,16 @@ class App extends React.Component<{}, State> {
     this.nextState.useMedian = value;
     this.setState({useMedian: value, resultTables: this.updateResultTable()});
   }
+  selectHighlightVariance = (value: boolean): void => {
+    this.nextState.highlightVariance = value;
+    this.setState({highlightVariance: value, resultTables: this.updateResultTable()});
+  }
   updateResultTable() {
     if (this.nextState.separateKeyedAndNonKeyed) {
-      return [new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, false, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian),
-              new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, true, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian)]      
+      return [new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, false, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian, this.nextState.highlightVariance),
+              new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, true, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian, this.nextState.highlightVariance)]
     } else {
-      return [new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, undefined, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian)]
+      return [new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, undefined, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian, this.nextState.highlightVariance)]
     }
   }
   selectComparison = (framework: string): void => {
@@ -157,19 +163,19 @@ class App extends React.Component<{}, State> {
   render() {
     let disclaimer = (false) ? (<div>
           <h2>Results for js web frameworks benchmark – round 7</h2>
-          <p>Go here for the accompanying article <a href="http://www.stefankrause.net/wp/?p=454">http://www.stefankrause.net/wp/?p=454</a>. Source code can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>	
+          <p>Go here for the accompanying article <a href="http://www.stefankrause.net/wp/?p=454">http://www.stefankrause.net/wp/?p=454</a>. Source code can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>
         </div>) :
         (<p>Warning: These results are preliminary - use with caution (they may e.g. be from different browser versions).Official results are published on my <a href="http://www.stefankrause.net/">blog</a>.</p>);
 
     return (
-      <div>   
+      <div>
         {disclaimer}
-        <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.13.1, Chrome 62.0.3202.94 (64-bit))</p>        
-        <SelectBar  benchmarksCPU={this.state.benchmarksCPU} 
+        <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.13.1, Chrome 62.0.3202.94 (64-bit))</p>
+        <SelectBar  benchmarksCPU={this.state.benchmarksCPU}
                     benchmarksStartup={this.state.benchmarksStartup}
-                    benchmarksMEM={this.state.benchmarksMEM} 
-                    frameworksKeyed={this.state.frameworksKeyed} 
-                    frameworksNonKeyed={this.state.frameworksNonKeyed} 
+                    benchmarksMEM={this.state.benchmarksMEM}
+                    frameworksKeyed={this.state.frameworksKeyed}
+                    frameworksNonKeyed={this.state.frameworksNonKeyed}
                     frameworkSelectKeyed={this.frameworkSelectKeyed}
                     frameworkSelectNonKeyed={this.frameworkSelectNonKeyed}
                     benchSelectCpu={this.benchSelectCpu}
@@ -183,10 +189,12 @@ class App extends React.Component<{}, State> {
                     selectComparison={this.selectComparison}
                     useMedian={this.state.useMedian}
                     selectMedian={this.selectMedian}
+                    highlightVariance={this.state.highlightVariance}
+                    selectHighlightVariance={this.selectHighlightVariance}
                     />
-          {!this.state.compareWith ? null :           
-          (<p style={{marginTop:'10px'}}>In comparison mode white cells mean there's no statistically significant difference. 
-            Green cells are significantly faster than the comparison and red cells are slower. 
+          {!this.state.compareWith ? null :
+          (<p style={{marginTop:'10px'}}>In comparison mode white cells mean there's no statistically significant difference.
+            Green cells are significantly faster than the comparison and red cells are slower.
             The test is performed as a one sided t-test. The significance level is 10%. The darker the color the lower the p-Value.</p>
           )}
           <ResultTable currentSortKey={this.state.sortKey} data={this.state.resultTables} separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed} sortBy={this.sortBy}/>

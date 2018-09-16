@@ -61,18 +61,16 @@ let computeColor = function(factor: number): string {
 }
 
 export class TableResultValueEntry implements TableResultEntry {
-    color: string;
-    constructor(public key:string, public mean: number, public standardDeviation: number, public factor: number, public statisticallySignificantFactor: string|number|undefined, public statisticalCol: [string,string]|undefined) {
-        this.color = computeColor(factor);
+    constructor(public key:string, public mean: number, public standardDeviation: number, public factor: number, public formattedFactor: string, public bgColor: string, public textColor: string, public statisticallySignificantFactor: string|number|undefined = undefined) {
     }
     render() {
-        let col = this.statisticalCol === undefined ? this.color : this.statisticalCol[0];
-        let textCol = this.statisticalCol === undefined ? '#000' : this.statisticalCol[1];
+        let col = this.bgColor;
+        let textCol = this.textColor;
         return (<td key={this.key} style={{backgroundColor:col, color: textCol}}>
                     <span className="mean">{this.mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true})}</span>
                     <span className="deviation">{this.standardDeviation.toFixed(1)}</span>
                     <br />
-                    <span className="factor">({this.factor.toFixed(1)})</span>
+                    <span className="factor">({this.formattedFactor})</span>
                     <br/>
                     <span className="factor">{this.statisticallySignificantFactor}</span>
                 </td>);
@@ -143,7 +141,8 @@ export class ResultTableData {
     constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup,
         public selectedFrameworks: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, nonKeyed: boolean|undefined, sortKey: string,
         public compareWith: Framework|undefined,
-        public useMedian: boolean) {
+        public useMedian: boolean,
+        public highlightVariance: boolean) {
         this.frameworks = this.allFrameworks.filter(framework => (nonKeyed===undefined || framework.keyed !== nonKeyed) && selectedFrameworks.has(framework));
         this.update(sortKey);
     }
@@ -221,7 +220,7 @@ export class ResultTableData {
             let gMean = resultsCPUForFramework.reduce((gMean, r) => {
                 if (r !== null)  {
                     count++;
-                    gMean *= r.factor;
+                    gMean *= (r.factor as number);
                 }
                 return gMean;
             }, 1.0);
@@ -240,11 +239,11 @@ export class ResultTableData {
                 let factor = clamp ? Math.max(16, mean) / Math.max(16, min) : mean/min;
                 let standardDeviation = result.standardDeviation;
 
-                let statisticalResult = undefined;
-                let statisticalCol = undefined;
                 // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
                 // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
                 if (compareWithResults) {
+                    let statisticalResult = undefined;
+                    let statisticalCol = undefined;
                     let compareWithMean = compareWithResults.mean;
                     let stdDev = result.standardDeviation || 0;
                     let compareWithResultsStdDev = compareWithResults.standardDeviation || 0;
@@ -261,8 +260,14 @@ export class ResultTableData {
                     let p = (1.0-jStat.studentt.cdf( Math.abs(t), ny ))*2;
                     statisticalCol = statisticComputeColor(t, p);
                     statisticalResult = (p*100).toFixed(3)+"%";
+                    return new TableResultValueEntry(f.name, mean, standardDeviation || 0, factor, factor.toFixed(1), statisticalCol[0], statisticalCol[1], statisticalResult);
+                } else if (this.highlightVariance) {
+                    let stdDev = result.standardDeviation || 0;
+                    let stdDevFactor = stdDev/result.mean * 100.0;
+                    return new TableResultValueEntry(f.name, mean, standardDeviation || 0, factor, stdDevFactor.toFixed(2) + "%", computeColor(stdDevFactor/5.0 + 1.0), '0x000');
+                } else {
+                    return new TableResultValueEntry(f.name, mean, standardDeviation || 0, factor, factor.toFixed(1), computeColor(factor), '0x000');
                 }
-                return new TableResultValueEntry(f.name, mean, standardDeviation || 0, factor, statisticalResult, statisticalCol);
             }
         });
     }
