@@ -17,17 +17,22 @@ export interface ErrorsAndWarning {
     warnings: String[];
 }
 
-export interface BenchmarkOptions {
-    outputDirectory: string;
-    port: string;
+export interface BenchmarkDriverOptions {
     headless?: boolean;
     chromeBinaryPath?: string;
+}
+
+export interface BenchmarkOptions extends BenchmarkDriverOptions {
+    outputDirectory: string;
+    port: string;
     numIterationsForAllBenchmarks: number;
+    numIterationsForStartupBenchmark: number;
 }
 
 export let config = {
     PORT: 8080,
     REPEAT_RUN: 10,
+    REPEAT_RUN_STARTUP: 4,
     DROP_WORST_RUN: 0,
     WARMUP_COUNT: 5,
     TIMEOUT: 60 * 1000,

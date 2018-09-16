@@ -54,6 +54,7 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
             headless: args.headless,
             chromeBinaryPath: args.chromeBinary,
             numIterationsForAllBenchmarks: config.REPEAT_RUN,
+            numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
         }
 
         try {

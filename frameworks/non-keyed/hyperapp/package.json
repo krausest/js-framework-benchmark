@@ -7,7 +7,7 @@
     "frameworkVersionFromPackage": "hyperapp"
   },
   "dependencies": {
-    "hyperapp": "1.2.0"
+    "hyperapp": "1.2.9"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

@@ -2,6 +2,13 @@
 
 module.exports = function(environment) {
   let ENV = {
+
+    'ember-resolver': {
+      features: {
+        // EMBER_RESOLVER_MODULE_UNIFICATION: true,
+        // EMBER_GLIMMER_ANGLE_BRACKET_INVOCATION: true,
+      },
+    },
     modulePrefix: 'ember-temp',
     environment,
     rootURL: '/frameworks/keyed/ember/dist/',
@@ -10,6 +17,9 @@ module.exports = function(environment) {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
+
+        // 'ember-glimmer-angle-bracket-invocation': true,
+        // EMBER_GLIMMER_ANGLE_BRACKET_INVOCATION: true,
       },
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
