@@ -41,7 +41,7 @@ const CpuResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData
 const StartupResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void}) => {
   return data.resultsStartup.length==0 ? null :
         (<div>
-          <h3>Startup metrics</h3>
+          <h3>Startup metrics (lighthouse with mobile simulation)</h3>
           <table className='results'>
             <thead>
               <tr>
