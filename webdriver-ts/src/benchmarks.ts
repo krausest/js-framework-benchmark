@@ -79,6 +79,7 @@ const benchReplaceAll = new class extends Benchmark {
         await testElementLocatedById(driver, 'run', SHORT_TIMEOUT);
         for (let i = 0; i < config.WARMUP_COUNT; i++) {
             await clickElementById(driver, 'run');
+            await testTextContains(driver, '//tbody/tr[1]/td[1]', (i*1000+1).toFixed());
         }
     }
     async run(driver: WebDriver) {
