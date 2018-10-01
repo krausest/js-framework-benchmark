@@ -38,7 +38,7 @@ var loaders = [
 	{
 		test: /\.(svg|ttf|eot|svg)(\?[\s\S]+)?$/,
 		loader: 'file-loader'
-	}	
+	}
 ];
 var extensions = [
 	'.ts', '.tsx', '.ts', '.js'
@@ -47,7 +47,7 @@ var extensions = [
 module.exports = [{
 	cache: cache,
 	module: {
-		loaders: loaders
+		rules: loaders
 	},
 	entry: {
 		main: './src/App.tsx'
@@ -68,7 +68,7 @@ module.exports = [{
 		/*new webpack.DefinePlugin({
 			'process.env.NODE_ENV': '"production"'
 		}),*/
-		process.env.NODE_ENV === 'production' ? 
+		process.env.NODE_ENV === 'production' ?
 		new HtmlWebpackPlugin({
 			filename: 'table.html',
 			template: 'index.html',
@@ -79,5 +79,5 @@ module.exports = [{
 			template: 'index.html'
 		})
 		,
-  	new HtmlWebpackInlineSourcePlugin()	]	
+  	new HtmlWebpackInlineSourcePlugin()	]
 }];

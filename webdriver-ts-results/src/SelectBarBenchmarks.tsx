@@ -10,11 +10,11 @@ interface Props {
 export const SelectBarBenchmarks = (props: Props) => {
     return (
       <div>
-        {props.benchmarks.map(item => 
+        {props.benchmarks.map(item =>
             <div key={item.id} className="col-md-12">
-                <div className="checkbox">
-                    <label>
-                    <input type="checkbox" onChange={(evt) => props.select(item, evt.target.checked)} checked={props.isSelected(item)} />
+                <div className="form-check">
+                    <input id={'inp-'+item.id} className="form-check-input" type="checkbox" onChange={(evt) => props.select(item, evt.target.checked)} checked={props.isSelected(item)} />
+                    <label htmlFor={'inp-'+item.id} className="form-check-label">
                     {item.label}
                     </label>
                 </div>
