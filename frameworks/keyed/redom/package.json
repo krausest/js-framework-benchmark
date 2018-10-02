@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "redom": "3.14.0",
+    "redom": "3.14.1",
     "rollup": "0.66.2",
     "rollup-plugin-buble": "0.19.2",
     "rollup-plugin-node-resolve": "3.4.0",
