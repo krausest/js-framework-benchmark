@@ -109,7 +109,7 @@ function isKeyedSwapRow(result: any): boolean {
 
 async function runBench(frameworkNames: string[]) {
     let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name)>-1));
-    console.log("Frameworks that will be checked", runFrameworks.map(f => f.fullNameWithKeyedAndVersion));
+    console.log("Frameworks that will be checked", runFrameworks.map(f => f.fullNameWithKeyedAndVersion).join(' '));
 
     let frameworkMap = new Map<String, FrameworkData>();
     frameworks.forEach(f => frameworkMap.set(f.fullNameWithKeyedAndVersion, f));
