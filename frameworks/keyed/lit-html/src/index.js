@@ -1,5 +1,5 @@
 import { html, render } from '../node_modules/lit-html/lit-html.js';
-import { repeat } from '../node_modules/lit-html/lib/repeat.js';
+import { repeat } from '../node_modules/lit-html/directives/repeat.js';
 
 let startTime;
 let lastMeasure;
