@@ -43,7 +43,7 @@ export class Store {
     this.selected = null;
   }
   add () {
-    this.data = this.data.concat(this.buildData(1000));
+    this.data.push.apply(this.data, this.buildData(1000));
     this.selected = null;
   }
   update () {
