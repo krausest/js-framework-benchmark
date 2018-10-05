@@ -3,13 +3,44 @@ import utils from './utils.js'
 
 let currentBench = "";
 
-new Doz({
-    mixin: utils,
-    root: '#main',
+Doz.component('x-table', {
     store: 'list',
     props: {
         rows: []
     },
+    template(h) {
+        return h`
+            <table class="table table-hover table-striped test-data">
+                <tbody>
+                    ${this.each(this.props.rows, row => `
+                        <tr>
+                            <td class="col-md-1">${row.id}</td>
+                            <td class="col-md-4">${row.label}</td>
+                            <td class="col-md-1">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </td>
+                            <td class="col-md-6"></td>
+                        </tr>`
+                    )}
+                </tbody>
+            </table>        
+        `
+    },
+    onCreate() {
+    },
+
+    onBeforeUpdate() {
+        console.time(currentBench = 'update');
+    },
+
+    onUpdate() {
+        console.timeEnd(currentBench);
+    }
+});
+
+new Doz({
+    mixin: utils,
+    root: '#main',
     template(h) {
         return h`
             <div class="container">
@@ -42,32 +73,9 @@ new Doz({
                         </div>
                     </div>
                 </div>
-                <table class="table table-hover table-striped test-data">
-                    <tbody>
-                        ${this.each(this.props.rows, row => `
-                            <tr>
-                                <td class="col-md-1">${row.id}</td>
-                                <td class="col-md-4">${row.label}</td>
-                                <td class="col-md-1">
-                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                </td>
-                                <td class="col-md-6"></td>
-                            </tr>`
-                        )}
-                    </tbody>
-                </table>
+                <x-table></x-table>
                 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
             </div>
         `
-    },
-
-    onCreate() {
-        this.currentBench = '';
-        this.rows = [];
-    },
-
-    onUpdate() {
-        console.log('update', this.currentBench);
-        console.timeEnd(this.currentBench);
     }
 });
