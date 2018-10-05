@@ -1,0 +1,30 @@
+{
+  "name": "js-framework-benchmark-doz",
+  "version": "1.0.0",
+  "description": "Doz benchmark",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "doz"
+  },
+  "scripts": {
+    "build-dev": "parcel watch src/index.js --no-cache",
+    "build-prod": "parcel build src/index.js --no-cache"
+  },
+  "keywords": [
+    "doz",
+    "benchmark"
+  ],
+  "author": "Fabio Ricali",
+  "license": "MIT",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "parcel-bundler": "1.10.1"
+  },
+  "dependencies": {
+    "doz": "1.6.4"
+  }
+}
