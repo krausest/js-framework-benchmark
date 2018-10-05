@@ -156,10 +156,12 @@ class Tr {
       this.label.textContent = label;
     }
 
-    if (id === selected) {
-      this.el.classList.add('danger');
-    } else {
-      this.el.classList.remove('danger');
+    if (id !== this.data.id) {
+      if (id === selected) {
+        this.el.classList.add('danger');
+      } else {
+        this.el.classList.remove('danger');
+      }
     }
 
     this.data = { id, label };
