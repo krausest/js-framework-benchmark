@@ -61,14 +61,14 @@ let computeColor = function(factor: number): string {
 }
 
 export class TableResultValueEntry implements TableResultEntry {
-    constructor(public key:string, public mean: number, public standardDeviation: number, public factor: number, public formattedFactor: string, public bgColor: string, public textColor: string, public statisticallySignificantFactor: string|number|undefined = undefined) {
+    constructor(public key:string, public mean: number, public confidenceInterval: number, public factor: number, public formattedFactor: string, public bgColor: string, public textColor: string, public statisticallySignificantFactor: string|number|undefined = undefined) {
     }
     render() {
         let col = this.bgColor;
         let textCol = this.textColor;
         return (<td key={this.key} style={{backgroundColor:col, color: textCol}}>
                     <span className="mean">{this.mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true})}</span>
-                    <span className="deviation">{this.standardDeviation.toFixed(1)}</span>
+                    <span className="deviation">{this.confidenceInterval.toFixed(2)}</span>
                     <br />
                     <span className="factor">({this.formattedFactor})</span>
                     <br/>
@@ -237,7 +237,7 @@ export class ResultTableData {
             else {
                 let mean = (this.useMedian && !compareWithResults) ? result.median : result.mean;
                 let factor = clamp ? Math.max(16, mean) / Math.max(16, min) : mean/min;
-                let standardDeviation = result.standardDeviation;
+                let conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
 
                 // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
                 // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
@@ -260,13 +260,13 @@ export class ResultTableData {
                     let p = (1.0-jStat.studentt.cdf( Math.abs(t), ny ))*2;
                     statisticalCol = statisticComputeColor(t, p);
                     statisticalResult = (p*100).toFixed(3)+"%";
-                    return new TableResultValueEntry(f.name, mean, standardDeviation || 0, factor, factor.toFixed(1), statisticalCol[0], statisticalCol[1], statisticalResult);
+                    return new TableResultValueEntry(f.name, mean, conficenceInterval, factor, factor.toFixed(2), statisticalCol[0], statisticalCol[1], statisticalResult);
                 } else if (this.highlightVariance) {
                     let stdDev = result.standardDeviation || 0;
                     let stdDevFactor = stdDev/result.mean * 100.0;
-                    return new TableResultValueEntry(f.name, mean, standardDeviation || 0, factor, stdDevFactor.toFixed(2) + "%", computeColor(stdDevFactor/5.0 + 1.0), '0x000');
+                    return new TableResultValueEntry(f.name, mean, stdDev, factor, stdDevFactor.toFixed(2) + "%", computeColor(stdDevFactor/5.0 + 1.0), '0x000');
                 } else {
-                    return new TableResultValueEntry(f.name, mean, standardDeviation || 0, factor, factor.toFixed(1), computeColor(factor), '0x000');
+                    return new TableResultValueEntry(f.name, mean, conficenceInterval, factor, factor.toFixed(2), computeColor(factor), '0x000');
                 }
             }
         });

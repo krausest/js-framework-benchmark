@@ -197,7 +197,7 @@ class App extends React.Component<{}, State> {
             Green cells are significantly faster than the comparison and red cells are slower.
             The test is performed as a one sided t-test. The significance level is 10%. The darker the color the lower the p-Value.</p>
           )}
-          <ResultTable currentSortKey={this.state.sortKey} data={this.state.resultTables} separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed} sortBy={this.sortBy}/>
+          <ResultTable currentSortKey={this.state.sortKey} data={this.state.resultTables} separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed} sortBy={this.sortBy} highlightVariance={this.state.highlightVariance}/>
       </div>
     );
   }

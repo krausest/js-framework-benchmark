@@ -7,12 +7,13 @@ export interface Props {
   data: Array<ResultTableData>;
   sortBy: (name:string, tableIdx: number) => void;
   currentSortKey: string;
+  highlightVariance: boolean;
 }
 
-const CpuResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void}) => {
+const CpuResultsTable = ({data, currentSortKey, sortBy, showStdDeviation} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void, showStdDeviation: boolean}) => {
   return data.resultsCPU.length==0 ? null :
         (<div>
-          <h3>Duration in milliseconds ± standard deviation (Slowdown = Duration / Fastest)</h3>
+          <h3>Duration in milliseconds ± {showStdDeviation ? 'standard deviation' : '95% confidence interval'} (Slowdown = Duration / Fastest)</h3>
           <table className='results'>
             <thead>
               <tr>
@@ -63,10 +64,10 @@ const StartupResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTable
         </div>);
 };
 
-const MemResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void}) => {
+const MemResultsTable = ({data, currentSortKey, sortBy, showStdDeviation} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void, showStdDeviation: boolean}) => {
   return data.resultsMEM.length==0 ? null :
         (<div>
-          <h3>Memory allocation in MBs ± standard deviation</h3>
+          <h3>Memory allocation in MBs ± {showStdDeviation ? 'standard deviation' : '95% confidence interval'}</h3>
           <table className='results'>
             <thead>
               <tr>
@@ -109,9 +110,9 @@ export class ResultTable extends React.Component<Props, {}> {
               <div key={texts[idx].label}>
                 <h1>{texts[idx].label}</h1>
                 <p>{texts[idx].description}</p>
-                <CpuResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data}/>
+                <CpuResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data} showStdDeviation={this.props.highlightVariance}/>
                 <StartupResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data}/>
-                <MemResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data}/>
+                <MemResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data}  showStdDeviation={this.props.highlightVariance}/>
               </div>
             )})}
         </div>
