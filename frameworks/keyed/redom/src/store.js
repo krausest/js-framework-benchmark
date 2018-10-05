@@ -33,7 +33,8 @@ export class Store {
   delete (id) {
     for (let i = 0; i < this.data.length; i++) {
       if (this.data[i].id === id) {
-        return this.data.splice(i--, 1);
+        this.data.splice(i--, 1);
+        return;
       }
     }
   }
