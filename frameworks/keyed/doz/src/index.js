@@ -63,6 +63,7 @@ new Doz({
 
     onCreate() {
         this.currentBench = '';
+        this.rows = [];
     },
 
     onUpdate() {
