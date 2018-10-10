@@ -42,6 +42,7 @@
     "webpack-cli": "^3.1.1"
   },
   "dependencies": {
+    "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-polyfill": "6.26.0",
     "jStat": "1.7.1",
     "react": "16.5.2",

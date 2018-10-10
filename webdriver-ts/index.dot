@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JS-Framkeworks Benchmark</title>
+    <title>JS-Frameworks Benchmark</title>
     <meta charset="UTF-8">
     <link href="css/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="css/main.css">
@@ -16,8 +16,8 @@
         </div>
         <div class="panel-body">
             <ul class="nav nav-pills nav-stacked">
-				{{~it.frameworks :framwork}}
-                <li><a href="/{{=framwork.uri}}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> {{=framwork.fullNameWithKeyedAndVersion}}</a></li>
+				{{~it.frameworks :framework}}
+                <li><a href="/{{=framework.uri}}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> {{=framework.fullNameWithKeyedAndVersion}}</a></li>
 				{{~}}
             </ul>
         </div>
