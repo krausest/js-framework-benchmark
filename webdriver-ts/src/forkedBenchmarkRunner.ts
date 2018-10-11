@@ -463,10 +463,26 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
             try {
                 setUseShadowRoot(framework.useShadowRoot);
                 await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/`);
+
+                // await (driver as any).sendDevToolsCommand('Network.enable');
+                // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
+                //     offline: false,
+                //     latency: 200, // ms
+                //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
+                //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
+                // });
                 await driver.executeScript("console.timeStamp('initBenchmark')");
                 await initBenchmark(driver, benchmark, framework);
+                if (benchmark.throttleCPU) {
+                    console.log("CPU slowdown", benchmark.throttleCPU);
+                    await (driver as any).sendDevToolsCommand('Emulation.setCPUThrottlingRate', {rate: benchmark.throttleCPU});
+                }
                 await driver.executeScript("console.timeStamp('runBenchmark')");
                 await runBenchmark(driver, benchmark, framework);
+                if (benchmark.throttleCPU) {
+                    console.log("resetting CPU slowdown");
+                    await (driver as any).sendDevToolsCommand('Emulation.setCPUThrottlingRate', {rate: 1});
+                }
                 await driver.executeScript("console.timeStamp('finishedBenchmark')");
                 await afterBenchmark(driver, benchmark, framework);
                 await driver.executeScript("console.timeStamp('afterBenchmark')");
