@@ -1,6 +1,6 @@
 import './App.css';
 import * as React from 'react';
-import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN} from './Common';
+import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, TableResultValueEntry, Benchmark, TableResultGeommeanEntry, T_SORT_BY_GEOMMEAN, SORT_BY_GEOMMEAN_STARTUP, SORT_BY_GEOMMEAN_MEM} from './Common';
 
 export interface Props {
   separateKeyedAndNonKeyed: boolean;
@@ -9,6 +9,26 @@ export interface Props {
   currentSortKey: string;
   highlightVariance: boolean;
 }
+
+
+const RenderRows = ({results, geomMean, benchmarks, currentSortKey, sortBy, sortbyGeommeanEnum} : {results: Array<Array<TableResultValueEntry|null>>, geomMean: Array<TableResultGeommeanEntry|null>, benchmarks: Array<Benchmark>, currentSortKey: string,
+    sortBy: (name:string) => void , sortbyGeommeanEnum: T_SORT_BY_GEOMMEAN}) => {
+    return <>{
+        results.map((resultsForBenchmark, benchIdx) =>
+    (<tr key={benchmarks[benchIdx].id}>
+        <th className='benchname'><a href='#' className={currentSortKey==benchmarks[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(benchmarks[benchIdx].id)}}>{benchmarks[benchIdx].label}</a>
+          <div className="rowCount">{benchmarks[benchIdx].description}</div>
+        </th>
+        {resultsForBenchmark.map((result,idx) => result == null ? <td key={idx}></td> : result.render())}
+    </tr>))}
+    <tr>
+        <th><a href='#' className={currentSortKey==sortbyGeommeanEnum ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(sortbyGeommeanEnum)}}>slowdown geometric mean</a></th>
+        {geomMean.map(result => result == null ? <td></td> : result.render())}
+    </tr>
+
+    </>
+}
+
 
 const CpuResultsTable = ({data, currentSortKey, sortBy, showStdDeviation} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void, showStdDeviation: boolean}) => {
   return data.resultsCPU.length==0 ? null :
@@ -22,18 +42,7 @@ const CpuResultsTable = ({data, currentSortKey, sortBy, showStdDeviation} : {dat
               </tr>
             </thead>
             <tbody>
-              {data.resultsCPU.map((resultsForBenchmark, benchIdx) =>
-                (<tr key={data.benchmarksCPU[benchIdx].id}>
-                    <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksCPU[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksCPU[benchIdx].id)}}>{data.benchmarksCPU[benchIdx].label}</a>
-                      <div className="rowCount">{data.benchmarksCPU[benchIdx].description}</div>
-                    </th>
-                    {resultsForBenchmark.map((result,idx) => result == null ? <td key={idx}></td> : result.render())}
-                </tr>
-              ))}
-              <tr>
-                <th><a href='#' className={currentSortKey==SORT_BY_GEOMMEAN ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_GEOMMEAN)}}>slowdown geometric mean</a></th>
-                {data.geomMeanCPU.map(result => result == null ? <td></td> : result.render())}
-              </tr>
+                <RenderRows results={data.resultsCPU} benchmarks={data.benchmarksCPU} currentSortKey={currentSortKey} sortBy={sortBy} geomMean={data.geomMeanCPU} sortbyGeommeanEnum={SORT_BY_GEOMMEAN_CPU}/>
             </tbody>
           </table>
         </div>);
@@ -51,14 +60,7 @@ const StartupResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTable
               </tr>
             </thead>
             <tbody>
-              {data.resultsStartup.map((resultsForBenchmark, benchIdx) =>
-                (<tr key={data.benchmarksStartup[benchIdx].id}>
-                    <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksStartup[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksStartup[benchIdx].id)}}>{data.benchmarksStartup[benchIdx].label}</a>
-                      <div className="rowCount">{data.benchmarksStartup[benchIdx].description}</div>
-                    </th>
-                    {resultsForBenchmark.map(result => result == null ? <td></td> : result.render())}
-                </tr>
-              ))}
+            <RenderRows results={data.resultsStartup} benchmarks={data.benchmarksStartup} currentSortKey={currentSortKey} sortBy={sortBy} geomMean={data.geomMeanStartup} sortbyGeommeanEnum={SORT_BY_GEOMMEAN_STARTUP}/>
             </tbody>
           </table>
         </div>);
@@ -76,14 +78,7 @@ const MemResultsTable = ({data, currentSortKey, sortBy, showStdDeviation} : {dat
               </tr>
             </thead>
             <tbody>
-              {data.resultsMEM.map((resultsForBenchmark, benchIdx) =>
-                (<tr key={data.benchmarksMEM[benchIdx].id}>
-                    <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksMEM[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksMEM[benchIdx].id)}}>{data.benchmarksMEM[benchIdx].label}</a>
-                      <div className="rowCount">{data.benchmarksMEM[benchIdx].description}</div>
-                    </th>
-                    {resultsForBenchmark.map(result => result == null ? <td></td> : result.render())}
-                </tr>
-              ))}
+                <RenderRows results={data.resultsMEM} benchmarks={data.benchmarksMEM} currentSortKey={currentSortKey} sortBy={sortBy}  geomMean={data.geomMeanMEM} sortbyGeommeanEnum={SORT_BY_GEOMMEAN_MEM}/>
             </tbody>
           </table>
         </div>);

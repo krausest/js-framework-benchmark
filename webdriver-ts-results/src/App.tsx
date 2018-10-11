@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './App.css';
 import {benchmarks, frameworks, results} from './results';
-import {Framework, Benchmark, BenchmarkType, convertToMap, ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN} from './Common';
+import {Framework, Benchmark, BenchmarkType, convertToMap, ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, SORT_BY_GEOMMEAN_MEM, SORT_BY_GEOMMEAN_STARTUP} from './Common';
 import {SelectBar} from './SelectBar';
 import {ResultTable} from './ResultTable';
 require('babel-polyfill')
@@ -97,7 +97,7 @@ class App extends React.Component<{}, State> {
                   selectedFrameworks: _allFrameworks,
                   separateKeyedAndNonKeyed: true,
                   resultTables: [],
-                  sortKey: SORT_BY_GEOMMEAN,
+                  sortKey: SORT_BY_GEOMMEAN_CPU,
                   compareWith: undefined,
                   useMedian: false,
                   highlightVariance: false
@@ -113,7 +113,7 @@ class App extends React.Component<{}, State> {
     let sortKey = this.state.sortKey;
     let setIds = new Set();
     set.forEach(b => setIds.add(b.id))
-    if ((sortKey!=SORT_BY_NAME && sortKey!=SORT_BY_GEOMMEAN) && !setIds.has(sortKey)) sortKey = SORT_BY_NAME;
+    if ((sortKey!=SORT_BY_NAME && sortKey!=SORT_BY_GEOMMEAN_CPU && sortKey!=SORT_BY_GEOMMEAN_MEM && sortKey!=SORT_BY_GEOMMEAN_STARTUP) && !setIds.has(sortKey)) sortKey = SORT_BY_NAME;
     this.nextState.selectedBenchmarks = set;
     this.setState({selectedBenchmarks: set, sortKey, resultTables: this.updateResultTable()});
   }

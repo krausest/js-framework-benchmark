@@ -85,8 +85,8 @@ export class SelectBar extends React.Component<Props, {}> {
                     </DropDown>
                     <div className="hspan" />
                     <div className="form-check" style={{ display: "inline-block" }}>
-                        <input className="form-check-input" type="checkbox" onChange={(evt) => selectSeparateKeyedAndNonKeyed(evt.target.checked)} checked={separateKeyedAndNonKeyed} />
-                        <label className="form-check-label">
+                        <input className="form-check-input" id='chb_nonKeyed' type="checkbox" onChange={(evt) => selectSeparateKeyedAndNonKeyed(evt.target.checked)} checked={separateKeyedAndNonKeyed} />
+                        <label className="form-check-label" htmlFor='chb_nonKeyed'>
                             Separate keyed and non-keyed
                         </label>
                     </div>
@@ -107,15 +107,15 @@ export class SelectBar extends React.Component<Props, {}> {
                     </form>
                     <div className="hspan" />
                     <div className="form-check" style={{ display: "inline-block" }}>
-                        <input className="form-check-input" type="checkbox" onChange={(evt) => selectMedian(evt.target.checked)} checked={useMedian} />
-                        <label className="form-check-label">
+                        <input className="form-check-input" id='chb_median' type="checkbox" onChange={(evt) => selectMedian(evt.target.checked)} checked={useMedian} />
+                        <label className="form-check-label" htmlFor='chb_median'>
                             Use median instead of mean
                         </label>
                     </div>
                     <div className="hspan" />
                     <div className="form-check" style={{ display: "inline-block" }}>
-                        <input className="form-check-input" type="checkbox" onChange={(evt) => selectHighlightVariance(evt.target.checked)} checked={highlightVariance} />
-                        <label className="form-check-label">
+                        <input className="form-check-input" id='chb_variance' type="checkbox" onChange={(evt) => selectHighlightVariance(evt.target.checked)} checked={highlightVariance} />
+                        <label className="form-check-label" htmlFor='chb_variance'>
                             Highlight variance
                         </label>
                     </div>

@@ -42,7 +42,10 @@ export interface TableResultEntry {
 }
 
 export const SORT_BY_NAME = 'SORT_BY_NAME';
-export const SORT_BY_GEOMMEAN = 'SORT_BY_GEOMMEAN';
+export const SORT_BY_GEOMMEAN_CPU = 'SORT_BY_GEOMMEAN_CPU';
+export const SORT_BY_GEOMMEAN_MEM = 'SORT_BY_GEOMMEAN_MEM';
+export const SORT_BY_GEOMMEAN_STARTUP = 'SORT_BY_GEOMMEAN_STARTUP';
+export type T_SORT_BY_GEOMMEAN = typeof SORT_BY_GEOMMEAN_CPU | typeof SORT_BY_GEOMMEAN_MEM | typeof SORT_BY_GEOMMEAN_STARTUP;
 
 let computeColor = function(factor: number): string {
     if (factor < 2.0) {
@@ -135,6 +138,8 @@ export class ResultTableData {
     // Cell data
     resultsCPU: Array<Array<TableResultValueEntry|null>>;   // [benchmark][framework]
     geomMeanCPU: Array<TableResultGeommeanEntry|null>;
+    geomMeanStartup: Array<TableResultGeommeanEntry|null>;
+    geomMeanMEM: Array<TableResultGeommeanEntry|null>;
     resultsStartup: Array<Array<TableResultValueEntry|null>>;
     resultsMEM: Array<Array<TableResultValueEntry|null>>;
 
@@ -177,13 +182,23 @@ export class ResultTableData {
             let resultsForFramework = this.resultsCPU.map(arr => arr[idx]);
             return this.computeGeometricMean(framework, this.benchmarksCPU, resultsForFramework);
         });
+        this.geomMeanStartup = this.frameworks.map((framework, idx) => {
+            let resultsForFramework = this.resultsStartup.map(arr => arr[idx]);
+            return this.computeGeometricMean(framework, this.benchmarksStartup, resultsForFramework);
+        });
+        this.geomMeanMEM = this.frameworks.map((framework, idx) => {
+            let resultsForFramework = this.resultsMEM.map(arr => arr[idx]);
+            return this.computeGeometricMean(framework, this.benchmarksMEM, resultsForFramework);
+        });
         this.sortBy(sortKey);
     }
     sortBy(sortKey: string) {
         let zipped = this.frameworks.map((f,frameworkIndex) => {
             let sortValue;
             if (sortKey === SORT_BY_NAME) sortValue = f.name;
-            else if (sortKey === SORT_BY_GEOMMEAN) sortValue = this.geomMeanCPU[frameworkIndex]!.mean || Number.POSITIVE_INFINITY;
+            else if (sortKey === SORT_BY_GEOMMEAN_CPU) sortValue = this.geomMeanCPU[frameworkIndex]!.mean || Number.POSITIVE_INFINITY;
+            else if (sortKey === SORT_BY_GEOMMEAN_MEM) sortValue = this.geomMeanMEM[frameworkIndex]!.mean || Number.POSITIVE_INFINITY;
+            else if (sortKey === SORT_BY_GEOMMEAN_STARTUP) sortValue = this.geomMeanStartup[frameworkIndex]!.mean || Number.POSITIVE_INFINITY;
             else {
                 let cpuIdx = this.benchmarksCPU.findIndex(b => b.id === sortKey);
                 let startupIdx = this.benchmarksStartup.findIndex(b => b.id === sortKey);
@@ -204,9 +219,11 @@ export class ResultTableData {
         let remappedIdx = zipped.map(z => z.origIndex);
         this.frameworks = this.remap(remappedIdx, this.frameworks);
         this.resultsCPU = this.resultsCPU.map(row => this.remap(remappedIdx, row));
-        this.geomMeanCPU = this.remap(remappedIdx, this.geomMeanCPU);
         this.resultsStartup = this.resultsStartup.map(row => this.remap(remappedIdx, row));
         this.resultsMEM = this.resultsMEM.map(row => this.remap(remappedIdx, row));
+        this.geomMeanCPU = this.remap(remappedIdx, this.geomMeanCPU);
+        this.geomMeanMEM = this.remap(remappedIdx, this.geomMeanMEM);
+        this.geomMeanStartup = this.remap(remappedIdx, this.geomMeanStartup);
     }
     remap<T>(remappedIdx: Array<number>, array: Array<T>): Array<T> {
         let copy = new Array<T>(array.length);
@@ -264,9 +281,9 @@ export class ResultTableData {
                 } else if (this.highlightVariance) {
                     let stdDev = result.standardDeviation || 0;
                     let stdDevFactor = stdDev/result.mean * 100.0;
-                    return new TableResultValueEntry(f.name, mean, stdDev, factor, stdDevFactor.toFixed(2) + "%", computeColor(stdDevFactor/5.0 + 1.0), '0x000');
+                    return new TableResultValueEntry(f.name, mean, stdDev, factor, stdDevFactor.toFixed(2) + "%", computeColor(stdDevFactor/5.0 + 1.0), '#000');
                 } else {
-                    return new TableResultValueEntry(f.name, mean, conficenceInterval, factor, factor.toFixed(2), computeColor(factor), '0x000');
+                    return new TableResultValueEntry(f.name, mean, conficenceInterval, factor, factor.toFixed(2), computeColor(factor), '#000');
                 }
             }
         });
