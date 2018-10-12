@@ -64,18 +64,22 @@ let computeColor = function(factor: number): string {
 }
 
 export class TableResultValueEntry implements TableResultEntry {
-    constructor(public key:string, public mean: number, public confidenceInterval: number, public factor: number, public formattedFactor: string, public bgColor: string, public textColor: string, public statisticallySignificantFactor: string|number|undefined = undefined) {
+    constructor(public key:string, public mean: string, public deviation: string, public factor: number, public formattedFactor: string, public bgColor: string, public textColor: string, public statisticallySignificantFactor: string|number|undefined = undefined) {
     }
     render() {
         let col = this.bgColor;
         let textCol = this.textColor;
         return (<td key={this.key} style={{backgroundColor:col, color: textCol}}>
-                    <span className="mean">{this.mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true})}</span>
-                    <span className="deviation">{this.confidenceInterval.toFixed(2)}</span>
+                    {/* <span className="mean">{}</span> */}
+                    <span className="mean">{this.mean}</span>
+                    <span className="deviation">{this.deviation}</span>
                     <br />
                     <span className="factor">({this.formattedFactor})</span>
+                    {this.statisticallySignificantFactor && <>
                     <br/>
                     <span className="factor">{this.statisticallySignificantFactor}</span>
+                    </>
+                    }
                 </td>);
     }
 }
@@ -128,6 +132,8 @@ let statisticComputeColor = function(sign: number, pValue: number): [string, str
     }
 }
 
+const formatEn = new Intl.NumberFormat('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true});
+
 export class ResultTableData {
     // Rows
     benchmarksCPU: Array<Benchmark>;
@@ -152,6 +158,7 @@ export class ResultTableData {
         this.update(sortKey);
     }
     private update(sortKey: string) {
+        console.time("update");
         this.benchmarksCPU = this.allBenchmarks.filter(benchmark => benchmark.type === BenchmarkType.CPU && this.selectedBenchmarks.has(benchmark));
         this.benchmarksStartup = this.allBenchmarks.filter(benchmark => benchmark.type === BenchmarkType.STARTUP && this.selectedBenchmarks.has(benchmark));
         this.benchmarksMEM = this.allBenchmarks.filter(benchmark => benchmark.type === BenchmarkType.MEM && this.selectedBenchmarks.has(benchmark));
@@ -191,6 +198,7 @@ export class ResultTableData {
             return this.computeGeometricMean(framework, this.benchmarksMEM, resultsForFramework);
         });
         this.sortBy(sortKey);
+        console.timeEnd("update");
     }
     sortBy(sortKey: string) {
         let zipped = this.frameworks.map((f,frameworkIndex) => {
@@ -255,6 +263,9 @@ export class ResultTableData {
                 let mean = (this.useMedian && !compareWithResults) ? result.median : result.mean;
                 let factor = clamp ? Math.max(16, mean) / Math.max(16, min) : mean/min;
                 let conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
+                let conficenceIntervalStr = conficenceInterval.toFixed(1);
+                // let meanStr = 'x'; //mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true});
+                let meanStr = formatEn.format(mean);
 
                 // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
                 // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
@@ -277,13 +288,14 @@ export class ResultTableData {
                     let p = (1.0-jStat.studentt.cdf( Math.abs(t), ny ))*2;
                     statisticalCol = statisticComputeColor(t, p);
                     statisticalResult = (p*100).toFixed(3)+"%";
-                    return new TableResultValueEntry(f.name, mean, conficenceInterval, factor, factor.toFixed(2), statisticalCol[0], statisticalCol[1], statisticalResult);
+                    return new TableResultValueEntry(f.name, meanStr, conficenceIntervalStr, factor, factor.toFixed(2), statisticalCol[0], statisticalCol[1], statisticalResult);
                 } else if (this.highlightVariance) {
                     let stdDev = result.standardDeviation || 0;
+                    let stdDevStr = stdDev.toFixed(1);
                     let stdDevFactor = stdDev/result.mean * 100.0;
-                    return new TableResultValueEntry(f.name, mean, stdDev, factor, stdDevFactor.toFixed(2) + "%", computeColor(stdDevFactor/5.0 + 1.0), '#000');
+                    return new TableResultValueEntry(f.name, meanStr, stdDevStr, factor, stdDevFactor.toFixed(2) + "%", computeColor(stdDevFactor/5.0 + 1.0), '#000');
                 } else {
-                    return new TableResultValueEntry(f.name, mean, conficenceInterval, factor, factor.toFixed(2), computeColor(factor), '#000');
+                    return new TableResultValueEntry(f.name, meanStr, conficenceIntervalStr, factor, factor.toFixed(2), computeColor(factor), '#000');
                 }
             }
         });
