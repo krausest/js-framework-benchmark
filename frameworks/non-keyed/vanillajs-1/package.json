@@ -1,0 +1,28 @@
+{
+  "name": "js-framework-benchmark-vanillajs",
+  "version": "1.1.1",
+  "description": "Vanilla.JS demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": ""
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "keywords": [],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "rollup": "^0.66.4",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-terser": "^3.0.0"
+  }
+}
