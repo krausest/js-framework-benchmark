@@ -66,10 +66,10 @@ function buildData(count, result) {
     result.push({
       id: rowId++,
       label: adjectives[random(adjectives.length)] +
-      " " +
-      colours[random(colours.length)] +
-      " " +
-      nouns[random(nouns.length)]
+        " " +
+        colours[random(colours.length)] +
+        " " +
+        nouns[random(nouns.length)]
     });
   }
 }
