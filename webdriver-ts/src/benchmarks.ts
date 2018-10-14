@@ -11,7 +11,7 @@ export interface BenchmarkInfo {
     type: BenchmarkType;
     label: string;
     description: string;
-    dynamicCountMultiplicity?: number
+    throttleCPU?: number
 }
 
 export abstract class Benchmark {
@@ -19,14 +19,14 @@ export abstract class Benchmark {
     type: BenchmarkType;
     label: string;
     description: string;
-    dynamicCountMultiplicity?: number
+    throttleCPU?: number;
 
     constructor(public benchmarkInfo: BenchmarkInfo) {
         this.id = benchmarkInfo.id;
         this.type = benchmarkInfo.type;
         this.label = benchmarkInfo.label;
         this.description = benchmarkInfo.description;
-        this.dynamicCountMultiplicity = benchmarkInfo.dynamicCountMultiplicity;
+        this.throttleCPU = benchmarkInfo.throttleCPU;
     }
     abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
     abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
@@ -54,8 +54,7 @@ const benchRun = new class extends Benchmark {
             id: "01_run1k",
             label: "create rows",
             description: "Duration for creating 1000 rows after the page loaded.",
-            type: BenchmarkType.CPU,
-            dynamicCountMultiplicity: 3
+            type: BenchmarkType.CPU
         })
     }
     async init(driver: WebDriver) { await testElementLocatedById(driver, "add", SHORT_TIMEOUT); }
@@ -71,14 +70,14 @@ const benchReplaceAll = new class extends Benchmark {
             id: "02_replace1k",
             label: "replace all rows",
             description: "Duration for updating all 1000 rows of the table (with " + config.WARMUP_COUNT + " warmup iterations).",
-            type: BenchmarkType.CPU,
-            dynamicCountMultiplicity: 3
+            type: BenchmarkType.CPU
         })
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, 'run', SHORT_TIMEOUT);
         for (let i = 0; i < config.WARMUP_COUNT; i++) {
             await clickElementById(driver, 'run');
+            await testTextContains(driver, '//tbody/tr[1]/td[1]', (i*1000+1).toFixed());
         }
     }
     async run(driver: WebDriver) {
@@ -93,8 +92,7 @@ const benchUpdate = new class extends Benchmark {
             id: "03_update10th1k",   // FIXME rename to now 03_update10th10k
             label: "partial update",
             description: "Time to update the text of every 10th row (with " + config.WARMUP_COUNT + " warmup iterations) for a table with 10k rows.",
-            type: BenchmarkType.CPU,
-            dynamicCountMultiplicity: 3
+            type: BenchmarkType.CPU
         })
     }
     async init(driver: WebDriver) {
@@ -117,9 +115,9 @@ const benchSelect = new class extends Benchmark {
         super({
             id: "04_select1k",
             label: "select row",
-            description: "Duration to highlight a row in response to a click on the row. (with " + config.WARMUP_COUNT + " warmup iterations).",
+            description: "Duration to highlight a row in response to a click on the row. (with " + config.WARMUP_COUNT + " warmup iterations). Simulated 16x CPU slowdown.",
             type: BenchmarkType.CPU,
-            dynamicCountMultiplicity: 6
+            throttleCPU: 16
         })
     }
     async init(driver: WebDriver) {
@@ -141,9 +139,9 @@ const benchSwapRows = new class extends Benchmark {
         super({
             id: "05_swap1k",
             label: "swap rows",
-            description: "Time to swap 2 rows on a 1K table. (with " + config.WARMUP_COUNT + " warmup iterations).",
+            description: "Time to swap 2 rows on a 1K table. (with " + config.WARMUP_COUNT + " warmup iterations). Simulated 4x CPU slowdown.",
             type: BenchmarkType.CPU,
-            dynamicCountMultiplicity: 6
+            throttleCPU: 4
         })
     }
     async init(driver: WebDriver) {
@@ -169,8 +167,7 @@ const benchRemove = new class extends Benchmark {
             id: "06_remove-one-1k",
             label: "remove row",
             description: "Duration to remove a row. (with " + config.WARMUP_COUNT + " warmup iterations).",
-            type: BenchmarkType.CPU,
-            dynamicCountMultiplicity: 4
+            type: BenchmarkType.CPU
         })
     }
     async init(driver: WebDriver) {
@@ -197,8 +194,7 @@ const benchRunBig = new class extends Benchmark {
             id: "07_create10k",
             label: "create many rows",
             description: "Duration to create 10,000 rows",
-            type: BenchmarkType.CPU,
-            dynamicCountMultiplicity: 1
+            type: BenchmarkType.CPU
         })
     }
     async init(driver: WebDriver) {
@@ -216,8 +212,7 @@ const benchAppendToManyRows = new class extends Benchmark {
             id: "08_create1k-after10k",
             label: "append rows to large table",
             description: "Duration for adding 1000 rows on a table of 10,000 rows.",
-            type: BenchmarkType.CPU,
-            dynamicCountMultiplicity: 1
+            type: BenchmarkType.CPU
         })
     }
     async init(driver: WebDriver) {
@@ -237,8 +232,7 @@ const benchClear = new class extends Benchmark {
             id: "09_clear10k",
             label: "clear rows",
             description: "Duration to clear the table filled with 10.000 rows.",
-            type: BenchmarkType.CPU,
-            dynamicCountMultiplicity: 3
+            type: BenchmarkType.CPU
         })
     }
     async init(driver: WebDriver) {

@@ -7,18 +7,18 @@ interface Props<T> extends DropdownCallback<T> {
 
 export function DropDownContents<T>(props: Props<T>) {
   let {selectNone, selectAll, isNoneSelected, areAllSelected, children} = props;
-  return <div>            
+  return <div className="mb-4">
           <div className="row">
-            <div className="text-left col-md-8"> 
+            <div className="text-left col-md-8">
               {children[0]}
             </div>
-            <div className="text-right col-md-4" style={{paddingTop: '25px'}}> 
+            <div className="text-right col-md-4" style={{paddingTop: '25px'}}>
                 {!isNoneSelected() ? <a href='#' onClick={selectNone}>None</a> : <span>None</span>}
                 &nbsp;
                 {!areAllSelected() ? <a href='#' onClick={selectAll}>All</a> : <span>All</span>}
-            </div>    
-          </div>    
-          <div className="row">
+            </div>
+          </div>
+          <div className="row here1">
             {children[1]}
           </div>
       </div>;

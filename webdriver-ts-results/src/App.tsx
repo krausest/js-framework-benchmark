@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './App.css';
 import {benchmarks, frameworks, results} from './results';
-import {Framework, Benchmark, BenchmarkType, convertToMap, ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN} from './Common';
+import {Framework, Benchmark, BenchmarkType, convertToMap, ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, SORT_BY_GEOMMEAN_MEM, SORT_BY_GEOMMEAN_STARTUP} from './Common';
 import {SelectBar} from './SelectBar';
 import {ResultTable} from './ResultTable';
 require('babel-polyfill')
@@ -97,7 +97,7 @@ class App extends React.Component<{}, State> {
                   selectedFrameworks: _allFrameworks,
                   separateKeyedAndNonKeyed: true,
                   resultTables: [],
-                  sortKey: SORT_BY_GEOMMEAN,
+                  sortKey: SORT_BY_GEOMMEAN_CPU,
                   compareWith: undefined,
                   useMedian: false,
                   highlightVariance: false
@@ -113,7 +113,7 @@ class App extends React.Component<{}, State> {
     let sortKey = this.state.sortKey;
     let setIds = new Set();
     set.forEach(b => setIds.add(b.id))
-    if ((sortKey!=SORT_BY_NAME && sortKey!=SORT_BY_GEOMMEAN) && !setIds.has(sortKey)) sortKey = SORT_BY_NAME;
+    if ((sortKey!=SORT_BY_NAME && sortKey!=SORT_BY_GEOMMEAN_CPU && sortKey!=SORT_BY_GEOMMEAN_MEM && sortKey!=SORT_BY_GEOMMEAN_STARTUP) && !setIds.has(sortKey)) sortKey = SORT_BY_NAME;
     this.nextState.selectedBenchmarks = set;
     this.setState({selectedBenchmarks: set, sortKey, resultTables: this.updateResultTable()});
   }
@@ -162,15 +162,15 @@ class App extends React.Component<{}, State> {
   }
   render() {
     let disclaimer = (false) ? (<div>
-          <h2>Results for js web frameworks benchmark – round 7</h2>
-          <p>Go here for the accompanying article <a href="http://www.stefankrause.net/wp/?p=454">http://www.stefankrause.net/wp/?p=454</a>. Source code can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>
+          <h2>Results for js web frameworks benchmark – round 8</h2>
+          <p>Go here for the accompanying article <a href="http://www.stefankrause.net/wp/?p=504">http://www.stefankrause.net/wp/?p=504</a>. Source code can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>
         </div>) :
         (<p>Warning: These results are preliminary - use with caution (they may e.g. be from different browser versions).Official results are published on my <a href="http://www.stefankrause.net/">blog</a>.</p>);
 
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.13.1, Chrome 62.0.3202.94 (64-bit))</p>
+        <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.13.1, Chrome 69.0.3497.100 (64-bit))</p>
         <SelectBar  benchmarksCPU={this.state.benchmarksCPU}
                     benchmarksStartup={this.state.benchmarksStartup}
                     benchmarksMEM={this.state.benchmarksMEM}
@@ -197,7 +197,7 @@ class App extends React.Component<{}, State> {
             Green cells are significantly faster than the comparison and red cells are slower.
             The test is performed as a one sided t-test. The significance level is 10%. The darker the color the lower the p-Value.</p>
           )}
-          <ResultTable currentSortKey={this.state.sortKey} data={this.state.resultTables} separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed} sortBy={this.sortBy}/>
+          <ResultTable currentSortKey={this.state.sortKey} data={this.state.resultTables} separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed} sortBy={this.sortBy} highlightVariance={this.state.highlightVariance}/>
       </div>
     );
   }
