@@ -24,6 +24,7 @@
     "@angular/platform-browser": "6.1.0",
     "core-js": "2.5.7",
     "rxjs": "6.2.2",
+    "tslib": "^1.9.3",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
