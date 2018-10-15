@@ -1,20 +1,18 @@
 'use strict';
 
 import { Store } from './store.es6'
-import { linkEvent, Component, render, createTextVNode } from 'inferno'
+import { linkEvent, Component, render } from 'inferno'
 
 function Row({ d, id, styleClass, deleteFunc, selectFunc }) {
   /*
    * Only <td className="col-md-1"> and  <a onClick={linkEvent(id, selectFunc)}/>, nodes needs children shape flags
-   * Because they have dynamic children. We can pre-define children type by using $HasVNodeChildren
-   *
-   * other elements don't have children so $NoNormalize is not needed there
+   * Because they have dynamic children. We can pre-define children type by using ChildFlags
    */
   return (
     <tr className={styleClass}>
-      <td className="col-md-1" $HasVNodeChildren>{createTextVNode(id + '')}</td>
+      <td className="col-md-1" $HasTextChildren>{id}</td>
       <td className="col-md-4">
-        <a onClick={linkEvent(id, selectFunc)} $HasVNodeChildren>{createTextVNode(d.label)}</a>
+        <a onClick={linkEvent(id, selectFunc)} $HasTextChildren>{d.label}</a>
       </td>
       <td className="col-md-1">
         <a onClick={linkEvent(id, deleteFunc)}>
@@ -26,9 +24,12 @@ function Row({ d, id, styleClass, deleteFunc, selectFunc }) {
   )
 }
 
-function onComponentShouldUpdate(lastProps, nextProps) {
-  return nextProps.d !== lastProps.d || nextProps.styleClass !== lastProps.styleClass;
-}
+// Inferno functional components has hooks, when they are static they can be defined in defaultHooks property
+Row.defaultHooks = {
+  onComponentShouldUpdate(lastProps, nextProps) {
+    return nextProps.d !== lastProps.d || nextProps.styleClass !== lastProps.styleClass;
+  }
+};
 
 function createRows(store, deleteFunc, selectFunc) {
   const rows = [];
@@ -48,7 +49,6 @@ function createRows(store, deleteFunc, selectFunc) {
         selected={selected}
         deleteFunc={deleteFunc}
         selectFunc={selectFunc}
-        onComponentShouldUpdate={onComponentShouldUpdate}
       />
     );
   }
@@ -76,19 +76,19 @@ export class Controller extends Component {
     this.start = 0;
   }
 
-  run() {
+  run(event) {
     event.stopPropagation();
     this.state.store.run();
     this.setState({ store: this.state.store });
   }
 
-  add() {
+  add(event) {
     event.stopPropagation();
     this.state.store.add();
     this.setState({ store: this.state.store });
   }
 
-  update() {
+  update(event) {
     event.stopPropagation();
     this.state.store.update();
     this.setState({ store: this.state.store });
@@ -106,7 +106,7 @@ export class Controller extends Component {
     this.setState({ store: this.state.store });
   }
 
-  runLots() {
+  runLots(event) {
     event.stopPropagation();
     this.state.store.runLots();
     this.setState({ store: this.state.store });
@@ -118,7 +118,7 @@ export class Controller extends Component {
     this.setState({ store: this.state.store });
   }
 
-  swapRows() {
+  swapRows(event) {
     event.stopPropagation();
     this.state.store.swapRows();
     this.setState({ store: this.state.store });

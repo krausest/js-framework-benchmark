@@ -1,4 +1,13 @@
 {
-    "presets": [ "es2015", "stage-0" ],
-    "plugins": ["babel-plugin-syntax-jsx", ["babel-plugin-inferno", {"imports": true}]]
+    "presets": [
+        ["@babel/preset-env",
+            {
+                "modules": false,
+                "loose": true
+            }
+        ]
+    ],
+    "plugins": [
+        ["babel-plugin-inferno", {"imports": true}]
+    ]
 }
