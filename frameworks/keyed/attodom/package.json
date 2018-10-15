@@ -1,7 +1,7 @@
 {
-  "name": "js-framework-benchmark-attodom-v0.9.0",
-  "version": "0.9.0",
-  "description": "Benchmark for attoDom 0.9.0",
+  "name": "js-framework-benchmark-attodom",
+  "version": "0.11.3",
+  "description": "Benchmark for attodom",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "attodom"
   },
@@ -22,6 +22,6 @@
     "uglify-js": "3.0.12"
   },
   "dependencies": {
-    "attodom": "0.9.0"
+    "attodom": "^0.11.3"
   }
 }

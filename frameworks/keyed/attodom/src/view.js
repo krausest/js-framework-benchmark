@@ -1,9 +1,8 @@
 /*eslint indent: ["warn", 2, { "VariableDeclarator": 2 }]*/
 var h = require('attodom/el'),
-    list = require('attodom/list'),
-    t = require('attodom/text')
+    list = require('attodom/list')
 
-var TITLE = 'attodom v0.9.0'
+var TITLE = 'attodom v0.11.3'
 
 module.exports = function(store) {
   function clickHandlerMenu(e) {
@@ -11,41 +10,46 @@ module.exports = function(store) {
     if (key) {
       e.preventDefault()
       store[key === 'runlots' ? 'runLots' : key === 'swaprows' ? 'swapRows' : key]()
-      rows.update(store.data)
+      rowList.update(store.data)
     }
   }
+
   function updateRow(v) {
     this.$label.data = v.label
     this.className = (this.id === store.selected) ? 'danger' : ''
   }
-  function clickHandlerSelect(e) {
-    e.preventDefault()
-    store.select(this.parentNode.id)
-    rows.update(store.data)
-  }
-  function clickHandlerDelete(e) {
-    e.preventDefault()
-    store.delete(+this.parentNode.id)
-    rows.update(store.data)
-  }
 
-  var rows = list('id', function(rec) {
-    var attr = {id: rec.id, update: updateRow, $label: t(rec.label)}
+  function makeRow(rec) {
+    var attr = {id: rec.id, update: updateRow}
     return h('tr', attr,
       h('td', {class: 'col-md-1'}, rec.id),
-      h('td', {class: 'col-md-4', onclick: clickHandlerSelect},
-        h('a', {class: 'lbl'}, attr.$label)
+      h('td', {class: 'col-md-4', onClick: clickHandlerSelect},
+        h('a', {class: 'lbl'}, attr.$label = document.createTextNode(rec.label))
       ),
-      h('td', {class: 'col-md-1', onclick: clickHandlerDelete},
+      h('td', {class: 'col-md-1', onClick: clickHandlerDelete},
         h('a', {class: 'remove'},
           h('span', {class: 'glyphicon glyphicon-remove remove', 'aria-hidden': ''})
         )
       ),
       h('td', {class: 'col-md-6'})
     )
-  })
+  }
 
-  return h('div', {id: 'main', update: function() { rows.update(store.data) }},
+  function clickHandlerSelect(e) {
+    e.preventDefault()
+    store.select(this.parentNode.id)
+    rowList.update(store.data)
+  }
+
+  function clickHandlerDelete(e) {
+    e.preventDefault()
+    store.delete(+this.parentNode.id)
+    rowList.update(store.data)
+  }
+
+  var rowList = list(h('tbody', {id: 'tbody'}), makeRow, {key: 'id'})
+
+  return h('div', {id: 'main', update: function() { rowList.update(store.data) }},
     h('div', {class: 'container'},
       h('div', {class: 'jumbotron'},
         h('div', {class: 'row'},
@@ -64,9 +68,7 @@ module.exports = function(store) {
           )
         )
       ),
-      h('table', {class: 'table table-hover table-striped test-data'},
-        h('tbody', {id: 'tbody'}, rows)
-      ),
+      h('table', {class: 'table table-hover table-striped test-data'}, rowList.parent),
       h('span', {class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': ''})
     )
   )

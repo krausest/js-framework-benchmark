@@ -5,5 +5,4 @@ var Store = require('./src/store'),
 
 var view = View(new Store)
 view.update()
-
 document.body.appendChild(view)
