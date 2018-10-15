@@ -1,0 +1,37 @@
+{
+  "name": "js-framework-benchmark-glasgow",
+  "version": "1.0.0",
+  "description": "Benchmark for glasgow framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "glasgow"
+  },
+  "scripts": {
+    "build-dev": "rollup -c",
+    "build-prod": "rollup -c --environment production"
+  },
+  "keywords": [
+    "ractive"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.3",
+    "babel-loader": "7.1.5",
+    "babel-preset-stage-0": "6.24.1",
+    "rollup": "^0.63.4",
+    "rollup-plugin-alias": "^1.4.0",
+    "rollup-plugin-babel": "^3.0.7",
+    "rollup-plugin-commonjs": "^9.1.4",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-replace": "^2.0.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1"
+  },
+  "dependencies": {
+    "glasgow": "0.2.7"
+  }
+}
