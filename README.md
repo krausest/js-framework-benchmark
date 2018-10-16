@@ -38,7 +38,7 @@ The results of this benchmark is outlined on my blog ([round 1](http://www.stefa
 
 Official results are posted on the blog mentioned above. The current snapshot that may not have the same quality (i.e.
 results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
-[![Results](images/results.png?raw=true "Results")](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
+[![Results](images/results.png?raw=true "Results")](https://krausest.github.io/js-framework-benchmark/current.html)
 
 ## How to get started - building and running
 
