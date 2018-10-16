@@ -1,5 +1,6 @@
 import { html, render } from '../node_modules/lit-html/lit-html.js';
 import { repeat } from '../node_modules/lit-html/directives/repeat.js';
+import { guard } from '../node_modules/lit-html/directives/guard.js';
 
 let startTime;
 let lastMeasure;
@@ -84,12 +85,25 @@ const interact = e => {
 const del = id => {
   startMeasure('delete');
   const idx = data.findIndex(d => d.id === id);
-  data.splice(idx, 1);
+  data = [
+    ...data.slice(0, idx),
+    ...data.slice(idx + 1)
+  ]
   _render();
   stopMeasure();
 };
 const select = id => {
   startMeasure('select');
+  data = data.map(item => {
+    switch (item.id) {
+      case selected:
+        return { ...item, selected: false } 
+      case id:
+        return { ...item, selected: true }
+      default:
+        return item
+    }
+  })
   selected = id;
   _render();
   stopMeasure();
@@ -97,30 +111,33 @@ const select = id => {
 const swapRows = () => {
   startMeasure('swapRows');
   if (data.length > 998) {
-    var tmp = data[1];
-    data[1] = data[998];
-    data[998] = tmp;
+    data = [
+      data[0],
+      data[998],
+      ...data.slice(2, 998),
+      data[1],
+      data[999],
+    ]
   }
   _render();
   stopMeasure();
 };
 const update = () => {
   startMeasure('update');
-  for (let i = 0; i < data.length; i += 10) {
-    data[i].label += ' !!!';
-  }
+  data = data.map((item, i) => i % 10 === 0
+    ? { ...item, label: item.label + ' !!!' }
+    : item
+  )
   _render();
   stopMeasure();
-};
-const rowClass = (id, selected) => {
-  return id === selected ? 'danger' : '';
 };
 const buildData = count => {
   const data = [];
   for (var i = 0; i < count; i++) {
     data.push({
       id: did++,
-      label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`
+      label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
+      selected: false,
     });
   }
   return data;
@@ -173,8 +190,8 @@ const template = () => html`
     <tbody>${repeat(
       data,
       item => item.id,
-      item => html`
-      <tr .item=${item.id} class=${rowClass(item.id, selected)}>
+      item => guard(item, () => html`
+      <tr .item=${item.id} class=${item.selected ? 'danger' : ''}>
         <td class="col-md-1">${item.id}</td>
         <td data-interaction='select' class="col-md-4">
           <a data-interaction='select'>${item.label}</a>
@@ -185,7 +202,7 @@ const template = () => html`
           </a>
         </td>
         <td class="col-md-6"></td>
-      </tr>`
+      </tr>`)
     )}
     </tbody>
   </table>
