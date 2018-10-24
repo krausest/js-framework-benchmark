@@ -7,8 +7,8 @@
     "frameworkVersionFromPackage": "react"
   },
   "scripts": {
-    "build-dev": "webpack -w -d",
-    "build-prod": "webpack -p"
+    "build-dev": "webpack --watch",
+    "build-prod": "webpack"
   },
   "keywords": [
     "react",
@@ -22,16 +22,17 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "babel-core": "6.26.3",
-    "babel-loader": "7.1.5",
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-react": "6.24.1",
-    "jsx-loader": "0.13.2",
-    "webpack": "4.16.3",
-    "webpack-cli": "^3.1.0"
+    "@babel/core": "7.1.2",
+    "@babel/preset-env": "7.1.0",
+    "@babel/preset-react": "7.0.0",
+    "@babel/plugin-proposal-class-properties": "7.1.0",
+    "babel-loader": "8.0.4",
+    "terser-webpack-plugin": "1.1.0",
+    "webpack": "4.22.0",
+    "webpack-cli": "3.1.2"
   },
   "dependencies": {
-    "react": "16.4.1",
-    "react-dom": "16.4.1"
+    "react": "16.6.0",
+    "react-dom": "16.6.0"
   }
 }
