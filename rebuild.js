@@ -34,6 +34,10 @@ if (frameworks.length === 0) {
     });
     let frameworkNames = frameworks.map(f => f.split("/")[1]).join(" ");
     if (frameworkNames.length>1) {
+        exec('npm run bench -- --count 1 --framework '+frameworkNames, {
+            cwd: 'webdriver-ts',
+            stdio: 'inherit'
+        });
         exec('npm run isKeyed -- --framework '+frameworkNames, {
             cwd: 'webdriver-ts',
             stdio: 'inherit'
