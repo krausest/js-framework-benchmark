@@ -1,6 +1,6 @@
-import { statelessComponent, render, map, element, onClick, stopDirtyChecking, setupScheduler, invalidateHandler } from "ivi";
+import { connect, render, map, element, onClick, stopDirtyChecking, setupScheduler, invalidateHandler, invalidate } from "ivi";
 import { h1, div, span, table, tbody, tr, td, a, button } from "ivi-html";
-import { createStore } from "ivi-state";
+import { createStore, createBox } from "ivi-state";
 
 function random(max) {
   return Math.round(Math.random() * 1000) % max;
@@ -27,103 +27,99 @@ function buildData(count) {
 }
 
 const STORE = createStore(
-  { data: [], selected: null },
+  { data: createBox([]), selected: 0 },
   function (state, action) {
-    const data = state.data;
-    const selected = state.selected;
+    const { data, selected } = state;
+    const itemList = data.value;
     switch (action.type) {
       case "delete":
-        data.splice(data.findIndex((d) => d.id === action.id), 1);
-        return { data, selected };
+        itemList.splice(itemList.findIndex((d) => d.id === action.id), 1);
+        return { data: createBox(itemList), selected };
       case "run":
-        return { data: buildData(1000), selected: null };
+        return { data: createBox(buildData(1000)), selected: 0 };
       case "add":
-        return { data: state.data.concat(buildData(1000)), selected };
+        return { data: createBox(itemList.concat(buildData(1000))), selected };
       case "update":
-        for (let i = 0; i < data.length; i += 10) {
-          const r = data[i];
-          data[i] = { id: r.id, label: r.label + " !!!" };
+        for (let i = 0; i < itemList.length; i += 10) {
+          const r = itemList[i];
+          itemList[i] = { id: r.id, label: r.label + " !!!" };
         }
         return { data, selected };
       case "select":
-        return { data, selected: data.find((d) => d.id === action.id) };
+        return { data, selected: action.id };
       case "runlots":
-        return { data: buildData(10000), selected: null };
+        return { data: createBox(buildData(10000)), selected: 0 };
       case "clear":
-        return { data: [], selected: null };
+        return { data: createBox([]), selected: 0 };
       case "swaprows":
-        if (data.length > 998) {
-          const a = data[1];
-          data[1] = data[998];
-          data[998] = a;
+        if (itemList.length > 998) {
+          const a = itemList[1];
+          itemList[1] = itemList[998];
+          itemList[998] = a;
         }
-        return { data, selected };
+        return { data: createBox(itemList), selected };
     }
     return state;
   },
-  update,
+  invalidate,
 );
 
 const GlyphIcon = element(span("", { "aria-hidden": "true" }));
+const RemoveRowButton = element(td("col-md-1").c(a().c(GlyphIcon("glyphicon glyphicon-remove"))));
 
-const Row = statelessComponent(({ id, label, selected }) => (
-  stopDirtyChecking(
-    tr(selected ? "danger" : "").c(
-      td("col-md-1").c(id),
-      td("col-md-4").c(a().c(label)),
-      td("col-md-1").c(a().c(GlyphIcon("glyphicon glyphicon-remove delete"))),
+const Row = connect(
+  (_, idx) => {
+    const state = STORE.state;
+    const item = state.data.value[idx];
+    return state.selected === item.id ? { id: item.id, label: item.label, selected: true } : item;
+  },
+  (item) => (
+    stopDirtyChecking(tr(item.selected === true ? "danger" : "").c(
+      td("col-md-1").t(item.id),
+      td("col-md-4").c(a().t(item.label)),
+      RemoveRowButton(),
       td("col-md-6"),
-    ),
-  )
-));
+    ))
+  ),
+);
+
+const RowList = connect(
+  () => STORE.state.data,
+  ({ value }) => (
+    tbody().e(onClick((ev) => {
+      const target = ev.target;
+      STORE.dispatch({
+        type: target.matches(".glyphicon") ? "delete" : "select",
+        id: +target.closest("tr").firstChild.textContent,
+      });
+    })).c(map(value, ({ id }, i) => Row(i).k(id)))
+  ),
+);
 
 function Button(text, id) {
   return div("col-sm-6 smallpad").c(
     button("btn btn-primary btn-block", { type: "button", id })
       .e(onClick(() => { STORE.dispatch({ type: id }); }))
-      .c(text),
+      .t(text),
   );
 }
-
-const Jumbotron = statelessComponent(() => (
-  div("jumbotron").c(
-    div("row").c(
-      div("col-md-6").c(h1().c("ivi")),
-      div("col-md-6").c(
-        div("row").c(
-          Button("Create 1,000 rows", "run"),
-          Button("Create 10,000 rows", "runlots"),
-          Button("Append 1,000 rows", "add"),
-          Button("Update every 10th row", "update"),
-          Button("Clear", "clear"),
-          Button("Swap Rows", "swaprows"),
-        ),
-      ),
-    ),
-  )
-));
 
 setupScheduler(invalidateHandler);
-const CONTAINER = document.getElementById("main");
-function update() {
-  const { data, selected } = STORE.state;
-  render(
-    div("container").c(
-      Jumbotron(),
-      table("table table-hover table-striped test-data").c(
-        tbody()
-          .e(onClick((ev) => {
-            const target = ev.target;
-            STORE.dispatch({
-              type: target.matches(".delete") ? "delete" : "select",
-              id: +target.closest("tr").firstChild.textContent,
-            });
-          }))
-          .c(map(data, (item) => Row(item === selected ? { id: item.id, label: item.label, selected: item === selected } : item).k(item.id))),
-      ),
-      GlyphIcon("preloadicon glyphicon glyphicon-remove"),
-    ),
-    CONTAINER,
-  );
-}
-update();
+render(
+  div("container").c(
+    stopDirtyChecking(div("jumbotron").c(div("row").c(
+      div("col-md-6").c(h1().t("ivi")),
+      div("col-md-6").c(div("row").c(
+        Button("Create 1,000 rows", "run"),
+        Button("Create 10,000 rows", "runlots"),
+        Button("Append 1,000 rows", "add"),
+        Button("Update every 10th row", "update"),
+        Button("Clear", "clear"),
+        Button("Swap Rows", "swaprows"),
+      )),
+    ))),
+    table("table table-hover table-striped test-data").c(RowList()),
+    GlyphIcon("preloadicon glyphicon glyphicon-remove"),
+  ),
+  document.getElementById("main"),
+);
