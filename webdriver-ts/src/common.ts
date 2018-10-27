@@ -121,38 +121,46 @@ export class PackageVersionInformationErrorNoPackageJSONLock  {
 
 export type PackageVersionInformation = PackageVersionInformationValid | PackageVersionInformationErrorUnknownPackage | PackageVersionInformationErrorNoPackageJSONLock;
 
+export interface IMatchPredicate {
+    (frameworkDirectory: string): boolean
+}
 
-export function loadFrameworkVersionInformation(): FrameworkVersionInformation[] {
+const matchAll : IMatchPredicate= (frameworkDirectory: string) => true;
+
+export function loadFrameworkVersionInformation(matchPredicate: IMatchPredicate = matchAll): FrameworkVersionInformation[] {
     let result = new Array<FrameworkVersionInformation>();
     let frameworksPath = path.resolve('..','frameworks');
     ['keyed','non-keyed'].forEach((keyedType: KeyedType) => {
         let directories = fs.readdirSync(path.resolve(frameworksPath, keyedType));
 
         for (let directory of directories) {
-            let packageJSONPath = path.resolve(frameworksPath, keyedType, directory, 'package.json');
-            if (fs.existsSync(packageJSONPath)) {
-                let packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, 'utf8'));
-                if (packageJSON['js-framework-benchmark']) {
-                    if (packageJSON['js-framework-benchmark']['frameworkVersionFromPackage']) {
-                        result.push(new FrameworkVersionInformationDynamic(keyedType, directory,
-                            packageJSON['js-framework-benchmark']['frameworkVersionFromPackage'].split(':'),
-                            packageJSON['js-framework-benchmark']['customURL'],
-                            packageJSON['js-framework-benchmark']['useShadowRoot']
-                        ));
-                    } else if (typeof packageJSON['js-framework-benchmark']['frameworkVersion'] === 'string') {
-                        result.push(new FrameworkVersionInformationStatic(keyedType, directory,
-                            packageJSON['js-framework-benchmark']['frameworkVersion'],
-                            packageJSON['js-framework-benchmark']['customURL'],
-                            packageJSON['js-framework-benchmark']['useShadowRoot']
-                        ));
+            let frameworkPath = path.join(keyedType, directory);
+            if (matchPredicate(frameworkPath)) {
+                let packageJSONPath = path.resolve(frameworksPath, frameworkPath, 'package.json');
+                if (fs.existsSync(packageJSONPath)) {
+                    let packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, 'utf8'));
+                    if (packageJSON['js-framework-benchmark']) {
+                        if (packageJSON['js-framework-benchmark']['frameworkVersionFromPackage']) {
+                            result.push(new FrameworkVersionInformationDynamic(keyedType, directory,
+                                packageJSON['js-framework-benchmark']['frameworkVersionFromPackage'].split(':'),
+                                packageJSON['js-framework-benchmark']['customURL'],
+                                packageJSON['js-framework-benchmark']['useShadowRoot']
+                            ));
+                        } else if (typeof packageJSON['js-framework-benchmark']['frameworkVersion'] === 'string') {
+                            result.push(new FrameworkVersionInformationStatic(keyedType, directory,
+                                packageJSON['js-framework-benchmark']['frameworkVersion'],
+                                packageJSON['js-framework-benchmark']['customURL'],
+                                packageJSON['js-framework-benchmark']['useShadowRoot']
+                            ));
+                        } else {
+                            result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'frameworkVersionFromPackage\' or \'frameworkVersion\' in the \'js-framework-benchmark\'.property'));
+                        }
                     } else {
-                        result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'frameworkVersionFromPackage\' or \'frameworkVersion\' in the \'js-framework-benchmark\'.property'));
+                        result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'js-framework-benchmark\' property'));
                     }
                 } else {
-                    result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'js-framework-benchmark\' property'));
+                    result.push(new FrameworkVersionInformationError(keyedType, directory, 'No package.json found'));
                 }
-            } else {
-                result.push(new FrameworkVersionInformationError(keyedType, directory, 'No package.json found'));
             }
         }
     });
@@ -200,8 +208,8 @@ export function determineInstalledVersions(framework: FrameworkVersionInformatio
     return versions;
 }
 
-export function initializeFrameworks(): FrameworkData[] {
-    let frameworkVersionInformations = loadFrameworkVersionInformation();
+export function initializeFrameworks(matchPredicate: IMatchPredicate = matchAll): FrameworkData[] {
+    let frameworkVersionInformations = loadFrameworkVersionInformation(matchPredicate);
 
     let frameworks = frameworkVersionInformations.map(frameworkVersionInformation => {
         if (frameworkVersionInformation instanceof FrameworkVersionInformationDynamic) {
