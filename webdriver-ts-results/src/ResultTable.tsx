@@ -99,7 +99,7 @@ export class ResultTable extends React.Component<Props, {}> {
                 [{nonKeyed: false, label: 'Keyed results', description: 'Keyed implementations create an association between the domain data and a dom element by assigning a \'key\'. If data changes the dom element with that key will be updated. In consequence inserting or deleting an element in the data array causes a corresponding change to the dom.'}, {nonKeyed: true, label: 'Non keyed results', description: 'Non keyed implementations are allowed to reuse existing dom elements. In consequence inserting or deleting an element in the data array might append after or delete the last table row and update the contents of all elements after the inserting or deletion index. This can perform better, but can cause problems if dom state is modified externally.'}]
                 : [{nonKeyed: undefined, label: 'Mixed keyed and non-keyed', description: 'This is an apple to oranges comparison. Use it to find out how much a non-keyed version can be faster (if that doesn\'t introduce any problems e.g. with transitions).'}];
       return (
-        <div>
+        <div className="mt-3">
           { this.props.data.map((data, idx) => {
             return ( data.frameworks.length===0 || data.benchmarksCPU.length==0 && data.benchmarksStartup.length==0 && data.benchmarksMEM.length==0 ? null :
               <div key={texts[idx].label}>

@@ -158,7 +158,6 @@ export class ResultTableData {
         this.update(sortKey);
     }
     private update(sortKey: string) {
-        console.time("update");
         this.benchmarksCPU = this.allBenchmarks.filter(benchmark => benchmark.type === BenchmarkType.CPU && this.selectedBenchmarks.has(benchmark));
         this.benchmarksStartup = this.allBenchmarks.filter(benchmark => benchmark.type === BenchmarkType.STARTUP && this.selectedBenchmarks.has(benchmark));
         this.benchmarksMEM = this.allBenchmarks.filter(benchmark => benchmark.type === BenchmarkType.MEM && this.selectedBenchmarks.has(benchmark));
@@ -210,7 +209,6 @@ export class ResultTableData {
             else {
                 let cpuIdx = this.benchmarksCPU.findIndex(b => b.id === sortKey);
                 let startupIdx = this.benchmarksStartup.findIndex(b => b.id === sortKey);
-                console.log("startupIdx", startupIdx);
                 let memIdx = this.benchmarksMEM.findIndex(b => b.id === sortKey);
                 if (cpuIdx>-1) sortValue = this.resultsCPU[cpuIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsCPU[cpuIdx][frameworkIndex]!.mean;
                 else if (startupIdx>-1) sortValue = this.resultsStartup[startupIdx][frameworkIndex]==null ? Number.POSITIVE_INFINITY : this.resultsStartup[startupIdx][frameworkIndex]!.mean;
