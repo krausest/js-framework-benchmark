@@ -1,5 +1,5 @@
 import replace from 'rollup-plugin-replace';
-import nodeResolve from 'rollup-plugin-node-resolve-main-fields';
+import nodeResolve from 'rollup-plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 
 export default {
@@ -15,9 +15,7 @@ export default {
         TARGET: JSON.stringify('evergreen'),
       },
     }),
-    nodeResolve({
-      mainFields: ['es2016', 'module', 'main'],
-    }),
+    nodeResolve(),
     terser({
       parse: {
         ecma: 8,
@@ -27,6 +25,7 @@ export default {
         inline: true,
         reduce_funcs: false,
         passes: 5,
+        comparisons: false,
       },
       output: {
         ecma: 5,
