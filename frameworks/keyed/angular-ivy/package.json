@@ -6,25 +6,26 @@
     "frameworkVersionFromPackage": "@angular/core"
   },
   "scripts": {
+    "postinstall": "ivy-ngcc && bash ./workaround.sh",
     "start": "echo 'please start in root project'",
     "test": "karma start",
     "prengc": "rimraf tmp",
     "ngc": "ngc -p tsconfig.json",
     "preclosure": "rimraf dist",
     "closure": "java -jar node_modules/google-closure-compiler/compiler.jar --flagfile closure.conf",
-    "build-prod": "npm run ngc && npm run closure",
+    "build-prod-failed": "npm run ngc && npm run closure",
     "rollup": "rollup -c rollup.config.js",
-    "build-dev": "npm run ngc && npm run rollup"
+    "build-prod": "npm run ngc && npm run rollup"
   },
   "license": "MIT",
   "dependencies": {
-    "@angular/common": "6.1.0",
-    "@angular/compiler": "6.1.0",
-    "@angular/compiler-cli": "6.1.0",
-    "@angular/core": "6.1.0",
-    "@angular/platform-browser": "6.1.0",
+    "@angular/common": "7.0.0",
+    "@angular/compiler": "7.0.0",
+    "@angular/compiler-cli": "7.0.0",
+    "@angular/core": "7.0.0",
+    "@angular/platform-browser": "7.0.0",
     "core-js": "2.5.7",
-    "rxjs": "6.2.2",
+    "rxjs": "6.3.3",
     "tslib": "1.9.3",
     "zone.js": "0.8.26"
   },
@@ -32,11 +33,13 @@
     "google-closure-compiler": "20180716.0.1",
     "http-server": "0.11.1",
     "rimraf": "2.5.4",
-    "rollup": "0.55.0",
-    "rollup-plugin-commonjs": "8.2.6",
-    "rollup-plugin-node-resolve": "3.0.2",
-    "rollup-plugin-uglify": "3.0.0",
-    "typescript": "2.7.2",
+    "rollup": "0.66.6",
+    "rollup-plugin-alias": "^1.4.0",
+    "rollup-plugin-node-resolve": "3.4.0",
+    "rollup-plugin-replace": "2.1.0",
+    "rollup-plugin-terser": "3.0.0",
+    "rollup-plugin-uglify": "6.0.0",
+    "typescript": "3.1.4",
     "yargs": "11.0.0"
   }
 }
