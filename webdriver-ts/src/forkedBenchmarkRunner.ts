@@ -201,7 +201,7 @@ async function runLighthouse(framework: FrameworkData, benchmarkOptions: Benchma
             TimeToConsistentlyInteractive: extractRawValue(results.lhr, 'interactive'),
             ScriptBootUpTtime: Math.max(16, extractRawValue(results.lhr, 'bootup-time')),
             MainThreadWorkCost: extractRawValue(results.lhr, 'mainthread-work-breakdown'),
-            TotalByteWeight: extractRawValue(results.lhr, 'total-byte-weight')
+            TotalKiloByteWeight: extractRawValue(results.lhr, 'total-byte-weight')/1024.0
         };
         return LighthouseData;
     } catch (error) {

@@ -11,17 +11,15 @@ export const SelectBarFrameworks = (props: Props) => {
     return (
       <>
         {props.frameworks.map(item =>
-            <div key={item.name} className="col-md-3">
-                <div className="form-check">
-                    <input className="form-check-input" id={'inp-'+item.name+'-'+item.keyed}
-                        type="checkbox"
-                        onChange={(evt) => props.select(item, evt.target.checked)}
-                        checked={props.isSelected(item)}
-                    />
-                    <label htmlFor={'inp-'+item.name+'-'+item.keyed} className="form-check-label">
-                      {item.name}
-                    </label>
-                </div>
+            <div key={item.name} className="col-3">
+                <input className="form-check-input" id={'inp-'+item.name+'-'+item.keyed}
+                    type="checkbox"
+                    onChange={(evt) => props.select(item, evt.target.checked)}
+                    checked={props.isSelected(item)}
+                />
+                <label htmlFor={'inp-'+item.name+'-'+item.keyed} className="form-check-label">
+                    {item.name}
+                </label>
             </div>
         )}
       </>);

@@ -33,6 +33,13 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
 
     let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name) > -1));
     let runBenchmarks = benchmarks.filter(b => benchmarkNames.some(name => b.id.toLowerCase().indexOf(name) > -1));
+
+    let restart: string = undefined; // 'rx-domh-rxjs-v0.0.2-keyed';
+    let index = runFrameworks.findIndex(f => f.fullNameWithKeyedAndVersion===restart);
+    if (index>-1) {
+        runFrameworks = runFrameworks.slice(index);
+    }
+
     console.log("Frameworks that will be benchmarked", runFrameworks);
     console.log("Benchmarks that will be run", runBenchmarks.map(b => b.id));
 

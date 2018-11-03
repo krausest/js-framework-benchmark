@@ -1,4 +1,3 @@
 {
-    presets: [ "es2015", "react"],
-    plugins: []
+    "presets": ["@babel/preset-env", "@babel/preset-react"]
 }

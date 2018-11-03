@@ -1,13 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './App.css';
-import {benchmarks, frameworks, results} from './results';
-import {Framework, Benchmark, BenchmarkType, convertToMap, ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, SORT_BY_GEOMMEAN_MEM, SORT_BY_GEOMMEAN_STARTUP} from './Common';
+import {benchmarks, frameworks, results as rawResults} from './results';
+import {IDisplayMode, Result, RawResult, Framework, Benchmark, BenchmarkType, convertToMap, ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, SORT_BY_GEOMMEAN_MEM, SORT_BY_GEOMMEAN_STARTUP, DisplayMode_Mean, DisplayMode, DisplayMode_Median, DisplayModeCompare, DisplayMode_HighlightVariance, DisplayMode_BoxPlot} from './Common';
 import {SelectBar} from './SelectBar';
 import {ResultTable} from './ResultTable';
-require('babel-polyfill')
-
-import "bootstrap/dist/css/bootstrap.css";
+var jStat:any = require('jStat').jStat;
 
 interface State {
   benchmarks: Array<Benchmark>;
@@ -22,10 +20,13 @@ interface State {
   separateKeyedAndNonKeyed: boolean;
   resultTables: Array<ResultTableData>;
   sortKey: string;
-  compareWith: Framework | undefined;
-  useMedian: boolean;
-  highlightVariance: boolean;
+  displayMode: IDisplayMode;
 }
+
+let results : Result[] = (rawResults as RawResult[]).map(res => Object.assign(({framework: res.f, benchmark: res.b, values: res.v}),
+    {mean: res.v ? jStat.mean(res.v) : Number.NaN,
+    median: res.v ? jStat.median(res.v) : Number.NaN,
+    standardDeviation: res.v ? jStat.stdev(res.v, true):  Number.NaN}));
 
 let allBenchmarks = () => benchmarks.reduce((set, b) => set.add(b), new Set() );
 let allFrameworks = () => frameworks.reduce((set, f) => set.add(f), new Set() );
@@ -98,9 +99,7 @@ class App extends React.Component<{}, State> {
                   separateKeyedAndNonKeyed: true,
                   resultTables: [],
                   sortKey: SORT_BY_GEOMMEAN_CPU,
-                  compareWith: undefined,
-                  useMedian: false,
-                  highlightVariance: false
+                  displayMode: DisplayMode_Mean,
                 };
     this.nextState.resultTables = this.updateResultTable();
     this.state = this.nextState;
@@ -129,20 +128,32 @@ class App extends React.Component<{}, State> {
     this.nextState.separateKeyedAndNonKeyed = value;
     this.setState({separateKeyedAndNonKeyed: value, resultTables: this.updateResultTable()});
   }
-  selectMedian = (value: boolean): void => {
-    this.nextState.useMedian = value;
-    this.setState({useMedian: value, resultTables: this.updateResultTable()});
-  }
-  selectHighlightVariance = (value: boolean): void => {
-    this.nextState.highlightVariance = value;
-    this.setState({highlightVariance: value, resultTables: this.updateResultTable()});
+  selectDisplayMode = (value: any) => {
+    let chooseDisplayMode = (displayMode: DisplayMode) => {
+        switch (displayModeEnum) {
+            case DisplayMode.DisplayMean:
+                return DisplayMode_Mean;
+            case DisplayMode.DisplayMedian:
+                return DisplayMode_Median;
+            case DisplayMode.CompareAgainst:
+                return new DisplayModeCompare(undefined);
+            case DisplayMode.HighlightVariance:
+                return DisplayMode_HighlightVariance;
+                case DisplayMode.BoxPlot:
+                return DisplayMode_BoxPlot;
+        }
+    }
+
+    let displayModeEnum = Number(value) as DisplayMode;
+    this.nextState.displayMode = chooseDisplayMode(displayModeEnum);
+    this.setState({displayMode: this.nextState.displayMode, resultTables: this.updateResultTable()});
   }
   updateResultTable() {
     if (this.nextState.separateKeyedAndNonKeyed) {
-      return [new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, false, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian, this.nextState.highlightVariance),
-              new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, true, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian, this.nextState.highlightVariance)]
+      return [new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, false, this.nextState.sortKey, this.nextState.displayMode),
+              new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, true, this.nextState.sortKey, this.nextState.displayMode)]
     } else {
-      return [new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, undefined, this.nextState.sortKey, this.nextState.compareWith, this.nextState.useMedian, this.nextState.highlightVariance)]
+      return [new ResultTableData(frameworks, benchmarks, resultLookup, this.nextState.selectedFrameworks, this.nextState.selectedBenchmarks, undefined, this.nextState.sortKey, this.nextState.displayMode)]
     }
   }
   selectComparison = (framework: string): void => {
@@ -151,14 +162,15 @@ class App extends React.Component<{}, State> {
     if (!compareWith) {
       compareWith = this.state.frameworksNonKeyed.find((f) => f.name === framework);
     }
-    this.nextState.compareWith = compareWith;
-    this.setState({compareWith:compareWith, resultTables: this.updateResultTable()});
+    this.nextState.displayMode = new DisplayModeCompare(compareWith);
+    this.setState({displayMode: this.nextState.displayMode, resultTables: this.updateResultTable()});
   }
 
   sortBy = (sortkey: string, tableIdx: number): void => {
     this.state.resultTables[tableIdx].sortBy(sortkey);
     this.nextState.sortKey = sortkey;
-    this.setState({sortKey:sortkey, resultTables: this.updateResultTable()});
+    this.nextState.resultTables = this.updateResultTable();
+    this.setState({sortKey:sortkey, resultTables: this.nextState.resultTables});
   }
   render() {
     let disclaimer = (false) ? (<div>
@@ -170,7 +182,7 @@ class App extends React.Component<{}, State> {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.13.1, Chrome 69.0.3497.100 (64-bit))</p>
+        <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.14.1, Chrome 70.0.3538.77  (64-bit))</p>
         <SelectBar  benchmarksCPU={this.state.benchmarksCPU}
                     benchmarksStartup={this.state.benchmarksStartup}
                     benchmarksMEM={this.state.benchmarksMEM}
@@ -185,19 +197,16 @@ class App extends React.Component<{}, State> {
                     selectFramework={this.selectFramework}
                     selectSeparateKeyedAndNonKeyed={this.selectSeparateKeyedAndNonKeyed}
                     separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed}
-                    compareWith={this.state.compareWith}
                     selectComparison={this.selectComparison}
-                    useMedian={this.state.useMedian}
-                    selectMedian={this.selectMedian}
-                    highlightVariance={this.state.highlightVariance}
-                    selectHighlightVariance={this.selectHighlightVariance}
+                    displayMode={this.state.displayMode}
+                    selectDisplayMode={this.selectDisplayMode}
                     />
-          {!this.state.compareWith ? null :
+          {this.state.displayMode.type === DisplayMode.CompareAgainst &&
           (<p style={{marginTop:'10px'}}>In comparison mode white cells mean there's no statistically significant difference.
             Green cells are significantly faster than the comparison and red cells are slower.
             The test is performed as a one sided t-test. The significance level is 10%. The darker the color the lower the p-Value.</p>
           )}
-          <ResultTable currentSortKey={this.state.sortKey} data={this.state.resultTables} separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed} sortBy={this.sortBy} highlightVariance={this.state.highlightVariance}/>
+          <ResultTable currentSortKey={this.state.sortKey} data={this.state.resultTables} separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed} sortBy={this.sortBy} displayMode={this.state.displayMode}/>
       </div>
     );
   }

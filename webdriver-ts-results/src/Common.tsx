@@ -1,6 +1,23 @@
 import * as React from 'react';
 var jStat:any = require('jStat').jStat;
 
+export enum DisplayMode { DisplayMean, DisplayMedian, CompareAgainst, HighlightVariance, BoxPlot };
+export interface IDisplayMode {
+    type: DisplayMode;
+};
+
+class DisplayModeSimple implements IDisplayMode {
+    constructor(public type: DisplayMode) {}
+};
+export class DisplayModeCompare implements IDisplayMode {
+    public type = DisplayMode.CompareAgainst;
+    constructor(public compareAgainst: Framework|undefined) {}
+};
+export const DisplayMode_Mean = new DisplayModeSimple(DisplayMode.DisplayMean);
+export const DisplayMode_Median = new DisplayModeSimple(DisplayMode.DisplayMedian);
+export const DisplayMode_HighlightVariance = new DisplayModeSimple(DisplayMode.HighlightVariance);
+export const DisplayMode_BoxPlot = new DisplayModeSimple(DisplayMode.BoxPlot);
+
 export interface Framework {
     name: string;
     keyed: boolean;
@@ -15,18 +32,19 @@ export interface Benchmark {
     description: string;
 }
 
+export interface RawResult {
+    f: string;
+    b: string;
+    v: number[];
+}
+
 export interface Result {
     framework: string;
     benchmark: string;
-    type: string;
-    min: number;
-    max: number;
-    mean: number;
-    geometricMean: number|null;
-    standardDeviation: number|null;
-    median: number;
     values: number[];
-    count?: number;
+    mean: number;
+    median: number;
+    standardDeviation: number;
 }
 
 export interface DropdownCallback<T> {
@@ -93,7 +111,7 @@ export class TableResultGeommeanEntry implements TableResultEntry {
     }
 }
 
-interface ResultLookup {
+export interface ResultLookup {
     (benchmark: Benchmark, framework: Framework): Result|null;
 }
 export function convertToMap(results: Array<Result>): ResultLookup {
@@ -149,9 +167,7 @@ export class ResultTableData {
 
     constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup,
         public selectedFrameworks: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, nonKeyed: boolean|undefined, sortKey: string,
-        public compareWith: Framework|undefined,
-        public useMedian: boolean,
-        public highlightVariance: boolean) {
+        public displayMode: IDisplayMode) {
         this.frameworks = this.allFrameworks.filter(framework => (nonKeyed===undefined || framework.keyed !== nonKeyed) && selectedFrameworks.has(framework));
         this.update(sortKey);
     }
@@ -161,22 +177,21 @@ export class ResultTableData {
         this.benchmarksStartup = this.allBenchmarks.filter(benchmark => benchmark.type === BenchmarkType.STARTUP && this.selectedBenchmarks.has(benchmark));
         this.benchmarksMEM = this.allBenchmarks.filter(benchmark => benchmark.type === BenchmarkType.MEM && this.selectedBenchmarks.has(benchmark));
 
-        const prepare = (benchmark: Benchmark) => {
-            this.frameworks.forEach(f => {
-                let result = this.results(benchmark, f);
-                if (result !== null) {
-                    let vals = result.values.slice(0);
-                    result.mean = jStat.mean(vals);
-                    result.median = jStat.median(vals);
-                    result.standardDeviation = jStat.stdev(vals, true);
-                    result.count = vals.length;
-                }
-            });
-        }
+        // const prepare = (benchmark: Benchmark) => {
+        //     this.frameworks.forEach(f => {
+        //         let result = this.results(benchmark, f);
+        //         if (result !== null) {
+        //             let vals = result.values.slice(0);
+        //             result.mean = jStat.mean(vals);
+        //             result.median = jStat.median(vals);
+        //             result.standardDeviation = jStat.stdev(vals, true);
+        //         }
+        //     });
+        // }
 
-        this.benchmarksCPU.forEach(prepare);
-        this.benchmarksStartup.forEach(prepare);
-        this.benchmarksMEM.forEach(prepare);
+        // this.benchmarksCPU.forEach(prepare);
+        // this.benchmarksStartup.forEach(prepare);
+        // this.benchmarksMEM.forEach(prepare);
 
 
         this.resultsCPU = this.benchmarksCPU.map(benchmark => this.computeFactors(benchmark, true));
@@ -253,49 +268,81 @@ export class ResultTableData {
 
     computeFactors(benchmark: Benchmark, clamp: boolean): Array<TableResultValueEntry|null> {
         let benchmarkResults = this.frameworks.map(f => this.results(benchmark, f));
-        let compareWithResults = this.compareWith ? this.results(benchmark, this.compareWith) : undefined;
-        let min = benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, this.useMedian ? result.median : result.mean), Number.POSITIVE_INFINITY);
+        let selectFn = (result: Result|null) => {
+            if (result===null) return 0;
+            if (this.displayMode.type === DisplayMode.DisplayMean) {
+                return result.mean;
+            } else if (this.displayMode.type === DisplayMode.DisplayMedian) {
+                return result.median;
+            } else if (this.displayMode.type === DisplayMode.HighlightVariance) {
+                return (result.standardDeviation || 0)/result.mean * 100.0;
+            } else { // if (this.displayMode.type === DisplayMode.CompareAgainst) {
+                return result.mean;
+            }
+        }
+        let min = benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, selectFn(result)), Number.POSITIVE_INFINITY);
         return this.frameworks.map(f => {
             let result = this.results(benchmark, f);
             if (result === null) return null;
-            else {
-                let value = (this.useMedian && !compareWithResults) ? result.median : result.mean;
-                let factor = clamp ? Math.max(16, value) / Math.max(16, min) : value/min;
+
+            let value = selectFn(result);
+            let factor = value/min;
+            if (this.displayMode.type === DisplayMode.DisplayMean) {
+                let conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
+                let conficenceIntervalStr = conficenceInterval.toFixed(1);
+                let formattedValue = formatEn.format(value);
+                return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), computeColor(factor), '#000');
+            }
+            else if (this.displayMode.type === DisplayMode.BoxPlot) {
+                let conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
+                let conficenceIntervalStr = conficenceInterval.toFixed(1);
+                let formattedValue = formatEn.format(value);
+                return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), computeColor(factor), '#000');
+            }
+            else if (this.displayMode.type === DisplayMode.DisplayMedian) {
+                let conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
+                let conficenceIntervalStr = conficenceInterval.toFixed(1);
+                let formattedValue = formatEn.format(value);
+                return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), computeColor(factor), '#000');
+            }
+            else if (this.displayMode.type === DisplayMode.HighlightVariance) {
+                let formattedValue = formatEn.format(value);
+                let stdDev = result.standardDeviation || 0;
+                let stdDevStr = stdDev.toFixed(1);
+                let stdDevFactor = stdDev/result.mean * 100.0;
+                console.log("variance ",f.name, benchmark.id, stdDev, value, stdDevFactor);
+                return new TableResultValueEntry(f.name, value, formattedValue, stdDevStr, stdDevFactor, stdDevFactor.toFixed(2) + "%", computeColor(stdDevFactor/5.0 + 1.0), '#000');
+            }
+            else if (this.displayMode.type === DisplayMode.CompareAgainst && (this.displayMode as DisplayModeCompare).compareAgainst) {
+                let compareWithResults = this.results(benchmark, (this.displayMode as DisplayModeCompare).compareAgainst!)!;
                 let conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
                 let conficenceIntervalStr = conficenceInterval.toFixed(1);
                 // let meanStr = 'x'; //mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true});
-                let formattedValue = formatEn.format(value);
 
                 // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
                 // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
-                if (compareWithResults) {
-                    let statisticalResult = undefined;
-                    let statisticalCol = undefined;
-                    let compareWithMean = compareWithResults.mean;
-                    let stdDev = result.standardDeviation || 0;
-                    let compareWithResultsStdDev = compareWithResults.standardDeviation || 0;
+                let formattedValue = formatEn.format(value);
+                let statisticalResult = undefined;
+                let statisticalCol = undefined;
+                let compareWithMean = compareWithResults.mean;
+                let stdDev = result.standardDeviation || 0;
+                let compareWithResultsStdDev = compareWithResults.standardDeviation || 0;
 
-                    let x1 = value;
-                    let x2 = compareWithMean;
-                    let s1_2 = stdDev*stdDev;
-                    let s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
-                    let n1 = 10;
-                    let n2 = 10;
-                    let ny = Math.pow(s1_2/n1 + s2_2/n2, 2) /
-                            (s1_2*s1_2 / (n1*n1*(n1-1)) + s2_2*s2_2/(n2*n2*(n2-1)));
-                    let t = (x1-x2)/Math.sqrt(s1_2/n1 + s2_2/n2);
-                    let p = (1.0-jStat.studentt.cdf( Math.abs(t), ny ))*2;
-                    statisticalCol = statisticComputeColor(t, p);
-                    statisticalResult = (p*100).toFixed(3)+"%";
-                    return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), statisticalCol[0], statisticalCol[1], statisticalResult);
-                } else if (this.highlightVariance) {
-                    let stdDev = result.standardDeviation || 0;
-                    let stdDevStr = stdDev.toFixed(1);
-                    let stdDevFactor = stdDev/result.mean * 100.0;
-                    return new TableResultValueEntry(f.name, value, formattedValue, stdDevStr, factor, stdDevFactor.toFixed(2) + "%", computeColor(stdDevFactor/5.0 + 1.0), '#000');
-                } else {
-                    return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), computeColor(factor), '#000');
-                }
+                let x1 = value;
+                let x2 = compareWithMean;
+                let s1_2 = stdDev*stdDev;
+                let s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
+                let n1 = 10;
+                let n2 = 10;
+                let ny = Math.pow(s1_2/n1 + s2_2/n2, 2) /
+                        (s1_2*s1_2 / (n1*n1*(n1-1)) + s2_2*s2_2/(n2*n2*(n2-1)));
+                let t = (x1-x2)/Math.sqrt(s1_2/n1 + s2_2/n2);
+                let p = (1.0-jStat.studentt.cdf( Math.abs(t), ny ))*2;
+                statisticalCol = statisticComputeColor(t, p);
+                statisticalResult = (p*100).toFixed(3)+"%";
+                return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), statisticalCol[0], statisticalCol[1], statisticalResult);
+            } else {
+                return null;
             }
         });
     }

@@ -1,7 +1,7 @@
 'use strict';
-require("babel-plugin-syntax-jsx")
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 var path = require('path')
 var webpack = require('webpack')
@@ -52,32 +52,25 @@ module.exports = [{
 	entry: {
 		main: './src/App.tsx'
 	},
-	output: {
-		path: path.resolve(__dirname, "dist"),
-		filename: '[name].js'
-	},
 	resolve: {
 		extensions: extensions,
 		modules: [
 			__dirname,
 			path.resolve(__dirname, "src"),
 			"node_modules"
-		]
+        ],
+        alias: {
+            plotly: 'plotly.js-cartesian-dist'
+          }
 	},
-	plugins: [
-		/*new webpack.DefinePlugin({
-			'process.env.NODE_ENV': '"production"'
-		}),*/
-		process.env.NODE_ENV === 'production' ?
-		new HtmlWebpackPlugin({
-			filename: 'table.html',
-			template: 'index.html',
-			inlineSource: '.(js|css)$' // embed all javascript and css inline
-		}) :
-		new HtmlWebpackPlugin({
-			filename: 'table.html',
-			template: 'index.html'
-		})
-		,
-  	new HtmlWebpackInlineSourcePlugin()	]
+    plugins: [
+        // new BundleAnalyzerPlugin(),
+        new HtmlWebpackPlugin({
+            template: path.join(__dirname, 'index.html'),
+            filename: 'table.html',
+            inject: 'body',
+            inlineSource: '.js$' // embed all javascript and css inline
+        }),
+        new HtmlWebpackInlineSourcePlugin()
+        ]
 }];

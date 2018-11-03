@@ -2,7 +2,7 @@ import * as React from 'react';
 import './App.css';
 import { DropDown } from './DropDown'
 import { DropDownContents } from './DropDownContents'
-import { Framework, Benchmark, DropdownCallback } from './Common';
+import { Framework, Benchmark, DropdownCallback, DisplayMode, IDisplayMode, DisplayModeCompare } from './Common';
 import { SelectBarFrameworks } from './SelectBarFrameworks';
 import { SelectBarBenchmarks } from './SelectBarBenchmarks';
 
@@ -21,12 +21,9 @@ export interface Props {
     benchmarksCPU: Array<Benchmark>;
     benchmarksStartup: Array<Benchmark>;
     benchmarksMEM: Array<Benchmark>;
-    compareWith: Framework | undefined;
     selectComparison: (framework: string) => void;
-    useMedian: boolean;
-    selectMedian: (value: boolean) => void;
-    highlightVariance: boolean;
-    selectHighlightVariance: (value: boolean) => void;
+    selectDisplayMode: (mode: string) => void;
+    displayMode: IDisplayMode;
 }
 
 const SelectCategory = ({ benchmarks, select, benchSelect, label }:
@@ -57,16 +54,13 @@ export class SelectBar extends React.Component<Props, {}> {
             benchmarksCPU,
             benchmarksStartup,
             benchmarksMEM,
-            compareWith,
             selectComparison,
-            useMedian,
-            selectMedian,
-            highlightVariance,
-            selectHighlightVariance
+            selectDisplayMode,
+            displayMode
         } = this.props;
         return (
-            <div>
-                <div>
+            <div className="selectBar">
+                <div className="header-row">
                     <DropDown label="Which frameworks?" width='1024px'>
                         <DropDownContents {...frameworkSelectKeyed}>
                             <h3>Keyed frameworks:</h3>
@@ -83,41 +77,37 @@ export class SelectBar extends React.Component<Props, {}> {
                         <SelectCategory benchmarks={benchmarksStartup} select={selectBenchmark} benchSelect={benchSelectStartup} label="Startup" />
                         <SelectCategory benchmarks={benchmarksMEM} select={selectBenchmark} benchSelect={benchSelectMem} label="Memory" />
                     </DropDown>
-                    <div className="hspan" />
-                    <div className="form-check" style={{ display: "inline-block" }}>
-                        <input className="form-check-input" id='chb_nonKeyed' type="checkbox" onChange={(evt) => selectSeparateKeyedAndNonKeyed(evt.target.checked)} checked={separateKeyedAndNonKeyed} />
-                        <label className="form-check-label" htmlFor='chb_nonKeyed'>
+                </div>
+                <div className="header-row">
+                    <div>
+                        <label htmlFor="displayMode">Display mode</label>
+                        <div className="hspan" />
+                        <select id="displayMode" className="custom-select" value={displayMode.type} onChange={(evt) => selectDisplayMode(evt.target.value)}>
+                            <option value={DisplayMode.DisplayMean}>Display results (mean results)</option>
+                            <option value={DisplayMode.DisplayMedian}>Display results (median results)</option>
+                            <option value={DisplayMode.CompareAgainst}>Compare results against one framework</option>
+                            <option value={DisplayMode.HighlightVariance}>Colorize high variance</option>
+                            <option value={DisplayMode.BoxPlot}>Display as box plots</option>
+                        </select>
+                        <div className="hspan" />
+                        <input id='chb_nonKeyed' type="checkbox" onChange={(evt) => selectSeparateKeyedAndNonKeyed(evt.target.checked)} checked={separateKeyedAndNonKeyed} />
+                        <label htmlFor='chb_nonKeyed'>
                             Separate keyed and non-keyed
                         </label>
-                    </div>
-                    <div className="hspan" />
-                    <form className="form-inline" style={{ display: "inline-block" }}>
-                        <div className="form-group">
-                            <div className="hspan" />
-                            <select className="form-control" value={compareWith ? compareWith.name : ''} onChange={(evt) => selectComparison(evt.target.value)}>
-                                <option value=''>Compare with ...</option>
-                                <optgroup label="Keyed">
-                                    {frameworksKeyed.map(f => <option key={f.name} value={f.name}>{f.name}</option>)}
-                                </optgroup>
-                                <optgroup label="Non-keyed">
-                                    {frameworksNonKeyed.map(f => <option key={f.name} value={f.name}>{f.name}</option>)}
-                                </optgroup>
-                            </select>
-                        </div>
-                    </form>
-                    <div className="hspan" />
-                    <div className="form-check" style={{ display: "inline-block" }}>
-                        <input className="form-check-input" id='chb_median' type="checkbox" onChange={(evt) => selectMedian(evt.target.checked)} checked={useMedian} />
-                        <label className="form-check-label" htmlFor='chb_median'>
-                            Use median instead of mean
-                        </label>
-                    </div>
-                    <div className="hspan" />
-                    <div className="form-check" style={{ display: "inline-block" }}>
-                        <input className="form-check-input" id='chb_variance' type="checkbox" onChange={(evt) => selectHighlightVariance(evt.target.checked)} checked={highlightVariance} />
-                        <label className="form-check-label" htmlFor='chb_variance'>
-                            Highlight variance
-                        </label>
+                        {displayMode.type === DisplayMode.CompareAgainst &&
+                            (<><div className="hspan"></div>
+                                <select className="custom-select" value={(displayMode as DisplayModeCompare).compareAgainst ?
+                                (displayMode as DisplayModeCompare).compareAgainst!.name : ''}
+                            onChange={(evt) => selectComparison(evt.target.value)}>
+                                    <option value=''>Compare with ...</option>
+                                    <optgroup label="Keyed">
+                                        {frameworksKeyed.map(f => <option key={f.name} value={f.name}>{f.name}</option>)}
+                                    </optgroup>
+                                    <optgroup label="Non-keyed">
+                                        {frameworksNonKeyed.map(f => <option key={f.name} value={f.name}>{f.name}</option>)}
+                                    </optgroup>
+                                </select>
+                            </>)}
                     </div>
                 </div>
             </div>

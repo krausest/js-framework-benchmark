@@ -8,7 +8,7 @@ let frameworks = initializeFrameworks();
 
 let results: Map<string, Map<string, JSONResult>> = new Map();
 
-let resultJS = "export let results=[";
+let resultJS = "import {RawResult} from './Common';\n\nexport let results: RawResult[]=[";
 
 let allBenchmarks : BenchmarkInfo[] = [];
 
@@ -24,10 +24,10 @@ frameworks.forEach((framework, fIdx) => {
         let name = `${fileName(framework, benchmarkInfo)}`;
         let file = './results/' + name;
         if (fs.existsSync(file)) {
-            let data = fs.readFileSync(file, {
+            let data : JSONResult = JSON.parse(fs.readFileSync(file, {
                 encoding:'utf-8'
-            });
-            resultJS += '\n' + data + ',';
+            }));
+            resultJS += '\n' + JSON.stringify(({f:data.framework, b:data.benchmark, v:data.values})) + ',';
         } else {
             console.log("MISSING FILE",file);
         }
