@@ -6,14 +6,14 @@
             <td class="col-md-1">{{item.id}}</td>
 
             <td class="col-md-4">
-                <a style='cursor: pointer' onclick={{action @onSelect item.id}}>
+                <a style='cursor: pointer' onclick={{@onSelect item.id}}>
                   {{item.label}}
                 </a>
             </td>
 
             <td class="col-md-1">
 
-              <a onclick={{action @onRemove item.id}}>
+              <a onclick={{@onRemove item.id}}>
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
               </a>
             </td>
