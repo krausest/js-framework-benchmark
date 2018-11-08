@@ -5,8 +5,8 @@
       <Row
         @item={{item}}
         @rowClass={{if (eq item.id @selected) 'danger' 'x'}}
-        @onSelect={{action @onSelect item.id}}
-        @onRemove={{action @onRemove item.id}}
+        @onSelect={{@onSelect item.id}}
+        @onRemove={{@onRemove item.id}}
       />
 
     {{/each}}
