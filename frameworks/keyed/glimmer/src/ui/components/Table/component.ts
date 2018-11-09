@@ -1,105 +1,55 @@
-import Component, { tracked } from "@glimmer/component";
+import Component, { tracked } from '@glimmer/component';
 
-function _random(max) {
-    return Math.round(Math.random() * 1000) % max;
-}
-
-let startTime;
-let lastMeasure;
-let startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-let stopMeasure = function() {
-    let last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            let stop = performance.now();
-            let duration = 0;
-            console.log(last+" took "+(stop-startTime));
-        }, 0);
-    }
-}
+import {
+    add, deleteRow, run, runLots, swapRows, update
+} from './-utils/benchmark-helpers';
 
 export default class Glimmerjs extends Component {
-    maxId = 1;
-    @tracked rows = {
-        selected: undefined,
-        data: []
+    @tracked public id = 1;
+    @tracked public data = [];
+    @tracked public selected = undefined;
+
+    public run() {
+        const result = run(this.id);
+
+        this.data = result.data;
+        this.id = result.id;
+        this.selected = undefined;
     }
 
-    buildData(count = 1000) {
-        let adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-        let colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-        let nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-        let data = [];
-        for (let i = 0; i < count; i++) {
-            data.push({ id: this.maxId++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
-        }
-        return data;
+    public runLots() {
+        const result = runLots(this.id);
+
+        this.data = result.data;
+        this.id = result.id;
+        this.selected = undefined;
     }
 
-    run() {
-        startMeasure("run");
-        this.rows = { selected: undefined, data: this.buildData(1000) };
-        stopMeasure();
+    public add() {
+        const result = add(this.id, this.data);
+
+        this.data = result.data;
     }
 
-    runLots() {
-        startMeasure("runLots");
-        this.rows = { selected: undefined, data: this.buildData(10000) };
-        stopMeasure();
+    public update() {
+        this.data = update(this.data);
     }
 
-    add() {
-        startMeasure("add");
-        this.rows = { ...this.rows, data: this.rows.data.concat(this.buildData(1000)) };
-        stopMeasure();
+    public clear() {
+        this.data = [];
+        this.selected = undefined;
     }
 
-    update() {
-        startMeasure("update");
-        let data = this.rows.data.map((item, index) => {
-            if (index % 10 === 0) {
-                return { ...item, label: `${item.label} !!!` };
-            }
-            return item;
-        });
-        this.rows = { ...this.rows, data }
-        stopMeasure();
+    public swapRows() {
+        this.data = swapRows(this.data);
     }
 
-    clear() {
-        startMeasure("clear");
-        this.rows = { selected: undefined, data: [] }
-        stopMeasure();
+    public select(id) {
+        this.selected = id;
     }
 
-    swapRows() {
-        startMeasure("swapRows");
-        if(this.rows.data.length > 998) {
-            let data = this.rows.data;
-            let d1 = data[1];
-            data[1] = data[998];
-            data[998] = d1;
-            this.rows = { ...this.rows, data }
-        }
-        stopMeasure();
-    }
-
-    select(id) {
-        startMeasure("select");
-        this.rows = { ...this.rows, selected: id }
-        stopMeasure();
-    }
-
-    delete(id) {
-        startMeasure("delete");
-        let idx = this.rows.data.findIndex(item => item.id === id);
-        let data = this.rows.data;
-        data.splice(idx, 1);
-        this.rows = { selected: undefined, data };
-        stopMeasure();
+    public delete(id) {
+        this.data = deleteRow(this.data, id);
+        this.selected = undefined;
     }
 }

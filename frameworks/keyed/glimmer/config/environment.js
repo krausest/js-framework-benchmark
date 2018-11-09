@@ -3,7 +3,7 @@
 module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'glimmer-app',
-    environment: environment
+    environment
   };
 
   return ENV;
