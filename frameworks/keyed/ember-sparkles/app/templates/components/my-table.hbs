@@ -40,11 +40,20 @@
     </div>
 </div>
 
-<DataRows
-  @data={{data}}
-  @onSelect={{action select}}
-  @onRemove={{action remove}}
-  @selected={{selected}} />
+<table class="table table-hover table-striped test-data">
+  <tbody>
+    {{#each data key='id' as |item|}}
+
+      <Row
+        @item={{item}}
+        @rowClass={{if (eq item.id selected) 'danger' 'x'}}
+        @onSelect={{action select item.id}}
+        @onRemove={{action remove item.id}}
+      />
+
+    {{/each}}
+  </tbody>
+</table>
 
 
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>

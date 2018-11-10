@@ -40,11 +40,34 @@
     </div>
 </div>
 
-{{data-rows
-  data=data
-  onSelect=(action select)
-  onRemove=(action remove)
-  selected=selected}}
+
+<table class="table table-hover table-striped test-data">
+  <tbody>
+  {{#each data key='id' as |item|}}
+
+    <tr class={{if (eq item.id selected) 'danger' 'x'}}>
+      <td class="col-md-1">{{item.id}}</td>
+
+      <td class="col-md-4">
+        <a style='cursor: pointer' onclick={{action select item.id}}>
+          {{item.label}}
+        </a>
+      </td>
+
+      <td class="col-md-1">
+
+        <a onclick={{action remove item.id}}>
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+      </td>
+
+      <td class="col-md-6"></td>
+    </tr>
+
+  {{/each}}
+  </tbody>
+</table>
+
 
 
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
