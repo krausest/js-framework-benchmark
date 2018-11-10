@@ -1,6 +1,3 @@
 dist/
-lib/
 node_modules/
-src/app.ngfactory.ts
-src/app.ngsummery.json
 tmp/
