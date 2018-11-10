@@ -42,13 +42,13 @@
 
 <table class="table table-hover table-striped test-data">
   <tbody>
-    {{#each data key='id' as |item|}}
+    {{#each this.data key='id' as |item|}}
 
       <Row
         @item={{item}}
-        @rowClass={{if (eq item.id selected) 'danger' 'x'}}
-        @onSelect={{action select item.id}}
-        @onRemove={{action remove item.id}}
+        @rowClass={{if (eq item.id this.selected) 'danger' 'x'}}
+        @onSelect={{action this.select item.id}}
+        @onRemove={{action this.remove item.id}}
       />
 
     {{/each}}
