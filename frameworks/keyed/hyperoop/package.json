@@ -1,0 +1,31 @@
+{
+  "name": "hyperoop-v0.1.12-js-benchmark",
+  "version": "1.0.0",
+  "description": "hyperoop v0.1.12 js benchmark",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "hyperoop"
+  },
+  "devDependencies": {
+    "@types/node": "^10.9.3",
+    "rollup": "^0.67.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-serve": "^0.6.0",
+    "rollup-plugin-typescript2": "^0.17.2",
+    "rollup-watch": "^4.3.1",
+    "typescript": "^3.0.1"
+  },
+  "scripts": {
+    "build-prod": "rollup -cf iife -i src/index.tsx -o dist/index.js",
+    "build-dev": "rollup -w -cf iife -m inline -i src/index.tsx -o dist/index.js"
+  },
+  "keywords": [
+    "hyperoop"
+  ],
+  "author": "Osman Bineev",
+  "license": "MIT",
+  "dependencies": {
+    "hyperoop": "^0.1.12"
+  }
+}
