@@ -46,7 +46,6 @@ function createRows(store, deleteFunc, selectFunc) {
         key={id}
         d={d}
         id={id}
-        selected={selected}
         deleteFunc={deleteFunc}
         selectFunc={selectFunc}
       />

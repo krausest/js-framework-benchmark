@@ -20,10 +20,10 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "7.1.0",
-    "babel-plugin-inferno": "6.0.0",
-    "rollup": "^0.66.6",
+    "@babel/core": "^7.1.5",
+    "@babel/preset-env": "7.1.5",
+    "babel-plugin-inferno": "6.0.3",
+    "rollup": "^0.67.0",
     "rollup-plugin-alias": "^1.4.0",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
@@ -32,6 +32,6 @@
     "rollup-plugin-uglify": "^6.0.0"
   },
   "dependencies": {
-    "inferno": "6.0.1"
+    "inferno": "6.2.1"
   }
 }

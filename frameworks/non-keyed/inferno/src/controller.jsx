@@ -45,7 +45,6 @@ function createRows(store, deleteFunc, selectFunc) {
         styleClass={id === selected ? 'danger' : null}
         d={d}
         id={id}
-        selected={selected}
         deleteFunc={deleteFunc}
         selectFunc={selectFunc}
       />
