@@ -1,7 +1,7 @@
 <div class="jumbotron">
     <div class="row">
         <div class="col-md-6">
-            <h1>Ember v3.4.1</h1>
+            <h1>Ember v3.5.1</h1>
         </div>
         <div class="col-md-6">
             <div class="row">
@@ -40,11 +40,34 @@
     </div>
 </div>
 
-{{data-rows
-  data=data
-  onSelect=(action select)
-  onRemove=(action remove)
-  selected=selected}}
+
+<table class="table table-hover table-striped test-data">
+  <tbody>
+  {{#each this.data key='id' as |item|}}
+
+    <tr class={{if (eq item.id this.selected) 'danger' 'x'}}>
+      <td class="col-md-1">{{item.id}}</td>
+
+      <td class="col-md-4">
+        <a style='cursor: pointer' onclick={{action this.select item.id}}>
+          {{item.label}}
+        </a>
+      </td>
+
+      <td class="col-md-1">
+
+        <a onclick={{action this.remove item.id}}>
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+      </td>
+
+      <td class="col-md-6"></td>
+    </tr>
+
+  {{/each}}
+  </tbody>
+</table>
+
 
 
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>

@@ -1,7 +1,7 @@
 <div class="jumbotron">
     <div class="row">
         <div class="col-md-6">
-            <h1>Ember v3.4.1 (Sparkles)</h1>
+            <h1>Ember v3.5.1 (Sparkles)</h1>
         </div>
         <div class="col-md-6">
             <div class="row">
@@ -40,11 +40,20 @@
     </div>
 </div>
 
-<DataRows
-  @data={{data}}
-  @onSelect={{action select}}
-  @onRemove={{action remove}}
-  @selected={{selected}} />
+<table class="table table-hover table-striped test-data">
+  <tbody>
+    {{#each this.data key='id' as |item|}}
+
+      <Row
+        @item={{item}}
+        @rowClass={{if (eq item.id this.selected) 'danger' 'x'}}
+        @onSelect={{action this.select item.id}}
+        @onRemove={{action this.remove item.id}}
+      />
+
+    {{/each}}
+  </tbody>
+</table>
 
 
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
