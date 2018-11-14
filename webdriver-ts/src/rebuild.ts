@@ -51,5 +51,5 @@ if (frameworks.length === 0) {
     });
 
     console.log("All checks are fine!");
-    console.log("======> Please rerun the benchmark for ", frameworkNames);
+    console.log("======> Please rerun the benchmark: npm run bench -- --framework ", frameworkNames);
 }
