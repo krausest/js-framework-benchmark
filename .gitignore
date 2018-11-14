@@ -54,6 +54,7 @@ marko-*/.cache
 marko-*/static
 marko-*/build
 marko-*/src/xtable.marko
+**/hyperoop/.rpt2_cache
 
 # keep root yarn.lock in repo so that travis will install yarn
 yarn.lock
