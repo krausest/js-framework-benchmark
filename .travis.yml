@@ -64,7 +64,7 @@ env:
   - JS_FRAMEWORK=vue-v2.3.3-non-keyed
 
 language : node_js
-node_js  : 7
+node_js  : 8
 
 addons:
   chrome: beta
