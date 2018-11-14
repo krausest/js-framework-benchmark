@@ -98,7 +98,7 @@ window.nonKeyedDetector_reset();
 `;
 
 function isKeyedRun(result: any): boolean {
-    return (result.tradded>0 && result.trremoved>0 && result.removedStoredTr>0);
+    return (result.tradded>=1000 && result.trremoved>0 && result.removedStoredTr>0);
 }
 function isKeyedRemove(result: any): boolean {
     return (result.removedStoredTr>0);
