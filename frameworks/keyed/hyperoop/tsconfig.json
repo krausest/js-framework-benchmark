@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "esnext",
+      "outDir": "./dist",
+      "declaration": true,
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "jsx": "react",
+      "jsxFactory": "ui.h",
+      "lib": [
+          "es6",
+          "dom"
+      ]
+    },
+    
+    "include": [
+        "src/**/*"
+    ]
+}
