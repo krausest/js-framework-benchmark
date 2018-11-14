@@ -92,4 +92,4 @@ script:
   - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then  (npm run selenium -- --framework $JS_FRAMEWORK --count 1 --benchmark 01_ 02_ 03_ 04_ 05_ 06_) fi
   
 git:
-  depth: 700
+  depth: 5
