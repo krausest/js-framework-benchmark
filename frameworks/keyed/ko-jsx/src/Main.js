@@ -90,8 +90,8 @@ var HomeViewModel = function () {
     // stopMeasure();
   };
 
-  self.clickRow = function(e, id) {
-    if (e.target.matches('.delete')) {
+  self.clickRow = function(e, id, action) {
+    if (action === 'remove') {
       // startMeasure("delete");
       var tmp = self.data();
       const idx = tmp.findIndex(d => d.id === id);

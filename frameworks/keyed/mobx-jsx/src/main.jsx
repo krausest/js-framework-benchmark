@@ -24,12 +24,13 @@ function buildData(count) {
 function App() {
   const state = observable({data: [], selected: null});
 
-  const clickRow = (e, id) => {
+  const clickRow = (e, id, intent) => {
     e.stopPropagation();
     action(() => {
-      if (e.target.matches('.delete')) {
-        // startMeasure('remove');
-        state.data = state.data.filter(row => row.id !== id);
+      if (intent === 'remove') {
+        // startMeasure('delete');
+        const data = state.data;
+        data.splice(data.findIndex(d => d.id === id), 1)
         // stopMeasure();
       } else {
         // startMeasure("select");
@@ -58,7 +59,7 @@ function App() {
   const add = action(e => {
     e.stopPropagation();
     // startMeasure('append 1000');
-    state.data = state.data.concat(buildData(1000));
+    state.data.push.apply(state.data, buildData(1000));
     // stopMeasure();
   });
 
@@ -117,16 +118,15 @@ function App() {
       </div></div>
     </div></div>
     <table class='table table-hover table-striped test-data'><tbody onClick={ clickRow }>{
-      selectWhen(() => state.selected, (el, selected) => el.className = selected ? 'danger' : '')
-      (each(() => state.data, row => {
-        const rowId = untracked(() => row.id);
-        return <tr model={(( rowId ))}>
-          <td class='col-md-1' textContent={(( rowId ))} />
-          <td class='col-md-4'><a>{ row.label }</a></td>
-          <td class='col-md-1'><a><span class='delete glyphicon glyphicon-remove' /></a></td>
+      selectWhen(() => state.selected, 'danger')
+      (each(() => state.data, row =>
+        <tr model={ row.id }>
+          <td class='col-md-1' textContent={ row.id } />
+          <td class='col-md-4'><a>{( row.label )}</a></td>
+          <td class='col-md-1'><a action={'remove'}><span class='glyphicon glyphicon-remove' /></a></td>
           <td class='col-md-6'/>
         </tr>
-      }))
+      ))
     }</tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
