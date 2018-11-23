@@ -2,10 +2,6 @@ var A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome",
 var C = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"]
 var N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse",  "keyboard"]
 
-tag GlyphIcon < span
-	def render
-		<self.glyphicon.glyphicon-remove :aria-hidden=true>
-
 tag Row < tr
 	prop select
 	prop remove 
@@ -22,7 +18,7 @@ tag Row < tr
 		<self .selected=@selected>
 			<td.col-md-1> @item:id
 			<td.col-md-4><a :tap.onSelect> @item:label
-			<td.col-md-1><a :tap.onRemove> <GlyphIcon>
+			<td.col-md-1><a :tap.onRemove> <span.glyphicon.glyphicon-remove :aria-hidden=true>
 			<td.col-md-6>
 
 tag Button
