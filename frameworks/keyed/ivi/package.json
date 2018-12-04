@@ -16,12 +16,12 @@
     "build-prod": "rollup -c rollup.config.js"
   },
   "dependencies": {
-    "ivi-html": "0.16.0",
-    "ivi-state": "0.16.0",
-    "ivi": "0.16.0"
+    "ivi-html": "0.20.0",
+    "ivi-state": "0.20.0",
+    "ivi": "0.20.0"
   },
   "devDependencies": {
-    "rollup": "0.66.6",
+    "rollup": "0.67.4",
     "rollup-plugin-node-resolve": "3.4.0",
     "rollup-plugin-replace": "2.1.0",
     "rollup-plugin-terser": "3.0.0"
