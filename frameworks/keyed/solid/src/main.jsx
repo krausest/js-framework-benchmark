@@ -15,14 +15,13 @@ function buildData(count) {
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: idCounter++,
-      label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)]
+      label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`
     }
   }
   return data;
 }
 
 function App() {
-  let rowId;
   const state = new State({ data: [], selected: null });
 
   return <div class='container'>
@@ -50,26 +49,27 @@ function App() {
       </div></div>
     </div></div>
     <table class='table table-hover table-striped test-data'><tbody onClick={ clickRow }>{
-      selectWhen(() => state.selected, (el, selected) => el.className = selected ? 'danger' : '')
+      selectWhen(() => state.selected, 'danger')
       (each(row =>
-        (rowId = row.sample('id'),
-        <tr model={(( rowId ))}>
-          <td class='col-md-1' textContent={(( rowId ))} />
-          <td class='col-md-4'><a>{ row.label }</a></td>
-          <td class='col-md-1'><a><span class='delete glyphicon glyphicon-remove' /></a></td>
+        <tr model={ row.id }>
+          <td class='col-md-1' textContent={ row.id } />
+          <td class='col-md-4'><a>{( row.label )}</a></td>
+          <td class='col-md-1'><a action={ 'remove' }>
+            <span class='glyphicon glyphicon-remove' />
+          </a></td>
           <td class='col-md-6'/>
-        </tr>)
+        </tr>
       )(() => state.data))
     }</tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
 
-  function clickRow(e, id) {
+  function clickRow(e, id, action) {
     e.stopPropagation();
-    if (e.target.matches('.delete')) {
-      state.set({
-        data: state.data.filter(row => row.id !== id)
-      });
+    if (action === 'remove') {
+      const data = state.data.slice(0);
+      data.splice(data.findIndex(d => d.id === id), 1)
+      state.set({ data });
     } else state.set({ selected: id })
   }
 
