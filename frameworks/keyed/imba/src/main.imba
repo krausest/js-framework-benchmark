@@ -29,7 +29,7 @@ tag Button
 	def render
 		<self>
 			<div.col-sm-6.smallpad>
-				<button.btn.btn-primary.btn-block :type='button' :id=@id :tap=@cb> @title
+				<button.btn.btn-primary.btn-block :type='button' id=@id :tap=@cb> @title
 
 var items = []
 var selected = 0
