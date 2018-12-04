@@ -36,10 +36,7 @@ var HomeViewModel = function () {
     function buildData(count) {
         var data = [];
         for (var i = 0; i < count; i++) {
-            data.push(new ItemViewModel({
-                id: id++,
-                label: getRandomLabel()
-            }));
+            data.push(new ItemViewModel(id++, getRandomLabel()));
         }
         return data;
     }
@@ -95,15 +92,16 @@ var HomeViewModel = function () {
         stopMeasure();
     });
 
-    function ItemViewModel(data) {
+    function ItemViewModel(id, itemLabel) {
 
-        var label = new Datum(data.label);
-
-        var id = new Datum(data.id);
+        var label = new Datum(itemLabel);
 
         this.label = new Datum.Text(label);
 
-        this.id = new Datum.Text(id);
+        this.id = new Datum.Text(function() {
+
+            return id;
+        });
 
         this.update = function() {
             label(label() + " !!!");
