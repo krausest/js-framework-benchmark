@@ -15,10 +15,10 @@ tag Row < tr
 		@remove(@item)
 
 	def render
-		<self .selected=@selected>
+		<self .danger=@selected>
 			<td.col-md-1> @item:id
 			<td.col-md-4><a :tap.onSelect> @item:label
-			<td.col-md-1><a :tap.onRemove> <span.glyphicon.glyphicon-remove :aria-hidden=true>
+			<td.col-md-1><a :tap.onRemove> <span.glyphicon.glyphicon-remove>
 			<td.col-md-6>
 
 tag Button
@@ -29,7 +29,7 @@ tag Button
 	def render
 		<self>
 			<div.col-sm-6.smallpad>
-				<button.btn.btn-primary.btn-block :type='button' id=@id :tap=@cb> @title
+				<button.btn.btn-primary.btn-block type='button' id=@id :tap=@cb> @title
 
 var items = []
 var selected = 0
@@ -110,7 +110,7 @@ tag Main
 
 				<table.table.table-hover.table-striped.test-data>
 					<tbody> for item in items
-						<Row :key=item:id item=item selected=(selected === item:id) select=(do select(item)) remove=(do remove(item))> 
-				<span.preloadicon.glyphicon.glyphicon-remove :aria-hidden=true>			
+						<Row@{item:id} item=item selected=(selected === item:id) select=(do select(item)) remove=(do remove(item))> 
+				<span.preloadicon.glyphicon.glyphicon-remove>
 
 Imba.mount <Main[{selected: 0, nextId: 0}]>
