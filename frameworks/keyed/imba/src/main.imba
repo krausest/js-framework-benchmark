@@ -15,7 +15,7 @@ tag Row < tr
 		@remove(@item)
 
 	def render
-		<self .selected=@selected>
+		<self@{item:id} .selected=@selected>
 			<td.col-md-1> @item:id
 			<td.col-md-4><a :tap.onSelect> @item:label
 			<td.col-md-1><a :tap.onRemove> <span.glyphicon.glyphicon-remove :aria-hidden=true>
