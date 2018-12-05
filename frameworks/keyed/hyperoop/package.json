@@ -7,14 +7,14 @@
     "frameworkVersionFromPackage": "hyperoop"
   },
   "devDependencies": {
-    "@types/node": "^10.9.3",
-    "rollup": "^0.67.0",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-serve": "^0.6.0",
-    "rollup-plugin-typescript2": "^0.17.2",
-    "rollup-watch": "^4.3.1",
-    "typescript": "^3.0.1"
+    "@types/node": "10.9.3",
+    "rollup": "0.67.0",
+    "rollup-plugin-commonjs": "9.2.0",
+    "rollup-plugin-node-resolve": "3.4.0",
+    "rollup-plugin-serve": "0.6.0",
+    "rollup-plugin-typescript2": "0.17.2",
+    "rollup-watch": "4.3.1",
+    "typescript": "3.0.1"
   },
   "scripts": {
     "build-prod": "rollup -cf iife -i src/index.tsx -o dist/index.js",
@@ -26,6 +26,6 @@
   "author": "Osman Bineev",
   "license": "MIT",
   "dependencies": {
-    "hyperoop": "^0.1.12"
+    "hyperoop": "0.1.12"
   }
 }
