@@ -2,6 +2,13 @@ var A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome",
 var C = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"]
 var N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse",  "keyboard"]
 
+tag RemoveIcon < span
+	def build
+		set('aria-hidden', true)
+
+	def render
+		<self.glyphicon.glyphicon-remove>
+
 tag Row < tr
 	prop select
 	prop remove 
@@ -18,7 +25,7 @@ tag Row < tr
 		<self .danger=@selected>
 			<td.col-md-1> @item:id
 			<td.col-md-4><a :tap.onSelect> @item:label
-			<td.col-md-1><a :tap.onRemove> <span.glyphicon.glyphicon-remove>
+			<td.col-md-1><a :tap.onRemove><RemoveIcon>
 			<td.col-md-6>
 
 tag Button
@@ -111,6 +118,6 @@ tag Main
 				<table.table.table-hover.table-striped.test-data>
 					<tbody> for item in items
 						<Row@{item:id} item=item selected=(selected === item:id) select=(do select(item)) remove=(do remove(item))> 
-				<span.preloadicon.glyphicon.glyphicon-remove>
+				<RemoveIcon.preloadicon>
 
 Imba.mount <Main[{selected: 0, nextId: 0}]>
