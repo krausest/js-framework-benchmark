@@ -11,14 +11,14 @@ tag RemoveIcon < span
 
 tag Row < tr
 	prop select
-	prop remove 
+	prop remove
 	prop item
 	prop selected
 
 	def onSelect
 		@select(@item)
 
-	def onRemove 
+	def onRemove
 		@remove(@item)
 
 	def render
@@ -44,8 +44,8 @@ var nextId = 1
 
 tag Main
 	def run
-		items = buildData(1000)	
-		selected = 0		
+		items = buildData(1000)
+		selected = 0
 		Imba.commit
 
 	def runLots
@@ -55,7 +55,7 @@ tag Main
 	def add
 		items = items.concat(buildData(1000))
 
-	def update		
+	def update
 		var i = 0
 		while i < items:length
 			var item = items[i]
@@ -74,7 +74,7 @@ tag Main
 		items = []
 		selected = 0
 
-	def swapRows		
+	def swapRows
 		if (items:length > 998)
 			var temp = items[1]
 			items[1] = items[998]
@@ -82,7 +82,7 @@ tag Main
 
 		Imba.commit
 
-	
+
 	def buildData(count)
 		var newItems  = Array.new(count)
 		var i = 0
@@ -95,8 +95,8 @@ tag Main
 			nextId = nextId + 1
 
 		newItems
-	
-	def random max 
+
+	def random max
 		Math.round(Math.random() * 1000) % max
 
 	def render
@@ -105,7 +105,7 @@ tag Main
 				<div.jumbotron>
 					<div.row>
 						<div.col-md-6>
-							<h1> 'Imba keyed'
+							<h1> 'Imba non-keyed'
 						<div.col-md-6>
 							<div.row>
 								<Button id='run' title='Create 1,000 rows' cb=(do run)>
@@ -117,7 +117,7 @@ tag Main
 
 				<table.table.table-hover.table-striped.test-data>
 					<tbody> for item in items
-						<Row@{item:id} item=item selected=(selected === item:id) select=(do select(item)) remove=(do remove(item))> 
+						<Row item=item selected=(selected === item:id) select=(do select(item)) remove=(do remove(item))>
 				<RemoveIcon.preloadicon>
 
 Imba.mount <Main[{selected: 0, nextId: 0}]>
