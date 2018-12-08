@@ -2,41 +2,24 @@ var A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome",
 var C = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"]
 var N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse",  "keyboard"]
 
-tag RemoveIcon < span
-	def build
-		set('aria-hidden', true)
-
-	def render
-		<self.glyphicon.glyphicon-remove>
+extend tag element
+	attr aria-hidden
 
 tag Row < tr
-	prop select
-	prop remove 
-	prop item
-	prop selected
+	def select
+		trigger('select',@data)
 
-	def onSelect
-		@select(@item)
-
-	def onRemove 
-		@remove(@item)
+	def remove
+		trigger('remove',@data)
 
 	def render
-		<self .danger=@selected>
-			<td.col-md-1> @item:id
-			<td.col-md-4><a :tap.onSelect> @item:label
-			<td.col-md-1><a :tap.onRemove><RemoveIcon>
-			<td.col-md-6>
-
-tag Button
-	prop id
-	prop cb
-	prop title
-
-	def render
+		return if @data === @prev
+		@prev = @data
 		<self>
-			<div.col-sm-6.smallpad>
-				<button.btn.btn-primary.btn-block type='button' id=@id :tap=@cb> @title
+			<td.col-md-1 text=@data:id>
+			<td.col-md-4> <a :tap.select text=@data:label>
+			<td.col-md-1> <a :tap.remove> <span.glyphicon.glyphicon-remove aria-hidden=true>
+			<td.col-md-6>
 
 var items = []
 var selected = 0
@@ -61,14 +44,20 @@ tag Main
 			var item = items[i]
 			items[i] = { id: item:id, label: item:label + ' !!!' }
 			i = i + 10
-		Imba.commit()
+		Imba.commit
 
 	def select item
 		selected = item:id
 
 	def remove item
 		items.splice(items.indexOf(item), 1)
-		Imba.commit()
+		Imba.commit
+	
+	def onselect e
+		select(e.data)
+	
+	def onremove e
+		remove(e.data)
 
 	def clear
 		items = []
@@ -79,7 +68,6 @@ tag Main
 			var temp = items[1]
 			items[1] = items[998]
 			items[998] = temp
-
 		Imba.commit
 
 	
@@ -97,7 +85,7 @@ tag Main
 		newItems
 	
 	def random max 
-		Math.round(Math.random() * 1000) % max
+		Math.round(Math.random * 1000) % max
 
 	def render
 		<self>
@@ -108,16 +96,21 @@ tag Main
 							<h1> 'Imba keyed'
 						<div.col-md-6>
 							<div.row>
-								<Button id='run' title='Create 1,000 rows' cb=(do run)>
-								<Button id="runlots" title="Create 10,000 rows" cb=(do runLots)>
-								<Button id="add" title="Append 1,000 rows" cb=(do add)>
-								<Button id="update" title="Update every 10th row" cb=(do update)>
-								<Button id="clear" title="Clear" cb=(do clear)>
-								<Button id="swaprows" title="Swap Rows" cb=(do swapRows)>
-
+								<div.col-sm-6.smallpad> 
+									<button.btn.btn-primary.btn-block type='button' id='run' :tap.run> 'Create 1,000 rows'
+								<div.col-sm-6.smallpad> 
+									<button.btn.btn-primary.btn-block type='button' id="runlots" :tap.runLots> "Create 10,000 rows"
+								<div.col-sm-6.smallpad> 
+									<button.btn.btn-primary.btn-block type='button' id="add" :tap.add> "Append 1,000 rows"
+								<div.col-sm-6.smallpad> 
+									<button.btn.btn-primary.btn-block type='button' id="update" :tap.update> "Update every 10th row"
+								<div.col-sm-6.smallpad> 
+									<button.btn.btn-primary.btn-block type='button' id="clear" :tap.clear> "Clear"
+								<div.col-sm-6.smallpad> 
+									<button.btn.btn-primary.btn-block type='button' id="swaprows" :tap.swapRows> "Swap Rows"
 				<table.table.table-hover.table-striped.test-data>
 					<tbody> for item in items
-						<Row@{item:id} item=item selected=(selected === item:id) select=(do select(item)) remove=(do remove(item))> 
-				<RemoveIcon.preloadicon>
+						<Row@{item:id} data=item .danger=(selected === item:id)>
+				<span.glyphicon.glyphicon-remove.preloadicon aria-hidden=true>
 
-Imba.mount <Main[{selected: 0, nextId: 0}]>
+Imba.mount <Main>
