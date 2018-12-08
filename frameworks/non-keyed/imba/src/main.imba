@@ -93,7 +93,7 @@ tag Main
 				<div.jumbotron>
 					<div.row>
 						<div.col-md-6>
-							<h1> 'Imba keyed'
+							<h1> 'Imba non-keyed'
 						<div.col-md-6>
 							<div.row>
 								<div.col-sm-6.smallpad> 
