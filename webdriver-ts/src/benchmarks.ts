@@ -53,7 +53,7 @@ const benchRun = new class extends Benchmark {
         super({
             id: "01_run1k",
             label: "create rows",
-            description: "Duration for creating 1000 rows after the page loaded.",
+            description: "creating 1,000 rows",
             type: BenchmarkType.CPU
         })
     }
@@ -69,7 +69,7 @@ const benchReplaceAll = new class extends Benchmark {
         super({
             id: "02_replace1k",
             label: "replace all rows",
-            description: "Duration for updating all 1000 rows of the table (with " + config.WARMUP_COUNT + " warmup iterations).",
+            description: "updating all 1,000 rows (" + config.WARMUP_COUNT + " warmup runs).",
             type: BenchmarkType.CPU
         })
     }
@@ -115,7 +115,7 @@ const benchUpdate = new class extends Benchmark {
         super({
             id: "03_update10th1k_x16",
             label: "partial update",
-            description: "Time to update the text of every 10th row (with 3 warmup iterations) for a table with 1k rows. Simulated 16x CPU slowdown.",
+            description: "updating every 10th row for 1,000 rows (3 warmup runs). 16x CPU slowdown.",
             type: BenchmarkType.CPU,
             throttleCPU: 16
         })
@@ -140,7 +140,7 @@ const benchSelect = new class extends Benchmark {
         super({
             id: "04_select1k",
             label: "select row",
-            description: "Duration to highlight a row in response to a click on the row. (with " + config.WARMUP_COUNT + " warmup iterations). Simulated 16x CPU slowdown.",
+            description: "highlighting a selected row. (" + config.WARMUP_COUNT + " warmup runs). 16x CPU slowdown.",
             type: BenchmarkType.CPU,
             throttleCPU: 16
         })
@@ -164,7 +164,7 @@ const benchSwapRows = new class extends Benchmark {
         super({
             id: "05_swap1k",
             label: "swap rows",
-            description: "Time to swap 2 rows on a 1K table. (with " + config.WARMUP_COUNT + " warmup iterations). Simulated 4x CPU slowdown.",
+            description: "swap 2 rows for table with 1,000 rows. (" + config.WARMUP_COUNT + " warmup runs). 4x CPU slowdown.",
             type: BenchmarkType.CPU,
             throttleCPU: 4
         })
@@ -191,7 +191,7 @@ const benchRemove = new class extends Benchmark {
         super({
             id: "06_remove-one-1k",
             label: "remove row",
-            description: "Duration to remove a row. (with " + config.WARMUP_COUNT + " warmup iterations).",
+            description: "removing one row. (" + config.WARMUP_COUNT + " warmup runs).",
             type: BenchmarkType.CPU
         })
     }
@@ -218,7 +218,7 @@ const benchRunBig = new class extends Benchmark {
         super({
             id: "07_create10k",
             label: "create many rows",
-            description: "Duration to create 10,000 rows",
+            description: "creating 10,000 rows",
             type: BenchmarkType.CPU
         })
     }
@@ -256,7 +256,7 @@ const benchAppendToManyRows = new class extends Benchmark {
         super({
             id: "08_create1k-after1k_x2",
             label: "append rows to large table",
-            description: "Duration for adding 1,000 rows on a table of 1,000 rows. Simulated 2x CPU slowdown",
+            description: "appending 1,000 to a table of 10,000 rows. 2x CPU slowdown",
             type: BenchmarkType.CPU,
             throttleCPU: 2
         })
@@ -297,7 +297,7 @@ const benchClear = new class extends Benchmark {
         super({
             id: "09_clear1k_x8",
             label: "clear rows",
-            description: "Duration to clear the table filled with 1,000 rows. Simulated 8x CPU slowdown",
+            description: "clearing a table with 1,000 rows. 8x CPU slowdown",
             type: BenchmarkType.CPU,
             throttleCPU: 8
         })

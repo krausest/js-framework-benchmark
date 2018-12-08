@@ -116,7 +116,7 @@ const CpuResultsTable = ({data, currentSortKey, sortBy, displayMode} : {data: Re
           <table className='results'>
             <thead>
               <tr>
-                <th className='benchname'><a href='#' className={currentSortKey==SORT_BY_NAME ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_NAME)}}>Name</a></th>
+                <th className='benchname'><a href='#' className={currentSortKey==SORT_BY_NAME ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_NAME)}}>Name</a><br/>Duration for...</th>
                 {data.frameworks.map(f => <th key={f.name}>{f.name}</th>)}
               </tr>
             </thead>
