@@ -36,7 +36,7 @@ if (frameworks.length === 0) {
     });
 
     let frameworkInfos = initializeFrameworks((filePath: string) => frameworks.indexOf(filePath) > -1);
-    console.log("frameworkInfos", frameworkInfos);
+    // console.log("frameworkInfos", frameworkInfos, frameworks);
     let frameworkNames = frameworkInfos.map(f => "'"+f.fullNameWithKeyedAndVersion+"'").join(' ');
     if (frameworkInfos.length === 0) {
         throw "expected to find some version information for the framework";
