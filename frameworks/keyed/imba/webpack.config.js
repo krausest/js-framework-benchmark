@@ -3,8 +3,7 @@ const webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
 
 module.exports = {
-  // mode: 'production',
-  mode: 'development',
+  mode: 'production',
   entry: {
     main: path.join(__dirname, 'src', 'main.imba')
   },
