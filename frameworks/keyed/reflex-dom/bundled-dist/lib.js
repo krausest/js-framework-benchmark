@@ -1914,11 +1914,6 @@ function h$ghcjsbn_index_b(b, w) {
   h$ghcjsbn_assertValid_w(r, "index_b result");
 }
 
-// Bool -> BigNat -> Double
-function h$ghcjsbn_toDouble_b(nonNeg, b) {
-  throw new Error("toDouble_b");
-}
-
 function h$ghcjsbn_byteArrayToBigNat(ba, len) {
   throw new Error("h$ghcjsbn_byteArrayToBigNat not yet implemented");
 }
@@ -2568,8 +2563,57 @@ var h$jsstringEmpty = (h$c1(h$ghcjszmprimZCGHCJSziPrimziJSVal_con_e, ('')));
 
 var h$jsstringHead, h$jsstringTail, h$jsstringCons,
     h$jsstringSingleton, h$jsstringSnoc, h$jsstringUncons,
-    h$jsstringIndex, h$jsstringUncheckedIndex,
-    h$jsstringTake, h$jsstringDrop, h$jsstringTakeEnd, h$jsstringDropEnd;
+    h$jsstringIndex, h$jsstringUncheckedIndex;
+
+var h$fromCodePoint;
+
+if(String.prototype.fromCodePoint) {
+    h$fromCodePoint = String.fromCodePoint;
+} else {
+    // polyfill from https://github.com/mathiasbynens/String.fromCodePoint (MIT-license)
+    h$fromCodePoint =
+      (function() {
+          var stringFromCharCode = String.fromCharCode;
+          var floor = Math.floor;
+          return function(_) {
+              var MAX_SIZE = 0x4000;
+              var codeUnits = [];
+              var highSurrogate;
+              var lowSurrogate;
+              var index = -1;
+              var length = arguments.length;
+              if (!length) {
+                  return '';
+              }
+              var result = '';
+              while (++index < length) {
+                  var codePoint = Number(arguments[index]);
+                  if (
+                      !isFinite(codePoint) || // `NaN`, `+Infinity`, or `-Infinity`
+                      codePoint < 0 || // not a valid Unicode code point
+                      codePoint > 0x10FFFF || // not a valid Unicode code point
+                      floor(codePoint) != codePoint // not an integer
+                  ) {
+                      throw RangeError('Invalid code point: ' + codePoint);
+                  }
+                  if (codePoint <= 0xFFFF) { // BMP code point
+                      codeUnits.push(codePoint);
+                  } else { // Astral code point; split in surrogate halves
+                      // https://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
+                      codePoint -= 0x10000;
+                      highSurrogate = (codePoint >> 10) + 0xD800;
+                      lowSurrogate = (codePoint % 0x400) + 0xDC00;
+                      codeUnits.push(highSurrogate, lowSurrogate);
+                  }
+                  if (index + 1 == length || codeUnits.length > MAX_SIZE) {
+                      result += stringFromCharCode.apply(null, codeUnits);
+                      codeUnits.length = 0;
+                  }
+              }
+              return result;
+          }
+      })();
+}
 
 if(String.prototype.codePointAt) {
     h$jsstringSingleton = function(ch) {
@@ -2601,7 +2645,9 @@ if(String.prototype.codePointAt) {
     h$jsstringUncons = function(str) {
                                                              ;
  var l = str.length;
- if(l===0) return -1;
+ if(l===0) {
+          { h$ret1 = (null); return (-1); };
+        }
  var ch = str.codePointAt(0);
         if(ch === undefined) {
      { h$ret1 = (null); return (-1); };
@@ -2631,7 +2677,7 @@ if(String.prototype.codePointAt) {
  if(l===0) return -1;
  var ch = str.charCodeAt(0);
  if(((ch|1023)===0xDBFF)) {
-     return (l>1) ? ((((ch)-0xD800)<<10)+(str.charCodeAt(1))-9216) : -1;
+     return (l>1) ? ((((ch)-0xD800)<<10)+(str.charCodeAt(1))-0xDC00+0x10000) : -1;
  } else {
      return ch;
  }
@@ -2659,11 +2705,13 @@ if(String.prototype.codePointAt) {
     h$jsstringUncons = function(str) {
                                                                 ;
  var l = str.length;
- if(l===0) return -1;
+ if(l===0) {
+          { h$ret1 = (null); return (-1); };
+        }
  var ch = str.charCodeAt(0);
  if(((ch|1023)===0xDBFF)) {
    if(l > 1) {
-        { h$ret1 = (str.substr(2)); return (((((ch)-0xD800)<<10)+(str.charCodeAt(1))-9216)); };
+        { h$ret1 = (str.substr(2)); return (((((ch)-0xD800)<<10)+(str.charCodeAt(1))-0xDC00+0x10000)); };
    } else {
        { h$ret1 = (null); return (-1); };
    }
@@ -2676,14 +2724,33 @@ if(String.prototype.codePointAt) {
         // TRACE_JSSTRING("(no codePointAt) index: " + i + " '" + str + "'");
  var ch = str.charCodeAt(i);
  if(ch != ch) return -1; // NaN test
- return (((ch|1023)===0xDBFF)) ? ((((ch)-0xD800)<<10)+(str.charCodeAt(i+1))-9216) : ch;
+ return (((ch|1023)===0xDBFF)) ? ((((ch)-0xD800)<<10)+(str.charCodeAt(i+1))-0xDC00+0x10000) : ch;
     }
     h$jsstringUncheckedIndex = function(i, str) {
                                                                                          ;
  var ch = str.charCodeAt(i);
- return (((ch|1023)===0xDBFF)) ? ((((ch)-0xD800)<<10)+(str.charCodeAt(i+1))-9216) : ch;
+ return (((ch|1023)===0xDBFF)) ? ((((ch)-0xD800)<<10)+(str.charCodeAt(i+1))-0xDC00+0x10000) : ch;
     }
 }
+
+function h$jsstringUnsnoc(str) {
+                                         ;
+  var l = str.length;
+  if(l===0) {
+    { h$ret1 = (null); return (-1); };
+  }
+  var ch = str.charCodeAt(l-1);
+  if(((ch|1023)===0xDFFF)) {
+    if(l !== 1) {
+      { h$ret1 = (str.substr(0,l-2)); return (((((str.charCodeAt(l-2))-0xD800)<<10)+(ch)-0xDC00+0x10000)); };
+    } else {
+      { h$ret1 = (null); return (-1); };
+    }
+  } else {
+    { h$ret1 = (str.substr(0,l-1)); return (ch); };
+  }
+}
+
 
 function h$jsstringPack(xs) {
     var r = '', i = 0, a = [], c;
@@ -2691,13 +2758,13 @@ function h$jsstringPack(xs) {
  c = ((xs).d1);
  a[i++] = ((typeof(c) === 'number')?(c):(c).d1);
  if(i >= 60000) {
-     r += String.fromCharCode.apply(null, a);
+     r += h$fromCodePoint.apply(null, a);
      a = [];
      i = 0;
  }
  xs = ((xs).d2);
     }
-    if(i > 0) r += String.fromCharCode.apply(null, a);
+    if(i > 0) r += h$fromCodePoint.apply(null, a);
                                        ;
     return r;
 }
@@ -2727,11 +2794,11 @@ function h$jsstringPackArrayReverse(arr) {
 
 function h$jsstringConvertArray(arr) {
     if(arr.length < 60000) {
- return String.fromCharCode.apply(null, arr);
+ return h$fromCodePoint.apply(null, arr);
     } else {
  var r = '';
  for(var i=0; i<arr.length; i+=60000) {
-     r += String.fromCharCode.apply(null, arr.slice(i, i+60000));
+     r += h$fromCodePoint.apply(null, arr.slice(i, i+60000));
  }
  return r;
     }
@@ -2753,7 +2820,7 @@ function h$jsstringLast(str) {
     if(l===0) return -1;
     var ch = str.charCodeAt(l-1);
     if(((ch|1023)===0xDFFF)) {
- return (l>1) ? ((((str.charCodeAt(l-2))-0xD800)<<10)+(ch)-9216) : -1;
+ return (l>1) ? ((((str.charCodeAt(l-2))-0xD800)<<10)+(ch)-0xDC00+0x10000) : -1;
 
     } else return ch;
 }
@@ -2763,7 +2830,7 @@ function h$jsstringIndexR(i, str) {
                                                      ;
     if(i < 0 || i > str.length) return -1;
     var ch = str.charCodeAt(i);
-    return (((ch|1023)===0xDFFF)) ? ((((str.charCodeAt(i-1))-0xD800)<<10)+(ch)-9216) : ch;
+    return (((ch|1023)===0xDFFF)) ? ((((str.charCodeAt(i-1))-0xD800)<<10)+(ch)-0xDC00+0x10000) : ch;
 }
 
 function h$jsstringNextIndex(i, str) {
@@ -2792,7 +2859,7 @@ function h$jsstringDrop(n, str) {
     while(n--) {
  ch = str.charCodeAt(i++);
  if(((ch|1023)===0xDBFF)) i++;
- if(i >= l) return str;
+ if(i >= l) return '';
     }
     return str.substr(i);
 }
@@ -2854,12 +2921,8 @@ function h$jsstringIntersperse(ch, ys) {
                                                           ;
     var i = 0, l = ys.length, j = 0, a = [], ych;
     if(((ch)>=0x10000)) {
- var ch1 = ((((ch)-0x10000)>>>10)+0xDC00), ch2 = (((ch)&0x3FF)+0xD800);
  while(j < l) {
-     if(i) {
-  a[i++] = ch1;
-  a[i++] = ch2;
-     }
+     if(i) a[i++] = ch;
      ych = ys.charCodeAt(j++);
      a[i++] = ych;
      if(((ych|1023)===0xDBFF)) a[i++] = ys.charCodeAt(j++);
@@ -3156,12 +3219,12 @@ function h$jsstringGroup(x) {
     if(xl === 0) return h$ghczmprimZCGHCziTypesziZMZN;
     var i = xl-1, si, ch, s=xl, r=h$ghczmprimZCGHCziTypesziZMZN;
     var tch = x.charCodeAt(i--);
-    if(((tch|1023)===0xDFFF)) tch = ((((x.charCodeAt(i--))-0xD800)<<10)+(tch)-9216);
+    if(((tch|1023)===0xDFFF)) tch = ((((x.charCodeAt(i--))-0xD800)<<10)+(tch)-0xDC00+0x10000);
     while(i >= 0) {
  si = i;
  ch = x.charCodeAt(i--);
  if(((ch|1023)===0xDFFF)) {
-     ch = ((((x.charCodeAt(i--))-0xD800)<<10)+(ch)-9216);
+     ch = ((((x.charCodeAt(i--))-0xD800)<<10)+(ch)-0xDC00+0x10000);
  }
  if(ch != tch) {
      tch = ch;
@@ -3176,9 +3239,10 @@ function h$jsstringChunksOf1(n, s, x) {
                                                                 ;
     var m = s, c = 0, l = x.length, ch;
     if(n <= 0 || l === 0 || s >= l) return -1
-    while(++m < l && ++c < n) {
- ch = x.charCodeAt(m);
- if(((ch|1023)===0xDBFF)) ++m;
+    while(++m < l) {
+        ch = x.charCodeAt(m - 1);
+        if(((ch|1023)===0xDBFF)) ++m;
+        if(++c >= n) break;
     }
     var r1 = (m >= l && s === c) ? x : x.substr(s,m-s);
     { h$ret1 = (r1); return (m); };
@@ -3261,12 +3325,25 @@ function h$jsstringUnpack(str) {
     var r = h$ghczmprimZCGHCziTypesziZMZN, i = str.length-1, c;
     while(i >= 0) {
  c = str.charCodeAt(i--);
- if(((c|1023)===0xDFFF)) c = ((((str.charCodeAt(i--))-0xD800)<<10)+(c)-9216)
+ if(((c|1023)===0xDFFF)) c = ((((str.charCodeAt(i--))-0xD800)<<10)+(c)-0xDC00+0x10000)
  r = (h$c2(h$ghczmprimZCGHCziTypesziZC_con_e, (c), (r)));
     }
     return r;
 }
 
+
+
+
+function h$jsstringDecInteger(val) {
+                              ;
+  if(((val).f === h$integerzmgmpZCGHCziIntegerziTypeziSzh_con_e)) {
+    return '' + ((val).d1);
+  } else if(((val).f === h$integerzmgmpZCGHCziIntegerziTypeziJpzh_con_e)) {
+    return h$ghcjsbn_showBase(((val).d1), 10);
+  } else {
+    return '-' + h$ghcjsbn_showBase(((val).d1), 10);
+  }
+}
 function h$jsstringDecI64(hi,lo) {
                                               ;
     var lo0 = (lo < 0) ? lo+4294967296:lo;
@@ -3298,6 +3375,16 @@ function h$jsstringDecW64(hi,lo) {
     return '' + x2 + h$jsstringDecIPadded6(x1);
 }
 
+
+function h$jsstringHexInteger(val) {
+                              ;
+  if(((val).f === h$integerzmgmpZCGHCziIntegerziTypeziSzh_con_e)) {
+    return '' + ((val).d1);
+  } else {
+    // we assume it's nonnegative. this condition is checked by the Haskell code
+    return h$ghcjsbn_showBase(((val).d1), 16);
+  }
+}
 function h$jsstringHexI64(hi,lo) {
     var lo0 = lo<0 ? lo+4294967296 : lo;
     if(hi === 0) return lo0.toString(16);
@@ -3518,7 +3605,11 @@ function h$jsstringReadInteger(str) {
   } else if(str.length <= 9) {
     return (h$c1(h$integerzmgmpZCGHCziIntegerziTypeziSzh_con_e, (parseInt(str, 10))));;
   } else {
-    return MK_INTEGER_J(new BigInteger(str, 10));
+
+    return h$ghcjsbn_readInteger(str);
+
+
+
   }
 }
 
@@ -3981,7 +4072,7 @@ function h$allProps(o) {
     return a;
 }
 
-function h$listAllProps(o) {
+function h$listProps(o) {
     var r = h$ghczmprimZCGHCziTypesziZMZN;
     for(var p in o) { r = (h$c2(h$ghczmprimZCGHCziTypesziZC_con_e, ((h$c1(h$ghcjszmprimZCGHCJSziPrimziJSVal_con_e, (p)))), (r))); }
     return r;
@@ -4899,7 +4990,7 @@ goog.crypt.Md5.prototype.digest = function() {
 
 
 /* Define to 1 if you have the `clock_gettime' function. */
-/* #undef HAVE_CLOCK_GETTIME */
+
 
 /* Define to 1 if you have the <ctype.h> header file. */
 
@@ -4917,6 +5008,9 @@ goog.crypt.Md5.prototype.digest = function() {
 /* #undef HAVE_EVENTFD */
 
 /* Define to 1 if you have the <fcntl.h> header file. */
+
+
+/* Define if you have flock support. */
 
 
 /* Define to 1 if you have the `ftruncate' function. */
@@ -4964,6 +5058,9 @@ goog.crypt.Md5.prototype.digest = function() {
 /* Define to 1 if you have the <memory.h> header file. */
 
 
+/* Define if you have open file descriptor lock support. */
+/* #undef HAVE_OFD_LOCKING */
+
 /* Define if you have poll support. */
 
 
@@ -4992,6 +5089,9 @@ goog.crypt.Md5.prototype.digest = function() {
 /* #undef HAVE_SYS_EVENTFD_H */
 
 /* Define to 1 if you have the <sys/event.h> header file. */
+
+
+/* Define to 1 if you have the <sys/file.h> header file. */
 
 
 /* Define to 1 if you have the <sys/resource.h> header file. */
@@ -5039,6 +5139,9 @@ goog.crypt.Md5.prototype.digest = function() {
 /* Define to 1 if you have the <unistd.h> header file. */
 
 
+/* Define to 1 if you have the `unsetenv' function. */
+
+
 /* Define to 1 if you have the <utime.h> header file. */
 
 
@@ -5053,6 +5156,15 @@ goog.crypt.Md5.prototype.digest = function() {
 
 /* Define to 1 if you have the `_chsize' function. */
 /* #undef HAVE__CHSIZE */
+
+/* Define to Haskell type for blkcnt_t */
+
+
+/* Define to Haskell type for blksize_t */
+
+
+/* Define to Haskell type for bool */
+
 
 /* Define to Haskell type for cc_t */
 
@@ -5072,7 +5184,16 @@ goog.crypt.Md5.prototype.digest = function() {
 /* Define to Haskell type for float */
 
 
+/* Define to Haskell type for fsblkcnt_t */
+
+
+/* Define to Haskell type for fsfilcnt_t */
+
+
 /* Define to Haskell type for gid_t */
+
+
+/* Define to Haskell type for id_t */
 
 
 /* Define to Haskell type for ino_t */
@@ -5133,6 +5254,9 @@ goog.crypt.Md5.prototype.digest = function() {
 
 
 /* Define to Haskell type for tcflag_t */
+
+
+/* Define to Haskell type for timer_t */
 
 
 /* Define to Haskell type for time_t */
@@ -5198,11 +5322,51 @@ goog.crypt.Md5.prototype.digest = function() {
 /* Define to 1 if you have the ANSI C header files. */
 
 
+/* Define if stdlib.h declares unsetenv to return void. */
+/* #undef UNSETENV_RETURNS_VOID */
+
+/* Enable extensions on AIX 3, Interix.  */
+
+
+
+/* Enable GNU extensions on systems that have them.  */
+
+
+
+/* Enable threading extensions on Solaris.  */
+
+
+
+/* Enable extensions on HP NonStop.  */
+
+
+
+/* Enable general extensions on Solaris.  */
+
+
+
+
+
+/* Enable large inode numbers on Mac OS X 10.5.  */
+
+
+
+
 /* Number of bits in a file offset, on hosts where this is settable. */
 /* #undef _FILE_OFFSET_BITS */
 
 /* Define for large files, on AIX-style hosts. */
 /* #undef _LARGE_FILES */
+
+/* Define to 1 if on MINIX. */
+/* #undef _MINIX */
+
+/* Define to 2 if the system does not provide POSIX.1 features except with
+   this defined. */
+/* #undef _POSIX_1_SOURCE */
+
+/* Define to 1 if you need to in order for `stat' and other things to work. */
+/* #undef _POSIX_SOURCE */
 
 
 
@@ -5379,8 +5543,9 @@ function h$base_read(fd, buf, buf_off, n, c) {
     if(fdo && fdo.read) {
         fdo.read(fd, fdo, buf, buf_off, n, c);
     } else {
-        h$errno = 22;
-        c(-1);
+        h$fs.read(fd, buf.u8, buf_off, n, null, function(err, bytesRead, buf0) {
+            h$handleErrnoC(err, -1, bytesRead, c);
+        });
     }
 }
 function h$base_stat(file, file_off, stat, stat_off, c) {
@@ -5401,8 +5566,9 @@ function h$base_write(fd, buf, buf_off, n, c) {
     if(fdo && fdo.write) {
         fdo.write(fd, fdo, buf, buf_off, n, c);
     } else {
-        h$errno = 22;
-        c(-1);
+        h$fs.write(fd, buf.u8, buf_off, n, function(err, bytesWritten, buf0) {
+            h$handleErrnoC(err, -1, bytesWritten, c);
+        });
     }
 }
 
@@ -5621,57 +5787,15 @@ function h$shutdownHaskellAndExit(code, fast) {
 function h$rand() {
   return (32768 * Math.random()) & 32767;
 }
-function h$hsprimitive_memcpy(dst_d, dst_o, doff, src_d, src_o, soff, len) {
-  return h$primitive_memmove(dst_d, dst_o, doff, src_d, src_o, len);
-}
 
-function h$hsprimitive_memmove(dst_d, dst_o, doff, src_d, src_o, soff, len) {
-  if(len === 0) return;
-  var du8 = dst_d.u8, su8 = src_d.u8;
-  for(var i=len-1;i>=0;i--) {
-    du8[dst_o+i] = su8[src_o+i];
-  }
-}
-function h$hsprimitive_memsetba_Word8 (p_d, off, n, x) { if(n > 0) { if(p_d.u8.fill) p_d.u8.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.u8[i] = x; } }
-function h$hsprimitive_memsetba_Word16 (p_d, off, n, x) { if(n > 0) { if(p_d.u1.fill) p_d.u1.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.u1[i] = x; } }
-function h$hsprimitive_memsetba_Word32 (p_d, off, n, x) { if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.i3[i] = x; } }
-function h$hsprimitive_memsetba_Word (p_d, off, n, x) { if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.i3[i] = x; } }
-function h$hsprimitive_memsetba_Float (p_d, off, n, x) { if(n > 0) { if(p_d.f3.fill) p_d.f3.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.f3[i] = x; } }
-function h$hsprimitive_memsetba_Double (p_d, off, n, x) { if(n > 0) { if(p_d.f6.fill) p_d.f6.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.f6[i] = x; } }
-function h$hsprimitive_memsetba_Char (p_d, off, n, x) { if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.i3[i] = x; } }
+// SIGUSR1, SIGTERM, SIGINT, SIGPIPE, SIGHUP, SIGTERM, SIGINT
+// SIGBREAK, SIGWINCH, SIGKILL, SIGSTOP, SIGBUS, SIGFPE
+// SIGSEGV, SIGILL
 
-function h$hsprimitive_memset_Word8 (p_d, p_o, off, n, x) { var start = (p_o >> 0) + off; if(n > 0) { if(p_d.u8.fill) p_d.u8.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.u8[i] = x; } }
-function h$hsprimitive_memset_Word16 (p_d, p_o, off, n, x) { var start = (p_o >> 1) + off; if(n > 0) { if(p_d.u1.fill) p_d.u1.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.u1[i] = x; } }
-function h$hsprimitive_memset_Word32 (p_d, p_o, off, n, x) { var start = (p_o >> 2) + off; if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.i3[i] = x; } }
-function h$hsprimitive_memset_Word (p_d, p_o, off, n, x) { var start = (p_o >> 2) + off; if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.i3[i] = x; } }
-function h$hsprimitive_memset_Float (p_d, p_o, off, n, x) { var start = (p_o >> 2) + off; if(n > 0) { if(p_d.f3.fill) p_d.f3.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.f3[i] = x; } }
-function h$hsprimitive_memset_Double (p_d, p_o, off, n, x) { var start = (p_o >> 3) + off; if(n > 0) { if(p_d.f6.fill) p_d.f6.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.f6[i] = x; } }
-function h$hsprimitive_memset_Char (p_d, p_o, off, n, x) { var start = (p_o >> 2) + off; if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.i3[i] = x; } }
-
-function h$hsprimitive_memsetba_Word64(p_d, off, n, x_1, x_2) {
-  h$hsprimitive_memset_Word64(p_d, 0, off, n, x_1, x_2);
-}
-
-function h$hsprimitive_memset_Word64(p_d, p_o, off, n, x_1, x_2) {
-  var start = (p_o >> 3) + off;
-  if(n > 0) {
-    var pi3 = p_d.i3;
-    for(var i = 0; i < n; i++) {
-      var o = (start + i) << 1;
-      pi3[o] = x_1;
-      pi3[o+1] = x_2;
-    }
-  }
-}
-
-function h$hsprimitive_memset_Ptr(p_d, p_o, off, n, x_1, x_2) {
-  if(n > 0) {
-    if(!p_d.arr) p_d.arr = [];
-    var a = p_d.arr;
-    for(var i = 0; i < n; i++) {
-      a[p_o + ((off + i) << 2)] = [x_1, x_2];
-    }
-  }
+// returns old action code
+function h$stg_sig_install(sigNo, actionCode, sigSet_d, sigSet_o) {
+  // XXX dummy implementation
+  return 0;
 }
 function h$get_current_timezone_seconds(t, pdst_v, pdst_o, pname_v, pname_o) {
     var d = new Date(t * 1000);
@@ -5702,88 +5826,86 @@ function h$clock_gettime(when, p_d, p_o) {
   p_d.i3[o+1] = tn|0;
   return 0;
 }
-// generated by generate_threefish_block.hs
 var h$Threefish_256_Process_Block;
-h$Threefish_256_Process_Block=function(p,q,y,r){var m;m=p.i3;var a;a=q.i3;y=y.i3;var b,g,l,c,d,h,k,e,f,t,u,v,n,w,x;q=m[0];p=m[1];r=m[2];t=m[3];u=m[4];v=m[5];n=m[6];m=m[7];w=q^r^u^n^2851871266;x=p^t^v^m^466688986;b=a[0];g=a[1];c=a[2];d=a[3];h=a[4];k=a[5];e=a[6];f=a[7];a=(b&16777215)+(q&16777215);b=(a>>>24)+(b>>>24)+(q>>>24)+((g&65535)<<8)+((p&65535)<<8);l=((b>>>24)+(g>>>16)+(p>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(r&16777215)+0;b=(a>>>24)+(c>>>24)+(r>>>24)+0+((d&65535)<<8)+((t&
-65535)<<8)+0;d=((b>>>24)+(d>>>16)+(t>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(u&16777215)+0;b=(a>>>24)+(h>>>24)+(u>>>24)+0+((k&65535)<<8)+((v&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(v>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(n&16777215);b=(a>>>24)+(e>>>24)+(n>>>24)+((f&65535)<<8)+((m&65535)<<8);f=((b>>>24)+(f>>>16)+(m>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>
-16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&
-16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);
-h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(r&16777215);b=(a>>>24)+(g>>>24)+(r>>>24)+
-((l&65535)<<8)+((t&65535)<<8);l=((b>>>24)+(l>>>16)+(t>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(u&16777215)+0;b=(a>>>24)+(c>>>24)+(u>>>24)+0+((d&65535)<<8)+((v&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(v>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(n&16777215)+0;b=(a>>>24)+(h>>>24)+(n>>>24)+0+((k&65535)<<8)+((m&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(m>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(w&16777215)+1;b=(a>>>24)+(e>>>24)+(w>>>24)+0+((f&65535)<<8)+((x&
-65535)<<8)+0;f=((b>>>24)+(f>>>16)+(x>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>
-24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&
-16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);
-k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(u&16777215);b=(a>>>24)+(g>>>24)+(u>>>24)+((l&65535)<<8)+((v&65535)<<8);l=((b>>>24)+(l>>>16)+(v>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(n&16777215)+0;b=(a>>>24)+(c>>>24)+(n>>>24)+0+((d&65535)<<8)+((m&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(m>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(w&16777215)+0;b=(a>>>24)+(h>>>24)+(w>>>24)+0+((k&65535)<<8)+((x&65535)<<8)+0;k=((b>>>24)+
-(k>>>16)+(x>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(q&16777215)+2;b=(a>>>24)+(e>>>24)+(q>>>24)+0+((f&65535)<<8)+((p&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(p>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);
-k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=
-(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<
-16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(n&16777215);b=(a>>>24)+(g>>>24)+(n>>>24)+((l&65535)<<8)+((m&65535)<<8);l=((b>>>24)+(l>>>16)+(m>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(w&16777215)+0;b=(a>>>24)+(c>>>24)+(w>>>24)+0+((d&65535)<<8)+((x&
-65535)<<8)+0;d=((b>>>24)+(d>>>16)+(x>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(q&16777215)+0;b=(a>>>24)+(h>>>24)+(q>>>24)+0+((k&65535)<<8)+((p&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(p>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(r&16777215)+3;b=(a>>>24)+(e>>>24)+(r>>>24)+0+((f&65535)<<8)+((t&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(t>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>
-24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+
-(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>
-8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(w&16777215);b=(a>>>24)+(g>>>24)+(w>>>24)+((l&65535)<<8)+((x&65535)<<8);l=((b>>>
-24)+(l>>>16)+(x>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(q&16777215)+0;b=(a>>>24)+(c>>>24)+(q>>>24)+0+((d&65535)<<8)+((p&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(p>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(r&16777215)+0;b=(a>>>24)+(h>>>24)+(r>>>24)+0+((k&65535)<<8)+((t&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(t>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(u&16777215)+4;b=(a>>>24)+(e>>>24)+(u>>>24)+0+((f&65535)<<8)+((v&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(v>>>
-16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<
+h$Threefish_256_Process_Block=function(n,r,p,t,y,u,v){var m=n.i3;var a=p.i3;y=y.i3;p=m[0];n=m[1];r=m[2];t=m[3];u=m[4];v=m[5];var q=m[6];m=m[7];var w=p^r^u^q^2851871266;var x=n^t^v^m^466688986;var b=a[0];var g=a[1];var c=a[2];var d=a[3];var h=a[4];var k=a[5];var e=a[6];var f=a[7];a=(b&16777215)+(p&16777215);b=(a>>>24)+(b>>>24)+(p>>>24)+((g&65535)<<8)+((n&65535)<<8);var l=((b>>>24)+(g>>>16)+(n>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(r&16777215);b=(a>>>24)+(c>>>24)+(r>>>24)+((d&65535)<<
+8)+((t&65535)<<8);d=((b>>>24)+(d>>>16)+(t>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(u&16777215);b=(a>>>24)+(h>>>24)+(u>>>24)+((k&65535)<<8)+((v&65535)<<8);k=((b>>>24)+(k>>>16)+(v>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(q&16777215);b=(a>>>24)+(e>>>24)+(q>>>24)+((f&65535)<<8)+((m&65535)<<8);f=((b>>>24)+(f>>>16)+(m>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+
+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);
+b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|
+a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(r&16777215);b=(a>>>24)+(g>>>24)+(r>>>24)+((l&65535)<<
+8)+((t&65535)<<8);l=((b>>>24)+(l>>>16)+(t>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(u&16777215);b=(a>>>24)+(c>>>24)+(u>>>24)+((d&65535)<<8)+((v&65535)<<8);d=((b>>>24)+(d>>>16)+(v>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(q&16777215);b=(a>>>24)+(h>>>24)+(q>>>24)+((k&65535)<<8)+((m&65535)<<8);k=((b>>>24)+(k>>>16)+(m>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(w&16777215)+1;b=(a>>>24)+(e>>>24)+(w>>>24)+((f&65535)<<8)+((x&65535)<<8);f=((b>>>24)+(f>>>16)+
+(x>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<
+8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=
+(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+
+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(u&16777215);b=(a>>>24)+(g>>>24)+(u>>>24)+((l&65535)<<8)+((v&65535)<<8);l=((b>>>24)+(l>>>16)+(v>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(q&16777215);b=(a>>>24)+(c>>>24)+(q>>>24)+((d&65535)<<8)+((m&65535)<<8);d=((b>>>24)+(d>>>16)+(m>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(w&16777215);b=(a>>>24)+(h>>>24)+(w>>>24)+((k&65535)<<8)+((x&65535)<<8);k=((b>>>24)+(k>>>16)+(x>>>16)<<16)+(b>>8&65535);h=b<<24|a&
+16777215;a=(e&16777215)+(p&16777215)+2;b=(a>>>24)+(e>>>24)+(p>>>24)+((f&65535)<<8)+((n&65535)<<8);f=((b>>>24)+(f>>>16)+(n>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<
+24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+
+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>
+27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(q&16777215);b=(a>>>24)+(g>>>24)+(q>>>24)+((l&65535)<<8)+((m&65535)<<8);l=((b>>>24)+(l>>>16)+(m>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(w&16777215);b=(a>>>24)+(c>>>24)+(w>>>24)+((d&65535)<<8)+((x&65535)<<8);d=((b>>>24)+(d>>>16)+(x>>>16)<<16)+(b>>8&65535);
+c=b<<24|a&16777215;a=(h&16777215)+(p&16777215);b=(a>>>24)+(h>>>24)+(p>>>24)+((k&65535)<<8)+((n&65535)<<8);k=((b>>>24)+(k>>>16)+(n>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(r&16777215)+3;b=(a>>>24)+(e>>>24)+(r>>>24)+((f&65535)<<8)+((t&65535)<<8);f=((b>>>24)+(f>>>16)+(t>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^
+l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>
+24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+
+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(w&16777215);b=(a>>>24)+(g>>>24)+(w>>>24)+((l&65535)<<8)+((x&65535)<<8);l=((b>>>24)+(l>>>16)+(x>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(p&16777215);
+b=(a>>>24)+(c>>>24)+(p>>>24)+((d&65535)<<8)+((n&65535)<<8);d=((b>>>24)+(d>>>16)+(n>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(r&16777215);b=(a>>>24)+(h>>>24)+(r>>>24)+((k&65535)<<8)+((t&65535)<<8);k=((b>>>24)+(k>>>16)+(t>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(u&16777215)+4;b=(a>>>24)+(e>>>24)+(u>>>24)+((f&65535)<<8)+((v&65535)<<8);f=((b>>>24)+(f>>>16)+(v>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<
+8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=
+(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+
+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(p&
+16777215);b=(a>>>24)+(g>>>24)+(p>>>24)+((l&65535)<<8)+((n&65535)<<8);l=((b>>>24)+(l>>>16)+(n>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(r&16777215);b=(a>>>24)+(c>>>24)+(r>>>24)+((d&65535)<<8)+((t&65535)<<8);d=((b>>>24)+(d>>>16)+(t>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(u&16777215);b=(a>>>24)+(h>>>24)+(u>>>24)+((k&65535)<<8)+((v&65535)<<8);k=((b>>>24)+(k>>>16)+(v>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(q&16777215)+5;b=(a>>>24)+(e>>>24)+(q>>>24)+
+((f&65535)<<8)+((m&65535)<<8);f=((b>>>24)+(f>>>16)+(m>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&
+16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&
+65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<
+8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(r&16777215);b=(a>>>24)+(g>>>24)+(r>>>24)+((l&65535)<<8)+((t&65535)<<8);l=((b>>>24)+(l>>>16)+(t>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(u&16777215);b=(a>>>24)+(c>>>24)+(u>>>24)+((d&65535)<<8)+((v&65535)<<8);d=((b>>>24)+(d>>>16)+(v>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(q&16777215);b=(a>>>24)+(h>>>24)+(q>>>24)+((k&65535)<<8)+((m&65535)<<8);k=((b>>>
+24)+(k>>>16)+(m>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(w&16777215)+6;b=(a>>>24)+(e>>>24)+(w>>>24)+((f&65535)<<8)+((x&65535)<<8);f=((b>>>24)+(f>>>16)+(x>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>
+24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+
+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&
+65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(u&16777215);b=(a>>>24)+(g>>>24)+(u>>>24)+((l&65535)<<8)+((v&65535)<<8);l=((b>>>24)+(l>>>16)+(v>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(q&16777215);b=(a>>>24)+(c>>>24)+(q>>>24)+((d&65535)<<8)+((m&65535)<<8);
+d=((b>>>24)+(d>>>16)+(m>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(w&16777215);b=(a>>>24)+(h>>>24)+(w>>>24)+((k&65535)<<8)+((x&65535)<<8);k=((b>>>24)+(k>>>16)+(x>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(p&16777215)+7;b=(a>>>24)+(e>>>24)+(p>>>24)+((f&65535)<<8)+((n&65535)<<8);f=((b>>>24)+(f>>>16)+(n>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>
+8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>
+24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=
+f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(q&16777215);b=(a>>>24)+(g>>>24)+(q>>>24)+((l&65535)<<8)+((m&65535)<<8);l=((b>>>24)+(l>>>16)+(m>>>16)<<16)+
+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(w&16777215);b=(a>>>24)+(c>>>24)+(w>>>24)+((d&65535)<<8)+((x&65535)<<8);d=((b>>>24)+(d>>>16)+(x>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(p&16777215);b=(a>>>24)+(h>>>24)+(p>>>24)+((k&65535)<<8)+((n&65535)<<8);k=((b>>>24)+(k>>>16)+(n>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(r&16777215)+8;b=(a>>>24)+(e>>>24)+(r>>>24)+((f&65535)<<8)+((t&65535)<<8);f=((b>>>24)+(f>>>16)+(t>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&
+16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<
+16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>
+24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;
+a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(w&16777215);b=(a>>>24)+(g>>>24)+(w>>>24)+((l&65535)<<8)+((x&65535)<<8);l=((b>>>24)+(l>>>16)+(x>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(p&16777215);b=(a>>>24)+(c>>>24)+(p>>>24)+((d&65535)<<8)+((n&65535)<<8);d=((b>>>24)+(d>>>16)+(n>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(r&16777215);b=(a>>>24)+(h>>>24)+(r>>>24)+((k&65535)<<8)+((t&65535)<<8);k=((b>>>24)+(k>>>16)+(t>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;
+a=(e&16777215)+(u&16777215)+9;b=(a>>>24)+(e>>>24)+(u>>>24)+((f&65535)<<8)+((v&65535)<<8);f=((b>>>24)+(f>>>16)+(v>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;
+a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<
+8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+
+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(p&16777215);b=(a>>>24)+(g>>>24)+(p>>>24)+((l&65535)<<8)+((n&65535)<<8);l=((b>>>24)+(l>>>16)+(n>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(r&16777215);b=(a>>>24)+(c>>>24)+(r>>>24)+((d&65535)<<8)+((t&65535)<<8);d=((b>>>24)+(d>>>16)+(t>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(u&16777215);b=(a>>>24)+
+(h>>>24)+(u>>>24)+((k&65535)<<8)+((v&65535)<<8);k=((b>>>24)+(k>>>16)+(v>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(q&16777215)+10;b=(a>>>24)+(e>>>24)+(q>>>24)+((f&65535)<<8)+((m&65535)<<8);f=((b>>>24)+(f>>>16)+(m>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>
+24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&
+16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<
+8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(r&16777215);b=(a>>>24)+(g>>>24)+(r>>>24)+((l&65535)<<8)+((t&65535)<<8);l=((b>>>24)+(l>>>16)+(t>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(u&16777215);
+b=(a>>>24)+(c>>>24)+(u>>>24)+((d&65535)<<8)+((v&65535)<<8);d=((b>>>24)+(d>>>16)+(v>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(q&16777215);b=(a>>>24)+(h>>>24)+(q>>>24)+((k&65535)<<8)+((m&65535)<<8);k=((b>>>24)+(k>>>16)+(m>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(w&16777215)+11;b=(a>>>24)+(e>>>24)+(w>>>24)+((f&65535)<<8)+((x&65535)<<8);f=((b>>>24)+(f>>>16)+(x>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<
+8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<
+14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+
+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(u&16777215);b=(a>>>24)+(g>>>24)+(u>>>24)+((l&65535)<<
+8)+((v&65535)<<8);l=((b>>>24)+(l>>>16)+(v>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(q&16777215);b=(a>>>24)+(c>>>24)+(q>>>24)+((d&65535)<<8)+((m&65535)<<8);d=((b>>>24)+(d>>>16)+(m>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(w&16777215);b=(a>>>24)+(h>>>24)+(w>>>24)+((k&65535)<<8)+((x&65535)<<8);k=((b>>>24)+(k>>>16)+(x>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(p&16777215)+12;b=(a>>>24)+(e>>>24)+(p>>>24)+((f&65535)<<8)+((n&65535)<<8);f=((b>>>24)+(f>>>16)+
+(n>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<
 8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<
 23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>
-16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(q&16777215);b=(a>>>24)+(g>>>24)+(q>>>24)+((l&65535)<<8)+((p&65535)<<8);l=((b>>>24)+(l>>>16)+(p>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(r&16777215)+0;b=(a>>>24)+(c>>>24)+(r>>>24)+0+((d&65535)<<8)+((t&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(t>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(u&16777215)+0;b=(a>>>24)+(h>>>24)+(u>>>24)+0+((k&65535)<<8)+((v&65535)<<8)+0;k=
-((b>>>24)+(k>>>16)+(v>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(n&16777215)+5;b=(a>>>24)+(e>>>24)+(n>>>24)+0+((f&65535)<<8)+((m&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(m>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<
-8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;
-a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>
-16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(r&16777215);b=(a>>>24)+(g>>>24)+(r>>>24)+((l&65535)<<8)+((t&65535)<<8);l=((b>>>24)+(l>>>16)+(t>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(u&16777215)+0;b=(a>>>24)+(c>>>24)+(u>>>24)+0+((d&65535)<<8)+((v&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(v>>>16)+
-0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(n&16777215)+0;b=(a>>>24)+(h>>>24)+(n>>>24)+0+((k&65535)<<8)+((m&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(m>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(w&16777215)+6;b=(a>>>24)+(e>>>24)+(w>>>24)+0+((f&65535)<<8)+((x&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(x>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<
-24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>
-24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|
-f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(u&16777215);b=(a>>>24)+(g>>>24)+(u>>>24)+((l&65535)<<8)+((v&65535)<<8);
-l=((b>>>24)+(l>>>16)+(v>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(n&16777215)+0;b=(a>>>24)+(c>>>24)+(n>>>24)+0+((d&65535)<<8)+((m&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(m>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(w&16777215)+0;b=(a>>>24)+(h>>>24)+(w>>>24)+0+((k&65535)<<8)+((x&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(x>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(q&16777215)+7;b=(a>>>24)+(e>>>24)+(q>>>24)+0+((f&65535)<<8)+((p&65535)<<8)+0;f=((b>>>24)+(f>>>
-16)+(p>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&
-65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>
-6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>
-16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(n&16777215);b=(a>>>24)+(g>>>24)+(n>>>24)+((l&65535)<<8)+((m&65535)<<8);l=((b>>>24)+(l>>>16)+(m>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(w&16777215)+0;b=(a>>>24)+(c>>>24)+(w>>>24)+0+((d&65535)<<8)+((x&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(x>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(q&16777215)+0;b=(a>>>24)+(h>>>24)+(q>>>24)+0+((k&65535)<<8)+((p&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(p>>>16)+0<<16)+
-(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(r&16777215)+8;b=(a>>>24)+(e>>>24)+(r>>>24)+0+((f&65535)<<8)+((t&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(t>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>
-16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);
-b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|
-a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(w&16777215);b=(a>>>24)+(g>>>24)+(w>>>24)+((l&65535)<<8)+((x&65535)<<8);l=((b>>>24)+(l>>>16)+(x>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(q&16777215)+0;b=(a>>>24)+(c>>>24)+(q>>>24)+0+((d&65535)<<8)+((p&65535)<<8)+0;d=((b>>>24)+
-(d>>>16)+(p>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(r&16777215)+0;b=(a>>>24)+(h>>>24)+(r>>>24)+0+((k&65535)<<8)+((t&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(t>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(u&16777215)+9;b=(a>>>24)+(e>>>24)+(u>>>24)+0+((f&65535)<<8)+((v&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(v>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+
-(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+
-(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;
-a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(q&16777215);b=(a>>>24)+(g>>>24)+(q>>>24)+((l&65535)<<8)+((p&65535)<<8);l=((b>>>24)+(l>>>16)+(p>>>16)<<16)+
-(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(r&16777215)+0;b=(a>>>24)+(c>>>24)+(r>>>24)+0+((d&65535)<<8)+((t&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(t>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(u&16777215)+0;b=(a>>>24)+(h>>>24)+(u>>>24)+0+((k&65535)<<8)+((v&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(v>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(n&16777215)+10;b=(a>>>24)+(e>>>24)+(n>>>24)+0+((f&65535)<<8)+((m&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(m>>>16)+0<<16)+(b>>8&65535);e=
-b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>
-24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+
-(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&
-65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(r&16777215);b=(a>>>24)+(g>>>24)+(r>>>24)+((l&65535)<<8)+((t&65535)<<8);l=((b>>>24)+(l>>>16)+(t>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(u&16777215)+0;b=(a>>>24)+(c>>>24)+(u>>>24)+0+((d&65535)<<8)+((v&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(v>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(n&16777215)+0;b=(a>>>24)+(h>>>24)+(n>>>24)+0+((k&65535)<<8)+((m&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(m>>>
-16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(w&16777215)+11;b=(a>>>24)+(e>>>24)+(w>>>24)+0+((f&65535)<<8)+((x&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(x>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>
+16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(q&16777215);b=(a>>>24)+(g>>>24)+(q>>>24)+((l&65535)<<8)+((m&65535)<<8);l=((b>>>24)+(l>>>16)+(m>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(w&16777215);b=(a>>>24)+(c>>>24)+(w>>>24)+((d&65535)<<8)+((x&65535)<<8);d=((b>>>24)+(d>>>16)+(x>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(p&16777215);b=(a>>>24)+(h>>>24)+(p>>>24)+((k&65535)<<8)+((n&65535)<<8);k=((b>>>24)+(k>>>
+16)+(n>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(r&16777215)+13;b=(a>>>24)+(e>>>24)+(r>>>24)+((f&65535)<<8)+((t&65535)<<8);f=((b>>>24)+(f>>>16)+(t>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>
 16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);
 b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<
-24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(u&16777215);b=(a>>>24)+(g>>>24)+(u>>>24)+((l&65535)<<8)+((v&65535)<<8);l=((b>>>24)+(l>>>16)+(v>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(n&16777215)+0;b=(a>>>24)+(c>>>24)+(n>>>24)+0+((d&65535)<<8)+((m&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(m>>>16)+0<<16)+(b>>8&65535);c=b<<
-24|a&16777215;a=(h&16777215)+(w&16777215)+0;b=(a>>>24)+(h>>>24)+(w>>>24)+0+((k&65535)<<8)+((x&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(x>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(q&16777215)+12;b=(a>>>24)+(e>>>24)+(q>>>24)+0+((f&65535)<<8)+((p&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(p>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<
-14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<
-8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&
-16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(n&16777215);b=(a>>>24)+(g>>>24)+(n>>>24)+((l&65535)<<8)+((m&65535)<<8);l=((b>>>24)+(l>>>16)+(m>>>16)<<
-16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(w&16777215)+0;b=(a>>>24)+(c>>>24)+(w>>>24)+0+((d&65535)<<8)+((x&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(x>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(q&16777215)+0;b=(a>>>24)+(h>>>24)+(q>>>24)+0+((k&65535)<<8)+((p&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(p>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(r&16777215)+13;b=(a>>>24)+(e>>>24)+(r>>>24)+0+((f&65535)<<8)+((t&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(t>>>16)+0<<16)+(b>>8&65535);
-e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>
-24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+
-(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;
-a=d;d=c^k;c=a^h;a=(g&16777215)+(w&16777215);b=(a>>>24)+(g>>>24)+(w>>>24)+((l&65535)<<8)+((x&65535)<<8);l=((b>>>24)+(l>>>16)+(x>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(q&16777215)+0;b=(a>>>24)+(c>>>24)+(q>>>24)+0+((d&65535)<<8)+((p&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(p>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(r&16777215)+0;b=(a>>>24)+(h>>>24)+(r>>>24)+0+((k&65535)<<8)+((t&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(t>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+
-(u&16777215)+14;b=(a>>>24)+(e>>>24)+(u>>>24)+0+((f&65535)<<8)+((v&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(v>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;
-f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&
-65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^
-g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(q&16777215);b=(a>>>24)+(g>>>24)+(q>>>24)+((l&65535)<<8)+((p&65535)<<8);l=((b>>>24)+(l>>>16)+(p>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(r&16777215)+0;b=(a>>>24)+(c>>>24)+(r>>>24)+0+((d&65535)<<8)+((t&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(t>>>16)+0<<16)+(b>>8&65535);c=b<<24|
-a&16777215;a=(h&16777215)+(u&16777215)+0;b=(a>>>24)+(h>>>24)+(u>>>24)+0+((k&65535)<<8)+((v&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(v>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(n&16777215)+15;b=(a>>>24)+(e>>>24)+(n>>>24)+0+((f&65535)<<8)+((m&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(m>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|
-c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<
-8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;
-a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(r&16777215);b=(a>>>24)+(g>>>24)+(r>>>24)+((l&65535)<<8)+((t&65535)<<8);l=((b>>>24)+(l>>>16)+(t>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+
-(u&16777215)+0;b=(a>>>24)+(c>>>24)+(u>>>24)+0+((d&65535)<<8)+((v&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(v>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(n&16777215)+0;b=(a>>>24)+(h>>>24)+(n>>>24)+0+((k&65535)<<8)+((m&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(m>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(w&16777215)+16;b=(a>>>24)+(e>>>24)+(w>>>24)+0+((f&65535)<<8)+((x&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(x>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=
-(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<
-24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+
-((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>
-27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(u&16777215);b=(a>>>24)+(g>>>24)+(u>>>24)+((l&65535)<<8)+((v&65535)<<8);l=((b>>>24)+(l>>>16)+(v>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(n&16777215)+0;b=(a>>>24)+(c>>>24)+(n>>>24)+0+((d&65535)<<8)+((m&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(m>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(w&16777215)+0;b=(a>>>24)+(h>>>24)+(w>>>24)+0+((k&65535)<<8)+((x&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(x>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;
-a=(e&16777215)+(q&16777215)+17;b=(a>>>24)+(e>>>24)+(q>>>24)+0+((f&65535)<<8)+((p&65535)<<8)+0;f=((b>>>24)+(f>>>16)+(p>>>16)+0<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&
-16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&
-65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=
-(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(n&16777215);b=(a>>>24)+(g>>>24)+(n>>>24)+((l&65535)<<8)+((m&65535)<<8);l=((b>>>24)+(l>>>16)+(m>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(w&16777215)+0;b=(a>>>24)+(c>>>24)+(w>>>24)+0+((d&65535)<<8)+((x&65535)<<8)+0;d=((b>>>24)+(d>>>16)+(x>>>16)+0<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(q&
-16777215)+0;b=(a>>>24)+(h>>>24)+(q>>>24)+0+((k&65535)<<8)+((p&65535)<<8)+0;k=((b>>>24)+(k>>>16)+(p>>>16)+0<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(r&16777215)+18;b=(a>>>24)+(e>>>24)+(r>>>24)+0+((f&65535)<<8)+((t&65535)<<8)+0;y[0]=g;y[1]=l;y[2]=c;y[3]=d;y[4]=h;y[5]=k;y[6]=b<<24|a&16777215;y[7]=((b>>>24)+(f>>>16)+(t>>>16)+0<<16)+(b>>8&65535)};"undefined"!==typeof exports&&(exports.h$Threefish_256_Process_Block=h$Threefish_256_Process_Block);
+24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(w&16777215);b=(a>>>24)+(g>>>24)+(w>>>24)+((l&65535)<<8)+((x&65535)<<8);l=((b>>>24)+(l>>>16)+(x>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(p&16777215);b=(a>>>24)+(c>>>24)+(p>>>24)+((d&65535)<<8)+((n&65535)<<8);d=((b>>>24)+(d>>>16)+(n>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;
+a=(h&16777215)+(r&16777215);b=(a>>>24)+(h>>>24)+(r>>>24)+((k&65535)<<8)+((t&65535)<<8);k=((b>>>24)+(k>>>16)+(t>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(u&16777215)+14;b=(a>>>24)+(e>>>24)+(u>>>24)+((f&65535)<<8)+((v&65535)<<8);f=((b>>>24)+(f>>>16)+(v>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>
+18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>
+16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);
+b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(p&16777215);b=(a>>>24)+(g>>>24)+(p>>>24)+((l&65535)<<8)+((n&65535)<<8);l=((b>>>24)+(l>>>16)+(n>>>16)<<16)+(b>>8&65535);g=b<<24|
+a&16777215;a=(c&16777215)+(r&16777215);b=(a>>>24)+(c>>>24)+(r>>>24)+((d&65535)<<8)+((t&65535)<<8);d=((b>>>24)+(d>>>16)+(t>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(u&16777215);b=(a>>>24)+(h>>>24)+(u>>>24)+((k&65535)<<8)+((v&65535)<<8);k=((b>>>24)+(k>>>16)+(v>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(q&16777215)+15;b=(a>>>24)+(e>>>24)+(q>>>24)+((f&65535)<<8)+((m&65535)<<8);f=((b>>>24)+(f>>>16)+(m>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);
+b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|
+a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&
+65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(r&16777215);
+b=(a>>>24)+(g>>>24)+(r>>>24)+((l&65535)<<8)+((t&65535)<<8);l=((b>>>24)+(l>>>16)+(t>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(u&16777215);b=(a>>>24)+(c>>>24)+(u>>>24)+((d&65535)<<8)+((v&65535)<<8);d=((b>>>24)+(d>>>16)+(v>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(q&16777215);b=(a>>>24)+(h>>>24)+(q>>>24)+((k&65535)<<8)+((m&65535)<<8);k=((b>>>24)+(k>>>16)+(m>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(w&16777215)+16;b=(a>>>24)+(e>>>24)+(w>>>24)+((f&65535)<<
+8)+((x&65535)<<8);f=((b>>>24)+(f>>>16)+(x>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<14|c>>>18)^l;c=(c<<14|a>>>18)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<16|e>>>16)^k;e=(e<<16|a>>>16)^h;a=(g&16777215)+(e&16777215);
+b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<20|f>>>12)^l;e=(a<<20|e>>>12)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<25|d>>>7)^k;c=(a<<25|c>>>7)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<
+24|a&16777215;a=d;d=(d<<23|c>>>9)^l;c=(c<<23|a>>>9)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<8|f>>>24)^k;e=(a<<8|e>>>24)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(f<<5|e>>>27)^l;e=(e<<5|a>>>27)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&
+65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(c<<5|d>>>27)^k;c=(a<<5|c>>>27)^h;a=(g&16777215)+(u&16777215);b=(a>>>24)+(g>>>24)+(u>>>24)+((l&65535)<<8)+((v&65535)<<8);l=((b>>>24)+(l>>>16)+(v>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(q&16777215);b=(a>>>24)+(c>>>24)+(q>>>24)+((d&65535)<<8)+((m&65535)<<8);d=((b>>>24)+(d>>>16)+(m>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(w&16777215);b=(a>>>24)+(h>>>24)+(w>>>24)+((k&
+65535)<<8)+((x&65535)<<8);k=((b>>>24)+(k>>>16)+(x>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(p&16777215)+17;b=(a>>>24)+(e>>>24)+(p>>>24)+((f&65535)<<8)+((n&65535)<<8);f=((b>>>24)+(f>>>16)+(n>>>16)<<16)+(b>>8&65535);e=b<<24|a&16777215;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(d<<25|c>>>7)^l;c=(c<<25|a>>>7)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+
+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(e<<1|f>>>31)^k;e=(a<<1|e>>>31)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=(e<<14|f>>>18)^l;e=(a<<14|e>>>18)^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=(d<<12|c>>>
+20)^k;c=(c<<12|a>>>20)^h;a=(g&16777215)+(c&16777215);b=(a>>>24)+(g>>>24)+(c>>>24)+((l&65535)<<8)+((d&65535)<<8);l=((b>>>24)+(l>>>16)+(d>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=d;d=(c<<26|d>>>6)^l;c=(a<<26|c>>>6)^g;a=(h&16777215)+(e&16777215);b=(a>>>24)+(h>>>24)+(e>>>24)+((k&65535)<<8)+((f&65535)<<8);k=((b>>>24)+(k>>>16)+(f>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=f;f=(f<<22|e>>>10)^k;e=(e<<22|a>>>10)^h;a=(g&16777215)+(e&16777215);b=(a>>>24)+(g>>>24)+(e>>>24)+((l&65535)<<8)+((f&65535)<<8);
+l=((b>>>24)+(l>>>16)+(f>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=f;f=e^l;e=a^g;a=(h&16777215)+(c&16777215);b=(a>>>24)+(h>>>24)+(c>>>24)+((k&65535)<<8)+((d&65535)<<8);k=((b>>>24)+(k>>>16)+(d>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=d;d=c^k;c=a^h;a=(g&16777215)+(q&16777215);b=(a>>>24)+(g>>>24)+(q>>>24)+((l&65535)<<8)+((m&65535)<<8);l=((b>>>24)+(l>>>16)+(m>>>16)<<16)+(b>>8&65535);g=b<<24|a&16777215;a=(c&16777215)+(w&16777215);b=(a>>>24)+(c>>>24)+(w>>>24)+((d&65535)<<8)+((x&65535)<<8);d=((b>>>
+24)+(d>>>16)+(x>>>16)<<16)+(b>>8&65535);c=b<<24|a&16777215;a=(h&16777215)+(p&16777215);b=(a>>>24)+(h>>>24)+(p>>>24)+((k&65535)<<8)+((n&65535)<<8);k=((b>>>24)+(k>>>16)+(n>>>16)<<16)+(b>>8&65535);h=b<<24|a&16777215;a=(e&16777215)+(r&16777215)+18;b=(a>>>24)+(e>>>24)+(r>>>24)+((f&65535)<<8)+((t&65535)<<8);y[0]=g;y[1]=l;y[2]=c;y[3]=d;y[4]=h;y[5]=k;y[6]=b<<24|a&16777215;y[7]=((b>>>24)+(f>>>16)+(t>>>16)<<16)+(b>>8&65535)};"undefined"!==typeof exports&&(exports.h$Threefish_256_Process_Block=h$Threefish_256_Process_Block);
 
 
 
@@ -5883,11 +6005,11 @@ a=(e&16777215)+(q&16777215)+17;b=(a>>>24)+(e>>>24)+(q>>>24)+0+((f&65535)<<8)+((p
 // unboxed tuple returns
 // #define RETURN_UBX_TUP1(x) return x;
 
-function h$_hs_text_memcpy(dst_v,dst_o2,src_v,src_o2,n) {
+function h$_hs_text_memcpy(dst_v,dst_v_zero,dst_o2,src_v,src_o_zero,src_o2,n) {
   return h$memcpy(dst_v,2*dst_o2,src_v,2*src_o2,2*n);
 }
 
-function h$_hs_text_memcmp(a_v,a_o2,b_v,b_o2,n) {
+function h$_hs_text_memcmp(a_v,a_o_zero,a_o2,b_v,b_o_zero,b_o2,n) {
   return h$memcmp(a_v,2*a_o2,b_v,2*b_o2,2*n);
 }
 
@@ -5929,7 +6051,7 @@ var h$_text_utf8d =
  * returns the next source offset to read from.
  */
 
-function h$_hs_text_decode_utf8_internal ( dest_v
+function h$_hs_text_decode_utf8_internal ( dest_v, dest_o_zero
                                          , destoff_v, destoff_o
                                          , src_v, src_o
                                          , src_end_v, src_end_o
@@ -5976,10 +6098,10 @@ function h$_hs_text_decode_utf8_internal ( dest_v
   s.state = state;
   s.codepoint = codepoint;
   destoff_v.dv.setUint32(destoff_o,dsto>>1,true);
-  { h$ret1 = (srco); return (src_v); };
+  { h$ret1 = (s.last); return (src_v); };
 }
 
-function h$_hs_text_decode_utf8_state( dest_v
+function h$_hs_text_decode_utf8_state( dest_v, dest_o_zero
                                      , destoff_v, destoff_o
                                      , src_v, src_o
                                      , srcend_v, srcend_o
@@ -5991,7 +6113,7 @@ function h$_hs_text_decode_utf8_state( dest_v
           , last: src_o
           };
   var ret, ret1;
-  { (ret) = (h$_hs_text_decode_utf8_internal ( dest_v , destoff_v, destoff_o , src_v.arr[src_o][0], src_v.arr[src_o][1] , srcend_v, srcend_o , s )); (ret1) = h$ret1; };
+  { (ret) = (h$_hs_text_decode_utf8_internal ( dest_v, dest_o_zero , destoff_v, destoff_o , src_v.arr[src_o][0], src_v.arr[src_o][1] , srcend_v, srcend_o , s )); (ret1) = h$ret1; };
 
 
 
@@ -6002,11 +6124,10 @@ function h$_hs_text_decode_utf8_state( dest_v
   src_v.arr[src_o][1] = s.last;
   state0_v.dv.setUint32(state0_o, s.state, true);
   codepoint0_v.dv.setUint32(codepoint0_o, s.codepoint, true);
-  if(s.state === 12) ret1--;
   { h$ret1 = (ret1); return (ret); };
 }
 
-function h$_hs_text_decode_utf8( dest_v
+function h$_hs_text_decode_utf8( dest_v, dest_o_zero
                                , destoff_v, destoff_o
                                , src_v, src_o
                                , srcend_v, srcend_o
@@ -6017,7 +6138,7 @@ function h$_hs_text_decode_utf8( dest_v
           , last: src_o
           };
   var ret, ret1;
-  { (ret) = (h$_hs_text_decode_utf8_internal ( dest_v , destoff_v, destoff_o , src_v, src_o , srcend_v, srcend_o , s )); (ret1) = h$ret1; };
+  { (ret) = (h$_hs_text_decode_utf8_internal ( dest_v, dest_o_zero , destoff_v, destoff_o , src_v, src_o , srcend_v, srcend_o , s )); (ret1) = h$ret1; };
 
 
 
@@ -6025,7 +6146,6 @@ function h$_hs_text_decode_utf8( dest_v
 
 
 
-  if (s.state !== 0) ret1--;
   { h$ret1 = (ret1); return (ret); };
 }
 
@@ -6035,7 +6155,7 @@ function h$_hs_text_decode_utf8( dest_v
  * code-points, therefore we can trivially convert from a latin-1 encoded bytestring to
  * an UTF16 array
  */
-function h$_hs_text_decode_latin1(dest_d, src_d, src_o, srcend_d, srcend_o) {
+function h$_hs_text_decode_latin1(dest_d, dest_o_zero, src_d, src_o, srcend_d, srcend_o) {
   var p = src_o;
   var d = 0;
   var su8 = src_d.u8;
@@ -6064,7 +6184,7 @@ function h$_hs_text_decode_latin1(dest_d, src_d, src_o, srcend_d, srcend_o) {
     du1[d++] = su8[p++];
 }
 
-function h$_hs_text_encode_utf8(destp_v, destp_o, src_v, srcoff, srclen) {
+function h$_hs_text_encode_utf8(destp_v, destp_o, src_v, src_o_zero, srcoff, srclen) {
   var dest_v = destp_v.arr[destp_o][0];
   var dest_o = destp_v.arr[destp_o][1];
   var src = srcoff;
@@ -6106,12 +6226,64 @@ function h$_hs_text_encode_utf8(destp_v, destp_o, src_v, srcoff, srclen) {
   }
   destp_v.arr[destp_o][1] = dest;
 }
+function h$hsprimitive_memcpy(dst_d, dst_o, doff, src_d, src_o, soff, len) {
+  return h$primitive_memmove(dst_d, dst_o, doff, src_d, src_o, len);
+}
+
+function h$hsprimitive_memmove(dst_d, dst_o, doff, src_d, src_o, soff, len) {
+  if(len === 0) return;
+  var du8 = dst_d.u8, su8 = src_d.u8;
+  for(var i=len-1;i>=0;i--) {
+    du8[dst_o+i] = su8[src_o+i];
+  }
+}
+function h$hsprimitive_memsetba_Word8 (p_d, off, n, x) { if(n > 0) { if(p_d.u8.fill) p_d.u8.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.u8[i] = x; } }
+function h$hsprimitive_memsetba_Word16 (p_d, off, n, x) { if(n > 0) { if(p_d.u1.fill) p_d.u1.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.u1[i] = x; } }
+function h$hsprimitive_memsetba_Word32 (p_d, off, n, x) { if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.i3[i] = x; } }
+function h$hsprimitive_memsetba_Word (p_d, off, n, x) { if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.i3[i] = x; } }
+function h$hsprimitive_memsetba_Float (p_d, off, n, x) { if(n > 0) { if(p_d.f3.fill) p_d.f3.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.f3[i] = x; } }
+function h$hsprimitive_memsetba_Double (p_d, off, n, x) { if(n > 0) { if(p_d.f6.fill) p_d.f6.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.f6[i] = x; } }
+function h$hsprimitive_memsetba_Char (p_d, off, n, x) { if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, off, off + n); else for(var i=off; i<off+n; i++) p_d.i3[i] = x; } }
+
+function h$hsprimitive_memset_Word8 (p_d, p_o, off, n, x) { var start = (p_o >> 0) + off; if(n > 0) { if(p_d.u8.fill) p_d.u8.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.u8[i] = x; } }
+function h$hsprimitive_memset_Word16 (p_d, p_o, off, n, x) { var start = (p_o >> 1) + off; if(n > 0) { if(p_d.u1.fill) p_d.u1.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.u1[i] = x; } }
+function h$hsprimitive_memset_Word32 (p_d, p_o, off, n, x) { var start = (p_o >> 2) + off; if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.i3[i] = x; } }
+function h$hsprimitive_memset_Word (p_d, p_o, off, n, x) { var start = (p_o >> 2) + off; if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.i3[i] = x; } }
+function h$hsprimitive_memset_Float (p_d, p_o, off, n, x) { var start = (p_o >> 2) + off; if(n > 0) { if(p_d.f3.fill) p_d.f3.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.f3[i] = x; } }
+function h$hsprimitive_memset_Double (p_d, p_o, off, n, x) { var start = (p_o >> 3) + off; if(n > 0) { if(p_d.f6.fill) p_d.f6.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.f6[i] = x; } }
+function h$hsprimitive_memset_Char (p_d, p_o, off, n, x) { var start = (p_o >> 2) + off; if(n > 0) { if(p_d.i3.fill) p_d.i3.fill(x, start, start + n); else for(var i=start; i<start+n; i++) p_d.i3[i] = x; } }
+
+function h$hsprimitive_memsetba_Word64(p_d, off, n, x_1, x_2) {
+  h$hsprimitive_memset_Word64(p_d, 0, off, n, x_1, x_2);
+}
+
+function h$hsprimitive_memset_Word64(p_d, p_o, off, n, x_1, x_2) {
+  var start = (p_o >> 3) + off;
+  if(n > 0) {
+    var pi3 = p_d.i3;
+    for(var i = 0; i < n; i++) {
+      var o = (start + i) << 1;
+      pi3[o] = x_1;
+      pi3[o+1] = x_2;
+    }
+  }
+}
+
+function h$hsprimitive_memset_Ptr(p_d, p_o, off, n, x_1, x_2) {
+  if(n > 0) {
+    if(!p_d.arr) p_d.arr = [];
+    var a = p_d.arr;
+    for(var i = 0; i < n; i++) {
+      a[p_o + ((off + i) << 2)] = [x_1, x_2];
+    }
+  }
+}
 /* FNV-1 hash
  *
  * The FNV-1 hash description: http://isthe.com/chongo/tech/comp/fnv/
  * The FNV-1 hash is public domain: http://isthe.com/chongo/tech/comp/fnv/#public_domain
  */
-function h$hashable_fnv_hash_offset(str_a, o, len, hash) {
+function h$hashable_fnv_hash_offset(str_a, str_o_zero, o, len, hash) {
   return h$hashable_fnv_hash(str_a, o, len, hash);
 }
 
@@ -6599,13 +6771,14 @@ function h$_hs_bytestring_uint_dec(x, buf_d, buf_o) {
 function h$_hs_bytestring_long_long_uint_dec(x_a, x_b, buf_d, buf_o) {
     var c, ptr = buf_o, next_free;
     var bu8 = buf_d.u8;
-    var x = h$ghcjsbn_mkBigNat_ww(x_a, x_b), q = [], r = [];
+    var x = h$ghcjsbn_mkBigNat_ww(x_a, x_b), q = [], r;
 
     // encode positive number as little-endian decimal
     do {
-        h$ghcjsbn_quotRem_bw(q, r, x, 10);
+        r = h$ghcjsbn_quotRem_bw(q, x, 10);
         x = q;
-        bu8[ptr++] = h$_hs_bytestring_digits[h$ghcjsbn_toInt_b(r)];
+        q = [];
+        bu8[ptr++] = h$_hs_bytestring_digits[r];
     } while(!h$ghcjsbn_isZero_b(x));
 
     // reverse written digits;
@@ -6687,15 +6860,22 @@ function h$_hs_bytestring_uint_hex(x, buf_d, buf_o) {
     { h$ret1 = (next_free); return (buf_d); };
 }
 
+// 279_172_874_240
+//
 // unsigned long ints (64 bit words)
 function h$_hs_bytestring_long_long_uint_hex(x_a, x_b, buf_d, buf_o) {
     // write hex representation in reverse order
-    var c, ptr = buf_o, next_free;
+    var c, i, ptr = buf_o, next_free;
     var bu8 = buf_d.u8;
     if(x_a === 0 && x_b === 0) {
         bu8[ptr++] = 48; // '0'
+    } else if(x_a === 0) {
+      while(x_b !== 0) {
+          bu8[ptr++] = h$_hs_bytestring_digits[x_b & 0xf];
+          x_b >>>= 4;
+      }
     } else {
-        while(x_b !== 0) {
+        for(i=0;i<8;i++) {
             bu8[ptr++] = h$_hs_bytestring_digits[x_b & 0xf];
             x_b >>>= 4;
         }
