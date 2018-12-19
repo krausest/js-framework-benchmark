@@ -1,0 +1,46 @@
+{
+  "name": "js-framework-benchmark-stage0",
+  "version": "1.0.0",
+  "description": "stage0 demo",
+  "main": "dist/app.min.js",
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c",
+    "start": "ws"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@sifrr/fetch",
+    "useShadowRoot": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sifrr/sifrr.git"
+  },
+  "keywords": [
+    "sifrr"
+  ],
+  "author": "Aaditya Taparia",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sifrr/sifrr/issues"
+  },
+  "homepage": "https://github.com/sifrr/sifrr#readme",
+  "dependencies": {
+    "@sifrr/dom": "^0.0.1-alpha",
+    "@sifrr/fetch": "^0.1.0-alpha",
+    "local-web-server": "^2.6.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-es2016": "^6.24.1",
+    "rollup": "^0.58.2",
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-minifyliterals": "^1.1.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-terser": "^1.0.1",
+    "rollup-plugin-uglify": "^3.0.0",
+    "uglify-es": "^3.3.9"
+  }
+}
