@@ -1,5 +1,6 @@
 <template>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link href="/css/currentStyle.css" rel="stylesheet"/>
   <div class="container">
     <div class="jumbotron">
       <div class="row">
@@ -35,7 +36,6 @@
         <!-- ${this.arrayToDom('data', this.newdata())} -->
       </tbody>
     </table>
-    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
   </div>
 </template>
 <script>
@@ -45,7 +45,7 @@
     }
   }
   MainElement.defaultState = {
-    "data": [{ id: '1', label: 'ok' }, {id: '2', label: 'bang' }],
+    "data": [],
     "selected": null
   }
 
