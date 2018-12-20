@@ -32,6 +32,6 @@
     "webpack-cli": "3.1.2"
   },
   "dependencies": {
-    "rax": "^0.6.7"
+    "rax": "0.6.7"
   }
 }
