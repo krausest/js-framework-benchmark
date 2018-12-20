@@ -17,6 +17,7 @@
     "index": "node dist/createIndex.js",
     "check": "node dist/runCheck.js",
     "update": "node dist/updateFrameworks.js",
+    "checkUpdate": "node dist/updateFrameworks.js -- --update false",
     "nonKeyed": "cross-env LANG=\"en_US.UTF-8\" node dist/isKeyed.js",
     "isKeyed": "cross-env LANG=\"en_US.UTF-8\" node dist/isKeyed.js",
     "rebuild": "node dist/rebuild.js"

@@ -32,7 +32,7 @@ let stopMeasure = function () {
       <div class="jumbotron">
         <div class="row">
           <div class="col-md-6">
-            <h1>Angular v7.0.0 (ivy renderer)</h1>
+            <h1>Angular keyed (ivy renderer)</h1>
           </div>
           <div class="col-md-6">
             <div class="col-sm-6 smallpad">
