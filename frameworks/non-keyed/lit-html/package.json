@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lit-html": "0.14.0"
+    "lit-html": "1.0.0-rc.1"
   },
   "devDependencies": {
     "rollup": "0.67.3",
