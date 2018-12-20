@@ -23,6 +23,7 @@ var stopMeasure = function() {
     }, 0);
   }
 }
+let selected = null;
 document.querySelector("main-element").$click = e => {
   let target = e.path ? e.path[0] : e.target;
   startMeasure(target.id || target.className);
@@ -86,7 +87,15 @@ document.querySelector("main-element").$click = e => {
   } else if (target.matches('.lbl')) {
     let id = getParentId(target);
     // console.log("select",id);
-    sft.state = { selected: id };
+    let state = sft.state.data;
+    for(let i = state.length-1; i >= 0; i--){
+      if (state[i].id == id) {
+        state[i].class = 'danger';
+      } else {
+        state[i].class = null;
+      }
+    }
+    sft.state = { data: state };
   }
   stopMeasure();
 };
@@ -113,11 +122,6 @@ function buildData(count = 1000) {
 }
 
 function getParentId(elem) {
-  while (elem) {
-    if (elem.tagName==="TR") {
-      return elem.id;
-    }
-    elem = elem.parentNode;
-  }
-  return undefined;
+  while(!elem.dataset.id) elem = elem.parentNode;
+  return elem.dataset.id;
 }

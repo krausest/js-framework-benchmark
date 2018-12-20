@@ -1,5 +1,4 @@
 <template>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <link href="/css/currentStyle.css" rel="stylesheet"/>
   <div class="container">
     <div class="jumbotron">
@@ -33,28 +32,18 @@
     </div>
     <table class="table table-hover table-striped test-data">
       <tbody data-sifrr-html="true">
-        <!-- ${this.arrayToDom('data', this.newdata())} -->
+        <!-- ${this.arrayToDom('data')} -->
       </tbody>
     </table>
   </div>
 </template>
 <script>
-  class MainElement extends Sifrr.Dom.Element {
-    newdata() {
-      return this.state.data.map((st) => changeState(st, this.state.selected));
-    }
-  }
+  class MainElement extends Sifrr.Dom.Element {}
   MainElement.defaultState = {
-    "data": [],
-    "selected": null
+    "data": []
   }
 
-  MainElement.addArrayToDom('data', "<tr class=${class} id=${id}><td class='col-md-1'>${id}</td><td class='col-md-4'><a class='lbl'>${label}</a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td></tr>");
-  function changeState(state, selected) {
-    if (selected == state.id) state.class = 'danger'
-    else state.class = ''
-    return state;
-  }
+  MainElement.addArrayToDom('data', "<tr class=${class} data-id=${id}><td class='col-md-1'>${id}</td><td class='col-md-4'><a class='lbl'>${label}</a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td></tr>");
 
   Sifrr.Dom.register(MainElement);
 </script>
