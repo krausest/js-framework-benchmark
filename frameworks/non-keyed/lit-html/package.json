@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "rollup": "0.67.3",
+    "rollup-plugin-minify-html-literals": "^1.1.2",
     "rollup-plugin-terser": "3.0.0"
   }
 }

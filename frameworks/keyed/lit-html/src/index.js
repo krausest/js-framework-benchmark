@@ -2,134 +2,71 @@ import { html, render } from '../node_modules/lit-html/lit-html.js';
 import { repeat } from '../node_modules/lit-html/directives/repeat.js';
 import { guard } from '../node_modules/lit-html/directives/guard.js';
 
-let startTime;
-let lastMeasure;
-
-const startMeasure = function(name) {
-  startTime = performance.now();
-  lastMeasure = name;
-};
-const stopMeasure = function() {
-  window.setTimeout(function() {
-    const stop = performance.now();
-    console.log(lastMeasure + ' took ' + (stop - startTime));
-  }, 0);
-};
-
 const adjectives = [
-  'pretty',
-  'large',
-  'big',
-  'small',
-  'tall',
-  'short',
-  'long',
-  'handsome',
-  'plain',
-  'quaint',
-  'clean',
-  'elegant',
-  'easy',
-  'angry',
-  'crazy',
-  'helpful',
-  'mushy',
-  'odd',
-  'unsightly',
-  'adorable',
-  'important',
-  'inexpensive',
-  'cheap',
-  'expensive',
-  'fancy'
-];
+  'pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
 const colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
 const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
 
 let data = [];
 let did = 1;
-let selected = 0;
+let selected = -1;
 
 const add = () => {
-  startMeasure('add');
   data = data.concat(buildData(1000));
   _render();
-  stopMeasure();
 };
 const run = () => {
-  startMeasure('run');
   data = buildData(1000);
   _render();
-  stopMeasure();
 };
 const runLots = () => {
-  startMeasure('runLots');
   data = buildData(10000);
   _render();
-  stopMeasure();
 };
 const clear = () => {
-  startMeasure('clear');
   data = [];
   _render();
-  stopMeasure();
 };
 const interact = e => {
   const interaction = e.target.getAttribute('data-interaction');
+  const id = parseInt(
+    e.target.parentNode.id || 
+    e.target.parentNode.parentNode.id ||
+    e.target.parentNode.parentNode.parentNode.id
+  );
   if (interaction === 'delete') {
-    del(e.target.parentNode.item || e.target.parentNode.parentNode.item || e.target.parentNode.parentNode.parentNode.item);
-  } else if (interaction === 'select') {
-    select(e.target.parentNode.item || e.target.parentNode.parentNode.item);
+    del(id)
+  } else {
+    select(id)
   }
 };
 const del = id => {
-  startMeasure('delete');
   const idx = data.findIndex(d => d.id === id);
-  data = [
-    ...data.slice(0, idx),
-    ...data.slice(idx + 1)
-  ]
+  data.splice(idx, 1)
   _render();
-  stopMeasure();
 };
 const select = id => {
-  startMeasure('select');
-  data = data.map(item => {
-    switch (item.id) {
-      case selected:
-        return { ...item, selected: false } 
-      case id:
-        return { ...item, selected: true }
-      default:
-        return item
-    }
-  })
-  selected = id;
+  if (selected > -1) {
+    data[selected] = { ...data[selected], selected: false }
+  }
+  selected = data.findIndex(d => d.id === id);
+  data[selected] = { ...data[selected], selected: true }
   _render();
-  stopMeasure();
 };
 const swapRows = () => {
-  startMeasure('swapRows');
   if (data.length > 998) {
-    data = [
-      data[0],
-      data[998],
-      ...data.slice(2, 998),
-      data[1],
-      data[999],
-    ]
+    const tmp = data[1]
+    data[1] = data[998]
+    data[998] = tmp
   }
   _render();
-  stopMeasure();
 };
 const update = () => {
-  startMeasure('update');
-  data = data.map((item, i) => i % 10 === 0
-    ? { ...item, label: item.label + ' !!!' }
-    : item
-  )
+  for(let i = 0; i < data.length; i += 10) {
+    const item = data[i]
+    data[i] = { ...item, label: item.label + ' !!!' }
+  }
   _render();
-  stopMeasure();
 };
 const buildData = count => {
   const data = [];
@@ -187,11 +124,10 @@ const template = () => html`
     </div>
   </div>
   <table @click=${interact} class="table table-hover table-striped test-data">
-    <tbody>${repeat(
-      data,
+    <tbody>${data.length === 0 ? '' : html`${repeat(data,
       item => item.id,
       item => guard(item, () => html`
-      <tr .item=${item.id} class=${item.selected ? 'danger' : ''}>
+      <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
         <td class="col-md-1">${item.id}</td>
         <td data-interaction='select' class="col-md-4">
           <a data-interaction='select'>${item.label}</a>
@@ -203,7 +139,7 @@ const template = () => html`
         </td>
         <td class="col-md-6"></td>
       </tr>`)
-    )}
+    )}`}
     </tbody>
   </table>
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
