@@ -123,7 +123,7 @@ const template = () => html`
     </div>
   </div>
   <table @click=${interact} class="table table-hover table-striped test-data">
-    <tbody>${data.length === 0 ? '' : html`${data.map(item => guard(item, () => html`
+    <tbody>${data.map(item => guard(item, () => html`
       <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
         <td class="col-md-1">${item.id}</td>
         <td data-interaction='select' class="col-md-4">
@@ -136,7 +136,7 @@ const template = () => html`
         </td>
         <td class="col-md-6"></td>
       </tr>`)
-    )}`}
+    )}
     </tbody>
   </table>
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>

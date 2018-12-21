@@ -124,7 +124,7 @@ const template = () => html`
     </div>
   </div>
   <table @click=${interact} class="table table-hover table-striped test-data">
-    <tbody>${data.length === 0 ? '' : html`${repeat(data,
+    <tbody>${repeat(data,
       item => item.id,
       item => guard(item, () => html`
       <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
@@ -139,7 +139,7 @@ const template = () => html`
         </td>
         <td class="col-md-6"></td>
       </tr>`)
-    )}`}
+    )}
     </tbody>
   </table>
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
