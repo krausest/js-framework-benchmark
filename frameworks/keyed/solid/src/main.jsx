@@ -1,9 +1,7 @@
-import { State, root, each } from 'solid-js';
+import { useState, root } from 'solid-js';
 import { r, selectWhen } from 'solid-js/dom';
 
-function _random (max) {
-  return Math.round(Math.random() * 1000) % max;
-};
+function _random (max) { return Math.round(Math.random() * 1000) % max; };
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],
@@ -22,7 +20,7 @@ function buildData(count) {
 }
 
 function App() {
-  const state = new State({ data: [], selected: null });
+  const [ state, setState ] = useState({ data: [], selected: null });
 
   return <div class='container'>
     <div class='jumbotron'><div class='row'>
@@ -48,79 +46,38 @@ function App() {
         </div>
       </div></div>
     </div></div>
-    <table class='table table-hover table-striped test-data'><tbody onClick={ clickRow }>{
-      selectWhen(() => state.selected, 'danger')
-      (each(row =>
-        <tr model={ row.id }>
-          <td class='col-md-1' textContent={ row.id } />
-          <td class='col-md-4'><a>{( row.label )}</a></td>
-          <td class='col-md-1'><a action={ 'remove' }>
-            <span class='glyphicon glyphicon-remove' />
-          </a></td>
-          <td class='col-md-6'/>
-        </tr>
-      )(() => state.data))
-    }</tbody></table>
+    <table class='table table-hover table-striped test-data'><tbody onClick={ clickRow }>
+      <$ each={ state.data } afterRender={ selectWhen(() => state.selected, 'danger') }>{
+        row =>
+          <tr model={ row.id }>
+            <td class='col-md-1' textContent={ row.id } />
+            <td class='col-md-4'><a>{( row.label )}</a></td>
+            <td class='col-md-1'><a action={ 'remove' }><span class='glyphicon glyphicon-remove' /></a></td>
+            <td class='col-md-6'/>
+          </tr>
+      }</$>
+    </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
 
+  function run() { setState({ data: buildData(1000), selected: null }); }
+
+  function runLots() { setState({ data: buildData(10000), selected: null }); }
+
+  function add() { setState('data', d => [...d, ...buildData(1000)]); }
+
+  function update() { setState('data', { by: 10 }, 'label', l => l + ' !!!'); }
+
+  function swapRows() { setState('data', d => d.length > 998 ? { 1: d[998], 998: d[1] } : d); }
+
+  function clear() { setState({ data: [], selected: null }); }
+
   function clickRow(e, id, action) {
-    e.stopPropagation();
-    if (action === 'remove') {
-      const data = state.data.slice(0);
-      data.splice(data.findIndex(d => d.id === id), 1)
-      state.set({ data });
-    } else state.set({ selected: id })
-  }
-
-  function run(e) {
-    e.stopPropagation();
-    state.set({
-      data: buildData(1000),
-      selected: null
-    });
-  }
-
-  function runLots(e) {
-    e.stopPropagation();
-    state.set({
-      data: buildData(10000),
-      selected: null
-    });
-  }
-
-  function add(e) {
-    e.stopPropagation();
-    state.set({
-      data: state.data.concat(buildData(1000))
-    });
-  }
-
-  function update(e) {
-    e.stopPropagation();
-    let index = 0;
-    while (index < state.data.length) {
-      state.replace('data', index, 'label', state.data[index].label + ' !!!');
-      index += 10;
-    }
-  }
-
-  function swapRows(e) {
-    e.stopPropagation();
-    if (state.data.length > 998) {
-      state.set('data', {
-        1: state.data[998],
-        998: state.data[1]
-      });
-    }
-  }
-
-  function clear(e) {
-    e.stopPropagation();
-    state.set({
-      data: [],
-      selected: null
-    });
+    action === 'remove' ?
+      setState('data', d => {
+        const idx = d.findIndex(d => d.id === id);
+        return [...d.slice(0, idx), ...d.slice(idx + 1)];
+      }) : setState('selected', id);
   }
 }
 

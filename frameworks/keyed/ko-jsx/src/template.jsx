@@ -25,17 +25,17 @@ export default function({data, selected, run, runLots, add, update, clear, swapR
         </div>
       </div></div>
     </div></div>
-    <table class='table table-hover table-striped test-data'><tbody onClick={clickRow}>{
-      selectWhen(selected, 'danger')
-      (data.each(row =>
-        <tr model={row.id}>
-          <td class='col-md-1' textContent={row.id} />
-          <td class='col-md-4'><a>{row.label}</a></td>
-          <td class='col-md-1'><a action={'remove'}><span class='glyphicon glyphicon-remove' /></a></td>
-          <td class='col-md-6'/>
-        </tr>
-      ))
-    }</tbody></table>
+    <table class='table table-hover table-striped test-data'><tbody onClick={clickRow}>
+      <$ each={data()} afterRender={selectWhen(selected, 'danger')}>{
+        row =>
+          <tr model={row.id}>
+            <td class='col-md-1' textContent={row.id} />
+            <td class='col-md-4'><a>{row.label}</a></td>
+            <td class='col-md-1'><a action={'remove'}><span class='glyphicon glyphicon-remove' /></a></td>
+            <td class='col-md-6'/>
+          </tr>
+      }</$>
+    </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
 }

@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-ko-jsx",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ko-jsx"
@@ -17,16 +17,16 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "babel-plugin-jsx-dom-expressions": "0.2.0",
+    "babel-plugin-jsx-dom-expressions": "0.3.3",
     "knockout": "^3.4.2",
-    "ko-jsx": "0.2.0"
+    "ko-jsx": "0.3.0"
   },
   "devDependencies": {
     "@babel/core": "7.1.6",
-    "rollup": "0.67.3",
-    "rollup-plugin-babel": "4.0.3",
+    "rollup": "1.0.0",
+    "rollup-plugin-babel": "4.2.0",
     "rollup-plugin-commonjs": "9.2.0",
-    "rollup-plugin-node-resolve": "3.4.0",
+    "rollup-plugin-node-resolve": "4.0.0",
     "rollup-plugin-terser": "3.0.0"
   }
 }

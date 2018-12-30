@@ -1,5 +1,5 @@
-import { observable, action, untracked } from 'mobx';
-import { r, each, selectWhen, root } from 'mobx-jsx';
+import { observable, action } from 'mobx';
+import { r, selectWhen, root } from 'mobx-jsx';
 
 function _random (max) {
   return Math.round(Math.random() * 1000) % max;
@@ -25,72 +25,49 @@ function App() {
   const state = observable({data: [], selected: null});
 
   const clickRow = (e, id, intent) => {
-    e.stopPropagation();
     action(() => {
       if (intent === 'remove') {
-        // startMeasure('delete');
-        const data = state.data;
+        const data = state.data.slice(0);
         data.splice(data.findIndex(d => d.id === id), 1)
-        // stopMeasure();
-      } else {
-        // startMeasure("select");
-        state.selected = id;
-        // stopMeasure();
-      }
+        state.data = data;
+      } else state.selected = id;
     })();
   };
 
   const run = action(e => {
-    e.stopPropagation();
-    // startMeasure('create 1000');
     state.data = buildData(1000);
     state.selected = null;
-    // stopMeasure();
   });
 
   const runLots = action(e => {
-    e.stopPropagation();
-    // startMeasure('create 10000');
     state.data = buildData(10000);
     state.selected = null;
-    // stopMeasure();
   });
 
   const add = action(e => {
-    e.stopPropagation();
-    // startMeasure('append 1000');
-    state.data.push.apply(state.data, buildData(1000));
-    // stopMeasure();
+    state.data = state.data.concat(buildData(1000));
   });
 
   const update = action(e => {
-    e.stopPropagation();
-    // startMeasure('update');
     let index = 0;
     while (index < state.data.length) {
       state.data[index].label += ' !!!';
       index += 10;
     }
-    // stopMeasure();
   });
 
   const swapRows = action(e => {
-    e.stopPropagation();
-    // startMeasure("swapRows");
     if (state.data.length > 998) {
-      let temp = state.data[1];
-      state.data[1] = state.data[998];
-      state.data[998] = temp;
+      let data = state.data.slice(0);
+      data[1] = state.data[998];
+      data[998] = state.data[1];
+      state.data = data;
     }
-    // stopMeasure();
   });
 
   const clear = action(e => {
-    e.stopPropagation();
-    // startMeasure('clear');
     state.data = [];
     state.selected = null;
-    // stopMeasure();
   });
 
   return <div class='container'>
@@ -117,17 +94,17 @@ function App() {
         </div>
       </div></div>
     </div></div>
-    <table class='table table-hover table-striped test-data'><tbody onClick={ clickRow }>{
-      selectWhen(() => state.selected, 'danger')
-      (each(() => state.data, row =>
-        <tr model={ row.id }>
-          <td class='col-md-1' textContent={ row.id } />
-          <td class='col-md-4'><a>{( row.label )}</a></td>
-          <td class='col-md-1'><a action={'remove'}><span class='glyphicon glyphicon-remove' /></a></td>
-          <td class='col-md-6'/>
-        </tr>
-      ))
-    }</tbody></table>
+    <table class='table table-hover table-striped test-data'><tbody onClick={ clickRow }>
+      <$ each={ state.data } afterRender={selectWhen(() => state.selected, 'danger')}>{
+        row =>
+          <tr model={ row.id }>
+            <td class='col-md-1' textContent={ row.id } />
+            <td class='col-md-4'><a>{( row.label )}</a></td>
+            <td class='col-md-1'><a action={'remove'}><span class='glyphicon glyphicon-remove' /></a></td>
+            <td class='col-md-6'/>
+          </tr>
+      }</$>
+    </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
 }
