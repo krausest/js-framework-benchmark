@@ -1,5 +1,5 @@
-import { ɵdetectChanges as detectChanges, AfterViewChecked, Component, NgModule, ChangeDetectorRef, VERSION } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ɵdetectChanges as detectChanges, AfterViewChecked, Component, NgModule, VERSION, ViewContainerRef, TemplateRef } from '@angular/core';
+import { CommonModule, NgForOf } from '@angular/common';
 
 interface Data {
   id: number;
@@ -94,7 +94,7 @@ export class AppComponent implements AfterViewChecked {
   id: number = 1;
   backup: Array<Data> = undefined;
 
-  constructor(private cdRef: ChangeDetectorRef) {
+  constructor() {
     console.info(VERSION.full);
   }
 
@@ -125,7 +125,7 @@ export class AppComponent implements AfterViewChecked {
     startMeasure('select');
     event.preventDefault();
     this.selected = item.id;
-    this.cdRef.detectChanges();
+    detectChanges(this);
   }
 
   delete(item: Data, event: Event) {
@@ -137,19 +137,19 @@ export class AppComponent implements AfterViewChecked {
         break;
       }
     }
-    this.cdRef.detectChanges();
+    detectChanges(this);
   }
 
   run() {
     startMeasure('run');
     this.data = this.buildData();
-    this.cdRef.detectChanges();
+    detectChanges(this);
   }
 
   add() {
     startMeasure('add');
     this.data = this.data.concat(this.buildData(1000));
-    this.cdRef.detectChanges();
+    detectChanges(this);
   }
 
   update() {
@@ -157,21 +157,21 @@ export class AppComponent implements AfterViewChecked {
     for (let i = 0; i < this.data.length; i += 10) {
       this.data[i].label += ' !!!';
     }
-    this.cdRef.detectChanges();
+    detectChanges(this);
   }
 
   runLots() {
     startMeasure('runLots');
     this.data = this.buildData(10000);
     this.selected = undefined;
-    this.cdRef.detectChanges();
+    detectChanges(this);
   }
 
   clear() {
     startMeasure('clear');
     this.data = [];
     this.selected = undefined;
-    this.cdRef.detectChanges();
+    detectChanges(this);
   }
 
   swapRows() {
@@ -181,7 +181,7 @@ export class AppComponent implements AfterViewChecked {
       this.data[1] = this.data[998];
       this.data[998] = a;
     }
-    this.cdRef.detectChanges();
+    detectChanges(this);
   }
 
   ngAfterViewChecked() {
@@ -189,7 +189,10 @@ export class AppComponent implements AfterViewChecked {
   }
 }
 
-// TODO: The property would currently be dropped by closure compiler, figure it out
+// TODO: The properties would currently be dropped by closure compiler, figure it out
+Object.assign(ViewContainerRef, { __NG_ELEMENT_ID__: (ViewContainerRef as any).__NG_ELEMENT_ID__ });
+Object.assign(TemplateRef, { __NG_ELEMENT_ID__: (TemplateRef as any).__NG_ELEMENT_ID__ });
+Object.assign(NgForOf, { ngDirectiveDef: (NgForOf as any).ngDirectiveDef });
 Object.assign(AppComponent, { ngComponentDef: (AppComponent as any).ngComponentDef });
 
 @NgModule({
