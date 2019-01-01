@@ -17,7 +17,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "babel-plugin-jsx-dom-expressions": "0.3.3",
+    "babel-plugin-jsx-dom-expressions": "0.3.4",
     "mobx": "5.8.0",
     "mobx-jsx": "0.1.0"
   },
