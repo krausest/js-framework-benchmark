@@ -17,7 +17,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "babel-plugin-jsx-dom-expressions": "0.3.4",
+    "babel-plugin-jsx-dom-expressions": "0.3.5",
     "mobx": "5.8.0",
     "mobx-jsx": "0.1.0"
   },
@@ -27,6 +27,6 @@
     "rollup-plugin-babel": "4.2.0",
     "rollup-plugin-node-resolve": "4.0.0",
     "rollup-plugin-replace": "^2.1.0",
-    "rollup-plugin-terser": "3.0.0"
+    "rollup-plugin-terser": "4.0.1"
   }
 }
