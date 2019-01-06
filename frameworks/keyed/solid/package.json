@@ -19,7 +19,7 @@
   "dependencies": {
     "babel-plugin-jsx-dom-expressions": "0.3.5",
     "s-js": "0.4.9",
-    "solid-js": "0.3.3"
+    "solid-js": "0.3.4"
   },
   "devDependencies": {
     "@babel/core": "7.2.2",
