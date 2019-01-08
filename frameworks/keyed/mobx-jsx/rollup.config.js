@@ -1,4 +1,5 @@
 import resolve from 'rollup-plugin-node-resolve';
+import replace from 'rollup-plugin-replace'
 import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 
@@ -7,7 +8,8 @@ const plugins = [
 		exclude: 'node_modules/**',
 		plugins: ["jsx-dom-expressions"]
   }),
-	resolve({ extensions: ['.js', '.jsx'] })
+	resolve({ extensions: ['.js', '.jsx'] }),
+	replace({"process.env.NODE_ENV": "'production'"})
 ];
 
 if (process.env.production) {
