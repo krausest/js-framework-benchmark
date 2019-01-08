@@ -44,6 +44,7 @@
     "ember-cli-update": "^0.27.0",
     "ember-decorators": "3.0.1",
     "ember-export-application-global": "^2.0.0",
+    "ember-hbs-minifier": "^0.3.0",
     "ember-load-initializers": "2.0.0",
     "ember-qunit": "4.1.2",
     "ember-resolver": "^5.0.1",
