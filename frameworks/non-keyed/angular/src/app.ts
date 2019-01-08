@@ -30,7 +30,7 @@ let stopMeasure = function () {
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Angular non-keyed</h1>
+                <h1>Angular (non-keyed)</h1>
             </div>
             <div class="col-md-6">
                 <div class="col-sm-6 smallpad">
