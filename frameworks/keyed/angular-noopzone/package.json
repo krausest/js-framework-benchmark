@@ -10,7 +10,7 @@
     "test": "karma start",
     "ngc": "ngc",
     "preclosure": "rimraf dist",
-    "closure": "java -jar node_modules/google-closure-compiler/compiler.jar --flagfile closure.conf",
+    "closure": "google-closure-compiler --flagfile closure.conf",
     "build-prod": "npm run ngc && npm run closure",
     "rollup": "rollup -c rollup.config.js",
     "build-dev": "npm run ngc && npm run rollup"
@@ -28,7 +28,7 @@
     "zone.js": "0.8.26"
   },
   "devDependencies": {
-    "google-closure-compiler": "20180716.0.1",
+    "google-closure-compiler": "20181210.0.0",
     "http-server": "0.11.1",
     "rimraf": "2.6.2",
     "rollup": "0.68.1",
