@@ -1,0 +1,36 @@
+{
+  "name": "js-framework-benchmark-lighterhtml",
+  "version": "1.1.0",
+  "description": "lighterhtml demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "lighterhtml"
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "keywords": [
+    "lighterhtml"
+  ],
+  "author": "Mathis Zeiher",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
+  "dependencies": {
+    "lighterhtml": "0.5.1"
+  },
+  "devDependencies": {
+    "rollup": "1.1.0",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-minify-html-literals": "^1.1.2",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-terser": "4.0.2"
+  }
+}
