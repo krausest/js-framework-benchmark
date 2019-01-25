@@ -24,10 +24,10 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lighterhtml": "0.5.1"
+    "lighterhtml": "0.7.0"
   },
   "devDependencies": {
-    "rollup": "1.1.0",
+    "rollup": "1.1.2",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-minify-html-literals": "^1.1.2",
     "rollup-plugin-node-resolve": "^4.0.0",
