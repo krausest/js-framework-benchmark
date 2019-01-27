@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-wasm-bindgen",
+  "version": "1.0.0",
+  "description": "Benchmark for wasm-bindgen",
+  "license": "ISC",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.2.31"
+  },
+  "scripts": {
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "build-dev-force": "npm run build-prod-force",
+    "build-prod-force": "node build.js && webpack-cli"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.1.2"
+  }
+}
