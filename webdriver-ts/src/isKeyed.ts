@@ -114,6 +114,8 @@ async function runBench(frameworkNames: string[]) {
     let frameworkMap = new Map<String, FrameworkData>();
     frameworks.forEach(f => frameworkMap.set(f.fullNameWithKeyedAndVersion, f));
 
+    let allCorrect = true;
+
     for (let i=0;i<runFrameworks.length;i++) {
         let driver = await buildDriver();
         try {
@@ -154,13 +156,16 @@ async function runBench(frameworkNames: string[]) {
             +". It'll appear as "+(keyed ? "keyed" : "non-keyed")+" in the results");
             if (frameworkMap.get(framework.fullNameWithKeyedAndVersion).keyed !== keyed) {
                 console.log("ERROR: Framework "+framework.fullNameWithKeyedAndVersion+" is not correctly categorized");
+                allCorrect = false;
             }
         } catch(e) {
             console.log("ERROR running "+runFrameworks[i].fullNameWithKeyedAndVersion, e);
+            allCorrect = false;
         } finally {
             await driver.quit();
         }
     }
+    if (!allCorrect) process.exit(1)
 }
 
 let args = yargs(process.argv)
