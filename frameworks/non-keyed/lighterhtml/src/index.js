@@ -122,8 +122,8 @@ const template = () => html`
     </div>
   </div>
   <table onclick=${interact} class="table table-hover table-striped test-data">
-    <tbody>${data.map(item => html`
-      <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
+    <tbody>${data.map((item, index) => html`
+      <tr data-i="${index}" id=${item.id} class=${item.selected ? 'danger' : ''}>
         <td class="col-md-1">${item.id}</td>
         <td data-interaction='select' class="col-md-4">
           <a data-interaction='select'>${item.label}</a>
