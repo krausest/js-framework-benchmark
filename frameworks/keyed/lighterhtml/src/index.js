@@ -86,7 +86,7 @@ const _render = () => {
   render(container, template);
 };
 
-const template = () => html`
+const template = () => html.for(container)`
 <div class="container">
   <div class="jumbotron">
     <div class="row">
