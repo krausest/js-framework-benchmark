@@ -12,16 +12,11 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "hyperhtml": "2.13.0"
+    "hyperhtml": "2.25.4"
   },
   "devDependencies": {
-    "babel-core": "6.26.3",
-    "babel-plugin-external-helpers": "6.22.0",
-    "babel-preset-es2016": "6.24.1",
-    "rollup": "0.63.4",
-    "rollup-plugin-babel": "3.0.7",
-    "rollup-plugin-node-resolve": "3.3.0",
-    "rollup-plugin-uglify": "4.0.0",
-    "uglify-es": "3.3.9"
+    "rollup": "^1.1.2",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "rollup-plugin-terser": "^4.0.4"
   }
 }

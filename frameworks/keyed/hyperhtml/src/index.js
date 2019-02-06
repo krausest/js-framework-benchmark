@@ -1,4 +1,4 @@
-import { bind, wire } from "hyperhtml/esm";
+import { bind, wire } from "hyperhtml";
 
 import { startMeasure, stopMeasure } from "./utils";
 import { Store } from "./store";
@@ -121,7 +121,7 @@ function row(state) {
 
 function createRow(state) {
   const row = {
-    render: wire(),
+    render: wire(state),
     class(selected) {
       return state.id === selected ? 'danger' : '';
     },
