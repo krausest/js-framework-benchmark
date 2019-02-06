@@ -8,7 +8,7 @@ var loaders = [
 	{
 		test: /\.js$/,
 		loader: 'babel-loader',
-		exclude: /node_modules/
+        exclude: /node_modules/
 	},
 	{
 		test: /\.css$/,
