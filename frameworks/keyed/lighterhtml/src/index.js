@@ -26,6 +26,8 @@ const clear = () => {
   _render();
 };
 const interact = e => {
+  e.stopPropagation();
+  e.preventDefault();
   const interaction = e.target.getAttribute('data-interaction');
   const id = parseInt(
     e.target.parentNode.id || 
@@ -45,10 +47,10 @@ const del = id => {
 };
 const select = id => {
   if (selected > -1) {
-    data[selected] = { ...data[selected], selected: false }
+    data[selected].selected = false;
   }
   selected = data.findIndex(d => d.id === id);
-  data[selected] = { ...data[selected], selected: true }
+  data[selected].selected = true;
   _render();
 };
 const swapRows = () => {
@@ -61,8 +63,7 @@ const swapRows = () => {
 };
 const update = () => {
   for(let i = 0; i < data.length; i += 10) {
-    const item = data[i]
-    data[i] = { ...item, label: item.label + ' !!!' }
+    data[i].label += ' !!!';
   }
   _render();
 };
