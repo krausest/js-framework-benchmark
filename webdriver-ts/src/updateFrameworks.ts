@@ -5,13 +5,18 @@ import * as semver from 'semver';
 import * as yargs from 'yargs';
 import {loadFrameworkVersionInformation, determineInstalledVersions, FrameworkVersionInformation, FrameworkVersionInformationStatic, FrameworkVersionInformationDynamic, FrameworkVersionInformationError,
     PackageVersionInformation, PackageVersionInformationValid, PackageVersionInformationErrorUnknownPackage, PackageVersionInformationErrorNoPackageJSONLock, PackageVersionInformationResult} from './common';
+var exec = require('child_process').execSync;
 
 let args = yargs(process.argv)
-    .usage("$0 --updade true|false")
+    .usage("$0 --updade true|false --dir")
     .default('update', 'true')
+    .array('dir')
     .boolean('update').argv;
 
 let updatePackages = args.update;
+console.log("ARGS", args._.slice(2, args._.length));
+let directories = args._.slice(2, args._.length);
+let checkDirectory = (keyedType:string, folderName: string) => directories.length===0 || args._.includes(path.join(keyedType, folderName));
 
 async function ncuReportsUpdatedVersion(packageVersionInfo: PackageVersionInformationResult) {
     let ncuInfo = await ncu.run({
@@ -21,11 +26,12 @@ async function ncuReportsUpdatedVersion(packageVersionInfo: PackageVersionInform
         loglevel: 'silent'
     });
     if (ncuInfo) {
+        console.log(ncuInfo);
         return packageVersionInfo.versions.filter((pi: PackageVersionInformationValid) => ncuInfo[pi.packageName])
             .some((pi: PackageVersionInformationValid) => {
                 let newVersion = ncuInfo[pi.packageName];
                 if (newVersion.startsWith('^')) newVersion = newVersion.substring(1);
-                if ( newVersion.startsWith('~')) newVersion = newVersion.substring(1);
+                if (newVersion.startsWith('~')) newVersion = newVersion.substring(1);
                 if (newVersion) {
                     return !semver.satisfies(newVersion, '~'+pi.version);
                 } else {
@@ -87,7 +93,11 @@ async function main() {
         console.log(unknownPackages.map(val => val.framework.keyedType +'/' + val.framework.directory + ' for package ' + unknownPackagesStr(val)).join('\n') + '\n');
     }
 
-    let checkVersionsFor = packageLockInformations.filter(pli => pli.versions.every((packageVersionInfo: PackageVersionInformation) => packageVersionInfo instanceof PackageVersionInformationValid));
+    let checkVersionsFor = packageLockInformations
+        .filter(pli => pli.versions.every((packageVersionInfo: PackageVersionInformation) => packageVersionInfo instanceof PackageVersionInformationValid))
+        .filter(f => checkDirectory(f.framework.keyedType,f.framework.directory));
+
+    console.log("checkVersionsFor", checkVersionsFor);
 
     let toBeUpdated = new Array<PackageVersionInformationResult>();
     for (let f of checkVersionsFor) {
@@ -99,22 +109,20 @@ async function main() {
         console.log(toBeUpdated.map(val => val.framework.keyedType +'/' + val.framework.directory).join('\n') + '\n');
 
         if (updatePackages) {
+            let rebuild = "";
             for (let val of toBeUpdated) {
                 console.log("ACTION: Updating package.json for " +  val.framework.keyedType +'/' + val.framework.directory);
                 await ncuRunUpdate(val);
-                console.log("\nTODO: Rebuilding is required:");
-                let prefix = `frameworks/${val.framework.keyedType}/${val.framework.directory}/`;
-                console.log(`cd ${prefix}`);
-                console.log(`rm -rf node_modules package-lock.json dist elm-stuff bower_components`);
-                console.log(`npm install && npm run build-prod`);
-                console.log(`cd ../../..`);
+                let prefix = `${val.framework.keyedType}/${val.framework.directory}`;
+                rebuild = rebuild + "'"+prefix+"' ";
             }
+            console.log("\nTODO: Rebuilding is required:");
 
-            console.log("\nTODO: Rerunning those frameworks is required:");
+            console.log(`npm run rebuild -- ${rebuild}`);
+            exec('npm run rebuild -- '+rebuild, {
+                stdio: 'inherit'
+            });
 
-            console.log(`cd webdriver-ts`);
-            let frameworkList = toBeUpdated.map(framework => framework.getFrameworkData().fullNameWithKeyedAndVersion).join(' ');
-            console.log(`npm run selenium -- --framework ${frameworkList}`);
         }
     }
 }
