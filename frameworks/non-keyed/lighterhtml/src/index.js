@@ -26,6 +26,8 @@ const clear = () => {
   _render();
 };
 const interact = e => {
+  e.stopPropagation();
+  e.preventDefault();
   const interaction = e.target.getAttribute('data-interaction');
   const id = parseInt(
     e.target.parentNode.id || 
