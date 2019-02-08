@@ -21,17 +21,17 @@
   },
   "devDependencies": {
     "@babel/core": "^7.1.5",
-    "@babel/preset-env": "7.1.5",
-    "babel-plugin-inferno": "6.0.3",
-    "rollup": "^0.67.0",
+    "@babel/preset-env": "7.3.1",
+    "babel-plugin-inferno": "6.0.4",
+    "rollup": "^1.1.2",
     "rollup-plugin-alias": "^1.4.0",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-uglify": "^6.0.0"
   },
   "dependencies": {
-    "inferno": "6.2.1"
+    "inferno": "7.1.2"
   }
 }
