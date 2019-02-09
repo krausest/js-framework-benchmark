@@ -25,16 +25,12 @@ const clear = () => {
   data = [];
   _render();
 };
-const interact = e => {
-  e.stopPropagation();
-  e.preventDefault();
-  const interaction = e.target.getAttribute('data-interaction');
-  const id = parseInt(
-    e.target.parentNode.id || 
-    e.target.parentNode.parentNode.id ||
-    e.target.parentNode.parentNode.parentNode.id
-  );
-  if (interaction === 'delete') {
+const interact = event => {
+  event.preventDefault();
+  event.stopPropagation();
+  const {target} = event;
+  const id = +target.closest('tr').id;
+  if (target.getAttribute('data-interaction') === 'delete') {
     del(id)
   } else {
     select(id)
@@ -123,7 +119,7 @@ const template = () => html.for(container)`
     </div>
   </div>
   <table onclick=${interact} class="table table-hover table-striped test-data">
-    <tbody>${data.map((item) => html.for(item)`
+    <tbody>${data.map(item => html.for(item)`
       <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
         <td class="col-md-1">${item.id}</td>
         <td data-interaction='select' class="col-md-4">
