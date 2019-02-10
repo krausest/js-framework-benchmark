@@ -1,5 +1,5 @@
 var sf = require('scarletsframe');
-window.sf = sf;
+
 // Declare variable for the model
 sf.model.for('bench-mark', function(self){
     self.list = [];
