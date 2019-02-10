@@ -25,16 +25,12 @@ const clear = () => {
   data = [];
   _render();
 };
-const interact = e => {
-  e.stopPropagation();
-  e.preventDefault();
-  const interaction = e.target.getAttribute('data-interaction');
-  const id = parseInt(
-    e.target.parentNode.id || 
-    e.target.parentNode.parentNode.id ||
-    e.target.parentNode.parentNode.parentNode.id
-  );
-  if (interaction === 'delete') {
+const interact = event => {
+  event.preventDefault();
+  event.stopPropagation();
+  const {target} = event;
+  const id = +target.closest('tr').id;
+  if (target.getAttribute('data-interaction') === 'delete') {
     del(id)
   } else {
     select(id)
@@ -47,10 +43,10 @@ const del = id => {
 };
 const select = id => {
   if (selected > -1) {
-    data[selected] = { ...data[selected], selected: false }
+    data[selected] = { ...data[selected], selected: false };
   }
   selected = data.findIndex(d => d.id === id);
-  data[selected] = { ...data[selected], selected: true }
+  data[selected] = { ...data[selected], selected: true };
   _render();
 };
 const swapRows = () => {
@@ -63,8 +59,7 @@ const swapRows = () => {
 };
 const update = () => {
   for(let i = 0; i < data.length; i += 10) {
-    const item = data[i]
-    data[i] = { ...item, label: item.label + ' !!!' }
+    data[i].label += ' !!!';
   }
   _render();
 };
@@ -124,8 +119,8 @@ const template = () => html`
     </div>
   </div>
   <table onclick=${interact} class="table table-hover table-striped test-data">
-    <tbody>${data.map((item, index) => html`
-      <tr data-i="${index}" id=${item.id} class=${item.selected ? 'danger' : ''}>
+    <tbody>${data.map(item => html`
+      <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
         <td class="col-md-1">${item.id}</td>
         <td data-interaction='select' class="col-md-4">
           <a data-interaction='select'>${item.label}</a>
