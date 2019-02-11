@@ -38,7 +38,7 @@
         </div>
         <table class="table table-hover table-striped test-data">
             <tbody id="tbody">
-                <tr sf-repeat-this="x in list">
+                <tr sf-repeat-this="x in list" class="{{ x.status }}">
                     <td class="col-md-1">{{ x.id }}</td>
                     <td class="col-md-4">
                         <a class="lbl" sf-click="b_select(this)">{{ x.label }}</a>

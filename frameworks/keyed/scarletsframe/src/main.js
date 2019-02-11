@@ -1,10 +1,10 @@
 var sf = require('scarletsframe');
+var $ = sf.dom;
 
 // Declare variable for the model
 sf.model.for('bench-mark', function(self){
     self.list = [];
     self.selected = -1;
-    self.selectedRow = null;
 });
 
 // Declare functions that controlling the model
@@ -26,6 +26,7 @@ sf.controller.run('bench-mark', function(self, root){
         for (var i = 0; i < count; i++)
             data.push({
                 id: nextId++,
+                status:'',
                 label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)]
             });
 
@@ -34,24 +35,27 @@ sf.controller.run('bench-mark', function(self, root){
 
     self.unselect = function(){
         if(self.selected === -1) return;
+
+        if(self.list[self.selected] !== undefined){
+            self.list[self.selected].status = '';
+            self.list.softRefresh(self.selected);
+        }
+
         self.selected = -1;
-        
-        if(self.selectedRow !== undefined)
-            self.selectedRow.className = "";
     }
 
     // Handle button
     self.b_run = function(){
         Measurer.start("run");
         self.list = self.buildData();
-        self.unselect();
+        self.selected = -1;
         Measurer.stop();
     }
 
     self.b_runlots = function(){
         Measurer.start("runLots");
         self.list = self.buildData(10000);
-        self.unselect();
+        self.selected = -1;
         Measurer.stop();
     }
 
@@ -73,30 +77,42 @@ sf.controller.run('bench-mark', function(self, root){
     self.b_clear = function(){
         Measurer.start("clear");
         self.list.splice(0);
-        self.unselect();
+        self.selected = -1;
         Measurer.stop();
     }
 
     self.b_swaprows = function(){
         Measurer.start("swapRows");
-        if(self.list.length > 998){
+
+        if(self.list.length > 998)
             self.list.swap(1, 998);
-        }
+
         Measurer.stop();
     }
 
     self.b_select = function(el){
         Measurer.start("select");
         self.unselect();
-        self.selectedRow = el.parentNode.parentNode;
-        self.selected = sf.model.index(self.selectedRow);
-        self.selectedRow.className = "danger";
+
+        var rowIndex = $.parent(el, '[sf-bind-list]');
+        self.selected = rowIndex = sf.model.index(rowIndex);
+
+        self.list[rowIndex].status = 'danger';
+        self.list.softRefresh(rowIndex);
         Measurer.stop();
     }
 
     self.b_remove = function(el){
         Measurer.start("delete");
-        self.list.splice(sf.model.index(el.parentNode.parentNode), 1);
+
+        var rowIndex = $.parent(el, '[sf-bind-list]');
+        rowIndex = sf.model.index(rowIndex);
+
+        self.list.splice(rowIndex, 1);
+
+        if(rowIndex === self.selected)
+            self.selected = -1;
+
         Measurer.stop();
     }
 });
