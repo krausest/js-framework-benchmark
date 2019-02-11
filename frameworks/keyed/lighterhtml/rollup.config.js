@@ -14,13 +14,7 @@ export default {
       delimiters: ['', '']
     }),
     babel({
-      plugins: [
-        ['remove-ungap', {
-          exclude: [
-            '@ungap/create-content'
-          ]
-        }]
-      ],
+      plugins: [['remove-ungap']]
     }),
     terser()
   ],
