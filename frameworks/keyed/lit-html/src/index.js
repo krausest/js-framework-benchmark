@@ -27,12 +27,9 @@ const clear = () => {
   _render();
 };
 const interact = e => {
-  const interaction = e.target.getAttribute('data-interaction');
-  const id = parseInt(
-    e.target.parentNode.id ||
-    e.target.parentNode.parentNode.id ||
-    e.target.parentNode.parentNode.parentNode.id
-  );
+  const td = e.target.closest('td');
+  const interaction = td.getAttribute('data-interaction');
+  const id = parseInt(td.parentNode.id);
   if (interaction === 'delete') {
     del(id);
   } else {
@@ -128,12 +125,12 @@ const template = () => html`
       item => html`
       <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
         <td class="col-md-1">${item.id}</td>
-        <td data-interaction='select' class="col-md-4">
-          <a data-interaction='select'>${item.label}</a>
+        <td class="col-md-4">
+          <a>${item.label}</a>
         </td>
         <td data-interaction='delete' class="col-md-1">
-          <a data-interaction='delete'>
-            <span data-interaction='delete' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <a>
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
           </a>
         </td>
         <td class="col-md-6"></td>
