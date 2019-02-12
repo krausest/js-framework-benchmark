@@ -30,47 +30,47 @@ const clear = () => {
 const interact = e => {
   const interaction = e.target.getAttribute('data-interaction');
   const id = parseInt(
-    e.target.parentNode.id || 
+    e.target.parentNode.id ||
     e.target.parentNode.parentNode.id ||
     e.target.parentNode.parentNode.parentNode.id
   );
   if (interaction === 'delete') {
-    del(id)
+    del(id);
   } else {
-    select(id)
+    select(id);
   }
 };
 const del = id => {
   const idx = data.findIndex(d => d.id === id);
-  data.splice(idx, 1)
+  data.splice(idx, 1);
   _render();
 };
 const select = id => {
   if (selected > -1) {
-    data[selected] = { ...data[selected], selected: false }
+    data[selected] = { ...data[selected], selected: false };
   }
   selected = data.findIndex(d => d.id === id);
-  data[selected] = { ...data[selected], selected: true }
+  data[selected] = { ...data[selected], selected: true };
   _render();
 };
 const swapRows = () => {
   if (data.length > 998) {
-    const tmp = data[1]
-    data[1] = data[998]
-    data[998] = tmp
+    const tmp = data[1];
+    data[1] = data[998];
+    data[998] = tmp;
   }
   _render();
 };
 const update = () => {
-  for(let i = 0; i < data.length; i += 10) {
-    const item = data[i]
-    data[i] = { ...item, label: item.label + ' !!!' }
+  for (let i = 0; i < data.length; i += 10) {
+    const item = data[i];
+    data[i] = { ...item, label: item.label + ' !!!' };
   }
   _render();
 };
 const buildData = count => {
   const data = [];
-  for (var i = 0; i < count; i++) {
+  for (let i = 0; i < count; i++) {
     data.push({
       id: did++,
       label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
