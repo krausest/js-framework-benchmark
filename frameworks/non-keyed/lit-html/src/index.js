@@ -7,7 +7,7 @@ const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie'
 
 let data = [];
 let did = 1;
-let selected = -1;
+let selectedRow;
 
 const add = () => {
   data = data.concat(buildData(1000));
@@ -27,12 +27,13 @@ const clear = () => {
 };
 const interact = e => {
   const td = e.target.closest('td');
+  const tr = td.parentNode;
+  const id = parseInt(tr.id);
   const interaction = td.getAttribute('data-interaction');
-  const id = parseInt(td.parentNode.id);
   if (interaction === 'delete') {
     del(id);
   } else {
-    select(id);
+    select(tr);
   }
 };
 const del = id => {
@@ -40,13 +41,12 @@ const del = id => {
   data.splice(idx, 1);
   _render();
 };
-const select = id => {
-  if (selected > -1) {
-    data[selected].selected = false;
+const select = row => {
+  row.classList.add('danger');
+  if (selectedRow !== undefined) {
+    selectedRow.classList.remove('danger');
   }
-  selected = data.findIndex(d => d.id === id);
-  data[selected].selected = true;
-  _render();
+  selectedRow = row;
 };
 const swapRows = () => {
   if (data.length > 998) {
@@ -69,7 +69,6 @@ const buildData = count => {
     data.push({
       id: did++,
       label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
-      selected: false,
     });
   }
   return data;
@@ -120,7 +119,7 @@ const template = () => html`
   </div>
   <table @click=${interact} class="table table-hover table-striped test-data">
     <tbody>${data.map(item => html`
-      <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
+      <tr id=${item.id}>
         <td class="col-md-1">${item.id}</td>
         <td class="col-md-4">
           <a>${item.label}</a>
