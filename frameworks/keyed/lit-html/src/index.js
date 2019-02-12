@@ -1,6 +1,5 @@
 import { html, render } from '../node_modules/lit-html/lit-html.js';
 import { repeat } from '../node_modules/lit-html/directives/repeat.js';
-import { guard } from '../node_modules/lit-html/directives/guard.js';
 
 const adjectives = [
   'pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
@@ -47,10 +46,10 @@ const del = id => {
 };
 const select = id => {
   if (selected > -1) {
-    data[selected] = { ...data[selected], selected: false };
+    data[selected].selected = false;
   }
   selected = data.findIndex(d => d.id === id);
-  data[selected] = { ...data[selected], selected: true };
+  data[selected].selected = true;
   _render();
 };
 const swapRows = () => {
@@ -64,7 +63,7 @@ const swapRows = () => {
 const update = () => {
   for (let i = 0; i < data.length; i += 10) {
     const item = data[i];
-    data[i] = { ...item, label: item.label + ' !!!' };
+    data[i].label += ' !!!';
   }
   _render();
 };
@@ -126,7 +125,7 @@ const template = () => html`
   <table @click=${interact} class="table table-hover table-striped test-data">
     <tbody>${repeat(data,
       item => item.id,
-      item => guard(item, () => html`
+      item => html`
       <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
         <td class="col-md-1">${item.id}</td>
         <td data-interaction='select' class="col-md-4">
@@ -138,8 +137,7 @@ const template = () => html`
           </a>
         </td>
         <td class="col-md-6"></td>
-      </tr>`)
-    )}
+      </tr>`)}
     </tbody>
   </table>
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
