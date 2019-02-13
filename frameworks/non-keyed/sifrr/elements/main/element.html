@@ -68,25 +68,22 @@
   class MainElement extends Sifrr.Dom.Element {
     onConnect() {
       const self = this;
-      this.$('div').$click = (e, target) => {
-        if (target.matches('.remove')) {
-          const id = getParent(target).state.id;
-          // console.log("delete",id);
-          const data = self.state.data;
-          for(let i = data.length-1; i >= 0; i--){
-            if (data[i].id == id) {
-              data.splice(i, 1);
-            }
+      Sifrr.Dom.Event.addListener('click', '.remove', (e, target) => {
+        const id = getParent(target).state.id;
+        const data = self.state.data;
+        for(let i = data.length - 1; i >= 0; i--){
+          if (data[i].id === id) {
+            data.splice(i, 1);
           }
-          self.state = { data: data };
-        } else if (target.matches('.lbl')) {
-          const el = getParent(target);
-          // console.log("select", id);
-          if (self.selected) self.selected.className = '';
-          el.className = 'danger';
-          self.selected = el;
         }
-      };
+        self.state = { data: data };
+      });
+      Sifrr.Dom.Event.addListener('click', '.lbl', (e, target) => {
+        const el = getParent(target);
+        if (self.selected) self.selected.className = '';
+        el.className = 'danger';
+        self.selected = el;
+      });
     }
 
     run() {
@@ -142,7 +139,7 @@
     if (window.useSifrrInArray) {
       MainElement.addArrayToDom('data', '<tr is="sifrr-row"></tr>');
     } else {
-      MainElement.addArrayToDom('data', "<tr><td class='col-md-1 id'>${id}</td><td class='col-md-4'><a class='lbl'>${label}</a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td></tr>");
+      MainElement.addArrayToDom('data', "<tr><td class='col-md-1 id'>${id}</td><td class='col-md-4'><a class='lbl'>${label}</a></td><td class='col-md-1'><a class='remove'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td></tr>");
     }
     Sifrr.Dom.register(MainElement);
   });
