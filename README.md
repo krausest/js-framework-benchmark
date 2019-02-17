@@ -243,7 +243,7 @@ Contributions are very welcome. Please use the following rules:
   * If the initial rendering is able to render the selection state
   * The implementation uses only the idiomatic style of its library
   * If you don't use userland hacks in your implementation like dom manipulations or request animation frame calls
-Tip: If you start with your implemenation do not take vanillajs as the reference. It violates those rules and serves only as a performance baseline and not as a best practice implementation.
+Tip: If you start with your implementation do not take vanillajs as the reference. It violates those rules and serves only as a performance baseline and not as a best practice implementation.
 
 This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
 
