@@ -9,22 +9,22 @@
         <div class="col-md-6">
           <div class="row">
             <div class="col-sm-6 smallpad">
-              <button type='button' class='btn btn-primary btn-block' id='run'>Create 1,000 rows</button>
+              <button type='button' class='btn btn-primary btn-block' $click=${this.run.bind(this)} id='run'>Create 1,000 rows</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type='button' class='btn btn-primary btn-block' id='runlots'>Create 10,000 rows</button>
+              <button type='button' class='btn btn-primary btn-block' $click=${this.runlots.bind(this)} id='runlots'>Create 10,000 rows</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type='button' class='btn btn-primary btn-block' id='add'>Append 1,000 rows</button>
+              <button type='button' class='btn btn-primary btn-block' $click=${this.add.bind(this)} id='add'>Append 1,000 rows</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type='button' class='btn btn-primary btn-block' id='update'>Update every 10th row</button>
+              <button type='button' class='btn btn-primary btn-block' $click=${this.clickUpdate.bind(this)} id='update'>Update every 10th row</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type='button' class='btn btn-primary btn-block' id='clear'>Clear</button>
+              <button type='button' class='btn btn-primary btn-block' $click=${this.clear.bind(this)} id='clear'>Clear</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type='button' class='btn btn-primary btn-block' id='swaprows'>Swap Rows</button>
+              <button type='button' class='btn btn-primary btn-block' $click=${this.swaprows.bind(this)} id='swaprows'>Swap Rows</button>
             </div>
           </div>
         </div>
@@ -35,15 +35,112 @@
         <!-- ${this.arrayToDom('data')} -->
       </tbody>
     </table>
+    <span class='glyphicon glyphicon-remove' aria-hidden='true'>
   </div>
 </template>
 <script>
-  class MainElement extends Sifrr.Dom.Element {}
-  MainElement.defaultState = {
-    "data": []
+  let from = 1;
+
+  function _random(max) {
+    return Math.round(Math.random() * 1000) % max;
   }
 
-  MainElement.addArrayToDom('data', "<tr class=${class} data-id=${id}><td class='col-md-1'>${id}</td><td class='col-md-4'><a class='lbl'>${label}</a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td></tr>");
+  function buildData(count = 1000) {
+    const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive',
+      'cheap', 'expensive', 'fancy'];
+    const colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
+    const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
+    let data = [];
+    for (let i = 0; i < count; i++)
+      data.push({
+        id: i + from,
+        label: adjectives[_random(adjectives.length)] + ' ' + colours[_random(colours.length)] + ' ' + nouns[_random(nouns.length)]
+      });
+    from = from + count;
+    return data;
+  }
 
-  Sifrr.Dom.register(MainElement);
+  function getParent(elem) {
+    while(elem.nodeName !== 'TR') elem = elem.parentNode;
+    return elem;
+  }
+
+  class MainElement extends Sifrr.Dom.Element {
+    onConnect() {
+      const self = this;
+      Sifrr.Dom.Event.addListener('click', '.remove', (e, target) => {
+        const id = getParent(target).state.id;
+        const data = self.state.data;
+        for(let i = data.length - 1; i >= 0; i--){
+          if (data[i].id === id) {
+            data.splice(i, 1);
+          }
+        }
+        self.state = { data: data };
+      });
+      Sifrr.Dom.Event.addListener('click', '.lbl', (e, target) => {
+        const el = getParent(target);
+        if (self.selected) self.selected.className = '';
+        el.className = 'danger';
+        self.selected = el;
+      });
+    }
+
+    run() {
+      this.state = {
+        data: buildData(1000)
+      };
+    }
+
+    runlots() {
+      this.state = {
+        data: buildData(10000)
+      };
+    }
+
+    add() {
+      this.state = {
+        data: this.state.data.concat(buildData(1000))
+      };
+    }
+
+    // update is reserved in Sifrr.Dom.Element
+    clickUpdate() {
+      const state = this.state;
+      const l = this.state.data.length;
+      for (let i = 0; i < l; i += 10) {
+        state.data[i].label = state.data[i].label + ' !!!';
+        // this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label +' !!!'});
+      }
+      this.state = state;
+    }
+
+    clear() {
+      this.state = {
+        data: []
+      };
+    }
+
+    swaprows() {
+      const data = this.state.data;
+      if (data.length > 998) {
+        let a = data[1];
+        data[1] = data[998];
+        data[998] = a;
+        this.state = { data: data };
+      }
+    }
+  }
+  MainElement.defaultState = {
+    data: []
+  };
+
+  Sifrr.Dom.load('sifrr-row').then(() => {
+    if (window.useSifrrInArray) {
+      MainElement.addArrayToDom('data', '<tr is="sifrr-row"></tr>');
+    } else {
+      MainElement.addArrayToDom('data', "<tr><td class='col-md-1 id'>${id}</td><td class='col-md-4'><a class='lbl'>${label}</a></td><td class='col-md-1'><a class='remove'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td></tr>");
+    }
+    Sifrr.Dom.register(MainElement);
+  });
 </script>

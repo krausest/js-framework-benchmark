@@ -26,8 +26,8 @@
   },
   "homepage": "https://github.com/sifrr/sifrr#readme",
   "dependencies": {
-    "@sifrr/dom": "0.0.1-alpha1",
-    "@sifrr/fetch": "0.0.1-alpha",
+    "@sifrr/dom": "0.0.2-alpha",
+    "@sifrr/fetch": "0.0.2-alpha",
     "local-web-server": "^2.6.0"
   },
   "devDependencies": {
