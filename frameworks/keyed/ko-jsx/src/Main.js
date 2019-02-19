@@ -90,18 +90,18 @@ var HomeViewModel = function () {
     // stopMeasure();
   };
 
-  self.clickRow = function(e, id, action) {
-    if (action === 'remove') {
-      // startMeasure("delete");
-      var tmp = self.data();
-      const idx = tmp.findIndex(d => d.id === id);
-      self.data.splice(idx, 1);
-      // stopMeasure();
-    } else {
-      // startMeasure("select");
-      self.selected(id);
-      // stopMeasure();
-    }
+  self.select = function(e, id) {
+    // startMeasure("select");
+    self.selected(id);
+    // stopMeasure();
+  }
+
+  self.remove = function(e, id) {
+    // startMeasure("delete");
+    var tmp = self.data();
+    const idx = tmp.findIndex(d => d.id === id);
+    self.data.splice(idx, 1);
+    // stopMeasure();
   }
 };
 

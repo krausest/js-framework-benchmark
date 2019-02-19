@@ -472,6 +472,12 @@ async function runMemOrCPUBenchmark(framework: FrameworkData, benchmark: Benchma
                 //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
                 // });
                 await driver.executeScript("console.timeStamp('initBenchmark')");
+
+                if (framework.name.startsWith("scarletsframe")) {
+                    console.log("adding sleep for scarletsframe");
+                    await driver.sleep(1000);
+                }
+
                 await initBenchmark(driver, benchmark, framework);
                 if (benchmark.throttleCPU) {
                     console.log("CPU slowdown", benchmark.throttleCPU);
