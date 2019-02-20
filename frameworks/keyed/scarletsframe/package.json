@@ -21,7 +21,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "scarletsframe": "0.9.13",
+    "scarletsframe": "0.10.5",
     "webpack": "^4.29.2"
   },
   "devDependencies": {
