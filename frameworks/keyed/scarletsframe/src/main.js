@@ -26,7 +26,7 @@ sf.controller.run('bench-mark', function(self, root){
         for (var i = 0; i < count; i++)
             data.push({
                 id: nextId++,
-                status:'',
+                isSelected:'',
                 label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)]
             });
 
@@ -37,7 +37,7 @@ sf.controller.run('bench-mark', function(self, root){
         if(self.selected === -1) return;
 
         if(self.list[self.selected] !== undefined){
-            self.list[self.selected].status = '';
+            self.list[self.selected].isSelected = false;
             self.list.softRefresh(self.selected);
         }
 
@@ -97,7 +97,7 @@ sf.controller.run('bench-mark', function(self, root){
         var rowIndex = $.parent(el, '[sf-bind-list]');
         self.selected = rowIndex = sf.model.index(rowIndex);
 
-        self.list[rowIndex].status = 'danger';
+        self.list[rowIndex].isSelected = true;
         self.list.softRefresh(rowIndex);
         Measurer.stop();
     }
@@ -139,5 +139,21 @@ sf.controller.run('measurer', function(self){
     }
 });
 
-// We're not using dynamic resource loader
-sf.loader.off();
+// Fix for (https://github.com/krausest/js-framework-benchmark/pull/519#issuecomment-464855788)
+sf(function(){
+    tbody.innerHTML = 
+    `<tr sf-repeat-this="x in list" class="{{ x.isSelected ? 'danger' : '' }}">
+        <td class="col-md-1">{{ x.id }}</td>
+        <td class="col-md-4">
+            <a class="lbl" sf-click="b_select(this)">{{ x.label }}</a>
+        </td>
+        <td class="col-md-1">
+         <a class="remove" sf-click="b_remove(this)">
+           <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
+         </a>
+        </td>
+        <td class="col-md-6"></td>
+    </tr>`;
+
+    sf.model.init(tbody);
+});
