@@ -54,7 +54,8 @@
     for (let i = 0; i < count; i++)
       data.push({
         id: i + from,
-        label: adjectives[_random(adjectives.length)] + ' ' + colours[_random(colours.length)] + ' ' + nouns[_random(nouns.length)]
+        label: adjectives[_random(adjectives.length)] + ' ' + colours[_random(colours.length)] + ' ' + nouns[_random(nouns.length)],
+        class: ''
       });
     from = from + count;
     return data;
@@ -67,22 +68,24 @@
 
   class MainElement extends Sifrr.Dom.Element {
     onConnect() {
-      const self = this;
+      const me = this;
       Sifrr.Dom.Event.addListener('click', '.remove', (e, target) => {
         const id = getParent(target).state.id;
-        const data = self.state.data;
-        for(let i = data.length - 1; i >= 0; i--){
-          if (data[i].id === id) {
-            data.splice(i, 1);
-          }
-        }
-        self.state = { data: data };
+        const data = me.state.data;
+        const todel = data.findIndex(d => d.id === id);
+        data.splice(todel, 1);
+        me.state = { data: data };
       });
       Sifrr.Dom.Event.addListener('click', '.lbl', (e, target) => {
-        const el = getParent(target);
-        if (self.selected) self.selected.className = '';
-        el.className = 'danger';
-        self.selected = el;
+        const id = getParent(target).state.id;
+        const data = me.state.data, l = me.state.data.length;
+        let k = 0;
+        for (let i = 0; i < l; i++) {
+          if (me.state.data[i].class) me.state.data[i].class = '', k++;
+          if (me.state.data[i].id === id) me.state.data[i].class = 'danger', k++;
+          if (k > 1) break;
+        }
+        me.state = { data: data };
       });
     }
 
@@ -139,7 +142,7 @@
     if (window.useSifrrInArray) {
       MainElement.addArrayToDom('data', '<tr is="sifrr-row"></tr>');
     } else {
-      MainElement.addArrayToDom('data', "<tr><td class='col-md-1 id'>${id}</td><td class='col-md-4'><a class='lbl'>${label}</a></td><td class='col-md-1'><a class='remove'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td></tr>");
+      MainElement.addArrayToDom('data', "<tr class=${class}><td class='col-md-1 id'>${id}</td><td class='col-md-4'><a class='lbl'>${label}</a></td><td class='col-md-1'><a class='remove'><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td></tr>");
     }
     Sifrr.Dom.register(MainElement);
   });
