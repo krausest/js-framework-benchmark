@@ -46,52 +46,52 @@ sf.controller.run('bench-mark', function(self, root){
 
     // Handle button
     self.b_run = function(){
-        Measurer.start("run");
+        // Measurer.start("run");
         self.list = self.buildData();
         self.selected = -1;
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_runlots = function(){
-        Measurer.start("runLots");
+        // Measurer.start("runLots");
         self.list = self.buildData(10000);
         self.selected = -1;
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_add = function(){
-        Measurer.start("add");
+        // Measurer.start("add");
         self.list = self.list.concat(self.buildData(1000));
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_update = function(){
-        Measurer.start("update");
+        // Measurer.start("update");
         for (var i = 0; i < self.list.length; i += 10) {
             self.list[i].label += ' !!!';
             self.list.softRefresh(i);
         }
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_clear = function(){
-        Measurer.start("clear");
+        // Measurer.start("clear");
         self.list.splice(0);
         self.selected = -1;
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_swaprows = function(){
-        Measurer.start("swapRows");
+        // Measurer.start("swapRows");
 
         if(self.list.length > 998)
             self.list.swap(1, 998);
 
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_select = function(el){
-        Measurer.start("select");
+        // Measurer.start("select");
         self.unselect();
 
         var rowIndex = $.parent(el, '[sf-bind-list]');
@@ -99,11 +99,11 @@ sf.controller.run('bench-mark', function(self, root){
 
         self.list[rowIndex].isSelected = true;
         self.list.softRefresh(rowIndex);
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_remove = function(el){
-        Measurer.start("delete");
+        // Measurer.start("delete");
 
         var rowIndex = $.parent(el, '[sf-bind-list]');
         rowIndex = sf.model.index(rowIndex);
@@ -113,7 +113,7 @@ sf.controller.run('bench-mark', function(self, root){
         if(rowIndex === self.selected)
             self.selected = -1;
 
-        Measurer.stop();
+        // Measurer.stop();
     }
 });
 
