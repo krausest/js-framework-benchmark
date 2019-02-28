@@ -37,19 +37,7 @@
             </div>
         </div>
         <table class="table table-hover table-striped test-data">
-            <tbody id="tbody">
-                <tr sf-repeat-this="x in list" class="{{ x.status }}">
-                    <td class="col-md-1">{{ x.id }}</td>
-                    <td class="col-md-4">
-                        <a class="lbl" sf-click="b_select(this)">{{ x.label }}</a>
-                    </td>
-                    <td class="col-md-1">
-                     <a class="remove" sf-click="b_remove(this)">
-                       <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
-                     </a>
-                    </td>
-                    <td class="col-md-6"></td>
-                </tr>
+            <tbody class="sf-keyed-list" id="tbody">
             </tbody>
         </table>
         <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>

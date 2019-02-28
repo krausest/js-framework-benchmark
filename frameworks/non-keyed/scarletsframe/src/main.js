@@ -140,5 +140,21 @@ sf.controller.run('measurer', function(self){
     }
 });
 
-// We're not using dynamic resource loader
-sf.loader.off();
+// Fix for (https://github.com/krausest/js-framework-benchmark/pull/519#issuecomment-464855788)
+sf(function(){
+    tbody.innerHTML = 
+    `<tr sf-repeat-this="x in list" class="{{ x.isSelected ? 'danger' : '' }}">
+        <td class="col-md-1">{{ x.id }}</td>
+        <td class="col-md-4">
+            <a class="lbl" sf-click="b_select(this)">{{ x.label }}</a>
+        </td>
+        <td class="col-md-1">
+         <a class="remove" sf-click="b_remove(this)">
+           <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
+         </a>
+        </td>
+        <td class="col-md-6"></td>
+    </tr>`;
+
+    sf.model.init(tbody);
+});
