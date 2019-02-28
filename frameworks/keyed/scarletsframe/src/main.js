@@ -26,7 +26,7 @@ sf.controller.run('bench-mark', function(self, root){
         for (var i = 0; i < count; i++)
             data.push({
                 id: nextId++,
-                status:'',
+                isSelected:'',
                 label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)]
             });
 
@@ -37,7 +37,7 @@ sf.controller.run('bench-mark', function(self, root){
         if(self.selected === -1) return;
 
         if(self.list[self.selected] !== undefined){
-            self.list[self.selected].status = '';
+            self.list[self.selected].isSelected = false;
             self.list.softRefresh(self.selected);
         }
 
@@ -46,64 +46,64 @@ sf.controller.run('bench-mark', function(self, root){
 
     // Handle button
     self.b_run = function(){
-        Measurer.start("run");
+        // Measurer.start("run");
         self.list = self.buildData();
         self.selected = -1;
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_runlots = function(){
-        Measurer.start("runLots");
+        // Measurer.start("runLots");
         self.list = self.buildData(10000);
         self.selected = -1;
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_add = function(){
-        Measurer.start("add");
+        // Measurer.start("add");
         self.list = self.list.concat(self.buildData(1000));
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_update = function(){
-        Measurer.start("update");
+        // Measurer.start("update");
         for (var i = 0; i < self.list.length; i += 10) {
             self.list[i].label += ' !!!';
             self.list.softRefresh(i);
         }
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_clear = function(){
-        Measurer.start("clear");
+        // Measurer.start("clear");
         self.list.splice(0);
         self.selected = -1;
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_swaprows = function(){
-        Measurer.start("swapRows");
+        // Measurer.start("swapRows");
 
         if(self.list.length > 998)
             self.list.swap(1, 998);
 
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_select = function(el){
-        Measurer.start("select");
+        // Measurer.start("select");
         self.unselect();
 
         var rowIndex = $.parent(el, '[sf-bind-list]');
         self.selected = rowIndex = sf.model.index(rowIndex);
 
-        self.list[rowIndex].status = 'danger';
+        self.list[rowIndex].isSelected = true;
         self.list.softRefresh(rowIndex);
-        Measurer.stop();
+        // Measurer.stop();
     }
 
     self.b_remove = function(el){
-        Measurer.start("delete");
+        // Measurer.start("delete");
 
         var rowIndex = $.parent(el, '[sf-bind-list]');
         rowIndex = sf.model.index(rowIndex);
@@ -113,7 +113,7 @@ sf.controller.run('bench-mark', function(self, root){
         if(rowIndex === self.selected)
             self.selected = -1;
 
-        Measurer.stop();
+        // Measurer.stop();
     }
 });
 
@@ -139,5 +139,21 @@ sf.controller.run('measurer', function(self){
     }
 });
 
-// We're not using dynamic resource loader
-sf.loader.off();
+// Fix for (https://github.com/krausest/js-framework-benchmark/pull/519#issuecomment-464855788)
+sf(function(){
+    tbody.innerHTML = 
+    `<tr sf-repeat-this="x in list" class="{{ x.isSelected ? 'danger' : '' }}">
+        <td class="col-md-1">{{ x.id }}</td>
+        <td class="col-md-4">
+            <a class="lbl" sf-click="b_select(this)">{{ x.label }}</a>
+        </td>
+        <td class="col-md-1">
+         <a class="remove" sf-click="b_remove(this)">
+           <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
+         </a>
+        </td>
+        <td class="col-md-6"></td>
+    </tr>`;
+
+    sf.model.init(tbody);
+});

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>ScarletsFrame-"keyed"</title>
+    <title>ScarletsFrame-"non-keyed"</title>
     <link href="/css/currentStyle.css" rel="stylesheet"/>
 </head>
 <body>
@@ -10,7 +10,7 @@
         <div class="jumbotron">
             <div class="row">
                 <div class="col-md-6">
-                    <h1>ScarletsFrame-"keyed"</h1>
+                    <h1>ScarletsFrame-"non-keyed"</h1>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
@@ -38,18 +38,6 @@
         </div>
         <table class="table table-hover table-striped test-data">
             <tbody id="tbody">
-                <tr sf-repeat-this="x in list" class="{{ x.isSelected ? 'danger' : '' }}">
-                    <td class="col-md-1">{{ x.id }}</td>
-                    <td class="col-md-4">
-                        <a class="lbl" sf-click="b_select(this)">{{ x.label }}</a>
-                    </td>
-                    <td class="col-md-1">
-                     <a class="remove" sf-click="b_remove(this)">
-                       <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
-                     </a>
-                    </td>
-                    <td class="col-md-6"></td>
-                </tr>
             </tbody>
         </table>
         <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>

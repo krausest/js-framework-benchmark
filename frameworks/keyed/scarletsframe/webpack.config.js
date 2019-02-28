@@ -4,7 +4,8 @@ var cache = {};
 var loaders = [
 	{
 		test: /\.js$/,
-		loader: 'babel-loader'
+		loader: 'babel-loader',
+        exclude: /node_modules/
 	},
 	{
 		test: /\.css$/,
@@ -12,13 +13,13 @@ var loaders = [
 	}
 ];
 var extensions = [
-	'.js', '.jsx', '.es6.js'
+	'.js', '.jsx', '.es6.js', '.msx'
 ];
 
 module.exports = [{
 	cache: cache,
 	module: {
-		loaders: loaders
+		rules: loaders
 	},
 	entry: {
 		main: './src/main.js',
@@ -28,13 +29,11 @@ module.exports = [{
 		filename: '[name].js'
 	},
 	resolve: {
-		extensions: extensions,
 		modules: [
 			__dirname,
 			path.resolve(__dirname, "src"),
 			"node_modules"
 		],
-		alias: {
-		}
-	}
+		extensions: extensions
+	},
 }];
