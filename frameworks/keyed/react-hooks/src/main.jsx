@@ -40,30 +40,8 @@ const Button = ({ id, cb, title }) => (
   </div>
 );
 
-const Jumbotron = memo(({ run, runLots, add, update, clear, swapRows }) =>
-  <div className="jumbotron">
-    <div className="row">
-      <div className="col-md-6">
-        <h1>React Hooks keyed</h1>
-      </div>
-      <div className="col-md-6">
-        <div className="row">
-          <Button id="run" title="Create 1,000 rows" cb={run} />
-          <Button id="runlots" title="Create 10,000 rows" cb={runLots} />
-          <Button id="add" title="Append 1,000 rows" cb={add} />
-          <Button id="update" title="Update every 10th row" cb={update} />
-          <Button id="clear" title="Clear" cb={clear} />
-          <Button id="swaprows" title="Swap Rows" cb={swapRows} />
-        </div>
-      </div>
-    </div>
-  </div>
-, () => true);
-
-const Main = () => {
-  const [state, setState] = useState({ data: [], selected: 0 }),
-
-    run = () => setState({ data: buildData(1000), selected: 0 }),
+const Jumbotron = memo(({ setState }) => {
+  const run = () => setState({ data: buildData(1000), selected: 0 }),
 
     runLots = () => setState({ data: buildData(10000), selected: 0 }),
 
@@ -81,7 +59,29 @@ const Main = () => {
 
     swapRows = () => {
       setState(({ data, selected }) => ({ data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]], selected }))
-    },
+    };
+
+  return (<div className="jumbotron">
+    <div className="row">
+      <div className="col-md-6">
+        <h1>React Hooks keyed</h1>
+      </div>
+      <div className="col-md-6">
+        <div className="row">
+          <Button id="run" title="Create 1,000 rows" cb={run} />
+          <Button id="runlots" title="Create 10,000 rows" cb={runLots} />
+          <Button id="add" title="Append 1,000 rows" cb={add} />
+          <Button id="update" title="Update every 10th row" cb={update} />
+          <Button id="clear" title="Clear" cb={clear} />
+          <Button id="swaprows" title="Swap Rows" cb={swapRows} />
+        </div>
+      </div>
+    </div>
+  </div>);
+}, () => true);
+
+const Main = () => {
+  const [state, setState] = useState({ data: [], selected: 0 }),
 
     select = useCallback(item => setState(({ data }) => ({ data, selected: item.id })), []),
 
@@ -91,7 +91,7 @@ const Main = () => {
     }), []);
 
   return (<div className="container">
-    <Jumbotron run={run} runLots={runLots} add={add} update={update} clear={clear} swapRows={swapRows} />
+    <Jumbotron setState={setState} />
     <table className="table table-hover table-striped test-data"><tbody>
       {state.data.map(item => (
         <Row key={item.id} item={item} selected={state.selected === item.id} select={select} remove={remove} />
