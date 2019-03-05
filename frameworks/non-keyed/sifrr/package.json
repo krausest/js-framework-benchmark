@@ -9,7 +9,7 @@
     "start": "ws"
   },
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@sifrr/fetch",
+    "frameworkVersionFromPackage": "@sifrr/dom",
     "useShadowRoot": true
   },
   "repository": {
@@ -26,8 +26,8 @@
   },
   "homepage": "https://github.com/sifrr/sifrr#readme",
   "dependencies": {
-    "@sifrr/dom": "0.0.2-alpha",
-    "@sifrr/fetch": "0.0.2-alpha",
+    "@sifrr/dom": "0.0.3",
+    "@sifrr/fetch": "0.0.3",
     "local-web-server": "^2.6.0"
   },
   "devDependencies": {
