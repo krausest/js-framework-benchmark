@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from 'react';
+import React, { memo, useReducer, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 
 function random(max) { return Math.round(Math.random() * 1000) % max; }
@@ -23,16 +23,48 @@ function buildData(count) {
   return data;
 }
 
+function listReducer(state, action) {
+  const { data, selected } = state;
+  switch (action.type) {
+    case 'RUN':
+      return { data: buildData(1000), selected: 0 };
+    case 'RUN_LOTS':
+      return { data: buildData(10000), selected: 0 };
+    case 'ADD':
+      return { data: data.concat(buildData(1000)), selected };
+    case 'UPDATE':
+      const newData = data.slice(0);
+      for (let i = 0; i < newData.length; i += 10) {
+        const r = newData[i];
+        newData[i] = { id: r.id, label: r.label + " !!!" };
+      }
+      return { data: newData, selected };
+    case 'CLEAR':
+      return { data: [], selected: 0 };
+    case 'SWAP_ROWS':
+      return { data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]], selected };
+    case 'REMOVE':
+      const idx = data.findIndex((d) => d.id === action.id);
+      return { data: [...data.slice(0, idx), ...data.slice(idx + 1)], selected };
+    case 'SELECT':
+      return { data, selected: action.id };
+  }
+  return state;
+}
+
 const GlyphIcon = <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>;
 
-const Row = memo(({ selected, item, select, remove }) =>
-  <tr className={selected ? "danger" : ""}>
+const Row = memo(({ selected, item, dispatch }) => {
+  const select = useCallback(() => dispatch({ type: 'SELECT', id: item.id })),
+    remove = useCallback(() => dispatch({ type: 'REMOVE', id: item.id }));
+
+  return (<tr className={selected ? "danger" : ""}>
     <td className="col-md-1">{item.id}</td>
-    <td className="col-md-4"><a onClick={() => select(item)}>{item.label}</a></td>
-    <td className="col-md-1"><a onClick={() => remove(item)}>{GlyphIcon}</a></td>
+    <td className="col-md-4"><a onClick={select}>{item.label}</a></td>
+    <td className="col-md-1"><a onClick={remove}>{GlyphIcon}</a></td>
     <td className="col-md-6"></td>
-  </tr>
-);
+  </tr>);
+});
 
 const Button = ({ id, cb, title }) => (
   <div className="col-sm-6 smallpad">
@@ -40,61 +72,34 @@ const Button = ({ id, cb, title }) => (
   </div>
 );
 
-const Jumbotron = memo(({ setState }) => {
-  const run = () => setState({ data: buildData(1000), selected: 0 }),
-
-    runLots = () => setState({ data: buildData(10000), selected: 0 }),
-
-    add = () => setState(({ data, selected }) => ({ data: data.concat(buildData(1000)), selected })),
-
-    update = () => setState(({ data, selected }) => {
-      for (let i = 0; i < data.length; i += 10) {
-        const item = data[i];
-        data[i] = { id: item.id, label: item.label + ' !!!' };
-      }
-      return { data, selected };
-    }),
-
-    clear = () => setState({ data: [], selected: 0 }),
-
-    swapRows = () => {
-      setState(({ data, selected }) => ({ data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]], selected }))
-    };
-
-  return (<div className="jumbotron">
+const Jumbotron = memo(({ dispatch }) =>
+  <div className="jumbotron">
     <div className="row">
       <div className="col-md-6">
         <h1>React Hooks keyed</h1>
       </div>
       <div className="col-md-6">
         <div className="row">
-          <Button id="run" title="Create 1,000 rows" cb={run} />
-          <Button id="runlots" title="Create 10,000 rows" cb={runLots} />
-          <Button id="add" title="Append 1,000 rows" cb={add} />
-          <Button id="update" title="Update every 10th row" cb={update} />
-          <Button id="clear" title="Clear" cb={clear} />
-          <Button id="swaprows" title="Swap Rows" cb={swapRows} />
+          <Button id="run" title="Create 1,000 rows" cb={() => dispatch({ type: 'RUN' })} />
+          <Button id="runlots" title="Create 10,000 rows" cb={() => dispatch({ type: 'RUN_LOTS' })} />
+          <Button id="add" title="Append 1,000 rows" cb={() => dispatch({ type: 'ADD' })} />
+          <Button id="update" title="Update every 10th row" cb={() => dispatch({ type: 'UPDATE' })} />
+          <Button id="clear" title="Clear" cb={() => dispatch({ type: 'CLEAR' })} />
+          <Button id="swaprows" title="Swap Rows" cb={() => dispatch({ type: 'SWAP_ROWS' })} />
         </div>
       </div>
     </div>
-  </div>);
-}, () => true);
+  </div>
+, () => true);
 
 const Main = () => {
-  const [state, setState] = useState({ data: [], selected: 0 }),
-
-    select = useCallback(item => setState(({ data }) => ({ data, selected: item.id })), []),
-
-    remove = useCallback(item => setState(({ data, selected }) => {
-      const idx = data.indexOf(item);
-      return { data: [...data.slice(0, idx), ...data.slice(idx + 1)], selected };
-    }), []);
+  const [state, dispatch] = useReducer(listReducer, { data: [], selected: 0 });
 
   return (<div className="container">
-    <Jumbotron setState={setState} />
+    <Jumbotron dispatch={dispatch} />
     <table className="table table-hover table-striped test-data"><tbody>
       {state.data.map(item => (
-        <Row key={item.id} item={item} selected={state.selected === item.id} select={select} remove={remove} />
+        <Row key={item.id} item={item} selected={state.selected === item.id} dispatch={dispatch} />
       ))}
     </tbody></table>
     <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
