@@ -1,1 +1,1 @@
-./frameworks/non-keyed/sifrr/rollup.config.js
+../../non-keyed/sifrr/rollup.config.js

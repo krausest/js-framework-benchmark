@@ -1,1 +1,1 @@
-./frameworks/non-keyed/sifrr/app.js
+../../non-keyed/sifrr/app.js
