@@ -55,8 +55,8 @@ function listReducer(state, action) {
 const GlyphIcon = <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>;
 
 const Row = memo(({ selected, item, dispatch }) => {
-  const select = useCallback(() => dispatch({ type: 'SELECT', id: item.id })),
-    remove = useCallback(() => dispatch({ type: 'REMOVE', id: item.id }));
+  const select = useCallback(() => dispatch({ type: 'SELECT', id: item.id }), []),
+    remove = useCallback(() => dispatch({ type: 'REMOVE', id: item.id }), []);
 
   return (<tr className={selected ? "danger" : ""}>
     <td className="col-md-1">{item.id}</td>
