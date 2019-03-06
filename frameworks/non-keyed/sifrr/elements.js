@@ -2,6 +2,7 @@ import SifrrDom from '@sifrr/dom'
 const Sifrr = { Dom: SifrrDom };
 
 const template = `
+<link href="/css/currentStyle.css" rel="stylesheet"/>
 <div class="container">
   <div class="jumbotron">
     <div class="row">

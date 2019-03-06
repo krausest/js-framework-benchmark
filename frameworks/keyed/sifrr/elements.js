@@ -2,6 +2,7 @@ import SifrrDom from '@sifrr/dom'
 const Sifrr = { Dom: SifrrDom };
 
 const template = `
+<link href="/css/currentStyle.css" rel="stylesheet"/>
 <div class="container">
   <div class="jumbotron">
     <div class="row">
@@ -76,10 +77,6 @@ class MainElement extends Sifrr.Dom.Element {
   static get template() {
     const temp = Sifrr.Dom.template(template);
     return temp;
-  }
-
-  static get useShadowRoot() {
-    return false;
   }
 
   onConnect() {
