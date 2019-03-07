@@ -1,0 +1,38 @@
+{
+  "name": "js-framework-benchmark-react-hooks",
+  "version": "1.1.1",
+  "description": "React Hooks demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "react"
+  },
+  "scripts": {
+    "build-dev": "webpack --watch",
+    "build-prod": "webpack"
+  },
+  "keywords": [
+    "react",
+    "webpack"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.2.2",
+    "@babel/preset-env": "7.3.1",
+    "@babel/preset-react": "7.0.0",
+    "@babel/plugin-proposal-class-properties": "7.3.0",
+    "babel-loader": "8.0.5",
+    "terser-webpack-plugin": "1.2.2",
+    "webpack": "4.29.2",
+    "webpack-cli": "3.2.3"
+  },
+  "dependencies": {
+    "react": "16.8.3",
+    "react-dom": "16.8.3"
+  }
+}
