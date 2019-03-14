@@ -1,1 +1,41 @@
-../../non-keyed/sifrr/package.json
+{
+  "name": "js-framework-benchmark-sifrr",
+  "version": "1.0.0",
+  "description": "sifrr demo",
+  "main": "dist/app.min.js",
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c",
+    "start": "ws"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@sifrr/dom",
+    "useShadowRoot": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sifrr/sifrr.git"
+  },
+  "keywords": [
+    "sifrr"
+  ],
+  "author": "Aaditya Taparia",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sifrr/sifrr/issues"
+  },
+  "homepage": "https://github.com/sifrr/sifrr#readme",
+  "dependencies": {
+    "@sifrr/dom": "0.0.3",
+    "@sifrr/fetch": "0.0.3",
+    "local-web-server": "^2.6.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "rollup": "^0.58.2",
+    "rollup-plugin-babel": "^3.0.4",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-terser": "^1.0.1"
+  }
+}
