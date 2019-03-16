@@ -1,0 +1,48 @@
+<script src="./app-ui.js"></script>
+
+<template>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Endorphin (keyed)</h1>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="run" on:click="{onRun}">Create 1,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="runlots" on:click="{onRunLots}">Create 10,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="add" on:click="{onAdd}">Append 1,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="update" on:click="{onPartialUpdate}">Update every 10th row</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="clear" on:click="{onClear}">Clear</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="swaprows" on:click="{onSwapRows}">Swap Rows</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover table-striped test-data">
+        <tbody>
+            <e:for-each select="{$rows}" key="{@value.id}">
+                <tr class="{$selected === @value.id ? 'danger' : ''}">
+                    <td class="col-md-1">{@value.id}</td>
+                    <td class="col-md-4">
+                        <a on:click="{onSelect(@value.id)}">{@value.label}</a>
+                    </td>
+                    <td class="col-md-1"><a on:click="{onRemove(@value.id)}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                    <td class="col-md-6"></td>
+                </tr>
+            </e:for-each>
+        </tbody>
+    </table>
+    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+</template>
