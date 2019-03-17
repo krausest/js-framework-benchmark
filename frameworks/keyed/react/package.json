@@ -32,7 +32,7 @@
     "webpack-cli": "3.2.3"
   },
   "dependencies": {
-    "react": "16.8.1",
-    "react-dom": "16.8.1"
+    "react": "16.8.3",
+    "react-dom": "16.8.3"
   }
 }
