@@ -4,6 +4,7 @@ type retained_props_t = {
 };
 
 type actions_t =
+  | ITEM_CHANGE
   | SELECT_CHANGE;
 
 let component = ReasonReact.reducerComponent("Row");
@@ -13,15 +14,21 @@ let glyph_icon =
 
 let make = (~onSelect, ~onRemove, ~selected, ~item: Util.item, _children) => {
   ...component,
-  initialState: () => {item, selected: false},
+  initialState: () => {item, selected},
 
-  reducer: (_action: actions_t, state: retained_props_t) => {
-    ReasonReact.Update({...state, selected: !state.selected});
+  reducer: (action: actions_t, state: retained_props_t) => {
+    switch (action) {
+    | SELECT_CHANGE => ReasonReact.Update({...state, selected})
+    | ITEM_CHANGE => ReasonReact.Update({...state, item})
+    };
   },
 
   render: self => {
     if (selected != self.state.selected) {
       self.send(SELECT_CHANGE);
+    };
+    if (item !== self.state.item) {
+      self.send(ITEM_CHANGE);
     };
 
     <tr className={selected ? "danger" : ""}>
