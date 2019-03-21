@@ -306,7 +306,7 @@ export class ResultTableData {
                 return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), computeColor(factor), '#000');
             }
             else if (this.displayMode.type === DisplayMode.HighlightVariance) {
-                let formattedValue = formatEn.format(value);
+                let formattedValue = formatEn.format(result.mean);
                 let stdDev = result.standardDeviation || 0;
                 let stdDevStr = stdDev.toFixed(1);
                 let stdDevFactor = stdDev/result.mean * 100.0;
