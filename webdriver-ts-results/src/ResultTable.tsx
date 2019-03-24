@@ -145,8 +145,11 @@ const StartupResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTable
         </div>);
 };
 
+const MEM_TABLE_TEMP_DISABLED = true;
+
 const MemResultsTable = ({data, currentSortKey, sortBy, displayMode} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void, displayMode: IDisplayMode}) => {
-  return data.resultsMEM.length==0 ? null :
+  return (MEM_TABLE_TEMP_DISABLED ? (<div><h3>Memory measuremts currently disabled (see issue <a href='https://github.com/krausest/js-framework-benchmark/issues/538'>#538</a>)</h3></div>) :
+        (data.resultsMEM.length==0 ? null :
         (<div>
           <h3>Memory allocation in MBs ± {displayMode.type === DisplayMode.HighlightVariance ? 'standard deviation' : '95% confidence interval'}</h3>
           <table className='results'>
@@ -160,7 +163,7 @@ const MemResultsTable = ({data, currentSortKey, sortBy, displayMode} : {data: Re
                 <RenderRows results={data.resultsMEM} benchmarks={data.benchmarksMEM} currentSortKey={currentSortKey} sortBy={sortBy}  geomMean={data.geomMeanMEM} sortbyGeommeanEnum={SORT_BY_GEOMMEAN_MEM}/>
             </tbody>
           </table>
-        </div>);
+        </div>)));
 };
 
 interface Texts {

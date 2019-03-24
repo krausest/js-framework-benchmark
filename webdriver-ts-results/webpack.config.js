@@ -51,7 +51,12 @@ module.exports = [{
 	},
 	entry: {
 		main: './src/App.tsx'
-	},
+    },
+    optimization: {
+        splitChunks: {
+          chunks: "initial",
+        },
+    },
 	resolve: {
 		extensions: extensions,
 		modules: [
