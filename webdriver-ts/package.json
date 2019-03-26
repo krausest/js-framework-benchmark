@@ -25,27 +25,27 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/lodash": "4.14.116",
-    "@types/node": "10.11.4",
-    "@types/ramda": "0.25.39",
-    "@types/selenium-webdriver": "3.0.12",
+    "@types/lodash": "4.14.123",
+    "@types/node": "11.11.6",
+    "@types/ramda": "0.26.4",
+    "@types/selenium-webdriver": "3.0.15",
     "@types/semver": "5.5.0",
-    "@types/yargs": "12.0.1",
-    "rimraf": "^2.6.2",
-    "ts-node": "7.0.1",
-    "typescript": "3.1.1"
+    "@types/yargs": "12.0.10",
+    "rimraf": "^2.6.3",
+    "ts-node": "8.0.3",
+    "typescript": "3.3.4000"
   },
   "dependencies": {
     "cross-env": "5.2.0",
-    "chromedriver": "2.42.0",
+    "chromedriver": "2.46.0",
     "dot": "1.1.2",
     "jstat": "1.7.1",
-    "lighthouse": "3.2.1",
+    "lighthouse": "4.2.0",
     "lodash": "4.17.11",
-    "ramda": "0.25.0",
+    "ramda": "0.26.1",
     "selenium-webdriver": "4.0.0-alpha.1",
-    "yargs": "12.0.2",
-    "npm-check-updates": "2.14.2",
-    "semver": "5.5.1"
+    "yargs": "13.2.2",
+    "npm-check-updates": "3.1.1",
+    "semver": "5.6.0"
   }
 }
