@@ -60,7 +60,8 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
             port: config.PORT.toFixed(),
             headless: args.headless,
             chromeBinaryPath: args.chromeBinary,
-            numIterationsForAllBenchmarks: config.REPEAT_RUN,
+            numIterationsForCPUBenchmarks: config.REPEAT_RUN,
+            numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
             numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
         }
 
@@ -103,7 +104,7 @@ let args = yargs(process.argv)
     .default('check', 'false')
     .default('fork', 'true')
     .default('exitOnError', 'false')
-    .default('count', config.REPEAT_RUN)
+    .default('count', Number.MAX_SAFE_INTEGER)
     .default('port', config.PORT)
     .string('chromeBinary')
     .string('chromeDriver')
@@ -112,11 +113,13 @@ let args = yargs(process.argv)
 
 console.log(args);
 
-let runBenchmarks = args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""];
-let runFrameworks = args.framework && args.framework.length > 0 ? args.framework : [""];
+let runBenchmarks = (args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""]).map(v => v.toString());
+let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(v => v.toString());
 let count = Number(args.count);
 config.PORT = Number(args.port);
-config.REPEAT_RUN = count;
+if (count < Number.MAX_SAFE_INTEGER) config.REPEAT_RUN = count;
+config.REPEAT_RUN_MEM = Math.min(count, config.REPEAT_RUN_MEM);
+config.REPEAT_RUN_STARTUP = Math.min(count, config.REPEAT_RUN_STARTUP);
 config.FORK_CHROMEDRIVER = args.fork === 'true';
 
 let dir = args.check === 'true' ? "results_check" : "results"

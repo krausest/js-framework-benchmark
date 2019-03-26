@@ -25,13 +25,15 @@ export interface BenchmarkDriverOptions {
 export interface BenchmarkOptions extends BenchmarkDriverOptions {
     outputDirectory: string;
     port: string;
-    numIterationsForAllBenchmarks: number;
+    numIterationsForCPUBenchmarks: number;
+    numIterationsForMemBenchmarks: number;
     numIterationsForStartupBenchmark: number;
 }
 
 export let config = {
     PORT: 8080,
     REPEAT_RUN: 10,
+    REPEAT_RUN_MEM: 5,
     REPEAT_RUN_STARTUP: 4,
     DROP_WORST_RUN: 0,
     WARMUP_COUNT: 5,

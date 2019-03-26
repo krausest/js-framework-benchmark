@@ -177,7 +177,7 @@ let args = yargs(process.argv)
 
 config.PORT = Number(args.port);
 
-let runFrameworks = args.framework && args.framework.length>0 ? args.framework : [""];
+let runFrameworks = (args.framework && args.framework.length>0 ? args.framework : [""]).map(v => v.toString());
 
 if (args.help) {
     yargs.showHelp();
