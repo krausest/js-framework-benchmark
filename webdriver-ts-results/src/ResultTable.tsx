@@ -145,7 +145,7 @@ const StartupResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTable
         </div>);
 };
 
-const MEM_TABLE_TEMP_DISABLED = true;
+const MEM_TABLE_TEMP_DISABLED = false;
 
 const MemResultsTable = ({data, currentSortKey, sortBy, displayMode} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void, displayMode: IDisplayMode}) => {
   return (MEM_TABLE_TEMP_DISABLED ? (<div><h3>Memory measuremts currently disabled (see issue <a href='https://github.com/krausest/js-framework-benchmark/issues/538'>#538</a>)</h3></div>) :
