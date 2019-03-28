@@ -128,7 +128,6 @@ class MainContainer extends Component {
         this.store = new Store();
         this.onRunClick = () => {
             startMeasure("run");
-            this.store.clear();
             this.store.setData();
             stopMeasure();
         }

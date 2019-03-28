@@ -63,13 +63,17 @@ function buildData(count) {
         "keyboard",
     ]
 
-    return new Array(count).fill(0).map(_ => (fdValue({
-        id: id++,
-        label: `${adjectives[
-            rand() * 1000 % adjectives.length >> 0]} ${colours[
-            rand() * 1000 % colours.length >> 0]} ${nouns[
-            rand() * 1000 % nouns.length >> 0]}`
-    }, true)))
+    const arr = [];
+    for(let i = 0; i<count; i ++) {
+        arr.push(fdValue({
+            id: id++,
+            label: `${adjectives[
+                rand() * 1000 % adjectives.length >> 0]} ${colours[
+                rand() * 1000 % colours.length >> 0]} ${nouns[
+                rand() * 1000 % nouns.length >> 0]}`
+        }))
+    }
+    return arr;
 }
 
 export class Store {
@@ -101,7 +105,7 @@ export class Store {
         const length = this.data.value.length
         for (let i = 0; i < length; i += 10) {
             const item = this.data.value[i]
-            item.value = Object.assign(item.value, {
+            item.value = Object.assign({}, item.value, {
                 label: `${item.value.label} !!!`
             })
         }
