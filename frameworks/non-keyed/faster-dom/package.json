@@ -1,0 +1,34 @@
+{
+  "name": "js-framework-benchmark-faster-dom",
+  "main": "index.js",
+  "description": "Benchmark for faster-dom.js framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "faster-dom"
+  },
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
+  },
+  "keywords": [
+    "faster-dom",
+    "webpack"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
+    "babel-preset-es2015": "6.24.1",
+    "webpack": "4.29.2",
+    "webpack-cli": "3.2.3"
+  },
+  "dependencies": {
+    "faster-dom": "0.0.25-alpha",
+    "terser-webpack-plugin": "^1.2.3"
+  }
+}
