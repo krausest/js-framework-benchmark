@@ -71,7 +71,7 @@ function buildData(count) {
                 rand() * 1000 % adjectives.length >> 0]} ${colours[
                 rand() * 1000 % colours.length >> 0]} ${nouns[
                 rand() * 1000 % nouns.length >> 0]}`
-        }))
+        }, true))
     }
     return arr;
 }
@@ -79,11 +79,12 @@ function buildData(count) {
 export class Store {
     constructor() {
         this.data = fdValue([]);
-        this.selectedId = fdValue(null)
-        this.select = (index) => {
-            this.selectedId.value = index;
+        this.selectedItem = fdValue(null)
+        this.select = (item) => {
+            this.selectedItem.value = item;
         }
-        this.remove = (removeIndex) => {
+        this.remove = (item) => {
+            const removeIndex = this.data.value.indexOf(item)
             this.data.value = [...this.data.value.slice(0, removeIndex),
             ...this.data.value.slice(removeIndex + 1)]
         }
@@ -105,7 +106,7 @@ export class Store {
         const length = this.data.value.length
         for (let i = 0; i < length; i += 10) {
             const item = this.data.value[i]
-            item.value = Object.assign({}, item.value, {
+            item.value = Object.assign(item.value, {
                 label: `${item.value.label} !!!`
             })
         }

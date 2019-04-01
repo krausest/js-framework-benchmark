@@ -19,25 +19,25 @@ const stopMeasure = () => {
     }
 }
 
-function createTr(input) {
-    return createComponent(TrComponent, input)
+
+function createTr(item, selectedItem, onSelect, onRemove) {
+    return createComponent(TrComponent, item, selectedItem, onSelect, onRemove)
 }
 
 class TrComponent extends Component {
-    constructor(inputs) {
+    constructor(item, selectedItemObs, onSelect, onRemove) {
         super();
-        this.item = inputs.item;
-        const index = inputs.index
+        this.item = item;
         const idObs = fdValue(this.item.value.id)
         const labelObs = fdValue(this.item.value.label)
-        this.selectedIdObs = inputs.selectedId;
-        const selectedObs = fdValue(this.selectedIdObs.value === index ? true : false)
+        this.selectedItemObs = selectedItemObs;
+        const selectedObs = fdValue(this.selectedItemObs.value === item ? true : false)
 
 
-        this.selectedSub = (newIndex) => {
-            selectedObs.value = newIndex === index ? true : false
+        this.selectedSub = (newItem) => {
+            selectedObs.value = newItem === item ? true : false
         }
-        this.selectedIdObs.addSubscriber(this.selectedSub)
+        this.selectedItemObs.addSubscriber(this.selectedSub)
         this.subscriber = (newItem) => {
             idObs.value = newItem.id
             labelObs.value = newItem.label
@@ -54,12 +54,12 @@ class TrComponent extends Component {
         }
         this.onSelectClick = () => {
             startMeasure('select')
-            inputs.onSelect(index);
+            onSelect(item);
             stopMeasure();
         }
         this.onRemoveClick = () => {
             startMeasure('remove')
-            inputs.onRemove(index);
+            onRemove(item);
             stopMeasure();
         }
         this.template = {
@@ -114,7 +114,7 @@ class TrComponent extends Component {
 
     onDestroy() {
         this.item.removeSubscriber(this.subscriber)
-        this.selectedIdObs.removeSubscriber(this.selectedSub);
+        this.selectedItemObs.removeSubscriber(this.selectedSub);
     }
 }
 
@@ -306,14 +306,12 @@ class MainContainer extends Component {
                         {
                             tag: "tbody",
                             children: [
-                                fdFor(this.store.data, createTr, {
-                                    item: (e) => e,
-                                    selectedId: () => this.store.selectedId,
-                                    index: (e, index) => index,
-                                    onSelect: () => this.store.select,
-                                    onRemove: () => this.store.remove
-                                })
-                            ]
+                                fdFor(this.store.data, createTr, [
+                                    (e) => e,
+                                    () => this.store.selectedItem,
+                                    () => this.store.select,
+                                    () => this.store.remove,
+                                ])]
                         }
                     ]
                 },
