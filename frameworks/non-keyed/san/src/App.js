@@ -23,6 +23,7 @@ var stopMeasure = function () {
 
 export default san.defineComponent({
     trimWhitespace: 'all',
+    updateMode: 'optimized',
     template:` <div class="container">
         <div class="jumbotron">
             <div class="row">
