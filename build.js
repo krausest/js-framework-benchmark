@@ -5,9 +5,10 @@ var path = require('path');
 var yargs = require('yargs');
 
 let args = yargs(process.argv)
-    .usage("npm run build [-- [--check] [--skipIrrelevant] [--restartWith]]")
+    .usage("npm run build [-- [--check] [--skipIrrelevant] [--restartWith] [--benchmarks_only]]")
     .help('help')
     .boolean('check')
+    .boolean('benchmarks_only')
     .boolean('skipIrrelevant')
     .string('restartWith')
     .argv;
@@ -16,7 +17,7 @@ var referenceBranch = "origin/master";
 
 var restartWithFramework = args.restartWith || '';
 
-var core = ["webdriver-ts", "webdriver-ts-results"].map(f => ["", f]);
+var core = args.benchmarks_only ? [] : ["webdriver-ts", "webdriver-ts-results"].map(f => ["", f]);
 
 var frameworks = [].concat(
   fs.readdirSync('./frameworks/keyed').map(f => ['frameworks/keyed/', f]),
