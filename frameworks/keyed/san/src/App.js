@@ -23,7 +23,6 @@ var stopMeasure = function () {
 
 export default san.defineComponent({
     trimWhitespace: 'all',
-    updateMode: 'optimized',
     template:` <div class="container">
         <div class="jumbotron">
             <div class="row">
@@ -56,7 +55,7 @@ export default san.defineComponent({
         </div>
         <table class="table table-hover table-striped test-data" on-click="handleClick($event)">
             <tbody>
-                <tr s-for="item in rows" class="{{item.selected ? 'danger':''}}" data-id="{{item.id}}">
+                <tr s-for="item in rows trackBy item.id" class="{{item.selected ? 'danger':''}}" data-id="{{item.id}}">
                     <td class="col-md-1">{{item.id}}</td>
                     <td class="col-md-4">
                         <a data-action="select">{{item.label}}</a>

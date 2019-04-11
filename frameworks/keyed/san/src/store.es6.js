@@ -26,34 +26,19 @@ export class Store {
     updateData(mod = 10) {
         // Just assigning setting each tenth this.data doesn't cause a redraw, the following does:
         var newData = this.data.slice(0);
-        var expr = san.parseExpr('rows[0].label');
         for (let i = 0; i < this.data.length; i += mod) {
-            let newRow = Object.assign({}, this.data[i], { label: this.data[i].label + ' !!!' });
-            newData[i] = newRow;
-            this.fires.push({
-                type: 1,
-                expr: {
-                    type: expr.type,
-                    paths: [
-                        expr.paths[0],
-                        { type: expr.paths[1].type, value: i },
-                        expr.paths[2]
-                    ],
-                    raw: 'rows[' + i + '].label'
-                },
-                value: newRow.label,
-                option: {}
-            });
+            newData[i] = Object.assign({}, this.data[i], { label: this.data[i].label + ' !!!' });
         }
 
-        this.ops.push({
-            type: 'set',
-            name: 'rows',
-            arg: newData,
-            options: { silent: 1 }
-        });
-
         this.data = newData;
+
+        this.ops.push(
+            {
+                type: 'set',
+                name: 'rows',
+                arg: this.data
+            }
+        );
     }
     delete(id) {
         const idx = this.data.findIndex(d => d.id == id);
@@ -79,14 +64,15 @@ export class Store {
     }
     add() {
         var addData = this.buildData(1000);
-        var len = this.data.length;
         this.data = this.data.concat(addData);
 
-        this.ops.push({
-            type: 'splice',
-            name: 'rows',
-            arg: [len, 0].concat(addData)
-        });
+        this.ops.push(
+            {
+                type: 'set',
+                name: 'rows',
+                arg: this.data
+            }
+        );
     }
     update() {
         this.updateData();
@@ -107,21 +93,24 @@ export class Store {
 
         this.selected = id;
 
+        var newData = this.data.slice(0);
+
         if (resetIndex != null) {
-            this.ops.push({
-                type: 'set',
-                name: 'rows[' + resetIndex + '].selected',
-                arg: false
-            });
+            newData[resetIndex] = Object.assign({}, this.data[resetIndex], { selected: false });
         }
 
         if (selectedIndex != null) {
-            this.ops.push({
-                type: 'set',
-                name: 'rows[' + selectedIndex + '].selected',
-                arg: true
-            });
+            newData[selectedIndex] = Object.assign({}, this.data[selectedIndex], { selected: true });
         }
+
+        this.data = newData;
+        this.ops.push(
+            {
+                type: 'set',
+                name: 'rows',
+                arg: this.data
+            }
+        );
     }
     runLots() {
         this.data = this.buildData(10000);
@@ -132,7 +121,6 @@ export class Store {
                 name: 'rows',
                 arg: this.data
             }
-
         );
     }
     clear() {
@@ -148,24 +136,16 @@ export class Store {
     }
     swapRows() {
         if (this.data.length > 998) {
-            let d1 = this.data[1];
-            let d998 = this.data[998];
-
             var newData = this.data.slice(0);
-            newData[1] = d998;
-            newData[998] = d1;
-
+            newData[1] = this.data[998];
+            newData[998] = this.data[1];
             this.data = newData;
+
             this.ops.push(
                 {
                     type: 'set',
-                    name: 'rows[998]',
-                    arg: d1
-                },
-                {
-                    type: 'set',
-                    name: 'rows[1]',
-                    arg: d998
+                    name: 'rows',
+                    arg: this.data
                 }
             );
         }
