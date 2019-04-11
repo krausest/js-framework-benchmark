@@ -87,13 +87,14 @@ const App = component({
 			},
 			sync() {
 				this.setState({
-					rows: Object.freeze(store.data),
+					rows: store.data,
 					selected: store.selected
 				});
 			}
 		};
 	},
 	render() {
+		const { rows, selected } = this.getState();
 		return (
 			<div class="container">
 				<div class="jumbotron">
@@ -172,33 +173,37 @@ const App = component({
 					events={{ click: this.handleClick }}
 				>
 					<tbody>
-						{this.getState().rows.map(item => (
-							<tr
-								class={
-									item.id == this.getState().selected
-										? 'danger'
-										: ''
-								}
-							>
-								<td class="col-md-1">{item.id}</td>
-								<td class="col-md-4">
-									<a data-action="select" data-id={item.id}>
-										{item.label}
-									</a>
-								</td>
-								<td class="col-md-1">
-									<a>
-										<span
-											class="glyphicon glyphicon-remove"
-											aria-hidden="true"
-											data-action="remove"
+						{!!rows.length &&
+							rows.map(item => (
+								<tr
+									class={
+										item && item.id == selected
+											? 'danger'
+											: ''
+									}
+								>
+									<td class="col-md-1">{item.id}</td>
+									<td class="col-md-4">
+										<a
+											data-action="select"
 											data-id={item.id}
-										/>
-									</a>
-								</td>
-								<td class="col-md-6" />
-							</tr>
-						))}
+										>
+											{item.label}
+										</a>
+									</td>
+									<td class="col-md-1">
+										<a>
+											<span
+												class="glyphicon glyphicon-remove"
+												aria-hidden="true"
+												data-action="remove"
+												data-id={item.id}
+											/>
+										</a>
+									</td>
+									<td class="col-md-6" />
+								</tr>
+							))}
 					</tbody>
 				</table>
 				<span

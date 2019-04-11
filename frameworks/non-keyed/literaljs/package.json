@@ -3,13 +3,14 @@
 	"version": "1.0.0",
 	"description": "Benchmark for LiteralJS framework",
 	"js-framework-benchmark": {
-		"frameworkVersionFromPackage": "literaljs"
+		"frameworkVersionFromPackage": "literaljs",
+		"customURL": "/dist"
 	},
 	"main": "index.js",
 	"scripts": {
 		"start": "parcel index.html",
 		"dev": "parcel index.html --open",
-		"build-prod": "NODE_ENV=production parcel build index.html --no-minify --public-url /",
+		"build-prod": "NODE_ENV=production parcel build index.html --no-minify --public-url /frameworks/non-keyed/literaljs/dist/",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [
