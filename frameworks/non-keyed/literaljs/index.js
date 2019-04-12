@@ -174,11 +174,7 @@ const App = component({
 				>
 					<tbody>
 						{rows.map(item => (
-							<tr
-								class={
-									item && item.id == selected ? 'danger' : ''
-								}
-							>
+							<tr class={item.id == selected ? 'danger' : ''}>
 								<td class="col-md-1">{item.id}</td>
 								<td class="col-md-4">
 									<a data-action="select" data-id={item.id}>
@@ -195,7 +191,6 @@ const App = component({
 										/>
 									</a>
 								</td>
-								<td class="col-md-6" />
 							</tr>
 						))}
 					</tbody>
