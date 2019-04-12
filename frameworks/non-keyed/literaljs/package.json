@@ -11,7 +11,8 @@
 		"start": "parcel index.html",
 		"dev": "parcel index.html --open",
 		"build-prod": "NODE_ENV=production parcel build index.html --no-minify --public-url /frameworks/non-keyed/literaljs/dist/",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"rebuild": "sudo rm -rf node_modules && rm -rf yarn.lock && yarn && yarn dev"
 	},
 	"keywords": [
 		"literaljs"
@@ -20,8 +21,7 @@
 	"license": "MIT",
 	"dependencies": {
 		"@babel/runtime": "^7.4.3",
-		"literaljs": "^5.1.61",
-		"sass": "^1.18.0"
+		"literaljs": "^5.1.62"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.4.3",
