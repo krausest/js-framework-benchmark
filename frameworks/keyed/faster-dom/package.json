@@ -28,7 +28,7 @@
     "webpack-cli": "3.2.3"
   },
   "dependencies": {
-    "faster-dom": "0.0.35-alpha",
+    "faster-dom": "0.0.40-alpha",
     "terser-webpack-plugin": "^1.2.3"
   }
 }

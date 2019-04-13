@@ -1,4 +1,4 @@
-import { fdValue } from 'faster-dom';
+import { fdValue } from 'faster-dom'
 
 let id = 1;
 
@@ -95,7 +95,7 @@ export class Store {
     }
 
     append(count = 1000) {
-        this.data.value = [...this.data.value, ...buildData(count)]
+        this.data.value = this.data.value.concat(buildData(count))
     }
 
     clear() {

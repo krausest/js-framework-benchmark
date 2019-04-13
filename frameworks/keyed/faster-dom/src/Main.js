@@ -1,4 +1,4 @@
-import { Component, createComponent, fdFor, fdObject, fdValue, generateNode } from 'faster-dom';
+import { Component, createComponent, fdFor, fdObject, fdValue, generateNode } from 'faster-dom'
 
 import { Store } from './Store';
 
@@ -27,7 +27,7 @@ class TrComponent extends Component {
     constructor(item, selectedItem, onSelect, onRemove) {
         super();
         this.item = item;
-        const idObs = fdValue(this.item.value.id)
+        const id = item.value.id
         const labelObs = fdValue(this.item.value.label)
         this.selectedItemObs = selectedItem;
         const selectedObs = fdValue(this.selectedItemObs.value === item ? true : false)
@@ -37,7 +37,6 @@ class TrComponent extends Component {
         }
         this.selectedItemObs.addSubscriber(this.selectedSub)
         this.subscriber = (newItem) => {
-            idObs.value = newItem.id
             labelObs.value = newItem.label
         }
 
@@ -66,12 +65,12 @@ class TrComponent extends Component {
             children: [
                 {
                     tag: "td",
-                    classList: ['col-md-1'],
-                    textValue: idObs,
+                    classList: 'col-md-1',
+                    textValue: id,
                 },
                 {
                     tag: "td",
-                    classList: ['col-md-4'],
+                    classList: 'col-md-4',
                     children: [
                         {
                             tag: "a",
@@ -87,14 +86,14 @@ class TrComponent extends Component {
                 },
                 {
                     tag: "td",
-                    classList: ['col-md-1'],
+                    classList: 'col-md-1',
                     children: [
                         {
                             tag: 'a',
                             children: [
                                 {
                                     tag: 'span',
-                                    classList: ['remove', 'glyphicon', 'glyphicon-remove'],
+                                    classList: 'remove glyphicon glyphicon-remove',
                                     listeners: {
                                         click: this.onRemoveClick
                                     },
@@ -156,19 +155,19 @@ class MainContainer extends Component {
         }
         this.template = {
             tag: "div",
-            classList: ["container"],
+            classList: 'container',
             children: [
                 {
                     tag: "div",
-                    classList: ["jumbotron"],
+                    classList: "jumbotron",
                     children: [
                         {
                             tag: "div",
-                            classList: ['row'],
+                            classList: 'row',
                             children: [
                                 {
                                     tag: "div",
-                                    classList: ["col-md-6"],
+                                    classList: "col-md-6",
                                     children: [
                                         {
                                             tag: "h1",
@@ -178,19 +177,19 @@ class MainContainer extends Component {
                                 },
                                 {
                                     tag: "div",
-                                    classList: ['col-md-6'],
+                                    classList: 'col-md-6',
                                     children: [
                                         {
                                             tag: "div",
-                                            classList: ['row'],
+                                            classList: 'row',
                                             children: [
                                                 {
                                                     tag: "div",
-                                                    classList: ['col-sm-6', 'smallpad'],
+                                                    classList: 'col-sm-6 smallpad',
                                                     children: [
                                                         {
                                                             tag: "button",
-                                                            classList: ['btn', 'btn-primary', 'btn-block'],
+                                                            classList: 'btn btn-primary btn-block',
                                                             attrs: {
                                                                 id: "run"
                                                             },
@@ -203,14 +202,14 @@ class MainContainer extends Component {
                                                 },
                                                 {
                                                     tag: "div",
-                                                    classList: ['col-sm-6', 'smallpad'],
+                                                    classList: 'col-sm-6 smallpad',
                                                     children: [
                                                         {
                                                             tag: "button",
                                                             attrs: {
                                                                 id: "runlots"
                                                             },
-                                                            classList: ['btn', 'btn-primary', 'btn-block'],
+                                                            classList: 'btn btn-primary btn-block',
                                                             textValue: "Create 10,000 rows",
                                                             listeners: {
                                                                 click: this.onRunLotsClick,
@@ -220,14 +219,14 @@ class MainContainer extends Component {
                                                 },
                                                 {
                                                     tag: "div",
-                                                    classList: ['col-sm-6', 'smallpad'],
+                                                    classList: 'col-sm-6 smallpad',
                                                     children: [
                                                         {
                                                             tag: "button",
                                                             attrs: {
                                                                 id: "add"
                                                             },
-                                                            classList: ['btn', 'btn-primary', 'btn-block'],
+                                                            classList: 'btn btn-primary btn-block',
                                                             textValue: "Append 1,000 rows",
                                                             listeners: {
                                                                 click: this.onAppendClick,
@@ -237,14 +236,14 @@ class MainContainer extends Component {
                                                 },
                                                 {
                                                     tag: "div",
-                                                    classList: ['col-sm-6', 'smallpad'],
+                                                    classList: 'col-sm-6 smallpad',
                                                     children: [
                                                         {
                                                             tag: "button",
                                                             attrs: {
                                                                 id: "update"
                                                             },
-                                                            classList: ['btn', 'btn-primary', 'btn-block'],
+                                                            classList: 'btn btn-primary btn-block',
                                                             textValue: "Update every 10th row",
                                                             listeners: {
                                                                 click: this.onUpdateClick,
@@ -254,14 +253,14 @@ class MainContainer extends Component {
                                                 },
                                                 {
                                                     tag: "div",
-                                                    classList: ['col-sm-6', 'smallpad'],
+                                                    classList: 'col-sm-6 smallpad',
                                                     children: [
                                                         {
                                                             tag: "button",
                                                             attrs: {
                                                                 id: "clear"
                                                             },
-                                                            classList: ['btn', 'btn-primary', 'btn-block'],
+                                                            classList: 'btn btn-primary btn-block',
                                                             textValue: "Clear",
                                                             listeners: {
                                                                 click: this.onClear,
@@ -271,14 +270,14 @@ class MainContainer extends Component {
                                                 },
                                                 {
                                                     tag: "div",
-                                                    classList: ['col-sm-6', 'smallpad'],
+                                                    classList: 'col-sm-6 smallpad',
                                                     children: [
                                                         {
                                                             tag: "button",
                                                             attrs: {
                                                                 id: "swaprows"
                                                             },
-                                                            classList: ['btn', 'btn-primary', 'btn-block'],
+                                                            classList: 'btn btn-primary btn-block',
                                                             textValue: "Swap Rows",
                                                             listeners: {
                                                                 click: this.onSwapClick,
@@ -299,7 +298,7 @@ class MainContainer extends Component {
                     attrs: {
                         id: "table"
                     },
-                    classList: ['table', 'table-hover', 'table-striped', 'test-data'],
+                    classList: 'table table-hover table-striped test-data',
                     children: [
                         {
                             tag: "tbody",
@@ -319,7 +318,7 @@ class MainContainer extends Component {
                     attrs: {
                         'aria-hidden': true,
                     },
-                    classList: ['preloadicon', 'glyphicon', 'glyphicon-remove']
+                    classList: 'preloadicon glyphicon glyphicon-remove'
                 }
             ]
         }
