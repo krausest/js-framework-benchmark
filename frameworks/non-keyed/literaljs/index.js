@@ -87,13 +87,14 @@ const App = component({
 			},
 			sync() {
 				this.setState({
-					rows: Object.freeze(store.data),
+					rows: store.data,
 					selected: store.selected
 				});
 			}
 		};
 	},
 	render() {
+		const { rows, selected } = this.getState();
 		return (
 			<div class="container">
 				<div class="jumbotron">
@@ -172,14 +173,8 @@ const App = component({
 					events={{ click: this.handleClick }}
 				>
 					<tbody>
-						{this.getState().rows.map(item => (
-							<tr
-								class={
-									item.id == this.getState().selected
-										? 'danger'
-										: ''
-								}
-							>
+						{rows.map(item => (
+							<tr class={item.id == selected ? 'danger' : ''}>
 								<td class="col-md-1">{item.id}</td>
 								<td class="col-md-4">
 									<a data-action="select" data-id={item.id}>
@@ -196,7 +191,6 @@ const App = component({
 										/>
 									</a>
 								</td>
-								<td class="col-md-6" />
 							</tr>
 						))}
 					</tbody>
