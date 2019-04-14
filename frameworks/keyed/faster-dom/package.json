@@ -1,18 +1,19 @@
 {
-  "name": "js-framework-benchmark-san",
-  "version": "3.7.3",
-  "description": "Benchmark for san framework",
+  "name": "js-framework-benchmark-faster-dom",
+  "main": "index.js",
+  "description": "Benchmark for faster-dom.js framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "san"
+    "frameworkVersionFromPackage": "faster-dom"
   },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"
   },
   "keywords": [
-    "san"
+    "faster-dom",
+    "webpack"
   ],
-  "author": "zhangsiyuan",
+  "author": "Stefan Krause",
   "license": "Apache-2.0",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {
@@ -20,15 +21,14 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "babel-core": "6.26.3",
-    "babel-loader": "7.1.5",
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
     "babel-preset-es2015": "6.24.1",
-    "babel-preset-stage-0": "6.24.1",
-    "css-loader": "1.0.0",
-    "webpack": "4.16.3",
-    "webpack-cli": "^3.1.0"
+    "webpack": "4.29.2",
+    "webpack-cli": "3.2.3"
   },
   "dependencies": {
-    "san": "3.7.3"
+    "faster-dom": "0.0.35-alpha",
+    "terser-webpack-plugin": "^1.2.3"
   }
 }
