@@ -337,9 +337,14 @@ function buildDriver(benchmarkOptions: BenchmarkDriverOptions) {
     if (benchmarkOptions.chromeBinaryPath) options = options.setChromeBinaryPath(benchmarkOptions.chromeBinaryPath);
     options = options.setLoggingPrefs(logPref);
 
+    let traceCategories = 'devtools.timeline,blink.user_timing';
+    // let traceCategories = lighthouse.traceCategories.join(", ");
+
+    console.log("traceCategories", traceCategories);
+
     options = options.setPerfLoggingPrefs(<any>{
         enableNetwork: true, enablePage: true,
-        traceCategories: lighthouse.traceCategories.join(", ")
+        traceCategories: traceCategories
     });
 
     // Do the following lines really cause https://github.com/krausest/js-framework-benchmark/issues/303 ?
