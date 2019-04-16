@@ -223,8 +223,7 @@ const mainView = fidan.html`
       <table class="table table-hover table-striped test-data">
           <tbody>
           ${fidan.htmlArrayMap(dataArray, itemView, {
-            useCloneNode: true,
-            renderMode: "reconcile"
+            useCloneNode: true
           })}
           </tbody>
       </table>
