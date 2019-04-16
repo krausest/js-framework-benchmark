@@ -97,7 +97,7 @@ function _random(max) {
 const dataArray = fidan.array([]);
 const selectedTr = fidan.value(null);
 
-fidan.computeBy(selectedTr, (current, prev) => {
+fidan.beforeComputeBy(selectedTr, (current, prev) => {
   if (prev) prev.className = "";
   if (current) current.className = "danger";
 });
@@ -110,7 +110,7 @@ const run = () => {
 };
 
 const runLots = () => {
-  startMeasure("run");
+  startMeasure("runLots");
   selectedTr(null);
   const data = buildData(10000);
   dataArray(data);
@@ -222,7 +222,10 @@ const mainView = fidan.html`
       </div>
       <table class="table table-hover table-striped test-data">
           <tbody>
-          ${fidan.htmlArrayMap(dataArray, itemView, true)}
+          ${fidan.htmlArrayMap(dataArray, itemView, {
+            useCloneNode: true,
+            renderMode: "reconcile"
+          })}
           </tbody>
       </table>
       <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
