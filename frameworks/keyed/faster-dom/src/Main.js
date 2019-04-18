@@ -1,23 +1,6 @@
-import { Component, createComponent, fdFor, fdObject, fdValue, generateNode } from 'faster-dom'
+import { Component, bootstrap, createComponent, fdFor, fdObject, fdValue } from 'faster-dom'
 
 import { Store } from './Store';
-
-let startTime;
-let lastMeasure;
-const startMeasure = (name) => {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-const stopMeasure = () => {
-    let last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(() => {
-            lastMeasure = null;
-            const stop = performance.now();
-            console.log(last + " took " + (stop - startTime));
-        }, 0);
-    }
-}
 
 function createTr(item, selectedId, onSelect, onRemove) {
     return createComponent(TrComponent, item, selectedId, onSelect, onRemove)
@@ -26,9 +9,6 @@ function createTr(item, selectedId, onSelect, onRemove) {
 class TrComponent extends Component {
     constructor(item, selectedItem, onSelect, onRemove) {
         super();
-        this.item = item;
-        const id = item.value.id
-        const labelObs = fdValue(this.item.value.label)
         this.selectedItemObs = selectedItem;
         const selectedObs = fdValue(this.selectedItemObs.value === item ? true : false)
 
@@ -36,11 +16,6 @@ class TrComponent extends Component {
             selectedObs.value = newItem === item ? true : false
         }
         this.selectedItemObs.addSubscriber(this.selectedSub)
-        this.subscriber = (newItem) => {
-            labelObs.value = newItem.label
-        }
-
-        this.item.addSubscriber(this.subscriber)
         this.reactive = {
             selected: selectedObs
         }
@@ -50,14 +25,10 @@ class TrComponent extends Component {
             }),
         }
         this.onSelectClick = () => {
-            startMeasure('select')
             onSelect(item);
-            stopMeasure();
         }
         this.onRemoveClick = () => {
-            startMeasure('remove')
             onRemove(item);
-            stopMeasure();
         }
         this.template = {
             tag: "tr",
@@ -66,7 +37,7 @@ class TrComponent extends Component {
                 {
                     tag: "td",
                     classList: 'col-md-1',
-                    textValue: id,
+                    textValue: item.id,
                 },
                 {
                     tag: "td",
@@ -80,7 +51,7 @@ class TrComponent extends Component {
                             listeners: {
                                 click: this.onSelectClick
                             },
-                            textValue: labelObs,
+                            textValue: item.label,
                         }
                     ]
                 },
@@ -110,7 +81,6 @@ class TrComponent extends Component {
     }
 
     onDestroy() {
-        this.item.removeSubscriber(this.subscriber)
         this.selectedItemObs.removeSubscriber(this.selectedSub);
     }
 }
@@ -124,34 +94,22 @@ class MainContainer extends Component {
         super();
         this.store = new Store();
         this.onRunClick = () => {
-            startMeasure("run");
             this.store.setData();
-            stopMeasure();
         }
         this.onRunLotsClick = () => {
-            startMeasure("runLots");
             this.store.setData(10000);
-            stopMeasure();
         }
         this.onAppendClick = () => {
-            startMeasure("add");
             this.store.append();
-            stopMeasure();
         }
         this.onClear = () => {
-            startMeasure("clear");
             this.store.clear();
-            stopMeasure();
         }
         this.onUpdateClick = () => {
-            startMeasure("update");
             this.store.update();
-            stopMeasure();
         }
         this.onSwapClick = () => {
-            startMeasure("swapRows");
             this.store.swapData();
-            stopMeasure();
         }
         this.template = {
             tag: "div",
@@ -308,7 +266,7 @@ class MainContainer extends Component {
                                     () => this.store.selectedItem,
                                     () => this.store.select,
                                     () => this.store.remove,
-                                ], (item) => item.value.id)
+                                ], (item) => item.id)
                             ]
                         }
                     ]
@@ -325,4 +283,4 @@ class MainContainer extends Component {
     }
 }
 
-document.getElementById('main').appendChild(generateNode(createMainContainer()))
+bootstrap('#main', createMainContainer)
