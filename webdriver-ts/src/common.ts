@@ -20,6 +20,8 @@ export interface ErrorsAndWarning {
 export interface BenchmarkDriverOptions {
     headless?: boolean;
     chromeBinaryPath?: string;
+    remoteDebuggingPort: number;
+    chromePort: number;
 }
 
 export interface BenchmarkOptions extends BenchmarkDriverOptions {
@@ -32,6 +34,8 @@ export interface BenchmarkOptions extends BenchmarkDriverOptions {
 
 export let config = {
     PORT: 8080,
+    REMOTE_DEBUGGING_PORT: 9999,
+    CHROME_PORT: 9998,
     REPEAT_RUN: 10,
     REPEAT_RUN_MEM: 5,
     REPEAT_RUN_STARTUP: 4,

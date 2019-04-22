@@ -1,21 +1,18 @@
-import * as chrome from 'selenium-webdriver/chrome'
-import {Builder, WebDriver, promise, logging} from 'selenium-webdriver'
+import {WebDriver, logging} from 'selenium-webdriver'
 import {BenchmarkType, Benchmark, benchmarks, fileName, LighthouseData} from './benchmarks'
-import {setUseShadowRoot} from './webdriverAccess'
+import {setUseShadowRoot, buildDriver} from './webdriverAccess'
 
 const lighthouse = require('lighthouse');
 const chromeLauncher = require('chrome-launcher');
 
-import {lhConfig} from './lighthouseConfig';
 import * as fs from 'fs';
 import * as path from 'path';
 import {JSONResult, config, FrameworkData, BenchmarkError, ErrorsAndWarning, BenchmarkOptions, BenchmarkDriverOptions} from './common'
 import * as R from 'ramda';
 
+// necessary to launch without specifiying a path
 var chromedriver:any = require('chromedriver');
 var jStat:any = require('jstat').jStat;
-
-promise.USE_PROMISE_MANAGER = false;
 
 interface Timingresult {
     type: string;
@@ -96,49 +93,6 @@ function asString(res: Timingresult[]): string {
     return res.reduce((old, cur) => old + "\n" + JSON.stringify(cur), "");
 }
 
-// async function runLighthouse(protocolResults: any[]): Promise<LighthouseData> {
-//     const traceEvents = protocolResults.filter(e => e.method === 'Tracing.dataCollected').map(e => e.params);
-//     const devtoolsLogs = protocolResults.filter(e => e.method.startsWith('Page') || e.method.startsWith('Network'));
-
-//     const filenamePrefix = `${process.cwd()}/${Date.now()}`;
-//     const traceFilename = `${filenamePrefix}.trace.json`;
-//     const devtoolslogsFilename = `${filenamePrefix}.devtoolslogs.json`;
-
-//     fs.writeFileSync(traceFilename, JSON.stringify({traceEvents}));
-//     fs.writeFileSync(devtoolslogsFilename, JSON.stringify(devtoolsLogs));
-//     lhConfig.artifacts.traces = {defaultPass: traceFilename};
-//     lhConfig.artifacts.devtoolsLogs = {defaultPass: devtoolslogsFilename};
-
-//     const lhResults = await lighthouse('http://example.com/thispage', {}, lhConfig);
-//     fs.unlinkSync(traceFilename);
-//     fs.unlinkSync(devtoolslogsFilename);
-
-//     const audits = lhResults.audits;
-//     let LighthouseData: LighthouseData = {
-//         TimeToConsistentlyInteractive: 0, // temporarily disabled due to #458  audits['consistently-interactive'].extendedInfo.value.timeInMs,
-//         ScriptBootUpTtime: audits['bootup-time'].rawValue,
-//         MainThreadWorkCost: audits['mainthread-work-breakdown'].rawValue,
-//         TotalByteWeight: audits['total-byte-weight'].rawValue,
-//     };
-
-//     return LighthouseData;
-// }
-
-// async function computeResultsStartup(driver: WebDriver, framework: FrameworkData, benchmark: Benchmark, warnings: String[]): Promise<LighthouseData> {
-//     let durationJSArr : number[] = await driver.executeScript("return [window.performance.timing.loadEventEnd, window.performance.timing.navigationStart]") as number[];
-//     let durationJS = (durationJSArr[0] as number) - (durationJSArr[1] as number);
-//     let reportedDuration = durationJS;
-
-//     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
-//     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
-
-//     const perfLogEvents = (await fetchEventsFromPerformanceLog(driver));
-//     let filteredEvents = perfLogEvents.timingResults;
-//     let protocolResults = perfLogEvents.protocolResults;
-//     return runLighthouse(protocolResults);
-// }
-
-
 function extractRawValue(results: any, id: string) {
     let audits = results.audits;
     if (!audits) return null;
@@ -150,7 +104,7 @@ function extractRawValue(results: any, id: string) {
 
  function rmDir(dirPath: string) {
     try { var files = fs.readdirSync(dirPath); }
-    catch(e) { return; }
+    catch(e) { console.log("error in rmDir "+dirPath, e); return; }
     if (files.length > 0)
       for (var i = 0; i < files.length; i++) {
         var filePath = path.join(dirPath, files[i]);
@@ -162,7 +116,7 @@ function extractRawValue(results: any, id: string) {
     fs.rmdirSync(dirPath);
   };
 
-async function runLighthouse(framework: FrameworkData, benchmarkOptions: BenchmarkOptions): Promise<LighthouseData> {
+  async function runLighthouse(framework: FrameworkData, benchmarkOptions: BenchmarkOptions): Promise<LighthouseData> {
     const opts = {
         chromeFlags:
         [
@@ -181,22 +135,23 @@ async function runLighthouse(framework: FrameworkData, benchmarkOptions: Benchma
             "--window-size=1200,800"
         ],
         onlyCategories: ['performance'],
-        port: ''
+        port: benchmarkOptions.remoteDebuggingPort
     };
 
     try {
-        if (fs.existsSync('prefs')) rmDir('prefs');
-        fs.mkdirSync('prefs');
-        fs.mkdirSync('prefs/Default');
-        fs.copyFileSync('chromePreferences.json', 'prefs/Default/Preferences');
-
-        let options : any = {chromeFlags: opts.chromeFlags, logLevel: "info", userDataDir: "prefs"};
+        let options : any = {chromeFlags: opts.chromeFlags, logLevel: "info"};
         if (benchmarkOptions.chromeBinaryPath) options.chromePath = benchmarkOptions.chromeBinaryPath;
         let chrome = await chromeLauncher.launch(options);
         opts.port = chrome.port;
-        let results = await lighthouse(`http://localhost:${benchmarkOptions.port}/${framework.uri}/`, opts, null);
-        await chrome.kill();
-
+        let results = null;
+        try {
+            results = await lighthouse(`http://localhost:${benchmarkOptions.port}/${framework.uri}/`, opts, null);
+            await chrome.kill();
+        } catch (error) {
+            console.log("error running lighthouse", error);
+            await chrome.kill();
+            throw error;
+        } 
         let LighthouseData: LighthouseData = {
             TimeToConsistentlyInteractive: extractRawValue(results.lhr, 'interactive'),
             ScriptBootUpTtime: Math.max(16, extractRawValue(results.lhr, 'bootup-time')),
@@ -310,46 +265,6 @@ async function computeResultsMEM(driver: WebDriver, benchmarkOptions: BenchmarkO
     return results[0];
 }
 
-function buildDriver(benchmarkOptions: BenchmarkDriverOptions) {
-    let logPref = new logging.Preferences();
-    logPref.setLevel(logging.Type.PERFORMANCE, logging.Level.ALL);
-    logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
-
-    let options = new chrome.Options();
-    if(benchmarkOptions.headless) {
-        options = options.addArguments("--headless");
-        options = options.addArguments("--disable-gpu"); // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
-    }
-    options = options.addArguments("--js-flags=--expose-gc");
-    options = options.addArguments("--enable-precise-memory-info");
-    options = options.addArguments("--no-sandbox");
-    options = options.addArguments("--no-first-run");
-    options = options.addArguments("--enable-automation");
-    options = options.addArguments("--disable-infobars");
-    options = options.addArguments("--disable-background-networking");
-    options = options.addArguments("--disable-background-timer-throttling");
-    options = options.addArguments("--disable-cache");
-    options = options.addArguments("--disable-translate");
-    options = options.addArguments("--disable-sync");
-    options = options.addArguments("--disable-extensions");
-    options = options.addArguments("--disable-default-apps");
-    options = options.addArguments("--window-size=1200,800")
-    if (benchmarkOptions.chromeBinaryPath) options = options.setChromeBinaryPath(benchmarkOptions.chromeBinaryPath);
-    options = options.setLoggingPrefs(logPref);
-
-    options = options.setPerfLoggingPrefs(<any>{
-        enableNetwork: true, enablePage: true,
-        traceCategories: lighthouse.traceCategories.join(", ")
-    });
-
-    // Do the following lines really cause https://github.com/krausest/js-framework-benchmark/issues/303 ?
-    // let service = new chrome.ServiceBuilder(args.chromeDriver).build();
-    // return chrome.Driver.createSession(options, service);
-    return new Builder()
-        .forBrowser('chrome')
-        .setChromeOptions(options)
-        .build();
-}
 
 async function forceGC(framework: FrameworkData, driver: WebDriver): Promise<any> {
     if (framework.name.startsWith("angular-v4")) {

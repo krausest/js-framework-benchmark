@@ -1,31 +1,13 @@
-import * as chrome from 'selenium-webdriver/chrome'
-import {Builder, WebDriver, promise, logging} from 'selenium-webdriver'
 import * as yargs from 'yargs';
+import {buildDriver, setUseShadowRoot, testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath} from './webdriverAccess'
+import {config, FrameworkData, initializeFrameworks, BenchmarkOptions} from './common'
+
+// necessary to launch without specifiying a path
 var chromedriver:any = require('chromedriver');
-import {BenchmarkType, Benchmark, benchmarks, fileName} from './benchmarks'
-import {setUseShadowRoot, testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath} from './webdriverAccess'
-import {JSONResult, config, FrameworkData, initializeFrameworks} from './common'
 
 let frameworks = initializeFrameworks();
 
-function buildDriver() {
-    let logPref = new logging.Preferences();
-    logPref.setLevel(logging.Type.PERFORMANCE, logging.Level.ALL);
-    logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
-    let options = new chrome.Options();
-    options = options.addArguments("--js-flags=--expose-gc");
-    options = options.addArguments("--disable-infobars");
-    options = options.addArguments("--disable-background-networking");
-    options = options.addArguments("--disable-cache");
-    options = options.addArguments("--disable-extensions");
-    options = options.setLoggingPrefs(logPref);
-    options = options.setPerfLoggingPrefs(<any>{enableNetwork: false, enablePage: false, traceCategories: "devtools.timeline,blink.user_timing", bufferUsageReportingInterval: 20000});
-    return new Builder()
-        .forBrowser('chrome')
-        .setChromeOptions(options)
-        .build();
-}
 
 let init = `
 window.nonKeyedDetector_reset = function() {
@@ -117,7 +99,7 @@ async function runBench(frameworkNames: string[]) {
     let allCorrect = true;
 
     for (let i=0;i<runFrameworks.length;i++) {
-        let driver = await buildDriver();
+        let driver = await buildDriver(benchmarkOptions);
         try {
             let framework = runFrameworks[i];
             setUseShadowRoot(framework.useShadowRoot);
@@ -169,15 +151,29 @@ async function runBench(frameworkNames: string[]) {
 }
 
 let args = yargs(process.argv)
-.usage("$0 [--framework Framework1,Framework2,...]")
-.help('help')
-.default('check','false')
-.default('port', config.PORT)
-.array("framework").array("benchmark").argv;
+    .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...]")
+    .help('help')
+    .default('port', config.PORT)
+    .string('chromeBinary')
+    .string('chromeDriver')
+    .boolean('headless')
+    .array("framework").argv;
 
 config.PORT = Number(args.port);
 
 let runFrameworks = (args.framework && args.framework.length>0 ? args.framework : [""]).map(v => v.toString());
+
+let benchmarkOptions: BenchmarkOptions = {
+    outputDirectory: null,
+    port: config.PORT.toFixed(),
+    remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
+    chromePort: config.CHROME_PORT,
+    headless: args.headless,
+    chromeBinaryPath: args.chromeBinary,
+    numIterationsForCPUBenchmarks: config.REPEAT_RUN,
+    numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
+    numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
+}
 
 if (args.help) {
     yargs.showHelp();

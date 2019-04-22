@@ -58,6 +58,8 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
         let benchmarkOptions: BenchmarkOptions = {
             outputDirectory: dir,
             port: config.PORT.toFixed(),
+            remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
+            chromePort: config.CHROME_PORT,
             headless: args.headless,
             chromeBinaryPath: args.chromeBinary,
             numIterationsForCPUBenchmarks: config.REPEAT_RUN,
