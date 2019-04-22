@@ -1,4 +1,4 @@
-import { fdValue } from 'faster-dom';
+import { fdValue } from 'faster-dom'
 
 let id = 1;
 
@@ -65,13 +65,13 @@ function buildData(count) {
 
     const arr = [];
     for(let i = 0; i<count; i ++) {
-        arr.push(fdValue({
+        arr.push({
             id: id++,
-            label: `${adjectives[
+            label: fdValue(`${adjectives[
                 rand() * 1000 % adjectives.length >> 0]} ${colours[
                 rand() * 1000 % colours.length >> 0]} ${nouns[
-                rand() * 1000 % nouns.length >> 0]}`
-        }, true))
+                rand() * 1000 % nouns.length >> 0]}`)
+        })
     }
     return arr;
 }
@@ -85,8 +85,8 @@ export class Store {
         }
         this.remove = (item) => {
             const removeIndex = this.data.value.indexOf(item)
-            this.data.value = [...this.data.value.slice(0, removeIndex),
-            ...this.data.value.slice(removeIndex + 1)]
+            this.data.value.splice(removeIndex, 1)
+            this.data.value = [...this.data.value]
         }
     }
 
@@ -95,7 +95,7 @@ export class Store {
     }
 
     append(count = 1000) {
-        this.data.value = [...this.data.value, ...buildData(count)]
+        this.data.value = this.data.value.concat(buildData(count))
     }
 
     clear() {
@@ -106,9 +106,7 @@ export class Store {
         const length = this.data.value.length
         for (let i = 0; i < length; i += 10) {
             const item = this.data.value[i]
-            item.value = Object.assign(item.value, {
-                label: `${item.value.label} !!!`
-            })
+            item.label.value = `${item.label.value} !!!`
         }
     }
 
