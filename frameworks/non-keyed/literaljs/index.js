@@ -5,96 +5,94 @@ import '../../../css/bootstrap/dist/css/bootstrap.min.css';
 import '../../../css/main';
 
 import { Store } from './store';
-var store = new Store();
 
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-	startTime = performance.now();
-	lastMeasure = name;
-};
-var stopMeasure = function() {
-	var last = lastMeasure;
-	if (lastMeasure) {
-		window.setTimeout(function() {
-			lastMeasure = null;
-			var stop = performance.now();
-			console.log(last + ' took ' + (stop - startTime));
-		}, 0);
-	}
-};
-
-const App = component({
-	state: {
-		rows: store.data,
-		selected: store.selected
-	},
+const Row = component({
 	methods() {
 		return {
-			handleClick(e) {
-				const { action, id } = e.target.dataset;
-				if (action && id) {
-					this[action](id);
-				}
-			},
-			add() {
-				startMeasure('add');
-				store.add();
-				this.sync();
-				stopMeasure();
-			},
-			remove(id) {
-				startMeasure('remove');
-				store.delete(id);
-				this.sync();
-				stopMeasure();
-			},
-			select(id) {
-				startMeasure('select');
-				store.select(id);
-				this.sync();
-				stopMeasure();
-			},
-			run() {
-				startMeasure('run');
-				store.run();
-				this.sync();
-				stopMeasure();
-			},
-			update() {
-				startMeasure('update');
-				store.update();
-				this.sync();
-				stopMeasure();
-			},
-			runLots() {
-				startMeasure('runLots');
-				store.runLots();
-				this.sync();
-				stopMeasure();
-			},
-			clear() {
-				startMeasure('clear');
-				store.clear();
-				this.sync();
-				stopMeasure();
-			},
-			swapRows() {
-				startMeasure('swapRows');
-				store.swapRows();
-				this.sync();
-				stopMeasure();
-			},
-			sync() {
-				this.setState({
-					rows: store.data,
-					selected: store.selected
-				});
+			rowClass() {
+				const { item, selected } = this.props;
+				return item.id === selected ? 'danger' : '';
 			}
 		};
 	},
 	render() {
-		const { rows, selected } = this.getState();
+		const { item, selectRow, deleteRow } = this.props;
+		return (
+			<tr class={this.rowClass()}>
+				<td class="col-md-1">{item.id}</td>
+				<td class="col-md-4">
+					<a events={{ click: () => selectRow(item.id) }}>
+						{item.label}
+					</a>
+				</td>
+				<td class="col-md-1">
+					<a>
+						<span
+							class="glyphicon glyphicon-remove"
+							aria-hidden="true"
+							events={{ click: () => deleteRow(item.id) }}
+						/>
+					</a>
+				</td>
+			</tr>
+		);
+	}
+});
+
+const App = component({
+	state: {
+		store: new Store()
+	},
+	methods() {
+		const { store } = this.getState();
+		return {
+			run() {
+				store.run();
+				this.setState({ store });
+			},
+			add() {
+				store.add();
+				this.setState({ store });
+			},
+			update() {
+				store.update();
+				this.setState({ store });
+			},
+			select(id) {
+				store.select(id);
+				this.setState({ store });
+			},
+			delete(id) {
+				store.delete(id);
+				this.setState({ store });
+			},
+			runLots() {
+				store.runLots();
+				this.setState({ store });
+			},
+			clear() {
+				store.clear();
+				this.setState({ store });
+			},
+			swapRows() {
+				store.swapRows();
+				this.setState({ store });
+			},
+			createRows() {
+				return store.data.map(item => (
+					<Row
+						props={{
+							item,
+							selected: store.selected,
+							deleteRow: this.delete,
+							selectRow: this.select
+						}}
+					/>
+				));
+			}
+		};
+	},
+	render() {
 		return (
 			<div class="container">
 				<div class="jumbotron">
@@ -168,32 +166,8 @@ const App = component({
 						</div>
 					</div>
 				</div>
-				<table
-					class="table table-hover table-striped test-data"
-					events={{ click: this.handleClick }}
-				>
-					<tbody>
-						{rows.map(item => (
-							<tr class={item.id == selected ? 'danger' : ''}>
-								<td class="col-md-1">{item.id}</td>
-								<td class="col-md-4">
-									<a data-action="select" data-id={item.id}>
-										{item.label}
-									</a>
-								</td>
-								<td class="col-md-1">
-									<a>
-										<span
-											class="glyphicon glyphicon-remove"
-											aria-hidden="true"
-											data-action="remove"
-											data-id={item.id}
-										/>
-									</a>
-								</td>
-							</tr>
-						))}
-					</tbody>
+				<table class="table table-hover table-striped test-data">
+					<tbody>{this.createRows()}</tbody>
 				</table>
 				<span
 					class="preloadicon glyphicon glyphicon-remove"
