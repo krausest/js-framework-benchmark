@@ -1,0 +1,33 @@
+{
+	"name": "js-framework-benchmark-literaljs",
+	"version": "1.0.0",
+	"description": "Benchmark for LiteralJS framework",
+	"js-framework-benchmark": {
+		"frameworkVersionFromPackage": "literaljs",
+		"customURL": "/dist"
+	},
+	"main": "index.js",
+	"scripts": {
+		"start": "parcel index.html",
+		"dev": "parcel index.html --open",
+		"build-prod": "NODE_ENV=production parcel build index.html --no-minify --public-url /frameworks/non-keyed/literaljs/dist/",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"rebuild": "sudo rm -rf node_modules && rm -rf yarn.lock && yarn && yarn dev"
+	},
+	"keywords": [
+		"literaljs"
+	],
+	"author": "Michael Farrell",
+	"license": "MIT",
+	"dependencies": {
+		"@babel/runtime": "^7.4.3",
+		"literaljs": "^5.1.62"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.4.3",
+		"@babel/plugin-transform-react-jsx": "^7.3.0",
+		"@babel/plugin-transform-runtime": "^7.4.3",
+		"node-sass": "^4.11.0",
+		"parcel-bundler": "^1.12.3"
+	}
+}

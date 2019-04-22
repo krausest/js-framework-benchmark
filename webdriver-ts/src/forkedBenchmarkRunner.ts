@@ -265,7 +265,6 @@ async function computeResultsMEM(driver: WebDriver, benchmarkOptions: BenchmarkO
     return results[0];
 }
 
-
 async function forceGC(framework: FrameworkData, driver: WebDriver): Promise<any> {
     if (framework.name.startsWith("angular-v4")) {
         // workaround for window.gc for angular 4 - closure rewrites windows.gc");
