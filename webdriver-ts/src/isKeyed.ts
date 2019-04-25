@@ -5,10 +5,6 @@ import {config, FrameworkData, initializeFrameworks, BenchmarkOptions} from './c
 // necessary to launch without specifiying a path
 var chromedriver:any = require('chromedriver');
 
-let frameworks = initializeFrameworks();
-
-
-
 let init = `
 window.nonKeyedDetector_reset = function() {
     window.nonKeyedDetector_tradded = 0;
@@ -89,7 +85,7 @@ function isKeyedSwapRow(result: any): boolean {
     return (result.tradded>0 && result.trremoved>0);
 }
 
-async function runBench(frameworkNames: string[]) {
+async function runBench(frameworks: FrameworkData[], frameworkNames: string[]) {
     let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name)>-1));
     console.log("Frameworks that will be checked", runFrameworks.map(f => f.fullNameWithKeyedAndVersion).join(' '));
 
@@ -174,10 +170,14 @@ let benchmarkOptions: BenchmarkOptions = {
     numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
     numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
 }
+async function main() {
+    let frameworks = await initializeFrameworks();
 
-if (args.help) {
-    yargs.showHelp();
-} else {
-    runBench(runFrameworks);
+    if (args.help) {
+        yargs.showHelp();
+    } else {
+        runBench(frameworks, runFrameworks);
+    }
 }
 
+main();

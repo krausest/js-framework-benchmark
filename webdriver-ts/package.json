@@ -26,27 +26,28 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/lodash": "4.14.123",
-    "@types/node": "11.13.0",
-    "@types/ramda": "0.26.6",
+    "@types/node": "11.13.7",
+    "@types/ramda": "0.26.8",
     "@types/selenium-webdriver": "4.0.0",
     "@types/semver": "6.0.0",
-    "@types/yargs": "12.0.11",
+    "@types/yargs": "13.0.0",
     "dockerode": "^2.5.8",
     "rimraf": "^2.6.3",
-    "ts-node": "8.0.3",
-    "typescript": "3.4.2"
+    "ts-node": "8.1.0",
+    "typescript": "3.4.5"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "chromedriver": "74.0.0",
     "cross-env": "5.2.0",
-    "chromedriver": "2.46.0",
     "dot": "1.1.2",
     "jstat": "1.7.1",
-    "lighthouse": "4.2.0",
+    "lighthouse": "4.3.0",
     "lodash": "4.17.11",
+    "npm-check-updates": "3.1.8",
     "ramda": "0.26.1",
     "selenium-webdriver": "4.0.0-alpha.1",
-    "yargs": "13.2.2",
-    "npm-check-updates": "3.1.4",
-    "semver": "6.0.0"
+    "semver": "6.0.0",
+    "yargs": "13.2.2"
   }
 }

@@ -231,9 +231,14 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
 
     // Do the following lines really cause https://github.com/krausest/js-framework-benchmark/issues/303 ?
     // return chrome.Driver.createSession(options, service);
-
+   console.log("before service builder");
     let service = new chrome.ServiceBuilder().setPort(benchmarkOptions.chromePort).build();
     var driver = chrome.Driver.createSession(options, service);
+    // console.log("after service builder");
+    // return new Builder()
+    //     .forBrowser('chrome')
+    //     .setChromeOptions(options)
+    //     .build();
 
     return driver;
 }

@@ -6,7 +6,7 @@ import { JSONResult, config, FrameworkData, initializeFrameworks, BenchmarkError
 
 var exec = require('child_process').execSync;
 
-
+async function main() {
 let frameworks = process.argv.length<=2 ? [] : process.argv.slice(2,process.argv.length);
 
 if (frameworks.length === 0) {
@@ -35,7 +35,7 @@ if (frameworks.length === 0) {
         stdio: 'inherit'
     });
 
-    let frameworkInfos = initializeFrameworks((filePath: string) => frameworks.indexOf(filePath) > -1);
+    let frameworkInfos = await initializeFrameworks((filePath: string) => frameworks.indexOf(filePath) > -1);
     // console.log("frameworkInfos", frameworkInfos, frameworks);
     let frameworkNames = frameworkInfos.map(f => "'"+f.fullNameWithKeyedAndVersion+"'").join(' ');
     if (frameworkInfos.length === 0) {
@@ -53,3 +53,6 @@ if (frameworks.length === 0) {
     console.log("All checks are fine!");
     console.log("======> Please rerun the benchmark: npm run bench -- --framework ", frameworkNames);
 }
+}
+
+main();

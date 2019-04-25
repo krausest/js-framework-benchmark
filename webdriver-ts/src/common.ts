@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import axios from 'axios';
 
 export interface JSONResult {
     framework: string, keyed: boolean, benchmark: string, type: string, min: number,
@@ -195,12 +196,12 @@ export class PackageVersionInformationResult {
     }
 }
 
-export function determineInstalledVersions(framework: FrameworkVersionInformationDynamic): PackageVersionInformationResult {
-    let frameworksPath = path.resolve('..','frameworks');
-    let packageLockJSONPath = path.resolve(frameworksPath, framework.keyedType, framework.directory, 'package-lock.json');
+export async function determineInstalledVersions(framework: FrameworkVersionInformationDynamic): Promise<PackageVersionInformationResult> {
+    
     let versions = new PackageVersionInformationResult(framework);
-    if (fs.existsSync(packageLockJSONPath)) {
-        let packageLock = JSON.parse(fs.readFileSync(packageLockJSONPath, 'utf8'));
+    try {
+        console.log(`http://localhost:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`)
+        let packageLock: any = (await axios.get(`http://localhost:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`)).data;
         for (let packageName of framework.packageNames) {
             if (packageLock.dependencies[packageName]) {
                 versions.add(new PackageVersionInformationValid(packageName, packageLock.dependencies[packageName].version));
@@ -208,25 +209,26 @@ export function determineInstalledVersions(framework: FrameworkVersionInformatio
                 versions.add(new PackageVersionInformationErrorUnknownPackage(packageName));
             }
         }
-    } else {
+    } catch (err) {
+        console.log("err", err);
         versions.add(new PackageVersionInformationErrorNoPackageJSONLock());
     }
     return versions;
 }
 
-export function initializeFrameworks(matchPredicate: IMatchPredicate = matchAll): FrameworkData[] {
+export async function initializeFrameworks(matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkData[]> {
     let frameworkVersionInformations = loadFrameworkVersionInformation(matchPredicate);
 
-    let frameworks = frameworkVersionInformations.map(frameworkVersionInformation => {
+    let frameworks = await Promise.all(frameworkVersionInformations.map(async frameworkVersionInformation => {
         if (frameworkVersionInformation instanceof FrameworkVersionInformationDynamic) {
-            return determineInstalledVersions(frameworkVersionInformation).getFrameworkData();
+            return (await determineInstalledVersions(frameworkVersionInformation)).getFrameworkData();
         } else if (frameworkVersionInformation instanceof FrameworkVersionInformationStatic) {
             return frameworkVersionInformation.getFrameworkData();
         } else {
             console.log(`WARNING: Ignoring package ${frameworkVersionInformation.keyedType}/${frameworkVersionInformation.directory}: ${frameworkVersionInformation.error}`)
             return null;
         }
-    });
+    }));
 
     frameworks = frameworks.filter(f => f!==null);
     if (config.LOG_DETAILS) {

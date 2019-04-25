@@ -265,6 +265,55 @@ async function computeResultsMEM(driver: WebDriver, benchmarkOptions: BenchmarkO
     return results[0];
 }
 
+<<<<<<< HEAD
+=======
+function buildDriver(benchmarkOptions: BenchmarkDriverOptions) {
+    let logPref = new logging.Preferences();
+    logPref.setLevel(logging.Type.PERFORMANCE, logging.Level.ALL);
+    logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
+
+    let options = new chrome.Options();
+    if(benchmarkOptions.headless) {
+        options = options.addArguments("--headless");
+        options = options.addArguments("--disable-gpu"); // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
+    }
+    options = options.addArguments("--js-flags=--expose-gc");
+    options = options.addArguments("--enable-precise-memory-info");
+    options = options.addArguments("--no-sandbox");
+    options = options.addArguments("--no-first-run");
+    options = options.addArguments("--enable-automation");
+    options = options.addArguments("--disable-infobars");
+    options = options.addArguments("--disable-background-networking");
+    options = options.addArguments("--disable-background-timer-throttling");
+    options = options.addArguments("--disable-cache");
+    options = options.addArguments("--disable-translate");
+    options = options.addArguments("--disable-sync");
+    options = options.addArguments("--disable-extensions");
+    options = options.addArguments("--disable-default-apps");
+    options = options.addArguments("--window-size=1200,800")
+    if (benchmarkOptions.chromeBinaryPath) options = options.setChromeBinaryPath(benchmarkOptions.chromeBinaryPath);
+    options = options.setLoggingPrefs(logPref);
+
+    let traceCategories = 'devtools.timeline,blink.user_timing';
+    // let traceCategories = lighthouse.traceCategories.join(", ");
+
+    console.log("traceCategories", traceCategories);
+
+    options = options.setPerfLoggingPrefs(<any>{
+        enableNetwork: true, enablePage: true,
+        traceCategories: traceCategories
+    });
+
+    // Do the following lines really cause https://github.com/krausest/js-framework-benchmark/issues/303 ?
+    // let service = new chrome.ServiceBuilder(args.chromeDriver).build();
+    // return chrome.Driver.createSession(options, service);
+    return new Builder()
+        .forBrowser('chrome')
+        .setChromeOptions(options)
+        .build();
+}
+>>>>>>> 9b0dafc510a2e10968e6754eec9d442dfef41a10
+
 async function forceGC(framework: FrameworkData, driver: WebDriver): Promise<any> {
     if (framework.name.startsWith("angular-v4")) {
         // workaround for window.gc for angular 4 - closure rewrites windows.gc");
@@ -374,22 +423,19 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
 
     console.log("benchmarking ", framework, benchmark.id);
     let driver = buildDriver(benchmarkOptions);
-    console.log("driver *")
     try {
         for (let i = 0; i <benchmarkOptions.numIterationsForCPUBenchmarks; i++) {
             try {
                 setUseShadowRoot(framework.useShadowRoot);
-                console.log("driver get *")
                 await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/`);
-                
+
                 // await (driver as any).sendDevToolsCommand('Network.enable');
                 // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
-                    //     offline: false,
-                    //     latency: 200, // ms
-                    //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
-                    //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
-                    // });
-                    console.log("driver timerstamp *")
+                //     offline: false,
+                //     latency: 200, // ms
+                //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
+                //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
+                // });
                 await driver.executeScript("console.timeStamp('initBenchmark')");
 
                 if (framework.name.startsWith("scarletsframe")) {

@@ -18,7 +18,6 @@
         "./src/forkedBenchmarkRunner.ts",
         "./src/createResultJS.ts",
         "./src/createIndex.ts",
-        "./src/runCheck.ts",
         "./src/updateFrameworks.ts",
         "./src/isKeyed.ts",
         "./src/rebuild.ts",

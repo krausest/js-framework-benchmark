@@ -5,10 +5,9 @@ import { JSONResult, config, FrameworkData, initializeFrameworks, BenchmarkError
 import * as R from 'ramda';
 import { fork } from 'child_process';
 import { executeBenchmark } from './forkedBenchmarkRunner';
+import mapObjIndexed from 'ramda/es/mapObjIndexed';
 
-let frameworks = initializeFrameworks();
-
-function forkedRun(frameworkName: string, keyed: boolean, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {
+function forkedRun(frameworks: FrameworkData[], frameworkName: string, keyed: boolean, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {
     if (config.FORK_CHROMEDRIVER) {
         return new Promise(function (resolve, reject) {
             const forked = fork('dist/forkedBenchmarkRunner.js');
@@ -24,10 +23,7 @@ function forkedRun(frameworkName: string, keyed: boolean, benchmarkName: string,
     }
 }
 
-
-
-
-async function runBench(frameworkNames: string[], benchmarkNames: string[], dir: string) {
+async function runBench(frameworks: FrameworkData[], frameworkNames: string[], benchmarkNames: string[], dir: string) {
     let errors: BenchmarkError[] = [];
     let warnings: String[] = [];
 
@@ -68,7 +64,7 @@ async function runBench(frameworkNames: string[], benchmarkNames: string[], dir:
         }
 
         try {
-            let errorsAndWarnings: ErrorsAndWarning = await forkedRun(framework.name, framework.keyed, benchmark.id, benchmarkOptions);
+            let errorsAndWarnings: ErrorsAndWarning = await forkedRun(frameworks, framework.name, framework.keyed, benchmark.id, benchmarkOptions);
             errors.splice(errors.length, 0, ...errorsAndWarnings.errors);
             warnings.splice(warnings.length, 0, ...errorsAndWarnings.warnings);
         } catch (err) {
@@ -113,34 +109,39 @@ let args = yargs(process.argv)
     .boolean('headless')
     .array("framework").array("benchmark").argv;
 
-console.log(args);
+async function main() {
+    let frameworks = await initializeFrameworks();
 
-let runBenchmarks = (args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""]).map(v => v.toString());
-let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(v => v.toString());
-let count = Number(args.count);
-config.PORT = Number(args.port);
-if (count < Number.MAX_SAFE_INTEGER) config.REPEAT_RUN = count;
-config.REPEAT_RUN_MEM = Math.min(count, config.REPEAT_RUN_MEM);
-config.REPEAT_RUN_STARTUP = Math.min(count, config.REPEAT_RUN_STARTUP);
-config.FORK_CHROMEDRIVER = args.fork === 'true';
-
-let dir = args.check === 'true' ? "results_check" : "results"
-let exitOnError = args.exitOnError === 'true'
-
-config.EXIT_ON_ERROR = exitOnError;
-
-console.log("fork chromedriver process?", config.FORK_CHROMEDRIVER);
-
-if (!fs.existsSync(dir))
+    console.log(args);
+    
+    let runBenchmarks = (args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""]).map(v => v.toString());
+    let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(v => v.toString());
+    let count = Number(args.count);
+    config.PORT = Number(args.port);
+    if (count < Number.MAX_SAFE_INTEGER) config.REPEAT_RUN = count;
+    config.REPEAT_RUN_MEM = Math.min(count, config.REPEAT_RUN_MEM);
+    config.REPEAT_RUN_STARTUP = Math.min(count, config.REPEAT_RUN_STARTUP);
+    config.FORK_CHROMEDRIVER = args.fork === 'true';
+    
+    let dir = args.check === 'true' ? "results_check" : "results"
+    let exitOnError = args.exitOnError === 'true'
+    
+    config.EXIT_ON_ERROR = exitOnError;
+    
+    console.log("fork chromedriver process?", config.FORK_CHROMEDRIVER);
+    
+    if (!fs.existsSync(dir))
     fs.mkdirSync(dir);
-
-if (args.help) {
-    yargs.showHelp();
-} else {
-    runBench(runFrameworks, runBenchmarks, dir).then(_ => {
-        console.log("successful run");
-    }).catch(error => {
-        console.log("run was not completely sucessful");
-    })
+    
+    if (args.help) {
+        yargs.showHelp();
+    } else {
+        runBench(frameworks, runFrameworks, runBenchmarks, dir).then(_ => {
+                console.log("successful run");
+        }).catch(error => {
+            console.log("run was not completely sucessful");
+        })
+    }
 }
 
+main();
