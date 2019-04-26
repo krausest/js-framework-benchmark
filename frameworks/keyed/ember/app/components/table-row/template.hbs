@@ -1,0 +1,17 @@
+<tr ...attributes>
+  <td class="col-md-1">{{@item.id}}</td>
+
+  <td class="col-md-4">
+    <a onclick={{action @onSelect}} role="button">
+      {{@item.label}}
+    </a>
+  </td>
+
+  <td class="col-md-1">
+    <a onclick={{action @onRemove}} role="button">
+      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+    </a>
+  </td>
+
+  <td class="col-md-6"></td>
+</tr>

@@ -43,26 +43,13 @@
 
 <table class="table table-hover table-striped test-data">
   <tbody>
-    {{~#each this.data key="id" as |item|~}}
-
-      <tr class={{if (eq item.id this.selected) "danger" "x"}}>
-        <td class="col-md-1">{{item.id}}</td>
-
-        <td class="col-md-4">
-          <a onclick={{action this.select item.id}} role="button">
-            {{item.label}}
-          </a>
-        </td>
-
-        <td class="col-md-1">
-          <a onclick={{action this.remove item.id}} role="button">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-          </a>
-        </td>
-
-        <td class="col-md-6"></td>
-      </tr>
-
+    {{~#each this.data key="@index" as |item|~}}
+      <TableRow 
+        class={{if (eq item.id this.selected) "danger" "x"}}  
+        @item={{item}}
+        @onSelect={{action this.select item.id}}
+        @onRemove={{action this.remove item.id}}
+      />
     {{~/each~}}
   </tbody>
 </table>
