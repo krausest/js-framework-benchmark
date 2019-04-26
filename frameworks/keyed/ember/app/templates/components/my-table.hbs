@@ -46,9 +46,10 @@
     {{~#each this.data key="@index" as |item|~}}
       <TableRow 
         class={{if (eq item.id this.selected) "danger" "x"}}  
-        @item={{item}}
-        @onSelect={{action this.select item.id}}
-        @onRemove={{action this.remove item.id}}
+        @id={{item.id}}
+        @label={{item.label}}
+        @onSelect={{action this.select}}
+        @onRemove={{action this.remove}}
       />
     {{~/each~}}
   </tbody>
