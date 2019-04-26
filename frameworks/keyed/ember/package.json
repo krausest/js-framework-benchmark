@@ -11,7 +11,7 @@
     "test": "tests"
   },
   "js-framework-benchmark": {
-    "frameworkVersion": "3.5.1",
+    "frameworkVersion": "3.9.1",
     "customURL": "/dist"
   },
   "scripts": {
