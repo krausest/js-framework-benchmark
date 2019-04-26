@@ -44,10 +44,8 @@
 <table class="table table-hover table-striped test-data">
   <tbody>
     {{~#each this.data key="@index" as |item|~}}
-      <TableRow 
-        class={{if (eq item.id this.selected) "danger" "x"}}  
-        @id={{item.id}}
-        @label={{item.label}}
+      <TableRow
+        @item={{item}}
         @onSelect={{action this.select}}
         @onRemove={{action this.remove}}
       />

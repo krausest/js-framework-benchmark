@@ -33,6 +33,7 @@ export const buildData = (id, count = 1000) => {
     for (var i = 0; i < count; i++)
         data.push(EmberObject.create({
           id: id++,
+          selected: false,
           label: adjectives[_random(adjectives.length)]
             + " "
             + colours[_random(colours.length)]
@@ -46,7 +47,6 @@ export const buildData = (id, count = 1000) => {
 export const add = (id, data) => {
     const newData = buildData(id, 1000);
     data.pushObjects(newData.data);
-    return { data: data, id: newData.id };
 }
 
 export const run = (id) => {
