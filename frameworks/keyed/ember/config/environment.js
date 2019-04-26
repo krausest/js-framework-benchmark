@@ -16,14 +16,10 @@ module.exports = function(environment) {
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
-<<<<<<< HEAD
         // e.g. 'with-controller': true
-
         // 'ember-glimmer-angle-bracket-invocation': true,
         // EMBER_GLIMMER_ANGLE_BRACKET_INVOCATION: true,
-=======
         // e.g. EMBER_NATIVE_DECORATOR_SUPPORT: true
->>>>>>> 2989e03... message
       },
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
