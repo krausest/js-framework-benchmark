@@ -46,8 +46,8 @@
     {{~#each this.data key="@index" as |item|~}}
       <TableRow
         @item={{item}}
-        @onSelect={{action this.select}}
-        @onRemove={{action this.remove}}
+        @onSelect={{action this.select item.id}}
+        @onRemove={{action this.remove item.id}}
       />
     {{~/each~}}
   </tbody>
