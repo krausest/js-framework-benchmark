@@ -43,13 +43,13 @@
 
 <table class="table table-hover table-striped test-data">
   <tbody>
-    {{~#each this.data key="@identity" as |item|~}}
+    {{#each this.data key="@identity" as |item|}}
       <TableRow
         @item={{item}}
         @onSelect={{action this.select item.id}}
         @onRemove={{action this.remove item.id}}
       />
-    {{~/each~}}
+    {{/each}}
   </tbody>
 </table>
 
