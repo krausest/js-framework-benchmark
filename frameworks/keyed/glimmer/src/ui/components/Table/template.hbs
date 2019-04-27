@@ -1,6 +1,6 @@
 <table class="table table-hover table-striped test-data">
   <tbody>
-    {{~#each @data key="@identity" as |item|~}}
+    {{~#each @data key="id" as |item|~}}
       <Row
         @item={{item}}
         @onSelect={{action @onSelect item.id}}
