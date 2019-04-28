@@ -372,15 +372,18 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
     let errors: BenchmarkError[] = [];
     let warnings: String[] = [];
 
+    
     console.log("benchmarking ", framework, benchmark.id);
     let driver = buildDriver(benchmarkOptions);
-    console.log("driver *")
+    console.timeLog("chromedriver", "runCPU started");
     try {
         for (let i = 0; i <benchmarkOptions.numIterationsForCPUBenchmarks; i++) {
             try {
+                console.timeLog("chromedriver", "before setUseShadowRoot");
                 setUseShadowRoot(framework.useShadowRoot);
-                console.log("driver get *")
+                console.timeLog("chromedriver", "before get");
                 await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/`);
+                console.timeLog("chromedriver", "after get");
                 
                 // await (driver as any).sendDevToolsCommand('Network.enable');
                 // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {

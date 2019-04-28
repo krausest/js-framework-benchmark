@@ -202,6 +202,7 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
     logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
     let options = new chrome.Options();
+    options.setProxy(null);
     if(benchmarkOptions.headless) {
         options = options.addArguments("--headless");
         options = options.addArguments("--disable-gpu"); // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
@@ -231,9 +232,11 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
 
     // Do the following lines really cause https://github.com/krausest/js-framework-benchmark/issues/303 ?
     // return chrome.Driver.createSession(options, service);
-   console.log("before service builder");
+   console.time("chromedriver");
     let service = new chrome.ServiceBuilder().setPort(benchmarkOptions.chromePort).build();
+    console.timeLog("chromedriver", "service created");
     var driver = chrome.Driver.createSession(options, service);
+    console.timeLog("chromedriver", "driver created");
     // console.log("after service builder");
     // return new Builder()
     //     .forBrowser('chrome')
