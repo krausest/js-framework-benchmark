@@ -7,30 +7,26 @@ import '../../../css/main';
 import { Store } from './store';
 
 const Row = component({
-	methods() {
-		return {
-			rowClass() {
-				const { item, selected } = this.props;
-				return item.id === selected ? 'danger' : '';
-			}
-		};
+	shouldUpdate(oldProps, oldState) {
+		return (
+			oldProps.label !== this.props.label ||
+			oldProps.styleClass !== this.props.styleClass
+		);
 	},
 	render() {
-		const { item, selectRow, deleteRow } = this.props;
+		const { id, label, selectRow, deleteRow, styleClass } = this.props;
 		return (
-			<tr class={this.rowClass()}>
-				<td class="col-md-1">{item.id}</td>
+			<tr class={styleClass}>
+				<td class="col-md-1">{id}</td>
 				<td class="col-md-4">
-					<a events={{ click: () => selectRow(item.id) }}>
-						{item.label}
-					</a>
+					<a events={{ click: () => selectRow(id) }}>{label}</a>
 				</td>
 				<td class="col-md-1">
 					<a>
 						<span
 							class="glyphicon glyphicon-remove"
 							aria-hidden="true"
-							events={{ click: () => deleteRow(item.id) }}
+							events={{ click: () => deleteRow(id) }}
 						/>
 					</a>
 				</td>
@@ -40,59 +36,45 @@ const Row = component({
 });
 
 const App = component({
-	state: {
-		store: new Store()
-	},
 	methods() {
-		const { store } = this.getState();
+		const { store } = this.getStore();
 		return {
 			run() {
 				store.run();
-				this.setState({ store });
+				this.setStore({ store });
 			},
 			add() {
 				store.add();
-				this.setState({ store });
+				this.setStore({ store });
 			},
 			update() {
 				store.update();
-				this.setState({ store });
+				this.setStore({ store });
 			},
 			select(id) {
 				store.select(id);
-				this.setState({ store });
+				this.setStore({ store });
 			},
 			delete(id) {
 				store.delete(id);
-				this.setState({ store });
+				this.setStore({ store });
 			},
 			runLots() {
 				store.runLots();
-				this.setState({ store });
+				this.setStore({ store });
 			},
 			clear() {
 				store.clear();
-				this.setState({ store });
+				this.setStore({ store });
 			},
 			swapRows() {
 				store.swapRows();
-				this.setState({ store });
-			},
-			createRows() {
-				return store.data.map(item => (
-					<Row
-						props={{
-							item,
-							selected: store.selected,
-							deleteRow: this.delete,
-							selectRow: this.select
-						}}
-					/>
-				));
+				this.setStore({ store });
 			}
 		};
 	},
 	render() {
+		const { store } = this.getStore();
 		return (
 			<div class="container">
 				<div class="jumbotron">
@@ -167,7 +149,22 @@ const App = component({
 					</div>
 				</div>
 				<table class="table table-hover table-striped test-data">
-					<tbody>{this.createRows()}</tbody>
+					<tbody>
+						{store.data.map(item => (
+							<Row
+								props={{
+									id: item.id,
+									label: item.label,
+									deleteRow: this.delete,
+									selectRow: this.select,
+									styleClass:
+										item.id === store.selected
+											? 'danger'
+											: ''
+								}}
+							/>
+						))}
+					</tbody>
 				</table>
 				<span
 					class="preloadicon glyphicon glyphicon-remove"
@@ -178,4 +175,4 @@ const App = component({
 	}
 });
 
-render(App, 'root', {});
+render(App, 'root', { store: new Store() });
