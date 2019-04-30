@@ -1,43 +1,43 @@
 {
-  "name": "glimmer-app",
+  "name": "glimmer",
   "version": "0.0.0",
   "description": "A brand new Glimmer app.",
-  "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@glimmer/application",
-    "customURL": "/dist"
-  },
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@glimmer/application",
+    "customURL": "/dist"
+  },
   "scripts": {
-    "build": "ember build -e production",
+    "build": "ember build -prod",
     "start": "ember server",
     "test": "ember test",
+    "lint:ts": "tslint -c tslint.json 'src/**/*.ts' -t codeFrame",
     "build-dev": "ember build",
     "build-prod": "ember build --environment=production"
   },
   "devDependencies": {
-    "@glimmer/application": "^0.9.1",
-    "@glimmer/application-pipeline": "^0.11.0",
-    "@glimmer/blueprint": "^0.9.1",
-    "@glimmer/component": "^0.9.1",
-    "@glimmer/inline-precompile": "^1.0.1",
+    "@glimmer/application": "^0.14.0-alpha.4",
+    "@glimmer/application-pipeline": "^0.15.0",
+    "@glimmer/blueprint": "~0.14.0-alpha.4",
+    "@glimmer/component": "^0.14.0-alpha.4",
+    "@glimmer/inline-precompile": "^1.0.0",
     "@glimmer/resolver": "^0.4.1",
-    "@glimmer/test-helpers": "^0.30.3",
+    "@glimmer/test-helpers": "^0.31.1",
     "@types/qunit": "^2.0.31",
-    "broccoli-asset-rev": "^2.6.0",
-    "ember-cli": "^2.16.2",
+    "broccoli-asset-rev": "^2.5.0",
+    "ember-cli": "^3.9.0",
     "ember-cli-dependency-checker": "^2.0.1",
-    "ember-cli-inject-live-reload": "^1.7.0",
-    "ember-cli-sass": "^7.0.0",
-    "ember-cli-uglify": "^2.0.0",
-    "qunitjs": "^2.4.1",
-    "typescript": "~2.6.0"
+    "ember-cli-inject-live-reload": "^1.6.1",
+    "ember-cli-tslint": "^0.1.4",
+    "ember-cli-uglify": "^2.0.0-beta.1",
+    "qunitjs": "^2.3.3",
+    "typescript": "~3.2.1"
   },
   "engines": {
     "node": ">= 4.0"
   },
-  "private": true,
-  "dependencies": {}
+  "private": true
 }
