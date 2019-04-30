@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { action } from '@ember-decorators/object';
+import { action } from '@ember/object';
 
 import {
   run, runLots, add, update, swapRows, deleteRow,
@@ -21,11 +21,11 @@ export default class MyTable extends Component {
   }
 
   @action add() {
-    this.set('data', add(this.id, this.data).data);
+    add(this.id, this.data)
   }
 
   @action update() {
-    this.set('data', update(this.data));
+    update(this.data);
   }
 
   @action runLots() {
@@ -50,6 +50,10 @@ export default class MyTable extends Component {
   }
 
   @action remove(id) {
+    const selected = this.data.findBy('selected', true);
+    if (selected) {
+      selected.set('selected', false);
+    }
     this.setProperties({
       data: deleteRow(this.data, id),
       selelcted: undefined
@@ -58,5 +62,10 @@ export default class MyTable extends Component {
 
   @action select(id) {
     this.set('selected', id);
+    const selected = this.data.findBy('selected', true);
+    if (selected) {
+      selected.set('selected', false);
+    }
+    this.data.findBy('id', id).set('selected', true);
   }
 }

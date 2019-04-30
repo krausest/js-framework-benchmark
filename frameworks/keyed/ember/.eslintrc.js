@@ -2,8 +2,11 @@ module.exports = {
   root: true,
   parser: 'babel-eslint',
   parserOptions: {
-    ecmaVersion: 2017,
-    sourceType: 'module'
+    ecmaVersion: 2018,
+    sourceType: 'module',
+    ecmaFeatures: {
+      experimentalDecorators: true
+    }
   },
   plugins: [
     'ember'
@@ -21,12 +24,14 @@ module.exports = {
     // node files
     {
       files: [
+        '.eslintrc.js',
         '.template-lintrc.js',
         'ember-cli-build.js',
         'testem.js',
         'blueprints/*/index.js',
         'config/**/*.js',
-        'lib/*/index.js'
+        'lib/*/index.js',
+        'server/**/*.js'
       ],
       parserOptions: {
         sourceType: 'script',
