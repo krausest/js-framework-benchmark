@@ -210,8 +210,13 @@ export async function determineInstalledVersions(framework: FrameworkVersionInfo
             }
         }
     } catch (err) {
-        console.log("err", err);
-        versions.add(new PackageVersionInformationErrorNoPackageJSONLock());
+        if (err.errno==='ECONNREFUSED') {
+            console.log("Can't load package-lock.json via http. Make sure the http-server is running on port 8080");
+            throw "Can't load package-lock.json via http. Make sure the http-server is running on port 8080";
+        } else {
+            console.log("err", err);
+            versions.add(new PackageVersionInformationErrorNoPackageJSONLock());
+        }
     }
     return versions;
 }
@@ -219,16 +224,17 @@ export async function determineInstalledVersions(framework: FrameworkVersionInfo
 export async function initializeFrameworks(matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkData[]> {
     let frameworkVersionInformations = loadFrameworkVersionInformation(matchPredicate);
 
-    let frameworks = await Promise.all(frameworkVersionInformations.map(async frameworkVersionInformation => {
+    let frameworks: FrameworkData[] = [];
+    for (let frameworkVersionInformation of frameworkVersionInformations) {
         if (frameworkVersionInformation instanceof FrameworkVersionInformationDynamic) {
-            return (await determineInstalledVersions(frameworkVersionInformation)).getFrameworkData();
+            frameworks.push((await determineInstalledVersions(frameworkVersionInformation)).getFrameworkData());
         } else if (frameworkVersionInformation instanceof FrameworkVersionInformationStatic) {
-            return frameworkVersionInformation.getFrameworkData();
+            frameworks.push(frameworkVersionInformation.getFrameworkData());
         } else {
             console.log(`WARNING: Ignoring package ${frameworkVersionInformation.keyedType}/${frameworkVersionInformation.directory}: ${frameworkVersionInformation.error}`)
-            return null;
+            frameworks.push(null);
         }
-    }));
+    }
 
     frameworks = frameworks.filter(f => f!==null);
     if (config.LOG_DETAILS) {
