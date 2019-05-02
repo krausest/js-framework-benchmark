@@ -10,7 +10,16 @@
     "start": "http-server -c-1 .",
     "bench": "cd webdriver-ts && npm run selenium && npm run results",
     "selenium": "cd webdriver-ts && npm run selenium && npm run results",
-    "check": "cd webdriver-ts && npm run selenium -- --count 1 --exitOnError true --fork false"
+    "docker-build": "docker build -t js-framework-benchmark-centos -f Dockerfile .",
+    "docker-start": "cross-env-shell docker run --rm -d -p 8080:8080 --name js-framework-benchmark --volume ${INIT_CWD}:/src --volume js-framework-benchmark:/build js-framework-benchmark-centos",
+    "docker-stop": "docker stop js-framework-benchmark",
+    "docker-sync": "docker exec -it js-framework-benchmark rsync -av --exclude /index.html --exclude dist --exclude package-lock.json --exclude node_modules --exclude .git --exclude webdriver-ts/results /src/ /build/",
+    "docker-build-frameworks": "docker exec -it js-framework-benchmark npm install && docker exec -it js-framework-benchmark npm run build",
+    "docker-rebuild": "npm run docker-sync && docker exec -it -w /build/webdriver-ts js-framework-benchmark npm run rebuild --headless",
+    "docker-bench": "docker exec -it -w /build/webdriver-ts js-framework-benchmark node dist/benchmarkRunner.js --headless",
+    "docker-results": "docker exec -it -w /build/webdriver-ts js-framework-benchmark npm run results",
+    "docker-shell": "docker exec -it -w /build/webdriver-ts js-framework-benchmark /bin/bash",
+    "docker-dev-webdriver": "npm run docker-sync && docker exec -it -w /build/webdriver-ts js-framework-benchmark npm run compile && docker exec -it -w /build/webdriver-ts js-framework-benchmark node dist/benchmarkRunner.js --headless"
   },
   "keywords": [
     "benchmark",
@@ -34,6 +43,7 @@
     "http-server": "^0.10.0",
     "lodash": "^4.15.0",
     "rimraf": "^2.6.2",
-    "yargs": "^12.0.1"
+    "yargs": "^12.0.1",
+    "cross-env": "^5.2.0"
   }
 }

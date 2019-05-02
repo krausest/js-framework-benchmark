@@ -41,12 +41,12 @@ if (frameworks.length === 0) {
     if (frameworkInfos.length === 0) {
         throw "expected to find some version information for the framework";
     }
-    console.log('npm run bench -- --count 1 --framework '+frameworkNames);
-    exec('npm run bench -- --count 1 --framework '+frameworkNames, {
+    console.log('npm run bench -- --headless --count 1 --framework '+frameworkNames);
+    exec('npm run bench -- --headless --count 1 --framework '+frameworkNames, {
         stdio: 'inherit'
     });
-    console.log('npm run isKeyed -- --framework '+frameworkNames);
-    exec('npm run isKeyed -- --framework '+frameworkNames, {
+    console.log('npm run isKeyed -- --headless --framework '+frameworkNames);
+    exec('npm run isKeyed -- --headless --framework '+frameworkNames, {
         stdio: 'inherit'
     });
 
