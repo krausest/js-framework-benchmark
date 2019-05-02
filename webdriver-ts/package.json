@@ -38,16 +38,16 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "chromedriver": "74.0.0",
     "cross-env": "5.2.0",
+    "chromedriver": "74.0.0",
     "dot": "1.1.2",
     "jstat": "1.7.1",
     "lighthouse": "4.3.0",
     "lodash": "4.17.11",
-    "npm-check-updates": "3.1.8",
     "ramda": "0.26.1",
     "selenium-webdriver": "4.0.0-alpha.1",
-    "semver": "6.0.0",
-    "yargs": "13.2.2"
+    "yargs": "13.2.2",
+    "npm-check-updates": "3.1.8",
+    "semver": "6.0.0"
   }
 }
