@@ -1,8 +1,6 @@
 /** @jsx h */
 
 import { render, component, h } from 'literaljs';
-import '../../../css/bootstrap/dist/css/bootstrap.min.css';
-import '../../../css/main';
 
 import { Store } from './store';
 
