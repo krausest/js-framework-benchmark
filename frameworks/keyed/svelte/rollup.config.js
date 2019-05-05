@@ -1,21 +1,20 @@
 import svelte from 'rollup-plugin-svelte';
-import buble from 'rollup-plugin-buble';
-import {uglify} from 'rollup-plugin-uglify';
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import { terser } from 'rollup-plugin-terser';
 
-const plugins = [
-    svelte(),
-    buble()
-];
+const plugins = [resolve(), commonjs(), svelte()];
 
 if (process.env.production) {
-    plugins.push(uglify());
+  plugins.push(terser());
 }
 
 export default {
-    input: 'src/main.es6.js',
-    output: {
-        file: 'dist/main.js',
-        format: 'iife'
-    },
-    plugins
+  input: 'src/main.js',
+  output: {
+    file: 'dist/main.js',
+    format: 'iife',
+    name: 'main'
+  },
+  plugins
 };
