@@ -95,15 +95,16 @@ export class Store {
         var resetIndex;
         var selectedIndex;
         var oldId = this.selected;
-        this.data.forEach(function (item, index) {
+        for (var i = 0; i < this.data.length; i++) {
+            var item = this.data[i];
             if (item.id == oldId) {
-                resetIndex = index;
+                resetIndex = i;
             }
 
             if (item.id == id) {
-                selectedIndex = index;
+                selectedIndex = i;
             }
-        });
+        }
 
         this.selected = id;
 
