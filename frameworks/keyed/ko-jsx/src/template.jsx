@@ -1,4 +1,4 @@
-import { r, selectWhen } from 'ko-jsx'
+import { selectWhen } from 'ko-jsx'
 
 const Button = ({id, text, fn}) =>
   <div class='col-sm-6 smallpad'>
