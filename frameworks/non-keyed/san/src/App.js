@@ -24,11 +24,12 @@ var stopMeasure = function () {
 export default san.defineComponent({
     trimWhitespace: 'all',
     updateMode: 'optimized',
-    template:` <div class="container">
+    autoFillStyleAndId: false,
+    template:`<div class="container">
         <div class="jumbotron">
             <div class="row">
                 <div class="col-md-6">
-                    <h1>san v3.7.3</h1>
+                    <h1>san (non-keyed)</h1>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
