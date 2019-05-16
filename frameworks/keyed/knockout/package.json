@@ -1,23 +1,23 @@
 {
   "name": "js-framework-benchmark-knockoutjs",
   "version": "1.0.0",
-  "description": "Knockout v3.4 demo",
+  "description": "Knockout v3.5 demo",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "knockout"
   },
   "scripts": {
-    "build-dev": "webpack -w -d -c webpack.config.js",
-    "build-prod": "webpack -p -c webpack.config.js"
+    "build-dev": "rollup -c",
+    "build-prod": "rollup -c --environment production"
   },
   "author": "Stefan Krause",
   "license": "Apache-2.0",
   "devDependencies": {
-    "babel-core": "6.18.2",
-    "babel-loader": "6.2.8",
-    "babel-preset-es2015": "6.18.0",
-    "webpack": "1.13.3"
+    "rollup": "1.11.3",
+    "rollup-plugin-commonjs": "9.2.0",
+    "rollup-plugin-node-resolve": "4.2.3",
+    "rollup-plugin-terser": "4.0.4"
   },
   "dependencies": {
-    "knockout": "3.4.1"
+    "knockout": "3.5.0"
   }
 }
