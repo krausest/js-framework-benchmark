@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-mobx-jsx",
-  "version": "0.2.0",
+  "version": "0.4.1",
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mobx-jsx"
@@ -17,16 +17,16 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "babel-plugin-jsx-dom-expressions": "0.4.3",
-    "mobx": "5.9.0",
-    "mobx-jsx": "0.2.0"
+    "babel-plugin-jsx-dom-expressions": "0.8.0",
+    "mobx": "5.9.4",
+    "mobx-jsx": "0.4.1"
   },
   "devDependencies": {
     "@babel/core": "7.3.3",
-    "rollup": "1.1.2",
+    "rollup": "1.11.3",
     "rollup-plugin-babel": "4.3.2",
-    "rollup-plugin-node-resolve": "4.0.0",
-    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-node-resolve": "4.2.3",
+    "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-terser": "4.0.4"
   }
 }

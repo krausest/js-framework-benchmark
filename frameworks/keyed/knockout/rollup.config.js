@@ -1,13 +1,12 @@
 import resolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
+import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 
 const plugins = [
-	babel({
-		exclude: 'node_modules/**',
-		plugins: [["jsx-dom-expressions", {moduleName: 'solid-js/dom'}]]
-  }),
-	resolve({ extensions: ['.js', '.jsx'] })
+	resolve(),
+	commonjs({
+    include: 'node_modules/**'
+	})
 ];
 
 if (process.env.production) {
@@ -15,7 +14,7 @@ if (process.env.production) {
 }
 
 export default {
-	input: 'src/main.jsx',
+	input: 'src/Main.js',
 	output: {
 		file: 'dist/main.js',
 		format: 'iife'

@@ -1,5 +1,4 @@
-import { createRoot, createState } from 'solid-js';
-import { r, selectWhen } from 'solid-js/dom';
+import { createRoot, createState, selectWhen } from 'solid-js';
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],

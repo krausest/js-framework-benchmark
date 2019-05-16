@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx';
-import { r, selectWhen, root } from 'mobx-jsx';
+import { selectWhen, root } from 'mobx-jsx';
 
 function _random (max) {
   return Math.round(Math.random() * 1000) % max;

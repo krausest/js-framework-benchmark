@@ -6,7 +6,7 @@ import { terser } from 'rollup-plugin-terser';
 const plugins = [
 	babel({
 		exclude: 'node_modules/**',
-		plugins: ["jsx-dom-expressions"]
+		plugins: [["jsx-dom-expressions", {moduleName: 'mobx-jsx'}]]
   }),
 	resolve({ extensions: ['.js', '.jsx'] }),
 	replace({"process.env.NODE_ENV": "'production'"})

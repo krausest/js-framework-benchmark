@@ -1,5 +1,5 @@
 
-const ko = require('knockout');
+import ko from 'knockout';
 
 var startTime;
 var lastMeasure;

@@ -6,11 +6,14 @@ import { terser } from 'rollup-plugin-terser';
 const plugins = [
 	babel({
 		exclude: 'node_modules/**',
-		plugins: ["jsx-dom-expressions"]
+		plugins: [["jsx-dom-expressions", {moduleName: 'ko-jsx'}]]
   }),
 	resolve({ extensions: ['.js', '.jsx'] }),
 	commonjs({
-		include: 'node_modules/**'
+    include: 'node_modules/**',
+    namedExports: {
+      'node_modules/knockout/build/output/knockout-latest.js': ['ignoreDependencies', 'computed']
+    }
 	})
 ];
 
