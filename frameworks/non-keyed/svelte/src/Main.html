@@ -30,14 +30,12 @@
 	</div>
 </div>
 <table class="table table-hover table-striped test-data">
-	<tbody>
+	<tbody on:click={click}>
 		{#each data as row, num}
       <tr class={selected === row.id ? 'danger' : ''}>
         <td class="col-md-1">{row.id}</td>
-        <td class="col-md-4">
-          <a on:click={() => select(row.id)}>{row.label}</a>
-        </td>
-        <td class="col-md-1"><a on:click={() => remove(row.id)}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+        <td class="col-md-4"><a>{row.label}</a></td>
+        <td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
         <td class="col-md-6"></td>
       </tr>
 		{/each}
@@ -60,8 +58,8 @@
         data[i].label += ' !!!';
       }
     },
-    remove = (num) => {
-      const idx = data.findIndex(d => d.id === num);
+    remove = id => {
+      const idx = data.findIndex(d => d.id === id);
       data = [...data.slice(0, idx), ...data.slice(idx + 1)];
     },
     run = () => {
@@ -72,10 +70,18 @@
       data = buildData(10000);
       selected = undefined;
     },
-    select = (id) => selected = id,
+    select = id => selected = id,
     swapRows = () => {
       if (data.length > 998) {
         data = [data[0], data[998], ...data.slice(2, 998), data[1], data[999]];
+      }
+    },
+    click = ({ target }) => {
+      const id = Number.parseInt(target.closest("tr").firstChild.firstChild.nodeValue);
+      if (target.matches(".glyphicon-remove")) {
+        remove(id);
+      } else {
+        select(id);
       }
     };
 
