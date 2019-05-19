@@ -1,0 +1,12 @@
+(executable
+   (package js-framework-benchmark)
+   (name Entrypoint)
+   (public_name JsFrameworkBenchmark)
+   (preprocess (pps ppx_jane ))
+   (libraries   incr_dom )
+   (js_of_ocaml (flags
+      ; --pretty
+      --opt 3
+      --no-source-map
+   ))
+)

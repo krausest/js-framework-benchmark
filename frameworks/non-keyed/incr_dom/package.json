@@ -1,0 +1,35 @@
+{
+  "name": "js-framework-benchmark-incr_dom",
+  "version": "0.0.0",
+  "description": "Incr_dom version of benchmark",
+  "author": "Michael Boulton",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "keywords": [
+    "webpack",
+    "ReasonML",
+    "incr_dom"
+  ],
+  "esy": {
+    "build": "refmterr dune build -p js-framework-benchmark -j 3"
+  },
+  "scripts": {
+    "build": "esy b",
+    "build:bucklescript": "bsb -make-world",
+    "test": "refmterr esy b dune runtest --force",
+    "dbg": "refmterr esy b dune build ./test/RunTests.bc"
+  },
+  "peerDependencies": {
+    "ocaml": "^4.7.0"
+  },
+  "devDependencies": {
+    "@opam/ppx_deriving": "4.2.1",
+    "@esy-ocaml/reason": "*",
+    "@opam/merlin": "*",
+    "refmterr": "*"
+  }
+}
