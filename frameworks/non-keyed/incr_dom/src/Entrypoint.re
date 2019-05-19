@@ -1,0 +1,12 @@
+
+open! Core_kernel;
+open! Incr_dom;
+open! Js_of_ocaml;
+
+  Start_app.start(
+    ~debug=true,
+    ~bind_to_element_with_id="maindiv",
+    (module App),
+    ~initial_model=
+      App.Model.Fields.create(~counters=Int.Map.singleton(0, 13)),
+);

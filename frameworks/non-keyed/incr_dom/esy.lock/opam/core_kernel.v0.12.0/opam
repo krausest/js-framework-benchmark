@@ -1,0 +1,47 @@
+opam-version: "2.0"
+maintainer: "opensource@janestreet.com"
+authors: ["Jane Street Group, LLC <opensource@janestreet.com>"]
+homepage: "https://github.com/janestreet/core_kernel"
+bug-reports: "https://github.com/janestreet/core_kernel/issues"
+dev-repo: "git+https://github.com/janestreet/core_kernel.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/core_kernel/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"               {>= "4.07.0"}
+  "base"                {>= "v0.12" & < "v0.13"}
+  "base_bigstring"      {>= "v0.12" & < "v0.13"}
+  "base_quickcheck"     {>= "v0.12" & < "v0.13"}
+  "bin_prot"            {>= "v0.12" & < "v0.13"}
+  "jst-config"          {>= "v0.12" & < "v0.13"}
+  "fieldslib"           {>= "v0.12" & < "v0.13"}
+  "jane-street-headers" {>= "v0.12" & < "v0.13"}
+  "ppx_assert"          {>= "v0.12" & < "v0.13"}
+  "ppx_base"            {>= "v0.12" & < "v0.13"}
+  "ppx_hash"            {>= "v0.12" & < "v0.13"}
+  "ppx_inline_test"     {>= "v0.12" & < "v0.13"}
+  "ppx_jane"            {>= "v0.12" & < "v0.13"}
+  "ppx_sexp_conv"       {>= "v0.12" & < "v0.13"}
+  "ppx_sexp_message"    {>= "v0.12" & < "v0.13"}
+  "sexplib"             {>= "v0.12" & < "v0.13"}
+  "splittable_random"   {>= "v0.12" & < "v0.13"}
+  "stdio"               {>= "v0.12" & < "v0.13"}
+  "time_now"            {>= "v0.12" & < "v0.13"}
+  "typerep"             {>= "v0.12" & < "v0.13"}
+  "variantslib"         {>= "v0.12" & < "v0.13"}
+  "dune"                {build & >= "1.5.1"}
+]
+synopsis: "Industrial strength alternative to OCaml's standard library"
+description: "
+The Core suite of libraries is an industrial strength alternative to
+OCaml's standard library that was developed by Jane Street, the
+largest industrial user of OCaml.
+
+Core_kernel is the system-independent part of Core.
+"
+url {
+  src: "https://ocaml.janestreet.com/ocaml-core/v0.12/files/core_kernel-v0.12.0.tar.gz"
+  checksum: "md5=e7adb97d39a93ccd542b9d015659c480"
+}

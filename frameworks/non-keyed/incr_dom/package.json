@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-incr_dom",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Incr_dom version of benchmark",
   "author": "Michael Boulton",
   "license": "Apache-2.0",
@@ -18,6 +18,7 @@
     "build": "refmterr dune build -p js-framework-benchmark -j 3"
   },
   "scripts": {
+    "run": "esy x bash -c 'http-server #{self.bin}'",
     "build": "esy b",
     "build:bucklescript": "bsb -make-world",
     "test": "refmterr esy b dune runtest --force",
@@ -27,7 +28,8 @@
     "ocaml": "^4.7.0"
   },
   "devDependencies": {
-    "@opam/ppx_deriving": "4.2.1",
+    "http-server": "*",
+    "@opam/incr_dom": "v0.12.0",
     "@esy-ocaml/reason": "*",
     "@opam/merlin": "*",
     "refmterr": "*"

@@ -1,0 +1,25 @@
+opam-version: "2.0"
+maintainer: "opensource@janestreet.com"
+authors: ["Jane Street Group, LLC <opensource@janestreet.com>"]
+homepage: "https://github.com/janestreet/base_bigstring"
+bug-reports: "https://github.com/janestreet/base_bigstring/issues"
+dev-repo: "git+https://github.com/janestreet/base_bigstring.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/base_bigstring/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"    {>= "4.07.0"}
+  "base"     {>= "v0.12" & < "v0.13"}
+  "ppx_jane" {>= "v0.12" & < "v0.13"}
+  "dune"     {build & >= "1.5.1"}
+]
+synopsis: "String type based on [Bigarray], for use in I/O and C-bindings"
+description: "
+String type based on [Bigarray], for use in I/O and C-bindings.
+"
+url {
+  src: "https://ocaml.janestreet.com/ocaml-core/v0.12/files/base_bigstring-v0.12.0.tar.gz"
+  checksum: "md5=372b4a589cacacdf308272995d2daab6"
+}

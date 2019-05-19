@@ -1,0 +1,28 @@
+opam-version: "2.0"
+maintainer: "opensource@janestreet.com"
+authors: ["Jane Street Group, LLC <opensource@janestreet.com>"]
+homepage: "https://github.com/janestreet/protocol_version_header"
+bug-reports: "https://github.com/janestreet/protocol_version_header/issues"
+dev-repo: "git+https://github.com/janestreet/protocol_version_header.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/protocol_version_header/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"       {>= "4.07.0"}
+  "core_kernel" {>= "v0.12" & < "v0.13"}
+  "ppx_jane"    {>= "v0.12" & < "v0.13"}
+  "dune"        {build & >= "1.5.1"}
+]
+synopsis: "Protocol versioning"
+description: "
+This library offers a lightweight way for applications protocols to
+version themselves. The more protocols that add themselves to
+[Known_protocol], the nicer error messages we will get when connecting
+to a service while using the wrong protocol.
+"
+url {
+  src: "https://ocaml.janestreet.com/ocaml-core/v0.12/files/protocol_version_header-v0.12.0.tar.gz"
+  checksum: "md5=a74e864b82a5ac4610098184801a4a12"
+}

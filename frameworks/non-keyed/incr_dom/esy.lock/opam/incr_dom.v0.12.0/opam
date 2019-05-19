@@ -1,0 +1,51 @@
+opam-version: "2.0"
+maintainer: "opensource@janestreet.com"
+authors: ["Jane Street Group, LLC <opensource@janestreet.com>"]
+homepage: "https://github.com/janestreet/incr_dom"
+bug-reports: "https://github.com/janestreet/incr_dom/issues"
+dev-repo: "git+https://github.com/janestreet/incr_dom.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/incr_dom/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"           {>= "4.07.0"}
+  "async_js"        {>= "v0.12" & < "v0.13"}
+  "async_kernel"    {>= "v0.12" & < "v0.13"}
+  "core_kernel"     {>= "v0.12" & < "v0.13"}
+  "incr_map"        {>= "v0.12" & < "v0.13"}
+  "incr_select"     {>= "v0.12" & < "v0.13"}
+  "incremental"     {>= "v0.12" & < "v0.13"}
+  "ppx_jane"        {>= "v0.12" & < "v0.13"}
+  "virtual_dom"     {>= "v0.12" & < "v0.13"}
+  "dune"            {build & >= "1.5.1"}
+  "js_of_ocaml"     {>= "3.2.1"}
+  "js_of_ocaml-ppx"
+]
+synopsis: "A library for building dynamic webapps, using Js_of_ocaml"
+description: "
+The library is designed roughly on a model/view/controller model.
+Your application is built out of:
+
+- A functional model type that tracks the state of your application.
+
+- An incremental /view/ function for computing an HTML-like
+  representation of how your application should render on the browser.
+  The is based on the [[https://github.com/Matt-Esch/virtual-dom][virtual-dom]] javascript library.
+
+- An action type that is used to schedule events that update the
+  model.
+
+Combined with the ability to use Async, and in particular to send out
+network requests using websockets, this should allow the easy
+construction of rich web applications in a fairly comprehensible
+style.
+
+If you want a more concrete sense of how this works, look in the
+examples directory.
+"
+url {
+  src: "https://ocaml.janestreet.com/ocaml-core/v0.12/files/incr_dom-v0.12.0.tar.gz"
+  checksum: "md5=b8ead9f516cacb750b905ed85878790e"
+}
