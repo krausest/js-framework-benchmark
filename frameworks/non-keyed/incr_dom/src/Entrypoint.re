@@ -5,7 +5,7 @@ open! Js_of_ocaml;
 
   Start_app.start(
     ~debug=true,
-    ~bind_to_element_with_id="maindiv",
+    ~bind_to_element_with_id="main",
     (module App),
     ~initial_model=
       App.Model.Fields.create(~counters=Int.Map.singleton(0, 13)),

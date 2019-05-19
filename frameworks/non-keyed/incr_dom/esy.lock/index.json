@@ -1,5 +1,5 @@
 {
-  "checksum": "a0fe0d83ae6ab4fa7aedba182b571985",
+  "checksum": "89d988c72ceb93cd7780251b76d56df1",
   "root": "js-framework-benchmark-incr_dom@link-dev:./package.json",
   "node": {
     "wordwrap@0.0.3@d41d8cd9": {
@@ -258,11 +258,13 @@
         "manifest": "package.json"
       },
       "overrides": [],
-      "dependencies": [ "ocaml@4.7.1004@d41d8cd9" ],
+      "dependencies": [
+        "ocaml@4.7.1004@d41d8cd9", "@reason-native/console@0.1.0@d41d8cd9",
+        "@opam/incr_dom@opam:v0.12.0@9e4382bc"
+      ],
       "devDependencies": [
         "refmterr@3.1.10@d41d8cd9", "http-server@0.11.1@d41d8cd9",
         "@opam/merlin@opam:3.2.2@829ee6dd",
-        "@opam/incr_dom@opam:v0.12.0@9e4382bc",
         "@esy-ocaml/reason@3.4.0@d41d8cd9"
       ]
     },
@@ -429,6 +431,23 @@
       },
       "overrides": [],
       "dependencies": [],
+      "devDependencies": []
+    },
+    "@reason-native/console@0.1.0@d41d8cd9": {
+      "id": "@reason-native/console@0.1.0@d41d8cd9",
+      "name": "@reason-native/console",
+      "version": "0.1.0",
+      "source": {
+        "type": "install",
+        "source": [
+          "archive:https://registry.npmjs.org/@reason-native/console/-/console-0.1.0.tgz#sha1:3b56f0e9e1be8464329793df29020aa90e71c22c"
+        ]
+      },
+      "overrides": [],
+      "dependencies": [
+        "ocaml@4.7.1004@d41d8cd9", "@opam/dune@opam:1.9.3@cccbbfe7",
+        "@esy-ocaml/reason@3.4.0@d41d8cd9"
+      ],
       "devDependencies": []
     },
     "@opam/yojson@opam:1.7.0@2d92307e": {

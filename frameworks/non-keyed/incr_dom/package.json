@@ -27,9 +27,12 @@
   "peerDependencies": {
     "ocaml": "^4.7.0"
   },
+  "dependencies": {
+    "@opam/incr_dom": "v0.12.0",
+    "@reason-native/console": "*"
+  },
   "devDependencies": {
     "http-server": "*",
-    "@opam/incr_dom": "v0.12.0",
     "@esy-ocaml/reason": "*",
     "@opam/merlin": "*",
     "refmterr": "*"

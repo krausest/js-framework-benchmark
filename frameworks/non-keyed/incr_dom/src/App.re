@@ -1,10 +1,6 @@
 open! Core_kernel;
 open Incr_dom;
-
-let body = (~children, _) => Vdom.Node.body([], children);
-let div = (~children, _) => Vdom.Node.div([], children);
-let button = (~children, ~onClick, _) =>
-  Vdom.Node.button([Vdom.Attr.on_click(onClick)], children);
+open Elements;
 
 module Model = {
   [@deriving (sexp, fields, compare)]
@@ -56,6 +52,11 @@ let view = (m: Incr.t(Model.t), ~inject) => {
   open Vdom;
   let addNewCounterButton =
     <div>
+      <Button
+        id="lspd"
+        title="lflll"
+        onClick={_ => inject(Action.NewCounter)}
+      />
       <button onClick={_ev => inject(Action.NewCounter)}>
         {Node.text("Add new counter")}
       </button>
@@ -83,7 +84,6 @@ let view = (m: Incr.t(Model.t), ~inject) => {
   <body> ...{List.cons(addNewCounterButton, Map.data(elements))} </body>;
 };
 
-
 let create = (model: Incr.t(Model.t), ~old_model as _, ~inject) => {
   open Incr.Let_syntax;
   let%map apply_action = {
@@ -94,4 +94,4 @@ let create = (model: Incr.t(Model.t), ~old_model as _, ~inject) => {
   and model = model;
 
   Component.create(~apply_action, model, view);
-}
+};

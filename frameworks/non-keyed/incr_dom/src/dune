@@ -3,10 +3,16 @@
    (name Entrypoint)
    (public_name JsFrameworkBenchmark)
    (preprocess (pps ppx_jane ))
-   (libraries  incr_dom )
+   (libraries  incr_dom console.lib )
    (js_of_ocaml (flags
-      ; --pretty
-      --opt 3
+      --pretty
+      --opt 1
       --no-source-map
    ))
 )
+
+(install
+   (section bin)
+   (package js-framework-benchmark)
+   (files index.html Entrypoint.bc.js)
+   )
