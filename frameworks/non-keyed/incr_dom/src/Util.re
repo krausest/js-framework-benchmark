@@ -1,3 +1,5 @@
+open! Core_kernel;
+
 let random = max => Random.int(max);
 
 let adjectives = [|
@@ -56,9 +58,19 @@ let names = [|
   "keyboard",
 |];
 
+[@deriving sexp]
 type item = {
   id: int,
   label: string,
+};
+
+let makeBy = (count_, maker) => {
+  let rec impl = acc =>
+    fun
+    | 0 => acc
+    | n => impl([maker(n), ...acc], n - 1);
+
+  impl([], count_) |> Array.of_list;
 };
 
 let build_data_impl = () => {
@@ -74,7 +86,8 @@ let build_data_impl = () => {
         ++ " "
         ++ names[random(Array.length(names))],
     };
-    let generated = Belt.Array.makeBy(count, makeitem);
+
+    let generated = makeBy(count, makeitem);
     state := state^ + count;
     generated;
   };
