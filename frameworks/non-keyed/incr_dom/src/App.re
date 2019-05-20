@@ -26,7 +26,15 @@ module Action = {
   [@deriving sexp]
   type t =
     | NewCounter
-    | Update(int, int); /* pos, diff */
+    | Update(int, int) /* pos, diff */
+    | RUN
+    | RUNLOTS
+    | ADD
+    | UPDATEEVERYTENTH
+    | SELECT(Util.item)
+    | REMOVE(Util.item)
+    | CLEAR
+    | SWAPROWS;
 
   let should_log = _ => true;
 };
@@ -39,6 +47,7 @@ let apply_action = (model, action, _, ~schedule_action as _) =>
   switch ((action: Action.t)) {
   | NewCounter => Model.addNew(model)
   | Update(pos, diff) => Model.update(model, pos, diff)
+  | _ => model
   };
 
 let update_visibility = m => m;
@@ -50,13 +59,24 @@ let on_display = (~old as _, _, _) => ();
 let view = (m: Incr.t(Model.t), ~inject) => {
   open Incr.Let_syntax;
   open Vdom;
+
+  let sender = (action, _) => inject(action);
+
+  let jumbotron =
+    Action.(
+      <Jumbotron
+        run={sender(RUN)}
+        runLots={sender(RUNLOTS)}
+        add={sender(ADD)}
+        update={sender(UPDATEEVERYTENTH)}
+        clear={sender(CLEAR)}
+        swapRows={sender(SWAPROWS)}
+      />
+    );
+
   let addNewCounterButton =
     <div>
-      <Button
-        id="lspd"
-        title="lflll"
-        onClick={_ => inject(Action.NewCounter)}
-      />
+      {jumbotron}
       <button onClick={_ev => inject(Action.NewCounter)}>
         {Node.text("Add new counter")}
       </button>

@@ -19,8 +19,16 @@ let sanitise_classname =
 
 let body = (~children, _) => Vdom.Node.body([], children);
 
+let genericElement = (creator, ~className, ~children) => {
+  creator([sanitise_classname(className)], children);
+};
+
 let div = (~className=?, ~children, _) => {
-  Vdom.Node.div([sanitise_classname(className)], children);
+  genericElement(Vdom.Node.div, ~className, ~children);
+};
+
+let h1 = (~className=?, ~children, _) => {
+  genericElement(Vdom.Node.h1, ~className, ~children);
 };
 
 let button = (~id=?, ~className=?, ~onClick, ~children, _) => {
