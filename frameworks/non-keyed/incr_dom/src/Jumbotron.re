@@ -3,11 +3,11 @@ open Elements;
 
 let createElement =
     (~run, ~runLots, ~add, ~update, ~clear, ~swapRows, ~children as _, _) => {
+  let hdr = Vdom.Node.text("Incr_dom");
+
   <div className="jumbotron">
     <div className="row">
-      <div className="col-md-6">
-        <h1> {Vdom.Node.text("Incr_dom")} </h1>
-      </div>
+      <div className="col-md-6"> <h1> hdr </h1> </div>
       <div className="col-md-6">
         <div className="row">
           <Button id="run" title="Create 1,000 rows" onClick=run />
