@@ -27,16 +27,10 @@ let genericElement:
               Vdom.Event.t
                 =?,
     ~children: list(Vdom.Node.t),
-    'a
+    unit
   ) =>
   'b =
-  (
-    creator,
-    ~className=?,
-    ~onClick=?,
-    ~children,
-    _,
-  ) => {
+  (creator, ~className=?, ~onClick=?, ~children, _) => {
     let attrs = [sanitise_classname(className)];
 
     let fold_attrs = (acc, (type_, next)) =>
@@ -45,6 +39,7 @@ let genericElement:
       | Some(attr) => [type_(attr), ...acc]
       };
 
+    /* TODO: Merge with sanitise_classname */
     let attrs =
       List.fold_left(fold_attrs, attrs, [(Vdom.Attr.on_click, onClick)]);
 
@@ -56,26 +51,6 @@ let h1 = genericElement(Vdom.Node.h1);
 let tr = genericElement(Vdom.Node.tr);
 let td = genericElement(Vdom.Node.td);
 let a = genericElement(Vdom.Node.a);
-
-/* let div = (~className=?, ~children, _) => {
-     genericElement(Vdom.Node.div, ~className, ~children);
-   };
-
-   let h1 = (~className=?, ~children, _) => {
-     genericElement(Vdom.Node.h1, ~className, ~children);
-   };
-
-   let tr = (~className=?, ~children, _) => {
-     genericElement(Vdom.Node.tr, ~className, ~children);
-   };
-
-   let td = (~className=?, ~children, _) => {
-     genericElement(Vdom.Node.td, ~className, ~children);
-   };
-
-   let a = (~className=?, ~onClick=?, ~children, _) => {
-     genericElement(Vdom.Node.a, ~className, ~onClick, ~children);
-   }; */
 
 let button = (~id=?, ~className=?, ~onClick, ~children, _) => {
   Vdom.Node.button(
