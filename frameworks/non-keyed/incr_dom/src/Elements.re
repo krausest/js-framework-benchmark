@@ -29,7 +29,7 @@ let genericElement =
       ~id=?,
       ~className=?,
       ~onClick=?,
-      ~ariaHidden=?,
+      ~ariaHidden: option(bool)=?,
       ~children,
       _: unit,
     ) => {
