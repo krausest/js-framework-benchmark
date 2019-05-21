@@ -16,43 +16,6 @@ let sanitise_classname = className =>
     Vdom.Attr.class_(className);
   };
 
-/*
- type domConverter =
-    | OnclickConverter(
-        (Js_of_ocaml.Js.t(Js_of_ocaml.Dom_html.mouseEvent) => Vdom.Event.t) =>
-        Vdom.Attr.t,
-        option(
-          Js_of_ocaml.Js.t(Js_of_ocaml.Dom_html.mouseEvent) => Vdom.Event.t,
-        ),
-      )
-    | JsUnsafeConverter(
-        Js_of_ocaml.Js.Unsafe.any => Vdom.Attr.t,
-        option(Js_of_ocaml.Js.Unsafe.any),
-      );
-      */
-
-/*
- type fire_event_t =
-   Js_of_ocaml.Js.t(Js_of_ocaml.Dom_html.mouseEvent) => Vdom.Event.t;
-
- type any_type_t = Js_of_ocaml.Js.Unsafe.any;
-
- type domConverter(_) =
-   | OnclickConverter(fire_event_t => Vdom.Attr.t, option(fire_event_t))
-     : domConverter(fire_event_t)
-   | JsUnsafeConverter(any_type_t => Vdom.Attr.t, option(any_type_t))
-     : domConverter(any_type_t);
-
- type any =
-   | Any('a): any;
-
- let apply = (type a, wrapped_any: domConverter(a)): a => {
-   switch (wrapped_any) {
-   | Any(b) => b
-   };
- };
- */
-
 let maybe_apply: ('a => Vdom.Attr.t, option('a)) => option(Vdom.Attr.t) =
   converter =>
     fun
