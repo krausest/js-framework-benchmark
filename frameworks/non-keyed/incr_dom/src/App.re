@@ -1,22 +1,26 @@
 open! Core_kernel;
 open Incr_dom;
 open Elements;
+open Util;
 
 module Model = {
   [@deriving (sexp, fields, compare)]
-  type t = {counters: Int.Map.t(int)};
+  type t = {
+    counters: Int.Map.t(int),
+    data: array(item),
+  };
 
   let addNew = t => {
     let counters =
       Int.Map.set(t.counters, ~key=Map.length(t.counters), ~data=0);
-    {counters: counters};
+    {...t, counters};
   };
 
   /* no bounds checks */
   let update = (t, pos, diff) => {
     let oldVal = Map.find_exn(t.counters, pos);
     let counters = Int.Map.set(t.counters, ~key=pos, ~data=oldVal + diff);
-    {counters: counters};
+    {...t, counters};
   };
 
   let cutoff = (t1, t2) => compare(t1, t2) == 0;
@@ -62,6 +66,20 @@ let view = (m: Incr.t(Model.t), ~inject) => {
 
   let sender = (action, _) => inject(action);
 
+  let make_rows =
+    Action.(
+      Array.map(_, ~f=item =>
+        <div key={item.id}>
+          <Row
+            onSelect={sender(SELECT(item))}
+            onRemove={sender(REMOVE(item))}
+            selected=false
+            item
+          />
+        </div>
+      )
+    );
+
   let jumbotron =
     Action.(
       <Jumbotron
@@ -76,7 +94,7 @@ let view = (m: Incr.t(Model.t), ~inject) => {
 
   let addNewCounterButton =
     <div>
-      {jumbotron}
+      jumbotron
       <button onClick={_ev => inject(Action.NewCounter)}>
         {Node.text("Add new counter")}
       </button>

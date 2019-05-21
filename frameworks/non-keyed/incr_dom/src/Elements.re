@@ -30,6 +30,7 @@ let genericElement =
       ~className=?,
       ~onClick=?,
       ~ariaHidden: option(bool)=?,
+      ~key: option(int)=?,
       ~children,
       _: unit,
     ) => {
@@ -38,6 +39,10 @@ let genericElement =
     maybe_apply(
       Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("aria-hidden"),
       ariaHidden,
+    ),
+    maybe_apply(
+      Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("key"),
+      key,
     ),
     maybe_apply(Vdom.Attr.on_click, onClick),
     maybe_apply(Vdom.Attr.id, id),

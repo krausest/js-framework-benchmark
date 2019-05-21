@@ -1,10 +1,13 @@
 open Incr_dom;
 open Elements;
 
+open Util;
+
 let glyph_icon =
   <span className="glyphicon glyphicon-remove" ariaHidden=true />;
 
-let createElement = (~onSelect, ~onRemove, ~selected, ~item, ~children as _) => {
+let createElement =
+    (~onSelect, ~onRemove, ~selected, ~item, ~children as _, _) => {
   <tr className={selected ? "danger" : ""}>
     <td className="col-md-1">
       {item.id |> string_of_int |> Vdom.Node.text}

@@ -58,7 +58,7 @@ let names = [|
   "keyboard",
 |];
 
-[@deriving sexp]
+[@deriving (sexp, compare)]
 type item = {
   id: int,
   label: string,
