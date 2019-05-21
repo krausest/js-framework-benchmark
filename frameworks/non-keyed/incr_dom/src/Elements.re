@@ -1,65 +1,96 @@
+open! Core_kernel;
 open Incr_dom;
+
+// Left to right composition
+let (%>) = (f1: 'a => 'x, f2: 'x => 'b, x: 'a): 'b => f2(f1(x));
 
 let or_empty =
   fun
   | None => Random.bits() |> string_of_int
   | Some(x) => x;
 
-let sanitise_classname =
-  fun
-  | None => Random.bits() |> string_of_int |> Vdom.Attr.class_
-  | Some(className) => {
-      Console.log(className);
-      if (String.contains(className, ' ')) {
-        Vdom.Attr.classes(Core_kernel.String.split(className, ~on=' '));
-      } else {
-        Vdom.Attr.class_(className);
-      };
-    };
-
-let body = (~children, _) => Vdom.Node.body([], children);
-
-let genericElement:
-  (
-    (list(Vdom.Attr.t), list(Vdom.Node.t)) => 'b,
-    ~className: string=?,
-    ~onClick: Js_of_ocaml.Js.t(Js_of_ocaml.Dom_html.mouseEvent) =>
-              Vdom.Event.t
-                =?,
-    ~children: list(Vdom.Node.t),
-    unit
-  ) =>
-  'b =
-  (creator, ~className=?, ~onClick=?, ~children, _) => {
-    let attrs = [sanitise_classname(className)];
-
-    let fold_attrs = (acc, (type_, next)) =>
-      switch (next) {
-      | None => acc
-      | Some(attr) => [type_(attr), ...acc]
-      };
-
-    /* TODO: Merge with sanitise_classname */
-    let attrs =
-      List.fold_left(fold_attrs, attrs, [(Vdom.Attr.on_click, onClick)]);
-
-    creator(attrs, children);
+let sanitise_classname = className =>
+  if (String.contains(className, ' ')) {
+    Vdom.Attr.classes(Core_kernel.String.split(className, ~on=' '));
+  } else {
+    Vdom.Attr.class_(className);
   };
 
+/*
+ type domConverter =
+    | OnclickConverter(
+        (Js_of_ocaml.Js.t(Js_of_ocaml.Dom_html.mouseEvent) => Vdom.Event.t) =>
+        Vdom.Attr.t,
+        option(
+          Js_of_ocaml.Js.t(Js_of_ocaml.Dom_html.mouseEvent) => Vdom.Event.t,
+        ),
+      )
+    | JsUnsafeConverter(
+        Js_of_ocaml.Js.Unsafe.any => Vdom.Attr.t,
+        option(Js_of_ocaml.Js.Unsafe.any),
+      );
+      */
+
+/*
+ type fire_event_t =
+   Js_of_ocaml.Js.t(Js_of_ocaml.Dom_html.mouseEvent) => Vdom.Event.t;
+
+ type any_type_t = Js_of_ocaml.Js.Unsafe.any;
+
+ type domConverter(_) =
+   | OnclickConverter(fire_event_t => Vdom.Attr.t, option(fire_event_t))
+     : domConverter(fire_event_t)
+   | JsUnsafeConverter(any_type_t => Vdom.Attr.t, option(any_type_t))
+     : domConverter(any_type_t);
+
+ type any =
+   | Any('a): any;
+
+ let apply = (type a, wrapped_any: domConverter(a)): a => {
+   switch (wrapped_any) {
+   | Any(b) => b
+   };
+ };
+ */
+
+let maybe_apply: ('a => Vdom.Attr.t, option('a)) => option(Vdom.Attr.t) =
+  converter =>
+    fun
+    | None => None
+    | Some(a) => Some(converter(a));
+
+let genericElement =
+    (
+      creator,
+      ~type_=?,
+      ~id=?,
+      ~className=?,
+      ~onClick=?,
+      ~ariaHidden=?,
+      ~children,
+      _: unit,
+    ) => {
+  let attrs = [
+    maybe_apply(sanitise_classname, className),
+    maybe_apply(
+      Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("aria-hidden"),
+      ariaHidden,
+    ),
+    maybe_apply(Vdom.Attr.on_click, onClick),
+    maybe_apply(Vdom.Attr.id, id),
+    maybe_apply(Vdom.Attr.type_, type_),
+  ];
+
+  let filtered = List.filter_opt(attrs);
+
+  creator(filtered, children);
+};
+
+let body = genericElement(Vdom.Node.body);
 let div = genericElement(Vdom.Node.div);
 let h1 = genericElement(Vdom.Node.h1);
 let tr = genericElement(Vdom.Node.tr);
 let td = genericElement(Vdom.Node.td);
 let a = genericElement(Vdom.Node.a);
-
-let button = (~id=?, ~className=?, ~onClick, ~children, _) => {
-  Vdom.Node.button(
-    [
-      Vdom.Attr.on_click(onClick),
-      sanitise_classname(className),
-      Vdom.Attr.id(or_empty(id)),
-      Vdom.Attr.type_("button"),
-    ],
-    children,
-  );
-};
+let span = genericElement(Vdom.Node.span);
+let button = genericElement(Vdom.Node.button);
