@@ -1,0 +1,21 @@
+env:
+  browser: true
+  es6: true
+
+extends:
+  - eslint:recommended
+
+parser: babel-eslint
+
+parserOptions:
+  ecmaVersion: 9
+  sourceType: module
+
+globals:
+  html: readonly
+
+rules:
+  semi: error
+  no-unused-vars:
+    - error
+    - varsIgnorePattern: ^h$

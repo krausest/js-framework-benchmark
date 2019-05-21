@@ -1,0 +1,33 @@
+{
+  "name": "js-framework-benchmark-sinuous",
+  "version": "0.0.1",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "sinuous"
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "author": "Wesley Luyten",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "htm": "2.1.1",
+    "sinuous": "0.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.4.4",
+    "babel-eslint": "^10.0.1",
+    "babel-plugin-htm": "^2.1.0",
+    "eslint": "^5.16.0",
+    "rollup": "1.11.3",
+    "rollup-plugin-babel": "4.3.2",
+    "rollup-plugin-node-resolve": "4.2.3",
+    "rollup-plugin-terser": "4.0.4"
+  }
+}
