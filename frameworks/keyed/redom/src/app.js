@@ -131,13 +131,14 @@ class Tr {
     this.data = {};
     this.app = app;
     this.store = store;
+    this.isSelected = false;
     this.el = el('tr',
       this.id = el('td.col-md-1'),
       el('td.col-md-4',
         this.label = el('a', { onclick: e => app.select(this.data.id) })
       ),
       el('td.col-md-1',
-        this.remove = el('a', { onclick: e => app.remove(this.data.id) },
+        el('a', { onclick: e => app.remove(this.data.id) },
           el('span.glyphicon.glyphicon-remove', { 'aria-hidden': true })
         )
       ),
@@ -156,10 +157,12 @@ class Tr {
       this.label.textContent = label;
     }
 
-    if (id === selected) {
-    this.el.classList.add('danger');
-    } else {
-    this.el.classList.remove('danger');
+    if (id === selected && !this.isSelected) {
+      this.el.classList.add('danger');
+      this.isSelected = true;
+    } else if (this.isSelected) {
+      this.el.classList.remove('danger');
+      this.isSelected = false;
     }
 
     this.data = { id, label };
