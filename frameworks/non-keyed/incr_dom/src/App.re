@@ -7,7 +7,7 @@ module Model = {
   [@deriving (sexp, fields, compare)]
   type t = {
     counters: Int.Map.t(int),
-    data: array(item),
+    data: Int.Map.t(item),
   };
 
   let addNew = t => {
@@ -66,20 +66,6 @@ let view = (m: Incr.t(Model.t), ~inject) => {
 
   let sender = (action, _) => inject(action);
 
-  let make_rows =
-    Action.(
-      Array.map(_, ~f=item =>
-        <div key={item.id}>
-          <Row
-            onSelect={sender(SELECT(item))}
-            onRemove={sender(REMOVE(item))}
-            selected=false
-            item
-          />
-        </div>
-      )
-    );
-
   let jumbotron =
     Action.(
       <Jumbotron
@@ -119,7 +105,29 @@ let view = (m: Incr.t(Model.t), ~inject) => {
         </div>;
       },
     );
-  <body> ...{List.cons(addNewCounterButton, Map.data(elements))} </body>;
+
+  let%map rows =
+    Incr.Map.mapi'(
+      m >>| Model.data,
+      ~f=(~key as _, ~data as item) => {
+        let%map item = item;
+        Action.(
+          <div key={item.id}>
+            <Row
+              onSelect={sender(SELECT(item))}
+              onRemove={sender(REMOVE(item))}
+              selected=false
+              item
+            />
+          </div>
+        );
+      },
+    );
+
+  <body>
+    <div> addNewCounterButton </div>
+    <div> ...{Map.data(elements)} </div>
+  </body>;
 };
 
 let create = (model: Incr.t(Model.t), ~old_model as _, ~inject) => {
