@@ -64,6 +64,16 @@ type item = {
   label: string,
 };
 
+// This is for if you want to _index_ using items
+// module Item_Mappable = {
+//   module T = {
+//     [@deriving (sexp, compare)]
+//     type t = item;
+//   };
+//   include T;
+//   include Comparable.Make(T);
+// };
+
 let makeBy = (count_, maker) => {
   let rec impl = acc =>
     fun
@@ -96,3 +106,10 @@ let build_data_impl = () => {
 };
 
 let build_data = build_data_impl();
+
+let exclaim = (idx, d: item) =>
+  if (0 == idx mod 10) {
+    {...d, label: d.label ++ " !!!"};
+  } else {
+    d;
+  };

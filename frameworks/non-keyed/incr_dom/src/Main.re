@@ -15,13 +15,6 @@ type main_actions_t =
 
 let component = ReasonReact.reducerComponent("Main");
 
-let exclaim = (idx, d: Util.item) =>
-  if (0 == idx mod 10) {
-    {...d, label: d.label ++ " !!!"};
-  } else {
-    d;
-  };
-
 /*
  let exclaim_inplace = (arr: array(Util.item)) => {
    let impl = (idx, d: Util.item) =>

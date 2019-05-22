@@ -6,21 +6,25 @@ open Util;
 module Model = {
   [@deriving (sexp, fields, compare)]
   type t = {
-    counters: Int.Map.t(int),
-    data: Int.Map.t(item),
+    data: array(item),
+    selected: option(item),
   };
 
-  let addNew = t => {
-    let counters =
-      Int.Map.set(t.counters, ~key=Map.length(t.counters), ~data=0);
-    {...t, counters};
-  };
+  // -  let addNew = t => {
+  //   -    let counters =
+  //   -      Int.Map.set(t.counters, ~key=Map.length(t.counters), ~data=0);
+  //   -    {...t, counters};
+  //   -  };
+  //   -
+  //   -  /* no bounds checks */
+  //   -  let update = (t, pos, diff) => {
+  //   -    let oldVal = Map.find_exn(t.counters, pos);
+  //   -    let counters = Int.Map.set(t.counters, ~key=pos, ~data=oldVal + diff);
+  //   -    {...t, counters};
 
-  /* no bounds checks */
-  let update = (t, pos, diff) => {
-    let oldVal = Map.find_exn(t.counters, pos);
-    let counters = Int.Map.set(t.counters, ~key=pos, ~data=oldVal + diff);
-    {...t, counters};
+  let create1000 = model => {
+    let newdata = Util.build_data(1000);
+    {...model, data: newdata};
   };
 
   let cutoff = (t1, t2) => compare(t1, t2) == 0;
@@ -29,8 +33,6 @@ module Model = {
 module Action = {
   [@deriving sexp]
   type t =
-    | NewCounter
-    | Update(int, int) /* pos, diff */
     | RUN
     | RUNLOTS
     | ADD
@@ -49,9 +51,10 @@ module State = {
 
 let apply_action = (model, action, _, ~schedule_action as _) =>
   switch ((action: Action.t)) {
-  | NewCounter => Model.addNew(model)
-  | Update(pos, diff) => Model.update(model, pos, diff)
+  | RUN => Model.create1000(model)
   | _ => model
+  // -  | NewCounter => Model.addNew(model)
+  // -  | Update(pos, diff) => Model.update(model, pos, diff)
   };
 
 let update_visibility = m => m;
@@ -60,7 +63,7 @@ let on_startup = (~schedule_action as _, _) => Async_kernel.return();
 
 let on_display = (~old as _, _, _) => ();
 
-let view = (m: Incr.t(Model.t), ~inject) => {
+let view = (model: Incr.t(Model.t), ~inject) => {
   open Incr.Let_syntax;
 
   let sender = (action, _) => inject(action);
@@ -78,27 +81,30 @@ let view = (m: Incr.t(Model.t), ~inject) => {
     );
 
   let%map rows =
-    Incr.Map.mapi'(
-      m >>| Model.data,
-      ~f=(~key as _, ~data as item) => {
-        let%map item = item;
-        Action.(
-          <div key={item.id}>
-            <Row
-              onSelect={sender(SELECT(item))}
-              onRemove={sender(REMOVE(item))}
-              selected=false
-              item
-            />
-          </div>
-        );
-      },
+    model
+    >>| (
+      x =>
+        x.data
+        |> Array.map(_, ~f=item =>
+             Action.(
+               <div key={item.id}>
+                 <Row
+                   onSelect={sender(SELECT(item))}
+                   onRemove={sender(REMOVE(item))}
+                   selected=false
+                   item
+                 />
+               </div>
+             )
+           )
     );
+
+  let rows = rows |> Array.to_list;
 
   <div className="container">
     jumbotron
     <table className="table table-hover table-striped test-data">
-      <tbody> ...{Map.data(rows)} </tbody>
+      <tbody> ...rows </tbody>
     </table>
     <span className="preloadicon glyphicon glyphicon-remove" ariaHidden=true />
   </div>;
