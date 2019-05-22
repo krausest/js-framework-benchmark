@@ -15,14 +15,18 @@
     "incr_dom"
   ],
   "esy": {
-    "build": "refmterr dune build -p js-framework-benchmark -j 3"
+    "build": "dune build --root . -j 3 --verbose --profile release",
+    "install": [
+      "esy-installer js-framework-benchmark.install"
+    ],
+    "release": {
+      "releasedBinaries": []
+    }
   },
   "scripts": {
     "run": "esy x bash -c 'http-server #{self.bin}'",
     "build": "esy b",
-    "build:bucklescript": "bsb -make-world",
-    "test": "refmterr esy b dune runtest --force",
-    "dbg": "refmterr esy b dune build ./test/RunTests.bc"
+    "build-prod": "esy b dune build --root . -j 3 --verbose --profile release"
   },
   "peerDependencies": {
     "ocaml": "^4.7.0"
