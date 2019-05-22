@@ -14,5 +14,5 @@
 (install
    (section bin)
    (package js-framework-benchmark)
-   (files index.html Entrypoint.bc.js)
+   (files Entrypoint.bc.js)
    )

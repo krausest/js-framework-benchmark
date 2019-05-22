@@ -112,6 +112,11 @@ let view = (model: Incr.t(Model.t), ~inject) => {
       />
     );
 
+  let is_selected =
+    fun
+    | None => (_i => false)
+    | Some(n) => ((item: Util.item) => phys_equal(item, n));
+
   let%map rows =
     model
     >>| (
@@ -123,7 +128,7 @@ let view = (model: Incr.t(Model.t), ~inject) => {
                  <Row
                    onSelect={sender(SELECT(item))}
                    onRemove={sender(REMOVE(item))}
-                   selected=false
+                   selected={is_selected(x.selected, item)}
                    item
                  />
                </div>
