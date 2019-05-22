@@ -62,7 +62,6 @@ let on_display = (~old as _, _, _) => ();
 
 let view = (m: Incr.t(Model.t), ~inject) => {
   open Incr.Let_syntax;
-  open Vdom;
 
   let sender = (action, _) => inject(action);
 
@@ -78,33 +77,7 @@ let view = (m: Incr.t(Model.t), ~inject) => {
       />
     );
 
-  let addNewCounterButton =
-    <div>
-      <button onClick={_ev => inject(Action.NewCounter)}>
-        {Node.text("Add new counter")}
-      </button>
-    </div>;
-
-  let button = (txt, pos, diff) => {
-    let onClick = _ev => inject(Action.Update(pos, diff));
-    <button onClick> {Node.text(txt)} </button>;
-  };
-
-  let%map elements =
-    Incr.Map.mapi'(
-      m >>| Model.counters,
-      ~f=(~key as pos, ~data as value) => {
-        let button_minus = button("-", pos, -1);
-        let button_plus = button("+", pos, 1);
-        let%map value = value;
-        <div>
-          button_minus
-          {Node.text(Int.to_string(value))}
-          button_plus
-        </div>;
-      },
-    )
-  and rows =
+  let%map rows =
     Incr.Map.mapi'(
       m >>| Model.data,
       ~f=(~key as _, ~data as item) => {
@@ -122,12 +95,13 @@ let view = (m: Incr.t(Model.t), ~inject) => {
       },
     );
 
-  <body>
-    <div> addNewCounterButton </div>
-    <div> jumbotron </div>
-    <div> ...{Map.data(elements)} </div>
-    <div> ...{Map.data(rows)} </div>
-  </body>;
+  <div className="container">
+    jumbotron
+    <table className="table table-hover table-striped test-data">
+      <tbody> ...{Map.data(rows)} </tbody>
+    </table>
+    <span className="preloadicon glyphicon glyphicon-remove" ariaHidden=true />
+  </div>;
 };
 
 let create = (model: Incr.t(Model.t), ~old_model as _, ~inject) => {

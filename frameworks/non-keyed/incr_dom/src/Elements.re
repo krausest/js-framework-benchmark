@@ -73,3 +73,5 @@ let td = genericElement(Vdom.Node.td);
 let a = genericElement(Vdom.Node.a);
 let span = genericElement(Vdom.Node.span);
 let button = genericElement(Vdom.Node.button);
+let tbody = genericElement(Vdom.Node.button);
+let table = genericElement(Vdom.Node.button);
