@@ -156,6 +156,15 @@ As you can see the mean duration for create 1000 rows was 144 msecs.
 
 ## 6. Building the result table
 
+Install libraries
+```
+cd ..
+cd webdriver-ts-results
+npm install
+cd ..
+cd webdriver-ts
+```
+
 In the webdriver-ts directory issue the follwing command:
 ```
 npm run results
