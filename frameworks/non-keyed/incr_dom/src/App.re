@@ -11,18 +11,6 @@ module Model = {
     selected: option(item),
   };
 
-  // -  let addNew = t => {
-  //   -    let counters =
-  //   -      Int.Map.set(t.counters, ~key=Map.length(t.counters), ~data=0);
-  //   -    {...t, counters};
-  //   -  };
-  //   -
-  //   -  /* no bounds checks */
-  //   -  let update = (t, pos, diff) => {
-  //   -    let oldVal = Map.find_exn(t.counters, pos);
-  //   -    let counters = Int.Map.set(t.counters, ~key=pos, ~data=oldVal + diff);
-  //   -    {...t, counters};
-
   module Updates = {
     let create_some = (model, n) => {
       let newdata = Util.build_data(n);
@@ -31,7 +19,7 @@ module Model = {
 
     let add_some = (model, n) => {
       let newdata = Util.build_data(n);
-      {...model, data: Array.append(newdata, model.data)};
+      {...model, data: Array.append(model.data, newdata)};
     };
 
     let update_every_10 = model => {
