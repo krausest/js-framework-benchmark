@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "http-server": "*",
-    "@esy-ocaml/reason": "*",
-    "@opam/merlin": "*",
-    "refmterr": "*"
+    "@esy-ocaml/reason": "3.4.0",
+    "@opam/merlin": "3.2.2",
+    "refmterr": "3.1.10"
   }
 }
