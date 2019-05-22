@@ -4,43 +4,7 @@ import { render, component, h } from 'literaljs';
 
 import { Store } from './store';
 
-const Row = component({
-	methods() {
-		return {
-			rowClass() {
-				const { item, selected } = this.props;
-				return item.id === selected ? 'danger' : '';
-			}
-		};
-	},
-	render() {
-		const { item, selectRow, deleteRow } = this.props;
-		return (
-			<tr class={this.rowClass()}>
-				<td class="col-md-1">{item.id}</td>
-				<td class="col-md-4">
-					<a events={{ click: () => selectRow(item.id) }}>
-						{item.label}
-					</a>
-				</td>
-				<td class="col-md-1">
-					<a>
-						<span
-							class="glyphicon glyphicon-remove"
-							aria-hidden="true"
-							events={{ click: () => deleteRow(item.id) }}
-						/>
-					</a>
-				</td>
-			</tr>
-		);
-	}
-});
-
 const App = component({
-	state: {
-		store: new Store()
-	},
 	methods() {
 		const { store } = this.getState();
 		return {
@@ -75,22 +39,11 @@ const App = component({
 			swapRows() {
 				store.swapRows();
 				this.setState({ store });
-			},
-			createRows() {
-				return store.data.map(item => (
-					<Row
-						props={{
-							item,
-							selected: store.selected,
-							deleteRow: this.delete,
-							selectRow: this.select
-						}}
-					/>
-				));
 			}
 		};
 	},
 	render() {
+		const { store } = this.getState();
 		return (
 			<div class="container">
 				<div class="jumbotron">
@@ -165,7 +118,38 @@ const App = component({
 					</div>
 				</div>
 				<table class="table table-hover table-striped test-data">
-					<tbody>{this.createRows()}</tbody>
+					<tbody>
+						{store.data.map(item => (
+							<tr
+								class={
+									item.id === store.selected ? 'danger' : ''
+								}
+							>
+								<td class="col-md-1">{item.id}</td>
+								<td class="col-md-4">
+									<a
+										events={{
+											click: () => this.select(item.id)
+										}}
+									>
+										{item.label}
+									</a>
+								</td>
+								<td class="col-md-1">
+									<a>
+										<span
+											class="glyphicon glyphicon-remove"
+											aria-hidden="true"
+											events={{
+												click: () =>
+													this.delete(item.id)
+											}}
+										/>
+									</a>
+								</td>
+							</tr>
+						))}
+					</tbody>
 				</table>
 				<span
 					class="preloadicon glyphicon glyphicon-remove"
@@ -176,4 +160,4 @@ const App = component({
 	}
 });
 
-render(App, 'root', {});
+render(App, 'root', { store: new Store() });
