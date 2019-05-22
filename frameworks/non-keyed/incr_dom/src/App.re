@@ -80,7 +80,6 @@ let view = (m: Incr.t(Model.t), ~inject) => {
 
   let addNewCounterButton =
     <div>
-      jumbotron
       <button onClick={_ev => inject(Action.NewCounter)}>
         {Node.text("Add new counter")}
       </button>
@@ -104,9 +103,8 @@ let view = (m: Incr.t(Model.t), ~inject) => {
           button_plus
         </div>;
       },
-    );
-
-  let%map rows =
+    )
+  and rows =
     Incr.Map.mapi'(
       m >>| Model.data,
       ~f=(~key as _, ~data as item) => {
@@ -126,7 +124,9 @@ let view = (m: Incr.t(Model.t), ~inject) => {
 
   <body>
     <div> addNewCounterButton </div>
+    <div> jumbotron </div>
     <div> ...{Map.data(elements)} </div>
+    <div> ...{Map.data(rows)} </div>
   </body>;
 };
 

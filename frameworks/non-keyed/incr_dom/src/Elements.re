@@ -16,11 +16,22 @@ let sanitise_classname = className =>
     Vdom.Attr.class_(className);
   };
 
-let maybe_apply: ('a => Vdom.Attr.t, option('a)) => option(Vdom.Attr.t) =
-  converter =>
-    fun
-    | None => None
-    | Some(a) => Some(converter(a));
+let maybe_apply = (~validator=Option.some, converter) =>
+  fun
+  | None => None
+  | Some(value) => {
+      switch (validator(value)) {
+      | None => None
+      | Some(validated) => Some(converter(validated))
+      };
+    };
+
+let no_empty = item =>
+  if (String.length(item) == 0) {
+    None;
+  } else {
+    Some(item);
+  };
 
 let genericElement =
     (
@@ -35,7 +46,7 @@ let genericElement =
       _: unit,
     ) => {
   let attrs = [
-    maybe_apply(sanitise_classname, className),
+    maybe_apply(~validator=no_empty, sanitise_classname, className),
     maybe_apply(
       Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("aria-hidden"),
       ariaHidden,
