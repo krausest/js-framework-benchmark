@@ -124,14 +124,13 @@ let view = (model: Incr.t(Model.t), ~inject) => {
         x.data
         |> Array.map(_, ~f=item =>
              Action.(
-               <div key={item.id}>
-                 <Row
-                   onSelect={sender(SELECT(item))}
-                   onRemove={sender(REMOVE(item))}
-                   selected={is_selected(x.selected, item)}
-                   item
-                 />
-               </div>
+              //  NOTE: Missing the 'key' here, not sure if this is required
+               <Row
+                 onSelect={sender(SELECT(item))}
+                 onRemove={sender(REMOVE(item))}
+                 selected={is_selected(x.selected, item)}
+                 item
+               />
              )
            )
     );
