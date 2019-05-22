@@ -3,3 +3,4 @@ lib
 .merlin
 _esy
 _release
+*.install
