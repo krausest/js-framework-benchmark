@@ -23,10 +23,49 @@ module Model = {
   //   -    let counters = Int.Map.set(t.counters, ~key=pos, ~data=oldVal + diff);
   //   -    {...t, counters};
 
-  let create1000 = model => {
-    let newdata = Util.build_data(1000);
-    {...model, data: newdata};
+  module Updates = {
+    let create_some = (model, n) => {
+      let newdata = Util.build_data(n);
+      {...model, data: newdata};
+    };
+
+    let add_some = (model, n) => {
+      let newdata = Util.build_data(n);
+      {...model, data: Array.append(newdata, model.data)};
+    };
+
+    let update_every_10 = model => {
+      {...model, data: Array.mapi(model.data, ~f=exclaim)};
+    };
+
+    let select = (model, item) => {
+      {...model, selected: Some(item)};
+    };
+
+    let swap_rows = model =>
+      if (Array.length(model.data) > 998) {
+        let elem_1 = model.data[1];
+        let elem_2 = model.data[998];
+        model.data[1] = elem_2;
+        model.data[998] = elem_1;
+        model;
+      } else {
+        model;
+      };
+
+    let remove_item = (model, item) => {
+      let isnt_item = c => !phys_equal(item, c);
+      switch (model.selected) {
+      | Some(n) when phys_equal(n, item) => {
+          selected: None,
+          data: Array.filter(model.data, ~f=isnt_item),
+        }
+      | _ => {...model, data: Array.filter(model.data, ~f=isnt_item)}
+      };
+    };
   };
+
+  let empty = {data: [||], selected: None};
 
   let cutoff = (t1, t2) => compare(t1, t2) == 0;
 };
@@ -52,10 +91,14 @@ module State = {
 
 let apply_action = (model, action, _, ~schedule_action as _) =>
   switch ((action: Action.t)) {
-  | RUN => Model.create1000(model)
-  | _ => model
-  // -  | NewCounter => Model.addNew(model)
-  // -  | Update(pos, diff) => Model.update(model, pos, diff)
+  | RUN => Model.Updates.create_some(model, 1000)
+  | RUNLOTS => Model.Updates.create_some(model, 10000)
+  | ADD => Model.Updates.add_some(model, 1000)
+  | UPDATEEVERYTENTH => Model.Updates.update_every_10(model)
+  | SELECT(item) => Model.Updates.select(model, item)
+  | SWAPROWS => Model.Updates.swap_rows(model)
+  | REMOVE(item) => Model.Updates.remove_item(model, item)
+  | CLEAR => Model.empty
   };
 
 let update_visibility = m => m;
