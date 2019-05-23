@@ -24,11 +24,11 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lit-html": "1.0.0"
+    "lit-html": "1.1.0"
   },
   "devDependencies": {
-    "rollup": "1.1.2",
-    "rollup-plugin-minify-html-literals": "^1.1.2",
-    "rollup-plugin-terser": "4.0.4"
+    "rollup": "1.12.3",
+    "rollup-plugin-minify-html-literals": "^1.2.2",
+    "rollup-plugin-terser": "5.0.0"
   }
 }
