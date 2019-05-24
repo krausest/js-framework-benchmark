@@ -72,30 +72,22 @@ type item = {
 //   include Comparable.Make(T);
 // };
 
-let makeBy = (count_, maker) => {
-  let rec impl = acc =>
-    fun
-    | 0 => acc
-    | n => impl([maker(n), ...acc], n - 1);
-
-  impl([], count_) |> Array.of_list;
-};
-
 let build_data_impl = () => {
-  let state = ref(0);
+  let state = ref(1);
+
+  let makeitem = n => {
+    id: n + state^,
+    label:
+      Array.random_element_exn(adjectives)
+      ++ " "
+      ++ Array.random_element_exn(colours)
+      ++ " "
+      ++ Array.random_element_exn(names),
+  };
+  let generate = Array.init(_, ~f=makeitem);
 
   let impl = count => {
-    let makeitem = n => {
-      id: n + state^,
-      label:
-        Array.random_element_exn(adjectives)
-        ++ " "
-        ++ Array.random_element_exn(colours)
-        ++ " "
-        ++ Array.random_element_exn(names),
-    };
-
-    let generated = makeBy(count, makeitem);
+    let generated = generate(count);
     state := state^ + count;
     generated;
   };

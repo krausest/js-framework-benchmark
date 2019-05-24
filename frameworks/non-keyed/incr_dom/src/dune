@@ -5,7 +5,7 @@
    (preprocess (pps ppx_jane ))
    (libraries  incr_dom console.lib )
    (js_of_ocaml (flags
-      ; --pretty
+      --pretty
       --opt 3
       --no-source-map
    ))

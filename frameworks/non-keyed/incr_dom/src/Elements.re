@@ -4,11 +4,6 @@ open Incr_dom;
 // Left to right composition
 let (%>) = (f1: 'a => 'x, f2: 'x => 'b, x: 'a): 'b => f2(f1(x));
 
-let or_empty =
-  fun
-  | None => Random.bits() |> string_of_int
-  | Some(x) => x;
-
 let sanitise_classname = className =>
   if (String.contains(className, ' ')) {
     Vdom.Attr.classes(Core_kernel.String.split(className, ~on=' '));
