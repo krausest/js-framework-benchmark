@@ -1,7 +1,5 @@
 open! Core_kernel;
 
-let random = max => Random.int(max);
-
 let adjectives = [|
   "pretty",
   "large",
@@ -84,17 +82,17 @@ let makeBy = (count_, maker) => {
 };
 
 let build_data_impl = () => {
-  let state = ref(1);
+  let state = ref(0);
 
   let impl = count => {
     let makeitem = n => {
       id: n + state^,
       label:
-        adjectives[random(Array.length(adjectives))]
+        Array.random_element_exn(adjectives)
         ++ " "
-        ++ colours[random(Array.length(colours))]
+        ++ Array.random_element_exn(colours)
         ++ " "
-        ++ names[random(Array.length(names))],
+        ++ Array.random_element_exn(names),
     };
 
     let generated = makeBy(count, makeitem);
