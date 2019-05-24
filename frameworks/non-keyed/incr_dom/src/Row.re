@@ -1,7 +1,53 @@
+open! Core_kernel;
 open Incr_dom;
 open Elements;
 
 open Util;
+
+/*
+module Model = {
+  [@deriving (sexp, fields, compare)]
+  type t = {
+    item,
+    selected: bool,
+  };
+
+  module Updates = {
+    let invert_select = model => {...model, selected: !model.selected};
+
+    let change_item = (model, item) => {...model, item};
+  };
+};
+
+module Action = {
+  [@deriving sexp]
+  type t =
+    | ITEM_CHANGE(item)
+    | SELECT_INVERT;
+
+  let should_log = _ => true;
+};
+
+module State = {
+  type t = unit;
+};
+
+let update_visibility = m => m;
+
+let on_startup = (~schedule_action as _, _) => Async_kernel.return();
+
+let on_display = (~old as _, _, _) => ();
+
+let apply_action = (model, action, _, ~schedule_action as _) =>
+  switch ((action: Action.t)) {
+  | ITEM_CHANGE(item) => Model.Updates.change_item(model, item)
+  | SELECT_INVERT => Model.Updates.invert_select(model)
+  };
+
+let view = (model: Incr.t(Model.t), ~inject) => {
+
+};
+*/
 
 let glyph_icon =
   <span className="glyphicon glyphicon-remove" ariaHidden=true />;
