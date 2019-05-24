@@ -33,10 +33,8 @@ module Model = {
     let swap_rows = model =>
       if (Array.length(model.data) > 998) {
         let newdata = Array.copy(model.data);
-        let elem_1 = model.data[1];
-        let elem_2 = model.data[998];
-        newdata[1] = elem_2;
-        newdata[998] = elem_1;
+        newdata[1] = model.data[998];
+        newdata[998] = model.data[1];
         {...model, data: newdata};
       } else {
         model;
@@ -113,15 +111,16 @@ let view = (model: Incr.t(Model.t), ~inject) => {
       />
     );
 
-  let is_selected =
-    fun
-    | None => (_i => false)
-    | Some(n) => ((item: Util.item) => phys_equal(item, n));
-
   let%map rows =
     model
     >>| (
-      x =>
+      x => {
+        let is_selected =
+          switch (x.selected) {
+          | None => (_i => false)
+          | Some(n) => ((item: Util.item) => phys_equal(item, n))
+          };
+
         x.data
         |> Array.map(_, ~f=item =>
              Action.(
@@ -129,11 +128,12 @@ let view = (model: Incr.t(Model.t), ~inject) => {
                  //  NOTE: Missing the 'key' here, not sure if this is required
                  onSelect={sender(SELECT(item))}
                  onRemove={sender(REMOVE(item))}
-                 selected={is_selected(x.selected, item)}
+                 selected={is_selected(item)}
                  item
                />
              )
-           )
+           );
+      }
     );
 
   let rows = rows |> Array.to_list;
