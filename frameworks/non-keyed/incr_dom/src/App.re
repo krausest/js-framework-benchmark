@@ -111,32 +111,29 @@ let view = (model: Incr.t(Model.t), ~inject) => {
       />
     );
 
-  let%map rows =
-    model
-    >>| (
-      x => {
-        let is_selected =
-          switch (x.selected) {
-          | None => (_i => false)
-          | Some(n) => ((item: Util.item) => phys_equal(item, n))
-          };
+  let%map rows = model >>| Model.data
+  and selected_item = model >>| Model.selected;
 
-        x.data
-        |> Array.map(_, ~f=item =>
-             Action.(
-               <Row
-                 //  NOTE: Missing the 'key' here, not sure if this is required
-                 onSelect={sender(SELECT(item))}
-                 onRemove={sender(REMOVE(item))}
-                 selected={is_selected(item)}
-                 item
-               />
-             )
-           );
-      }
+  let is_selected =
+    switch (selected_item) {
+    | None => (_i => false)
+    | Some(n) => ((item: Util.item) => phys_equal(item, n))
+    };
+
+  let rows =
+    Array.map(rows, ~f=item =>
+      Action.(
+        <Row
+          //  NOTE: Missing the 'key' here, not sure if this is required
+          onSelect={sender(SELECT(item))}
+          onRemove={sender(REMOVE(item))}
+          selected={is_selected(item)}
+          item
+        />
+      )
     );
 
-  let rows = rows |> Array.to_list;
+  let rows = Array.to_list(rows);
 
   <div className="container">
     jumbotron
