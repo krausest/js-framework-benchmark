@@ -9,6 +9,9 @@
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "incr_dom"
+  },
   "keywords": [
     "webpack",
     "ReasonML",

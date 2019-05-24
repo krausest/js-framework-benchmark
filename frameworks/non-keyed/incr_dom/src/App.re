@@ -32,11 +32,12 @@ module Model = {
 
     let swap_rows = model =>
       if (Array.length(model.data) > 998) {
+        let newdata = Array.copy(model.data);
         let elem_1 = model.data[1];
         let elem_2 = model.data[998];
-        model.data[1] = elem_2;
-        model.data[998] = elem_1;
-        model;
+        newdata[1] = elem_2;
+        newdata[998] = elem_1;
+        {...model, data: newdata};
       } else {
         model;
       };
@@ -124,8 +125,8 @@ let view = (model: Incr.t(Model.t), ~inject) => {
         x.data
         |> Array.map(_, ~f=item =>
              Action.(
-              //  NOTE: Missing the 'key' here, not sure if this is required
                <Row
+                 //  NOTE: Missing the 'key' here, not sure if this is required
                  onSelect={sender(SELECT(item))}
                  onRemove={sender(REMOVE(item))}
                  selected={is_selected(x.selected, item)}
