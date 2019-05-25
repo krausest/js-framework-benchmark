@@ -69,7 +69,7 @@ module Action = {
     | CLEAR
     | SWAPROWS;
 
-  let should_log = _ => true;
+  let should_log = _ => is_debug;
 };
 
 module State = {

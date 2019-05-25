@@ -1,9 +1,9 @@
 open! Core_kernel;
-open! Incr_dom;
-open! Js_of_ocaml;
+open Incr_dom;
+open Util;
 
 Start_app.start(
-  ~debug=true,
+  ~debug=is_debug,
   ~bind_to_element_with_id="main",
   (module App),
   ~initial_model=App.Model.Fields.create(~data=[||], ~selected=None),

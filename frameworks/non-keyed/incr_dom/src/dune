@@ -6,9 +6,10 @@
    (libraries  incr_dom console.lib )
    (js_of_ocaml (flags
       --pretty
-      --opt 3
-      --no-source-map
+      --opt 1
+      --source-map
    ))
+   (ocamlopt_flags -g)
 )
 
 (install
