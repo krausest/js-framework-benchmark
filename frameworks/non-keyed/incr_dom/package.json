@@ -25,7 +25,7 @@
     "build-prod": "esy @esy b refmterr dune build --root . -j 3 --verbose --profile release",
     "postbuild-prod": "sh copy.sh",
     "prebuild-dev": "esy @esy install",
-    "build-dev": "esy @esy b refmterr dune build --root . -j 3 --verbose --profile dev",
+    "build-dev": "esy @esy b refmterr dune build --root . -j 3 --profile dev",
     "postbuild-dev": "sh copy.sh"
   }
 }
