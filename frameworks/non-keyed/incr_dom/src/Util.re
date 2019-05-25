@@ -56,6 +56,10 @@ let names = [|
   "keyboard",
 |];
 
+[@deriving sexp]
+type fire_event_t =
+  Js_of_ocaml.Js.t(Js_of_ocaml.Dom_html.mouseEvent) => Virtual_dom__.Event.t;
+
 [@deriving (sexp, compare)]
 type item = {
   id: int,
