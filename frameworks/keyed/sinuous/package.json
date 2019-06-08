@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-sinuous",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "sinuous"
@@ -17,8 +17,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "htm": "2.1.1",
-    "sinuous": "0.6.1"
+    "sinuous": "0.7.0"
   },
   "devDependencies": {
     "@babel/core": "7.4.4",
