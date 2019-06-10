@@ -1,7 +1,6 @@
-import o, { subscribe, root, sample } from 'sinuous/observable';
-import each from 'sinuous/each';
-import sinuous from 'sinuous';
-const h = sinuous({ subscribe, root, sample });
+import { o, h } from 'sinuous';
+import { subscribe } from 'sinuous/observable';
+import map from 'sinuous/map';
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],
@@ -87,7 +86,7 @@ const App = () => {
 		</div></div>
 		<table class="table table-hover table-striped test-data">
 			<tbody onclick=${() => removeOrSelect}>
-				${each(data, (row) => html`
+				${map(data, (row) => html`
 					<tr data-id="${ row.id }">
 						<td class=col-md-1 textContent=${ row.id } />
 						<td class=col-md-4><a>${ row.label }</a></td>
