@@ -1,66 +1,71 @@
-let startTime;
-let lastMeasure;
+const A = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean',
+	'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive',
+	'cheap', 'expensive', 'fancy'];
+const C = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
+const N = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse',
+	'keyboard'];
 
-function startMeasure(name) {
-    startTime = performance.now();
-    lastMeasure = name;
+function random(max) {
+	return Math.floor(Math.random() * 1000) % max;
 }
 
-function stopMeasure() {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            var stop = performance.now();
-            console.log(last+" took "+(stop-startTime));
-        }, 0);
-    }
+let nextId = 1;
+
+function buildData(count) {
+	const data = new Array(count);
+	for (let i = 0; i < count; i++) {
+		data[i] = {
+			id: nextId++,
+			label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`,
+		};
+	}
+	return data;
 }
 
-export function onAdd ({ store }) {
-    startMeasure("add");
-    store.add();
-    stopMeasure();
+export function state() {
+	return { rows: [], selected: null };
 }
 
-export function onClear ({ store }) {
-    startMeasure("clear");
-    store.clear();
-    stopMeasure();
+export function onAdd({ state, setState }) {
+	setState({ rows: state.rows.concat(buildData(1000)) });
 }
 
-export function onPartialUpdate ({ store }) {
-    startMeasure("update");
-    store.update();
-    stopMeasure();
+export function onClear({ setState }) {
+	setState({ rows: [], selected: null });
 }
 
-export function onRemove( id, { store } ) {
-    startMeasure("delete");
-    store.delete(id);
-    stopMeasure();
+export function onPartialUpdate({ state, setState }) {
+	const rows = state.rows.slice();
+
+	for (let i = 0; i < rows.length; i += 10) {
+		rows[i].label += ' !!!';
+	}
+
+	setState({ rows });
 }
 
-export function onRun ({ store }) {
-    startMeasure("run");
-    store.run();
-    stopMeasure();
+export function onRemove(item, { state, setState }) {
+	const { rows } = state;
+	const ix = rows.indexOf(item);
+	setState({
+		rows: [...rows.slice(0, ix), ...rows.slice(ix + 1)]
+	});
 }
 
-export function onRunLots ({ store }) {
-    startMeasure("runLots");
-    store.runLots();
-    stopMeasure();
+export function onRun({ setState }) {
+	setState({ rows: buildData(1000), selected: null });
 }
 
-export function onSelect ( id, { store } ) {
-    startMeasure("select");
-    store.select(id);
-    stopMeasure();
+export function onRunLots({ setState }) {
+	setState({ rows: buildData(10000), selected: null });
 }
 
-export function onSwapRows ({ store }) {
-    startMeasure("swapRows");
-    store.swapRows();
-    stopMeasure();
+export function onSwapRows({ state, setState }) {
+	const rows = state.rows.slice();
+
+	if (rows.length > 998) {
+		[rows[1], rows[998]] = [rows[998], rows[1]];
+
+		setState({ rows });
+	}
 }
