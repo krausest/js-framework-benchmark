@@ -476,10 +476,10 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
             errors.push(await registerError(driver, framework, benchmark, e, ));
             console.log(e);
             throw e;
+            if (config.EXIT_ON_ERROR) { throw "Benchmarking failed" }
         } finally {
             await driver.close();
             await driver.quit();
-            if (config.EXIT_ON_ERROR) { throw "Benchmarking failed" }
         }
     }
     await writeResult({ framework: framework, results: allResults, benchmark: benchmark }, benchmarkOptions.outputDirectory);
@@ -526,36 +526,22 @@ export async function executeBenchmark(frameworks: FrameworkData[], keyed: boole
     return errorsAndWarnings;
 }
 
-export async function benchmarkWithRetry(frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions, retryCount: number): Promise<ErrorsAndWarning> {
-    try {
+export async function performBenchmark(frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {
         let errorsAndWarnings = await executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
         if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorsAndWarnings);
         process.send(errorsAndWarnings);
         process.exit(0);
         return errorsAndWarnings;
-    } catch (err) {
-        console.log("error running benchmark", err);
-        if (retryCount>1) {
-            console.log("************* RETRY BENCHMARK *******************", retryCount);
-            benchmarkWithRetry(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions, retryCount-1);
-        } else {
-            console.log("max retry reached");
-            process.exit(1);
-        }
-    }
 }
 
 process.on('message', (msg) => {
+    console.log("START BENCHMARK")
     if (config.LOG_DEBUG) console.log("child process got message", msg);
 
     let {frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions} : {frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions} = msg;
     if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
-    const MAX_RETRY = 3;
-            try {
-                benchmarkWithRetry(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions, MAX_RETRY)
-            } catch (err) {
-                console.log("direct error", err);
-                process.exit(1);
-            }
-    }
-  );
+        performBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions).catch((err) => {
+        console.log("error in forkedBenchmarkRunner", err);
+        process.exit(1);
+    });
+});
