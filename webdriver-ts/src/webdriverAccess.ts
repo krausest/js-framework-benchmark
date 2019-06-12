@@ -195,9 +195,10 @@ async function shadowRoot(driver: WebDriver) : Promise<WebElement> {
         : await driver.findElement(By.tagName("body"));
 }
 
-
+// node_modules\.bin\chromedriver.cmd --verbose --port=9998 --log-path=chromedriver.log
+// SELENIUM_REMOTE_URL=http://localhost:9998
 export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver {
- 
+
 
     console.time("chromedriver");
     let caps = new Capabilities({
@@ -231,9 +232,10 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
             "browser": "ALL",
             "performance": "ALL"
         }
-    });       
-    return new Builder()
-       .forBrowser('chrome')
-       .withCapabilities(caps)
-       .build();
+    });
+    // port probing fails sometimes on windows, the following driver construction avoids probing:
+    let service = new chrome.ServiceBuilder().setPort(benchmarkOptions.chromePort).build();
+    var driver = chrome.Driver.createSession(caps, service);
+
+    return driver;
 }
