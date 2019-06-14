@@ -182,7 +182,7 @@ class App extends React.Component<{}, State> {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.14.3, Chrome 73.0.3683.86  (64-bit))</p>
+        <p>The benchmark was run on a MacBook Pro 15 (2,5 GHz i7, 16 GB RAM, OSX 10.14.5, Chrome 75.0.3770.80 (64-bit))</p>
         <SelectBar  benchmarksCPU={this.state.benchmarksCPU}
                     benchmarksStartup={this.state.benchmarksStartup}
                     benchmarksMEM={this.state.benchmarksMEM}

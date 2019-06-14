@@ -28,7 +28,8 @@ async function main() {
                 let data : JSONResult = JSON.parse(fs.readFileSync(file, {
                     encoding:'utf-8'
                 }));
-                resultJS += '\n' + JSON.stringify(({f:data.framework, b:data.benchmark, v:data.values})) + ',';
+                if (data.values.some(v => v==null)) console.log(`Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`)
+                resultJS += '\n' + JSON.stringify(({f:data.framework, b:data.benchmark, v:data.values.filter(v => v!=null)})) + ',';
             } else {
                 console.log("MISSING FILE",file);
             }
