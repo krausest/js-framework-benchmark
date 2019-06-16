@@ -7,8 +7,10 @@ const chromeLauncher = require('chrome-launcher');
 
 import * as fs from 'fs';
 import * as path from 'path';
-import {JSONResult, config, FrameworkData, BenchmarkError, ErrorsAndWarning, BenchmarkOptions, BenchmarkDriverOptions} from './common'
+import {TConfig, JSONResult, FrameworkData, BenchmarkError, ErrorsAndWarning, BenchmarkOptions, BenchmarkDriverOptions} from './common'
 import * as R from 'ramda';
+
+let config:TConfig = null;
 
 // necessary to launch without specifiying a path
 var chromedriver:any = require('chromedriver');
@@ -537,7 +539,8 @@ export async function performBenchmark(frameworks: FrameworkData[], keyed: boole
 }
 
 process.on('message', (msg) => {
-    console.log("START BENCHMARK")
+    config = msg.config;
+    console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
     if (config.LOG_DEBUG) console.log("child process got message", msg);
 
     let {frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions} : {frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions} = msg;

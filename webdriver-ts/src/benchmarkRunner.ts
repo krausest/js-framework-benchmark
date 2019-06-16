@@ -12,7 +12,7 @@ function forkedRun(frameworks: FrameworkData[], frameworkName: string, keyed: bo
         return new Promise(function (resolve, reject) {
             const forked = fork('dist/forkedBenchmarkRunner.js');
             if (config.LOG_DEBUG) console.log("forked child process");
-            forked.send({ frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions });
+            forked.send({ config, frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions });
             forked.on('message', (msg) => {
                 if (config.LOG_DEBUG) console.log("main process got message from child", msg);
                 resolve(msg);
@@ -101,6 +101,7 @@ let args = yargs(process.argv)
     .help('help')
     .default('check', 'false')
     .default('fork', 'true')
+    .boolean('noResults')
     .default('exitOnError', 'false')
     .default('count', Number.MAX_SAFE_INTEGER)
     .default('port', config.PORT)
@@ -112,8 +113,7 @@ let args = yargs(process.argv)
 async function main() {
     let frameworks = await initializeFrameworks();
 
-    console.log(args);
-    
+
     let runBenchmarks = (args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""]).map(v => v.toString());
     let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(v => v.toString());
     let count = Number(args.count);
@@ -122,17 +122,20 @@ async function main() {
     config.REPEAT_RUN_MEM = Math.min(count, config.REPEAT_RUN_MEM);
     config.REPEAT_RUN_STARTUP = Math.min(count, config.REPEAT_RUN_STARTUP);
     config.FORK_CHROMEDRIVER = args.fork === 'true';
-    
+    config.WRITE_RESULTS = !args.noResults;
+
+    console.log(args, "no-results", args.noResults, config.WRITE_RESULTS);
+
     let dir = args.check === 'true' ? "results_check" : "results"
     let exitOnError = args.exitOnError === 'true'
-    
+
     config.EXIT_ON_ERROR = exitOnError;
-    
+
     console.log("fork chromedriver process?", config.FORK_CHROMEDRIVER);
-    
+
     if (!fs.existsSync(dir))
     fs.mkdirSync(dir);
-    
+
     if (args.help) {
         yargs.showHelp();
     } else {

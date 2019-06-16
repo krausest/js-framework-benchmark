@@ -50,8 +50,10 @@ export let config = {
     EXIT_ON_ERROR: false,
     STARTUP_DURATION_FROM_EVENTLOG: true,
     STARTUP_SLEEP_DURATION: 1000,
-    FORK_CHROMEDRIVER: true
+    FORK_CHROMEDRIVER: true,
+    WRITE_RESULTS: true
 }
+export type TConfig = typeof config;
 
 export interface FrameworkData {
     name: string;
@@ -197,7 +199,7 @@ export class PackageVersionInformationResult {
 }
 
 export async function determineInstalledVersions(framework: FrameworkVersionInformationDynamic): Promise<PackageVersionInformationResult> {
-    
+
     let versions = new PackageVersionInformationResult(framework);
     try {
         console.log(`http://localhost:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`)
