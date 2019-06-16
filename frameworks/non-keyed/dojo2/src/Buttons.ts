@@ -21,7 +21,7 @@ export class Buttons extends WidgetBase<ButtonsProperties> {
 		return v('div', { classes: [ 'jumbotron' ] }, [
 			v('div', { classes: [ 'row' ] }, [
 				v('div', { classes: [ 'col-md-6' ] }, [
-					v('h1', ['Dojo2 v0.2.0'])
+					v('h1', ['Dojo2 keyed'])
 				]),
 				v('div', { classes: [ 'col-md-6' ] }, buttonConfigs.map(({ id, label, onClick }) => {
 					return w(Button, { key: id, id, label, onClick });

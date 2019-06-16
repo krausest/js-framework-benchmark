@@ -2,7 +2,7 @@
 
 import { combineReducers, createStore } from 'redux';
 import { node, demux } from 'redux-combiner'
-import * as utils from './utils.es6'
+import * as utils from './utils'
 
 const BUILD_DATA = 'BUILD_DATA';
 const DELETE = 'DELETE';

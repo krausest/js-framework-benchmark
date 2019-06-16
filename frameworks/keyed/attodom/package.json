@@ -18,10 +18,10 @@
   },
   "devDependencies": {
     "@hugov/cjs-to-iife": "^0.1.1",
-    "@types/node": "^8.5.1",
-    "uglify-js": "3.0.12"
+    "@types/node": "^12.0.8",
+    "uglify-js": "3.6.0"
   },
   "dependencies": {
-    "attodom": "^0.11.3"
+    "attodom": "^0.12.0"
   }
 }
