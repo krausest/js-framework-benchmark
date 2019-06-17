@@ -23,7 +23,7 @@ var extensions = [
 module.exports = [{
   cache: cache,
   module: {
-    loaders: loaders
+    rules: loaders
   },
   entry: {
     main: './src/main',
