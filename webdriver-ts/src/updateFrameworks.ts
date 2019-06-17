@@ -16,7 +16,7 @@ let args = yargs(process.argv)
 let updatePackages = args.update;
 console.log("ARGS", args._.slice(2, args._.length));
 let directories = args._.slice(2, args._.length);
-let checkDirectory = (keyedType:string, folderName: string) => directories.length===0 || args._.includes(path.join(keyedType, folderName));
+let checkDirectory = (keyedType:string, folderName: string) => directories.length===0 || args._.some(a => path.join(keyedType, folderName).startsWith(a));
 
 async function ncuReportsUpdatedVersion(packageVersionInfo: PackageVersionInformationResult) {
     let ncuInfo = await ncu.run({
@@ -26,7 +26,7 @@ async function ncuReportsUpdatedVersion(packageVersionInfo: PackageVersionInform
         loglevel: 'silent'
     });
     if (ncuInfo) {
-        console.log(ncuInfo);
+        // console.log(ncuInfo);
         return packageVersionInfo.versions.filter((pi: PackageVersionInformationValid) => ncuInfo[pi.packageName])
             .some((pi: PackageVersionInformationValid) => {
                 let newVersion = ncuInfo[pi.packageName];
@@ -74,6 +74,7 @@ async function main() {
             .filter(frameworkVersionInformation => frameworkVersionInformation instanceof FrameworkVersionInformationDynamic)
             .map(frameworkVersionInformation => frameworkVersionInformation as FrameworkVersionInformationDynamic);
 
+
     let packageLockInformations : PackageVersionInformationResult[] = await Promise.all(automatically.map(frameworkVersionInformation => determineInstalledVersions(frameworkVersionInformation)));
 
     let noPackageLock = packageLockInformations.filter(pli => pli.versions.some((packageVersionInfo: PackageVersionInformation) => packageVersionInfo instanceof PackageVersionInformationErrorNoPackageJSONLock));
@@ -90,14 +91,14 @@ async function main() {
         let unknownPackagesStr = (packageVersionInfo: PackageVersionInformationResult) => packageVersionInfo.versions.filter(pvi => pvi instanceof PackageVersionInformationErrorUnknownPackage).
             map((packageVersionInfo: PackageVersionInformationErrorUnknownPackage) => packageVersionInfo.packageName).join(', ');
 
-        console.log(unknownPackages.map(val => val.framework.keyedType +'/' + val.framework.directory + ' for package ' + unknownPackagesStr(val)).join('\n') + '\n');
+        // console.log(unknownPackages.map(val => val.framework.keyedType +'/' + val.framework.directory + ' for package ' + unknownPackagesStr(val)).join('\n') + '\n');
     }
 
     let checkVersionsFor = packageLockInformations
         .filter(pli => pli.versions.every((packageVersionInfo: PackageVersionInformation) => packageVersionInfo instanceof PackageVersionInformationValid))
         .filter(f => checkDirectory(f.framework.keyedType,f.framework.directory));
 
-    console.log("checkVersionsFor", checkVersionsFor);
+    console.log("checkVersionsFor", checkVersionsFor.map(v => v.getFrameworkData().uri));
 
     let toBeUpdated = new Array<PackageVersionInformationResult>();
     for (let f of checkVersionsFor) {
