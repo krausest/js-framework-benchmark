@@ -11,8 +11,8 @@ export default {
   plugins: [
     replace({
       values: {
-        DEBUG: false,
-        TARGET: JSON.stringify('evergreen'),
+        "process.env.NODE_ENV": '"production"',
+        "process.env.IVI_TARGET": '"evergreen"',
       },
     }),
     nodeResolve(),
