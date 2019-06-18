@@ -1,5 +1,5 @@
-import { o, h } from 'sinuous';
-import { subscribe } from 'sinuous/observable';
+import { observable, h } from 'sinuous';
+import { template, t, o } from 'sinuous/template';
 import map from 'sinuous/map';
 
 let idCounter = 1;
@@ -14,35 +14,29 @@ function buildData(count) {
 	for (let i = 0; i < count; i++) {
 		data[i] = {
 			id: idCounter++,
-			label: o(`${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`)
+			label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`
 		};
 	}
 	return data;
 }
 
-function getParentData(node, name) {
+function getParentId(node) {
 	do {
-		if (node.dataset[name]) return node.dataset[name];
+		if (node.data && node.data.id) {
+			return node.data.id;
+		}
 	} while ((node = node.parentNode));
 }
 
-const Button = ({ id, text, fn }) => html`
-	<div class="col-sm-6 smallpad">
-		<button id="${ id }" class="btn btn-primary btn-block" type=button onclick=${() => fn}>
-			${ text }
-		</button>
-	</div>`;
-
 const App = () => {
-	const data = o([]);
-	const selected = o();
+	const data = observable([]);
 	const run = () => data(buildData(1000)) && selected(null);
 	const runLots = () => data(buildData(10000)) && selected(null);
 	const add = () => data(data().concat(buildData(1000)));
 	const update = () => {
 		const d = data();
 		for (let i = 0; i < d.length; i += 10) {
-			d[i].label(d[i].label() + ' !!!');
+			d[i].label += ' !!!';
 		}
 	};
 	const swapRows = () => {
@@ -56,21 +50,38 @@ const App = () => {
 	};
 	const clear = () => data([]) && selected(null);
 	const removeOrSelect = (e) => e.target.matches('.remove') ? remove(e) : select(e);
-	const select = (e) => selected(getParentData(e.target, 'id'));
-	subscribe((tr) => {
-		const id = selected();
-		if (tr) tr.className = '';
-		if (id && (tr = document.querySelector(`tr[data-id="${id}"]`))) {
-			tr.className = 'danger';
+	const select = (e) => selected(getParentId(e.target));
+	const selected = ((tr) => (id) => {
+		if (tr) tr.selected = '';
+		const d = data();
+		if (id && (tr = d.find(d => d.id === id))) {
+			tr.selected = 'danger';
 		}
-		return tr;
-	});
+	})();
 	const remove = (e) => {
 		const d = data();
-		const idx = d.findIndex(d => d.id == getParentData(e.target, 'id'));
+		const idx = d.findIndex(d => d.id === getParentId(e.target));
 		d.splice(idx, 1);
 		data(d);
 	};
+
+	const Button = ({ id, text, fn }) => html`
+		<div class="col-sm-6 smallpad">
+			<button id="${ id }" class="btn btn-primary btn-block" type=button onclick=${() => fn}>
+				${ text }
+			</button>
+		</div>`;
+
+	const Row = template(() => html`
+		<tr class=${ o('selected') }>
+			<td class=col-md-1 textContent=${ t('id') } />
+			<td class=col-md-4><a>${ o('label') }</a></td>
+			<td class=col-md-1><a>
+				<span class="glyphicon glyphicon-remove remove" />
+			</a></td>
+			<td class=col-md-6 />
+		</tr>
+	`);
 
 	return html`<div class=container>
 		<div class=jumbotron><div class=row>
@@ -86,16 +97,7 @@ const App = () => {
 		</div></div>
 		<table class="table table-hover table-striped test-data">
 			<tbody onclick=${() => removeOrSelect}>
-				${map(data, (row) => html`
-					<tr data-id="${ row.id }">
-						<td class=col-md-1 textContent=${ row.id } />
-						<td class=col-md-4><a>${ row.label }</a></td>
-						<td class=col-md-1><a>
-							<span class="glyphicon glyphicon-remove remove" />
-						</a></td>
-						<td class=col-md-6 />
-					</tr>
-				`)}
+				${map(data, Row)}
 			</tbody>
 		</table>
 		<span class="preloadicon glyphicon glyphicon-remove" aria-hidden=true />
