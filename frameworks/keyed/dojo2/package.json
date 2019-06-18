@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@dojo/cli": "5.0.0",
-    "@dojo/cli-build-app": "5.0.4",
+    "@dojo/cli-build-app": "5.0.5",
     "typescript": "3.5.2"
   }
 }
