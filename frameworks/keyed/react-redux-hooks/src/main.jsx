@@ -64,7 +64,7 @@ const store = createStore((state = { data: [], selected: 0 }, action) => {
 const GlyphIcon = <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>;
 
 const Row = React.memo(({ data }) => {
-  const isSelected = useSelector((state) => state.selected === data.id, [data]);
+  const isSelected = useSelector((state) => state.selected === data.id);
   const dispatch = useDispatch();
   const select = useCallback(() => { dispatch({ type: "SELECT", id: data.id }); }, [data]);
   const remove = useCallback(() => { dispatch({ type: "REMOVE", item: data }); }, [data]);
