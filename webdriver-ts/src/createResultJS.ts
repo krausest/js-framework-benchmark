@@ -5,13 +5,15 @@ import {BenchmarkType, Benchmark, benchmarks, fileName, BenchmarkInfo} from './b
 import * as yargs from 'yargs';
 
 async function main() {
-	let frameworks = await initializeFrameworks();
+    let frameworks = await initializeFrameworks();
 
     let results: Map<string, Map<string, JSONResult>> = new Map();
 
     let resultJS = "import {RawResult} from './Common';\n\nexport let results: RawResult[]=[";
 
     let allBenchmarks : BenchmarkInfo[] = [];
+
+    let jsonResult: {framework: string, benchmark:string, values: number[]}[] = [];
 
     benchmarks.forEach((benchmark, bIdx) => {
         let r = benchmark.resultKinds ? benchmark.resultKinds() : [benchmark];
@@ -29,7 +31,10 @@ async function main() {
                     encoding:'utf-8'
                 }));
                 if (data.values.some(v => v==null)) console.log(`Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`)
-                resultJS += '\n' + JSON.stringify(({f:data.framework, b:data.benchmark, v:data.values.filter(v => v!=null)})) + ',';
+                let result = {f:data.framework, b:data.benchmark, v:data.values.filter(v => v!=null)};
+                let resultNice = {framework:data.framework, benchmark:data.benchmark, values:data.values.filter(v => v!=null)};
+                resultJS += '\n' + JSON.stringify(result) + ',';
+                jsonResult.push(resultNice)
             } else {
                 console.log("MISSING FILE",file);
             }
@@ -41,7 +46,8 @@ resultJS += 'export let frameworks = '+JSON.stringify(frameworks.map(f => ({name
 resultJS += 'export let benchmarks = '+JSON.stringify(allBenchmarks)+";\n";
 
 fs.writeFileSync('../webdriver-ts-results/src/results.ts', resultJS, {encoding: 'utf-8'});
+fs.writeFileSync('./results.json', JSON.stringify(jsonResult), {encoding: 'utf-8'});
 
 }
 
-main();
+main().catch(e => {console.log("error processing results",e); process.exit(1)});
