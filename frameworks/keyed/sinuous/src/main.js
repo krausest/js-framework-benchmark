@@ -77,7 +77,7 @@ const App = () => {
 			<td class=col-md-1 textContent=${ t('id') } />
 			<td class=col-md-4><a>${ o('label') }</a></td>
 			<td class=col-md-1><a>
-				<span class="glyphicon glyphicon-remove remove" />
+				<span class="glyphicon glyphicon-remove remove" aria-hidden=true />
 			</a></td>
 			<td class=col-md-6 />
 		</tr>
