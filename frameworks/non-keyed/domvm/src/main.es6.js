@@ -26,7 +26,7 @@ function AppView(vm, store) {
 			el("div", {class: "container"}, [
 				JumbotronTpl(store),
 				TableTpl(store),
-				el("span", {class: "preloadicon glyphicon glyphicon-remove", "aria-hidden": ""})
+				el("span", {class: "preloadicon glyphicon glyphicon-remove", "aria-hidden": "true"})
 			])
 		])
 	);
@@ -91,7 +91,7 @@ function RowTpl(item, store) {
 			]),
 			el("td", {class: "col-md-1"}, [
 				el("a", {onclick: [store.exec, "delete", item.id]}, [
-					el("span", {class: "glyphicon glyphicon-remove", "aria-hidden": ""})
+					el("span", {class: "glyphicon glyphicon-remove", "aria-hidden": "true"})
 				])
 			]),
 			el("td", {class: "col-md-6"})

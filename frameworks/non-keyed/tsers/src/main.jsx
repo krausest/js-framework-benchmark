@@ -23,7 +23,7 @@ function cache(key, render) {
 function main(signals) {
 	const {DOM, model$, mux} = signals;
 	const {h} = DOM;
-	
+
 	const vdom$ = DOM.prepare(model$.map(state =>
 	/* {
 		let rows = state.items.map(item =>
@@ -90,7 +90,7 @@ function main(signals) {
 							h(
 								'a',
 								{ className: 'remove' },
-								h('span', { className: 'glyphicon glyphicon-remove remove' })
+								h('span', { className: 'glyphicon glyphicon-remove remove'})
 							)
 						),
 						h('td', { className: 'col-md-6' })
@@ -98,7 +98,7 @@ function main(signals) {
 				)
 			)
 		);
-		
+
 		return h(
 			'div',
 			{ className: 'container' },
@@ -210,65 +210,65 @@ function main(signals) {
 		);
 	}
 	));
-	
+
 	const addMod$ = DOM.events(vdom$, '#add', 'click').map(() => () => {
 		store.add();
 		return {items: store.data, selected: store.selected};
 	});
-	
+
 	const runMod$ = DOM.events(vdom$, '#run', 'click').map(() => () => {
 		store.run();
 		return {items: store.data, selected: store.selected};
 	});
-	
+
 	const updateMod$ = DOM.events(vdom$, '#update', 'click').map(() => () => {
 		store.update();
 		return {items: store.data, selected: store.selected};
 	});
-	
+
 	const runLotsMod$ = DOM.events(vdom$, '#runlots', 'click').map(() => () => {
 		store.runLots();
 		return {items: store.data, selected: store.selected};
 	});
-	
+
 	const clearMod$ = DOM.events(vdom$, '#clear', 'click').map(() => () => {
 		store.clear();
 		return {items: store.data, selected: store.selected};
 	});
-	
+
 	const swapRowsMod$ = DOM.events(vdom$, '#swaprows', 'click').map(() => () => {
 		store.swapRows();
 		return {items: store.data, selected: store.selected};
 	});
-	
+
 	const selectMod$ = DOM.events(vdom$, '.select', 'click').map((e) => () => {
 		let el = e.target;
 		while(el && !el.id) {
 			el = el.parentNode;
 		}
-		
+
 		store.select(parseInt(el.id));
-		
+
 		return {items: store.data, selected: store.selected};
 	});
-	
+
 	const removeMod$ = DOM.events(vdom$, '.remove', 'click').map((e) => () => {
 		let el = e.target;
 		while(el && !el.id) {
 			el = el.parentNode;
 		}
-		
+
 		store.delete(parseInt(el.id));
-		
+
 		return {items: store.data, selected: store.selected};
 	});
-	
+
 	return mux({
 		DOM: vdom$,
 		model$: model$.mod(Observable.merge(addMod$, runMod$, updateMod$, runLotsMod$, clearMod$, swapRowsMod$, selectMod$, removeMod$))
 	});
 };
- 
+
 TSERS(main, {
 	DOM: ReactDOM('#main'),
 	model$: Model({items: store.data, selected: store.selected})

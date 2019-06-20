@@ -147,6 +147,7 @@ const App = component({
 										/>
 									</a>
 								</td>
+                                <td class="col-md-6"></td>
 							</tr>
 						))}
 					</tbody>

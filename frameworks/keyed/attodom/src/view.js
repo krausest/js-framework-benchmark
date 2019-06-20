@@ -28,7 +28,7 @@ module.exports = function(store) {
       ),
       h('td', {class: 'col-md-1', onClick: clickHandlerDelete},
         h('a', {class: 'remove'},
-          h('span', {class: 'glyphicon glyphicon-remove remove', 'aria-hidden': ''})
+          h('span', {class: 'glyphicon glyphicon-remove remove', 'aria-hidden': 'true'})
         )
       ),
       h('td', {class: 'col-md-6'})

@@ -75,6 +75,10 @@ class TrComponent extends Component {
                             ]
                         }
                     ]
+                },
+                {
+                    tag: "td",
+                    classList: 'col-md-6'
                 }
             ]
         }
@@ -129,7 +133,7 @@ class MainContainer extends Component {
                                     children: [
                                         {
                                             tag: "h1",
-                                            textValue: 'FastDom-"keyed""'
+                                            textValue: 'FastDom-"keyed"'
                                         }
                                     ]
                                 },

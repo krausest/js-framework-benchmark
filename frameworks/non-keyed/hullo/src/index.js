@@ -152,6 +152,9 @@ function Row(props) {
             }
           })
         ]
+      }),
+      Td({
+        span: 6
       })
     ]
   );

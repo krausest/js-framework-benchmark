@@ -36,7 +36,7 @@ function convertPath(path: string): Array<PathPart> {
 }
 
 // Fake findByXPath for simple XPath expressions to allow usage with shadow dom
-async function findByXPath(node: WebElement, path: string): Promise<WebElement> {
+export async function findByXPath(node: WebElement, path: string): Promise<WebElement> {
      let paths = convertPath(path);
      let n = node;
      try {
@@ -190,7 +190,7 @@ export async function getTextByXPath(driver: WebDriver, xpath: string): Promise<
     });
 }
 
-async function shadowRoot(driver: WebDriver) : Promise<WebElement> {
+export async function shadowRoot(driver: WebDriver) : Promise<WebElement> {
     return useShadowRoot ? await driver.executeScript('return document.querySelector("main-element").shadowRoot') as WebElement
         : await driver.findElement(By.tagName("body"));
 }
