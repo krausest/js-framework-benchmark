@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@hullo/browser": "^0.8.2",
-    "@hullo/core": "^0.8.2",
-    "@hullo/dom": "^0.8.2"
+    "@hullo/core": "^0.8.3",
+    "@hullo/dom": "^0.8.3"
   }
 }
