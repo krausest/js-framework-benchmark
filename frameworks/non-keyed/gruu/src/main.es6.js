@@ -77,7 +77,7 @@ const app = (
     <div className="jumbotron">
       <div className="row">
         <div className="col-md-6">
-          <h1>Gruu v1.7.3</h1>
+          <h1>Gruu v1.7.5</h1>
         </div>
         <div className="col-md-6">
           <div className="row">
