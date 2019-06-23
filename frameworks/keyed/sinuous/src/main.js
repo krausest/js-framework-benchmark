@@ -33,12 +33,26 @@ const App = () => {
 	const run = () => data(buildData(1000)) && selected(null);
 	const runLots = () => data(buildData(10000)) && selected(null);
 	const add = () => data(data().concat(buildData(1000)));
+	const clear = () => data([]) && selected(null);
+	const removeOrSelect = (e) => e.target.matches('.remove') ? remove(e) : select(e);
+	const select = (e) => selected(getParentId(e.target));
+
+	let rowObject;
+	const selected = (id) => {
+		if (rowObject) rowObject.selected = '';
+		const d = data();
+		if (id && (rowObject = d.find(d => d.id === id))) {
+			rowObject.selected = 'danger';
+		}
+	};
+
 	const update = () => {
 		const d = data();
 		for (let i = 0; i < d.length; i += 10) {
 			d[i].label += ' !!!';
 		}
 	};
+
 	const swapRows = () => {
 		const d = data();
 		if (d.length > 998) {
@@ -48,16 +62,7 @@ const App = () => {
 			data(d);
 		}
 	};
-	const clear = () => data([]) && selected(null);
-	const removeOrSelect = (e) => e.target.matches('.remove') ? remove(e) : select(e);
-	const select = (e) => selected(getParentId(e.target));
-	const selected = ((tr) => (id) => {
-		if (tr) tr.selected = '';
-		const d = data();
-		if (id && (tr = d.find(d => d.id === id))) {
-			tr.selected = 'danger';
-		}
-	})();
+
 	const remove = (e) => {
 		const d = data();
 		const idx = d.findIndex(d => d.id === getParentId(e.target));
