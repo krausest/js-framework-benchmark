@@ -1,0 +1,29 @@
+[package]
+name = "js-framework-benchmark-dominator"
+version = "1.0.0"
+edition = "2018"
+
+[profile.release]
+lto = true
+panic = "abort"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+dominator = "0.5.0"
+futures-signals = "0.3.6"
+wasm-bindgen = "0.2.46"
+js-sys = "0.3.23"
+
+[dependencies.web-sys]
+version = "0.3.23"
+features = [
+  "Window",
+  "Document",
+  "Element",
+]
+
+[dependencies.wasm-bindgen-futures]
+version = "0.3.24"
+features = ["futures_0_3"]
