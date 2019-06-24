@@ -3,7 +3,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::{Document, Element, Event, HtmlElement, Node, Window};
+use web_sys::{Document, Element, Event, Node};
 
 const ADJECTIVES_LEN: usize = 25;
 const ADJECTIVES_LEN_F64: f64 = ADJECTIVES_LEN as f64;
@@ -63,7 +63,6 @@ struct Row {
 const ROW_TEMPLATE: &str = "<td class='col-md-1'></td><td class='col-md-4'><a class='lbl'></a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td>";
 
 struct Main {
-    window: Window,
     document: Document,
     data: Vec<Row>,
     row_template: Node,
@@ -98,9 +97,9 @@ impl Main {
 
     fn update(&mut self) {
         let mut i = 0;
-        let mut l = self.data.len();
+        let l = self.data.len();
         while i < l {
-            let mut row = &mut self.data[i];
+            let row = &mut self.data[i];
             row.label.push_str(" !!!");
             row.label_node.set_text_content(Some(row.label.as_str()));
             i += 10;
@@ -202,7 +201,7 @@ impl Main {
 }
 
 #[wasm_bindgen(start)]
-pub fn run() -> Result<(), JsValue> {
+pub fn main_js() -> Result<(), JsValue> {
     let window = web_sys::window().unwrap();
     let document = window.document().unwrap();
 
@@ -211,8 +210,7 @@ pub fn run() -> Result<(), JsValue> {
 
     let tbody = document.get_element_by_id("tbody").unwrap();
 
-    let mut main = RefCell::new(Rc::new(Main {
-        window,
+    let main = RefCell::new(Rc::new(Main {
         document,
         data: Vec::new(),
         row_template: row_template.into(),
@@ -237,11 +235,11 @@ pub fn run() -> Result<(), JsValue> {
         match el.id().as_str() {
             "add" => {
                 e.prevent_default();
-                main.add();
+                main.add().unwrap();
             }
             "run" => {
                 e.prevent_default();
-                main.run();
+                main.run().unwrap();
             }
             "update" => {
                 e.prevent_default();
@@ -249,7 +247,7 @@ pub fn run() -> Result<(), JsValue> {
             }
             "runlots" => {
                 e.prevent_default();
-                main.run_lots();
+                main.run_lots().unwrap();
             }
             "clear" => {
                 e.prevent_default();
@@ -257,7 +255,7 @@ pub fn run() -> Result<(), JsValue> {
             }
             "swaprows" => {
                 e.prevent_default();
-                main.swap_rows();
+                main.swap_rows().unwrap();
             }
             _ => {
                 let class_list = el.class_list();
