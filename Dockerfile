@@ -1,4 +1,5 @@
 FROM centos:latest
+COPY install_rust.sh /root/
 RUN echo "unsafe-perm = true" > /root/.npmrc
 RUN echo "{ \"allow_root\": true }" >  /root/.bowerrc
 RUN curl -sL https://rpm.nodesource.com/setup_10.x | bash -
@@ -16,8 +17,12 @@ VOLUME /src
 VOLUME /build
 WORKDIR /build
 
+# Install chrome
 RUN curl -sL https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm > /root/chrome.rpm
 RUN yum localinstall -y /root/chrome.rpm
+
+# Install rust
+RUN bash /root/install_rust.sh
 
 # USER user
 
