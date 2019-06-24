@@ -3,8 +3,12 @@ name = "js-framework-benchmark-yew"
 version = "1.0.0"
 authors = ["Isamu Mogi <isamu@leafytree.jp>"]
 
+[profile.release]
+lto = true
+panic = "abort"
+
 [dependencies]
 byteorder = { version = "1.2.4", features = [ "i128" ] }
 rand = { version = "0.5.4", features = [ "stdweb" ] }
-stdweb = "0.4.8"
-yew = { git = "https://github.com/DenisKolodin/yew.git", rev = "dcd3834dd915647f4eae1ec78b6d803b70fad1da" }
+stdweb = "0.4.17"
+yew = { git = "https://github.com/DenisKolodin/yew.git", rev = "792a254acdc84b1419f2c2d6219e933ca7081c07" }
