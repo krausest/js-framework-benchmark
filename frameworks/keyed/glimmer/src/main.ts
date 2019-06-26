@@ -11,7 +11,7 @@ export default class App extends Application {
 
     super({
       builder: new DOMBuilder({ element, nextSibling: null }),
-      loader: new RuntimeCompilerLoader(resolver),
+      loader: new RuntimeCompilerLoader(),
       renderer: new SyncRenderer(),
       resolver,
       rootName: resolverConfiguration.app.rootName

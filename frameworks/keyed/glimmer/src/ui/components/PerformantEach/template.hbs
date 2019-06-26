@@ -1,0 +1,9 @@
+
+{{#in-element this.fragment}}
+  {{#each @items key="id" as |item|}}
+    <Row @item={{item}} @onSelect={{action @onSelect item.id}} @onRemove={{action @onRemove item.id}}/>
+  {{/each}}
+  {{this.appendNode}}
+{{/in-element}}
+
+
