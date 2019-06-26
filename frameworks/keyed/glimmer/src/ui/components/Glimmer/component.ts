@@ -10,7 +10,6 @@ import {
 
 function isRendering(ctx) {
   if (ctx.__owner__._rendering || ctx.__owner__._scheduled) {
-    console.log('its rendering');
     return true;
   }
   return false;
