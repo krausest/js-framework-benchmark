@@ -1,53 +1,53 @@
 <div class="container">
-    <div class="jumbotron">
+  <div class="jumbotron">
+    <div class="row">
+      <div class="col-md-6">
+        <h1>Glimmer v0.14.0</h1>
+      </div>
+      <div class="col-md-6">
         <div class="row">
-            <div class="col-md-6">
-                <h1>Glimmer v0.14.0</h1>
-            </div>
-            <div class="col-md-6">
-                <div class="row">
-                    <div class="col-sm-6 smallpad">
-                        <BsButton id="run" @onClick={{action this.create}}>
-                            Create 1,000 rows
-                        </BsButton>
-                    </div>
-                    <div class="col-sm-6 smallpad">
-                        <BsButton id="runlots" @onClick={{action this.runLots}}>
-                            Create 10,000 rows
-                        </BsButton>
-                    </div>
-                    <div class="col-sm-6 smallpad">
-                        <BsButton id="add" @onClick={{action this.add}}>
-                            Append 1,000 rows
-                        </BsButton>
-                    </div>
-                    <div class="col-sm-6 smallpad">
-                        <BsButton id="update" @onClick={{action this.update}}>
-                            Update every 10th row
-                        </BsButton>
-                    </div>
-                    <div class="col-sm-6 smallpad">
-                        <BsButton id="clear" @onClick={{action this.clear}}>
-                            Clear
-                        </BsButton>
-                    </div>
-                    <div class="col-sm-6 smallpad">
-                        <BsButton id="swaprows" @onClick={{action this.swapRows}}>
-                            Swap Rows
-                        </BsButton>
-                    </div>
-                </div>
-            </div>
+          <div class="col-sm-6 smallpad">
+            <BsButton id="run" @onClick={{action this.create}}>
+              Create 1,000 rows
+            </BsButton>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <BsButton id="runlots" @onClick={{action this.runLots}}>
+              Create 10,000 rows
+            </BsButton>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <BsButton id="add" @onClick={{action this.add}}>
+              Append 1,000 rows
+            </BsButton>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <BsButton id="update" @onClick={{action this.update}}>
+              Update every 10th row
+            </BsButton>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <BsButton id="clear" @onClick={{action this.clear}}>
+              Clear
+            </BsButton>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <BsButton id="swaprows" @onClick={{action this.swapRows}}>
+              Swap Rows
+            </BsButton>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
 
-    <Table 
-        @data={{this.data}} 
-        @onSelect={{action this.select}} 
-        @onRemove={{action this.remove}} 
-    />
+  <Table 
+    @data={{this.data}} 
+    @onSelect={{action this.select}} 
+    @onRemove={{action this.remove}} 
+  />
 
-    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+  <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 
 </div>
