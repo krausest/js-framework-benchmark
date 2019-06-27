@@ -1,2 +1,5 @@
-js_framework_benchmark_wasm_bindgen.*
-js_framework_benchmark_wasm_bindgen_bg.*
+node_modules
+/target
+/pkg
+/wasm-pack.log
+/yarn-error.log

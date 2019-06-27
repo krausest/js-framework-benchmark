@@ -1,17 +1,23 @@
-'use strict';
+const path = require("path");
+const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
-const path = require('path');
-
-var cache = {};
+const dist = path.resolve(__dirname, "bundled-dist");
 
 module.exports = {
-    cache: cache,
-    entry: './index.js',
-    output: {
-        path: path.resolve(__dirname, "dist"),
-        filename: '[name].js',
-        publicPath: 'dist/'
-    },
-    plugins: [ ],
-    mode: 'production'
+  mode: "production",
+  stats: "errors-warnings",
+  entry: {
+    index: "./index.js"
+  },
+  output: {
+    path: dist,
+    publicPath: "bundled-dist/",
+    filename: "[name].js"
+  },
+  plugins: [
+    new WasmPackPlugin({
+      crateDirectory: __dirname,
+      extraArgs: "--out-name index"
+    })
+  ]
 };
