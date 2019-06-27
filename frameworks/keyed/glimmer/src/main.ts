@@ -10,11 +10,11 @@ export default class App extends Application {
     const element = document.body;
 
     super({
-      builder: new DOMBuilder({ element }),
-      loader: new RuntimeCompilerLoader(resolver),
+      builder: new DOMBuilder({ element, nextSibling: null }),
+      loader: new RuntimeCompilerLoader(),
       renderer: new SyncRenderer(),
       resolver,
-      rootName: resolverConfiguration.app.rootName,
+      rootName: resolverConfiguration.app.rootName
     });
   }
 }
