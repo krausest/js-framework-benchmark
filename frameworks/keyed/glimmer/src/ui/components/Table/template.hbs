@@ -1,11 +1,6 @@
-<table class="table table-hover table-striped test-data">
-  <tbody>
-    {{~#each @data key="id" as |item|~}}
-      <Row
-        @item={{item}}
-        @onSelect={{action @onSelect item.id}}
-        @onRemove={{action @onRemove item.id}}
-      />
-    {{~/each~}}
-  </tbody>
+{{! template-lint-disable }}
+<table class="table table-hover table-striped test-data" id="items-list">
+  {{#if @data.length}}
+    <PerformantEach @onSelect={{@onSelect}} @onRemove={{@onRemove}} @items={{@data}} />
+  {{/if}}
 </table>
