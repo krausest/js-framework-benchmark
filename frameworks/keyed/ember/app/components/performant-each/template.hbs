@@ -1,4 +1,4 @@
 {{#-in-element this.fragment}}
-{{#each this.items as |item|}}{{yield item}}{{/each}}
+{{#each this.items key="id" as |item|}}{{yield item}}{{/each}}
 {{/-in-element}}
 {{this.addFragmentToDom}}
