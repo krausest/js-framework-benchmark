@@ -199,6 +199,28 @@ export async function shadowRoot(driver: WebDriver) : Promise<WebElement> {
 // SELENIUM_REMOTE_URL=http://localhost:9998
 export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver {
 
+    let args = [
+        "--js-flags=--expose-gc",
+        "--enable-precise-memory-info",
+        "--no-first-run",
+        "--enable-automation",
+        "--disable-infobars",
+        "--disable-background-networking",
+        "--disable-background-timer-throttling",
+        "--disable-cache",
+        "--disable-translate",
+        "--disable-sync",
+        "--disable-extensions",
+        "--disable-default-apps",
+        "--remote-debugging-port=" + (benchmarkOptions.remoteDebuggingPort).toFixed(),
+        "--window-size=1200,800"
+    ];
+
+    if (benchmarkOptions.headless) {
+        args.push("--headless");
+        args.push("--disable-gpu"); // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
+        args.push("--no-sandbox");
+    }
 
     console.time("chromedriver");
     let caps = new Capabilities({
@@ -206,22 +228,7 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
         platform: 'ANY',
         version: 'stable',
         "goog:chromeOptions": {
-            args: [
-                "--js-flags=--expose-gc",
-                "--enable-precise-memory-info",
-                "--no-first-run",
-                "--enable-automation",
-                "--disable-infobars",
-                "--disable-background-networking",
-                "--disable-background-timer-throttling",
-                "--disable-cache",
-                "--disable-translate",
-                "--disable-sync",
-                "--disable-extensions",
-                "--disable-default-apps",
-                "--remote-debugging-port=" + (benchmarkOptions.remoteDebuggingPort).toFixed(),
-                "--window-size=1200,800"
-            ],
+            args: args,
             "perfLoggingPrefs": {
                 "enableNetwork": true,
                 "enablePage": true,

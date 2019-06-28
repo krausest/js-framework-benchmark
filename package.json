@@ -13,7 +13,7 @@
     "install-webdriver-ts": "cd webdriver-ts && npm install && npm run build-prod",
     "install-webdriver-ts-results": "cd webdriver-ts-results && npm install",
     "install-local": "npm run install-webdriver-ts && npm run install-webdriver-ts-results",
-    "docker-build": "docker build -t js-framework-benchmark-centos -f Dockerfile .",
+    "docker-build-image": "docker build -t js-framework-benchmark-centos -f Dockerfile .",
     "docker-start": "cross-env-shell docker run --rm -d -p 8080:8080 --name js-framework-benchmark --volume ${INIT_CWD}:/src --volume js-framework-benchmark:/build js-framework-benchmark-centos",
     "docker-stop": "docker stop js-framework-benchmark",
     "docker-sync": "docker exec -it js-framework-benchmark rsync -avC --exclude /index.html --exclude /framework/**/dist --exclude /webdriver-ts*/dist --exclude package-lock.json --exclude node_modules --exclude webdriver-ts/results /src/ /build/",
