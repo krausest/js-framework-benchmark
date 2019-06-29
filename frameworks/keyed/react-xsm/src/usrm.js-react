@@ -1,0 +1,268 @@
+let _data = {};
+let config = {};
+let sharedState = {};
+let sublist = new Map();
+let rmsublist = new Map();
+let debug=false;
+let trace=false;
+let keysep='.';
+
+
+const frameworkcfg = {
+    React: {
+        umount: 'componentWillUnmount',
+        setstate: self => (key, val) => self.setState({[key]: val}),
+        initstate: (self, key, val) => {
+            if( !self.state ) self.state={};
+            if( key ) {
+                let v = get(key);
+                if( v === undefined ) {
+                    self.state[key] = val;
+                    set(key, val);
+                } else {
+                    self.state[key] = v;
+                }
+            }
+        },
+    },
+    Vue: {
+        umount: 'destroyed',
+        setstate: self => (key, val) => self[key] = val,
+        initstate: ()=>null,
+    },
+    Angular: {
+        umount: 'ngOnDestroy',
+        setstate: self => (key, val) => self[key] = val,
+        initstate: ()=>null,
+    },
+};
+
+function rmkey(key) {
+    let start, sep;
+    if( config.sep )
+        sep = config.sep;
+    else
+        sep = keysep;
+    start = _data;
+    const keystr = key + '';
+    let keychain = keystr.split(sep);
+    let len = keychain.length;
+    let breaklen = len-1;
+    let ref = start;
+    let keyitem;
+    for(let i=0; i<len; i++) {
+        keyitem = keychain[i];
+        if( i === breaklen ) {
+            ref[keyitem] = undefined;
+            return;
+        }
+        if( !ref[keyitem] ) {
+            ref[keyitem] = {};
+        } 
+        ref = ref[keyitem];
+    }
+    if( debug ) {
+        if( trace )
+            console.trace('trace for removing key=', key);
+        console.log('key=', key, 'store', {..._data});
+    }
+}
+
+function rmsub(key, id) {
+      if( (id||id===0) && sublist.has(key) && (sublist.get(key).length) > id ) {
+          sublist.get(key).splice(id, 1)
+          if( sublist.get(key).length === 0 ) {
+              sublist.delete(key)
+              rmkey(key);
+          }
+      }
+}
+
+function addsub(key, cb) {
+      if( !sublist.has(key) ) sublist.set(key, []);
+      let subitem = sublist.get(key);
+      subitem.push((key,val)=>cb(key,val))
+      return subitem.length-1;
+}
+
+export function setflat(key, val, opt) {
+    let cblst = sublist.get(key);
+    //console.log('cblst', cblst, key);
+    if( cblst ) {
+        for(let i=0; i<cblst.length; i++) {
+            cblst[i](key, val);
+        }
+    }
+    _data[key] = val;
+}
+export function set(key, val, opt) {
+    let start, sep;
+    if( opt && opt.sep )
+        sep = opt.sep;
+    else
+        sep = keysep;
+    if( opt && opt.pathref instanceof Object ) {
+        start = opt.pathref;
+    } else {
+        start = _data;
+    }
+    const keystr = key + '';
+    let keychain = keystr.split(sep);
+    let len = keychain.length;
+    let breaklen = len-1;
+    let ref = start;
+    let keyitem;
+    for(let i=0; i<len; i++) {
+        keyitem = keychain[i];
+        if( i === breaklen ) {
+            ref[keyitem] = val;
+            if(  sublist.has(key) ) {
+                let cblst = sublist.get(key);
+                for(let i=0; i<cblst.length; i++) {
+                    cblst[i](key, val);
+                }
+            }
+            if( debug ) {
+                if( trace )
+                    console.trace('trace for key=', key, 'val=', val);
+                console.log('key=', key, 'store', {..._data});
+            }
+            return;
+        }
+        if( !ref[keyitem] ) {
+            ref[keyitem] = {};
+        } 
+        ref = ref[keyitem];
+    }
+}
+export function get(key, sep) {
+    sep = sep || keysep;
+    key = key + '';
+    let keychain = key.split(sep);
+    let len = keychain.length;
+    let breaklen = len-1;
+    let ref = _data;
+    let keyval;
+    for(let i=0; i<len; i++) {
+        keyval = keychain[i];
+        if( i === breaklen ) {
+            return ref[keyval];
+        }
+        if( !ref[keyval] ) {
+            return undefined;
+        } 
+        ref = ref[keyval];
+        if( !ref || typeof ref !== 'object' ) {
+            return undefined;
+        } 
+    }
+}
+
+function rmStateBinding(self, opt) {
+    let map;
+    if( opt )
+        map  = opt;
+    else if( config.bindings )
+        map  = config.bindings[self.constructor.name];
+    else
+        return;
+    Object.keys(map).forEach(key => {
+        rmsub(key, rmsublist.get(self)[key]);
+    });
+}
+
+export function bindState(self, opt) {
+    let map;
+    if( opt )
+        map  = opt;
+    else if( config.bindings )
+        map  = config.bindings[self.constructor.name];
+    else
+        return;
+    let id;
+    rmsublist.set(self, {});
+    const ref = rmsublist.get(self)
+    let framework = config.framework;
+    Object.keys(map).forEach(key => {
+        frameworkcfg[framework].initstate(self, key, map[key]);
+        let frameworkcb =  frameworkcfg[framework].setstate(self);
+        let statecb = (key, val) => {
+                frameworkcb(key, val);
+        }
+        id = addsub(key, statecb);
+        ref[key] = id;
+    });
+    let umount = self[frameworkcfg[framework].umount]
+    if( framework ) {
+        if( umount ) {
+            umount = umount.bind(self);
+            self[frameworkcfg[framework].umount] = function classDestroy() {
+                rmStateBinding(self, map);
+                umount();
+    //console.log('has umount framework', framework, 'umount', umount, 'self', self, 'store', _data)
+            };
+        } else {
+            self[frameworkcfg[framework].umount] = function classDestroy() {
+                rmStateBinding(self, map);
+    //console.log('no umount framework', framework, 'umount', umount, 'self', self, 'store', _data)
+            };
+        }
+    } else {
+    console.log('default framework', framework, 'umount', umount, 'self', self)
+    }
+}
+
+function reset(key, opt) {
+    if(key) {
+      delete _data[key];
+    } else {
+      _data = {}; return
+    }
+}
+
+function setSharedState(bindings) {
+    let keylist = {};
+    Object.keys(bindings).forEach(key => {
+      const component = bindings[key];
+      Object.keys(component).forEach(state => {
+        if( keylist[state])
+            keylist[state] += 1;
+        else
+            keylist[state]= 1;
+      });
+    });
+    Object.keys(keylist).forEach(key => {
+        if( keylist[key]>1 )
+            sharedState[key] = true;
+    });
+    if( debug )
+        console.log('sharedState', sharedState);
+}
+
+export function setcfg(opt) {
+    if( !opt ) return;
+    Object.keys(opt).forEach(key => {
+        config[key] = opt[key];
+        if( key === 'bindings' )
+            setSharedState(opt[key])
+        if( key === 'debug' ) {
+            usm.debug(opt[key])
+            debug = opt[key];
+        }
+    });
+}
+
+const usm = {
+  setcfg,
+  set,
+  get,
+  reset,
+  rmsub,
+  addsub,
+  bindState,
+  select: (key, opt) => {
+  },
+  debug: val => debug=val,
+};
+
+export default usm;
