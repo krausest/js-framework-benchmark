@@ -42,9 +42,9 @@
 
 
 {{#if this.data.length}}
-{{#performant-each tagName="table" class="table table-hover table-striped test-data" internalTag="tbody" items=this.data key="@id" as |item|}}
-<TableRow @item={{item}} @onSelect={{action this.select item.id}} @onRemove={{action this.remove item.id}} />
-{{/performant-each}}
+  {{#performant-each tagName="table" class="table table-hover table-striped test-data" internalTag="tbody" items=this.data key="@id" as |item|}}
+    <TableRow @item={{item}} @onSelect={{action this.select item.id}} @onRemove={{action this.remove item.id}} />
+  {{/performant-each}}
 {{/if}}
 
 
