@@ -1,7 +1,7 @@
 const fs = require('fs');
 const rollup = require('rollup');
 const buble = require('rollup-plugin-buble');
-const UglifyJS = require('uglify-js');
+const terser = require('terser');
 const CleanCSS = require('clean-css');
 const path = require("path");
 const yargs = require("yargs-parser");
@@ -117,7 +117,6 @@ async function build() {
 		unsafe_regexp: false,
 		unsafe_undefined: false,
 		unused: true,
-		warnings: false,
 	};
 
 	const uglifyOpts = {
@@ -133,11 +132,11 @@ async function build() {
 		}),
 	};
 
-    const { code, map } = await bundle.generate({
+    const { output } = await bundle.generate({
         format: "iife",
     });
 
-    const minJs = UglifyJS.minify(code, uglifyOpts).code;
+    const minJs = terser.minify(output[0].code, uglifyOpts).code;
 
     var css = fs.readFileSync(__dirname + '/bootstrap-reboot.css', 'utf8').replace(/\/\*[\s\S]+?\*\/\s*/gm, '');
     css += fs.readFileSync(__dirname + '/style.css', 'utf8');

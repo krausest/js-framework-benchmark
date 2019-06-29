@@ -5,6 +5,10 @@ body {
     color: #333;
 }
 
+h1, h2, h3, h4, h5, h6 {
+	font-size: auto;
+}
+
 a {
     color: #337ab7;
     text-decoration: none;
