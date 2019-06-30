@@ -1,7 +1,7 @@
 <div class="jumbotron">
   <div class="row">
     <div class="col-md-6">
-      <h1>Ember v3.9.1</h1>
+      <h1>Ember v3.11.1</h1>
     </div>
     <div class="col-md-6">
       <div class="row">
@@ -41,18 +41,11 @@
 </div>
 
 
-<table class="table table-hover table-striped test-data">
-  <tbody>
-    {{#each this.data key="@identity" as |item|}}
-      <TableRow
-        @item={{item}}
-        @onSelect={{action this.select item.id}}
-        @onRemove={{action this.remove item.id}}
-      />
-    {{/each}}
-  </tbody>
-</table>
-
+{{#if this.data.length}}
+  {{#performant-each tagName="table" class="table table-hover table-striped test-data" internalTag="tbody" items=this.data key="@id" as |item|}}
+    <TableRow @item={{item}} @onSelect={{action this.select item.id}} @onRemove={{action this.remove item.id}} />
+  {{/performant-each}}
+{{/if}}
 
 
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
