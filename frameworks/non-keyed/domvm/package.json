@@ -12,7 +12,7 @@
   "devDependencies": {
     "rollup": "1.16.3",
     "rollup-plugin-buble": "0.19.6",
-    "terser": "^4.0.1"
+    "terser": "4.0.1"
   },
   "dependencies": {
     "domvm": "git://github.com/domvm/domvm.git#3.4.12"
