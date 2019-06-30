@@ -71,7 +71,7 @@ function TableTpl(store) {
 	const key = item => item.id;
 	const diff = {
 		val: (item) => item.label + (item.id === store.selected),
-		cmp: (o, n) => o !== n,
+		eq: (o, n) => o === n,
 	};
 
 	return (

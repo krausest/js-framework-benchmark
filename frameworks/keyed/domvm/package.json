@@ -1,20 +1,20 @@
 {
   "name": "js-framework-benchmark-domvm-keyed",
-  "version": "3.4.5-keyed",
+  "version": "3.4.12-keyed",
   "description": "Benchmark for domvm framework (keyed)",
   "js-framework-benchmark": {
-    "frameworkVersion": "3.4.5"
+    "frameworkVersion": "3.4.12"
   },
   "scripts": {
     "build-dev": "node build.js",
     "build-prod": "node build.js"
   },
   "devDependencies": {
-    "rollup": "0.64.1",
-    "rollup-plugin-buble": "0.19.2",
-    "uglify-js": "3.4.7"
+    "rollup": "1.16.3",
+    "rollup-plugin-buble": "0.19.6",
+    "terser": "^4.0.1"
   },
   "dependencies": {
-    "domvm": "git://github.com/domvm/domvm.git#3.4.5"
+    "domvm": "git://github.com/domvm/domvm.git#3.4.12"
   }
 }
