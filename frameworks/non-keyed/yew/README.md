@@ -7,10 +7,6 @@ However, if you do want to compile it, you will need the following:
 After installing that, run these commands:
 
 ```
-rustup toolchain install nightly
-rustup override set nightly
-rustup target add wasm32-unknown-unknown
-cargo install -f cargo-web
 npm install
 npm run build-prod-force
 ```
