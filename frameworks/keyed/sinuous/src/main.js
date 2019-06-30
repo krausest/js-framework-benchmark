@@ -22,8 +22,8 @@ function buildData(count) {
 
 function getParentId(node) {
 	do {
-		if (node.data && node.data.id) {
-			return node.data.id;
+		if (node.props && node.props.id) {
+			return node.props.id;
 		}
 	} while ((node = node.parentNode));
 }
@@ -79,7 +79,7 @@ const App = () => {
 
 	const Row = template(() => html`
 		<tr class=${ o('selected') }>
-			<td class=col-md-1 textContent=${ t('id') } />
+			<td class=col-md-1>${ t('id') }</td>
 			<td class=col-md-4><a>${ o('label') }</a></td>
 			<td class=col-md-1><a>
 				<span class="glyphicon glyphicon-remove remove" aria-hidden=true />
