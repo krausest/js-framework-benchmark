@@ -1,6 +1,6 @@
 const rollup = require('rollup').rollup;
 const buble = require('rollup-plugin-buble');
-const UglifyJS = require('uglify-js');
+const terser = require('terser');
 const fs = require('fs');
 
 rollup({
@@ -59,7 +59,6 @@ rollup({
 		unsafe_regexp: false,
 		unsafe_undefined: false,
 		unused: true,
-		warnings: false,
 	};
 
 	const opts = {
@@ -75,7 +74,7 @@ rollup({
 		}),
 	};
 
-	const compiled = UglifyJS.minify(fs.readFileSync('dist/bundle.js', 'utf8'), opts).code;
+	const compiled = terser.minify(fs.readFileSync('dist/bundle.js', 'utf8'), opts).code;
 
 	fs.writeFileSync('dist/bundle.min.js', compiled, 'utf8');
 }).catch(err => console.log(err.stack));

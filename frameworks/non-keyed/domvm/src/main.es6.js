@@ -70,7 +70,7 @@ function ButtonTpl(store, action, text) {
 function TableTpl(store) {
 	const diff = {
 		val: (item) => item.label + (item.id === store.selected),
-		cmp: (o, n) => o !== n,
+		eq: (o, n) => o === n,
 	};
 
 	return (
