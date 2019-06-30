@@ -6,7 +6,7 @@ import { Store } from './store';
 
 const App = component({
 	methods() {
-		const { store } = this.getState();
+		const { store } = this.state;
 		return {
 			run() {
 				store.run();
@@ -43,7 +43,7 @@ const App = component({
 		};
 	},
 	render() {
-		const { store } = this.getState();
+		const { store } = this.state;
 		return (
 			<div class="container">
 				<div class="jumbotron">
@@ -147,7 +147,7 @@ const App = component({
 										/>
 									</a>
 								</td>
-                                <td class="col-md-6"></td>
+								<td class="col-md-6" />
 							</tr>
 						))}
 					</tbody>
