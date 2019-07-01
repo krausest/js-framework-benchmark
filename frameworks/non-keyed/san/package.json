@@ -26,9 +26,9 @@
     "babel-preset-stage-0": "6.24.1",
     "css-loader": "1.0.0",
     "webpack": "4.16.3",
-    "webpack-cli": "^3.1.0"
+    "webpack-cli": "3.1.0"
   },
   "dependencies": {
-    "san": "^3.7.5"
+    "san": "3.7.7"
   }
 }
