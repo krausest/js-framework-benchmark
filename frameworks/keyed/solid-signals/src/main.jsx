@@ -45,7 +45,7 @@ const App = () => {
         <tr model={ row.id }>
           <td class='col-md-1' textContent={ row.id } />
           <td class='col-md-4'><a onClick={ select }>{ row.label }</a></td>
-          <td class='col-md-1'><a onClick={ remove }><span class='glyphicon glyphicon-remove' /></a></td>
+          <td class='col-md-1'><a onClick={ remove }><span class='glyphicon glyphicon-remove' aria-hidden='true'/></a></td>
           <td class='col-md-6'/>
         </tr>
       }</$>
