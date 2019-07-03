@@ -54,7 +54,7 @@ async function ncuRunUpdate(packageVersionInfo: PackageVersionInformationResult)
 
 async function main() {
 
-    let frameworkVersionInformations = loadFrameworkVersionInformation();
+    let frameworkVersionInformations = await loadFrameworkVersionInformation();
 
     let errors = frameworkVersionInformations.filter(frameworkVersionInformation => frameworkVersionInformation instanceof FrameworkVersionInformationError);
 

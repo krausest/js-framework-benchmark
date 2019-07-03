@@ -23,11 +23,10 @@ function forkedRun(frameworks: FrameworkData[], frameworkName: string, keyed: bo
     }
 }
 
-async function runBench(frameworks: FrameworkData[], frameworkNames: string[], benchmarkNames: string[], dir: string) {
+async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]) {
     let errors: BenchmarkError[] = [];
     let warnings: String[] = [];
 
-    let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name) > -1));
     let runBenchmarks = benchmarks.filter(b => benchmarkNames.some(name => b.id.toLowerCase().indexOf(name) > -1));
 
     let restart: string = undefined; // 'rx-domh-rxjs-v0.0.2-keyed';
@@ -36,7 +35,7 @@ async function runBench(frameworks: FrameworkData[], frameworkNames: string[], b
         runFrameworks = runFrameworks.slice(index);
     }
 
-    console.log("Frameworks that will be benchmarked", runFrameworks);
+    console.log("Frameworks that will be benchmarked", runFrameworks.map(f => f.fullNameWithKeyedAndVersion));
     console.log("Benchmarks that will be run", runBenchmarks.map(b => b.id));
 
     let data: [[FrameworkData, Benchmark]] = <any>[];
@@ -52,7 +51,6 @@ async function runBench(frameworks: FrameworkData[], frameworkNames: string[], b
 
 
         let benchmarkOptions: BenchmarkOptions = {
-            outputDirectory: dir,
             port: config.PORT.toFixed(),
             remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
             chromePort: config.CHROME_PORT,
@@ -64,7 +62,7 @@ async function runBench(frameworks: FrameworkData[], frameworkNames: string[], b
         }
 
         try {
-            let errorsAndWarnings: ErrorsAndWarning = await forkedRun(frameworks, framework.name, framework.keyed, benchmark.id, benchmarkOptions);
+            let errorsAndWarnings: ErrorsAndWarning = await forkedRun(runFrameworks, framework.name, framework.keyed, benchmark.id, benchmarkOptions);
             errors.splice(errors.length, 0, ...errorsAndWarnings.errors);
             warnings.splice(warnings.length, 0, ...errorsAndWarnings.warnings);
         } catch (err) {
@@ -96,8 +94,11 @@ async function runBench(frameworks: FrameworkData[], frameworkNames: string[], b
     }
 }
 
+let allArgs = process.argv.length<=2 ? [] : process.argv.slice(2,process.argv.length);
+// if no --option is passed we interpret the arguments as directory names that should be ru-run
+
 let args = yargs(process.argv)
-    .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError]")
+    .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError] \n or: $0 [directory1] [directory2] .. [directory3]")
     .help('help')
     .default('check', 'false')
     .default('fork', 'true')
@@ -110,12 +111,23 @@ let args = yargs(process.argv)
     .boolean('headless')
     .array("framework").array("benchmark").argv;
 
+let runBenchmarksFromDirectoryNamesArgs = !args.framework;
+
 async function main() {
-    let frameworks = await initializeFrameworks();
-
-
+    
+    
     let runBenchmarks = (args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""]).map(v => v.toString());
-    let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(v => v.toString());
+    let runFrameworks: FrameworkData[];
+    if (runBenchmarksFromDirectoryNamesArgs) {    
+        console.log("MODE: Directory names. Using arguments as the directory names to be re-run.");
+        let matchesDirectoryArg = (directoryName: string) => allArgs.some(arg => arg==directoryName)
+        runFrameworks = await initializeFrameworks(matchesDirectoryArg);
+    } else {
+        console.log("MODE: Classic command line options.");
+        let frameworkNames = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(v => v.toString());
+        let frameworks = await initializeFrameworks();
+        runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name) > -1));
+    }
     let count = Number(args.count);
     config.PORT = Number(args.port);
     if (count < Number.MAX_SAFE_INTEGER) config.REPEAT_RUN = count;
@@ -126,25 +138,24 @@ async function main() {
 
     console.log(args, "no-results", args.noResults, config.WRITE_RESULTS);
 
-    let dir = args.check === 'true' ? "results_check" : "results"
     let exitOnError = args.exitOnError === 'true'
 
     config.EXIT_ON_ERROR = exitOnError;
 
     console.log("fork chromedriver process?", config.FORK_CHROMEDRIVER);
 
-    if (!fs.existsSync(dir))
-    fs.mkdirSync(dir);
+    if (!fs.existsSync(config.RESULTS_DIRECTORY))
+    fs.mkdirSync(config.RESULTS_DIRECTORY);
 
     if (args.help) {
         yargs.showHelp();
     } else {
-        runBench(frameworks, runFrameworks, runBenchmarks, dir).then(_ => {
-                console.log("successful run");
-        }).catch(error => {
-            console.log("run was not completely sucessful");
-        })
+        return runBench(runFrameworks, runBenchmarks);
     }
 }
 
-main();
+main().then(_ => {
+    console.log("successful run");
+}).catch(error => {
+    console.log("run was not completely sucessful", error);
+})

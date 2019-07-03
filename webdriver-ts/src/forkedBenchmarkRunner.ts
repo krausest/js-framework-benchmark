@@ -327,7 +327,8 @@ interface Result<T> {
 }
 
 
-function writeResult<T>(res: Result<T>, dir: string) {
+function writeResult<T>(res: Result<T>) {
+    if (!config.WRITE_RESULTS) return;
     let benchmark = res.benchmark;
     let framework = res.framework.name;
     let keyed = res.framework.keyed;
@@ -356,7 +357,7 @@ function writeResult<T>(res: Result<T>, dir: string) {
             "standardDeviation": s.stdev(true),
             "values": data
         }
-        fs.writeFileSync(`${dir}/${fileName(res.framework, resultKind)}`, JSON.stringify(result), {encoding: "utf8"});
+        fs.writeFileSync(`${config.RESULTS_DIRECTORY}/${fileName(res.framework, resultKind)}`, JSON.stringify(result), {encoding: "utf8"});
     }
 }
 
@@ -425,7 +426,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
             }
         }
         let results = await computeResultsCPU(driver, benchmarkOptions, framework, benchmark, warnings);
-        await writeResult({ framework: framework, results: results, benchmark: benchmark }, benchmarkOptions.outputDirectory);
+        await writeResult({ framework: framework, results: results, benchmark: benchmark });
         console.log("QUIT");
         await driver.close();
         await driver.quit();
@@ -486,7 +487,7 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
             await driver.quit();
         }
     }
-    await writeResult({ framework: framework, results: allResults, benchmark: benchmark }, benchmarkOptions.outputDirectory);
+    await writeResult({ framework: framework, results: allResults, benchmark: benchmark });
     return {errors, warnings};
 }
 
@@ -505,7 +506,7 @@ async function runStartupBenchmark(framework: FrameworkData, benchmark: Benchmar
             throw error;
         }
     }
-    await writeResult({framework: framework, results: results, benchmark: benchmark}, benchmarkOptions.outputDirectory);
+    await writeResult({framework: framework, results: results, benchmark: benchmark});
     return {errors, warnings: []};
 }
 

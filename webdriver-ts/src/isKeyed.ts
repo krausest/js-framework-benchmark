@@ -4,6 +4,19 @@ import {config, FrameworkData, initializeFrameworks, BenchmarkOptions} from './c
 import { WebDriver, By, WebElement } from 'selenium-webdriver';
 import * as R from 'ramda';
 
+
+let args = yargs(process.argv)
+    .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...]")
+    .help('help')
+    .default('port', config.PORT)
+    .string('chromeBinary')
+    .string('chromeDriver')
+    .boolean('headless')
+    .array("framework").argv;
+
+let allArgs = process.argv.length<=2 ? [] : process.argv.slice(2,process.argv.length);
+let runBenchmarksFromDirectoryNamesArgs = !args.framework;
+
 // necessary to launch without specifiying a path
 var chromedriver:any = require('chromedriver');
 
@@ -162,12 +175,18 @@ export async function getInnerHTML(driver: WebDriver, xpath: string, timeout = c
     return elem.getAttribute("innerHTML");
 }
 
-async function runBench(frameworks: FrameworkData[], frameworkNames: string[]) {
-    let runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name)>-1));
+async function runBench(frameworkNames: string[]) {
+    let runFrameworks;
+    if (!runBenchmarksFromDirectoryNamesArgs) {
+        let frameworks = await initializeFrameworks();
+        runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name)>-1));
+    } else {
+        let matchesDirectoryArg = (directoryName: string) => allArgs.some(arg => arg==directoryName)
+        runFrameworks = await initializeFrameworks(matchesDirectoryArg);
+    }
     console.log("Frameworks that will be checked", runFrameworks.map(f => f.fullNameWithKeyedAndVersion).join(' '));
 
     let frameworkMap = new Map<String, FrameworkData>();
-    frameworks.forEach(f => frameworkMap.set(f.fullNameWithKeyedAndVersion, f));
 
     let allCorrect = true;
 
@@ -217,7 +236,7 @@ async function runBench(frameworks: FrameworkData[], frameworkNames: string[]) {
             + (keyedRemove ? "keyed" : "non-keyed") + " for 'remove row benchmark' "
             + (keyedSwap ? "keyed" : "non-keyed") + " for 'swap rows benchmark' "
             +". It'll appear as "+(keyed ? "keyed" : "non-keyed")+" in the results");
-            if (frameworkMap.get(framework.fullNameWithKeyedAndVersion).keyed !== keyed) {
+            if (framework.keyed !== keyed) {
                 console.log("ERROR: Framework "+framework.fullNameWithKeyedAndVersion+" is not correctly categorized");
                 allCorrect = false;
             }
@@ -231,21 +250,11 @@ async function runBench(frameworks: FrameworkData[], frameworkNames: string[]) {
     if (!allCorrect) process.exit(1)
 }
 
-let args = yargs(process.argv)
-    .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...]")
-    .help('help')
-    .default('port', config.PORT)
-    .string('chromeBinary')
-    .string('chromeDriver')
-    .boolean('headless')
-    .array("framework").argv;
-
 config.PORT = Number(args.port);
 
 let runFrameworks = (args.framework && args.framework.length>0 ? args.framework : [""]).map(v => v.toString());
 
 let benchmarkOptions: BenchmarkOptions = {
-    outputDirectory: null,
     port: config.PORT.toFixed(),
     remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
     chromePort: config.CHROME_PORT,
@@ -256,12 +265,10 @@ let benchmarkOptions: BenchmarkOptions = {
     numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
 }
 async function main() {
-    let frameworks = await initializeFrameworks();
-
     if (args.help) {
         yargs.showHelp();
     } else {
-        runBench(frameworks, runFrameworks);
+        runBench(runFrameworks);
     }
 }
 

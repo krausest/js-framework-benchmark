@@ -35,18 +35,13 @@ if (frameworks.length === 0) {
         stdio: 'inherit'
     });
 
-    let frameworkInfos = await initializeFrameworks((filePath: string) => frameworks.indexOf(filePath) > -1);
-    // console.log("frameworkInfos", frameworkInfos, frameworks);
-    let frameworkNames = frameworkInfos.map(f => "'"+f.fullNameWithKeyedAndVersion+"'").join(' ');
-    if (frameworkInfos.length === 0) {
-        throw "expected to find some version information for the framework";
-    }
-    console.log('npm run bench -- --headless --noResults --count 1 --framework '+frameworkNames);
-    exec('npm run bench -- --headless --noResults --count 1 --framework '+frameworkNames, {
+    let frameworkNames = frameworks.join(" ");
+    console.log('npm run bench -- --headless --noResults --count 1  '+frameworkNames);
+    exec('npm run bench -- --headless --noResults --count 1 '+frameworkNames, {
         stdio: 'inherit'
     });
-    console.log('npm run isKeyed -- --headless --framework '+frameworkNames);
-    exec('npm run isKeyed -- --headless --framework '+frameworkNames, {
+    console.log('npm run isKeyed -- --headless '+frameworkNames);
+    exec('npm run isKeyed -- --headless '+frameworkNames, {
         stdio: 'inherit'
     });
 
