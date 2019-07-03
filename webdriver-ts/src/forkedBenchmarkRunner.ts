@@ -7,10 +7,10 @@ const chromeLauncher = require('chrome-launcher');
 
 import * as fs from 'fs';
 import * as path from 'path';
-import {TConfig, JSONResult, FrameworkData, BenchmarkError, ErrorsAndWarning, BenchmarkOptions, BenchmarkDriverOptions} from './common'
+import {TConfig, config as defaultConfig, JSONResult, FrameworkData, BenchmarkError, ErrorsAndWarning, BenchmarkOptions, BenchmarkDriverOptions} from './common'
 import * as R from 'ramda';
 
-let config:TConfig = null;
+let config:TConfig = defaultConfig;
 
 // necessary to launch without specifiying a path
 var chromedriver:any = require('chromedriver');
