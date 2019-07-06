@@ -2,7 +2,8 @@
 var h = require('attodom/el'),
     list = require('attodom/list')
 
-var TITLE = 'attodom v0.11.3'
+var TITLE = 'attodom v0.12.0',
+    selected = null
 
 module.exports = function(store) {
   function clickHandlerMenu(e) {
@@ -10,21 +11,24 @@ module.exports = function(store) {
     if (key) {
       e.preventDefault()
       store[key === 'runlots' ? 'runLots' : key === 'swaprows' ? 'swapRows' : key]()
+      if (!store.selected && selected) {
+        selected.className = ''
+        selected = null
+      }
       rowList.update(store.data)
     }
   }
 
   function updateRow(v) {
     this.$label.data = v.label
-    this.className = (this.id === store.selected) ? 'danger' : ''
   }
 
   function makeRow(rec) {
-    var attr = {id: rec.id, update: updateRow}
-    return h('tr', attr,
+    var $label
+    var row = h('tr',
       h('td', {class: 'col-md-1'}, rec.id),
       h('td', {class: 'col-md-4', onClick: clickHandlerSelect},
-        h('a', {class: 'lbl'}, attr.$label = document.createTextNode(rec.label))
+        h('a', {class: 'lbl'}, $label = document.createTextNode(rec.label))
       ),
       h('td', {class: 'col-md-1', onClick: clickHandlerDelete},
         h('a', {class: 'remove'},
@@ -33,18 +37,25 @@ module.exports = function(store) {
       ),
       h('td', {class: 'col-md-6'})
     )
+    row.id = rec.id
+    row.update = updateRow
+    row.$label = $label
+    return row
   }
 
   function clickHandlerSelect(e) {
     e.preventDefault()
     store.select(this.parentNode.id)
-    rowList.update(store.data)
+    if (selected) selected.className = ''
+    selected = this.parentNode
+    selected.className = 'danger'
   }
 
   function clickHandlerDelete(e) {
+    var row = this.parentNode
     e.preventDefault()
-    store.delete(+this.parentNode.id)
-    rowList.update(store.data)
+    row.parentNode.removeChild(row)
+    store.delete(+row.id)
   }
 
   var rowList = list(h('tbody', {id: 'tbody'}), makeRow, {key: 'id'})
