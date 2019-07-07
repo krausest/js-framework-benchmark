@@ -72,7 +72,7 @@ const App = () => {
 
 	const Button = ({ id, text, fn }) => html`
 		<div class="col-sm-6 smallpad">
-			<button id="${ id }" class="btn btn-primary btn-block" type=button onclick=${() => fn}>
+			<button id="${ id }" class="btn btn-primary btn-block" type=button onclick=${fn}>
 				${ text }
 			</button>
 		</div>`;
@@ -101,7 +101,7 @@ const App = () => {
 			</div></div>
 		</div></div>
 		<table class="table table-hover table-striped test-data">
-			<tbody onclick=${() => removeOrSelect}>
+			<tbody onclick=${removeOrSelect}>
 				${map(data, Row)}
 			</tbody>
 		</table>
