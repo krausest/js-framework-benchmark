@@ -1,0 +1,126 @@
+<app>
+  <div class='container'>
+    <div class='jumbotron'>
+      <div class='row'>
+        <div class='col-md-6'>
+          <h1>riot</h1>
+        </div>
+        <div class='col-md-6'>
+          <div class='row'>
+            <div class='col-sm-6 smallpad'>
+              <button type='button' class='btn btn-primary btn-block' id='run' onclick={ run }>
+                Create 1,000 rows
+              </button>
+            </div>
+            <div class='col-sm-6 smallpad'>
+              <button type='button' class='btn btn-primary btn-block' id='runlots' onclick={ runLots }>Create 10,000 rows
+              </button>
+            </div>
+            <div class='col-sm-6 smallpad'>
+              <button type='button' class='btn btn-primary btn-block' id='add' onclick={ add }>
+                Append 1,000 rows
+              </button>
+            </div>
+            <div class='col-sm-6 smallpad'>
+              <button type='button' class='btn btn-primary btn-block' id='update' onclick={ updateRows }>Update every 10th row
+              </button>
+            </div>
+            <div class='col-sm-6 smallpad'>
+              <button type='button' class='btn btn-primary btn-block' id='clear' onclick={ clear }>
+                Clear
+              </button>
+            </div>
+            <div class='col-sm-6 smallpad'>
+              <button type='button' class='btn btn-primary btn-block' id="swaprows" onclick={ swapRows } >
+                Swap Rows
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class='table table-hover table-striped test-data'>
+      <tbody>
+        <tr each={ row in state.rows } key={ row.id } class={ rowClass(row) }>
+          <td class='col-md-1'>{ row.id }</td>
+          <td class='col-md-4'>
+            <a onclick={ () => select(row) }>{ row.label }</a>
+          </td>
+          <td class='col-md-1'>
+            <a onclick={ () => remove(row) }><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>
+          </td>
+          <td class='col-md-6'></td>
+        </tr>
+      </tbody>
+    </table>
+    <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
+  </div>
+  <script>
+    export default {
+      onBeforeMount(props) {
+        this.store = props.store
+        this.state = {
+          rows: this.store.data,
+          selected: this.store.selected
+        }
+      },
+      rowClass(row) {
+        return row.id === this.state.selected ? 'danger' : ''
+      },
+      renderWithNewState() {
+        this.update({
+          rows: this.store.data,
+          selected: this.store.selected
+        })
+      },
+      add() {
+        startMeasure('add')
+        this.store.add()
+        this.renderWithNewState()
+        stopMeasure()
+      },
+      remove(item) {
+        startMeasure('remove')
+        this.store.delete(item.id)
+        this.renderWithNewState()
+        stopMeasure()
+      },
+      select(item) {
+        startMeasure('select')
+        this.store.select(item.id)
+        this.renderWithNewState()
+        stopMeasure()
+      },
+      run() {
+        startMeasure('run')
+        this.store.run()
+        this.renderWithNewState()
+        stopMeasure()
+      },
+      updateRows() {
+        startMeasure('update')
+        this.store.update()
+        this.renderWithNewState()
+        stopMeasure()
+      },
+      runLots() {
+        startMeasure('runLots')
+        this.store.runLots()
+        this.renderWithNewState()
+        stopMeasure()
+      },
+      clear() {
+        startMeasure('clear')
+        this.store.clear()
+        this.renderWithNewState()
+        stopMeasure()
+      },
+      swapRows() {
+        startMeasure('swapRows')
+        this.store.swapRows()
+        this.renderWithNewState()
+        stopMeasure()
+      }
+    }
+  </script>
+</app>
