@@ -42,7 +42,7 @@
     <table class='table table-hover table-striped test-data'>
       <tbody>
         <tr each={ row in state.rows } class={ rowClass(row) }>
-          <td class='col-md-1'>{ id }</td>
+          <td class='col-md-1'>{ row.id }</td>
           <td class='col-md-4'>
             <a onclick={ () => select(row) }>{ row.label }</a>
           </td>
