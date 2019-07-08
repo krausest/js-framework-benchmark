@@ -5,7 +5,7 @@ import { terser } from 'rollup-plugin-terser';
 const plugins = [
 	babel({
 		exclude: 'node_modules/**',
-		plugins: [['htm']]
+		plugins: [['sinuous/babel-plugin-htm']]
   }),
 	resolve()
 ];
