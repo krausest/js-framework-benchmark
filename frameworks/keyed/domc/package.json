@@ -24,17 +24,17 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "domc": "0.0.5"
+    "domc": "0.0.12"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-es2016": "^6.24.1",
-    "rollup": "^0.58.2",
-    "rollup-plugin-babel": "^3.0.4",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-terser": "^1.0.1",
-    "rollup-plugin-uglify": "^3.0.0",
-    "uglify-es": "^3.3.9"
+    "@babel/core": "7.4.5",
+    "@babel/plugin-external-helpers": "7.2.0",
+    "@babel/preset-env": "7.4.5",
+    "rollup": "1.16.6",
+    "rollup-plugin-babel": "4.3.3",
+    "rollup-plugin-node-resolve": "5.2.0",
+    "rollup-plugin-terser": "5.1.1",
+    "rollup-plugin-uglify": "6.0.2",
+    "uglify-es": "3.3.9"
   }
 }
