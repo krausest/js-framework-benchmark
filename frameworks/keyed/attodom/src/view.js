@@ -2,7 +2,7 @@
 var h = require('attodom/el'),
     list = require('attodom/list')
 
-var TITLE = 'attodom v0.11.3'
+var TITLE = 'attodom v0.12.0'
 
 module.exports = function(store) {
   function clickHandlerMenu(e) {
@@ -15,16 +15,17 @@ module.exports = function(store) {
   }
 
   function updateRow(v) {
-    this.$label.data = v.label
-    this.className = (this.id === store.selected) ? 'danger' : ''
+    if (this.$label.data !== v.label) this.$label.data = v.label
+    var className = (this.id === store.selected) ? 'danger' : ''
+    if (this.className !== className) this.className = className
   }
 
   function makeRow(rec) {
-    var attr = {id: rec.id, update: updateRow}
-    return h('tr', attr,
+    var $label
+    var row = h('tr',
       h('td', {class: 'col-md-1'}, rec.id),
       h('td', {class: 'col-md-4', onClick: clickHandlerSelect},
-        h('a', {class: 'lbl'}, attr.$label = document.createTextNode(rec.label))
+        h('a', {class: 'lbl'}, $label = document.createTextNode(rec.label))
       ),
       h('td', {class: 'col-md-1', onClick: clickHandlerDelete},
         h('a', {class: 'remove'},
@@ -33,6 +34,10 @@ module.exports = function(store) {
       ),
       h('td', {class: 'col-md-6'})
     )
+    row.id = rec.id
+    row.update = updateRow
+    row.$label = $label
+    return row
   }
 
   function clickHandlerSelect(e) {
@@ -59,7 +64,7 @@ module.exports = function(store) {
           h('div', {class: 'col-md-6'},
             h('div', {class: 'row', onclick: clickHandlerMenu},
               button('run', 'Create 1,000 rows'),
-              button('runlots', 'Create 10,000 rows'), //TODO error
+              button('runlots', 'Create 10,000 rows'),
               button('add', 'Append 1,000 rows'),
               button('update', 'Update every 10th row'),
               button('clear', 'Clear'),
