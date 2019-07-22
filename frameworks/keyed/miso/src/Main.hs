@@ -232,7 +232,7 @@ viewJumbotron =
         [ class_ "col-md-6" ]
         [ h1_
             []
-            [ text "miso-0.18.0.0-keyed" ]
+            [ text "miso-1.1.0.0-keyed" ]
         ]
       , div_
           [ class_ "col-md-6" ]
