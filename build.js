@@ -1,8 +1,12 @@
 var _ = require('lodash');
+var util = require('util');
 var exec = require('child_process').execSync;
 var fs = require('fs');
+var fsp = require('fs').promises;
 var path = require('path');
 var yargs = require('yargs');
+
+var execp = util.promisify(require('child_process').exec);
 
 let args = yargs(process.argv)
     .usage("npm run build [-- [--check] [--skipIrrelevant] [--restartWith] [--benchmarks_only]]")
@@ -36,21 +40,28 @@ var relevant = args.skipIrrelevant && !_.some(core, isDifferent)
 
 _.each(skippable, ([dir,name]) => console.log("*** Skipping " + dir + name));
 
-_.each([].concat(relevant, core), function([dir,name]) {
-        let fullname = dir + name;
-	if(fs.statSync(fullname).isDirectory() && fs.existsSync(path.join(fullname, "package.json"))) {
-          console.log("*** Executing npm install in "+fullname);
-            exec('npm install', {
-				cwd: fullname,
-				stdio: 'inherit'
-			});
-			console.log("*** Executing npm run build-prod in "+fullname);
-			exec('npm run build-prod', {
-				cwd: fullname,
-				stdio: 'inherit'
-			});
-	}
-});
+const buildProject = async ([dir,name]) => {
+    let fullname = dir + name;
+    try {
+        if((await fsp.stat(fullname)).isDirectory() &&
+           (await fsp.stat(path.join(fullname, "package.json"))).isFile()) {
+            console.log("*** Executing npm install in "+fullname);
+            await execp('npm install', {
+                cwd: fullname
+            });
+            console.log("*** Executing npm run build-prod in "+fullname);
+            await execp('npm run build-prod', {
+                cwd: fullname
+            });
+        }
+    } catch (err) {
+        console.log(
+            '*** Failed to execute ' + fullname + "\n" +
+            err.stderr + "\n" +
+            err.stdout);
+    }
+}
+Promise.all([].concat(relevant, core).map(buildProject));
 
 var testable = args.check ? relevant : [];
 _.each(testable, function([dir,name]) {
