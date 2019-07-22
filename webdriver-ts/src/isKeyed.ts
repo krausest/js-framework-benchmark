@@ -14,9 +14,11 @@ let args = yargs(process.argv)
     .boolean('headless')
     .array("framework").argv;
 
-let allArgs = process.argv.length<=2 ? [] : process.argv.slice(2,process.argv.length);
-let runBenchmarksFromDirectoryNamesArgs = !args.framework;
+let allArgs = args._.length<=2 ? [] : args._.slice(2,args._.length);
 
+console.log("args.framework", args.framework, !args.framework);
+let runBenchmarksFromDirectoryNamesArgs = !args.framework;
+    
 // necessary to launch without specifiying a path
 var chromedriver:any = require('chromedriver');
 
@@ -154,7 +156,7 @@ export async function checkTRcorrect(driver: WebDriver, timeout = config.TIMEOUT
     }
     let spanAria = (await span.getAttribute("aria-hidden"));
     if ("true"!=spanAria) {
-        console.log("Expected to find 'aria-hidden'=true on span in fourth td, but found ", spanAria);
+        console.log("Expected to find 'aria-hidden'=true on span in third td, but found ", spanAria);
         return false;
     }
 
@@ -181,7 +183,7 @@ async function runBench(frameworkNames: string[]) {
         let frameworks = await initializeFrameworks();
         runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name)>-1));
     } else {
-        let matchesDirectoryArg = (directoryName: string) => allArgs.some(arg => arg==directoryName)
+        let matchesDirectoryArg = (directoryName: string) => allArgs.length==0 || allArgs.some(arg => arg==directoryName)
         runFrameworks = await initializeFrameworks(matchesDirectoryArg);
     }
     console.log("Frameworks that will be checked", runFrameworks.map(f => f.fullNameWithKeyedAndVersion).join(' '));

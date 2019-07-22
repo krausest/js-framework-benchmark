@@ -94,8 +94,9 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
     }
 }
 
-let allArgs = process.argv.length<=2 ? [] : process.argv.slice(2,process.argv.length);
-// if no --option is passed we interpret the arguments as directory names that should be ru-run
+// FIXME: Clean up args.
+// What works: npm run bench keyed/react, npm run bench -- keyed/react, npm run bench -- keyed/react --count 1 --benchmark 01_
+// What doesn't work (keyed/react becomes an element of argument benchmark): npm run bench -- --count 1 --benchmark 01_ keyed/react   
 
 let args = yargs(process.argv)
     .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError] \n or: $0 [directory1] [directory2] .. [directory3]")
@@ -109,7 +110,10 @@ let args = yargs(process.argv)
     .string('chromeBinary')
     .string('chromeDriver')
     .boolean('headless')
-    .array("framework").array("benchmark").argv;
+    .array("framework").array("benchmark")
+    .argv;
+
+let allArgs = args._.length<=2 ? [] : args._.slice(2,args._.length);
 
 let runBenchmarksFromDirectoryNamesArgs = !args.framework;
 
@@ -119,11 +123,11 @@ async function main() {
     let runBenchmarks = (args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""]).map(v => v.toString());
     let runFrameworks: FrameworkData[];
     if (runBenchmarksFromDirectoryNamesArgs) {    
-        console.log("MODE: Directory names. Using arguments as the directory names to be re-run.");
-        let matchesDirectoryArg = (directoryName: string) => allArgs.some(arg => arg==directoryName)
+        console.log("MODE: Directory names. Using arguments as the directory names to be re-run: ", allArgs);
+        let matchesDirectoryArg = (directoryName: string) => allArgs.length==0 || allArgs.some(arg => arg==directoryName)
         runFrameworks = await initializeFrameworks(matchesDirectoryArg);
     } else {
-        console.log("MODE: Classic command line options.");
+        console.log("MODE: Classic command line options");
         let frameworkNames = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(v => v.toString());
         let frameworks = await initializeFrameworks();
         runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name) > -1));
