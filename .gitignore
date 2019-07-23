@@ -75,3 +75,6 @@ glimmer-*/tmp
 .cargo/
 .rustup/
 Cargo.lock
+
+# emacs
+*~
