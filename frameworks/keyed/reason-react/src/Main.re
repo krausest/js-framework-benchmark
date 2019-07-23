@@ -13,8 +13,6 @@ type main_actions_t =
   | CLEAR
   | SWAPROWS;
 
-// let component = ReasonReact.reducerComponent("Main");
-
 let exclaim = (idx, d: Util.item) =>
   if (0 == idx mod 10) {
     {...d, label: d.label ++ " !!!"};
@@ -22,17 +20,7 @@ let exclaim = (idx, d: Util.item) =>
     d;
   };
 
-/*
- let exclaim_inplace = (arr: array(Util.item)) => {
-   let impl = (idx, d: Util.item) =>
-     if (0 == idx mod 10) {
-       arr[idx] = {...d, label: d.label ++ " !!!"};
-     };
-   impl;
- };
- */
-
-let reducer = (state: main_state_t, action: main_actions_t) =>
+let reducer = (state: main_state_t, action: main_actions_t) => {
   switch (action) {
   | RUN => {...state, data: Util.build_data(1000)}
 
@@ -70,11 +58,12 @@ let reducer = (state: main_state_t, action: main_actions_t) =>
       let elem_2 = state.data[998];
       state.data[1] = elem_2;
       state.data[998] = elem_1;
-      state;
+      {...state, data: state.data};
     } else {
-      state;
+      {...state, data: state.data};
     }
   };
+};
 
 let initialState = {data: [||], selected: None};
 
@@ -91,9 +80,12 @@ type cb_record_t = {
   onRemove: Util.item => unit,
 };
 
-// type cb_t = {
-
-// }
+let is_selected = (state, item: Util.item) => {
+  switch (state.selected) {
+  | None => false
+  | Some(it) => it === item
+  };
+};
 
 [@react.component]
 let make = () => {
@@ -109,19 +101,14 @@ let make = () => {
         update: sender(UPDATEEVERYTENTH),
         clear: sender(CLEAR),
         swapRows: sender(SWAPROWS),
-        onSelect: item => sender(SELECT(item)) |> ignore,
-        onRemove: item => sender(REMOVE(item)) |> ignore,
+        onSelect: item => dispatch(SELECT(item)),
+        onRemove: item => dispatch(REMOVE(item)),
       };
     });
 
-  let is_selected =
-    switch (state.selected) {
-    | None => (_i => false)
-    | Some(n) => ((i: Util.item) => i === n)
-    };
-
   <div className="container">
     <Jumbotron
+      key="jumbotron"
       run={cb.run}
       runLots={cb.runLots}
       add={cb.add}
@@ -137,7 +124,7 @@ let make = () => {
                <Row
                  key={item.id |> string_of_int}
                  item
-                 selected={is_selected(item)}
+                 selected={item |> is_selected(state)}
                  onSelect={cb.onSelect}
                  onRemove={cb.onRemove}
                />,

@@ -8,7 +8,6 @@ let make = (~run, ~runLots, ~add, ~update, ~clear, ~swapRows) => {
       <div className="col-md-6">
         <div className="row">
           <Button id="run" title="Create 1,000 rows" cb=run />
-          <Button id="run" title="Create 1,000 rows" cb=run />
           <Button id="runlots" title="Create 10,000 rows" cb=runLots />
           <Button id="add" title="Append 1,000 rows" cb=add />
           <Button id="update" title="Update every 10th row" cb=update />
