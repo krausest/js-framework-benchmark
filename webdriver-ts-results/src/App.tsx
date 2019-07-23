@@ -182,7 +182,7 @@ class App extends React.Component<{}, State> {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 32 GB RAM, Manjaro Linux 5.1, Chromium 75.0.3770.100 (64-bit))</p>
+        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 32 GB RAM, Manjaro 5.2.1-1-MANJARO mitigations=off, Chromium 75.0.3770.100 (64-bit))</p>
         <SelectBar  benchmarksCPU={this.state.benchmarksCPU}
                     benchmarksStartup={this.state.benchmarksStartup}
                     benchmarksMEM={this.state.benchmarksMEM}
