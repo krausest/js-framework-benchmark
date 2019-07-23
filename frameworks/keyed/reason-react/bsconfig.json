@@ -5,13 +5,13 @@
 {
   "name": "js-framework-reason-react",
   "reason": {
-    "react-jsx": 2
+    "react-jsx": 3
   },
   "sources": {
-    "dir" : "src/"
+    "dir" : "src"
   },
   "package-specs": [{
-    "module": "commonjs",
+    "module": "es6",
     "in-source": true
   }],
   "suffix": ".bs.js",
