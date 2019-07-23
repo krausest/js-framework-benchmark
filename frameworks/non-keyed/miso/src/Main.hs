@@ -208,8 +208,9 @@ viewTable m@Model{selectedId=idx} =
             [ a_
               [ class_ "remove" ]
               [ span_
-                  [class_ "glyphicon glyphicon-remove remove"
+                  [ class_ "glyphicon glyphicon-remove remove"
                   , onClick (Remove i)
+                  , textProp "aria-hidden" "true"
                   ]
                   []
               ]
