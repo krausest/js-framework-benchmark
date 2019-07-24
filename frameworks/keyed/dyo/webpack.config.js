@@ -27,7 +27,7 @@ module.exports = [{
 		rules: loaders
 	},
 	entry: {
-		main: './src/main.es6.js',
+		main: './src/main.js',
 	},
 	output: {
 		path: path.resolve(__dirname, "dist"),
