@@ -41,14 +41,14 @@ const App = () => {
       </div></div>
     </div></div>
     <table class='table table-hover table-striped test-data'><tbody>
-      <$ each={ data() } afterRender={ selectWhen(selected, 'danger') }>{ row =>
+      <For each={( data() )} transform={ selectWhen(selected, 'danger') }>{ row =>
         <tr model={ row.id }>
           <td class='col-md-1' textContent={ row.id } />
           <td class='col-md-4'><a onClick={ select }>{ row.label }</a></td>
-          <td class='col-md-1'><a onClick={ remove }><span class='glyphicon glyphicon-remove' aria-hidden='true'/></a></td>
+          <td class='col-md-1'><a onClick={ remove }><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
           <td class='col-md-6'/>
         </tr>
-      }</$>
+      }</For>
     </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
