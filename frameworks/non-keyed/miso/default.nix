@@ -4,17 +4,17 @@ with (import (builtins.fetchTarball {
 }) {});
 with pkgs.haskell.packages;
 let
-  app = ghcjs.callCabal2nix "miso-benchmark-keyed" ./. {};
+  app = ghcjs.callCabal2nix "miso-benchmark-non-keyed" ./. {};
 in
   pkgs.lib.overrideDerivation app (drv: {
     postInstall = with pkgs; ''
       mkdir -p $out/bin
-      echo "(window['gc'] = window['gc']);" >> $out/bin/miso-benchmark-keyed.jsexe/all.js
+      echo "(window['gc'] = window['gc']);" >> $out/bin/miso-benchmark-non-keyed.jsexe/all.js
       ${closurecompiler}/bin/closure-compiler --compilation_level ADVANCED_OPTIMIZATIONS \
           --jscomp_off=checkVars \
-          --externs=$out/bin/miso-benchmark-keyed.jsexe/all.js.externs \
-          $out/bin/miso-benchmark-keyed.jsexe/all.js > temp.js
+          --externs=$out/bin/miso-benchmark-non-keyed.jsexe/all.js.externs \
+          $out/bin/miso-benchmark-non-keyed.jsexe/all.js > temp.js
           mv temp.js $out/bin/all.min.js
-          rm -r $out/bin/miso-benchmark-keyed.jsexe
+          rm -r $out/bin/miso-benchmark-non-keyed.jsexe
       '';
   })

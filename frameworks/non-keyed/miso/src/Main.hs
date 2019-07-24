@@ -194,7 +194,7 @@ viewTable m@Model{selectedId=idx} =
     ]
   where
     viewRow i r@Row{rowIdx=rId} =
-      trKeyed_ (toKey rId)
+      tr_
         (conditionalDanger i)
         [ td_
             [ class_ "col-md-1" ]
@@ -208,7 +208,7 @@ viewTable m@Model{selectedId=idx} =
             [ a_
               [ class_ "remove" ]
               [ span_
-                  [class_ "glyphicon glyphicon-remove remove"
+                  [ class_ "glyphicon glyphicon-remove remove"
                   , onClick (Remove i)
                   , textProp "aria-hidden" "true"
                   ]
@@ -233,7 +233,7 @@ viewJumbotron =
         [ class_ "col-md-6" ]
         [ h1_
             []
-            [ text "miso-1.1.0.0-keyed" ]
+            [ text "miso-1.1.0.0-non-keyed" ]
         ]
       , div_
           [ class_ "col-md-6" ]
