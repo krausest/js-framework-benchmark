@@ -12,7 +12,10 @@ const plugins = [
 	commonjs({
     include: 'node_modules/**',
     namedExports: {
-      'node_modules/knockout/build/output/knockout-latest.js': ['ignoreDependencies', 'computed']
+      'node_modules/knockout/build/output/knockout-latest.js': [
+        'ignoreDependencies', 'observable', 'observableArray',
+        'computed', 'subscribable'
+      ]
     }
 	})
 ];
