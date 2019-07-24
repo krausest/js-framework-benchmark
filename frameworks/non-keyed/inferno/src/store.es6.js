@@ -1,5 +1,3 @@
-'use strict';
-
 function random(max) {
   return Math.round(Math.random() * 1000) % max;
 }
@@ -66,10 +64,10 @@ function buildData(count, result) {
     result.push({
       id: rowId++,
       label: adjectives[random(adjectives.length)] +
-        " " +
-        colours[random(colours.length)] +
-        " " +
-        nouns[random(nouns.length)]
+          " " +
+          colours[random(colours.length)] +
+          " " +
+          nouns[random(nouns.length)]
     });
   }
 }
