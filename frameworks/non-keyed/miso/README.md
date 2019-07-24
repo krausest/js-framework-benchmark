@@ -1,4 +1,4 @@
-# miso-1.1.0.0-keyed
+# miso-1.1.0.0-non-keyed
 
 [Miso](https://haskell-miso.org) is a tasty [Haskell](https://www.haskell.org/) front-end framework.
 
@@ -6,14 +6,14 @@
 
 All needed `*.js` sources have already been generated in folder [`dist-bundle`](./dist-bundle) to avoid other dependencies of [`Haskell`](http://haskell.org/) and [`Nix`](https://nixos.org/nix/).
 
-However, to build everything by yourself you have to use [`Nix`](https://nixos.org/nix/) to run `nix-build` from [`root` of miso-1.1.0.0.-keyed](./).
+However, to build everything by yourself you have to use [`Nix`](https://nixos.org/nix/) to run `nix-build` from [`root` of miso-1.1.0.0.-non-keyed](./).
 
 After that just run `npm run cp-js` (or `yarn cp-js`) to copy generated `*.js` sources from local Nix store to `dist-bundle` folder. This folder is used by running benchmarks.
 
 Now you can start benchmarks by running
 ```
 cd webdriver-ts
-yarn selenium --count 3 --framework miso-1.1.0.0-keyed
+yarn selenium --count 3 --framework miso-1.1.0.0-non-keyed
 ```
 (^ see [Running a single framework with the automated benchmark driver](../README#4-running-a-single-framework-with-the-automated-benchmark-driver))
 

@@ -1,4 +1,4 @@
-name:                miso-benchmark-keyed
+name:                miso-benchmark-non-keyed
 version:             0.1.0.0
 synopsis:            Benchmark of miso
 category:            Web
@@ -7,7 +7,7 @@ cabal-version:       >=1.10
 
 extra-source-files:  index.html
 
-executable miso-benchmark-keyed
+executable miso-benchmark-non-keyed
   main-is:            Main.hs
   if !impl(ghcjs)
     Buildable: False
