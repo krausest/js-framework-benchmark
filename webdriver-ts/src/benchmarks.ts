@@ -469,7 +469,7 @@ class BenchStartup extends Benchmark {
         return [
             benchStartupConsistentlyInteractive,
             benchStartupBootup,
-            benchStartupMainThreadWorkCost,
+            // benchStartupMainThreadWorkCost,
             benchStartupTotalBytes,
         ];
     }
