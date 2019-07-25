@@ -2,10 +2,6 @@ import { Store } from './store.es6'
 import { linkEvent, Component, render } from 'inferno'
 
 function Row({ label, id, selected, deleteFunc, selectFunc }) {
-  /*
-   * Only <td className="col-md-1"> and  <a onClick={linkEvent(id, selectFunc)}/>, nodes needs children shape flags
-   * Because they have dynamic children. We can pre-define children type by using ChildFlags
-   */
   return (
       <tr className={selected ? 'danger' : null}>
         <td className="col-md-1" $HasTextChildren>{id}</td>
@@ -58,7 +54,7 @@ function Header({run, runLots, add, update, clear, swapRows}) {
       <div className="jumbotron">
         <div className="row">
           <div className="col-md-6">
-            <h1>Inferno - keyed</h1>
+            <h1>Inferno</h1>
           </div>
           <div className="col-md-6">
             <div className="row">
@@ -168,10 +164,6 @@ export class Controller extends Component {
   }
 
   render() {
-    /*
-     * Only <table> needs $HasVNodeChildren flag everything else is static
-     * tables children is tbody so another vNode, no other flags needed
-     */
     return (
         <div className="container">
           <Header
@@ -182,7 +174,7 @@ export class Controller extends Component {
               clear={this.clear}
               swapRows={this.swapRows}
           />
-          <table className="table table-hover table-striped test-data" $HasVNodeChildren>
+          <table className="table table-hover table-striped test-data">
             <tbody $HasKeyedChildren>
               {createRows(this.state.store, this.delete, this.select)}
             </tbody>
