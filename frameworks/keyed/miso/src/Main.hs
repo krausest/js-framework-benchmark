@@ -40,7 +40,6 @@ data Action = Create !Int
             | Clear
             | Swap
             | Select !Int
-            | ChangeModel !Model
             | NoOp
 
 adjectives :: V.Vector MisoString
@@ -135,13 +134,12 @@ createRows n lastIdx seed = go seed mempty [0..n]
               , colours V.! colorIdx
               , nouns V.! nounIdx
               ]
-        go s3 (IM.insert x (Row x title) intMap) xs
+        go s3 (IM.insert (x + lastIdx) (Row (x + lastIdx) title) intMap) xs
 
 updateModel :: Action -> Model -> Effect Action Model
-updateModel (ChangeModel newModel) _ = noEff newModel
 updateModel (Create n) model@Model{..} = noEff $
   let
-    (newSeed, intMap) = createRows 0 lastId seed
+    (newSeed, intMap) = createRows n lastId seed
   in
     model { lastId = lastId + n
           , rows = intMap
@@ -157,15 +155,15 @@ updateModel (Append n) model@Model{..} = noEff $ do
             , seed = newSeed
             }
 
-updateModel Clear model = noEff model { rows = mempty, lastId = 0 }
+updateModel Clear model = noEff model { rows = mempty }
 
 updateModel (Update n) model@Model{..} = noEff $
   let
     newRows =
-      flip IM.mapWithKey rows $ \key x ->
-                                  if key `mod` 10 == 0
-                                  then x { rowTitle = rowTitle x <> " !!!" }
-                                  else x
+      flip IM.mapWithKey rows $ \i row ->
+                                  if i `mod` n == 0
+                                  then row { rowTitle = rowTitle row <> " !!!" }
+                                  else row
   in
     model { rows = newRows }
 
@@ -178,10 +176,10 @@ updateModel Swap model = noEff newModel
         else model
     swappedRows =
       let
-        oneValue = rows model IM.! 1
-        nineNineEightValue = rows model IM.! 998
+        x = rows model IM.! 1
+        y = rows model IM.! 998
       in
-        IM.insert 1 nineNineEightValue (IM.insert 998 oneValue (rows model))
+        IM.insert 1 y (IM.insert 998 x (rows model))
 
 updateModel (Select idx) model = noEff model { selectedId = Just idx }
 
