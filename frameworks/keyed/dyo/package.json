@@ -1,17 +1,17 @@
 {
-  "name": "js-framework-benchmark-dio",
-  "version": "8.1.1",
-  "description": "DIO demo",
+  "name": "js-framework-benchmark-dyo",
+  "version": "1.0.0",
+  "description": "Dyo demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "dio.js"
+    "frameworkVersionFromPackage": "dyo"
   },
   "scripts": {
     "build-dev": "webpack -w -d",
     "build-prod": "webpack -p"
   },
   "keywords": [
-    "dio",
+    "dyo",
     "webpack"
   ],
   "author": "Sultan Tarimo",
@@ -31,6 +31,6 @@
     "webpack-cli": "^3.1.0"
   },
   "dependencies": {
-    "dio.js": "9.1.1"
+    "dyo": "1.0.0"
   }
 }
