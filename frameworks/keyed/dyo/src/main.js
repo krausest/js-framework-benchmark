@@ -36,6 +36,10 @@ const update = ({id, data, selected}) => {
 }
 
 const clear = (state) => {
+	return {id: state.id, data: [], selected: -1}
+}
+
+const init = (state) => {
 	return {id: 1, data: [], selected: -1}
 }
 
@@ -111,7 +115,7 @@ const Row = memo(({dispatch, id, label, selected}) => (
 ), (prev, next) => prev.label === next.label && prev.selected === next.selected)
 
 const Main = (props) => {
-	const [{data, selected}, dispatch] = useReducer(reducer, clear)
+	const [{data, selected}, dispatch] = useReducer(reducer, init)
 
 	return h('div', {className: 'container'},
 		h(Jumbo, {dispatch}),
