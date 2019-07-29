@@ -160,6 +160,8 @@ async function main() {
 
 main().then(_ => {
     console.log("successful run");
+    process.exit(0);
 }).catch(error => {
     console.log("run was not completely sucessful", error);
+    process.exit(1);
 })

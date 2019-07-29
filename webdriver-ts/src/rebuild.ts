@@ -36,8 +36,8 @@ if (frameworks.length === 0) {
     });
 
     let frameworkNames = frameworks.join(" ");
-    console.log('npm run bench -- --headless --noResults --count 1  '+frameworkNames);
-    exec('npm run bench -- --headless --noResults --count 1 '+frameworkNames, {
+    console.log('npm run bench -- --headless --noResults --exitOnError true --count 1  '+frameworkNames);
+    exec('npm run bench -- --headless --noResults --exitOnError true --count 1 '+frameworkNames, {
         stdio: 'inherit'
     });
     console.log('npm run isKeyed -- --headless '+frameworkNames);

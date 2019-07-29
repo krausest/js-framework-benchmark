@@ -480,7 +480,6 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
         } catch (e) {
             errors.push(await registerError(driver, framework, benchmark, e, ));
             console.log(e);
-            throw e;
             if (config.EXIT_ON_ERROR) { throw "Benchmarking failed" }
         } finally {
             await driver.close();
@@ -532,7 +531,7 @@ export async function executeBenchmark(frameworks: FrameworkData[], keyed: boole
 }
 
 export async function performBenchmark(frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {
-        let errorsAndWarnings = await executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
+    let errorsAndWarnings = await executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
         if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorsAndWarnings);
         process.send(errorsAndWarnings);
         process.exit(0);
