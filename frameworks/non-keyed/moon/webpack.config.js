@@ -1,6 +1,12 @@
 module.exports = {
-  entry: './src/scripts.js',
-  output: {
-    filename: './dist/bundle.js'
-  }
+	entry: "./src/index.js",
+	output: {
+		filename: "bundle.js"
+	},
+	module: {
+		rules: [
+			{ test: /\.js$/, use: "moon-loader" }
+		]
+	},
+	mode: process.env.NODE_ENV
 }
