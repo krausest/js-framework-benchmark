@@ -1,28 +1,31 @@
 {
-  "name": "js-framework-benchmark-moon",
-  "version": "1.0.0",
-  "description": "Benchmark for Moon framework",
-  "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "moonjs"
-  },
-  "scripts": {
-    "build-dev": "webpack -w -d",
-    "build-prod": "webpack -p"
-  },
-  "keywords": [
-    "moon"
-  ],
-  "author": "Kabir Shah",
-  "license": "MIT",
-  "homepage": "https://github.com/krausest/js-framework-benchmark",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/krausest/js-framework-benchmark.git"
-  },
-  "devDependencies": {
-    "webpack": "^3.2.0"
-  },
-  "dependencies": {
-    "moonjs": "v0.11.0"
-  }
+	"name": "js-framework-benchmark-moon",
+	"version": "1.0.0",
+	"description": "Benchmark for Moon framework",
+	"js-framework-benchmark": {
+		"frameworkVersionFromPackage": "moon"
+	},
+	"scripts": {
+		"build-dev": "NODE_ENV=\"development\" webpack",
+		"build-prod": "NODE_ENV=\"production\" webpack"
+	},
+	"keywords": [
+		"moon"
+	],
+	"author": "Kabir Shah",
+	"license": "MIT",
+	"homepage": "https://github.com/krausest/js-framework-benchmark",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/krausest/js-framework-benchmark.git"
+	},
+	"devDependencies": {
+		"webpack": "^4.39.1",
+		"webpack-cli": "^3.3.6"
+	},
+	"dependencies": {
+		"moon": "^1.0.0-beta.4",
+		"moon-compiler": "^1.0.0-beta.4",
+		"moon-loader": "^0.1.0"
+	}
 }
