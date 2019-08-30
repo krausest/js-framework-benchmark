@@ -177,9 +177,11 @@ export default factory(({ properties, middleware: { invalidator } }) => {
     swapRows: () => {
       const idArray = Array.from(ids);
       if (idArray.length > 998) {
-        const row = idArray[1];
-        idArray[1] = idArray[998];
-        idArray[998] = row;
+        const second = idArray[1];
+        const last = idArray[998];
+        const row = data[second];
+        data[second] = data[last];
+        data[last] = row;
       }
       ids = new Set(idArray);
       invalidate();
