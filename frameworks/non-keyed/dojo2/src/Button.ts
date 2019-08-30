@@ -1,6 +1,4 @@
-import { WidgetBase } from '@dojo/widget-core/WidgetBase';
-import { v, w } from '@dojo/widget-core/d';
-import { WidgetProperties, DNode } from '@dojo/widget-core/interfaces';
+import { create, w, v } from '@dojo/framework/core/vdom'
 
 export interface ButtonProperties {
 	id: string;
@@ -8,21 +6,16 @@ export interface ButtonProperties {
 	onClick: () => void;
 }
 
-export class Button extends WidgetBase<ButtonProperties> {
+const factory = create().properties<ButtonProperties>();
 
-	private _onClick() {
-		this.properties.onClick();
-	}
+export default factory(function Button({ properties }) {
+	const { id, label, onClick } = properties();
 
-	protected render(): DNode {
-		const { id, label, onClick } = this.properties;
-
-		return v('div', { classes: [ 'col-sm-6', 'smallpad' ] }, [
-			v('button', {
-				id,
-				classes: [ 'btn', 'btn-primary', 'btn-block' ],
-				onclick: onClick
-			}, [ label ])
-		]);
-	}
-}
+	return v('div', { classes: [ 'col-sm-6', 'smallpad' ] }, [
+		v('button', {
+			id,
+			classes: [ 'btn', 'btn-primary', 'btn-block' ],
+			onclick: onClick
+		}, [ label ])
+	]);
+});

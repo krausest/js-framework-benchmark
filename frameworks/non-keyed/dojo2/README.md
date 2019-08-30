@@ -1,1 +1,1 @@
-# dojo2-v0.2.0-keyed
+# dojo-v6.0.0-keyed
