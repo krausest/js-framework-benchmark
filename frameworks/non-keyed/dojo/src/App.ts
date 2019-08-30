@@ -16,10 +16,15 @@ export default factory(function App({ middleware: { store }}) {
 		{ id: 'swaprows', label: 'Swap Rows', onClick: store.swapRows }
 	];
 
-	const rows = store.ids.map((id) => {
+	const rows = store.ids.map((key) => {
+		const item = store.getItem(key);
+		if (!item) {
+			return null;
+		}
 		return w(Row, {
-			id,
-			key: id,
+			key,
+			id: item.id,
+			label: item.label,
 			onSelect: store.select
 		});
 	});

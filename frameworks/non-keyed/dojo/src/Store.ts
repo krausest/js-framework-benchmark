@@ -71,9 +71,10 @@ const nouns = [
   "keyboard"
 ];
 
-const factory = create({ invalidator }).properties<{ id?: number | string }>();
+const factory = create({ invalidator });
 
 let id = 1;
+let idx = 0;
 let data: Data = {};
 let ids = new Set<number>();
 let selected: number | undefined;
@@ -88,15 +89,16 @@ function buildData(count: number = 1000): { data: Data; ids: Set<number> } {
     const colour = colours[random(colours.length)];
     const noun = nouns[random(nouns.length)];
     const label = `${adjective} ${colour} ${noun}`;
-    data[id] = { id, label };
-    ids.add(id);
-    id = id + 1;
+    data[idx] = { id, label };
+    ids.add(idx);
+    id++;
+    idx++;
   }
   return { data, ids };
 }
 
 export default factory(({ properties, middleware: { invalidator } }) => {
-  const { id: widgetKey = "app" } = properties();
+  const { key: widgetKey = "app" } = properties();
   if (widgetKey === "app") {
     appInvalidator = invalidator;
   } else {
@@ -115,8 +117,8 @@ export default factory(({ properties, middleware: { invalidator } }) => {
     get ids(): number[] {
       return Array.from(ids);
     },
-    get item(): Item | undefined {
-      return data[widgetKey];
+    getItem(id: string | number = widgetKey): Item | undefined {
+      return data[id];
     },
     get selected(): number | undefined {
       return selected;
@@ -125,31 +127,31 @@ export default factory(({ properties, middleware: { invalidator } }) => {
       if (typeof widgetKey === "number") {
         ids.delete(widgetKey);
         delete data[widgetKey];
-        invalidate(widgetKey);
+        invalidate();
       }
     },
     run: () => {
+      idx = 0;
       const builtData = buildData();
       ids = builtData.ids;
       data = builtData.data;
       selected = undefined;
       invalidate();
-      invalidatorMap.clear();
     },
     add: () => {
       const builtData = buildData();
       data = { ...data, ...builtData.data };
-      ids = new Set([...ids, ...builtData.ids]);
+      ids = new Set([...Array.from(ids), ...Array.from(builtData.ids)]);
       invalidate();
     },
     update: () => {
-      const idArray = [...ids];
+      const idArray = Array.from(ids);
       for (let i = 0; i < idArray.length; i += 10) {
         const itemId = idArray[i];
         const item = data[itemId];
         data[itemId] = { ...item, label: `${item.label} !!!` };
-        invalidate(itemId);
       }
+      invalidate();
     },
     select: (id: number) => {
       selected && invalidate(selected);
@@ -157,14 +159,15 @@ export default factory(({ properties, middleware: { invalidator } }) => {
       selected = id;
     },
     runLots: () => {
+      idx = 0;
       const builtData = buildData(10000);
       ids = builtData.ids;
       data = builtData.data;
       selected = undefined;
       invalidate();
-      invalidatorMap.clear();
     },
     clear: () => {
+      idx = 0;
       data = {};
       ids.clear();
       selected = undefined;
@@ -172,7 +175,7 @@ export default factory(({ properties, middleware: { invalidator } }) => {
       invalidatorMap.clear();
     },
     swapRows: () => {
-      const idArray = [...ids];
+      const idArray = Array.from(ids);
       if (idArray.length > 998) {
         const row = idArray[1];
         idArray[1] = idArray[998];
