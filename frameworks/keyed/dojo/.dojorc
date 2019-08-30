@@ -1,6 +1,6 @@
 {
 	"build-app": {
-		"base": "/frameworks/keyed/dojo2/output/dist/"
+		"base": "/frameworks/keyed/dojo/output/dist/"
 	},
 	"create-app": {}
 }
