@@ -1,49 +1,37 @@
-import { DNode } from '@dojo/widget-core/interfaces';
-import { WidgetBase } from '@dojo/widget-core/WidgetBase';
-import { v } from '@dojo/widget-core/d';
+import { create, v } from '@dojo/framework/core/vdom';
 
 export interface RowProperties {
-	onRowSelected: (id: number) => void;
-	onRowDeleted: (id: number) => void;
-	selected: boolean;
 	label: string;
 	id: number;
+	onDelete: Function;
+	onSelect: Function;
+	selected: number | undefined;
 }
 
-export class Row extends WidgetBase<RowProperties> {
+const factory = create({}).properties<RowProperties>();
 
-	private _onDelete() {
-		const { onRowDeleted, id } = this.properties;
-		onRowDeleted(id);
-	}
+export default factory(function Row({ properties }) {
+	const { id, label, onSelect, onDelete, selected } = properties();
 
-	private _onClick() {
-		const { onRowSelected, id } = this.properties;
-		onRowSelected(id);
-	}
-
-	protected render(): DNode {
-		const { id, selected, label } = this.properties;
-
-		return v('tr', {
-				classes: [ selected ? 'danger' : null ]
-			}, [
-				v('td', { classes: [ 'col-md-1' ] }, [ `${id}` ]),
-				v('td', { classes: [ 'col-md-4' ] }, [
-					v('a', { onclick: this._onClick }, [ label ])
-				]),
-				v('td', { classes: [ 'col-md-1' ] }, [
-					v('a', { onclick: this._onDelete }, [
-						v('span', {
-							'aria-hidden': true,
-							classes: [ 'glyphicon', 'glyphicon-remove' ]
-						})
-					])
-				]),
-				v('td', { classes: [ 'col-md-6' ] })
-			]
-		);
-	}
-}
-
-export default Row;
+	return v('tr', {
+		classes: [ selected === id && 'danger' ]
+	}, [
+		v('td', { classes: [ 'col-md-1' ] }, [ `${id}` ]),
+		v('td', { classes: [ 'col-md-4' ] }, [
+			v('a', { onclick: () => {
+				onSelect(id);
+			} }, [ label ])
+		]),
+		v('td', { classes: [ 'col-md-1' ] }, [
+			v('a', { onclick: () => {
+				onDelete(id);
+			} }, [
+				v('span', {
+					'aria-hidden': true,
+					classes: [ 'glyphicon', 'glyphicon-remove' ]
+				})
+			])
+		]),
+		v('td', { classes: [ 'col-md-6' ] })
+	]);
+});

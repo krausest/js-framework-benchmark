@@ -1,0 +1,6 @@
+{
+	"build-app": {
+		"base": "/frameworks/keyed/dojo2/output/dist/"
+	},
+	"create-app": {}
+}

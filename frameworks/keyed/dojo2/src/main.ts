@@ -1,7 +1,5 @@
-import { ProjectorMixin } from '@dojo/widget-core/mixins/Projector';
+import renderer, { w } from '@dojo/framework/core/vdom';
 import App from './App';
 
-const Projector = ProjectorMixin(App);
-const projector = new Projector();
-
-projector.append();
+const r = renderer(() => w(App, {}));
+r.mount();
