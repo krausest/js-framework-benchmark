@@ -1,30 +1,34 @@
 import { create, v } from '@dojo/framework/core/vdom';
+import store from './Store';
 
 export interface RowProperties {
-	label: string;
 	id: number;
-	onDelete: Function;
 	onSelect: Function;
-	selected: number | undefined;
 }
 
-const factory = create({}).properties<RowProperties>();
+const factory = create({ store }).properties<RowProperties>();
 
-export default factory(function Row({ properties }) {
-	const { id, label, onSelect, onDelete, selected } = properties();
+export default factory(function Row({ properties, middleware: { store } }) {
+	const { id, onSelect } = properties();
+	const item = store.item;
+
+	if (!item) {
+		return null;
+	}
 
 	return v('tr', {
-		classes: [ selected === id && 'danger' ]
+		key: id,
+		classes: [ store.selected === id && 'danger' ]
 	}, [
 		v('td', { classes: [ 'col-md-1' ] }, [ `${id}` ]),
 		v('td', { classes: [ 'col-md-4' ] }, [
 			v('a', { onclick: () => {
 				onSelect(id);
-			} }, [ label ])
+			} }, [ item.label ])
 		]),
 		v('td', { classes: [ 'col-md-1' ] }, [
 			v('a', { onclick: () => {
-				onDelete(id);
+				store.del();
 			} }, [
 				v('span', {
 					'aria-hidden': true,
