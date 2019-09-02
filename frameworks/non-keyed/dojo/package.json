@@ -1,0 +1,19 @@
+{
+  "name": "dojo-non-keyed",
+  "version": "1.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@dojo/framework",
+    "customURL": "/output/dist"
+  },
+  "scripts": {
+    "build-prod": "./node_modules/.bin/dojo build"
+  },
+  "dependencies": {
+    "@dojo/framework": "^6.0.0"
+  },
+  "devDependencies": {
+    "@dojo/cli": "^6.0.0",
+    "@dojo/cli-build-app": "^6.0.0",
+    "typescript": "3.5.2"
+  }
+}
