@@ -24,29 +24,29 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/lodash": "4.14.134",
-    "@types/node": "12.0.7",
-    "@types/ramda": "0.26.9",
-    "@types/selenium-webdriver": "4.0.0",
-    "@types/semver": "6.0.0",
-    "@types/yargs": "13.0.0",
+    "@types/lodash": "4.14.138",
+    "@types/node": "12.7.3",
+    "@types/ramda": "0.26.21",
+    "@types/selenium-webdriver": "4.0.2",
+    "@types/semver": "6.0.1",
+    "@types/yargs": "13.0.2",
     "dockerode": "^2.5.8",
-    "rimraf": "^2.6.3",
-    "ts-node": "8.2.0",
-    "typescript": "3.5.1"
+    "rimraf": "^3.0.0",
+    "ts-node": "8.3.0",
+    "typescript": "3.6.2"
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "cross-env": "5.2.0",
-    "chromedriver": "75.0.0",
+    "cross-env": "5.2.1",
+    "chromedriver": "76.0.1",
     "dot": "1.1.2",
-    "jstat": "1.8.3",
-    "lighthouse": "5.1.0",
-    "lodash": "4.17.11",
+    "jstat": "1.9.1",
+    "lighthouse": "5.2.0",
+    "lodash": "4.17.15",
     "ramda": "0.26.1",
     "selenium-webdriver": "4.0.0-alpha.1",
-    "yargs": "13.2.4",
-    "npm-check-updates": "3.1.10",
-    "semver": "6.1.1"
+    "yargs": "14.0.0",
+    "npm-check-updates": "3.1.21",
+    "semver": "6.3.0"
   }
 }

@@ -203,8 +203,6 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
         "--js-flags=--expose-gc",
         "--enable-precise-memory-info",
         "--no-first-run",
-        "--enable-automation",
-        "--disable-infobars",
         "--disable-background-networking",
         "--disable-background-timer-throttling",
         "--disable-cache",
@@ -233,7 +231,8 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
                 "enableNetwork": true,
                 "enablePage": true,
                 "traceCategories": "devtools.timeline,blink.user_timing"
-            }
+            },
+            "excludeSwitches": [ "enable-automation" ]
         },
         "goog:loggingPrefs": {
             "browser": "ALL",

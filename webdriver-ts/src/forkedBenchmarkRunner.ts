@@ -119,7 +119,7 @@ function extractRawValue(results: any, id: string) {
   };
 
   async function runLighthouse(framework: FrameworkData, benchmarkOptions: BenchmarkOptions): Promise<LighthouseData> {
-    const opts = {
+    const opts: any = {
         chromeFlags:
         [
             "--headless",
@@ -134,20 +134,20 @@ function extractRawValue(results: any, id: string) {
             "--disable-sync",
             "--disable-extensions",
             "--disable-default-apps",
-            "--window-size=1200,800"
+            "--window-size=1200,800",
+            "--remote-debugging-port=" + (benchmarkOptions.remoteDebuggingPort).toFixed()
         ],
         onlyCategories: ['performance'],
-        port: benchmarkOptions.remoteDebuggingPort
+        port: (benchmarkOptions.remoteDebuggingPort).toFixed(),
+        logLevel: "info"
     };
 
     try {
-        let options : any = {chromeFlags: opts.chromeFlags, logLevel: "info"};
-        if (benchmarkOptions.chromeBinaryPath) options.chromePath = benchmarkOptions.chromeBinaryPath;
-        let chrome = await chromeLauncher.launch(options);
-        opts.port = chrome.port;
+        if (benchmarkOptions.chromeBinaryPath) opts.chromePath = benchmarkOptions.chromeBinaryPath;
+        let chrome = await chromeLauncher.launch(opts);
         let results = null;
         try {
-            results = await lighthouse(`http://localhost:${benchmarkOptions.port}/${framework.uri}/`, opts, null);
+            results = await lighthouse(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`, opts, null);
             await chrome.kill();
         } catch (error) {
             console.log("error running lighthouse", error);
@@ -387,7 +387,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
                 console.timeLog("chromedriver", "before setUseShadowRoot");
                 setUseShadowRoot(framework.useShadowRoot);
                 console.timeLog("chromedriver", "before get");
-                await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/`);
+                await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
                 console.timeLog("chromedriver", "after get");
 
                 // await (driver as any).sendDevToolsCommand('Network.enable');
@@ -434,7 +434,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
         console.log("ERROR:", e);
         await driver.close();
         await driver.quit();
-        if (config.EXIT_ON_ERROR) { throw "Benchmarking failed" }
+        if (config.EXIT_ON_ERROR) { throw {msg:"Benchmarking failed", error: e} }
     }
     return {errors, warnings};
 }
@@ -450,7 +450,7 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
         let driver = buildDriver(benchmarkOptions);
         try {
             setUseShadowRoot(framework.useShadowRoot);
-            await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/`);
+            await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
             await driver.executeScript("console.timeStamp('initBenchmark')");
 
@@ -479,8 +479,8 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
             allResults.push(result);
         } catch (e) {
             errors.push(await registerError(driver, framework, benchmark, e, ));
-            console.log(e);
-            if (config.EXIT_ON_ERROR) { throw "Benchmarking failed" }
+            console.log("ERROR:", e);
+            if (config.EXIT_ON_ERROR) { throw {msg:"Benchmarking failed", error: e} }
         } finally {
             await driver.close();
             await driver.quit();
@@ -532,10 +532,10 @@ export async function executeBenchmark(frameworks: FrameworkData[], keyed: boole
 
 export async function performBenchmark(frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorsAndWarning> {
     let errorsAndWarnings = await executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
-        if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorsAndWarnings);
-        process.send(errorsAndWarnings);
-        process.exit(0);
-        return errorsAndWarnings;
+    if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorsAndWarnings);
+    process.send(errorsAndWarnings);
+    process.exit(0);
+    return errorsAndWarnings;
 }
 
 process.on('message', (msg) => {
@@ -546,7 +546,8 @@ process.on('message', (msg) => {
     let {frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions} : {frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions} = msg;
     if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
         performBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions).catch((err) => {
-        console.log("error in forkedBenchmarkRunner", err);
-        process.exit(1);
+        console.log("Error in forkedBenchmarkRunner", err);
+        process.send(err);
+        process.exit(0);
     });
 });
