@@ -29,7 +29,7 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
 
     let runBenchmarks = benchmarks.filter(b => benchmarkNames.some(name => b.id.toLowerCase().indexOf(name) > -1));
 
-    let restart: string = undefined; // 'rx-domh-rxjs-v0.0.2-keyed';
+    let restart: string = undefined; 
     let index = runFrameworks.findIndex(f => f.fullNameWithKeyedAndVersion===restart);
     if (index>-1) {
         runFrameworks = runFrameworks.slice(index);
@@ -49,24 +49,49 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
         let framework = data[i][0];
         let benchmark = data[i][1];
 
+        let retry = 1;
+        for (; retry<=5; retry++) {
+            console.log(`Executing benchmark ${framework.name} and benchmark ${benchmark.id} retry # ${retry}`);
 
-        let benchmarkOptions: BenchmarkOptions = {
-            port: config.PORT.toFixed(),
-            remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
-            chromePort: config.CHROME_PORT,
-            headless: args.headless,
-            chromeBinaryPath: args.chromeBinary,
-            numIterationsForCPUBenchmarks: config.REPEAT_RUN,
-            numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
-            numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
-        }
+            let benchmarkOptions: BenchmarkOptions = {
+                port: config.PORT.toFixed(),
+                remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
+                chromePort: config.CHROME_PORT,
+                headless: args.headless,
+                chromeBinaryPath: args.chromeBinary,
+                numIterationsForCPUBenchmarks: config.REPEAT_RUN,
+                numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
+                numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
+            }
 
-        try {
-            let errorsAndWarnings: ErrorsAndWarning = await forkedRun(runFrameworks, framework.name, framework.keyed, benchmark.id, benchmarkOptions);
-            errors.splice(errors.length, 0, ...errorsAndWarnings.errors);
-            warnings.splice(warnings.length, 0, ...errorsAndWarnings.warnings);
-        } catch (err) {
-            console.log(`Error executing benchmark ${framework.name} and benchmark ${benchmark.id}`);
+            try {
+                let benchMsg: any = await forkedRun(runFrameworks, framework.name, framework.keyed, benchmark.id, benchmarkOptions);
+                // Note: The following code has not yet been tested
+                // The "Server terminated early" issue stopped as soon as the code was added ;-(
+                if (benchMsg.msg) {
+                    console.log(`Executing benchmark ${framework.name} and benchmark ${benchmark.id} failed`);
+                    if (!benchMsg.error) {
+                        console.log("NO ERROR OBJECT");
+                        throw "Unexpected state: No error object found";
+                    } else {
+                        if (benchMsg.error.indexOf("Server terminated early with status 1")>-1) {
+                            console.log("ERROR Server terminated early with status 1 found");
+                        } else {
+                            console.log("Server terminated early with status 1 NOT FOUND");
+                            console.log(typeof benchMsg.error, benchMsg.error);
+                            if (config.EXIT_ON_ERROR) throw "STOPPING BECAUSE OF AN ERROR";
+                            break;
+                        }
+                    }
+                } else {
+                    let errorsAndWarnings = benchMsg as ErrorsAndWarning;
+                    errors.splice(errors.length, 0, ...errorsAndWarnings.errors);
+                    warnings.splice(warnings.length, 0, ...errorsAndWarnings.warnings);
+                    break;
+                }
+            } catch (err) {
+                console.log(`Error executing benchmark ${framework.name} and benchmark ${benchmark.id}`);
+            }
         }
     }
 
