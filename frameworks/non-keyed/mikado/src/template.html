@@ -1,0 +1,12 @@
+<tr class="{{this.state.selected === index ? 'danger' : ''}}" root>
+    <td class="col-md-1">{{item.id}}</td>
+    <td class="col-md-4">
+        <a class="lbl" click="select:root">{{item.label}}</a>
+    </td>
+    <td class="col-md-1">
+        <a class="remove" click="remove:root">
+            <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+    </td>
+    <td class="col-md-6"></td>
+</tr>
