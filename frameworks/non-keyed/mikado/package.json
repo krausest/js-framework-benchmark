@@ -24,7 +24,7 @@
     "build-prod": "npm run build"
   },
   "dependencies": {
-    "mikado": "0.0.69"
+    "mikado": "0.0.7"
   },
   "devDependencies": {
     "google-closure-compiler": "^20190904.0.0-nightly",
