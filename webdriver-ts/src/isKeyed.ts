@@ -253,7 +253,7 @@ async function runBench(frameworkNames: string[]) {
             let keyedRemove = isKeyedRemove(res, framework.keyed);
             let keyed = keyedRemove && keyedRun && keyedSwap;
             console.log(framework.fullNameWithKeyedAndVersion +" is "+(keyedRun ? "keyed" : "non-keyed")+" for 'run benchmark' and "
-            + (keyedRemove ? "keyed" : "non-keyed") + " for 'remove row benchmark' "
+            + (keyedRemove ? "keyed" : "non-keyed") + " for 'remove row benchmark' and "
             + (keyedSwap ? "keyed" : "non-keyed") + " for 'swap rows benchmark' "
             +". It'll appear as "+(keyed ? "keyed" : "non-keyed")+" in the results");
             if (framework.keyed !== keyed) {
