@@ -183,7 +183,7 @@ export async function loadFrameworkVersionInformation(matchPredicate: IMatchPred
         let directories = fs.readdirSync(path.resolve(frameworksPath, keyedType));
 
         for (let directory of directories) {
-            let pathInFrameworksDir = path.join(keyedType, directory);
+            let pathInFrameworksDir = keyedType + "/" + directory;
             if (matchPredicate(pathInFrameworksDir)) {
                 let fi = loadFrameworkInfo(pathInFrameworksDir);
                 if (fi!=null) results.push(fi);
