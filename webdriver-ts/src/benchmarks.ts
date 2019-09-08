@@ -86,30 +86,6 @@ const benchReplaceAll = new class extends Benchmark {
     }
 }
 
-// const benchUpdate = new class extends Benchmark {
-//     constructor() {
-//         super({
-//             id: "03_update10th1k",   // FIXME rename to now 03_update10th10k
-//             label: "partial update",
-//             description: "Time to update the text of every 10th row (with " + config.WARMUP_COUNT + " warmup iterations) for a table with 10k rows.",
-//             type: BenchmarkType.CPU
-//         })
-//     }
-//     async init(driver: WebDriver) {
-//         await testElementLocatedById(driver, "runlots", SHORT_TIMEOUT);
-//         await clickElementById(driver, 'runlots');
-//         await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a");
-//         for (let i = 0; i < config.WARMUP_COUNT; i++) {
-//             await clickElementById(driver, 'update');
-//             await testTextContains(driver, '//tbody/tr[9991]/td[2]/a', ' !!!'.repeat(i + 1));
-//         }
-//     }
-//     async run(driver: WebDriver) {
-//         await clickElementById(driver, 'update');
-//         await testTextContains(driver, '//tbody/tr[9991]/td[2]/a', ' !!!'.repeat(config.WARMUP_COUNT + 1));
-//     }
-// }
-
 const benchUpdate = new class extends Benchmark {
     constructor() {
         super({
@@ -231,26 +207,6 @@ const benchRunBig = new class extends Benchmark {
     }
 }
 
-// const benchAppendToManyRows = new class extends Benchmark {
-//     constructor() {
-//         super({
-//             id: "08_create1k-after10k",
-//             label: "append rows to large table",
-//             description: "Duration for adding 1000 rows on a table of 10,000 rows.",
-//             type: BenchmarkType.CPU
-//         })
-//     }
-//     async init(driver: WebDriver) {
-//         await testElementLocatedById(driver, "runlots", SHORT_TIMEOUT);
-//         await clickElementById(driver, 'runlots');
-//         await testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a");
-//     }
-//     async run(driver: WebDriver) {
-//         await clickElementById(driver, 'add');
-//         await testElementLocatedByXpath(driver, "//tbody/tr[11000]/td[2]/a");
-//     }
-// }
-
 const benchAppendToManyRows = new class extends Benchmark {
     constructor() {
         super({
@@ -271,26 +227,6 @@ const benchAppendToManyRows = new class extends Benchmark {
         await testElementLocatedByXpath(driver, "//tbody/tr[1100]/td[2]/a");
     }
 }
-
-// const benchClear = new class extends Benchmark {
-//     constructor() {
-//         super({
-//             id: "09_clear10k",
-//             label: "clear rows",
-//             description: "Duration to clear the table filled with 10.000 rows.",
-//             type: BenchmarkType.CPU
-//         })
-//     }
-//     async init(driver: WebDriver) {
-//         await testElementLocatedById(driver, "runlots", SHORT_TIMEOUT);
-//         await clickElementById(driver, 'runlots');
-//         await testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a");
-//     }
-//     async run(driver: WebDriver) {
-//         await clickElementById(driver, 'clear');
-//         await testElementNotLocatedByXPath(driver, "//tbody/tr[1]");
-//     }
-// }
 
 const benchClear = new class extends Benchmark {
     constructor() {
