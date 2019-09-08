@@ -92,14 +92,32 @@ window.nonKeyedDetector_storeTr = function() {
 window.nonKeyedDetector_reset();
 `;
 
-function isKeyedRun(result: any): boolean {
-    return (result.tradded>=1000 && result.trremoved>0 && result.removedStoredTr>0);
+function isKeyedRun(result: any, shouldBeKeyed:boolean): boolean {
+    let r = result.tradded>=1000 && result.trremoved>=1000;
+    if ((r && !shouldBeKeyed)) {
+        console.log(`Non-keyed test for create rows failed. Expected that TRs should be recycled, but there were ${result.tradded} added TRs and ${result.trremoved} were removed`);
+    } else if (!r && shouldBeKeyed) {
+        console.log(`Keyed test for create rows failed. Expected that 1000 TRs should be removed and added, but there were ${result.tradded} added TRs and ${result.trremoved} were removed`);
+    }
+    return r;
 }
-function isKeyedRemove(result: any): boolean {
-    return (result.removedStoredTr>0);
+function isKeyedRemove(result: any, shouldBeKeyed:boolean): boolean {
+    let r = result.removedStoredTr>0;
+    if ((r && !shouldBeKeyed)) {
+        console.log(`Non-keyed test for remove failed. Expected that the dom node for the 2nd row would NOT be removed, but it was.`);
+    } else if (!r && shouldBeKeyed) {
+        console.log(`Keyed test for remove failed. Expected that the dom node for the 2nd row would be removed, but it wasn't`);
+    }
+    return r;
 }
-function isKeyedSwapRow(result: any): boolean {
-    return (result.tradded>0 && result.trremoved>0);
+function isKeyedSwapRow(result: any, shouldBeKeyed:boolean): boolean {
+    let r = result.tradded>0 && result.trremoved>0;
+    if ((r && !shouldBeKeyed)) {
+        console.log(`Non-keyed test for swap failed. Expected than no TRs are added or removed, but there were ${result.tradded} added and ${result.trremoved} removed`);
+    } else if (!r && shouldBeKeyed) {
+        console.log(`Keyed test for swap failed. Expected at least 1 added and 1 removed TR, but there were ${result.tradded} added and ${result.trremoved} removed`);
+    }
+    return r;
 }
 
 async function assertChildNodes(elem: WebElement, expectedNodes: string[], message: string) {
@@ -217,14 +235,14 @@ async function runBench(frameworkNames: string[]) {
             await clickElementById(driver,'swaprows');
             await testTextContains(driver,'//tbody/tr[2]/td[1]','999');
             let res = await driver.executeScript('return nonKeyedDetector_result()');
-            let keyedSwap = isKeyedSwapRow(res);
+            let keyedSwap = isKeyedSwapRow(res, framework.keyed);
             // run
             await driver.executeScript('nonKeyedDetector_storeTr()');
             await driver.executeScript('window.nonKeyedDetector_reset()');
             await clickElementById(driver,'run');
             await testTextContains(driver,'//tbody/tr[1000]/td[1]','2000');
             res = await driver.executeScript('return nonKeyedDetector_result()');
-            let keyedRun =isKeyedRun(res);
+            let keyedRun =isKeyedRun(res, framework.keyed);
             // remove
             await driver.executeScript('nonKeyedDetector_storeTr()');
             let text = await getTextByXPath(driver, `//tbody/tr[2]/td[2]/a`);
@@ -232,9 +250,9 @@ async function runBench(frameworkNames: string[]) {
             await clickElementByXPath(driver, `//tbody/tr[2]/td[3]/a/span[1]`);
             await testTextNotContained(driver, `//tbody/tr[2]/td[2]/a`, text);
             res = await driver.executeScript('return nonKeyedDetector_result()');
-            let keyedRemove = isKeyedRemove(res);
+            let keyedRemove = isKeyedRemove(res, framework.keyed);
             let keyed = keyedRemove && keyedRun && keyedSwap;
-            console.log(framework.fullNameWithKeyedAndVersion +" is "+(keyed ? "keyed" : "non-keyed")+" for 'run benchmark' and "
+            console.log(framework.fullNameWithKeyedAndVersion +" is "+(keyedRun ? "keyed" : "non-keyed")+" for 'run benchmark' and "
             + (keyedRemove ? "keyed" : "non-keyed") + " for 'remove row benchmark' "
             + (keyedSwap ? "keyed" : "non-keyed") + " for 'swap rows benchmark' "
             +". It'll appear as "+(keyed ? "keyed" : "non-keyed")+" in the results");
