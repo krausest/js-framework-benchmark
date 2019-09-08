@@ -1,0 +1,33 @@
+{
+  "name": "js-framework-benchmark-mikado",
+  "description": "Web's smartest virtual DOM templating engine.",
+  "homepage": "https://github.com/nextapps-de/mikado/",
+  "author": "Nextapps GmbH",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "main": "src/mikado.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "mikado"
+  },
+  "browser": "src/browser.js",
+  "preferGlobal": false,
+  "bin": {
+    "mikado": "./task/compile.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "scripts": {
+    "compile": "node task/compile && echo Compile Complete. && exit 0",
+    "build": "node task/compile src/template.html && node task/build DEBUG=false ENABLE_CACHE=false BUILD_LIGHT=false && exit 0",
+    "build-prod": "npm run build"
+  },
+  "dependencies": {
+    "mikado": "0.0.69"
+  },
+  "devDependencies": {
+    "google-closure-compiler": "^20190904.0.0-nightly",
+    "html2json": "^1.0.2"
+  }
+}
