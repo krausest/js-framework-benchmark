@@ -19,12 +19,12 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "scripts": {
-    "compile": "node task/compile && echo Compile Complete. && exit 0",
-    "build": "node task/compile src/template.html && node task/build DEBUG=false ENABLE_CACHE=false BUILD_LIGHT=false && exit 0",
+    "compile": "node node_modules/mikado/task/compile ./../../src/template/app.html && node node_modules/mikado/task/compile ./../../src/template/item.html && echo Compile Complete. && exit 0",
+    "build": "npm run compile && node task/build RELEASE=custom DEBUG=false USE_POLYFILL=false SUPPORT_CACHE=false SUPPORT_EVENTS=true SUPPORT_STORAGE=true SUPPORT_HELPERS=true SUPPORT_ASYNC=false SUPPORT_TRANSPORT=false SUPPORT_LOOP_INCLUDE=false SUPPORT_CONDITIONAL=false && exit 0",
     "build-prod": "npm run build"
   },
   "dependencies": {
-    "mikado": "0.0.7"
+    "mikado": "^0.1.2"
   },
   "devDependencies": {
     "google-closure-compiler": "^20190904.0.0-nightly",
