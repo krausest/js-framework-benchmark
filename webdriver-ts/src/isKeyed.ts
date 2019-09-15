@@ -215,7 +215,7 @@ async function runBench(frameworkNames: string[]) {
         try {
             let framework = runFrameworks[i];
             setUseShadowRoot(framework.useShadowRoot);
-            await driver.get(`http://localhost:${config.PORT}/${framework.uri}/`);
+            await driver.get(`http://localhost:${config.PORT}/${framework.uri}/index.html`);
             await testElementLocatedById(driver, "add");
             await clickElementById(driver,'run');
             await testTextContains(driver,'//tbody/tr[1000]/td[1]','1000');
