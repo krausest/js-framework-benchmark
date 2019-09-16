@@ -14,13 +14,14 @@ Or it can be restrict matching to keyed or non-keyed frameworks:
 --restartWith keyed/angu
 (Matches only keyed angular, angularjs, angular-ivy, ...)
 The distinction is made by checking whether a slash is contained in the parameter
+
+Changed behaviour: Builds only the frameworks. To build webdriver-ts or the results use the npm run install-local task
 */
 
 let args = yargs(process.argv)
-    .usage("npm run build [-- [--check] [--skipIrrelevant] [--restartWith] [--benchmarks_only]]")
+    .usage("npm run build [-- [--check] [--skipIrrelevant] [--restartWith]]")
     .help('help')
     .boolean('check')
-    .boolean('benchmarks_only')
     .boolean('skipIrrelevant')
     .string('restartWith')
     .argv;
@@ -30,8 +31,6 @@ console.log("ARGS", process.argv);
 var referenceBranch = "origin/master";
 
 var restartWithFramework = args.restartWith || '';
-
-var core = args.benchmarks_only ? [] : ["webdriver-ts", "webdriver-ts-results"].map(f => ["", f]);
 
 var frameworks = [].concat(
   fs.readdirSync('./frameworks/keyed').map(f => ['keyed', f]),
@@ -49,13 +48,13 @@ var notRestarter = ([dir, name]) => {
 let skippable = _.takeWhile(frameworks, notRestarter);
 let buildable = _.slice(frameworks, skippable.length);
 
-var relevant = args.skipIrrelevant && !_.some(core, isDifferent)
+var relevant = args.skipIrrelevant 
     ? _.filter(buildable, isDifferent)
     : buildable;
 
 _.each(skippable, ([dir,name]) => console.log("*** Skipping " + dir + "/" + name));
 
-_.each([].concat(relevant, core), function([dir,name]) {
+_.each(relevant, function([dir,name]) {
   let fullname = path.join("frameworks", dir, name);
 	if(fs.statSync(fullname).isDirectory() && fs.existsSync(path.join(fullname, "package.json"))) {
           console.log("*** Executing npm install in "+fullname);

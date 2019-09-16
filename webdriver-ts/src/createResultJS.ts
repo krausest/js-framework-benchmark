@@ -35,6 +35,13 @@ async function main() {
                 let resultNice = {framework:data.framework, benchmark:data.benchmark, values:data.values.filter(v => v!=null)};
                 resultJS += '\n' + JSON.stringify(result) + ',';
                 jsonResult.push(resultNice)
+                if (benchmarkInfo.type === BenchmarkType.CPU && resultNice.values.length != config.REPEAT_RUN) {
+                    console.log(`WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length }. We expected ${config.REPEAT_RUN}`);
+                } else if (benchmarkInfo.type === BenchmarkType.MEM && resultNice.values.length != config.REPEAT_RUN_MEM) {
+                    console.log(`WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length }. We expected ${config.REPEAT_RUN_MEM}`);
+                } else if (benchmarkInfo.type === BenchmarkType.STARTUP && resultNice.values.length != config.REPEAT_RUN_STARTUP) {
+                    console.log(`WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length }. We expected ${config.REPEAT_RUN_STARTUP}`);
+                }
             } else {
                 console.log("MISSING FILE",file);
             }

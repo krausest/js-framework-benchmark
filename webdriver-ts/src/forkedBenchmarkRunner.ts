@@ -283,6 +283,11 @@ async function forceGC(framework: FrameworkData, driver: WebDriver): Promise<any
 async function snapMemorySize(driver: WebDriver): Promise<number> {
     // currently needed due to https://github.com/krausest/js-framework-benchmark/issues/538
     let heapSnapshot: any = await driver.executeScript(":takeHeapSnapshot");
+    if (typeof(heapSnapshot) === 'string') {
+        console.log("INFO: heapSnapshot was a JSON string");
+        heapSnapshot = JSON.parse(heapSnapshot);
+    }
+    console.log("****** heapSnapshot.snapshot.meta", typeof(heapSnapshot));
     let node_fields: any = heapSnapshot.snapshot.meta.node_fields;
     let nodes: any = heapSnapshot.nodes;
 
@@ -448,7 +453,6 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
             }
         } catch (err) {
             console.log("ERROR cleaning up driver", err);
-            throw "Quitting driver failed";
         }
     }
     return {error, warnings};
@@ -506,7 +510,6 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
             }
         } catch (err) {
             console.log("ERROR cleaning up driver", err);
-            throw "Quitting driver failed";
         }
     }
     return {error, warnings};
@@ -538,22 +541,22 @@ export async function executeBenchmark(frameworks: FrameworkData[], keyed: boole
     let framework = runFrameworks[0];
     let benchmark = runBenchmarks[0];
 
-    let errorsAndWarnings : ErrorAndWarning;
+    let errorAndWarnings : ErrorAndWarning;
     if (benchmark.type == BenchmarkType.STARTUP) {
-        errorsAndWarnings = await runStartupBenchmark(framework, benchmark, benchmarkOptions);
+        errorAndWarnings = await runStartupBenchmark(framework, benchmark, benchmarkOptions);
     } else if (benchmark.type == BenchmarkType.CPU) {
-        errorsAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
+        errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
     } else {
-        errorsAndWarnings = await runMemBenchmark(framework, benchmark, benchmarkOptions);
+        errorAndWarnings = await runMemBenchmark(framework, benchmark, benchmarkOptions);
     }
 
-    return errorsAndWarnings;
+    return errorAndWarnings;
 }
 
 export async function performBenchmark(frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning> {
-    let errorsAndWarnings = await executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
-    if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorsAndWarnings);
-    return errorsAndWarnings;
+    let errorAndWarnings = await executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
+    if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorAndWarnings);
+    return errorAndWarnings;
 }
 
 process.on('message', (msg) => {
@@ -564,12 +567,11 @@ process.on('message', (msg) => {
     let {frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions} : {frameworks: FrameworkData[], keyed: boolean, frameworkName: string, benchmarkName: string, benchmarkOptions: BenchmarkOptions} = msg;
     if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
         performBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions).then(result => {
-            console.log("THEN: Returning result", result);
             process.send(result);
             process.exit(0);        
         }).catch((err) => {
-            console.log("CATCH: Error in forkedBenchmarkRunner", JSON.stringify(err), typeof err, err);
-            process.send({failure: "Unhandled error"});
+            console.log("CATCH: Error in forkedBenchmarkRunner");
+            process.send({failure: convertError(err)});
             process.exit(0);
     });
 });

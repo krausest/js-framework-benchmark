@@ -32,6 +32,50 @@ function forkedRun(frameworks: FrameworkData[], frameworkName: string, keyed: bo
     }
 }
 
+async function performRetryableRun(runFrameworks: FrameworkData[], framework: FrameworkData, benchmark: Benchmark) {
+    let errors: String[] = [];
+    let warnings: String[] = [];
+    let retry = 1;
+    let attemptRetry = true;
+
+    for (; retry<=5 && attemptRetry; retry++) {
+        errors = [];
+        warnings = [];
+        console.log(`Executing benchmark ${framework.name} and benchmark ${benchmark.id} retry # ${retry}`);
+
+        attemptRetry = false;
+        let benchmarkOptions: BenchmarkOptions = {
+            port: config.PORT.toFixed(),
+            remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
+            chromePort: config.CHROME_PORT,
+            headless: args.headless,
+            chromeBinaryPath: args.chromeBinary,
+            numIterationsForCPUBenchmarks: config.REPEAT_RUN,
+            numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
+            numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
+        }
+        // Assumption: For all errors we can handle it won't throw but return a result
+        let benchMsg: any = await forkedRun(runFrameworks, framework.name, framework.keyed, benchmark.id, benchmarkOptions);
+        if (benchMsg.failure) {
+            console.log(`Executing ${framework.uri} and benchmark ${benchmark.id} failed with a technical error: ${benchMsg.failure}`);
+            errors.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed with a technical error: ${benchMsg.failure}`);
+            if (config.EXIT_ON_ERROR) throw "Exiting because of an technical error and config.EXIT_ON_ERROR = true";            
+        } else {
+            let errorsAndWarnings = benchMsg as ErrorAndWarning;
+            if (errorsAndWarnings.error) errors.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed: ` + errorsAndWarnings.error);
+            for (let warning of errorsAndWarnings.warnings) {
+                if (errorsAndWarnings.error) warnings.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed: ` + errorsAndWarnings.error);
+            }
+            if (errorsAndWarnings.error && errorsAndWarnings.error.indexOf("Server terminated early with status 1")>-1) {
+                console.log("******* STRANGE selenium error found - retry");
+                attemptRetry = true;
+            }
+            if (errorsAndWarnings.error && config.EXIT_ON_ERROR) throw "Exiting because of an error and config.EXIT_ON_ERROR = true";
+        }
+    }
+    return {errors: errors, warnings: warnings};
+}
+
 async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]) {
     let errors: String[] = [];
     let warnings: String[] = [];
@@ -57,43 +101,9 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
     for (let i = 0; i < data.length; i++) {
         let framework = data[i][0];
         let benchmark = data[i][1];
-
-        // let retry = 1;
-        // for (; retry<=5; retry++) {
-            console.log(`Executing benchmark ${framework.name} and benchmark ${benchmark.id} `); //retry # ${retry}`);
-
-            let benchmarkOptions: BenchmarkOptions = {
-                port: config.PORT.toFixed(),
-                remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
-                chromePort: config.CHROME_PORT,
-                headless: args.headless,
-                chromeBinaryPath: args.chromeBinary,
-                numIterationsForCPUBenchmarks: config.REPEAT_RUN,
-                numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
-                numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
-            }
-
-            try {
-                let benchMsg: any = await forkedRun(runFrameworks, framework.name, framework.keyed, benchmark.id, benchmarkOptions);
-                // Note: The following code has not yet been tested
-                // The "Server terminated early" issue stopped as soon as the code was added ;-(
-                if (benchMsg.failure) {
-                    console.log(`Executing benchmark ${framework.name} and benchmark ${benchmark.id} failed with a technical error: `, benchMsg.failure);
-                    throw `Executing benchmark failed`;
-                } else {
-                    let errorsAndWarnings = benchMsg as ErrorAndWarning;
-                    if (errorsAndWarnings.error) errors.push(`Executing benchmark ${framework.name} and benchmark ${benchmark.id} failed: ` + errorsAndWarnings.error);
-                    for (let warning of errorsAndWarnings.warnings) {
-                        if (errorsAndWarnings.error) warnings.push(`Executing benchmark ${framework.name} and benchmark ${benchmark.id} failed: ` + errorsAndWarnings.error);
-                    }
-                    if (errorsAndWarnings.error) throw `Executing benchmark failed`;
-                }
-            } catch (err) {
-                console.log(`Error executing benchmark ${framework.name} and benchmark ${benchmark.id}: `, err);
-                if (config.EXIT_ON_ERROR) throw "Exiting because of an error and config.EXIT_ON_ERROR = true";
-            }
-        //     if (retry>1) throw "RETRY > 1 CHECK CONSOLE OUTPUT";
-        // }
+        let result = await performRetryableRun(runFrameworks, framework, benchmark);
+        errors = errors.concat(result.errors);
+        warnings = warnings.concat(result.warnings);
     }
 
     if (warnings.length > 0) {
@@ -113,7 +123,6 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
 
         errors.forEach(e => {
             console.log(e);
-            console.log();
         });
         throw "Benchmarking failed with errors";
     }

@@ -43,7 +43,7 @@ export let config = {
     LOG_DETAILS: false,
     LOG_DEBUG: false,
     LOG_TIMELINE: false,
-    EXIT_ON_ERROR: true,
+    EXIT_ON_ERROR: null as boolean, // set from command line
     STARTUP_DURATION_FROM_EVENTLOG: true,
     STARTUP_SLEEP_DURATION: 1000,
     FORK_CHROMEDRIVER: true,
