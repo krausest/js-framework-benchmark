@@ -1,7 +1,8 @@
-version: 2
+version: 2.1
 jobs:
   build:
-    machine: true
+    machine: 
+      image: ubuntu-1604:201903-01
 
     steps:
       - checkout
