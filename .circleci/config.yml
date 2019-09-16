@@ -1,12 +1,7 @@
-version: 2.1
-workflows:
-  main:
-    jobs:
-      - build
+version: 2
 jobs:
   build:
-    machine: 
-      image: ubuntu-1604:201903-01
+    machine: true
 
     steps:
       - checkout
