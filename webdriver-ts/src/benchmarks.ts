@@ -392,11 +392,10 @@ class BenchStartup extends Benchmark {
             type: BenchmarkType.STARTUP,
         })
     }
-    async init(driver: WebDriver) { await driver.get(`http://localhost:${config.PORT}/`); }
+    async init(driver: WebDriver) { // not used with lighthouse 
+    }
     async run(driver: WebDriver, framework: FrameworkData) {
-        await driver.get(`http://localhost:${config.PORT}/${framework.uri}/`);
-        await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
-        return driver.sleep(config.STARTUP_SLEEP_DURATION);
+        // not used with lighthouse
     }
     extractResult(results: LighthouseData[], resultKind: BenchmarkInfo): number[] {
         return results.reduce((a, v) => { a.push(v[(resultKind as StartupBenchmarkResult).property]); return a; }, new Array<number>());

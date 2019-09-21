@@ -6,6 +6,34 @@ console.log();
 
 fs.existsSync("log") || fs.mkdirSync("log");
 
+let flag_str = "";
+
+var options = (function(argv){
+
+    const arr = {};
+    let count = 0;
+
+    argv.forEach(function(val, index) {
+
+        if(++count > 2){
+
+            index = val.split('=');
+            val = index[1];
+            index = index[0].toUpperCase();
+
+            flag_str += " --define='" + index + "=" + val + "'";
+            arr[index] = val;
+
+            if(count > 3) console.log(index + ': ' + val);
+        }
+    });
+
+    console.log('RELEASE: ' + (arr['RELEASE'] || 'custom'));
+
+    return arr;
+
+})(process.argv);
+
 const parameter = (function(opt){
 
     let parameter = '';
@@ -60,7 +88,7 @@ const parameter = (function(opt){
     //formatting: "PRETTY_PRINT"
 });
 
-exec("java -jar node_modules/google-closure-compiler-java/compiler.jar" + parameter + " --js='src/**.js' --js='node_modules/mikado/src/mikado.js' --js_output_file='dist/main.js' && exit 0", function(){
+exec("java -jar node_modules/google-closure-compiler-java/compiler.jar" + parameter + " --js='src/*.js' --js='src/template/*.es6.js' --js='node_modules/mikado/src/*.js'" + flag_str + " --js_output_file='dist/main.js' && exit 0", function(){
 
     console.log("Build Complete.");
 });

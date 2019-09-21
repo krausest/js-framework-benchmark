@@ -268,3 +268,12 @@ Tip: If you start with your implementation do not take vanillajs as the referenc
 This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
 
 Thanks to Baptiste Augrain for making the benchmarks more sophisticated and adding frameworks.
+
+## History
+Frameworks without activity on github or npm for more than a year will be removed. 
+The following frameworks were removed 9/16/2019:
+- [x] angular-light Last commit Nov 30, 2017
+- [x] nx. Last commit Feb 2017
+- [x]  maik-h  Last commit Dec 15, 2017
+- [x] rivets Last commit Oct 22, 2016
+- [x] tsers. Last commit Jun 19, 2016
