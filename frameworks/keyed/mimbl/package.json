@@ -1,0 +1,32 @@
+{
+  "name": "js-framework-benchmark-mimbl",
+  "version": "0.1.6",
+  "description": "Benchmark for Mimbl framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "mimbl"
+  },
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
+  },
+  "keywords": [
+    "mimbl"
+  ],
+  "author": "Michael Michlin",
+  "license": "Apache-2.0",
+  "homepage": "https://mmichlin66.github.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^6.1.0",
+    "typescript": "^3.6.3",
+    "webpack": "4.34.0",
+    "webpack-cli": "^3.3.4"
+  },
+  "dependencies": {
+    "mimbl": "^0.1.6"
+  }
+}
