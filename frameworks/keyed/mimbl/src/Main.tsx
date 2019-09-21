@@ -32,13 +32,6 @@ export class Main extends mim.Component implements IMainContainer
     {
         super();
 
-        this.add = this.add.bind(this);
-        this.run = this.run.bind(this);
-        this.update = this.update.bind(this);
-        this.runLots = this.runLots.bind(this);
-        this.clear = this.clear.bind(this);
-        this.swapRows = this.swapRows.bind(this);
-
         this.store = new Store();        
         this.tbody = new TBody( this);
 
@@ -49,31 +42,36 @@ export class Main extends mim.Component implements IMainContainer
     //     this.callMe( () => stopMeasure(), false);
     // }
 
-    run() {
+    run = () =>
+    {
         // startMeasure("run");
         this.tbody.run();
         // this.schedulePrintDuration();
     }
     
-    add() {
+    add = () =>
+    {
         // startMeasure("add");
         this.tbody.add();
         // this.schedulePrintDuration();
     }
     
-    update() {
+    update = () =>
+    {
         // startMeasure("update");
         this.tbody.update();
         // this.schedulePrintDuration();
     }
     
-    runLots() {
+    runLots = () =>
+    {
         // startMeasure("runLots");
         this.tbody.runLots();
         // this.schedulePrintDuration();
     }
     
-    clear() {
+    clear = () =>
+    {
         // startMeasure("clear");
         this.tbody.clear();
         this.tbody = new TBody( this);
@@ -81,20 +79,21 @@ export class Main extends mim.Component implements IMainContainer
         // this.schedulePrintDuration();
     }
     
-    swapRows() {
+    swapRows = () =>
+    {
         // startMeasure("swapRows");
         this.tbody.swapRows();
         // this.schedulePrintDuration();
     }
     
-    onSelectRowClicked(row)
+    onSelectRowClicked( row)
     {
         // startMeasure("select");
         this.tbody.onSelectRowClicked(row);
         // this.schedulePrintDuration();
     }
     
-    onDeleteRowClicked(row)
+    onDeleteRowClicked( row)
     {
         // startMeasure("delete");
         this.tbody.onDeleteRowClicked(row);

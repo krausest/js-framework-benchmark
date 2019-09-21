@@ -49,18 +49,6 @@ export class TBody extends mim.Component
     }
     
     swapRows() {
-        // this.store.swapRows( 1, 998);
-        // this.store.data.forEach( (item, i) => {
-        //     if (this.rows[i].id !== item.id)
-        //     {
-        //         if (this.store.selected === item.id)
-        //             this.selectedRow = undefined;
-
-        //         this.rows[i] = new Row( this.main, item.id, item.label);
-        //     }
-        // });
-        // this.updateMe();
-
 		if (this.rows.length > 998)
 		{
             this.store.swapRows( 1, 998);

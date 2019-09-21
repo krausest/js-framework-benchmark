@@ -25,9 +25,6 @@ export class Row extends mim.Component
 		this.id = id;
 		this.label = label;
 		this.selected = false;
-
-		this.onDeleteClicked = this.onDeleteClicked.bind(this);
-		this.onSelectClicked = this.onSelectClicked.bind(this);
 	}
 
 	setItem( newLabel: string, newSelectedID: number)
@@ -49,12 +46,12 @@ export class Row extends mim.Component
 		this.selected = selected;
 	}
 
-	onDeleteClicked()
+	onDeleteClicked = () =>
 	{
 		this.main.onDeleteRowClicked( this);
 	}
 
-	onSelectClicked()
+	onSelectClicked = () =>
 	{
 		if (this.selected)
 			return;
