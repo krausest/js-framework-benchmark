@@ -1,7 +1,7 @@
 {
-  "name": "js-framework-benchmark-keyed-mimbl",
+  "name": "js-framework-benchmark-non-keyed-mimbl",
   "version": "0.1.8",
-  "description": "Benchmark for Mimbl framework (keyed)",
+  "description": "Benchmark for Mimbl framework (non-keyed)",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mimbl"
   },
