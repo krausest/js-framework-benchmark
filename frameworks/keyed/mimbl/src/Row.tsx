@@ -13,9 +13,10 @@ export interface IMainContainer
 export class Row extends mim.Component
 {
 	main: IMainContainer;
+
 	id: number;
-	label: string;
-	selected: boolean;
+	@mim.updatable label: string;
+	@mim.updatable selected: boolean;
 
 	constructor( main: IMainContainer, id: number, label: string)
 	{
@@ -29,19 +30,19 @@ export class Row extends mim.Component
 
 	setItem( newLabel: string, newSelectedID: number)
 	{
-		let newSelected = this.id === newSelectedID;
+		// let newSelected = this.id === newSelectedID;
 
-		if (newLabel !== this.label || this.selected !== newSelected)
-			this.updateMe();
+		// if (newLabel !== this.label || this.selected !== newSelected)
+		// 	this.updateMe();
 
 		this.label = newLabel;
-		this.selected = newSelected;
+		this.selected = this.id === newSelectedID;
 	}
 
 	select( selected: boolean)
 	{
-		if (this.selected !== selected)
-			this.updateMe();
+		// if (this.selected !== selected)
+		// 	this.updateMe();
 
 		this.selected = selected;
 	}
@@ -58,7 +59,7 @@ export class Row extends mim.Component
 
 		this.selected = true;
 		this.main.onSelectRowClicked( this);
-		this.updateMe();
+		// this.updateMe();
 	}
 
 	render()

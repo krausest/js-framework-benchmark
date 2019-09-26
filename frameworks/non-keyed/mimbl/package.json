@@ -29,6 +29,6 @@
     "webpack-cli": "3.3.4"
   },
   "dependencies": {
-    "mimbl": "0.1.8"
+    "mimbl": "0.1.9"
   }
 }
