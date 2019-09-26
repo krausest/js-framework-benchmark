@@ -17,7 +17,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "sinuous": "0.12.6"
+    "sinuous": "0.15.1"
   },
   "devDependencies": {
     "@babel/core": "7.4.4",

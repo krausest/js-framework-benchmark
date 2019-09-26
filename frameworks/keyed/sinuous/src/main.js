@@ -1,6 +1,6 @@
 import { observable, h } from 'sinuous';
 import { template, t, o } from 'sinuous/template';
-import map from 'sinuous/map';
+import { map } from 'sinuous/map';
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],
