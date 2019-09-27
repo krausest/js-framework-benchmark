@@ -72,8 +72,8 @@ _.each(relevant, function([dir,name]) {
 
 var testable = args.check ? relevant : [];
 _.each(testable, function([dir,name]) {
-        let fullname = dir + name;
-	if(fs.statSync(fullname).isDirectory() && fs.existsSync(path.join(fullname, "package.json"))) {
+      let fullname = path.join("frameworks", dir, name);
+      if(fs.statSync(fullname).isDirectory() && fs.existsSync(path.join(fullname, "package.json"))) {
             console.log("*** Executing npm run selenium for "+fullname);
             exec(`npm run bench ${dir}/${name} -- --count 1 --fork false --noResults`, {
 				cwd: "webdriver-ts",
