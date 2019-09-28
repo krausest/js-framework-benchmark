@@ -17,5 +17,6 @@ jobs:
           nvm install v10.16.0
 
           npm install
+          npm install-webdriver-ts
           npm start &
           npm run build -- --check
