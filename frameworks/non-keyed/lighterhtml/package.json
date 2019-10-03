@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lighterhtml": "0.16.1"
+    "lighterhtml": "1.2.1"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",
