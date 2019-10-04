@@ -47,12 +47,12 @@ export class Row extends mim.Component
 		this.selected = selected;
 	}
 
-	onDeleteClicked = () =>
+	onDeleteClicked()
 	{
 		this.main.onDeleteRowClicked( this);
 	}
 
-	onSelectClicked = () =>
+	onSelectClicked()
 	{
 		if (this.selected)
 			return;

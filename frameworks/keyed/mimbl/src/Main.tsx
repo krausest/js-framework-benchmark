@@ -42,35 +42,35 @@ export class Main extends mim.Component implements IMainContainer
     //     this.callMe( () => stopMeasure(), false);
     // }
 
-    run = () =>
+    run()
     {
         // startMeasure("run");
         this.tbody.run();
         // this.schedulePrintDuration();
     }
     
-    add = () =>
+    add()
     {
         // startMeasure("add");
         this.tbody.add();
         // this.schedulePrintDuration();
     }
     
-    update = () =>
+    update()
     {
         // startMeasure("update");
         this.tbody.update();
         // this.schedulePrintDuration();
     }
     
-    runLots = () =>
+    runLots()
     {
         // startMeasure("runLots");
         this.tbody.runLots();
         // this.schedulePrintDuration();
     }
     
-    clear = () =>
+    clear()
     {
         // startMeasure("clear");
         this.tbody.clear();
@@ -79,7 +79,7 @@ export class Main extends mim.Component implements IMainContainer
         // this.schedulePrintDuration();
     }
     
-    swapRows = () =>
+    swapRows()
     {
         // startMeasure("swapRows");
         this.tbody.swapRows();
