@@ -1,5 +1,4 @@
 'use strict';
-require("babel-plugin-syntax-jsx")
 var path = require('path')
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 var webpack = require('webpack')
@@ -44,7 +43,7 @@ module.exports = [{
             "node_modules"
         ],
         alias: {
-            'preact': 'node_modules/preact/dist/preact.min.js',
+            'preact': 'node_modules/preact/dist/preact.js',
         }
     },
     plugins: [
