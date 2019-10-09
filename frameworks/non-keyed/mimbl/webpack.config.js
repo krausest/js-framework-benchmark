@@ -12,7 +12,7 @@ module.exports =
     output:
     {
         filename: outputFilename,
-        path: __dirname + "/lib",
+        path: __dirname + "/dist",
 		libraryTarget: 'umd',
 		globalObject: 'this'
     },

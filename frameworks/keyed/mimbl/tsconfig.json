@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		//"declaration": true,
-		"outDir": "./lib/",
+		"outDir": "./dist/",
 		"sourceMap": true,
 		"noImplicitAny": false,
 		"strictNullChecks": false,
