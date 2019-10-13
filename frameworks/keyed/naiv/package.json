@@ -13,13 +13,13 @@
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "naiv": "0.0.1-0",
+    "naiv": "0.0.1-1",
     "rollup": "^1.23.1",
     "rollup-plugin-minify-html-literals": "^1.2.2",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.1.2"
   },
   "js-framework-benchmark": {
-    "frameworkVersion": "naiv"
+    "frameworkVersionFromPackage": "naiv"
   }
 }

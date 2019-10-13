@@ -13,8 +13,7 @@ const buildData = (count = 1000) => {
     const label = `${adjectives[random(adjectives.length)]} ${colours[random(colours.length)]} ${nouns[random(nouns.length)]}`
     data.push({
       id: id++,
-      label: observable(label),
-      selected: observable()
+      label: observable(label)
     })
   }
 
@@ -35,14 +34,15 @@ const Button = (id, onclick, label) => html`
 `
 
 const App = () => {
-  // data
+  let selectedRow
   const data = observable([])
 
+  // methods
   const run = () => data(buildData(1000))
   const runlots = () => data(buildData(10000))
   const add = () => data(data().concat(buildData(1000)))
   const update = () => {
-    for (let i = 0; i < data().length; i += 10) {
+    for (let i = 0; i < data.length; i += 10) {
       const label = data[i].label
       label(label() + ' !!!')
     }
@@ -50,25 +50,12 @@ const App = () => {
   const clear = () => data([])
   const swaprows = () => {
     if (data.length > 998) {
-      const temp = data[1]
-      data[1] = data[998]
-      data[998] = temp
+      const arr = data()
+      const temp = arr[1]
+      arr[1] = arr[998]
+      arr[998] = temp
       trigger(data)
     }
-  }
-
-  // remove row
-  const remove = idx => {
-    const arr = data()
-    data([...arr.slice(0, idx), ...arr.slice(idx + 1)])
-  }
-
-  // select row
-  let selectedRow
-  const select = row => {
-    selectedRow && selectedRow.selected(false)
-    row.selected(true)
-    selectedRow = row
   }
 
   return html`
@@ -93,22 +80,37 @@ const App = () => {
       <table class='table table-hover table-striped test-data'>
         ${map(
           data,
-          (row) => row.id,
+          item => item.id,
           html`<tbody id='tbody'></tbody>`,
-          (row, idx) => html`
-            <tr class=${() => row.selected() ? 'danger' : ''}>
-              <td class="col-md-1">${row.id}</td>
-              <td class="col-md-4">
-                <a onclick=${() => select(row)}>${row.label}</a>
-              </td>
-              <td class="col-md-1">
-                <a onclick=${() => remove(idx())}>
-                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </a>
-              </td>
-              <td class="col-md-6"></td>
-            </tr>
-          `
+          (item, index) => {
+            const selected = observable()
+
+            // methods
+            const select = () => {
+              selected(true)
+              selectedRow && selectedRow(false)
+              selectedRow = selected
+            }
+
+            const remove = () => {
+              data.splice(index(), 1)
+              trigger(data)
+            }
+
+            return html`
+              <tr class=${() => selected() ? 'danger' : ''}>
+                <td class="col-md-1">${item.id}</td>
+                <td class="col-md-4">
+                  <a onclick=${select}>${item.label}</a>
+                </td>
+                <td class="col-md-1">
+                  <a onclick=${remove}>
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  </a>
+                </td>
+                <td class="col-md-6"></td>
+              </tr>`
+          }
         )}
       </table>
       <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
