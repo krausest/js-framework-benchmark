@@ -1,31 +1,21 @@
 {
-  "name": "js-framework-benchmark-vanillajs",
-  "version": "1.1.1",
-  "description": "Vanilla.JS demo",
+  "name": "js-framework-benchmark-fntags",
+  "version": "0.0.1",
+  "description": "fntags demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": ""
+    "frameworkVersion": "0.1.6"
   },
   "scripts": {
-    "build-dev": "webpack -w -d",
-    "build-prod": "webpack -p"
+    "build-dev": "node build.js dev",
+    "build-prod": "node build.js"
   },
-  "keywords": [
-    "react",
-    "webpack"
-  ],
-  "author": "Stefan Krause",
-  "license": "Apache-2.0",
-  "homepage": "https://github.com/krausest/js-framework-benchmark",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  "author": "Robert Kempton",
+  "dependencies": {
+    "fntags": "^0.1.6"
   },
   "devDependencies": {
-    "@babel/core": "7.4.5",
-    "@babel/preset-env": "7.4.5",
-    "babel-loader": "8.0.6",
-    "webpack": "4.34.0",
-    "webpack-cli": "^3.3.4"
+    "fs-extra": "^8.1.0",
+    "terser": "^4.3.8"
   }
 }
