@@ -1,7 +1,6 @@
-import { fnapp, fnbind, fnstate, h, resetState } from '../node_modules/fntags/src/fntags.js'
+import { findElement, fnapp, fnbind, fnstate, h, resetState } from '../node_modules/fntags/src/fntags.js'
 
-const data = fnstate( { current: [] } )
-const selected = fnstate( { id: 0 } )
+let data = fnstate( { current: [] } )
 
 function random( max ) { return Math.round( Math.random() * 1000 ) % max }
 
@@ -13,85 +12,63 @@ const N = [ 'table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', '
     'keyboard' ]
 
 let nextId = 1
-
 function buildData( count ) {
-    const data = new Array( count )
+    const newData = new Array( count )
     for( let i = 0; i < count; i++ ) {
-        data[ i ] = fnstate( {
+        newData[ i ] = fnstate( {
                                  id: nextId++,
                                  label: `${A[ random( A.length ) ]} ${C[ random( C.length ) ]} ${N[ random( N.length ) ]}`
                              } )
     }
-    return data
+    return newData
 }
 
-const createOneThousand = () => {
-    resetState( selected, true )
-    data.current = buildData( 1000 )
-}
-
-const createTenThousand = () => {
-    resetState( selected, true )
-    data.current = buildData( 10000 )
-}
-
-const appendOneThousand = () =>
-    data.current = data.current.concat( buildData( 1000 ) )
-
-const updateEveryTenth = () => {
-    for( let i = 0; i < data.current.length; i += 10 ) {
-        data.current[ i ].label += ' !!!'
-    }
-}
-
-const swapRows = () => {
-    const theData = data.current
-    if( theData.length > 998 ) {
-        const a = Object.assign( {}, theData[ 1 ] )
-        Object.assign( theData[ 1 ], theData[ 998 ] )
-        Object.assign( theData[ 998 ], a )
-    }
-}
-
-const clear = () => {
-    resetState( selected, true )
-
-    data.current = []
-}
-
-const Button = ( id, title, onclick ) => (
+const Button = ( id, title, onclick ) =>
     h( 'div', { class: 'col-sm-6 smallpad' },
        h( 'button', { id, type: 'button', class: 'btn btn-primary btn-block', onclick: onclick }, title )
     )
-)
 
-const row = ( item, idx ) => {
-    let tr = h( 'tr', { id: item.id },
-                h( 'td', { class: 'col-md-1' }, fnbind( item, () => item.id )),
-                   h( 'td', { class: 'col-md-4' }, h( 'a', { onclick: () => selected.id = item.id }, fnbind( item, () => item.label ) ) ),
-                   h( 'td', {
-                          class: 'col-md-1',
-                          onclick: ( e ) => {
-                              tr.replaceWith( '' )
-                              resetState( item )
-                              data.current.splice( idx, 1 )
-                          }
-                      },
-                      h( 'a',
-                         h( 'span', { class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
-                      )
-                   ),
-                   h( 'td', { class: 'col-md-6' } )
-                )
-    return fnbind( selected, tr, ( el, st ) => {
-        if( st.id === item.id )
-            el.className = 'danger'
-        else
-            el.className = ''
-
-    } )
+let selectedId= 0
+const row = ( item ) => {
+    let label = h( 'a', {
+        onclick: () => {
+            let currentSelection = data.current.find( i => i && i.id == selectedId )
+            if( currentSelection ) findElement( currentSelection ).className = ''
+            findElement( item ).className = 'danger'
+            selectedId = item.id
+        }
+    }, item.label )
+    let id = h( 'td', { class: 'col-md-1' }, item.id )
+    let tr = h( 'tr', { id: item.id.toString(), class: selectedId === item.id ? 'danger' : '' },
+                id,
+                h( 'td', { class: 'col-md-4' }, label ),
+                h( 'td', {
+                       class: 'col-md-1',
+                       onclick: ( e ) => {
+                           e.preventDefault()
+                           tr.replaceWith( '' )
+                           resetState( item )
+                           data.current[ data.current.findIndex( i => i && i.id === item.id ) ] = null
+                           tr = null
+                       }
+                   },
+                   h( 'a',
+                      h( 'span', { class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
+                   )
+                ),
+                h( 'td', { class: 'col-md-6' } )
+    )
+    return fnbind(
+        item,
+        tr,
+        () => {
+            label.innerText = item.label
+            id.innerText = item.id
+        }
+    )
 }
 
+const dataTable = h( 'tbody' )
 fnapp( document.body,
        h( 'div', { class: 'container' },
           h( 'div', { class: 'jumbotron' },
@@ -101,22 +78,48 @@ fnapp( document.body,
                 ),
                 h( 'div', { class: 'col-md-6' },
                    h( 'div', { class: 'row' },
-                      Button( 'run', 'Create 1,000 rows', createOneThousand ),
-                      Button( 'runlots', 'Create 10,000 rows', createTenThousand ),
-                      Button( 'add', 'Append 1,000 rows', appendOneThousand ),
-                      Button( 'update', 'Update every 10th row', updateEveryTenth ),
-                      Button( 'clear', 'Clear', clear ),
-                      Button( 'swaprows', 'Swap Rows', swapRows )
+                      Button( 'run', 'Create 1,000 rows', () => data.current = buildData( 1000 ) ),
+                      Button( 'runlots', 'Create 10,000 rows', () => data.current = buildData( 10000 ) ),
+                      Button( 'add', 'Append 1,000 rows', () => {
+                          let newData = buildData( 1000 )
+                          data.current.push( ...data.current.concat( newData ) )
+                          dataTable.append( ...newData.map( row ) )
+                      } ),
+                      Button( 'update', 'Update every 10th row', () => {
+                          for( let i = 0; i < data.current.length; i += 10 ) {
+                              data.current[ i ].label += ' !!!'
+                          }
+                      } ),
+                      Button( 'clear', 'Clear', () => data.current = [] ),
+                      Button( 'swaprows', 'Swap Rows', ( ) => {
+                          const theData = data.current
+                          if( theData.length > 998 ) {
+
+                              let rowa = findElement( theData[ 1 ], el => el.getAttribute( 'id' ) == theData[ 1 ].id )
+                              let rowb = findElement( theData[ 998 ], el => el.getAttribute( 'id' ) == theData[ 998 ].id )
+
+                              const a = theData[ 1 ]
+                              theData[ 1 ] = theData[ 998 ]
+                              theData[ 998 ] = a
+                              let sib = rowa.nextSibling
+                              let parent = rowa.parentNode
+                              parent.insertBefore( rowa, rowb )
+                              parent.insertBefore( rowb, sib )
+
+                          }
+                      } )
                    )
                 )
              )
           )
        ),
        h( 'table', { class: 'table table-hover table-striped test-data' },
-          fnbind( data, () =>
-              h( 'tbody', ...data.current.map( row ) )
-          )
+          fnbind( data, dataTable, ( el, st ) => {
+              while( el.firstChild ) {
+                  el.removeChild( el.firstChild )
+              }
+              el.append( ...st.current.filter( r => r ).map( row ) )
+          } )
        ),
        h( 'span', { class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
 )
-

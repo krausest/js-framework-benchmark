@@ -1,6 +1,7 @@
 import { BenchmarkType, Benchmark, benchmarks, fileName, LighthouseData } from './benchmarks'
 import * as fs from 'fs';
 import * as yargs from 'yargs';
+import * as path from 'path'
 import { JSONResult, config, FrameworkData, initializeFrameworks, ErrorAndWarning, BenchmarkOptions } from './common'
 import * as R from 'ramda';
 import { fork } from 'child_process';
@@ -59,7 +60,7 @@ async function performRetryableRun(runFrameworks: FrameworkData[], framework: Fr
         if (benchMsg.failure) {
             console.log(`Executing ${framework.uri} and benchmark ${benchmark.id} failed with a technical error: ${benchMsg.failure}`);
             errors.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed with a technical error: ${benchMsg.failure}`);
-            if (config.EXIT_ON_ERROR) throw "Exiting because of an technical error and config.EXIT_ON_ERROR = true";            
+            if (config.EXIT_ON_ERROR) throw "Exiting because of an technical error and config.EXIT_ON_ERROR = true";
         } else {
             let errorsAndWarnings = benchMsg as ErrorAndWarning;
             if (errorsAndWarnings.error) errors.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed: ` + errorsAndWarnings.error);
@@ -82,7 +83,7 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
 
     let runBenchmarks = benchmarks.filter(b => benchmarkNames.some(name => b.id.toLowerCase().indexOf(name) > -1));
 
-    let restart: string = undefined; 
+    let restart: string = undefined;
     let index = runFrameworks.findIndex(f => f.fullNameWithKeyedAndVersion===restart);
     if (index>-1) {
         runFrameworks = runFrameworks.slice(index);
@@ -133,7 +134,7 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
 // What doesn't work (keyed/react becomes an element of argument benchmark): npm run bench -- --count 1 --benchmark 01_ keyed/react   
 
 let args = yargs(process.argv)
-    .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError] \n or: $0 [directory1] [directory2] .. [directory3]")
+    .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError] \n or: $0 [directory1] [directory2] .. [directory3] \n or: $0 installed")
     .help('help')
     .default('check', 'false')
     .default('fork', 'true')
@@ -144,6 +145,7 @@ let args = yargs(process.argv)
     .string('chromeBinary')
     .string('chromeDriver')
     .boolean('headless')
+    .boolean('installed')
     .array("framework").array("benchmark")
     .argv;
 
@@ -152,11 +154,15 @@ let allArgs = args._.length<=2 ? [] : args._.slice(2,args._.length);
 let runBenchmarksFromDirectoryNamesArgs = !args.framework;
 
 async function main() {
-    
-    
+
     let runBenchmarks = (args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""]).map(v => v.toString());
     let runFrameworks: FrameworkData[];
-    if (runBenchmarksFromDirectoryNamesArgs) {    
+    if(args.installed){
+        console.log("MODE: Installed frameworks.");
+        const hasPackageLock = (directoryName: string)=>
+            !!fs.existsSync(path.join(path.resolve('..','frameworks'), directoryName, 'package-lock.json'))
+        runFrameworks = await initializeFrameworks(hasPackageLock)
+    } else if (runBenchmarksFromDirectoryNamesArgs) {
         console.log("MODE: Directory names. Using arguments as the directory names to be re-run: ", allArgs);
         let matchesDirectoryArg = (directoryName: string) => allArgs.length==0 || allArgs.some(arg => arg==directoryName)
         runFrameworks = await initializeFrameworks(matchesDirectoryArg);
