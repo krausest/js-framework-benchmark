@@ -24,10 +24,10 @@
     "build-prod": "npm run build"
   },
   "dependencies": {
-    "mikado": "^0.1.2"
+    "mikado": "0.1.2"
   },
   "devDependencies": {
-    "google-closure-compiler": "^20190910.0.0-nightly",
-    "html2json": "^1.0.2"
+    "google-closure-compiler": "20190910.0.0-nightly",
+    "html2json": "1.0.2"
   }
 }
