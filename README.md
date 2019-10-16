@@ -241,6 +241,7 @@ runs the test for all frameworks that contain either angular or bob, which means
 * You can also run implementations by passing their directory names (cd to webdriver-ts):
 `npm run bench keyed/angular keyed/react` or if you want to pass more options it becomes: 
 `npm run bench -- --count 3 keyed/angular keyed/react`.
+* You can run all of the frameworks you've installed using `npm run bench -- --installed`
 * If you can't get one framework to compile or run, just move it out of the root directory and remove it from common.ts, recompile and re-run
 * To achieve good precision you should run each framework often enough. I recommend at least 10 times, more is better. The result table contains the mean and the standard deviation. You can seen the effect on the latter pretty well if you increase the count.
 * One can check whether an implementation is keyed or non-keyed via `npm run isKeyed` in the webdriver-ts directory. You can limit which frameworks to check in the same way as the webdriver test runner like e.g. `npm run isKeyed -- --framework svelte`. The program will report an error if a benchmark implementation is incorrectly classified.
