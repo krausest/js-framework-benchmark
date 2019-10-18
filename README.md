@@ -260,6 +260,7 @@ Contributions are very welcome. Please use the following rules:
 * **Please make sure your implementation is validated by the test tool.** cd to webdriver-ts and invoke it with `npm run check [keyed|non-keyed]/[FrameworkName]`. It'll print an error if your framework behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation.
 * Please don't commit any of the result file webdriver-ts/table.html, webdriver-ts-results/src/results.ts or webdriver-ts-results/table.html. I use to run the benchmarks after merging and publish updated (temporary) results.
 * The latest stable chrome can be used regarding web features and language level (babel-preset-env "last 1 chrome versions")
+* The vanillajs implementations and some others include code that try to measure the repaint duration through javascript code. Implemenatations are not required to include that measurement. Remember: The real measurements are taken by the automated test driver by examining chrome timeline entries.
 * **Please don't over-optimize. Other contributors will review your implementation so beware of discussions ([#521](https://github.com/krausest/js-framework-benchmark/pull/521), [#519](https://github.com/krausest/js-framework-benchmark/pull/519), [#430](https://github.com/krausest/js-framework-benchmark/issues/430)) and rejection if the community finds you cheating. When are you safe?**
   * If the initial rendering is able to render the selection state
   * The implementation uses only the idiomatic style of its library
