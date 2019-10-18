@@ -1,4 +1,4 @@
-import React, { memo, useReducer, useCallback } from 'react';
+import React, { memo, useReducer, useCallback, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 function random(max) { return Math.round(Math.random() * 1000) % max; }
@@ -21,6 +21,25 @@ function buildData(count) {
     };
   }
   return data;
+}
+
+var startTime;
+var lastMeasure;
+var startMeasure = function(name) {
+  //console.timeStamp(name);
+  startTime = performance.now();
+  lastMeasure = name;
+}
+var stopMeasure = function() {
+  var last = lastMeasure;
+  if (lastMeasure) {
+    window.setTimeout(function () {
+      lastMeasure = null;
+      var stop = performance.now();
+      var duration = 0;
+      console.log(last+" took "+(stop-startTime));
+    }, 0);
+  }
 }
 
 function listReducer(state, action) {
@@ -66,11 +85,18 @@ const Row = memo(({ selected, item, dispatch }) => {
   </tr>);
 });
 
-const Button = ({ id, cb, title }) => (
-  <div className="col-sm-6 smallpad">
-    <button type="button" className="btn btn-primary btn-block" id={id} onClick={cb}>{title}</button>
-  </div>
-);
+const Button = ({ id, cb, title }) => {
+  const onClick = () => {
+    startMeasure(id);
+    cb();
+  };
+
+  return (
+    <div className="col-sm-6 smallpad">
+      <button type="button" className="btn btn-primary btn-block" id={id} onClick={onClick}>{title}</button>
+    </div>
+  );
+}
 
 const Jumbotron = memo(({ dispatch }) =>
   <div className="jumbotron">
@@ -94,6 +120,8 @@ const Jumbotron = memo(({ dispatch }) =>
 
 const Main = () => {
   const [state, dispatch] = useReducer(listReducer, { data: [], selected: 0 });
+
+  useEffect(stopMeasure)
 
   return (<div className="container">
     <Jumbotron dispatch={dispatch} />
