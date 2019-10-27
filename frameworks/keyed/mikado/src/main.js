@@ -5,22 +5,28 @@ import { buildData } from "./data.js";
 
 Mikado.once(document.getElementById("main"), app);
 
+let data;
 const state = { "selected": {} };
 const root = document.getElementById("tbody");
-const mikado = Mikado.new(root, item, {
+const mikado = new Mikado(root, item, {
     "reuse": false, "state": state
 })
-.route("run", () => { mikado.render(buildData(1000)) })
-.route("runlots", () => { mikado.render(buildData(10000)) })
+.route("run", () => { mikado.clear().append(data = buildData(1000)) })
+.route("runlots", () => { mikado.clear().append(buildData(10000)) })
 .route("add", () => { mikado.append(buildData(1000)) })
 .route("update", () => {
     for(let i = 0, len = mikado.length; i < len; i += 10){
-        mikado.data(i).label += " !!!";
-        mikado.refresh(i);
+        data[i].label += " !!!";
+        mikado.apply(mikado.node(i), data[i]);
     }
 })
 .route("clear", () => { mikado.clear() })
-.route("swaprows", () => { mikado.swap(1, 998) })
+.route("swaprows", () => {
+    const tmp = data[998]
+    data[998] = data[1];
+    data[1] = tmp;
+    mikado.reconcile(data);
+})
 .route("remove", target => { mikado.remove(target) })
 .route("select", target => {
     state["selected"].className = "";

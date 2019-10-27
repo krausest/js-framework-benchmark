@@ -10,14 +10,14 @@ let _nextId = 1;
 
 export function buildData(count){
 
-    if(count === 1){
-
-        return {
-
-            id: _nextId++,
-            label: ADJECTIVES[_random(len_ADJECTIVES)] + " " + COLOURS[_random(len_COLOURS)] + " " + NOUNS[_random(len_NOUNS)]
-        }
-    }
+    // if(count === 1){
+    //
+    //     return {
+    //
+    //         id: _nextId++,
+    //         label: ADJECTIVES[_random(len_ADJECTIVES)] + " " + COLOURS[_random(len_COLOURS)] + " " + NOUNS[_random(len_NOUNS)]
+    //     }
+    // }
 
     const data = new Array(count);
 
