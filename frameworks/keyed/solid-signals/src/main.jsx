@@ -1,4 +1,5 @@
-import { createRoot, createSignal, freeze, selectWhen } from 'solid-js'
+import { createSignal, freeze } from 'solid-js';
+import { render, selectWhen } from 'solid-js/dom';
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],
@@ -25,8 +26,10 @@ const Button = ({ id, text, fn }) =>
   </div>
 
 const App = () => {
+  let rowId;
   const [data, setData] = createSignal([]),
-    [selected, setSelected] = createSignal(null, (a, b) => a === b);
+    [selected, setSelected] = createSignal(null, (a, b) => a === b),
+    applySelection = selectWhen(selected, 'danger');
 
   return <div class='container'>
     <div class='jumbotron'><div class='row'>
@@ -41,14 +44,15 @@ const App = () => {
       </div></div>
     </div></div>
     <table class='table table-hover table-striped test-data'><tbody>
-      <For each={( data() )} transform={ selectWhen(selected, 'danger') }>{ row =>
-        <tr model={ row.id }>
-          <td class='col-md-1' textContent={ row.id } />
-          <td class='col-md-4'><a onClick={ select }>{ row.label }</a></td>
+      <For each={ data() } transform={ applySelection }>{ row => (
+        rowId = row.id,
+        <tr model={ rowId }>
+          <td class='col-md-1' textContent={ rowId } />
+          <td class='col-md-4'><a onClick={ select } textContent={ row.label() } /></td>
           <td class='col-md-1'><a onClick={ remove }><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
           <td class='col-md-6'/>
         </tr>
-      }</For>
+      )}</For>
     </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
@@ -106,4 +110,4 @@ const App = () => {
   }
 }
 
-createRoot(() => document.getElementById("main").appendChild(<App />))
+render(App, document.getElementById("main"));

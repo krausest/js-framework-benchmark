@@ -17,6 +17,17 @@ const selectRow = (selected, rows) => {
 }
 
 export default function({data, selected, run, runLots, add, update, clear, swapRows, remove, select}) {
+  let rowId;
+  const items = selectRow(selected, data.memoMap(row => (
+    rowId = row.id,
+    <tr model={rowId}>
+      <td class='col-md-1' textContent={rowId} />
+      <td class='col-md-4'><a onClick={select} textContent={row.label()} /></td>
+      <td class='col-md-1'><a onClick={remove}><span class='glyphicon glyphicon-remove' aria-hidden='true' /></a></td>
+      <td class='col-md-6'/>
+    </tr>
+  )));
+
   return <div class='container'>
     <div class='jumbotron'><div class='row'>
       <div class='col-md-6'><h1>KnockoutJSX-keyed</h1></div>
@@ -30,14 +41,7 @@ export default function({data, selected, run, runLots, add, update, clear, swapR
       </div></div>
     </div></div>
     <table class='table table-hover table-striped test-data'><tbody>{
-      selectRow(selected, data.memoMap(row =>
-        <tr model={row.id}>
-          <td class='col-md-1' textContent={row.id} />
-          <td class='col-md-4'><a onClick={select}>{row.label}</a></td>
-          <td class='col-md-1'><a onClick={remove}><span class='glyphicon glyphicon-remove' aria-hidden='true' /></a></td>
-          <td class='col-md-6'/>
-        </tr>
-      ))
+      items
     }</tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
