@@ -117,7 +117,7 @@ initialModel :: StdGen -> Model
 initialModel seed = Model
   { rows = mempty
   , selectedId = Nothing
-  , lastId = 1
+  , lastId = 0
   , seed = seed
   }
 
@@ -175,11 +175,13 @@ updateModel Swap model = noEff newModel
         then model { rows = swappedRows }
         else model
     swappedRows =
-      let
-        x = rows model IM.! 1
-        y = rows model IM.! 998
-      in
-        IM.insert 1 y (IM.insert 998 x (rows model))
+      case fst $ IM.findMin (rows model) of
+        minKey ->
+          let
+            x = rows model IM.! (minKey + 1)
+            y = rows model IM.! (minKey + 998)
+          in
+            IM.insert (minKey + 1) y (IM.insert (minKey + 998) x (rows model))
 
 updateModel (Select idx) model = noEff model { selectedId = Just idx }
 
@@ -213,7 +215,7 @@ viewTable m@Model{selectedId=idx} =
         (conditionalDanger i)
         [ td_
             [ class_ "col-md-1" ]
-            [ text (S.ms rId) ]
+            [ text (S.ms (rId + 1)) ]
         , td_
             [ class_ "col-md-4" ]
             [ a_ [class_ "lbl", onClick (Select i)] [text (rowTitle r)]
