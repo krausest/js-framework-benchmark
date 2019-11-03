@@ -1,4 +1,5 @@
-import { createRoot, createState, selectWhen } from 'solid-js';
+import { createState } from 'solid-js';
+import { render, selectWhen } from 'solid-js/dom';
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],
@@ -24,6 +25,7 @@ const Button = ({ id, text, fn }) =>
   </div>
 
 const App = () => {
+  let rowId;
   const [ state, setState ] = createState({ data: [], selected: null }),
     run = () => setState({ data: buildData(1000), selected: null }),
     runLots = () => setState({ data: buildData(10000), selected: null }),
@@ -35,7 +37,8 @@ const App = () => {
     remove = (e, id) => setState('data', d => {
       const idx = d.findIndex(d => d.id === id);
       return [...d.slice(0, idx), ...d.slice(idx + 1)];
-    });
+    }),
+    applySelection = selectWhen(() => state.selected, 'danger');
 
   return <div class='container'>
     <div class='jumbotron'><div class='row'>
@@ -50,17 +53,18 @@ const App = () => {
       </div></div>
     </div></div>
     <table class='table table-hover table-striped test-data'><tbody>
-      <For each={( state.data )} transform={ selectWhen(() => state.selected, 'danger') }>{ row =>
-        <tr model={ row.id }>
-          <td class='col-md-1' textContent={ row.id } />
-          <td class='col-md-4'><a onClick={ select }>{( row.label )}</a></td>
+      <For each={ state.data } transform={ applySelection }>{ row => (
+        rowId = row.id,
+        <tr model={ rowId }>
+          <td class='col-md-1' textContent={ rowId } />
+          <td class='col-md-4'><a onClick={ select } textContent={ row.label } /></td>
           <td class='col-md-1'><a onClick={ remove }><span class='glyphicon glyphicon-remove' aria-hidden='true' /></a></td>
           <td class='col-md-6'/>
         </tr>
-      }</For>
+      )}</For>
     </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
 }
 
-createRoot(() => document.getElementById("main").appendChild(<App />))
+render(App, document.getElementById("main"));
