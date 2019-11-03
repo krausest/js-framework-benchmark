@@ -1,13 +1,13 @@
 {
-  "name": "hyperapp-v1.2.0-js-benchmark",
+  "name": "hyperapp-v2.0.3-js-benchmark",
   "version": "1.0.0",
-  "description": "hyperapp v1.2.0 js benchmark",
+  "description": "hyperapp v2.0.3 js benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "hyperapp"
   },
   "dependencies": {
-    "hyperapp": "1.2.9"
+    "hyperapp": "2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
