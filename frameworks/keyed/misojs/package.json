@@ -1,0 +1,28 @@
+{
+  "name": "js-framework-benchmark-misojs-keyed",
+  "version": "1.0.0",
+  "description": "Benchmark for miso",
+  "author": "David Johnson",
+  "contributors": [
+    "Jens Krause",
+    "David Johnson"
+  ],
+  "js-framework-benchmark": {
+    "frameworkVersion": "1.1.0.0",
+    "customURL": "/"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "license": "Apache-2.0",
+  "scripts": {
+    "build-prod": "echo good to go",
+    "install": "echo good to go"
+  },
+  "keywords": [
+    "miso",
+    "javascript"
+  ]
+}
