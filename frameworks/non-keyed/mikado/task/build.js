@@ -58,7 +58,7 @@ const parameter = (function(opt){
     generate_exports: true,
     export_local_property_definitions: true,
     language_in: "ECMASCRIPT6_STRICT",
-    language_out: "ECMASCRIPT5_STRICT",
+    language_out: "ECMASCRIPT6_STRICT",
     process_closure_primitives: true,
     summary_detail_level: 3,
     warning_level: "VERBOSE",
@@ -88,7 +88,7 @@ const parameter = (function(opt){
     //formatting: "PRETTY_PRINT"
 });
 
-exec("java -jar node_modules/google-closure-compiler-java/compiler.jar" + parameter + " --js='src/*.js' --js='src/template/*.es6.js' --js='node_modules/mikado/src/*.js' --js='!src/*config.js'" + flag_str + " --js_output_file='dist/main.js' && exit 0", function(){
+exec("java -jar node_modules/google-closure-compiler-java/compiler.jar" + parameter + " --js='src/*.js' --js='src/template/*.es6.js' --js='node_modules/mikado/src/*.js'" + flag_str + " --js_output_file='dist/main.js' && exit 0", function(){
 
     console.log("Build Complete.");
 });
