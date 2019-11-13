@@ -5,25 +5,25 @@ import { buildData } from "./data.js";
 
 Mikado.once(document.getElementById("main"), app);
 
-const state = { "selected": {} };
+let data, state = {"selected": {}};
 const root = document.getElementById("tbody");
-const mikado = Mikado.new(root, item, {
+const view = new Mikado(root, item, {
     "reuse": false, "state": state
 })
-.route("run", () => { mikado.render(buildData(1000)) })
-.route("runlots", () => { mikado.render(buildData(10000)) })
-.route("add", () => { mikado.append(buildData(1000)) })
+.route("run", () => view.render(data = buildData(1000)))
+.route("runlots", () => view.render(buildData(10000)))
+.route("add", () => view.append(buildData(1000)))
 .route("update", () => {
-    for(let i = 0, len = mikado.length; i < len; i += 10){
-        mikado.data(i).label += " !!!";
-        mikado.refresh(i);
+    for(let i = 0, len = view.length, item; i < len; i += 10){
+        (item = data[i]).label += " !!!";
+        view.update(i, item);
     }
 })
-.route("clear", () => { mikado.clear() })
-.route("swaprows", () => { mikado.swap(1, 998) })
-.route("remove", target => { mikado.remove(target) })
+.route("clear", () => view.clear())
+.route("swaprows", () => view.swap(1, 998))
+.route("remove", target => view.remove(target))
 .route("select", target => {
-    state["selected"].className = "";
-    (state["selected"] = target).className = "danger";
+    state.selected.className = "";
+   (state.selected = target).className = "danger";
 })
 .listen("click");
