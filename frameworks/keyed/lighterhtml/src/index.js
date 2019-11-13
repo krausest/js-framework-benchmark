@@ -1,4 +1,4 @@
-import { html, render } from '../node_modules/lighterhtml/esm/index';
+import { html, render } from '../node_modules/lighterhtml/esm/index.js';
 
 const adjectives = [
   'pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
@@ -80,62 +80,60 @@ const _random = max => {
 
 const container = document.getElementById('container');
 const _render = () => {
-  render(container, template);
-};
-
-const template = () => html.for(container)`
-<div class="container">
-  <div class="jumbotron">
-    <div class="row">
-      <div class="col-md-6">
-        <h1>lighterhtml</h1>
-      </div>
-      <div class="col-md-6">
-        <div class="row">
-          <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="run" onclick=${run}>Create 1,000 rows</button>
-          </div>
-          <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="runlots" onclick=${runLots}>Create 10,000 rows</button>
-          </div>
-          <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary
-                        btn-block" id="add" onclick=${add}>Append 1,000 rows</button>
-          </div>
-          <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary
-                        btn-block" id="update" onclick=${update}>Update every 10th row</button>
-          </div>
-          <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary
-                        btn-block" id="clear" onclick=${clear}>Clear</button>
-          </div>
-          <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary
-                        btn-block" id="swaprows" onclick=${swapRows}>Swap Rows</button>
+  render(container, html.for(container)`
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>lighterhtml</h1>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary btn-block" id="run" onclick=${run}>Create 1,000 rows</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary btn-block" id="runlots" onclick=${runLots}>Create 10,000 rows</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary
+                          btn-block" id="add" onclick=${add}>Append 1,000 rows</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary
+                          btn-block" id="update" onclick=${update}>Update every 10th row</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary
+                          btn-block" id="clear" onclick=${clear}>Clear</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary
+                          btn-block" id="swaprows" onclick=${swapRows}>Swap Rows</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <table onclick=${interact} class="table table-hover table-striped test-data">
-    <tbody>${data.map(item => html.for(item)`
-      <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
-        <td class="col-md-1">${item.id}</td>
-        <td data-interaction='select' class="col-md-4">
-          <a data-interaction='select'>${item.label}</a>
-        </td>
-        <td data-interaction='delete' class="col-md-1">
-          <a data-interaction='delete'>
-            <span data-interaction='delete' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-          </a>
-        </td>
-        <td class="col-md-6"></td>
-      </tr>`)
-    }
-    </tbody>
-  </table>
-  <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
-</div>`;
+    <table onclick=${interact} class="table table-hover table-striped test-data">
+      <tbody>${data.map(item => html.for(item)`
+        <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
+          <td class="col-md-1">${item.id}</td>
+          <td data-interaction='select' class="col-md-4">
+            <a data-interaction='select'>${item.label}</a>
+          </td>
+          <td data-interaction='delete' class="col-md-1">
+            <a data-interaction='delete'>
+              <span data-interaction='delete' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </a>
+          </td>
+          <td class="col-md-6"></td>
+        </tr>`)
+      }
+      </tbody>
+    </table>
+    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+  </div>`);
+};
 
 _render();
