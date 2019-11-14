@@ -27,27 +27,24 @@ const clear = () => {
 };
 const interact = event => {
   event.preventDefault();
-  event.stopPropagation();
-  const {target} = event;
-  const id = +target.closest('tr').id;
-  if (target.getAttribute('data-interaction') === 'delete') {
-    del(id)
-  } else {
-    select(id)
+  const a = event.target.closest('a');
+  const id = parseInt(a.closest('tr').id, 10);
+  const idx = data.findIndex(item => item.id === id);
+  switch (a.dataset.action) {
+    case 'delete':
+      data.splice(idx, 1);
+      _render();
+      break;
+    case 'select':
+      if (selected !== idx) {
+        if (-1 < selected)
+          data[selected] = { ...data[selected], selected: false };
+        selected = idx;
+        data[selected] = { ...data[selected], selected: true };
+        _render();
+      }
+      break;
   }
-};
-const del = id => {
-  const idx = data.findIndex(d => d.id === id);
-  data.splice(idx, 1)
-  _render();
-};
-const select = id => {
-  if (selected > -1) {
-    data[selected] = { ...data[selected], selected: false };
-  }
-  selected = data.findIndex(d => d.id === id);
-  data[selected] = { ...data[selected], selected: true };
-  _render();
 };
 const swapRows = () => {
   if (data.length > 998) {
@@ -117,14 +114,14 @@ const _render = () => {
     </div>
     <table onclick=${interact} class="table table-hover table-striped test-data">
       <tbody>${data.map(item => html`
-        <tr id=${item.id} class=${item.selected ? 'danger' : ''}>
+        <tr data=${item} class=${item.selected ? 'danger' : ''}>
           <td class="col-md-1">${item.id}</td>
-          <td data-interaction='select' class="col-md-4">
-            <a data-interaction='select'>${item.label}</a>
+          <td class="col-md-4">
+            <a data-action='select'>${item.label}</a>
           </td>
-          <td data-interaction='delete' class="col-md-1">
-            <a data-interaction='delete'>
-              <span data-interaction='delete' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <td class="col-md-1">
+            <a data-action='delete'>
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
             </a>
           </td>
           <td class="col-md-6"></td>
