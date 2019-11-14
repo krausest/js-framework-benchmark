@@ -26,7 +26,8 @@ export function buildData(count){
         data[i] = {
 
             "id": _nextId++,
-            "label": ADJECTIVES[_random(len_ADJECTIVES)] + " " + COLOURS[_random(len_COLOURS)] + " " + NOUNS[_random(len_NOUNS)]
+            "label": ADJECTIVES[_random(len_ADJECTIVES)] + " " + COLOURS[_random(len_COLOURS)] + " " + NOUNS[_random(len_NOUNS)],
+            "selected": ""
         };
     }
 
