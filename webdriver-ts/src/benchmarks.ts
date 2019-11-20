@@ -182,6 +182,12 @@ const benchRemove = new class extends Benchmark {
         }
         await testTextContains(driver, '//tbody/tr[5]/td[1]', '10');
         await testTextContains(driver, '//tbody/tr[4]/td[1]', '4');
+
+        // Click on a row the second time
+        await testTextContains(driver, `//tbody/tr[6]/td[1]`, '11');
+        await clickElementByXPath(driver, `//tbody/tr[6]/td[3]/a/span[1]`);
+        await testTextContains(driver, `//tbody/tr[6]/td[1]`, '12');
+
     }
     async run(driver: WebDriver) {
         await clickElementByXPath(driver, "//tbody/tr[4]/td[3]/a/span[1]");
@@ -392,7 +398,7 @@ class BenchStartup extends Benchmark {
             type: BenchmarkType.STARTUP,
         })
     }
-    async init(driver: WebDriver) { // not used with lighthouse 
+    async init(driver: WebDriver) { // not used with lighthouse
     }
     async run(driver: WebDriver, framework: FrameworkData) {
         // not used with lighthouse
