@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lighterhtml": "^2.0.1"
+    "lighterhtml": "^2.0.2"
   },
   "devDependencies": {
     "@ungap/degap": "^0.1.4",
