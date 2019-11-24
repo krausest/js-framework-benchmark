@@ -5,25 +5,27 @@ import { buildData } from "./data.js";
 
 Mikado.once(document.getElementById("main"), app);
 
-let data, state = {"selected": {}};
+let data = [], selected = 0;
 const root = document.getElementById("tbody");
-const view = new Mikado(root, item, {
-    "reuse": true, "state": state
-})
+const view = new Mikado(root, item)
 .route("run", () => view.render(data = buildData(1000)))
 .route("runlots", () => view.render(buildData(10000)))
 .route("add", () => view.append(buildData(1000)))
 .route("update", () => {
-    for(let i = 0, len = view.length, item; i < len; i += 10){
-        (item = data[i]).label += " !!!";
-        view.update(i, item);
+    for(let i = 0; i < data.length; i += 10){
+        data[i].label += " !!!";
+        view.update(i, data[i]);
     }
 })
 .route("clear", () => view.clear())
-.route("swaprows", () => view.swap(1, 998))
+.route("swaprows", () => {
+    const tmp = data[998];
+    view.update(998, data[998] = data[1]);
+    view.update(1, data[1] = tmp);
+})
 .route("remove", target => view.remove(target))
 .route("select", target => {
-    state.selected.className = "";
-    (state.selected = target).className = "danger";
+    view.update(selected, data[selected]);
+    view.update(selected = view.index(target), data[selected], selected);
 })
 .listen("click");
