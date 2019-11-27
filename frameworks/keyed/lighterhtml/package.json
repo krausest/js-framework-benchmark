@@ -24,11 +24,11 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lighterhtml": "^2.0.2"
+    "lighterhtml": "2.0.7"
   },
   "devDependencies": {
     "@ungap/degap": "^0.1.4",
-    "rollup": "^1.27.0",
+    "rollup": "^1.27.5",
     "rollup-plugin-includepaths": "^0.2.3",
     "rollup-plugin-minify-html-literals": "^1.2.2",
     "rollup-plugin-node-resolve": "^5.2.0",
