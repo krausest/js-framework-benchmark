@@ -17,9 +17,9 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "ganic": "^2.1.0",
-    "ganic-dom": "^2.1.2",
-    "ganic-usex": "^2.1.3"
+    "ganic": "^2.1.2",
+    "ganic-dom": "^2.1.7",
+    "ganic-usex": "^2.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
