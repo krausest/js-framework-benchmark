@@ -1,137 +1,135 @@
-import { bind, wire } from "hyperhtml";
+import { bind, wire } from '../node_modules/hyperhtml/esm/index.js';
 
-import { startMeasure, stopMeasure } from "./utils";
-import { Store } from "./store";
+let did = 1;
+const buildData = (count) => {
+    const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+    const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+    const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+    const data = [];
+    for (let i = 0; i < count; i++) {
+        data.push({
+            id: did++,
+            label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)]
+        });
+    }
+    return data;
+};
 
-const rows = new WeakMap;
-const store = new Store();
-const render = bind(document.querySelector("#main"));
-app(render);
+const _random = max => Math.round(Math.random() * 1000) % max;
 
-//
+const scope = {
+    add() {
+        scope.data = scope.data.concat(buildData(1000));
+        update(scope);
+    },
+    run() {
+        scope.data = buildData(1000);
+        update(scope);
+    },
+    runLots() {
+        scope.data = buildData(10000);
+        update(scope);
+    },
+    clear() {
+        scope.data = [];
+        update(scope);
+    },
+    update() {
+        const {data} = scope;
+        for (let i = 0, {length} = data; i < length; i += 10)
+            data[i].label += ' !!!';
+        update(scope);
+    },
+    swapRows() {
+        const {data} = scope;
+        if (data.length > 998) {
+            const tmp = data[1];
+            data[1] = data[998];
+            data[998] = tmp;
+        }
+        update(scope);
+    },
+    interact(event) {
+      event.preventDefault();
+      const a = event.target.closest('a');
+      const id = parseInt(a.closest('tr').id, 10);
+      scope[a.dataset.action](id);
+    },
+    delete(id) {
+        const {data} = scope;
+        const idx = data.findIndex(d => d.id === id);
+        data.splice(idx, 1);
+        update(scope);
+    },
+    select(id) {
+        scope.selected = id;
+        update(scope);
+    },
+    selected: -1,
+    data: [],
+};
 
-function app(render) {
+const render = bind(document.getElementById('main'));
+update(scope);
+
+function update({data, selected, run, runLots, add, update, clear, swapRows, interact}) {
   render`
-    <div class="container">
-      <div class="jumbotron">
-        <div class="row">
-          <div class="col-md-6">
-            <h1>hyper(HTML) v2.4.0</h1>
-          </div>
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>lighterhtml</h1>
+        </div>
         <div class="col-md-6">
           <div class="row">
             <div class="col-sm-6 smallpad">
-              <button type="button" class="btn btn-primary btn-block" id="run" onclick=${run}>Create 1,000 rows</button>
+              <button type="button" class="btn btn-primary btn-block"
+                      id="run" onclick=${run}>Create 1,000 rows</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type="button" class="btn btn-primary btn-block" id="runlots" onclick=${runLots}>Create 10,000 rows</button>
+              <button type="button" class="btn btn-primary btn-block"
+                      id="runlots" onclick=${runLots}>Create 10,000 rows</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type="button" class="btn btn-primary btn-block" id="add" onclick=${add}>Append 1,000 rows</button>
+              <button type="button" class="btn btn-primary btn-block"
+                      id="add" onclick=${add}>Append 1,000 rows</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type="button" class="btn btn-primary btn-block" id="update" onclick=${update}>Update every 10th row</button>
+              <button type="button" class="btn btn-primary btn-block"
+                      id="update" onclick=${update}>Update every 10th row</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type="button" class="btn btn-primary btn-block" id="clear" onclick=${clear}>Clear</button>
+              <button type="button" class="btn btn-primary btn-block"
+                      id="clear" onclick=${clear}>Clear</button>
             </div>
             <div class="col-sm-6 smallpad">
-               <button type="button" class="btn btn-primary btn-block" id="swaprows" onclick=${swapRows}>Swap Rows</button>
+              <button type="button" class="btn btn-primary btn-block"
+                      id="swaprows" onclick=${swapRows}>Swap Rows</button>
             </div>
           </div>
         </div>
       </div>
-     </div>
-     <table class="table table-hover table-striped test-data">
-       <tbody>
-         ${store.data.map(row)}
-       </tbody>
-     </table>
-     <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
-    </div>`;
-
-  stopMeasure();
-}
-
-function run() {
-  startMeasure("run");
-  store.run();
-  app(render);
-}
-
-function runLots() {
-  startMeasure("runLots");
-  store.runLots();
-  app(render);
-}
-
-function add() {
-  startMeasure("add");
-  store.add();
-  app(render);
-}
-
-function update() {
-  startMeasure("update");
-  store.update();
-  app(render);
-}
-
-function clear() {
-  startMeasure("clear");
-  store.clear();
-  app(render);
-}
-
-function swapRows() {
-  startMeasure("swapRows");
-  store.swapRows();
-  app(render);
-}
-
-function remove(id) {
-  startMeasure("delete");
-  store.delete(id);
-  app(render);
-}
-
-function select(id) {
-  startMeasure("select");
-  store.select(id);
-  app(render);
-}
-
-function row(state) {
-  const view = rows.get(state) || createRow(state);
-  return view.render`
-  <tr class=${view.class(store.selected)}>
-    <td class="col-md-1">${state.id}</td>
-    <td class="col-md-4">
-      <a onclick=${view.onselect}>${state.label}</a>
-    </td>
-    <td class="col-md-1">
-      <a onclick=${view.onremove}>
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-      </a>
-    </td>
-    <td class="col-md-6"></td>
-  </tr>
-  `;
-}
-
-function createRow(state) {
-  const row = {
-    render: wire(state),
-    class(selected) {
-      return state.id === selected ? 'danger' : '';
-    },
-    onremove() {
-      remove(state.id);
-    },
-    onselect() {
-      select(state.id);
-    }
-  };
-  rows.set(state, row);
-  return row;
+    </div>
+    <table onclick=${interact} class="table table-hover table-striped test-data">
+      <tbody>${
+      data.map(item => {
+        const {id, label} = item;
+        return wire(item)`
+        <tr id=${id} class=${id === selected ? 'danger' : ''}>
+          <td class="col-md-1">${id}</td>
+          <td class="col-md-4">
+            <a data-action='select'>${label}</a>
+          </td>
+          <td class="col-md-1">
+            <a data-action='delete'>
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </a>
+          </td>
+          <td class="col-md-6"></td>
+        </tr>`;
+      })
+      }</tbody>
+    </table>
+    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+  </div>`;
 }
