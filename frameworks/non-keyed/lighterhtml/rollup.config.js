@@ -20,7 +20,7 @@ export default {
         "@ungap/trim": "./node_modules/@ungap/degap/trim.js"
       },
     }),
-    resolve({module: true}),
+    resolve(),
     terser()
   ],
   context: 'null',
