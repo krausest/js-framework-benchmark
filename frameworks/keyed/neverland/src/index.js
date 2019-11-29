@@ -1,23 +1,21 @@
+import {State} from 'js-framework-benchmark-utils';
 import {
   neverland as $, html, render,
-  useCallback,
-  useMemo,
-  useReducer
-} from '../node_modules/neverland/esm/index.js';
-
-import {Scope, listReducer} from './utils.js';
-
+  useCallback, useMemo, useReducer
+} from 'neverland';
 
 const GlyphIcon = () => html`<span class="glyphicon glyphicon-remove" aria-hidden="true" />`;
 
-const Row = $(({item, dispatch, selected}) => {
-  const select = useCallback(() => dispatch({type: 'select', id: item.id}), [item]),
-    remove = useCallback(() => dispatch({type: 'delete', id: item.id}), [item]);
+const Row = $(({data, item, dispatch, selected}) => {
+  const {id, label} = item;
 
-  return html.for(item)`
+  const select = useCallback(() => dispatch({type: 'select', id}), [id]),
+    remove = useCallback(() => dispatch({type: 'remove', id}), [id]);
+
+  return html.for(data, id)`
     <tr class=${selected ? "danger" : ""}>
-      <td class="col-md-1">${item.id}</td>
-      <td class="col-md-4"><a onclick=${select}>${item.label}</a></td>
+      <td class="col-md-1">${id}</td>
+      <td class="col-md-4"><a onclick=${select}>${label}</a></td>
       <td class="col-md-1"><a onclick=${remove}>${GlyphIcon()}</a></td>
       <td class="col-md-6" />
     </tr>
@@ -50,8 +48,30 @@ const Jumbotron = ({dispatch}) => html`
   </div>
 `;
 
+// This is a bit awkward, but also necessary because all methods in the State
+// are self-bound, meaning these will refer to an older state when changes happen.
+// With this update, the list reducer will refer always
+// to the updated object instead of the previously shallow copied one.
+let state = State($ => {state = $});
+
+// As result, the listReducer will always return a shallow copy of the initial state,
+// instead of returning a copy of the previous shallow copy that won't be referenced.
+const listReducer = (_, action) => {
+  const {type} = action;
+  switch (type) {
+    case 'remove':
+    case 'select':
+      state[type](action.id);
+      break;
+    default:
+      state[type]();
+      break;
+  }
+  return {...state};
+};
+
 const Main = $(() => {
-  const [state, dispatch] = useReducer(listReducer, Scope);
+  const [{data, selected}, dispatch] = useReducer(listReducer, state);
   const jumbotron = useMemo(() => Jumbotron({dispatch}), []);
 
   return html`
@@ -59,7 +79,7 @@ const Main = $(() => {
       ${jumbotron}
       <table class="table table-hover table-striped test-data">
         <tbody>
-        ${state.data.map(item => Row({item, dispatch, selected: item.id === state.selected}))}
+        ${data.map(item => Row({data, item, dispatch, selected: item.id === selected}))}
         </tbody>
       </table>
       <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
