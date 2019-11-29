@@ -1,4 +1,4 @@
-import { html } from '../../node_modules/heresy/esm/index.js';
+import {html} from 'heresy';
 
 import Button from './button.js';
 import Row from './row.js';
@@ -6,18 +6,23 @@ import Row from './row.js';
 export default {
   extends: 'div',
   includes: {Button, Row},
-  mappedAttributes: ['scope'],
+  mappedAttributes: ['state'],
   oninit() {
     this.classList.add('container');
   },
-  onscope() {
+  onstate() {
     this.render();
+  },
+  onclick({target}) {
+    const a = target.closest('a');
+    const {action} = a.dataset;
+    this.state[action](+a.closest('tr').id);
   },
   render() {
     const {
-      run, runLots, add, update, clear, swapRows,
-      interact, data, selected
-    } = this.scope;
+      data, selected,
+      run, runLots, add, update, clear, swapRows
+    } = this.state;
     this.html`
     <div class="jumbotron">
       <div class="row">
@@ -36,10 +41,10 @@ export default {
         </div>
       </div>
     </div>
-    <table onclick=${interact} class="table table-hover table-striped test-data">
+    <table onclick=${this} class="table table-hover table-striped test-data">
       <tbody>
       ${data.map(({id, label}) => html`
-        <Row id=${id} class=${id === selected ? 'danger' : ''} .label=${label} />
+        <Row id=${id} class=${id === selected ? 'danger' : ''} label=${label} />
       `)}
       </tbody>
     </table>
