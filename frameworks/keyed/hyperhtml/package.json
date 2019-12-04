@@ -12,7 +12,8 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "hyperhtml": "2.31.5"
+    "hyperhtml": "2.31.5",
+    "js-framework-benchmark-utils": "0.2.5"
   },
   "devDependencies": {
     "@ungap/degap": "^0.1.4",
