@@ -1,7 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import includePaths from 'rollup-plugin-includepaths';
 import minifyHTML from 'rollup-plugin-minify-html-literals';
-import { terser } from 'rollup-plugin-terser';
+import {terser} from 'rollup-plugin-terser';
 
 export default {
   input: 'src/index.js',

@@ -24,11 +24,12 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "neverland": "3.0.4"
+    "js-framework-benchmark-utils": "0.2.5",
+    "neverland": "3.1.2"
   },
   "devDependencies": {
     "@ungap/degap": "^0.1.4",
-    "rollup": "^1.27.4",
+    "rollup": "^1.27.6",
     "rollup-plugin-includepaths": "^0.2.3",
     "rollup-plugin-minify-html-literals": "^1.2.2",
     "rollup-plugin-node-resolve": "^5.2.0",
