@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "domdiff": "2.2.0"
+    "domdiff": "2.2.0",
+    "js-framework-benchmark-utils": "0.2.5"
   },
   "devDependencies": {
     "rollup": "^1.27.0",
