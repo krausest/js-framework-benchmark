@@ -14,7 +14,7 @@ export default {
       <a data-action='select'>${label}</a>
     </td>
     <td class="col-md-1">
-      <a data-action='delete'>
+      <a data-action='remove'>
         <span class="glyphicon glyphicon-remove" aria-hidden="true" />
       </a>
     </td>
