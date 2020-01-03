@@ -41,22 +41,28 @@
     </div>
     <table class='table table-hover table-striped test-data'>
       <tbody>
-        <tr each={ row in state.rows } class={ rowClass(row) }>
-          <td class='col-md-1'>{ row.id }</td>
-          <td class='col-md-4'>
-            <a onclick={ () => select(row) }>{ row.label }</a>
-          </td>
-          <td class='col-md-1'>
-            <a onclick={ () => remove(row) }><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>
-          </td>
-          <td class='col-md-6'></td>
+        <tr
+          is='row'
+          each={row in state.rows}
+          key={row.id}
+          {...{
+            row,
+            removeRow: removeRow(row),
+            selectRow: selectRow(row),
+            class: rowClass(row)
+          }}
+          >
         </tr>
       </tbody>
     </table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
   </div>
   <script>
+    import Row from './row.riot'
     export default {
+      components: {
+        Row
+      },
       onBeforeMount(props) {
         this.store = props.store
         this.state = {
@@ -79,17 +85,21 @@
         this.renderWithNewState()
         stopMeasure()
       },
-      remove(item) {
-        startMeasure('remove')
-        this.store.delete(item.id)
-        this.renderWithNewState()
-        stopMeasure()
+      removeRow(item) {
+        return () => {
+          startMeasure('remove')
+          this.store.delete(item.id)
+          this.renderWithNewState()
+          stopMeasure()
+        }
       },
-      select(item) {
-        startMeasure('select')
-        this.store.select(item.id)
-        this.renderWithNewState()
-        stopMeasure()
+      selectRow(item) {
+        return () => {
+          startMeasure('select')
+          this.store.select(item.id)
+          this.renderWithNewState()
+          stopMeasure()
+        }
       },
       run() {
         startMeasure('run')
