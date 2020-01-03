@@ -1,10 +1,10 @@
 <row>
   <td class='col-md-1'>{ props.row.id }</td>
   <td class='col-md-4'>
-    <a onclick={ props.selectRow }>{ props.row.label }</a>
+    <a onclick={ props.select(props.row) }>{ props.row.label }</a>
   </td>
   <td class='col-md-1'>
-    <a onclick={ props.removeRow }><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>
+    <a onclick={ props.remove(props.row) }><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>
   </td>
   <td class='col-md-6'></td>
 

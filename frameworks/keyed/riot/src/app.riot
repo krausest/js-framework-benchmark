@@ -47,8 +47,8 @@
           key={row.id}
           {...{
             row,
-            removeRow: removeRow(row),
-            selectRow: selectRow(row),
+            remove,
+            select,
             class: rowClass(row)
           }}
           >
@@ -85,7 +85,7 @@
         this.renderWithNewState()
         stopMeasure()
       },
-      removeRow(item) {
+      remove(item) {
         return () => {
           startMeasure('remove')
           this.store.delete(item.id)
@@ -93,7 +93,7 @@
           stopMeasure()
         }
       },
-      selectRow(item) {
+      select(item) {
         return () => {
           startMeasure('select')
           this.store.select(item.id)
