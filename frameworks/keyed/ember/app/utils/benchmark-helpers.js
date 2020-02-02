@@ -1,5 +1,15 @@
-import EmberObject from '@ember/object';
-import { A } from '@ember/array';
+import { tracked } from '@glimmer/tracking';
+
+class TodoItem {
+    @tracked label;
+    @tracked selected;
+    @tracked id
+    constructor({label,selected, id}) {
+        this.label = label;
+        this.selected = selected;
+        this.id = id;
+    }
+}
 
 const _random = (max) => {
     return Math.round(Math.random() * 1000) % max;
@@ -7,7 +17,7 @@ const _random = (max) => {
 
 const updateData = (data, mod = 10) => {
     for (let i = 0; i < data.length; i += mod) {
-        data[i].setProperties({ label: data[i].label + ' !!!' })
+        data[i].label =  data[i].label + ' !!!' ;
     }
     return data;
 }
@@ -28,10 +38,10 @@ export const buildData = (id, count = 1000) => {
       "table", "chair", "house", "bbq", "desk", "car", "pony", "cookie",
       "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
-    var data = A();
+    var data = [];
 
     for (var i = 0; i < count; i++)
-        data.push(EmberObject.create({
+        data.push(new TodoItem({
           id: id++,
           selected: false,
           label: adjectives[_random(adjectives.length)]
@@ -41,12 +51,12 @@ export const buildData = (id, count = 1000) => {
             + nouns[_random(nouns.length)]
         }));
 
-    return EmberObject.create({data, id});
+    return {data, id};
 }
 
 export const add = (id, data) => {
     const newData = buildData(id, 1000);
-    data.pushObjects(newData.data);
+    return [ ...data, ...newData.data];
 }
 
 export const run = (id) => {
@@ -73,7 +83,7 @@ export const swapRows = (data) => {
 
 export const deleteRow = (data, id) => {
     return data.filter(d => {
-        return d.id != id
+        return d.id !== id
     });
 }
 
