@@ -11,7 +11,7 @@
     "ngc": "ngc",
     "preclosure": "rimraf dist",
     "closure": "google-closure-compiler --flagfile closure.conf",
-    "build-prod": "npm run ngc && npm run rollup",
+    "build-prod": "npm run ngc && npm run closure",
     "rollup": "rollup -c rollup.config.js",
     "build-dev": "npm run ngc && npm run rollup"
   },
