@@ -1,20 +1,5 @@
 const Datum = require('Datum');
 
-var startTime;
-var lastMeasure;
-
-var startMeasure = function (name) {
-    startTime = performance.now();
-    lastMeasure = name;
-};
-
-var stopMeasure = function () {
-    window.setTimeout(function () {
-        var stop = performance.now();
-        console.log(lastMeasure + " took " + (stop - startTime));
-    }, 0);
-};
-
 var HomeViewModel = function () {
 
     this.data = [];
@@ -48,48 +33,36 @@ var HomeViewModel = function () {
     }
 
     this.run = new Datum.Click(function () {
-        startMeasure("run");
         this.data = buildData(1000);
         selected(null);
-        stopMeasure();
     });
 
     this.runLots = new Datum.Click(function () {
-        startMeasure("runLots");
         this.data = buildData(10000);
         selected(null);
-        stopMeasure();
     });
 
     this.add = new Datum.Click(function () {
-        startMeasure("add");
         this.data.push.apply(this.data, buildData(1000));
-        stopMeasure();
     });
 
     this.update = new Datum.Click(function () {
-        startMeasure("update");
         for (var i = 0; i < this.data.length; i += 10) {
             this.data[i].update();
         }
-        stopMeasure();
     });
 
     this.clear = new Datum.Click(function () {
-        startMeasure("clear");
         this.data = [];
         selected(null);
-        stopMeasure();
     });
 
     this.swapRows = new Datum.Click(function () {
-        startMeasure("swapRows");
         if (this.data.length > 998) {
             var a = this.data[1];
             var b = this.data.splice(998, 1, a)[0];
             this.data.splice(1, 1, b);
         }
-        stopMeasure();
     });
 
     function ItemViewModel(id, itemLabel) {
@@ -108,17 +81,13 @@ var HomeViewModel = function () {
         };
 
         this.del = new Datum.Click(function () {
-            startMeasure("delete");
             var index = self.data.indexOf(this);
             self.data.splice(index, 1);
-            stopMeasure();
         });
 
         this.select = new Datum.Binding({
             click: function() {
-                startMeasure("select");
                 selected(this);
-                stopMeasure();
             },
             classes: {
                 danger: function() {

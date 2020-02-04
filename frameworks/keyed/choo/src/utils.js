@@ -1,25 +1,4 @@
 exports.buildData = buildData;
-exports.startMeasure = startMeasure;
-exports.stopMeasure = stopMeasure;
-
-let startTime;
-let lastMeasure;
-function startMeasure(name) {
-  startTime = performance.now();
-  lastMeasure = name;
-}
-
-function stopMeasure() {
-  const last = lastMeasure;
-  if (lastMeasure) {
-    window.setTimeout(function metaStopMeasure() {
-      lastMeasure = null;
-      const stop = performance.now();
-      const duration = 0;
-      console.log(last + ' took ' + (stop - startTime));
-    }, 0);
-  }
-}
 
 //
 

@@ -7,24 +7,6 @@ interface Data {
   label: string;
 }
 
-let startTime: number;
-let lastMeasure: string;
-let startMeasure = function (name: string) {
-  startTime = performance.now();
-  lastMeasure = name;
-};
-let stopMeasure = function () {
-  var last = lastMeasure;
-  if (lastMeasure) {
-    window.setTimeout(function () {
-      lastMeasure = null;
-      var stop = performance.now();
-      var duration = 0;
-      console.log(last + ' took ' + (stop - startTime));
-    }, 0);
-  }
-};
-
 @Component({
   selector: 'my-app',
   template: `
@@ -86,7 +68,7 @@ let stopMeasure = function () {
           <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
       </div>`
 })
-export class AppComponent implements AfterViewChecked {
+export class AppComponent {
   data: Array<Data> = [];
   selected: number = undefined;
   id: number = 1;
@@ -123,7 +105,6 @@ export class AppComponent implements AfterViewChecked {
   }
 
   select(item: Data, event: Event) {
-    startMeasure('select');
     event.preventDefault();
     this.selected = item.id;
     this.appRef.tick();
@@ -131,7 +112,6 @@ export class AppComponent implements AfterViewChecked {
 
   delete(item: Data, event: Event) {
     event.preventDefault();
-    startMeasure('delete');
     for (let i = 0, l = this.data.length; i < l; i++) {
       if (this.data[i].id === item.id) {
         this.data.splice(i, 1);
@@ -142,19 +122,16 @@ export class AppComponent implements AfterViewChecked {
   }
 
   run() {
-    startMeasure('run');
     this.data = this.buildData();
     this.appRef.tick();
   }
 
   add() {
-    startMeasure('add');
     this.data = this.data.concat(this.buildData(1000));
     this.appRef.tick();
   }
 
   update() {
-    startMeasure('update');
     for (let i = 0; i < this.data.length; i += 10) {
       this.data[i].label += ' !!!';
     }
@@ -162,31 +139,24 @@ export class AppComponent implements AfterViewChecked {
   }
 
   runLots() {
-    startMeasure('runLots');
     this.data = this.buildData(10000);
     this.selected = undefined;
     this.appRef.tick();
   }
 
   clear() {
-    startMeasure('clear');
     this.data = [];
     this.selected = undefined;
     this.appRef.tick();
   }
 
   swapRows() {
-    startMeasure('swapRows');
     if (this.data.length > 998) {
       var a = this.data[1];
       this.data[1] = this.data[998];
       this.data[998] = a;
     }
     this.appRef.tick();
-  }
-
-  ngAfterViewChecked() {
-    stopMeasure();
   }
 }
 

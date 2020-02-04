@@ -1,19 +1,6 @@
 import app, { Component } from 'apprun'
 import Store from './store';
 
-var startTime;
-var lastMeasure;
-var startMeasure = function (name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function () {
-    window.setTimeout(function () {
-        var stop = performance.now();
-        console.log(lastMeasure + " took " + (stop - startTime));
-    }, 0);
-}
-
 const store = new Store();
 
 const update = {
@@ -143,19 +130,13 @@ document.body.addEventListener('click', e => {
     if (!t) return;
     if (t.tagName === 'BUTTON' && t.id) {
         e.preventDefault();
-        startMeasure(t.id);
         component.run(t.id);
-        stopMeasure();
     } else if (t.matches('.remove')) {
         e.preventDefault();
-        startMeasure('remove');
         component.run('remove', getId(t));
-        stopMeasure();
     } else if (t.matches('.lbl')) {
         e.preventDefault();
-        startMeasure('select');
         component.run('select', getId(t));
-        stopMeasure();
     }
 });
 

@@ -14,34 +14,6 @@ import {
   swapRows
 } from './store';
 
-
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-    performance.mark('mark_start_'+name);
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function() {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            var stop = performance.now();
-            var duration = 0;
-            performance.mark('mark_end_' + last);
-            window.performance.measure('measure_' + last, 'mark_start_' + last, 'mark_end_' + last);
-            var items = performance.getEntriesByType('measure');
-            for (var i = 0; i < items.length; ++i) {
-                var req = items[i];
-                duration = req.duration;
-                console.log(req.name + ' took ' + req.duration + 'ms');
-            }
-            performance.clearMeasures();
-        }, 0);
-    }
-}
-
 export class Row extends React.Component {
     constructor(props) {
         super(props);
@@ -84,8 +56,6 @@ export class Controller extends React.Component{
         this.runLots = this.runLots.bind(this);
         this.clear = this.clear.bind(this);
         this.swapRows = this.swapRows.bind(this);
-        this.componentDidUpdate = this.componentDidUpdate.bind(this);
-        this.componentDidMount = this.componentDidMount.bind(this);
         this.start = 0;
     }
     shouldComponentUpdate(nextProps, nextState) {
@@ -95,45 +65,28 @@ export class Controller extends React.Component{
         const nextSelected= nextProps.selected;
         return data !== nextData||selected!=nextSelected;
     }
-    printDuration() {
-        stopMeasure();
-    }
-    componentDidUpdate() {
-        this.printDuration();
-    }
-    componentDidMount() {
-        this.printDuration();
-    }
     run() {
-        startMeasure("run");
         this.props.run();
     }
     add() {
-        startMeasure("add");
         this.props.add();
     }
     update() {
-        startMeasure("updater");
         this.props.update();
     }
     select(id) {
-        startMeasure("select");
         this.props.select(id);
     }
     delete(id) {
-        startMeasure("delete");
         this.props.remove(id);
     }
     runLots() {
-        startMeasure("runLots");
         this.props.runLots();
     }
     clear() {
-        startMeasure("clear");
         this.props.clear();
     }
     swapRows() {
-        startMeasure("swapRows");
         this.props.swapRows();
     }
     render () {
