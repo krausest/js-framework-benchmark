@@ -20,12 +20,12 @@
 		"url": "https://github.com/krausest/js-framework-benchmark.git"
 	},
 	"devDependencies": {
-		"webpack": "^4.39.1",
-		"webpack-cli": "^3.3.6"
+		"webpack": "4.39.1",
+		"webpack-cli": "3.3.6"
 	},
 	"dependencies": {
-		"moon": "^1.0.0-beta.4",
-		"moon-compiler": "^1.0.0-beta.4",
-		"moon-loader": "^0.1.0"
+		"moon": "1.0.0-beta.4",
+		"moon-compiler": "1.0.0-beta.4",
+		"moon-loader": "0.1.0"
 	}
 }
