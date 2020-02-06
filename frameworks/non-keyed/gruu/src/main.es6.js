@@ -2,24 +2,6 @@ import Gruu from 'gruujs'
 import { Store } from './Store.es6'
 
 const mainStore = new Store()
-var startTime
-var lastMeasure
-
-const startMeasure = (name) => {
-  startTime = performance.now()
-  lastMeasure = name
-}
-
-const stopMeasure = () => {
-  var last = lastMeasure
-  if (lastMeasure) {
-    window.setTimeout(() => {
-      lastMeasure = null
-      const stop = performance.now()
-      console.log(last + ' took ' + (stop - startTime))
-    }, 0)
-  }
-}
 
 const store = (
   <$
@@ -31,17 +13,13 @@ const store = (
 )
 
 const exec = (name) => (...v) => {
-  startMeasure(name)
   mainStore[name](...v)
   store.state.data = mainStore.data
-  stopMeasure()
 }
 
 const select = (id) => {
-  startMeasure('select')
   mainStore.select(id)
   store.state.selected = mainStore.selected
-  stopMeasure()
 }
 
 const table = (

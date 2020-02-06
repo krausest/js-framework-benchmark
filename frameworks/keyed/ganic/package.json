@@ -17,16 +17,16 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "ganic": "^2.1.2",
-    "ganic-dom": "^2.1.7",
-    "ganic-usex": "^2.1.4"
+    "ganic": "2.1.2",
+    "ganic-dom": "2.1.7",
+    "ganic-usex": "2.1.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.4",
-    "@babel/plugin-transform-react-jsx": "^7.7.4",
-    "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/preset-env": "^7.7.4",
-    "@babel/runtime": "^7.7.4",
+    "@babel/core": "7.7.4",
+    "@babel/plugin-transform-react-jsx": "7.7.4",
+    "@babel/plugin-transform-runtime": "7.6.2",
+    "@babel/preset-env": "7.7.4",
+    "@babel/runtime": "7.7.4",
     "babel-loader": "8.0.6",
     "terser-webpack-plugin": "1.3.0",
     "webpack": "4.34.0",

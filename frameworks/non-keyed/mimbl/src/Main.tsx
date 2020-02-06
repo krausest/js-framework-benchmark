@@ -4,25 +4,6 @@ import {Store} from "./Store"
 import {TBody} from"./TBody"
 
 
-// var startTime;
-// var lastMeasure;
-// var startMeasure = function(name) {
-//     //console.timeStamp(name);
-//     startTime = performance.now();
-//     lastMeasure = name;
-// }
-// var stopMeasure = function() {
-//     var last = lastMeasure;
-//     if (lastMeasure) {
-//         window.setTimeout(function () {
-//             lastMeasure = null;
-//             var stop = performance.now();
-//             var duration = 0;
-//             console.log(last+" took "+(stop-startTime));
-//         }, 0);
-//     }
-// }
-
 export class Main extends mim.Component implements IMainContainer
 {
     store: Store;
@@ -32,74 +13,54 @@ export class Main extends mim.Component implements IMainContainer
     {
         super();
 
-        this.store = new Store();        
+        this.store = new Store();
         this.tbody = new TBody( this);
 
         (window as any).app = this;
     }
 
-    // schedulePrintDuration() {
-    //     this.callMe( () => stopMeasure(), false);
-    // }
-
     run = () =>
     {
-        // startMeasure("run");
         this.tbody.run();
-        // this.schedulePrintDuration();
     }
-    
+
     add = () =>
     {
-        // startMeasure("add");
         this.tbody.add();
-        // this.schedulePrintDuration();
     }
-    
+
     update = () =>
     {
-        // startMeasure("update");
         this.tbody.update();
-        // this.schedulePrintDuration();
     }
-    
+
     runLots = () =>
     {
-        // startMeasure("runLots");
         this.tbody.runLots();
-        // this.schedulePrintDuration();
     }
-    
+
     clear = () =>
     {
-        // startMeasure("clear");
         this.tbody.clear();
         this.tbody = new TBody( this);
         this.updateMe();
-        // this.schedulePrintDuration();
     }
-    
+
     swapRows = () =>
     {
-        // startMeasure("swapRows");
         this.tbody.swapRows();
-        // this.schedulePrintDuration();
     }
-    
+
     onSelectRowClicked( row)
     {
-        // startMeasure("select");
         this.tbody.onSelectRowClicked(row);
-        // this.schedulePrintDuration();
     }
-    
+
     onDeleteRowClicked( row)
     {
-        // startMeasure("delete");
         this.tbody.onDeleteRowClicked(row);
-        // this.schedulePrintDuration();
     }
-    
+
     render()
     {
         return (<div class="container">

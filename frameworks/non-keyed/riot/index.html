@@ -7,25 +7,6 @@
 </head>
 <body>
  <div id="app"></div>
-<script>
-var startTime
-var lastMeasure
-var startMeasure = function(name) {
-  startTime = performance.now()
-  lastMeasure = name
-}
-var stopMeasure = function() {
-  var last = lastMeasure
-  if (lastMeasure) {
-    window.setTimeout(function () {
-      lastMeasure = null
-      var stop = performance.now()
-      var duration = 0
-      console.log(last+' took '+(stop-startTime))
-    }, 0)
-  }
-}
-</script>
 <script src='dist/main.js'></script>
 </body>
 </html>

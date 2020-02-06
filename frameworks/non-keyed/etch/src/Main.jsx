@@ -5,24 +5,6 @@ var etch = require('etch');
 const {Row} = require('./Row');
 const {Store} = require('./Store');
 
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function() {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            var stop = performance.now();
-            var duration = 0;
-            console.log(last+" took "+(stop-startTime));
-        }, 0);
-    }
-}
-
 export class Main {
     constructor(props, children) {
         this.props = props;
@@ -43,48 +25,38 @@ export class Main {
     }
 
     update (props, children) {
-        return etch.update(this).then(() => {
-            stopMeasure();
-        });
+        return etch.update(this);
     }
 
     run() {
-        startMeasure("run");
         this.store.run();
         this.update();
     }
     add() {
-        startMeasure("add");
         this.store.add();
         this.update();
     }
     updateRows() {
-        startMeasure("update");
         this.store.update();
         this.update();
     }
     select(id) {
-        startMeasure("select");
         this.store.select(id);
         this.update();
     }
     delete(id) {
-        startMeasure("delete");
         this.store.delete(id);
         this.update();
     }
     runLots() {
-        startMeasure("runLots");
         this.store.runLots();
         this.update();
     }
     clear() {
-        startMeasure("clear");
         this.store.clear();
         this.update();
     }
     swapRows() {
-        startMeasure("swapRows");
         this.store.swapRows();
         this.update();
     }

@@ -11,65 +11,31 @@ let rowState = new State();
 
 let rowStore = new RowStore(rowState);
 
-let startTime;
-let lastMeasure;
-let startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-let stopMeasure = function() {
-    let last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            let stop = performance.now();
-            let duration = 0;
-            console.log(last+" took "+(stop-startTime));
-        }, 0);
-    }
-}
-
 class BenchmarkElement extends UI.Element {
 
     extraNodeAttributes(attr) {
         attr.addClass("container");
     }
 
-    printDuration() {
-        stopMeasure();
-    }
     run() {
-        startMeasure("run");
         rowStore.run();
-        this.printDuration();
     }
     add() {
-        startMeasure("add");
         rowStore.add();
-        this.printDuration();
     }
     update() {
-        startMeasure("update");
         rowStore.update();
-        this.printDuration();
     }
     select(id) {
-        startMeasure("select");
         rowStore.select(id);
-        this.printDuration();
     }
     runLots() {
-        startMeasure("runLots");
         rowStore.runLots();
-        this.printDuration();
     }
     clear() {
-        startMeasure("clear");
         rowStore.clear();
-        this.printDuration();
     }
     swapRows() {
-        startMeasure("swapRows");
         if (this.tbody.getGivenChildren().length > 998) {
             const i = 1;
             const j = 998;
@@ -87,7 +53,6 @@ class BenchmarkElement extends UI.Element {
             obj_i.refresh();
             obj_j.refresh();
         }
-        this.printDuration();
     }
 
     rowFromStateObject(stateObject) {
