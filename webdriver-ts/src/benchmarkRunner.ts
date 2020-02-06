@@ -14,7 +14,7 @@ function forkedRun(frameworks: FrameworkData[], frameworkName: string, keyed: bo
             const forked = fork('dist/forkedBenchmarkRunner.js');
             if (config.LOG_DEBUG) console.log("forked child process");
             forked.send({ config, frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions });
-            forked.on('message', (msg) => {
+            forked.on('message', (msg: ErrorAndWarning) => {
                 if (config.LOG_DEBUG) console.log("main process got message from child", msg);
                 resolve(msg);
             });
@@ -131,7 +131,7 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
 
 // FIXME: Clean up args.
 // What works: npm run bench keyed/react, npm run bench -- keyed/react, npm run bench -- keyed/react --count 1 --benchmark 01_
-// What doesn't work (keyed/react becomes an element of argument benchmark): npm run bench -- --count 1 --benchmark 01_ keyed/react   
+// What doesn't work (keyed/react becomes an element of argument benchmark): npm run bench -- --count 1 --benchmark 01_ keyed/react
 
 let args = yargs(process.argv)
     .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError] \n or: $0 [directory1] [directory2] .. [directory3] \n or: $0 installed")
