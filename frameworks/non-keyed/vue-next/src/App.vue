@@ -2,7 +2,7 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Vue.js 3.0.0-alpha4 (keyed)</h1>
+                <h1>Vue.js 3.0.0-alpha4 (non-keyed)</h1>
             </div>
             <div class="col-md-6">
                 <div class="row">
@@ -32,7 +32,6 @@
         <tbody>
             <tr
                 v-for="row in rows"
-                :key="row.id"
                 :class="{'danger': row.id === selected}">
                 <td class="col-md-1">{{row.id}}</td>
                 <td class="col-md-4">
