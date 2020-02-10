@@ -8,7 +8,7 @@
     "David Johnson"
   ],
   "js-framework-benchmark": {
-    "frameworkVersion": "1.3.0",
+    "frameworkVersion": "1.4.0",
     "customURL": "/dist-bundle"
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark",
