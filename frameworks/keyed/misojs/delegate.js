@@ -44,15 +44,13 @@ window['delegateEvent'] = function delegateEvent (event, obj, stack, parentStack
 
   /* stack not length 1, recurse */
   else if (stack.length > 1) {
-    if (obj['domRef'] === stack[0]) parentStack.unshift(obj);
+    parentStack.unshift(obj);
     for (var o = 0; o < obj.children.length; o++) {
-      if (obj.children[o]['type'] === 'vtext') continue;
-      delegateEvent ( event
-		    , obj.children[o]
-		    , stack.slice(1)
-		    , parentStack
-		    );
-     }
+      if (obj.children[o]['domRef'] === stack[1]) {
+        delegateEvent( event, obj.children[o], stack.slice(1), parentStack );
+        break;
+      }
+    }
   }
 
   /* stack.length == 1 */
