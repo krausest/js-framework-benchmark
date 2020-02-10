@@ -212,11 +212,7 @@ window['syncChildren'] = function syncChildren(os, ns, parent, doc) {
       window['diff'](null, nFirst, parent, doc);
       /* insertBefore's semantics will append a node if the second argument provided is `null` or `undefined`.
          Otherwise, it will insert node['domRef'] before oLast['domRef']. */
-      if (!oLast) {
-        parent.insertBefore(nFirst['domRef'], oFirst['domRef']);
-      } else {
-        parent.insertBefore(oLast['domRef'], nFirst['domRef']);
-      }
+      parent.insertBefore(nFirst['domRef'], oFirst ? oFirst['domRef'] : null);
       os.splice(newFirstIndex, 0, nFirst);
       newFirstIndex++;
     }
@@ -225,12 +221,11 @@ window['syncChildren'] = function syncChildren(os, ns, parent, doc) {
        -> [ ] <- new children
     */
     else if (newFirstIndex > newLastIndex) {
-      tmp = oldLastIndex - oldFirstIndex;
-      while (tmp >= 0) {
-        parent.removeChild(os[oldFirstIndex]['domRef']);
-        os.splice(oldFirstIndex, 1);
-        tmp--;
+      tmp = oldLastIndex;
+      while (oldLastIndex >= oldFirstIndex) {
+        parent.removeChild(os[oldLastIndex--]['domRef']);
       }
+      os.splice(oldFirstIndex, tmp - oldFirstIndex + 1);
       break;
     }
     /* happy path, everything aligns, we continue
@@ -249,7 +244,7 @@ window['syncChildren'] = function syncChildren(os, ns, parent, doc) {
        -> [ c b a ] <- new children
     */
     else if (oFirst['key'] === nLast['key'] && nFirst['key'] === oLast['key']) {
-      window['swapDomRefs'](node, oFirst['domRef'], oLast['domRef'], parent);
+      window['swapDomRefs'](node, oLast['domRef'], oFirst['domRef'], parent);
       window['swap'](os, oldFirstIndex, oldLastIndex);
       window['diff'](os[oldFirstIndex++], ns[newFirstIndex++], parent, doc);
       window['diff'](os[oldLastIndex--], ns[newLastIndex--], parent, doc);
@@ -322,10 +317,10 @@ window['syncChildren'] = function syncChildren(os, ns, parent, doc) {
       if (found) {
         /* Move item to correct position */
         os.splice(oldFirstIndex,0, os.splice(tmp,1)[0]);
-        /* Swap DOM references */
-        parent.insertBefore(node['domRef'], os[oldFirstIndex]['domRef']);
         /* optionally perform `diff` here */
         window['diff'](os[oldFirstIndex++], nFirst, parent, doc);
+        /* Swap DOM references */
+        parent.insertBefore(node['domRef'], os[oldFirstIndex]['domRef']);
         /* increment counters */
         newFirstIndex++;
       }
