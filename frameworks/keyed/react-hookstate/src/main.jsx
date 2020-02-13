@@ -26,29 +26,23 @@ function buildData(count) {
 }
 
 const globalState = createStateLink({});
+let selectedState = undefined;
 
 const GlyphIcon = <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>;
 
-const Row = ({ itemState, selectedRef }) => {
+const Row = ({ itemState }) => {
     const state = useStateLink(itemState).with(Downgraded);
     const item = state.value;
     const select = () => {
-        if (selectedRef.current && selectedRef.current.value) {
-            selectedRef.current.set(p => {
-                p.selected = false;
-                return p;
-            })
+        if (selectedState && selectedState.nested) {
+            selectedState.nested.selected.set(false)
         }
-        selectedRef.current = state
-
-        state.set(p => {
-            p.selected = true;
-            return p;
-        })
+        selectedState = state
+        selectedState.nested.selected.set(true)
     };
     const remove = () => state.set(None);
 
-    return (<tr className={item.selected ? "danger" : ""}>
+    return (<tr key={item.id} className={item.selected ? "danger" : ""}>
         <td className="col-md-1">{item.id}</td>
         <td className="col-md-4"><a onClick={select}>{item.label}</a></td>
         <td className="col-md-1"><a onClick={remove}>{GlyphIcon}</a></td>
@@ -116,13 +110,11 @@ const Jumbotron = () => {
 
 const Rows = () => {
     const dataState = useStateLink(globalState);
-    const selectedRef = React.useRef();
 
     return (<table className="table table-hover table-striped test-data"><tbody>
-        {dataState.keys.map(itemKey => {
-            const itemState = dataState.nested[itemKey];
-            return <Row key={itemKey} itemState={itemState} selectedRef={selectedRef} />
-        })}
+        {dataState.keys.map(itemKey =>
+            <Row key={itemKey} itemState={dataState.nested[itemKey]} />
+        )}
     </tbody></table>)
 }
 

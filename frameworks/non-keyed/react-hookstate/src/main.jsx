@@ -1,13 +1,6 @@
-'use strict';
-/** @jsx preact.h */
-
-var preact = require('preact');
-var React = require('react');
-var hookstate = require('@hookstate/core');
-
-var { render } = preact;
-var { useStateLink, createStateLink, None, Downgraded } = hookstate;
-
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { useStateLink, createStateLink, None, Downgraded } from '@hookstate/core';
 
 function random(max) { return Math.round(Math.random() * 1000) % max; }
 
@@ -49,7 +42,7 @@ const Row = ({ itemState }) => {
     };
     const remove = () => state.set(None);
 
-    return (<tr key={item.id} className={item.selected ? "danger" : ""}>
+    return (<tr className={item.selected ? "danger" : ""}>
         <td className="col-md-1">{item.id}</td>
         <td className="col-md-4"><a onClick={select}>{item.label}</a></td>
         <td className="col-md-1"><a onClick={remove}>{GlyphIcon}</a></td>
@@ -69,7 +62,7 @@ const Jumbotron = () => {
     return (<div className="jumbotron">
         <div className="row">
             <div className="col-md-6">
-                <h1>Preact Hookstate keyed</h1>
+                <h1>React Hookstate keyed</h1>
             </div>
             <div className="col-md-6">
                 <div className="row">
@@ -133,4 +126,4 @@ const Main = () => {
     </div>);
 }
 
-render(<Main />, document.getElementById('main'));
+ReactDOM.render(<Main />, document.getElementById('main'));
