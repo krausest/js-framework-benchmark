@@ -18,19 +18,28 @@ let allArgs = args._.length<=2 ? [] : args._.slice(2,args._.length);
 
 console.log("args.framework", args.framework, !args.framework);
 let runBenchmarksFromDirectoryNamesArgs = !args.framework;
-    
+
 // necessary to launch without specifiying a path
 var chromedriver:any = require('chromedriver');
 
 let init = `
 window.nonKeyedDetector_reset = function() {
-    window.nonKeyedDetector_tradded = 0;
-    window.nonKeyedDetector_trremoved = 0;
-    window.nonKeyedDetector_removedStoredTr = 0;
+    window.nonKeyedDetector_tradded = [];
+    window.nonKeyedDetector_trremoved = [];
+    window.nonKeyedDetector_removedStoredTr = [];
 }
 
 window.nonKeyedDetector_setUseShadowDom = function(useShadowDom ) {
     window.nonKeyedDetector_shadowRoot = useShadowDom;
+}
+
+function countDiff(list1, list2) {
+    let s = new Set(list1);
+    for (let o of list2) {
+        s.delete(o);
+    }
+    debugger;
+    return s.size;
 }
 
 window.nonKeyedDetector_instrument = function() {
@@ -43,14 +52,15 @@ window.nonKeyedDetector_instrument = function() {
     var target = node.querySelector('table.table');
     if (!target) return false;
 
-    function countTRInNodeList(nodeList) {
-        let trCount = 0;
+    function filterTRInNodeList(nodeList) {
+        let trs = [];
         nodeList.forEach(n => {
             if (n.tagName==='TR') {
-                trCount += 1 + countTRInNodeList(n.childNodes);
+                trs.push(n);
+                trs = trs.concat(filterTRInNodeList(n.childNodes));
             }
         });
-        return trCount;
+        return trs;
     }
 
     function countSelectedTRInNodeList(nodeList) {
@@ -66,9 +76,9 @@ window.nonKeyedDetector_instrument = function() {
     var observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             if (mutation.type === 'childList') {
-                nonKeyedDetector_tradded += countTRInNodeList(mutation.addedNodes);
-                nonKeyedDetector_trremoved += countTRInNodeList(mutation.removedNodes);
-                nonKeyedDetector_removedStoredTr += countSelectedTRInNodeList(mutation.removedNodes)
+                nonKeyedDetector_tradded = nonKeyedDetector_tradded.concat(filterTRInNodeList(mutation.addedNodes));
+                nonKeyedDetector_trremoved = nonKeyedDetector_trremoved.concat(filterTRInNodeList(mutation.removedNodes));
+                nonKeyedDetector_removedStoredTr = nonKeyedDetector_removedStoredTr.concat(filterTRInNodeList(mutation.removedNodes));
             }
             // console.log(mutation.type, mutation.addedNodes.length, mutation.removedNodes.length, mutation);
         });
@@ -79,7 +89,7 @@ window.nonKeyedDetector_instrument = function() {
     return true;
 }
 window.nonKeyedDetector_result = function() {
-    return {tradded: nonKeyedDetector_tradded, trremoved: nonKeyedDetector_trremoved, removedStoredTr: nonKeyedDetector_removedStoredTr};
+    return {tradded: nonKeyedDetector_tradded.length, trremoved: nonKeyedDetector_trremoved.length, removedStoredTr: nonKeyedDetector_removedStoredTr.length, newNodes: countDiff(window.nonKeyedDetector_tradded, window.nonKeyedDetector_trremoved)};
 }
 window.nonKeyedDetector_storeTr = function() {
     let node = document;
@@ -111,11 +121,15 @@ function isKeyedRemove(result: any, shouldBeKeyed:boolean): boolean {
     return r;
 }
 function isKeyedSwapRow(result: any, shouldBeKeyed:boolean): boolean {
-    let r = result.tradded>0 && result.trremoved>0;
+    let r = result.tradded>0 && result.trremoved>0 && (!shouldBeKeyed || result.newNodes == 0);
     if ((r && !shouldBeKeyed)) {
         console.log(`Non-keyed test for swap failed. Expected than no TRs are added or removed, but there were ${result.tradded} added and ${result.trremoved} removed`);
     } else if (!r && shouldBeKeyed) {
-        console.log(`Keyed test for swap failed. Expected at least 1 added and 1 removed TR, but there were ${result.tradded} added and ${result.trremoved} removed`);
+        if (result.newNodes > 0) {
+            console.log(`Keyed test for swap failed. Swap must add the TRs that it removed, but there were ${result.newNodes} new nodes`);
+        } else {
+            console.log(`Keyed test for swap failed. Expected at least 1 added and 1 removed TR, but there were ${result.tradded} added and ${result.trremoved} removed`);
+        }
     }
     return r;
 }
