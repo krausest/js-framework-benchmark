@@ -92,10 +92,12 @@
                 that.set("selected", undefined);
             });
             this.on('swapRows', function (event) {
-                if(this.get('data').length > 998) {
-                    var a = this.get('data')[1];
-                    this.splice('data', 1, 1, this.get('data')[998]);
-                    this.splice('data', 998, 1, a);
+                const data = this.get('data');
+                if (data.length > 998) {
+                    const a = data[1];
+                    data.splice(1, 1, data[998]);
+                    data.splice(998, 1, a);
+                    this.set('data', data, { shuffle: true });
                 }
             });
         },
