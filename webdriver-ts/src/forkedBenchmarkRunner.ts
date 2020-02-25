@@ -419,11 +419,6 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
                 console.log("driver timerstamp *")
             await driver.executeScript("console.timeStamp('initBenchmark')");
 
-            if (framework.name.startsWith("scarletsframe")) {
-                console.log("adding sleep for scarletsframe");
-                await driver.sleep(1000);
-            }
-
             await initBenchmark(driver, benchmark, framework);
             if (benchmark.throttleCPU) {
                 console.log("CPU slowdown", benchmark.throttleCPU);
@@ -473,11 +468,6 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
             await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
             await driver.executeScript("console.timeStamp('initBenchmark')");
-
-            if (framework.name.startsWith("scarletsframe")) {
-                console.log("adding sleep for scarletsframe");
-                await driver.sleep(1000);
-            }
 
             await initBenchmark(driver, benchmark, framework);
             if (benchmark.throttleCPU) {
