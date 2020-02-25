@@ -1,10 +1,10 @@
 {
   "name": "js-framework-benchmark-scarletsframe",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ScarletsFrame demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": ""
+    "frameworkVersion": "scarletsframe"
   },
   "scripts": {
     "build-dev": "webpack -w -d",
@@ -21,7 +21,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "scarletsframe": "0.10.6",
+    "raw-loader": "^4.0.0",
+    "scarletsframe": "0.25.1",
     "webpack": "^4.29.2"
   },
   "devDependencies": {
