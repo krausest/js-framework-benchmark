@@ -1,0 +1,25 @@
+{
+  "name": "jfb-reaml-react",
+  "version": "0.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "reaml:react"
+  },
+  "scripts": {
+    "build-prod": "bsb -clean-world && bsb -make-world && rollup -c --environment production"
+  },
+  "author": "Utkarsh Kukreti",
+  "license": "MIT",
+  "dependencies": {
+    "react": "16.12.0",
+    "react-dom": "16.12.0",
+    "reaml": "0.12.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "11.0.2",
+    "@rollup/plugin-node-resolve": "7.1.1",
+    "@rollup/plugin-replace": "2.3.1",
+    "bs-platform": "7.1.1",
+    "rollup": "1.31.1",
+    "rollup-plugin-terser": "5.2.0"
+  }
+}
