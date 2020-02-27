@@ -46,7 +46,7 @@ sf.model.for('bench-mark', function(self){
             self.selectedItem.selected = false;
 
         // Select current item
-        item.selected = truNe;
+        item.selected = true;
         self.selectedItem = item;
     }
 

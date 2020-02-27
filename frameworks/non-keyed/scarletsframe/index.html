@@ -42,10 +42,10 @@
             <tr sf-repeat-this="x in list" class="{{ x.selected ? 'danger' : '' }}">
               <td class="col-md-1">{{ x.id }}</td>
               <td class="col-md-4">
-                <a class="lbl" @click="b_select(#x)">{{ x.label }}</a>
+                <a class="lbl" @click="b_select(x)">{{ x.label }}</a>
               </td>
               <td class="col-md-1">
-               <a class="remove" @click="b_remove(#x)">
+               <a class="remove" @click="b_remove(x)">
                  <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
                </a>
               </td>
