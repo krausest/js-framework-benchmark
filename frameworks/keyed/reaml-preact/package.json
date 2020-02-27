@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "preact": "10.3.2",
-    "reaml": "0.12.2"
+    "reaml": "0.12.3"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "3.0.1",
