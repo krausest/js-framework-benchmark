@@ -14,8 +14,8 @@ export default {
   plugins: [
     alias({
       entries: [
-        { find: 'react', replacement: './preact.js' },
-        { find: 'react-dom', replacement: './preact.js' },
+        { find: 'react', replacement: 'reaml/preact' },
+        { find: 'react-dom', replacement: 'reaml/preact' },
       ],
     }),
     replace({
