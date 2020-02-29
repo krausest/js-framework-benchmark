@@ -71,8 +71,7 @@ module Store = struct
       { state with data }
     | Select id -> { state with selected = Some id }
 
-  let use =
-   fun [@reaml.hook] () ->
+  let[@reaml.hook] use () =
     let[@reaml] state, dispatch = R.useReducer reducer { data = [||]; selected = None } in
     state, dispatch
 end
@@ -85,8 +84,7 @@ module Row = struct
     dispatch : Store.action -> unit;
   }
 
-  let make =
-   fun [@reaml.component.memo "Row"] { row; selected; dispatch } ->
+  let[@reaml.component.memo "Row"] make { row; selected; dispatch } =
     let onSelect _ = dispatch (Select row.id) in
     let onRemove _ = dispatch (Remove row.id) in
     R.tr
@@ -143,8 +141,7 @@ let jumbotron (dispatch : Store.action -> unit) =
     ]
 
 module Main = struct
-  let make =
-   fun [@reaml.component "Main"] () ->
+  let[@reaml.component "Main"] make () =
     let[@reaml] state, dispatch = Store.use () in
     R.div [ R.class_ "container" ]
       [

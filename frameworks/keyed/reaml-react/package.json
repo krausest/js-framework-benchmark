@@ -12,14 +12,14 @@
   "dependencies": {
     "react": "16.13.0",
     "react-dom": "16.13.0",
-    "reaml": "0.12.3"
+    "reaml": "0.13.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "11.0.2",
     "@rollup/plugin-node-resolve": "7.1.1",
     "@rollup/plugin-replace": "2.3.1",
-    "bs-platform": "7.1.1",
-    "rollup": "1.31.1",
+    "bs-platform": "7.2.0",
+    "rollup": "1.32.0",
     "rollup-plugin-terser": "5.2.0"
   }
 }
