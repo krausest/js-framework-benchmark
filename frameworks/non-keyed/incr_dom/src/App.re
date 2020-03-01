@@ -116,7 +116,7 @@ let view = (model: Incr.t(Model.t), ~inject) => {
 
   let is_selected =
     switch (selected_item) {
-    | None => (_i => false)
+    | None => (_ => false)
     | Some(n) => ((item: Util.item) => phys_equal(item, n))
     };
 

@@ -29,16 +29,16 @@
     "build-prod": "esy b dune build --root . -j 3 --verbose --profile release"
   },
   "peerDependencies": {
-    "ocaml": "^4.7.0"
+    "ocaml": "^4.9.0"
   },
   "dependencies": {
-    "@opam/incr_dom": "v0.12.0",
+    "@opam/incr_dom": "v0.13.0",
     "@reason-native/console": "*"
   },
   "devDependencies": {
     "http-server": "*",
-    "@esy-ocaml/reason": "3.4.0",
-    "@opam/merlin": "3.2.2",
-    "refmterr": "3.1.10"
+    "@esy-ocaml/reason": "3.5.2",
+    "@opam/merlin": "3.3.3",
+    "refmterr": "3.3.0"
   }
 }

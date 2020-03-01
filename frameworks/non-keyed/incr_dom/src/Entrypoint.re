@@ -2,7 +2,7 @@ open! Core_kernel;
 open Incr_dom;
 open Util;
 
-Start_app.start(
+let () = Start_app.start(
   ~debug=is_debug,
   ~bind_to_element_with_id="main",
   (module App),
