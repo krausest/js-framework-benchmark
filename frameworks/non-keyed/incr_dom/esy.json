@@ -15,7 +15,7 @@
     "incr_dom"
   ],
   "esy": {
-    "build": "dune build --root . -j 3 --verbose --profile release",
+    "build": "dune build --root . -j 8 --verbose --profile release",
     "install": [
       "esy-installer js-framework-benchmark.install"
     ],
@@ -26,7 +26,7 @@
   "scripts": {
     "run": "esy x bash -c 'http-server #{self.bin}'",
     "build": "esy b",
-    "build-prod": "esy b dune build --root . -j 3 --verbose --profile release"
+    "build-prod": "esy b dune build --root . -j 8 --verbose --profile release"
   },
   "peerDependencies": {
     "ocaml": "^4.9.0"
