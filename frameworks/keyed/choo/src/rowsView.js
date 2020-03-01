@@ -1,6 +1,5 @@
 const html = require('choo/html');
 const utils = require('./utils');
-const startMeasure = utils.startMeasure;
 
 module.exports = function rowsView(state, emit) {
   const data = state.data;
@@ -41,14 +40,12 @@ function row(state, emit) {
 
 function del(id, emit) {
   return e => {
-    startMeasure('delete');
     emit('delete', { id: id });
   };
 }
 
 function click(id, emit) {
   return e => {
-    startMeasure('select');
     emit('select', { id: id });
   };
 }

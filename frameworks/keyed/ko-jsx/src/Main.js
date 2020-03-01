@@ -1,5 +1,5 @@
-import { root } from 'ko-jsx';
-import ko from 'knockout';
+import { render } from 'ko-jsx';
+import { observable, observableArray } from 'knockout';
 import template from './template';
 
 function _random(max) { return Math.round(Math.random() * 1000) % max; }
@@ -14,15 +14,15 @@ function buildData(count) {
   for (var i = 0; i < count; i++) {
     data.push({
       id: rowId++,
-      label: ko.observable(adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)])
+      label: observable(adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)])
     });
   }
   return data;
 }
 
 var HomeViewModel = function () {
-  const selected = ko.observable(null),
-    data = ko.observableArray();
+  const selected = observable(null),
+    data = observableArray();
 
   return {
     data,
@@ -66,6 +66,4 @@ var HomeViewModel = function () {
   }
 };
 
-root(function () {
-  document.getElementById('main').appendChild(template(new HomeViewModel()))
-});
+render(() => template(new HomeViewModel()), document.getElementById('main'))

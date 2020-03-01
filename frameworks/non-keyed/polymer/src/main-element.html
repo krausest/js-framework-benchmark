@@ -58,19 +58,6 @@
         </div>
     </template>
     <script>
-    var startTime;
-    var lastMeasure;
-
-    var startMeasure = function(name) {
-        startTime = performance.now();
-        lastMeasure = name;
-    };
-    var stopMeasure = function() {
-        window.setTimeout(function() {
-            var stop = performance.now();
-            console.log(lastMeasure+" took "+(stop-startTime));
-        }, 0);
-    };
 
     class MainElement extends Polymer.GestureEventListeners(Polymer.Element) {
         static get is() { return 'main-element' }
@@ -88,50 +75,34 @@
             }
         }
         add() {
-            startMeasure("add");
             this.data = this.data.concat(this.buildData(1000));
-            stopMeasure();
         }
         run() {
-            startMeasure("run");
             this.data = this.buildData(1000);
-            stopMeasure();
         }
         runLots() {
-            startMeasure("runLots");
             this.data = this.buildData(10000);
-            stopMeasure();
         }
         clear() {
-            startMeasure("clear");
             this.data = [];
-            stopMeasure();
         }
         del(e) {
-            startMeasure("delete");
             this.splice("data", e.model.index, 1);
-            stopMeasure();
         }
         select(e) {
-            startMeasure("select");
             this.selected = e.model.item.id;
-            stopMeasure();
         }
         swapRows() {
-            startMeasure("swapRows");
             if(this.data.length > 998) {
                 var tmp = this.data[1];
                 this.set(["data", 1], this.data[998]);
                 this.set(["data", 998], tmp);
             }
-            stopMeasure();
         }
         update() {
-            startMeasure("update");
             for (let i=0;i<this.data.length;i+=10) {
                 this.set(["data", i, "label"], this.data[i].label + ' !!!');
             }
-            stopMeasure();
         }
         rowClass(id, selected) {
             return id === selected ? "danger" : '';

@@ -22,10 +22,14 @@ export default {
     babel({
       exclude: 'node_modules/**',
       presets: [
-        [ "es2016" ]
+        [ "@babel/preset-env", {
+          "targets": {
+            "browsers": ["last 1 chrome versions"]
+          }
+        }]
       ],
       plugins: [
-        "external-helpers"
+        "@babel/plugin-external-helpers"
       ],
       runtimeHelpers: true,
       babelrc: false,

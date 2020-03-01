@@ -7,23 +7,6 @@
 var m = require('mithril');
 var {Store} = require('./store');
 
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-};
-var stopMeasure = function() {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            var stop = performance.now();
-            var duration = 0;
-            console.log(lastMeasure+" took "+(stop-startTime));
-        }, 0);
-    }
-};
-
 var Row = {
     oninit: function(vnode) {
             this.click = function() {
@@ -52,39 +35,28 @@ var Controller = {
             this.data = function() { return Store.data;};
             this.selected = function() { return Store.selected;};
             this.run = function() {
-                startMeasure("run")
                 Store.run();
             };
             this.add = function() {
-                startMeasure("add")
                 Store.add();
             };
             this.update = function() {
-                startMeasure("update")
                 Store.update();
             };
             this.select = function(id) {
-                startMeasure("select");
                 Store.select(id);
             };
             this.delete = function(id) {
-                startMeasure("delete")
                 Store.remove(id);
             };
             this.runLots = function() {
-                startMeasure("runLots")
                 Store.runLots();
             };
             this.clear = function() {
-                startMeasure("clear")
                 Store.clear();
             };
             this.swapRows = function() {
-                startMeasure("swapRows")
                 Store.swapRows();
-            };
-            this.done = function() {
-                stopMeasure();
             };
     },
 
@@ -98,7 +70,7 @@ var Controller = {
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-md-6">
-                        <h1>Mithril v1.1.1</h1>
+                        <h1>Mithril v2.0.4</h1>
                     </div>
                     <div class="col-md-6">
                         <div className="col-sm-6 smallpad">

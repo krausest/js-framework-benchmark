@@ -13,8 +13,6 @@ type main_actions_t =
   | CLEAR
   | SWAPROWS;
 
-let component = ReasonReact.reducerComponent("Main");
-
 let exclaim = (idx, d: Util.item) =>
   if (0 == idx mod 10) {
     {...d, label: d.label ++ " !!!"};
@@ -22,107 +20,119 @@ let exclaim = (idx, d: Util.item) =>
     d;
   };
 
-/*
- let exclaim_inplace = (arr: array(Util.item)) => {
-   let impl = (idx, d: Util.item) =>
-     if (0 == idx mod 10) {
-       arr[idx] = {...d, label: d.label ++ " !!!"};
-     };
-   impl;
- };
- */
+let reducer = (state: main_state_t, action: main_actions_t) => {
+  switch (action) {
+  | RUN => {...state, data: Util.build_data(1000)}
 
-let make = _children => {
-  ...component,
+  | RUNLOTS => {...state, data: Util.build_data(10000)}
 
-  initialState: () => {data: [||], selected: None},
+  | ADD => {
+      ...state,
+      data: Belt.Array.concat(state.data, Util.build_data(1000)),
+    }
 
-  reducer: (action: main_actions_t, state: main_state_t) =>
-    switch (action) {
-    | RUN => ReasonReact.Update({...state, data: Util.build_data(1000)})
+  | UPDATEEVERYTENTH =>
+    /*
+     Array.iteri(exclaim_inplace(state.data), state.data);
+     (state);
+     */
+    {...state, data: Array.mapi(exclaim, state.data)}
 
-    | RUNLOTS => ReasonReact.Update({...state, data: Util.build_data(10000)})
+  | SELECT(i) => {...state, selected: Some(i)}
 
-    | ADD =>
-      ReasonReact.Update({
-        ...state,
-        data: Belt.Array.concat(state.data, Util.build_data(1000)),
-      })
-
-    | UPDATEEVERYTENTH =>
-      /*
-       Array.iteri(exclaim_inplace(state.data), state.data);
-       ReasonReact.Update(state);
-       */
-      ReasonReact.Update({...state, data: Array.mapi(exclaim, state.data)})
-
-    | SELECT(i) => ReasonReact.Update({...state, selected: Some(i)})
-
-    | REMOVE(i) =>
-      let isnt_item = c => !(i === c);
-      switch (state.selected) {
-      | Some(n) when n === i =>
-        ReasonReact.Update({
-          selected: None,
-          data: Js.Array.filter(isnt_item, state.data),
-        })
-      | _ =>
-        ReasonReact.Update({
-          ...state,
-          data: Js.Array.filter(isnt_item, state.data),
-        })
-      };
-
-    | CLEAR => ReasonReact.Update({data: [||], selected: None})
-
-    | SWAPROWS =>
-      if (Array.length(state.data) > 998) {
-        let elem_1 = state.data[1];
-        let elem_2 = state.data[998];
-        state.data[1] = elem_2;
-        state.data[998] = elem_1;
-        ReasonReact.Update(state);
-      } else {
-        ReasonReact.NoUpdate;
+  | REMOVE(i) =>
+    let isnt_item = c => !(i === c);
+    switch (state.selected) {
+    | Some(n) when n === i => {
+        selected: None,
+        data: Js.Array.filter(isnt_item, state.data),
       }
-    },
+    | _ => {...state, data: Js.Array.filter(isnt_item, state.data)}
+    };
 
-  render: self => {
-    let sender = (message, _event) => self.send(message);
-    let is_selected =
-      switch (self.state.selected) {
-      | None => (_i => false)
-      | Some(n) => ((i: Util.item) => i === n)
+  | CLEAR => {data: [||], selected: None}
+
+  | SWAPROWS =>
+    if (Array.length(state.data) > 998) {
+      let elem_1 = state.data[1];
+      let elem_2 = state.data[998];
+      state.data[1] = elem_2;
+      state.data[998] = elem_1;
+      {...state, data: state.data};
+    } else {
+      {...state, data: state.data};
+    }
+  };
+};
+
+let initialState = {data: [||], selected: None};
+
+type cb_t = ReactEvent.Mouse.t => unit;
+
+type cb_record_t = {
+  run: cb_t,
+  runLots: cb_t,
+  add: cb_t,
+  update: cb_t,
+  clear: cb_t,
+  swapRows: cb_t,
+  onSelect: Util.item => unit,
+  onRemove: Util.item => unit,
+};
+
+let is_selected = (state, item: Util.item) => {
+  switch (state.selected) {
+  | None => false
+  | Some(it) => it === item
+  };
+};
+
+[@react.component]
+let make = () => {
+  let (state, dispatch) = React.useReducer(reducer, initialState);
+
+  let cb =
+    React.useMemo(() => {
+      let sender = (message: main_actions_t, _event) => dispatch(message);
+      {
+        run: sender(RUN),
+        runLots: sender(RUNLOTS),
+        add: sender(ADD),
+        update: sender(UPDATEEVERYTENTH),
+        clear: sender(CLEAR),
+        swapRows: sender(SWAPROWS),
+        onSelect: item => dispatch(SELECT(item)),
+        onRemove: item => dispatch(REMOVE(item)),
       };
+    });
 
-    <div className="container">
-      <Jumbotron
-        run={sender(RUN)}
-        runLots={sender(RUNLOTS)}
-        add={sender(ADD)}
-        update={sender(UPDATEEVERYTENTH)}
-        clear={sender(CLEAR)}
-        swapRows={sender(SWAPROWS)}
-      />
-      <table className="table table-hover table-striped test-data">
-        <tbody>
-          ...{Array.map(
-            (item: Util.item) =>
-              <Row
-                key={item.id |> string_of_int}
-                item
-                selected={is_selected(item)}
-                onSelect={sender(SELECT(item))}
-                onRemove={sender(REMOVE(item))}
-              />,
-            self.state.data,
-          )}
-        </tbody>
-      </table>
-      <span
-        className="preloadicon glyphicon glyphicon-remove"
-        ariaHidden=true
-      />
-    </div>;
-  },
+  <div className="container">
+    <Jumbotron
+      key="jumbotron"
+      run={cb.run}
+      runLots={cb.runLots}
+      add={cb.add}
+      update={cb.update}
+      clear={cb.clear}
+      swapRows={cb.swapRows}
+    />
+    <table className="table table-hover table-striped test-data">
+      <tbody>
+        {ReasonReact.array(
+           Array.map(
+             (item: Util.item) =>
+               <Row
+                 key={item.id |> string_of_int}
+                 item
+                 selected={item |> is_selected(state)}
+                 onSelect={cb.onSelect}
+                 onRemove={cb.onRemove}
+               />,
+             state.data,
+           ),
+         )}
+      </tbody>
+    </table>
+    <span className="preloadicon glyphicon glyphicon-remove" ariaHidden=true />
+  </div>;
 };

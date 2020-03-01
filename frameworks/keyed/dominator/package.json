@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-dominator",
+  "version": "1.0.0",
+  "description": "Benchmark for dominator",
+  "license": "ISC",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.5.0"
+  },
+  "scripts": {
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "build-prod-force": "rimraf bundled-dist pkg && webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@wasm-tool/wasm-pack-plugin": "^0.4.2",
+    "rimraf": "^2.6.3",
+    "webpack": "^4.35.0",
+    "webpack-cli": "^3.3.5"
+  }
+}

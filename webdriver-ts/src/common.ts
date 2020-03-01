@@ -8,13 +8,10 @@ export interface JSONResult {
         standardDeviation: number, median: number, values: Array<number>
 }
 
-export interface BenchmarkError {
-    imageFile : string;
-    exception : string
-}
+export type TBenchmarkStatus = 'OK'|'TEST_FAILED'|'TECHNICAL_ERROR';
 
-export interface ErrorsAndWarning {
-    errors: BenchmarkError[];
+export interface ErrorAndWarning {
+    error: String;
     warnings: String[];
 }
 
@@ -26,7 +23,6 @@ export interface BenchmarkDriverOptions {
 }
 
 export interface BenchmarkOptions extends BenchmarkDriverOptions {
-    outputDirectory: string;
     port: string;
     numIterationsForCPUBenchmarks: number;
     numIterationsForMemBenchmarks: number;
@@ -47,11 +43,14 @@ export let config = {
     LOG_DETAILS: false,
     LOG_DEBUG: false,
     LOG_TIMELINE: false,
-    EXIT_ON_ERROR: false,
+    EXIT_ON_ERROR: null as boolean, // set from command line
     STARTUP_DURATION_FROM_EVENTLOG: true,
     STARTUP_SLEEP_DURATION: 1000,
-    FORK_CHROMEDRIVER: true
+    FORK_CHROMEDRIVER: true,
+    WRITE_RESULTS: true,
+    RESULTS_DIRECTORY: "results"
 }
+export type TConfig = typeof config;
 
 export interface FrameworkData {
     name: string;
@@ -134,44 +133,61 @@ export interface IMatchPredicate {
 
 const matchAll : IMatchPredicate= (frameworkDirectory: string) => true;
 
-export function loadFrameworkVersionInformation(matchPredicate: IMatchPredicate = matchAll): FrameworkVersionInformation[] {
-    let result = new Array<FrameworkVersionInformation>();
+async function loadFrameworkInfo(pathInFrameworksDir: string): Promise<FrameworkVersionInformation> {
+    let keyedType: KeyedType;
+    let directory: string;
+    if (pathInFrameworksDir.startsWith("keyed")) {
+        keyedType = "keyed";
+        directory = pathInFrameworksDir.substring(6);
+    } else if (pathInFrameworksDir.startsWith("non-keyed")) {
+        keyedType = "non-keyed";
+        directory = pathInFrameworksDir.substring(10);
+    } else {
+        throw "pathInFrameworksDir must start with keyed or non-keyed, but is "+pathInFrameworksDir;
+    }
+    let frameworksPath = path.resolve('..','frameworks');
+    let packageJSONPath = path.resolve(frameworksPath, pathInFrameworksDir, 'package.json');
+    if (fs.existsSync(packageJSONPath)) {
+        let packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, 'utf8'));
+        if (packageJSON['js-framework-benchmark']) {
+            if (packageJSON['js-framework-benchmark']['frameworkVersionFromPackage']) {
+                return new FrameworkVersionInformationDynamic(keyedType, directory,
+                    packageJSON['js-framework-benchmark']['frameworkVersionFromPackage'].split(':'),
+                    packageJSON['js-framework-benchmark']['customURL'],
+                    packageJSON['js-framework-benchmark']['useShadowRoot']
+                );
+            } else if (typeof packageJSON['js-framework-benchmark']['frameworkVersion'] === 'string') {
+                return new FrameworkVersionInformationStatic(keyedType, directory,
+                    packageJSON['js-framework-benchmark']['frameworkVersion'],
+                    packageJSON['js-framework-benchmark']['customURL'],
+                    packageJSON['js-framework-benchmark']['useShadowRoot']
+                );
+            } else {
+                return new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'frameworkVersionFromPackage\' or \'frameworkVersion\' in the \'js-framework-benchmark\'.property');
+            }
+        } else {
+            return new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'js-framework-benchmark\' property');
+        }
+    } else {
+        return new FrameworkVersionInformationError(keyedType, directory, 'No package.json found');
+    }
+}
+
+export async function loadFrameworkVersionInformation(matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkVersionInformation[]> {
+    let results = new Array<Promise<FrameworkVersionInformation>>();
     let frameworksPath = path.resolve('..','frameworks');
     ['keyed','non-keyed'].forEach((keyedType: KeyedType) => {
         let directories = fs.readdirSync(path.resolve(frameworksPath, keyedType));
 
         for (let directory of directories) {
-            let frameworkPath = path.join(keyedType, directory);
-            if (matchPredicate(frameworkPath)) {
-                let packageJSONPath = path.resolve(frameworksPath, frameworkPath, 'package.json');
-                if (fs.existsSync(packageJSONPath)) {
-                    let packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, 'utf8'));
-                    if (packageJSON['js-framework-benchmark']) {
-                        if (packageJSON['js-framework-benchmark']['frameworkVersionFromPackage']) {
-                            result.push(new FrameworkVersionInformationDynamic(keyedType, directory,
-                                packageJSON['js-framework-benchmark']['frameworkVersionFromPackage'].split(':'),
-                                packageJSON['js-framework-benchmark']['customURL'],
-                                packageJSON['js-framework-benchmark']['useShadowRoot']
-                            ));
-                        } else if (typeof packageJSON['js-framework-benchmark']['frameworkVersion'] === 'string') {
-                            result.push(new FrameworkVersionInformationStatic(keyedType, directory,
-                                packageJSON['js-framework-benchmark']['frameworkVersion'],
-                                packageJSON['js-framework-benchmark']['customURL'],
-                                packageJSON['js-framework-benchmark']['useShadowRoot']
-                            ));
-                        } else {
-                            result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'frameworkVersionFromPackage\' or \'frameworkVersion\' in the \'js-framework-benchmark\'.property'));
-                        }
-                    } else {
-                        result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'js-framework-benchmark\' property'));
-                    }
-                } else {
-                    result.push(new FrameworkVersionInformationError(keyedType, directory, 'No package.json found'));
-                }
+            let pathInFrameworksDir = keyedType + "/" + directory;
+            if (matchPredicate(pathInFrameworksDir)) {
+                let fi = loadFrameworkInfo(pathInFrameworksDir);
+                if (fi!=null) results.push(fi);
             }
         }
     });
-    return result;
+    return await Promise.all(results);
 }
 
 export class PackageVersionInformationResult {
@@ -197,7 +213,7 @@ export class PackageVersionInformationResult {
 }
 
 export async function determineInstalledVersions(framework: FrameworkVersionInformationDynamic): Promise<PackageVersionInformationResult> {
-    
+
     let versions = new PackageVersionInformationResult(framework);
     try {
         console.log(`http://localhost:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`)
@@ -225,7 +241,7 @@ export async function determineInstalledVersions(framework: FrameworkVersionInfo
 }
 
 export async function initializeFrameworks(matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkData[]> {
-    let frameworkVersionInformations = loadFrameworkVersionInformation(matchPredicate);
+    let frameworkVersionInformations = await loadFrameworkVersionInformation(matchPredicate);
 
     let frameworks: FrameworkData[] = [];
     for (let frameworkVersionInformation of frameworkVersionInformations) {

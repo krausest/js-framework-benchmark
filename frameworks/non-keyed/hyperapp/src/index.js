@@ -2,34 +2,7 @@ import { h, app } from "hyperapp"
 import { state, actions } from "./store"
 import RowsView from "./rowsView"
 
-let startTime
-let lastMeasure
-
-function startMeasure(name, cb) {
-    startTime = performance.now()
-    lastMeasure = name
-    cb()
-}
-
-function stopMeasure() {
-    const last = lastMeasure
-
-    if (lastMeasure) {
-        window.setTimeout(
-            function metaStopMeasure() {
-                lastMeasure = null
-                const stop = performance.now()
-                const duration = 0
-                console.log(last + " took " + (stop - startTime))
-            },
-            0
-        )
-    }
-}
-
 function view(state, actions) {
-    stopMeasure()
-
     return (
         <div class="container">
             <div class="jumbotron">
@@ -44,8 +17,7 @@ function view(state, actions) {
                                     type="button"
                                     class="btn btn-primary btn-block"
                                     id="run"
-                                    onclick={_ =>
-                                        startMeasure("run", actions.run)}>
+                                    onclick={_ => actions.run()}>
                                     Create 1,000 rows
                                 </button>
                             </div>
@@ -54,11 +26,7 @@ function view(state, actions) {
                                     type="button"
                                     class="btn btn-primary btn-block"
                                     id="runlots"
-                                    onclick={_ =>
-                                        startMeasure(
-                                            "runLots",
-                                            actions.runLots
-                                        )}>
+                                    onclick={_ => actions.runLots()}>
                                     Create 10,000 rows
                                 </button>
                             </div>
@@ -67,8 +35,7 @@ function view(state, actions) {
                                     type="button"
                                     class="btn btn-primary btn-block"
                                     id="add"
-                                    onclick={_ =>
-                                        startMeasure("add", actions.add)}>
+                                    onclick={_ => actions.add()}>
                                     Append 1,000 rows
                                 </button>
                             </div>
@@ -77,8 +44,7 @@ function view(state, actions) {
                                     type="button"
                                     class="btn btn-primary btn-block"
                                     id="update"
-                                    onclick={_ =>
-                                        startMeasure("update", actions.update)}>
+                                    onclick={_ => actions.update()}>
                                     Update every 10th row
                                 </button>
                             </div>
@@ -87,8 +53,7 @@ function view(state, actions) {
                                     type="button"
                                     class="btn btn-primary btn-block"
                                     id="clear"
-                                    onclick={_ =>
-                                        startMeasure("clear", actions.clear)}>
+                                    onclick={_ => actions.clear()}>
                                     Clear
                                 </button>
                             </div>
@@ -98,10 +63,8 @@ function view(state, actions) {
                                     class="btn btn-primary btn-block"
                                     id="swaprows"
                                     onclick={_ =>
-                                        startMeasure(
-                                            "swapRows",
-                                            actions.swapRows
-                                        )}>
+                                            actions.swapRows()
+                                        }>
                                     Swap Rows
                                 </button>
                             </div>

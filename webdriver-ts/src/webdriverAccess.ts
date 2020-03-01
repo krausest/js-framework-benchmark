@@ -1,5 +1,5 @@
 import * as chrome from 'selenium-webdriver/chrome'
-import {By, until, Builder, WebDriver, Locator, promise, logging, WebElement, Condition} from 'selenium-webdriver'
+import {By, until, Builder, Capabilities, WebDriver, Locator, promise, logging, WebElement, Condition} from 'selenium-webdriver'
 
 import {config, BenchmarkDriverOptions} from './common'
 
@@ -36,7 +36,7 @@ function convertPath(path: string): Array<PathPart> {
 }
 
 // Fake findByXPath for simple XPath expressions to allow usage with shadow dom
-async function findByXPath(node: WebElement, path: string): Promise<WebElement> {
+export async function findByXPath(node: WebElement, path: string): Promise<WebElement> {
      let paths = convertPath(path);
      let n = node;
      try {
@@ -190,58 +190,58 @@ export async function getTextByXPath(driver: WebDriver, xpath: string): Promise<
     });
 }
 
-async function shadowRoot(driver: WebDriver) : Promise<WebElement> {
+export async function shadowRoot(driver: WebDriver) : Promise<WebElement> {
     return useShadowRoot ? await driver.executeScript('return document.querySelector("main-element").shadowRoot') as WebElement
         : await driver.findElement(By.tagName("body"));
 }
 
-
+// node_modules\.bin\chromedriver.cmd --verbose --port=9998 --log-path=chromedriver.log
+// SELENIUM_REMOTE_URL=http://localhost:9998
 export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver {
-    let logPref = new logging.Preferences();
-    logPref.setLevel(logging.Type.PERFORMANCE, logging.Level.ALL);
-    logPref.setLevel(logging.Type.BROWSER, logging.Level.ALL);
 
-    let options = new chrome.Options();
-    options.setProxy(null);
-    if(benchmarkOptions.headless) {
-        options = options.addArguments("--headless");
-        options = options.addArguments("--disable-gpu"); // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
+    let args = [
+        "--js-flags=--expose-gc",
+        "--enable-precise-memory-info",
+        "--no-first-run",
+        "--disable-background-networking",
+        "--disable-background-timer-throttling",
+        "--disable-cache",
+        "--disable-translate",
+        "--disable-sync",
+        "--disable-extensions",
+        "--disable-default-apps",
+        "--remote-debugging-port=" + (benchmarkOptions.remoteDebuggingPort).toFixed(),
+        "--window-size=1200,800"
+    ];
+
+    if (benchmarkOptions.headless) {
+        args.push("--headless");
+        args.push("--disable-gpu"); // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
+        args.push("--no-sandbox");
     }
-    options = options.addArguments("--js-flags=--expose-gc");
-    options = options.addArguments("--enable-precise-memory-info");
-    options = options.addArguments("--no-sandbox");
-    options = options.addArguments("--no-first-run");
-    options = options.addArguments("--enable-automation");
-    options = options.addArguments("--disable-infobars");
-    options = options.addArguments("--disable-background-networking");
-    options = options.addArguments("--disable-background-timer-throttling");
-    options = options.addArguments("--disable-cache");
-    options = options.addArguments("--disable-translate");
-    options = options.addArguments("--disable-sync");
-    options = options.addArguments("--disable-extensions");
-    options = options.addArguments("--disable-default-apps");
-    options = options.addArguments("--remote-debugging-port="+(benchmarkOptions.remoteDebuggingPort).toFixed());
-    options = options.addArguments("--window-size=1200,800")
-    if (benchmarkOptions.chromeBinaryPath) options = options.setChromeBinaryPath(benchmarkOptions.chromeBinaryPath);
-    options = options.setLoggingPrefs(logPref) as chrome.Options;
 
-    options = options.setPerfLoggingPrefs(<any>{
-        enableNetwork: true, enablePage: true,
-        traceCategories: 'devtools.timeline,blink.user_timing'
+    console.time("chromedriver");
+    let caps = new Capabilities({
+        browserName: 'chrome',
+        platform: 'ANY',
+        version: 'stable',
+        "goog:chromeOptions": {
+            args: args,
+            "perfLoggingPrefs": {
+                "enableNetwork": true,
+                "enablePage": true,
+                "traceCategories": "devtools.timeline,blink.user_timing"
+            },
+            "excludeSwitches": [ "enable-automation" ]
+        },
+        "goog:loggingPrefs": {
+            "browser": "ALL",
+            "performance": "ALL"
+        }
     });
-
-    // Do the following lines really cause https://github.com/krausest/js-framework-benchmark/issues/303 ?
-    // return chrome.Driver.createSession(options, service);
-   console.time("chromedriver");
+    // port probing fails sometimes on windows, the following driver construction avoids probing:
     let service = new chrome.ServiceBuilder().setPort(benchmarkOptions.chromePort).build();
-    console.timeLog("chromedriver", "service created");
-    var driver = chrome.Driver.createSession(options, service);
-    console.timeLog("chromedriver", "driver created");
-    // console.log("after service builder");
-    // return new Builder()
-    //     .forBrowser('chrome')
-    //     .setChromeOptions(options)
-    //     .build();
+    var driver = chrome.Driver.createSession(caps, service);
 
     return driver;
 }

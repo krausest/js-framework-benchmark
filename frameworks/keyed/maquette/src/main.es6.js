@@ -18,7 +18,7 @@ function App() {
 				h("div.container", [
 					jumbo.render(),
 					table.render(),
-					h("span.preloadicon.glyphicon.glyphicon-remove", {"aria-hidden": ""})
+					h("span.preloadicon.glyphicon.glyphicon-remove", {"aria-hidden": "true"})
 				])
 			])
 	};
@@ -100,7 +100,7 @@ function Table() {
 						]),
 						h("td.col-md-1", [
 							h("a.remove", [
-								h("span.glyphicon.glyphicon-remove", {"aria-hidden": ""})
+								h("span.glyphicon.glyphicon-remove", {"aria-hidden": "true"})
 							])
 						]),
 						h("td.col-md-6")

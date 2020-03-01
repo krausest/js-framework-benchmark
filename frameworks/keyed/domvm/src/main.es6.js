@@ -26,7 +26,7 @@ function AppView(vm, store) {
 			el("div", {class: "container"}, [
 				JumbotronTpl(store),
 				TableTpl(store),
-				el("span", {class: "preloadicon glyphicon glyphicon-remove", "aria-hidden": ""})
+				el("span", {class: "preloadicon glyphicon glyphicon-remove", "aria-hidden": "true"})
 			])
 		])
 	);
@@ -71,7 +71,7 @@ function TableTpl(store) {
 	const key = item => item.id;
 	const diff = {
 		val: (item) => item.label + (item.id === store.selected),
-		cmp: (o, n) => o !== n,
+		eq: (o, n) => o === n,
 	};
 
 	return (
@@ -92,7 +92,7 @@ function RowTpl(item, store, key) {
 			]),
 			el("td", {class: "col-md-1"}, [
 				el("a", {onclick: [store.exec, "delete", item.id]}, [
-					el("span", {class: "glyphicon glyphicon-remove", "aria-hidden": ""})
+					el("span", {class: "glyphicon glyphicon-remove", "aria-hidden": "true"})
 				])
 			]),
 			el("td", {class: "col-md-6"})

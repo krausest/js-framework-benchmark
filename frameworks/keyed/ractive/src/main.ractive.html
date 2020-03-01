@@ -1,7 +1,7 @@
 <div class="jumbotron">
     <div class="row">
         <div class="col-md-6">
-            <h1>Ractive v0.10 keyed</h1>
+            <h1>Ractive keyed</h1>
         </div>
         <div class="col-md-6">
             <div class="row">
@@ -47,23 +47,6 @@
     const Ractive = require('ractive');
     Ractive.DEBUG = /unminified/.test(function(){/*unminified*/});
 
-    var startTime;
-    var lastMeasure;
-    var startMeasure = function(name) {
-        startTime = performance.now();
-        lastMeasure = name;
-    }
-    var stopMeasure = function() {
-        var last = lastMeasure;
-        if (lastMeasure) {
-            window.setTimeout(function () {
-                lastMeasure = null;
-                var stop = performance.now();
-                console.log(last+" took "+(stop-startTime));
-            }, 0);
-        }
-    }
-
     let id = 1;
     function _random(max) {
         return Math.round(Math.random() * 1000) % max;
@@ -82,18 +65,13 @@
         oninit : function(options) {
             const that = this;
             this.on( 'run', function ( event) {
-                startMeasure("run");
                 this.splice('data', 0, this.get('data').length, ...buildData());
                 that.set("selected", undefined);
-                stopMeasure();
             });
             this.on( 'add', function ( event) {
-                startMeasure("add");
                 this.splice('data', this.get('data').length, 0, ...buildData(1000));
-                stopMeasure();
             });
             this.on( 'partialUpdate', function ( event) {
-            startMeasure("update");
             const data = this.get('data');
             const len = data.length;
             const sets = {};
@@ -101,44 +79,33 @@
                 sets[`data.${i}.label`] = data[i].label + ' !!!';
             }
             this.set(sets);
-            stopMeasure();
             });
             this.on('select', function (event, id) {
-                startMeasure("select");
                 this.set("selected", id);
-                stopMeasure();
             });
             this.on('runLots', function (event) {
-                startMeasure("runLots");
                 this.splice('data', 0, this.get('data').length, ...buildData(10000));
                 that.set("selected", undefined);
-                stopMeasure();
             });
             this.on('clear', function (event) {
-                startMeasure("clear");
                 this.splice('data', 0, this.get('data').length);
                 that.set("selected", undefined);
-                stopMeasure();
             });
             this.on('swapRows', function (event) {
-                startMeasure("swapRows");
-                if(this.get('data').length > 998) {
-                    var a = this.get('data')[1];
-                    this.splice('data', 1, 1, this.get('data')[998]);
-                    this.splice('data', 998, 1, a);
+                const data = this.get('data');
+                if (data.length > 998) {
+                    const a = data[1];
+                    data.splice(1, 1, data[998]);
+                    data.splice(998, 1, a);
+                    this.set('data', data, { shuffle: true });
                 }
-                stopMeasure();
             });
         },
         remove(idx) {
-            startMeasure("delete");
             this.splice('data',idx, 1);
-            stopMeasure();
         },
         select(id) {
-            startMeasure("select");
             this.set("selected", id);
-            stopMeasure();
         },
         el: "#main",
         template: $TEMPLATE,

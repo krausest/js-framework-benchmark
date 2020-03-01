@@ -13,7 +13,7 @@ executable miso-benchmark-keyed
     Buildable: False
   else
     hs-source-dirs:     src
-    ghcjs-options:      -DGHCJS_BROWSER -O2 -fspecialise-aggressively
+    ghcjs-options:      -DGHCJS_BROWSER -O2 -fspecialise-aggressively -dedupe
     build-depends:      base < 5
                       , containers
                       , random

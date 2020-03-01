@@ -3,12 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Ember v3.9.1</title>
+    <title>Ember v3.17</title>
     <meta name="description" content="">
 
     {{content-for "head"}}
 
-    <link rel="stylesheet" href="/css/currentStyle.css">
+    <link rel="stylesheet" href="{{rootURL}}assets/vendor.css">
+    <link rel="stylesheet" href="{{rootURL}}assets/ember-temp.css">
+    <link rel="stylesheet" data-embroider-ignore href="/css/currentStyle.css">
 
     {{content-for "head-footer"}}
   </head>

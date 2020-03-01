@@ -17,25 +17,23 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@angular/common": "7.1.4",
-    "@angular/compiler": "7.1.4",
-    "@angular/compiler-cli": "7.1.4",
-    "@angular/core": "7.1.4",
-    "@angular/platform-browser": "7.1.4",
-    "core-js": "2.6.1",
-    "rxjs": "6.3.3",
-    "tsickle": "0.34.0",
-    "zone.js": "0.8.26"
+    "@angular/common": "8.0.1",
+    "@angular/compiler": "8.0.1",
+    "@angular/compiler-cli": "8.0.1",
+    "@angular/core": "8.0.1",
+    "@angular/platform-browser": "8.0.1",
+    "core-js": "3.1.4",
+    "rxjs": "6.5.2",
+    "tsickle": "0.35.0",
+    "zone.js": "0.9.1"
   },
   "devDependencies": {
-    "google-closure-compiler": "20181210.0.0",
-    "http-server": "0.11.1",
-    "rimraf": "2.6.2",
-    "rollup": "0.68.1",
-    "rollup-plugin-commonjs": "9.2.0",
-    "rollup-plugin-node-resolve": "4.0.0",
-    "rollup-plugin-uglify": "6.0.0",
-    "typescript": "3.1.4",
-    "yargs": "12.0.5"
+    "google-closure-compiler": "20190528.0.0",
+    "rimraf": "2.6.3",
+    "rollup": "1.15.5",
+    "rollup-plugin-commonjs": "10.0.0",
+    "rollup-plugin-node-resolve": "5.0.2",
+    "rollup-plugin-uglify": "6.0.2",
+    "typescript": "3.4.5"
   }
 }

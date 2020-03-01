@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 const ncu = require('npm-check-updates');
 import * as _ from 'lodash';
-import { JSONResult, config, FrameworkData, initializeFrameworks, BenchmarkError, ErrorsAndWarning, BenchmarkOptions } from './common'
+import { JSONResult, config, FrameworkData, initializeFrameworks, BenchmarkOptions } from './common'
 
 var exec = require('child_process').execSync;
 
@@ -35,23 +35,18 @@ if (frameworks.length === 0) {
         stdio: 'inherit'
     });
 
-    let frameworkInfos = await initializeFrameworks((filePath: string) => frameworks.indexOf(filePath) > -1);
-    // console.log("frameworkInfos", frameworkInfos, frameworks);
-    let frameworkNames = frameworkInfos.map(f => "'"+f.fullNameWithKeyedAndVersion+"'").join(' ');
-    if (frameworkInfos.length === 0) {
-        throw "expected to find some version information for the framework";
-    }
-    console.log('npm run bench -- --headless --count 1 --framework '+frameworkNames);
-    exec('npm run bench -- --headless --count 1 --framework '+frameworkNames, {
+    let frameworkNames = frameworks.join(" ");
+    console.log('npm run bench -- --headless --noResults --exitOnError true --count 1  '+frameworkNames);
+    exec('npm run bench -- --headless --noResults --exitOnError true --count 1 '+frameworkNames, {
         stdio: 'inherit'
     });
-    console.log('npm run isKeyed -- --headless --framework '+frameworkNames);
-    exec('npm run isKeyed -- --headless --framework '+frameworkNames, {
+    console.log('npm run isKeyed -- --headless '+frameworkNames);
+    exec('npm run isKeyed -- --headless '+frameworkNames, {
         stdio: 'inherit'
     });
 
     console.log("All checks are fine!");
-    console.log("======> Please rerun the benchmark: npm run bench -- --framework ", frameworkNames);
+    console.log("======> Please rerun the benchmark: npm run bench ", frameworkNames);
 }
 }
 

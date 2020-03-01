@@ -1,32 +1,13 @@
 import { h, mount, patch } from "petit-dom"
 import { Store } from "./store"
 
+
+var store = new Store()
+
 function startMeasure(name, meth) {
-    startTime = performance.now()
-    lastMeasure = name
-    //
     meth.call(store)
     updateView()
-    //
-    stopMeasure()
 }
-
-function stopMeasure() {
-    const last = lastMeasure
-
-    if (lastMeasure) {
-        window.setTimeout(
-            function metaStopMeasure() {
-                lastMeasure = null
-                const stop = performance.now()
-                const duration = 0
-                console.log(last + " took " + (stop - startTime))
-            },
-            0
-        )
-    }
-}
-
 
 var runAction = () => startMeasure("run", store.run)
 var runLotsAction = () =>  startMeasure("runLots", store.runLots)
@@ -51,10 +32,6 @@ function updateView() {
   vel = vel2
 }
 
-let startTime
-let lastMeasure
-
-var store = new Store()
 var main = document.getElementById("main")
 var vel = render()
 var el = mount(vel)

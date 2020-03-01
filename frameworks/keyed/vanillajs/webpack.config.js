@@ -1,24 +1,21 @@
 'use strict';
 var path = require('path')
-var cache = {};
-var loaders = [
-	{
-		test: /\.js$/,
-		loader: 'babel-loader'
-	},
-	{
-		test: /\.css$/,
-		loader: 'style-loader!css-loader'
-	}
-];
-var extensions = [
-	'.js', '.jsx', '.es6.js'
-];
 
 module.exports = [{
-	cache: cache,
 	module: {
-		loaders: loaders
+		rules: [{
+			test: /\.jsx?$/,
+			exclude: /node_modules/,
+			use: [
+				{
+					loader: 'babel-loader',
+					options: {
+						presets: ['@babel/preset-env'],
+						plugins: [],
+					}
+				}
+			]
+		}]
 	},
 	entry: {
 		main: './src/Main.js',
@@ -28,13 +25,6 @@ module.exports = [{
 		filename: '[name].js'
 	},
 	resolve: {
-		extensions: extensions,
-		modules: [
-			__dirname,
-			path.resolve(__dirname, "src"),
-			"node_modules"
-		],
-		alias: {
-		}
+		extensions: ['.js']
 	}
 }];

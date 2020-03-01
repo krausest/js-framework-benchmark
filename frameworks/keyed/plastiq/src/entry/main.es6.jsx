@@ -2,24 +2,6 @@
 var plastiq = require('plastiq');
 const {Store} = require('./store');
 
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function() {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            var stop = performance.now();
-            var duration = 0;
-            console.log(last+" took "+(stop-startTime));
-        }, 0);
-    }
-}
-
 var c = {};
 
 function cache(key, render) {

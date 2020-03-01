@@ -8,7 +8,7 @@
     "David Johnson"
   ],
   "js-framework-benchmark": {
-    "frameworkVersion": "0.18.0.0",
+    "frameworkVersion": "1.4.0",
     "customURL": "/dist-bundle"
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark",
@@ -21,7 +21,7 @@
     "note": "echo All JS sources have been already generated in folder 'dist-bundle'. && echo However, you can install and build everything by yourself. && echo Just check the README.md to get more details how to do that.",
     "build-prod": "npm run note",
     "install": "npm run note",
-    "cp-js": "cp -f result/bin/miso-benchmark-keyed.jsexe/all.min.js ./dist-bundle"
+    "cp-js": "cp -vf result/bin/all.min.js ./dist-bundle"
   },
   "keywords": [
     "miso",

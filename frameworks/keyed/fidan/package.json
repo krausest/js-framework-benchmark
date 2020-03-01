@@ -4,13 +4,13 @@
   "description": "fidan demo",
   "main": "app.js",
   "scripts": {
-    "build-dev": "webpack",
+    "build-dev": "webpack -d",
     "build-prod": "webpack -p",
     "start": "ws",
     "yalc-link": "yalc link @fidanjs/runtime"
   },
   "js-framework-benchmark": {
-    "frameworkVersion": "0.0.12"
+    "frameworkVersion": "0.0.23"
   },
   "repository": {
     "type": "git",
@@ -26,10 +26,14 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "@fidanjs/runtime": "^0.0.12"
+    "@fidanjs/jsx": "^0.0.8",
+    "@fidanjs/runtime": "^0.0.23"
   },
   "devDependencies": {
-    "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.0"
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-typescript": "^7.3.3",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.31.0",
+    "webpack-cli": "^3.3.2"
   }
 }

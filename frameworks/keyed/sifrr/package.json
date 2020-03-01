@@ -26,16 +26,16 @@
   },
   "homepage": "https://github.com/sifrr/sifrr#readme",
   "dependencies": {
-    "@sifrr/dom": "0.0.3",
-    "@sifrr/fetch": "0.0.3",
-    "local-web-server": "^2.6.0"
+    "@sifrr/dom": "0.0.5",
+    "@sifrr/fetch": "0.0.5",
+    "local-web-server": "^3.0.1"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "rollup": "^0.58.2",
-    "rollup-plugin-babel": "^3.0.4",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-terser": "^1.0.1"
+    "@babel/core": "7.4.5",
+    "rollup": "^1.15.6",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-node-resolve": "^5.0.2",
+    "rollup-plugin-terser": "^5.0.0"
   }
 }

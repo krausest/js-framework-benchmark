@@ -1,23 +1,5 @@
 'use strict';
 
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function() {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            var stop = performance.now();
-            var duration = 0;
-            console.log(last+" took "+(stop-startTime));
-        }, 0);
-    }
-}
-
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
@@ -181,31 +163,22 @@ class Main {
         }
         return undefined;
     }
-    printDuration() {
-        stopMeasure();
-    }
     run() {
-        startMeasure("run");
         this.store.run();
         this.updateRows();
         this.appendRows();
         this.unselect();
-        stopMeasure();
     }
     add() {
-        startMeasure("add");
         this.store.add();
         this.appendRows();
-        stopMeasure();
     }
     update() {
-        startMeasure("update");
         this.store.update();
         // this.updateRows();
         for (let i=0;i<this.data.length;i+=10) {
             this.rows[i].childNodes[1].childNodes[0].innerText = this.store.data[i].label;
         }
-        stopMeasure();
     }
     unselect() {
         if (this.selectedRow !== undefined) {
@@ -214,15 +187,12 @@ class Main {
         }
     }
     select(idx) {
-        startMeasure("select");
         this.unselect();
         this.store.select(this.data[idx].id);
         this.selectedRow = this.rows[idx];
         this.selectedRow.className = "danger";
-        stopMeasure();
     }
     delete(idx) {
-        startMeasure("delete");
         // Remove that row from the DOM
         // this.store.delete(this.data[idx].id);
         // this.rows[idx].remove();
@@ -241,8 +211,6 @@ class Main {
         this.store.delete(this.data[idx].id);
         this.data.splice(idx, 1);
         this.rows.pop().remove();
-
-        stopMeasure();
     }
     updateRows() {
         for(let i=0;i<this.rows.length;i++) {
@@ -280,15 +248,12 @@ class Main {
         // while (last = tbody.lastChild) tbody.removeChild(last);
     }
     runLots() {
-        startMeasure("runLots");
         this.store.runLots();
         this.updateRows();
         this.appendRows();
         this.unselect();
-        stopMeasure();
     }
     clear() {
-        startMeasure("clear");
         this.store.clear();
         this.rows = [];
         this.data = [];
@@ -296,11 +261,9 @@ class Main {
         // requestAnimationFrame(() => {
             this.removeAllRows();
             this.unselect();
-            stopMeasure();
         // });
     }
     swapRows() {
-        startMeasure("swapRows");        
         let old_selection = this.store.selected;
         this.store.swapRows();
         this.updateRows();
@@ -313,7 +276,6 @@ class Main {
                 this.selectedRow.className = "danger";
             }
         }
-        stopMeasure();
     }
     appendRows() {
         // Using a document fragment is slower...

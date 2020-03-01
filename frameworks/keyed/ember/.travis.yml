@@ -23,6 +23,9 @@ before_install:
 
 install:
   - yarn install --non-interactive
+branches:
+  only:
+    - master
 
 script:
   - npm run lint:hbs

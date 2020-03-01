@@ -24,7 +24,7 @@ class Row extends UI.Primitive("tr") {
 			<td className="col-md-4">
 				<a onClick={() => this.getRowObject().setSelected()}>{state.label}</a>
 			</td>,
-			<td className="col-md-1"><a onClick={() => this.getRowObject().delete()}><span className="glyphicon glyphicon-remove aria-hidden=true"></span></a></td>,
+			<td className="col-md-1"><a onClick={() => this.getRowObject().delete()}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>,
 			<td className="col-md-6"></td>];
 	}
 

@@ -1,0 +1,37 @@
+{
+  "name": "js-framework-benchmark-hullo",
+  "version": "0.8.2",
+  "description": "Hullo demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.8.2"
+  },
+  "scripts": {
+    "build-dev": "NODE_ENV=development webpack -w",
+    "build-prod": "NODE_ENV=production webpack"
+  },
+  "keywords": [
+    "react",
+    "webpack"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@webpack-cli/init": "^0.1.3",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "terser-webpack-plugin": "^1.2.3",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "@hullo/browser": "^0.8.2",
+    "@hullo/core": "^0.8.3",
+    "@hullo/dom": "^0.8.3"
+  }
+}

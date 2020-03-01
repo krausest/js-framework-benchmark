@@ -1,27 +1,29 @@
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 
 import {
   run, runLots, add, update, swapRows, deleteRow,
 } from 'ember-temp/utils/benchmark-helpers';
 
 export default class MyTable extends Component {
+  @tracked
   id = 1;
+  @tracked
   data = [];
+  @tracked
   selected = undefined;
 
   @action create() {
     const result = run(this.id);
 
-    this.setProperties({
-      data: result.data,
-      id: result.id,
-      selected: undefined
-    });
+    this.id = result.id;
+    this.data = result.data;
+    this.selected  = undefined;
   }
 
   @action add() {
-    add(this.id, this.data)
+    this.data = add(this.id, this.data)
   }
 
   @action update() {
@@ -31,41 +33,35 @@ export default class MyTable extends Component {
   @action runLots() {
     const result = runLots(this.id);
 
-    this.setProperties({
-      data: result.data,
-      id: result.id,
-      selected: undefined
-    });
+    this.data = result.data;
+    this.id = result.id;
+    this.selected = undefined;
   }
 
   @action clear() {
-    this.setProperties({
-      data: [],
-      selected: undefined
-    });
+    this.data = [];
+    this.selected  = undefined;
   }
 
   @action swapRows() {
-    this.set('data', swapRows(this.data));
+    this.data = swapRows(this.data);
   }
 
   @action remove(id) {
-    const selected = this.data.findBy('selected', true);
+    const selected = this.data.find(({selected}) => selected === true);
     if (selected) {
-      selected.set('selected', false);
+      selected.selected = false;
     }
-    this.setProperties({
-      data: deleteRow(this.data, id),
-      selelcted: undefined
-    });
+    this.data = deleteRow(this.data, id);
+    this.selected = undefined;
   }
 
   @action select(id) {
-    this.set('selected', id);
-    const selected = this.data.findBy('selected', true);
+    this.selected = id;
+    const selected = this.data.find(({selected}) => selected === true);
     if (selected) {
-      selected.set('selected', false);
+      selected.selected = false;
     }
-    this.data.findBy('id', id).set('selected', true);
+    this.data.find((item)=>item.id === id).selected = true;
   }
 }

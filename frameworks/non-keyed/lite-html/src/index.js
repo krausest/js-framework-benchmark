@@ -1,19 +1,5 @@
 import { html, render } from '../node_modules/lite-html/lite-html.js';
 
-let startTime;
-let lastMeasure;
-
-const startMeasure = function(name) {
-  startTime = performance.now();
-  lastMeasure = name;
-};
-const stopMeasure = function() {
-  window.setTimeout(function() {
-    const stop = performance.now();
-    console.log(lastMeasure + ' took ' + (stop - startTime));
-  }, 0);
-};
-
 const adjectives = [
   'pretty',
   'large',
@@ -49,28 +35,20 @@ let did = 1;
 let selected = 0;
 
 const add = () => {
-  startMeasure('add');
   data = data.concat(buildData(1000));
   _render();
-  stopMeasure();
 };
 const run = () => {
-  startMeasure('run');
   data = buildData(1000);
   _render();
-  stopMeasure();
 };
 const runLots = () => {
-  startMeasure('runLots');
   data = buildData(10000);
   _render();
-  stopMeasure();
 };
 const clear = () => {
-  startMeasure('clear');
   data = [];
   _render();
-  stopMeasure();
 };
 const interact = e => {
   const interaction = e.target.getAttribute('data-interaction');
@@ -81,35 +59,27 @@ const interact = e => {
   }
 };
 const del = id => {
-  startMeasure('delete');
   const idx = data.findIndex(d => d.id === id);
   data.splice(idx, 1);
   _render();
-  stopMeasure();
 };
 const select = id => {
-  startMeasure('select');
   selected = id;
   _render();
-  stopMeasure();
 };
 const swapRows = () => {
-  startMeasure('swapRows');
   if (data.length > 998) {
     var tmp = data[1];
     data[1] = data[998];
     data[998] = tmp;
   }
   _render();
-  stopMeasure();
 };
 const update = () => {
-  startMeasure('update');
   for (let i = 0; i < data.length; i += 10) {
     data[i].label += ' !!!';
   }
   _render();
-  stopMeasure();
 };
 const rowClass = (id, selected) => {
   return id === selected ? 'danger' : '';

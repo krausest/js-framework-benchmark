@@ -5,13 +5,8 @@ const app = choo();
 const rowsView = require('./rowsView');
 const store = require('./store');
 const utils = require('./utils');
-const startMeasure = utils.startMeasure;
-const stopMeasure = utils.stopMeasure;
 
 app.use(store);
-app.emitter.addListener('render', () => {
-  stopMeasure();
-});
 
 function view(state, emit) {
   return html`
@@ -55,32 +50,26 @@ function view(state, emit) {
   `;
 
   function run() {
-    startMeasure('run');
     emit('run');
   }
 
   function runLots() {
-    startMeasure('runLots');
     emit('runLots');
   }
 
   function add() {
-    startMeasure('add');
     emit('add');
   }
 
   function update() {
-    startMeasure('update');
     emit('update');
   }
 
   function clear() {
-    startMeasure('clear');
     emit('clear');
   }
 
   function swapRows() {
-    startMeasure('swapRows');
     emit('swapRows');
   }
 }

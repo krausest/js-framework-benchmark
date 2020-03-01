@@ -1,20 +1,4 @@
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function() {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        setTimeout(function () {
-            lastMeasure = null;
-            var stop = performance.now();
-            var duration = 0;
-            console.log(last+" took "+(stop-startTime));
-        }, 0);
-    }
-}
+
 
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
@@ -169,66 +153,50 @@ class extends Slim {
     }
 
     doSelect(e) {
-        startMeasure('select');
         this.store.select(Slim._$(e.target).repeater['data'].id);
         this.selectedNode && this.selectedNode.classList.remove('danger');
         this.selectedNode = Slim._$(e.target).repeater.__node;
         this.selectedNode.classList.add('danger');
-        stopMeasure();
     }
 
     deleteOne(e) {
-        startMeasure('delete');
         this.store.delete(Slim._$(e.target).repeater['data'].id);
         const node = Slim._$(e.target).repeater.__node;
         node.classList.remove('danger');
         this.selectedNode = null;
         this.items = this.store.data;
-        stopMeasure();
     }
 
     update10() {
-        startMeasure('update');
         this.store.update();
         this.items = this.store.data;
-        stopMeasure();
     }
 
     testClear() {
-        startMeasure('clear');
         this.store.clear();
         this.items = this.store.data;
-        stopMeasure();
     }
 
     append1k() {
-        startMeasure('add');
         this.store.add(1000);
         this.items = this.store.data;
-        stopMeasure();
     }
 
     swap() {
-        startMeasure('swap');
         this.store.swapRows();
         this.items = this.store.data;
-        stopMeasure();
     }
 
     create10k() {
         console.log('10k');
         this.store.clear();
         this.store.runLots();
-        startMeasure('runLots');
         this.items = this.store.data;
-        stopMeasure();
     }
 
     create1k() {
         this.store.clear();
         this.store.run(1000);
-        startMeasure('run');
         this.items = this.store.data;
-        stopMeasure();
     }
 });
