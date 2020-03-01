@@ -9,7 +9,7 @@ rm -f $RELEASE_PATH/*.bc.js
 cp $built $RELEASE_PATH
 
 built=$(find | grep .bc.map | grep src)
-if [ ! -z "$build" ]; then
+if [ ! -z "$built" ]; then
   rm -f $RELEASE_PATH/*.bc.map
   cp $built $RELEASE_PATH
 fi
