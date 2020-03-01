@@ -6,7 +6,6 @@ open Util;
 module Model = {
   [@deriving (sexp, fields, compare)]
   type t = {
-    // TODO: Change this back to an Int.Map.t once it's working
     data: array(item),
     selected: option(item),
   };
