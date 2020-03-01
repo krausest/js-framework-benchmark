@@ -58,25 +58,11 @@ let names = [|
   "keyboard",
 |];
 
-[@deriving sexp]
-type fire_event_t =
-  Js_of_ocaml.Js.t(Js_of_ocaml.Dom_html.mouseEvent) => Virtual_dom__.Event.t;
-
 [@deriving (sexp, compare)]
 type item = {
   id: int,
   label: string,
 };
-
-// This is for if you want to _index_ using items
-// module Item_Mappable = {
-//   module T = {
-//     [@deriving (sexp, compare)]
-//     type t = item;
-//   };
-//   include T;
-//   include Comparable.Make(T);
-// };
 
 let build_data_impl = () => {
   let state = ref(1);
