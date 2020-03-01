@@ -1,4 +1,5 @@
 open! Core_kernel;
+open Option;
 open Incr_dom;
 
 // Left to right composition
@@ -11,15 +12,9 @@ let sanitise_classname = className =>
     Vdom.Attr.class_(className);
   };
 
-let maybe_apply = (~validator=Option.some, converter) =>
-  fun
-  | None => None
-  | Some(value) => {
-      switch (validator(value)) {
-      | None => None
-      | Some(validated) => Some(converter(validated))
-      };
-    };
+let maybe_apply = (~validator=Option.some, converter, value) => {
+    value >>= validator >>| converter
+}
 
 let no_empty = item =>
   if (String.length(item) == 0) {
@@ -27,6 +22,9 @@ let no_empty = item =>
   } else {
     Some(item);
   };
+
+let ariaHiddenProperty = Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("aria-hidden");
+let keyProperty = Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("key");
 
 let genericElement =
     (
@@ -43,11 +41,11 @@ let genericElement =
   let attrs = [
     maybe_apply(~validator=no_empty, sanitise_classname, className),
     maybe_apply(
-      Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("aria-hidden"),
+      ariaHiddenProperty,
       ariaHidden,
     ),
     maybe_apply(
-      Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("key"),
+      keyProperty,
       key,
     ),
     maybe_apply(Vdom.Attr.on_click, onClick),
