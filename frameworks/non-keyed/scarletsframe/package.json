@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "raw-loader": "^4.0.0",
-    "scarletsframe": "0.25.4",
+    "scarletsframe": "0.26.1",
     "webpack": "^4.29.2"
   },
   "devDependencies": {
