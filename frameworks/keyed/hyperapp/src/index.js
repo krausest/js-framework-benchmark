@@ -1,9 +1,34 @@
-import { h, app } from "hyperapp"
+import { h, Lazy, app } from "hyperapp"
 import { state, actions } from "./store"
-import RowsView from "./rowsView"
 
-function view(state) {
-  return (
+const Row = ({ data, label, styleClass }) => (
+  <tr key={data.id} class={styleClass}>
+    <td class="col-md-1">{data.id}</td>
+    <td class="col-md-4">
+        <a onclick={[actions.select, data.id]}>{label}</a>
+    </td>
+    <td class="col-md-1">
+        <a onclick={[actions.delete, data.id]}>
+            <span class="glyphicon glyphicon-remove" aria-hidden="true">
+            </span>
+        </a>
+    </td>
+    <td class="col-md-6"></td>
+  </tr>
+);
+
+const LazyRow = ({ data, label, styleClass }) => (
+  <Lazy
+    view={Row}
+    data={data}
+    label={label}
+    styleClass={styleClass}
+  />
+);
+
+app({
+  init: state,
+  view: state => (
     <div class="container">
       <div class="jumbotron">
         <div class="row">
@@ -78,12 +103,17 @@ function view(state) {
       </div>
       <table class="table table-hover table-striped test-data">
         <tbody>
-          <RowsView data={state.data} selected={state.selected} />
+          {state.data.map(data => (
+            <LazyRow
+              data={data}
+              label={data.label}
+              styleClass={data.id === state.selected ? 'danger' : ''}
+            />
+          ))}
         </tbody>
       </table>
       <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
     </div>
-  )
-}
-
-app({ init: state, view, node: document.getElementById("main") })
+  ),
+  node: document.getElementById('main')
+});
