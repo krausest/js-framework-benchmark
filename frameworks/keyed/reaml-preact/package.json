@@ -5,6 +5,7 @@
     "frameworkVersionFromPackage": "reaml:preact"
   },
   "scripts": {
+    "copy": "cp ../reaml-react/.gitignore ../reaml-react/.ocamlformat ../reaml-react/bsconfig.json . && cp ../reaml-react/src/Main.ml ../reaml-react/src/Main.mli src",
     "build-prod": "bsb -clean-world && bsb -make-world && rollup -c --environment production"
   },
   "author": "Utkarsh Kukreti",

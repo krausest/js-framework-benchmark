@@ -1,1 +1,4 @@
-../reaml-react/.gitignore
+*.bs.js
+.merlin
+/dist
+/lib
