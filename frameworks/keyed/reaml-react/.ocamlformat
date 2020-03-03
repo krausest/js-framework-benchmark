@@ -1,0 +1,6 @@
+profile = janestreet
+let-binding-spacing = compact
+module-item-spacing = compact
+dock-collection-brackets = true
+break-separators = after
+wrap-fun-args = true
