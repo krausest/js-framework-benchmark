@@ -2,7 +2,7 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Vue.js 3.0.0-alpha4 (keyed)</h1>
+                <h1>Vue.js 3.0.0-alpha5 (keyed)</h1>
             </div>
             <div class="col-md-6">
                 <div class="row">
@@ -51,8 +51,13 @@
 </template>
 
 <script>
+import { ref, markNonReactive } from 'vue';
+
+let ID = 1;
 let startTime;
 let lastMeasure;
+
+
 const startMeasure = function(name) {
     startTime = performance.now();
     lastMeasure = name;
@@ -67,79 +72,106 @@ const stopMeasure = function() {
         }, 0);
     }
 };
+
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
 
+function buildData(count = 1000) {
+    const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+    const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+    const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+    const data = [];
+    for (let i = 0; i < count; i++)
+        data.push({id: ID++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
+    return data;
+}
+
 export default {
-    data: () => ({
-        rows: [],
-        selected: undefined,
-        id: 1,
-    }),
-    methods: {
-        buildData(count = 1000) {
-            const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-            const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-            const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-            const data = [];
-            for (let i = 0; i < count; i++)
-                data.push({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
-            return data;
-        },
+    setup() {
+        const selected = ref(null);
+        const rows = ref([]);
 
-        add() {
+        function setRows(update = rows.value.slice()) {
+          rows.value = markNonReactive(update)
+        }
+
+        function add() {
             startMeasure("add");
-            this.rows = this.rows.concat(this.buildData(1000));
+            setRows(rows.value.concat(buildData(1000)));
             stopMeasure();
-        },
-        remove(id) {
+        }
+
+        function remove(id) {
             startMeasure("remove");
-            this.rows.splice(this.rows.findIndex(d => d.id === id), 1);
+            rows.value.splice(rows.value.findIndex(d => d.id === id), 1);
+            setRows();
             stopMeasure();
-        },
-        select(id) {
+        }
+
+        function select(id) {
             startMeasure("select");
-            this.selected = id;
+            selected.value = id;
             stopMeasure();
-        },
-        run() {
+        }
+
+        function run() {
             startMeasure("run");
-            this.rows = this.buildData();
-            this.selected = undefined;
+            setRows(buildData());
+            selected.value = undefined;
             stopMeasure();
-        },
-        update() {
+        }
+
+        function update() {
             startMeasure("update");
-            for (let i = 0; i < this.rows.length; i += 10) {
-                this.rows[i].label += ' !!!';
+            for (let i = 0; i < rows.value.length; i += 10) {
+                rows.value[i].label += ' !!!';
             }
+            setRows();
             stopMeasure();
-        },
-        runLots() {
+        }
+
+        function runLots() {
             startMeasure("runLots");
-            this.rows = this.buildData(10000);
-            this.selected = undefined;
+            setRows(buildData(10000));
+            selected.value = undefined;
             stopMeasure();
-        },
-        clear() {
-            startMeasure("clear");
-            this.rows = [];
-            this.selected = undefined;
-            stopMeasure();
-        },
-        swapRows() {
-            startMeasure("swapRows");
-            if (this.rows.length > 998) {
-                const d1 = this.rows[1];
-                const d998 = this.rows[998];
+        }
 
-                this.rows[1] = d998;
-                this.rows[998] = d1;
+        function clear() {
+            startMeasure("clear");
+            setRows([]);
+            selected.value = undefined;
+            stopMeasure();
+        }
+
+        function swapRows() {
+            startMeasure("swapRows");
+
+            if (rows.value.length > 998) {
+                const d1 = rows.value[1];
+                const d998 = rows.value[998];
+
+                rows.value[1] = d998;
+                rows.value[998] = d1;
+
+                setRows();
             }
             stopMeasure();
-        },
+        }
 
+        return {
+            rows,
+            selected,
+            run,
+            clear,
+            swapRows,
+            runLots,
+            update,
+            select,
+            remove,
+            add,
+        }
     }
 }
 </script>
