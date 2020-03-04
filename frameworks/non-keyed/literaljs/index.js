@@ -7,38 +7,39 @@ import { Store } from './store';
 const App = component({
 	state: { store: new Store() },
 	methods() {
+		const { store } = this.getState();
 		return {
 			run() {
 				store.run();
-				this.setState(({ store }) => ({ store }));
+				this.setState({ store });
 			},
 			add() {
 				store.add();
-				this.setState(({ store }) => ({ store }));
+				this.setState({ store });
 			},
 			update() {
 				store.update();
-				this.setState(({ store }) => ({ store }));
+				this.setState({ store });
 			},
 			select(id) {
 				store.select(id);
-				this.setState(({ store }) => ({ store }));
+				this.setState({ store });
 			},
 			delete(id) {
 				store.delete(id);
-				this.setState(({ store }) => ({ store }));
+				this.setState({ store });
 			},
 			runLots() {
 				store.runLots();
-				this.setState(({ store }) => ({ store }));
+				this.setState({ store });
 			},
 			clear() {
 				store.clear();
-				this.setState(({ store }) => ({ store }));
+				this.setState({ store });
 			},
 			swapRows() {
 				store.swapRows();
-				this.setState(({ store }) => ({ store }));
+				this.setState({ store });
 			}
 		};
 	},
