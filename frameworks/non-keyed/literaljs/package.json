@@ -21,7 +21,7 @@
 	"license": "MIT",
 	"dependencies": {
 		"@babel/runtime": "7.8.4",
-		"literaljs": "7.0.0"
+		"literaljs": "7.0.1"
 	},
 	"devDependencies": {
 		"@babel/core": "7.8.6",
