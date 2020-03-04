@@ -5,40 +5,40 @@ import { render, component, h } from 'literaljs';
 import { Store } from './store';
 
 const App = component({
+	state: { store: new Store() },
 	methods() {
-		const { store } = this.state;
 		return {
 			run() {
 				store.run();
-				this.setState({ store });
+				this.setState(({ store }) => ({ store }));
 			},
 			add() {
 				store.add();
-				this.setState({ store });
+				this.setState(({ store }) => ({ store }));
 			},
 			update() {
 				store.update();
-				this.setState({ store });
+				this.setState(({ store }) => ({ store }));
 			},
 			select(id) {
 				store.select(id);
-				this.setState({ store });
+				this.setState(({ store }) => ({ store }));
 			},
 			delete(id) {
 				store.delete(id);
-				this.setState({ store });
+				this.setState(({ store }) => ({ store }));
 			},
 			runLots() {
 				store.runLots();
-				this.setState({ store });
+				this.setState(({ store }) => ({ store }));
 			},
 			clear() {
 				store.clear();
-				this.setState({ store });
+				this.setState(({ store }) => ({ store }));
 			},
 			swapRows() {
 				store.swapRows();
-				this.setState({ store });
+				this.setState(({ store }) => ({ store }));
 			}
 		};
 	},
@@ -161,4 +161,4 @@ const App = component({
 	}
 });
 
-render(App, 'root', { store: new Store() });
+render(App, 'root', {});
