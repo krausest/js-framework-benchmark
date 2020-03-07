@@ -23,7 +23,7 @@ let no_empty = item =>
     Some(item);
   };
 
-let ariaHiddenProperty = Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("aria-hidden");
+let ariaHiddenProperty = Vdom.Attr.bool_property("aria-hidden");
 let keyProperty = Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("key");
 
 let genericElement =
