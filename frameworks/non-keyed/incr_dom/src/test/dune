@@ -7,8 +7,12 @@
    (ocamlopt_flags -linkall -g)
    ; you will want to depend on the library you are testing as well, however for
    ; the purposes of this example we are only depending on the test runner itself
-   (libraries rely.lib js-framework-benchmark-components.lib)
+   (libraries rely.lib js-framework-benchmark-components.lib )
    (modules (:standard \ RunTests))
+   (flags
+    (:standard
+      (-w -27-26)
+    ))
 )
 
 (executable
@@ -22,3 +26,7 @@
   )
   (modules RunTests)
 )
+
+(alias
+   (name runtest)
+   (action (run ./RunTests.exe -u)))
