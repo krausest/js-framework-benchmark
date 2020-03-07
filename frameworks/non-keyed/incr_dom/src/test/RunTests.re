@@ -1,0 +1,1 @@
+SnapshotTest.Framework.cli()

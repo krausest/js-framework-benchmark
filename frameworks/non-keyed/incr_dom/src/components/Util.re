@@ -1,7 +1,5 @@
 open! Core_kernel;
 
-let is_debug = false;
-
 let adjectives = [|
   "pretty",
   "large",

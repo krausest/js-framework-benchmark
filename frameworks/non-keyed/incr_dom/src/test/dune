@@ -1,0 +1,24 @@
+;; dune file
+(library
+   (name SnapshotTest)
+   (public_name js-framework-benchmark-test.lib)
+   ; the linkall flag ensures that all of our tests are compiled and the
+   ; -g flag emits debugging information
+   (ocamlopt_flags -linkall -g)
+   ; you will want to depend on the library you are testing as well, however for
+   ; the purposes of this example we are only depending on the test runner itself
+   (libraries rely.lib js-framework-benchmark-components.lib)
+   (modules (:standard \ RunTests))
+)
+
+(executable
+  ; the for the library is automatically detected because of the name, but we
+  ; need to explicitly specify the package here
+  (package js-framework-benchmark-test)
+  (name RunTests)
+  (public_name RunTests.exe)
+  (libraries
+    js-framework-benchmark-test.lib
+  )
+  (modules RunTests)
+)

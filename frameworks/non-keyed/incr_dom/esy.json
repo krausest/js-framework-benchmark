@@ -9,31 +9,23 @@
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
-  "keywords": [
-    "webpack",
-    "ReasonML",
-    "incr_dom"
-  ],
+  "keywords": [ "webpack", "ReasonML", "incr_dom" ],
   "esy": {
     "build": "dune build --root . -j 8 --verbose --profile release",
-    "install": [
-      "esy-installer js-framework-benchmark.install"
-    ],
-    "release": {
-      "releasedBinaries": []
-    }
+    "install": [ "esy-installer js-framework-benchmark.install" ],
+    "release": { "releasedBinaries": [] }
   },
   "scripts": {
     "run": "esy x bash -c 'http-server #{self.bin}'",
     "build": "esy b",
-    "build-prod": "esy b dune build --root . -j 8 --verbose --profile release"
+    "build-prod":
+      "esy b dune build --root . -j 8 --verbose --profile release"
   },
-  "peerDependencies": {
-    "ocaml": "^4.9.0"
-  },
+  "peerDependencies": { "ocaml": "^4.9.0" },
   "dependencies": {
     "@opam/incr_dom": "v0.13.0",
-    "@reason-native/console": "*"
+    "@reason-native/console": "*",
+    "@reason-native/rely": "^3.2.1"
   },
   "devDependencies": {
     "http-server": "*",

@@ -1,7 +1,10 @@
 open! Core_kernel;
 open Incr_dom;
-open Elements;
-open Util;
+open JsFrameworkBenchmarkComponents;
+open JsFrameworkBenchmarkComponents.Elements;
+open JsFrameworkBenchmarkComponents.Util;
+
+let is_debug = false;
 
 module Model = {
   [@deriving (sexp, fields, compare)]
@@ -12,12 +15,12 @@ module Model = {
 
   module Updates = {
     let create_some = (model, n) => {
-      let newdata = Util.build_data(n);
+      let newdata = build_data(n);
       {...model, data: newdata};
     };
 
     let add_some = (model, n) => {
-      let newdata = Util.build_data(n);
+      let newdata = build_data(n);
       {...model, data: Array.append(model.data, newdata)};
     };
 
@@ -63,8 +66,8 @@ module Action = {
     | RUNLOTS
     | ADD
     | UPDATEEVERYTENTH
-    | SELECT(Util.item)
-    | REMOVE(Util.item)
+    | SELECT(item)
+    | REMOVE(item)
     | CLEAR
     | SWAPROWS;
 
@@ -116,7 +119,7 @@ let view = (model: Incr.t(Model.t), ~inject) => {
   let is_selected =
     switch (selected_item) {
     | None => (_ => false)
-    | Some(n) => ((item: Util.item) => phys_equal(item, n))
+    | Some(n) => ((item: item) => phys_equal(item, n))
     };
 
   let rows =
