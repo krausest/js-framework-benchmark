@@ -23,9 +23,7 @@
   },
   "peerDependencies": { "ocaml": "4.9.0" },
   "dependencies": {
-    "@opam/incr_dom": "v0.13.0",
-    "@reason-native/console": "*",
-    "@reason-native/rely": "^3.2.1"
+    "@opam/incr_dom": "v0.13.0"
   },
   "devDependencies": {
     "http-server": "*",
