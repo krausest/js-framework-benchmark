@@ -39,15 +39,15 @@
         </div>
       </div>
     </div>
-    <table class='table table-hover table-striped test-data'>
+    <table class='table table-hover table-striped test-data' onclick={handleClick}>
       <tbody>
         <tr each={ row in state.rows } class={ rowClass(row) }>
           <td class='col-md-1'>{ row.id }</td>
           <td class='col-md-4'>
-            <a onclick={ () => select(row) }>{ row.label }</a>
+            <a data-action="select" data-id={row.id}>{ row.label }</a>
           </td>
           <td class='col-md-1'>
-            <a onclick={ () => remove(row) }><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>
+            <a><span data-action="remove" data-id={row.id} class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>
           </td>
           <td class='col-md-6'></td>
         </tr>
@@ -64,6 +64,13 @@
           selected: this.store.selected
         }
       },
+      handleClick(event) {
+        const { action, id } = event.target.dataset
+
+        if (action && id) {
+          this[action](Number(id))
+        }
+      },
       rowClass(row) {
         return row.id === this.state.selected ? 'danger' : ''
       },
@@ -77,12 +84,12 @@
         this.store.add()
         this.renderWithNewState()
       },
-      remove(item) {
-        this.store.delete(item.id)
+      remove(id) {
+        this.store.delete(id)
         this.renderWithNewState()
       },
-      select(item) {
-        this.store.select(item.id)
+      select(id) {
+        this.store.select(id)
         this.renderWithNewState()
       },
       run() {
