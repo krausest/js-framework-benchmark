@@ -13,8 +13,8 @@ let sanitise_classname = className =>
   };
 
 let maybe_apply = (~validator=Option.some, converter, value) => {
-    value >>= validator >>| converter
-}
+  value >>= validator >>| converter;
+};
 
 let no_empty = item =>
   if (String.length(item) == 0) {
@@ -22,9 +22,6 @@ let no_empty = item =>
   } else {
     Some(item);
   };
-
-let ariaHiddenProperty = Vdom.Attr.bool_property("aria-hidden");
-let keyProperty = Js_of_ocaml.Js.Unsafe.inject %> Vdom.Attr.property("key");
 
 let genericElement =
     (
@@ -40,14 +37,8 @@ let genericElement =
     ) => {
   let attrs = [
     maybe_apply(~validator=no_empty, sanitise_classname, className),
-    maybe_apply(
-      ariaHiddenProperty,
-      ariaHidden,
-    ),
-    maybe_apply(
-      keyProperty,
-      key,
-    ),
+    ariaHidden >>| string_of_bool >>| Vdom.Attr.create("aria-hidden", _),
+    key >>| string_of_int >>| Vdom.Attr.create("key", _),
     maybe_apply(Vdom.Attr.on_click, onClick),
     maybe_apply(Vdom.Attr.id, id),
     maybe_apply(Vdom.Attr.type_, type_),

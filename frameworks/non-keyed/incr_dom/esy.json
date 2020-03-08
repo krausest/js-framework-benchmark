@@ -21,7 +21,7 @@
     "build-prod":
       "esy b dune build --root . -j 8 --verbose --profile release"
   },
-  "peerDependencies": { "ocaml": "^4.9.0" },
+  "peerDependencies": { "ocaml": "4.9.0" },
   "dependencies": {
     "@opam/incr_dom": "v0.13.0",
     "@reason-native/console": "*",
