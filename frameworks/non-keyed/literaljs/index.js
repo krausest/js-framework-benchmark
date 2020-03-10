@@ -44,7 +44,7 @@ const App = component({
 		};
 	},
 	render() {
-		const { store } = this.state;
+		const { store } = this.getState();
 		return (
 			<div class="container">
 				<div class="jumbotron">
