@@ -278,7 +278,11 @@ async function runBench(frameworkNames: string[]) {
             console.log("ERROR running "+runFrameworks[i].fullNameWithKeyedAndVersion, e);
             allCorrect = false;
         } finally {
-            await driver.quit();
+            try {
+                await driver.quit();
+            } catch (e) {
+                console.log("error calling driver.quit - ignoring this excpetion");
+            }
         }
     }
     if (!allCorrect) process.exit(1)
