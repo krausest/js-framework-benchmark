@@ -5,7 +5,8 @@
   "author": "Nextapps GmbH",
   "license": "Apache-2.0",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "mikado"
+    "frameworkVersionFromPackage": "mikado",
+    "issues": [694]
   },
   "preferGlobal": false,
   "repository": {

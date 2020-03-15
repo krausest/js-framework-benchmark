@@ -3,7 +3,8 @@
   "version": "3.7.6",
   "description": "Benchmark for san framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "san"
+    "frameworkVersionFromPackage": "san",
+    "issues": [694]
   },
   "scripts": {
     "build-dev": "webpack -w -d",

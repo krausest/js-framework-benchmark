@@ -4,7 +4,8 @@
   "description": "Rawact demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "babel-plugin-rawact"
+    "frameworkVersionFromPackage": "babel-plugin-rawact",
+    "issues": [634]
   },
   "scripts": {
     "build-dev": "webpack --watch",

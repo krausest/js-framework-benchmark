@@ -5,7 +5,8 @@
   "author": "Alexandre Esteves <alexandre.fmp.esteves@gmail.com>",
   "js-framework-benchmark": {
     "frameworkVersion": "0.4",
-    "customURL": "/bundled-dist"
+    "customURL": "/bundled-dist",
+    "issues": [694]
   },
   "contributors": [
     "Ryan Trinkle <ryan.trinkle@gmail.com>"

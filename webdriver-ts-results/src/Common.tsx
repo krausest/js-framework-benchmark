@@ -21,6 +21,7 @@ export const DisplayMode_BoxPlot = new DisplayModeSimple(DisplayMode.BoxPlot);
 export interface Framework {
     name: string;
     keyed: boolean;
+    issues?: number[];
 }
 
 export enum BenchmarkType { CPU, MEM, STARTUP }

@@ -23,13 +23,19 @@ interface State {
   displayMode: IDisplayMode;
 }
 
+let knownIssues = [
+  {issue: 634, text:"The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
+  {issue: 694, text:"Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694"},
+];
+
+
 let results : Result[] = (rawResults as RawResult[]).map(res => Object.assign(({framework: res.f, benchmark: res.b, values: res.v}),
     {mean: res.v ? jStat.mean(res.v) : Number.NaN,
     median: res.v ? jStat.median(res.v) : Number.NaN,
     standardDeviation: res.v ? jStat.stdev(res.v, true):  Number.NaN}));
 
-let allBenchmarks = () => benchmarks.reduce((set, b) => set.add(b), new Set() );
-let allFrameworks = () => frameworks.reduce((set, f) => set.add(f), new Set() );
+let allBenchmarks = () => benchmarks.reduce((set, b) => set.add(b), new Set<Benchmark>() );
+let allFrameworks = () => frameworks.reduce((set, f) => set.add(f), new Set<Framework>() );
 
 let _allBenchmarks = allBenchmarks();
 let _allFrameworks = allFrameworks();
@@ -105,7 +111,7 @@ class App extends React.Component<{}, State> {
     this.state = this.nextState;
   }
   selectBenchmark = (benchmark: Benchmark, value: boolean) => {
-    let set = new Set();
+    let set = new Set<Benchmark>();
     this.state.selectedBenchmarks.forEach(benchmark => set.add(benchmark));
     if (set.has(benchmark)) set.delete(benchmark);
     else set.add(benchmark);
@@ -117,7 +123,7 @@ class App extends React.Component<{}, State> {
     this.setState({selectedBenchmarks: set, sortKey, resultTables: this.updateResultTable()});
   }
   selectFramework = (framework: Framework, value: boolean): void => {
-    let set = new Set();
+    let set = new Set<Framework>();
     this.state.selectedFrameworks.forEach(framework => set.add(framework));
     if (set.has(framework)) set.delete(framework);
     else set.add(framework);
@@ -207,6 +213,14 @@ class App extends React.Component<{}, State> {
             The test is performed as a one sided t-test. The significance level is 10%. The darker the color the lower the p-Value.</p>
           )}
           <ResultTable currentSortKey={this.state.sortKey} data={this.state.resultTables} separateKeyedAndNonKeyed={this.state.separateKeyedAndNonKeyed} sortBy={this.sortBy} displayMode={this.state.displayMode}/>
+
+          <h3>Known Issues</h3>
+          {knownIssues.map(issue =>
+            <dl id={issue.issue.toFixed()}>
+              <dt><a target="_blank" href={issue.link}>{issue.issue.toFixed()}</a></dt>
+              <dd>{issue.text}</dd>
+            </dl>
+          )}
       </div>
     );
   }

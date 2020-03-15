@@ -10,7 +10,8 @@
     "yalc-link": "yalc link @fidanjs/runtime"
   },
   "js-framework-benchmark": {
-    "frameworkVersion": "0.0.23"
+    "frameworkVersionFromPackage": "@fidanjs/runtime",
+    "issues": [694]
   },
   "repository": {
     "type": "git",
@@ -26,14 +27,14 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "@fidanjs/jsx": "^0.0.8",
-    "@fidanjs/runtime": "^0.0.23"
+    "@fidanjs/jsx": "0.0.8",
+    "@fidanjs/runtime": "0.0.23"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.4.4",
-    "@babel/preset-typescript": "^7.3.3",
-    "babel-loader": "^8.0.6",
-    "webpack": "^4.31.0",
-    "webpack-cli": "^3.3.2"
+    "@babel/preset-env": "7.4.4",
+    "@babel/preset-typescript": "7.3.3",
+    "babel-loader": "8.0.6",
+    "webpack": "4.31.0",
+    "webpack-cli": "3.3.2"
   }
 }

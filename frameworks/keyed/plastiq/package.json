@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for plastiq framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "plastiq"
+    "frameworkVersionFromPackage": "plastiq",
+    "issues": [634]
   },
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",

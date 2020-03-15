@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for Cycle.js framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@cycle/dom"
+    "frameworkVersionFromPackage": "@cycle/dom",
+    "issues": [634]
   },
   "scripts": {
     "build-dev": "webpack -w -d",

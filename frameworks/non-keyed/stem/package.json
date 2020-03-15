@@ -4,7 +4,8 @@
   "description": "None",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.2.70"
+    "frameworkVersion": "0.2.70",
+    "issues": [634]
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

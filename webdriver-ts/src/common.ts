@@ -58,6 +58,7 @@ export interface FrameworkData {
     uri: string;
     keyed: boolean;
     useShadowRoot: boolean;
+    issues: number[];
 }
 
 interface Options {
@@ -74,12 +75,13 @@ function computeHash(keyedType: KeyedType, directory: string) {
 export interface FrameworkId {
     keyedType: KeyedType;
     directory: string;
+    issues: number[];
 }
 
 
 abstract class FrameworkVersionInformationValid implements FrameworkId {
     public url: string;
-    constructor(public keyedType: KeyedType, public directory: string, customURL: string|undefined, public useShadowRoot: boolean) {
+    constructor(public keyedType: KeyedType, public directory: string, customURL: string|undefined, public useShadowRoot: boolean, public issues: number[]) {
         this.keyedType = keyedType;
         this.directory = directory;
         this.url = 'frameworks/'+keyedType+'/'+directory + (customURL ? customURL : '');
@@ -88,26 +90,28 @@ abstract class FrameworkVersionInformationValid implements FrameworkId {
 
 export class FrameworkVersionInformationDynamic extends FrameworkVersionInformationValid  {
     constructor(keyedType: KeyedType, directory: string, public packageNames: string[],
-        customURL: string|undefined, useShadowRoot: boolean = false) {
-            super(keyedType, directory, customURL, useShadowRoot);
+        customURL: string|undefined, useShadowRoot: boolean = false, issues: number[]) {
+            super(keyedType, directory, customURL, useShadowRoot, issues);
         }
     }
 
 export class FrameworkVersionInformationStatic extends FrameworkVersionInformationValid  {
-    constructor(keyedType: KeyedType, directory: string, public frameworkVersion: string, customURL: string|undefined, useShadowRoot: boolean = false) {
-        super(keyedType, directory, customURL, useShadowRoot);
+    constructor(keyedType: KeyedType, directory: string, public frameworkVersion: string, customURL: string|undefined, useShadowRoot: boolean = false, issues: number[]) {
+        super(keyedType, directory, customURL, useShadowRoot, issues);
     }
     getFrameworkData(): FrameworkData {
         return {name: this.directory,
             fullNameWithKeyedAndVersion: this.directory+(this.frameworkVersion ? '-v'+this.frameworkVersion : '')+'-'+this.keyedType,
             uri: this.url,
             keyed: this.keyedType === 'keyed',
-            useShadowRoot: this.useShadowRoot
+            useShadowRoot: this.useShadowRoot,
+            issues: this.issues
         }
     }
 }
 
 export class FrameworkVersionInformationError implements FrameworkId  {
+    public issues: [];
     constructor(public keyedType: KeyedType, public directory: string, public error: string) {}
 }
 
@@ -154,13 +158,15 @@ async function loadFrameworkInfo(pathInFrameworksDir: string): Promise<Framework
                 return new FrameworkVersionInformationDynamic(keyedType, directory,
                     packageJSON['js-framework-benchmark']['frameworkVersionFromPackage'].split(':'),
                     packageJSON['js-framework-benchmark']['customURL'],
-                    packageJSON['js-framework-benchmark']['useShadowRoot']
+                    packageJSON['js-framework-benchmark']['useShadowRoot'],
+                    packageJSON['js-framework-benchmark']['issues']
                 );
             } else if (typeof packageJSON['js-framework-benchmark']['frameworkVersion'] === 'string') {
                 return new FrameworkVersionInformationStatic(keyedType, directory,
                     packageJSON['js-framework-benchmark']['frameworkVersion'],
                     packageJSON['js-framework-benchmark']['customURL'],
-                    packageJSON['js-framework-benchmark']['useShadowRoot']
+                    packageJSON['js-framework-benchmark']['useShadowRoot'],
+                    packageJSON['js-framework-benchmark']['issues']
                 );
             } else {
                 return new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'frameworkVersionFromPackage\' or \'frameworkVersion\' in the \'js-framework-benchmark\'.property');
@@ -207,7 +213,8 @@ export class PackageVersionInformationResult {
             fullNameWithKeyedAndVersion: this.framework.directory+'-v'+this.getVersionName()+'-'+this.framework.keyedType,
             uri: this.framework.url,
             keyed: this.framework.keyedType === 'keyed',
-            useShadowRoot: this.framework.useShadowRoot
+            useShadowRoot: this.framework.useShadowRoot,
+            issues: this.framework.issues
         }
     }
 }
