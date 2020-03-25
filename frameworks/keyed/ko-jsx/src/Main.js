@@ -57,8 +57,7 @@ var HomeViewModel = function () {
         data(tmp);
       }
     },
-    select(e, id) { selected(id); },
-    remove(e, id) {
+    remove(id) {
       var tmp = data();
       const idx = tmp.findIndex(d => d.id === id);
       data.splice(idx, 1);

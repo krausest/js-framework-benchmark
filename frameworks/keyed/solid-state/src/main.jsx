@@ -1,5 +1,5 @@
-import { createSignal, freeze } from 'solid-js';
-import { render, selectWhen } from 'solid-js/dom';
+import { createState, createMemo, createEffect, mapArray, sample, $RAW } from 'solid-js';
+import { render } from 'solid-js/dom';
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],
@@ -11,10 +11,9 @@ function _random (max) { return Math.round(Math.random() * 1000) % max; };
 function buildData(count) {
   let data = new Array(count);
   for (let i = 0; i < count; i++) {
-    const [label, setLabel] = createSignal(`${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`);
     data[i] = {
       id: idCounter++,
-      label, setLabel
+      label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`
     }
   }
   return data;
@@ -25,11 +24,34 @@ const Button = ({ id, text, fn }) =>
     <button id={ id } class='btn btn-primary btn-block' type='button' onClick={ fn }>{ text }</button>
   </div>
 
+const List = props => {
+  const mapped = createMemo(mapArray(() => props.each, props.children));
+  createEffect(tr => {
+    let i, s = props.selected;
+    sample(() => {
+      if (tr) tr.className = "";
+      if ((tr = s && (i = props.each[$RAW].findIndex(el => el.id === s)) > -1 && mapped()[i]))
+        tr.className = "danger";
+    });
+    return tr;
+  });
+  return mapped;
+};
+
 const App = () => {
   let rowId;
-  const [data, setData] = createSignal([]),
-    [selected, setSelected] = createSignal(null, (a, b) => a === b),
-    applySelection = selectWhen(selected, 'danger');
+  const [ state, setState ] = createState({ data: [], selected: null }),
+    run = () => setState({ data: buildData(1000), selected: null }),
+    runLots = () => setState({ data: buildData(10000), selected: null }),
+    add = () => setState('data', d => [...d, ...buildData(1000)]),
+    update = () => setState('data', { by: 10 }, 'label', l => l + ' !!!'),
+    swapRows = () => setState('data', d => d.length > 998 ? { 1: d[998], 998: d[1] } : d),
+    clear = () => setState({ data: [], selected: null }),
+    select = id => setState('selected', id),
+    remove = id => setState('data', d => {
+      const idx = d.findIndex(d => d.id === id);
+      return [...d.slice(0, idx), ...d.slice(idx + 1)];
+    });
 
   return <div class='container'>
     <div class='jumbotron'><div class='row'>
@@ -44,70 +66,18 @@ const App = () => {
       </div></div>
     </div></div>
     <table class='table table-hover table-striped test-data'><tbody>
-      <For each={ data() } transform={ applySelection }>{ row => (
+      <List each={ state.data } selected={ state.selected }>{ row => (
         rowId = row.id,
-        <tr model={ rowId }>
+        <tr>
           <td class='col-md-1' textContent={ rowId } />
-          <td class='col-md-4'><a onClick={ select } textContent={ row.label() } /></td>
-          <td class='col-md-1'><a onClick={ remove }><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
+          <td class='col-md-4'><a onClick={[select, rowId]} textContent={ row.label } /></td>
+          <td class='col-md-1'><a onClick={[remove, rowId]}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
           <td class='col-md-6'/>
         </tr>
-      )}</For>
+      )}</List>
     </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
-
-  function select(e, id) { setSelected(id); }
-
-  function remove(e, id) {
-    const d = data();
-    d.splice(d.findIndex(d => d.id === id), 1);
-    setData(d);
-  }
-
-  function run() {
-    freeze(() => {
-      setData(buildData(1000));
-      setSelected(null);
-    });
-  }
-
-  function runLots() {
-    freeze(() => {
-      setData(buildData(10000));
-      setSelected(null);
-    });
-  }
-
-  function add() { setData(data().concat(buildData(1000))); }
-
-  function update() {
-    freeze(() => {
-      const d = data();
-      let index = 0;
-      while (index < d.length) {
-        d[index].setLabel(d[index].label() + ' !!!');
-        index += 10;
-      }
-    });
-  }
-
-  function swapRows() {
-    const d = data();
-    if (d.length > 998) {
-      let tmp = d[1];
-      d[1] = d[998];
-      d[998] = tmp;
-      setData(d);
-    }
-  }
-
-  function clear() {
-    freeze(() => {
-      setData([]);
-      setSelected(null);
-    });
-  }
 }
 
 render(App, document.getElementById("main"));
