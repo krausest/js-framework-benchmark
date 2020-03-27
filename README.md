@@ -100,11 +100,6 @@ There should be no build errors and we can open the framework in the browser:
 
 Some frameworks like binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a customURL property under js-framework-benchmark in the [package.json](https://github.com/krausest/js-framework-benchmark/blob/master/frameworks/keyed/ember/package.json#L10) that represents the url.
 
-Open the browser console and click a bit on the buttons and you should see some measurements printed on the console.
-![First Run](images/firstRun.png?raw=true "First run")
-
-> What is printed on the console is not what is actually measured by the automated benchmark driver. The benchmark driver extracts events from chrome's timeline to calculate the duration for the operations. What get's printed on the console above is an approximation of the actual duration which is pretty close to the actual duration.
-
 ## Optional 3.1: Contributing a new implementation
 
 For contributions it is basically sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional. Let's simulate that by copying vanillajs.
@@ -125,7 +120,7 @@ In most cases you'll need `npm install` and `npm run build-prod` and then check 
 
 ## 4. Running a single framework with the automated benchmark driver
 
-As mentioned above the benchmark uses an automated benchmark driver using chromedriver to measure the duration for each operation using chrome's timeline. Here are the steps to run is for a single framework:
+The benchmark uses an automated benchmark driver using chromedriver to measure the duration for each operation using chrome's timeline. Here are the steps to run is for a single framework:
 
 ```
 cd ../../..
