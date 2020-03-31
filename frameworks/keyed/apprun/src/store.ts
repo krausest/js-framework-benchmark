@@ -20,14 +20,14 @@ export default class Store {
     }
     updateData(mod = 10) {
         for (let i=0;i<this.data.length;i+=10) {
-            // this.data[i].label += ' !!!';
-            this.data[i] = { ...this.data[i], label: this.data[i].label + ' !!!' };
+            this.data[i].label += ' !!!';
+            // this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label +' !!!'});
         }
     }
     delete(id) {
         // const idx = this.data.findIndex(d => d.id==id);
-        this.data = this.data.filter((e,i) => e.id!=id);
-        if (this.selected === id) this.selected = null;
+        this.data = this.data.filter((e, i) => e.id != id);
+        if (id === this.selected) this.selected = null;
     }
     run() {
         this.data = this.buildData();
@@ -39,7 +39,6 @@ export default class Store {
     }
     update() {
         this.updateData();
-        this.selected = null;
     }
     select(id) {
         this.selected = id;
@@ -63,10 +62,11 @@ export default class Store {
         this.selected = null;
     }
     swapRows() {
-        if (this.data.length > 998) {
+        if (this.data.length > 4) {
+            var idx = this.data.length - 2;
             var a = this.data[1];
-            this.data[1] = this.data[998];
-            this.data[998] = a;
+            this.data[1] = this.data[idx];
+            this.data[idx] = a;
         }
     }
 }
