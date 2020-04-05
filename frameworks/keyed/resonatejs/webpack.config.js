@@ -21,7 +21,7 @@ module.exports = [{
 		loaders: loaders
 	},
 	entry: {
-		main: './src/Main.js',
+		main: './src/main.js',
 		resonate: './src/resonate.min.js',
 	},
 	output: {
