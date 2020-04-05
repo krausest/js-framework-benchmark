@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-apprun-v2.23.8",
+  "name": "js-framework-benchmark-apprun-v2.23.10",
   "version": "1.0.0",
   "description": "AppRun demo",
   "main": "index.js",
@@ -29,6 +29,6 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
-    "apprun": "2.23.9"
+    "apprun": "2.23.10"
   }
 }
