@@ -2,14 +2,11 @@ module Main where
 
 import Prelude
 
+import Data.Array as Array
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Aff (Aff)
-import Effect.Console (log)
-import Effect.Random (randomInt)
-import Control.Monad.Rec.Class (Step(..), tailRecM2)
-import DOM.HTML.Indexed.ButtonType (ButtonType(..))
-import Data.Array (cons, deleteAt, findIndex, index, length, mapWithIndex, updateAt, (!!))
-import Data.Maybe (Maybe(..))
+import Effect.Uncurried (EffectFn5, runEffectFn5)
 import Halogen as H
 import Halogen.Aff as HA
 import Halogen.HTML as HH
@@ -17,282 +14,198 @@ import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
 import Halogen.VDom.Driver (runUI)
 
-
------------
--- Main Entry
-
--- Start and run the application
 main :: Effect Unit
-main = HA.runHalogenAff $ do
+main = HA.runHalogenAff do
   body <- HA.awaitBody
   runUI app unit body
 
--- The top level component to render to the <body> element
-app :: H.Component HH.HTML Query Unit Void Aff
-app =
-  H.component
-    { initialState: const init
-    , render
-    , eval
-    , receiver: const Nothing
-    }
-
-
-----------
--- State
+data Action
+  = Create Int
+  | AppendOneThousand
+  | UpdateEveryTenth
+  | Clear
+  | Swap
+  | Remove Int
+  | Select Int
 
 type State =
-  { rows     :: Array Row
-  , selected :: Maybe Int
-  , lastId   :: Int }
+  { rows :: Array Row 
+  , lastId :: Int
+  , selectedId :: Int
+  }
 
 type Row =
-  { rid        :: Int
-  , label      :: String }
+  { id :: Int 
+  , label :: String
+  }
 
-init :: State
-init =
-  { rows: [], selected: Nothing, lastId: 1 }
-
-
-
-----------
--- Queries
-
-data Query a
-  = Create Int a
-  | Append Int a
-  | UpdateEvery Int a
-  | Clear a
-  | Swap Int Int a
-  | Remove Int a
-  | Select Int a
-
-
-eval :: Query ~> H.ComponentDSL State Query Void Aff
-eval = case _ of
-
-  Clear next -> do
-    H.modify_ (\st -> st { rows = [], lastId = st.lastId })
-    pure next
-
-  Create i next -> do
-    st   <- H.get
-    rows <- H.liftEffect $ createRandomNRows i st.lastId
-    H.modify_ (\st' -> st' { rows = rows, lastId = st'.lastId + i })
-    pure next
-
-  Append i next -> do
-    st   <- H.get
-    rows <- H.liftEffect $ createRandomNRows i st.lastId
-    H.modify_ (\st' -> st' { rows = st'.rows <> rows, lastId = st'.lastId + i})
-    pure next
-
-  UpdateEvery i next -> do
-    st  <- H.get
-    let rows = mapWithIndex (updateRowLabel i) st.rows
-    H.modify_ (\st' -> st' { rows = rows } )
-    pure next
-
-  Swap i0 i1 next -> do
-    st <- H.get
-    case swapRows st.rows i0 i1 of
-      Nothing  ->
-        H.liftEffect $ log "Failed to swap rows."
-      Just arr ->
-        H.modify_ (\st' -> st' { rows = arr })
-    pure next
-
-  -- If the row is already selected, deselect, else set it as the selected row.
-  Select i next -> do
-    st <- H.get
-    H.modify_ (\st' -> st' { selected = if (Just i) == st'.selected then Nothing else Just i })
-    pure next
-
-  Remove i next -> do
-    st <- H.get
-    H.modify_ (\st' -> st' { rows = deleteRow i st'.rows })
-    pure next
-
-
-
------
--- Update Helpers
-
-
--- | Create new batch of random rows
--- | Note: use `tailRecM` to ensure proper tail recursion in monadic code
-createRandomNRows :: Int -> Int -> Effect (Array Row)
-createRandomNRows n lastId = tailRecM2 f [] n
+app :: forall q i o. H.Component HH.HTML q i o Aff
+app = H.mkComponent
+  { initialState
+  , render
+  , eval: H.mkEval $ H.defaultEval { handleAction = handleAction }
+  }
   where
-    f arr 0 = pure (Done arr)
-    f arr n' = do
-      str <- selectConcatItems
+  initialState :: _ -> State 
+  initialState _ = { rows: [], lastId: 0, selectedId: 0 }
 
-      let str' = case str of
-            Nothing -> ""
-            Just s  -> s
-
-      pure (Loop $ { a: (createAndAppendRow arr (n' - 1) lastId str')
-                   , b: (n' - 1) })
-
-
--- | Create a single row
-createAndAppendRow :: Array Row -> Int -> Int -> String -> Array Row
-createAndAppendRow arr index lastId s =
-  cons
-  ({ rid: lastId + index
-   , label: s })
-  arr
-
-
--- | Select a random element from each array of strings,
--- | and then concatenate them into a string value.
-selectConcatItems :: Effect (Maybe String)
-selectConcatItems = do
-  adj <- index adjectives <$> (randomInt 1 $ length adjectives - 1)
-  clr <- index colours    <$> (randomInt 1 $ length colours - 1)
-  non <- index nouns      <$> (randomInt 1 $ length nouns - 1)
-
-  pure $ adj <> Just " " <> clr <> Just " " <> non
-
-
--- | For use in iterating through rows
-updateRowLabel :: Int -> Int -> Row -> Row
-updateRowLabel interval ix row =
-  if ix `mod` interval == 0
-  then row { label = row.label <> " !!!" }
-  else row
-
-
--- | Remove a status a particular row.
-deleteRow :: Int -> Array Row -> Array Row
-deleteRow pos arr =
-  case rowIndex of
-    Nothing -> arr
-    Just i  ->
-      case deleteAt i arr of
-        Nothing   -> arr
-        Just arr' -> arr'
-  where
-    rowIndex = findIndex (\x -> x.rid == pos) arr
-
-
--- | Swap two rows in an array, updating their ids
-swapRows :: Array Row -> Int -> Int -> Maybe (Array Row)
-swapRows arr index1 index2 = do
-  rowA <- arr !! index1
-  rowB <- arr !! index2
-
-  let diff = index2 - index1
-  arrA <- updateAt index1 rowB arr
-  arrB <- updateAt index2 rowA arrA
-
-  pure arrB
-
-
-
-
-
-----------
--- Rendering Views
-
-render :: State -> H.ComponentHTML Query
-render state =
-  let
-    label = show state.lastId
-  in
+  render :: forall ps. State -> H.ComponentHTML Action ps Aff
+  render state = 
     HH.div
-      [ HP.classes [ HH.ClassName "container" ] ]
-      [ HH.div
-        [ HP.classes [ HH.ClassName "jumbotron" ] ]
-        [ HH.div
-          [ HP.classes [ HH.ClassName "row" ] ]
-          [ HH.div
-            [ HP.classes [ HH.ClassName "col-md-6" ] ]
-            [ HH.h1_
-              [ HH.text "Halogen 4.0.0" ] ]
-          , HH.div
-            [ HP.classes [ HH.ClassName "col-md-6" ] ]
-            $ map renderButton buttons
-          ]
-        ]
+      [ class_ "container" ]
+      [ jumbotron 
       , HH.table
-        [ HP.classes [ HH.ClassName "table table-hover table-striped test-data" ] ]
-        [ HH.tbody_
-          $ map (renderRow state.selected) state.rows ]
-      ,  HH.span
-        [ HP.classes [ HH.ClassName "preloadicon glyphicon glyphicon-remove" ]
-          , HP.attr (HH.AttrName "aria-hidden") "true" ]
-        [ HH.text "" ]
+          [ class_ "table table-hover table-striped test-data" ]
+          [ HH.tbody_ do
+              map (renderRow state.selectedId) state.rows
+          ]
+      , footer
       ]
 
+  handleAction :: forall ps. Action -> H.HalogenM State Action ps o Aff Unit
+  handleAction = case _ of
+    Create amount -> do
+      state <- H.get
+      newRows <- H.liftEffect $ createRandomNRows amount state.lastId
+      H.modify_ _ { rows = newRows, lastId = state.lastId + amount }
+    
+    AppendOneThousand -> do
+      state <- H.get
+      let amount = 1000
+      newRows <- H.liftEffect $ createRandomNRows amount state.lastId
+      H.modify_ _ { rows = state.rows <> newRows, lastId = state.lastId + amount }
+    
+    UpdateEveryTenth -> do
+      let 
+        updateLabel ix row =
+          if ix `mod` 10 == 0 then row { label = row.label <> " !!!" } else row
 
-renderRow :: Maybe Int -> Row -> H.ComponentHTML Query
-renderRow mi { rid, label } =
-  let
-    checkSelected =
-      case mi of
-        Nothing -> HH.tr_
-        Just i  ->
-          if rid == i
-          then HH.tr [ HP.classes [ HH.ClassName "danger"]
-                     , HP.attr (HH.AttrName "selected") "true" ]
-          else HH.tr_
-  in
-   checkSelected
-     [
-       HH.td
-         [ HP.classes [ HH.ClassName "col-md-1" ] ]
-         [ HH.text $ show rid ]
-     , HH.td
-         [ HP.classes [ HH.ClassName "col-md-4" ] ]
-         [ HH.a
-           [ HP.href "#", HE.onClick (HE.input_ $ Select rid) ]
-           [ HH.text label ] ]
-     , HH.td
-         [ HP.classes [ HH.ClassName "col-md-1" ] ]
-         [ HH.a
-           [ HP.href "#" ]
-           [ HH.span
-             [ HP.classes [ HH.ClassName "glyphicon glyphicon-remove" ]
-             , HP.attr (HH.AttrName "aria-hidden") "true"
-             , HE.onClick (HE.input_ $ Remove rid) ]
-             [ HH.text "" ] ] ]
-     , HH.td
-         [ HP.classes [ HH.ClassName "col-md-6" ] ]
-         [ HH.text "" ]
-     ]
+      H.modify_ \state -> state { rows = Array.mapWithIndex updateLabel state.rows }
+    
+    Clear ->
+      H.modify_ _ { rows = [] }
+    
+    Swap -> do
+      state <- H.get
+      case swapRows state.rows 1 998 of 
+        Nothing -> pure unit
+        Just rows -> H.modify_ _ { rows = rows }
+    
+    Remove id ->
+      H.modify_ \state -> 
+        state { rows = Array.filter (\r -> r.id /= id) state.rows }
+    
+    Select id -> do
+      state <- H.get
+      if state.selectedId == id then
+        pure unit
+      else
+        H.modify_ _ { selectedId = id }
+        
+type ActionButton = { id :: String, label :: String, action :: Action }
 
-
-renderButton ::
-  { bid :: String, str :: String, q :: (Unit -> Query Unit) }
-  -> H.ComponentHTML Query
-renderButton { bid, str, q } =
-  HH.div
-    [ HP.classes [ HH.ClassName "col-sm-6 smallpad" ] ]
-    [ HH.button
-      [ HP.type_ ButtonButton
-      , HP.classes [ HH.ClassName "btn btn-primary btn-block" ]
-      , HP.id_ bid
-      , HE.onClick (HE.input_ q) ]
-      [ HH.text str ]
+buttons :: Array ActionButton
+buttons =
+    [ { id: "run", label: "Create 1,000 rows", action: Create 1000 }
+    , { id: "runlots", label: "Create 10,000 rows", action: Create 10000 }
+    , { id: "add", label: "Append 1,000 rows", action: AppendOneThousand }
+    , { id: "update", label: "Update every 10th row", action: UpdateEveryTenth }
+    , { id: "clear", label: "Clear", action: Clear }
+    , { id: "swaprows", label: "Swap Rows", action: Swap }
     ]
 
+renderActionButton :: forall ps. ActionButton -> H.ComponentHTML Action ps Aff
+renderActionButton { id, label, action } = 
+  HH.div
+    [ class_ "col-sm-6 smallpad" ]
+    [ HH.button 
+        [ HP.type_ HP.ButtonButton
+        , class_ "btn btn-primary btn-block"
+        , HP.id_ id
+        , HP.attr (HH.AttrName "ref") "text"
+        , HE.onClick \_ -> Just action
+        ]
+        [ HH.text label ]
+    ]
 
-buttons :: Array { bid :: String, str :: String, q :: (Unit -> Query Unit) }
-buttons =
-  [ { bid: "run",      str: "Create 1,000 Rows",     q: Create 1000    }
-  , { bid: "runlots",  str: "Create 10,000 Rows",    q: Create 10000   }
-  , { bid: "add",      str: "Append 1,000 Rows",     q: Append 1000    }
-  , { bid: "update",   str: "Update Every 10th Row", q: UpdateEvery 10 }
-  , { bid: "clear",    str: "Clear",                 q: Clear          }
-  , { bid: "swaprows", str: "Swap Rows",             q: Swap 1 998     } ]
+renderRow :: forall ps. Int -> Row -> H.ComponentHTML Action ps Aff
+renderRow selectedId row =
+  HH.tr
+    (if selectedId == row.id then
+      [ class_ "danger"
+      , HP.attr (HH.AttrName "selected") "true" 
+      ]
+    else
+      [ ]
+    )
+    [ HH.td colMd1 [ HH.text (show row.id) ]
+    , HH.td colMd4 [ HH.a [ HE.onClick \_ -> Just (Select row.id) ] [ HH.text row.label ] ]
+    , HH.td colMd1 [ HH.a [ HE.onClick \_ -> Just (Remove row.id) ] removeIcon ]
+    , spacer
+    ]
 
+removeIcon :: forall ps. Array (H.ComponentHTML Action ps Aff)
+removeIcon =
+  [ HH.span
+      [ class_ "glyphicon glyphicon-remove"
+      , HP.attr (HH.AttrName "aria-hidden") "true"
+      ]
+      []
+  ]
 
+class_ :: forall r i. String -> HH.IProp ( class :: String | r ) i
+class_ = HP.class_ <<< HH.ClassName
 
-----------
--- Supporting Data
+colMd1 :: forall r i. Array (HH.IProp ( class :: String | r ) i)
+colMd1 = [ class_ "col-md-1" ]
+
+colMd4 :: forall r i. Array (HH.IProp ( class :: String | r) i)
+colMd4 = [ class_ "col-md-4" ]
+
+spacer :: forall p i. HH.HTML p i
+spacer = HH.td [ class_ "col-md-6" ] []
+
+footer :: forall ps. H.ComponentHTML Action ps Aff
+footer =
+  HH.span
+    [ class_ "preloadicon glyphicon glyphicon-remove"
+    , HP.attr (HH.AttrName "aria-hidden") "true"
+    ]
+    []
+
+jumbotron :: forall ps. H.ComponentHTML Action ps Aff
+jumbotron =
+  HH.div
+    [ class_ "jumbotron" ]
+    [ HH.div
+        [ class_ "row" ]
+        [ HH.div
+            [ class_ "col-md-6" ]
+            [ HH.h1_ [ HH.text "Halogen 5.0.0 (non-keyed)" ] ]
+            , HH.div [ class_ "col-md-6" ] do
+                map (HH.lazy renderActionButton) buttons
+            ]
+        ]
+
+updateEveryTenth :: Array Row -> Array Row
+updateEveryTenth =
+  Array.mapWithIndex updateRowLabel
+  where
+  updateRowLabel ix row =
+    if ix `mod` 10 == 0 then row { label = row.label <> " !!!" } else row
+
+swapRows :: Array Row -> Int -> Int -> Maybe (Array Row)
+swapRows arr index1 index2 = do
+  rowA <- arr Array.!! index1
+  rowB <- arr Array.!! index2
+  arrA <- Array.updateAt index1 rowB arr
+  arrB <- Array.updateAt index2 rowA arrA
+  pure arrB
+
+foreign import createRandomNRowsImpl :: EffectFn5 (Array String) (Array String) (Array String) Int Int (Array Row)
+
+createRandomNRows :: Int -> Int -> Effect (Array Row)
+createRandomNRows n lastId = runEffectFn5 createRandomNRowsImpl adjectives colours nouns n lastId
 
 adjectives :: Array String
 adjectives =
@@ -323,7 +236,6 @@ adjectives =
     , "fancy"
     ]
 
-
 colours :: Array String
 colours =
     [ "red"
@@ -338,7 +250,6 @@ colours =
     , "black"
     , "orange"
     ]
-
 
 nouns :: Array String
 nouns =
