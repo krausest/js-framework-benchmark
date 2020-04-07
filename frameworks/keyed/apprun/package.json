@@ -29,6 +29,6 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
-    "apprun": "2.23.10"
+    "apprun": "2.23.12"
   }
 }

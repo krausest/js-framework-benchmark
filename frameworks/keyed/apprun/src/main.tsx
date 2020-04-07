@@ -132,7 +132,8 @@ const click = (e) => {
 };
 
 const component = new Component(store, view, update);
+component['-patch-vdom-on'] = true;
 component.rendered = () => {
-  store.selected && (document.getElementById(store.selected).className = 'danger');
+    store.selected && (document.getElementById(store.selected).className = 'danger');
 }
 component.start(document.getElementById('main'));
