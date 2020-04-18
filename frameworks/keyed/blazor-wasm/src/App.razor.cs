@@ -6,17 +6,16 @@ namespace blazor_wasm
 {
     public partial class App
     {
-        int startTime;
         string lastMeasure;
         Stopwatch Stopwatch;
 
-        void startMeasure(string name)
+        void StartMeasure(string name)
         {
             Stopwatch = Stopwatch.StartNew();
             lastMeasure = name;
         }
 
-        void stopMeasure()
+        void StopMeasure()
         {
             Stopwatch.Stop();
             var last = this.lastMeasure ?? "";
@@ -48,7 +47,7 @@ namespace blazor_wasm
             "table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"
         };
 
-        List<Data> buildData(int count = 1000)
+        List<Data> BuildData(int count = 1000)
         {
             var result = new List<Data>();
             for (int i = 0; i < count; i++)
@@ -63,50 +62,50 @@ namespace blazor_wasm
             return result;
         }
 
-        public void select(Data item)
+        public void Select(Data item)
         {
-            startMeasure("select");
+            StartMeasure("select");
             this.selected = item.Id;
         }
 
-        void delete(Data item)
+        void Delete(Data item)
         {
-            startMeasure("delete");
+            StartMeasure("delete");
             this.data.Remove(item);
         }
 
-        void run()
+        void Run()
         {
-            startMeasure("run");
-            this.data = this.buildData();
+            StartMeasure("run");
+            this.data = this.BuildData();
         }
-        void runlots()
+        void Runlots()
         {
-            startMeasure("runlots");
-            this.data = this.buildData(10000);
+            StartMeasure("runlots");
+            this.data = this.BuildData(10000);
         }
-        void add()
+        void Add()
         {
-            startMeasure("add");
-            this.data.AddRange(this.buildData(1000));
+            StartMeasure("add");
+            this.data.AddRange(this.BuildData(1000));
         }
-        void update()
+        void Update()
         {
-            startMeasure("update");
+            StartMeasure("update");
             for (var i = 0; i < this.data.Count; i += 10)
             {
                 this.data[i].Label += " !!!";
             }
         }
-        void clear()
+        void Clear()
         {
-            startMeasure("clear");
+            StartMeasure("clear");
             this.data = new List<Data>();
             this.selected = 0;
         }
-        void swaprows()
+        void SwapRows()
         {
-            startMeasure("swapRows");
+            StartMeasure("swapRows");
             if (this.data.Count > 998)
             {
                 var a = this.data[1];
@@ -119,7 +118,7 @@ namespace blazor_wasm
         {
             if (!firstRender)
             {
-                this.stopMeasure();
+                this.StopMeasure();
             }
         }
     }
