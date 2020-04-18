@@ -6,35 +6,34 @@
     "customURL": "/dist/angular-ng/"
   },
   "scripts": {
-    "postinstall": "ng analytics off",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "build-prod": "ng build --aot=true --prod=true",
+    "build-prod": "ng build --prod=true --buildOptimizer=true --sourceMap=false",
     "build-dev": "ng serve"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "8.2.14",
-    "@angular/common": "8.2.14",
-    "@angular/compiler": "8.2.14",
-    "@angular/core": "8.2.14",
-    "@angular/platform-browser": "8.2.14",
-    "@angular/platform-browser-dynamic": "8.2.14",
-    "rxjs": "6.4.0",
-    "tslib": "^1.10.0",
-    "zone.js": "0.9.1"
+    "@angular/animations": "9.1.2",
+    "@angular/common": "9.1.2",
+    "@angular/compiler": "9.1.2",
+    "@angular/core": "9.1.2",
+    "@angular/platform-browser": "9.1.2",
+    "@angular/platform-browser-dynamic": "9.1.2",
+    "rxjs": "6.5.5",
+    "tslib": "^1.11.1",
+    "zone.js": "0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.803.24",
-    "@angular/cli": "8.3.24",
-    "@angular/compiler-cli": "8.2.14",
-    "@angular/language-service": "8.2.14",
-    "@types/node": "8.9.4",
-    "ts-node": "7.0.0",
-    "tslint": "5.15.0",
-    "typescript": "3.5.3"
+    "@angular-devkit/build-angular": "0.901.1",
+    "@angular/cli": "9.1.1",
+    "@angular/compiler-cli": "9.1.2",
+    "@angular/language-service": "9.1.2",
+    "@types/node": "13.13.0",
+    "ts-node": "8.8.2",
+    "tslint": "6.1.1",
+    "typescript": "3.8.3"
   }
 }
