@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Blazor WebAssembly demo",
   "js-framework-benchmark": {
-    "frameworkVersion": "3.1.0-preview4.19579.2",
+    "frameworkVersion": "3.2.0-preview4.20210.8",
     "customURL": "/dist/wwwroot/"
   },
   "scripts": {
@@ -20,5 +20,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
-  }
+  },
+  "dependencies": {}
 }
