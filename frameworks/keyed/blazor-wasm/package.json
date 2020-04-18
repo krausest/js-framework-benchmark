@@ -1,0 +1,24 @@
+{
+  "name": "js-framework-benchmark-blazor-wasm",
+  "version": "1.0.0",
+  "description": "Blazor WebAssembly demo",
+  "js-framework-benchmark": {
+    "frameworkVersion": "3.1.0-preview4.19579.2",
+    "customURL": "/dist/wwwroot/"
+  },
+  "scripts": {
+    "build-dev": "dotnet build .\\src\\ -c Debug",
+    "build-prod": "dotnet publish .\\src\\ -c Release -o .\\dist"
+  },
+  "keywords": [
+    "blazor",
+    "webassembly"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}
