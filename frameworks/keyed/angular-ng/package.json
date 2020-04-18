@@ -6,7 +6,6 @@
     "customURL": "/dist/angular-ng/"
   },
   "scripts": {
-    "postinstall": "ng analytics off",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
