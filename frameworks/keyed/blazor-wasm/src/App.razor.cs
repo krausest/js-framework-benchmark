@@ -6,27 +6,6 @@ namespace blazor_wasm
 {
     public partial class App
     {
-        string lastMeasure;
-        Stopwatch Stopwatch;
-
-        void StartMeasure(string name)
-        {
-            Stopwatch = Stopwatch.StartNew();
-            lastMeasure = name;
-        }
-
-        void StopMeasure()
-        {
-            Stopwatch.Stop();
-            var last = this.lastMeasure ?? "";
-            if (!string.IsNullOrWhiteSpace(this.lastMeasure))
-            {
-                lastMeasure = string.Empty;
-                Console.WriteLine($"{last} took {Stopwatch.ElapsedMilliseconds} ms");
-                Stopwatch.Reset();
-            }
-        }
-
         List<Data> data = new List<Data>();
         int selected;
         int id = 1;
@@ -64,34 +43,28 @@ namespace blazor_wasm
 
         public void Select(Data item)
         {
-            StartMeasure("select");
             this.selected = item.Id;
         }
 
         void Delete(Data item)
         {
-            StartMeasure("delete");
             this.data.Remove(item);
         }
 
         void Run()
         {
-            StartMeasure("run");
             this.data = this.BuildData();
         }
         void Runlots()
         {
-            StartMeasure("runlots");
             this.data = this.BuildData(10000);
         }
         void Add()
         {
-            StartMeasure("add");
             this.data.AddRange(this.BuildData(1000));
         }
         void Update()
         {
-            StartMeasure("update");
             for (var i = 0; i < this.data.Count; i += 10)
             {
                 this.data[i].Label += " !!!";
@@ -99,26 +72,16 @@ namespace blazor_wasm
         }
         void Clear()
         {
-            StartMeasure("clear");
             this.data = new List<Data>();
             this.selected = 0;
         }
         void SwapRows()
         {
-            StartMeasure("swapRows");
             if (this.data.Count > 998)
             {
                 var a = this.data[1];
                 this.data[1] = this.data[998];
                 this.data[998] = a;
-            }
-        }
-
-        protected override void OnAfterRender(bool firstRender)
-        {
-            if (!firstRender)
-            {
-                this.StopMeasure();
             }
         }
     }
