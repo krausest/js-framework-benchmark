@@ -34,7 +34,7 @@
         <tbody id="tbody">
             @foreach (var item in data)
             {
-                <tr class="@((item.Id == selected ? "danger" : ""))">
+                <tr @key="item.Id" class="@((item.Id == selected ? "danger" : ""))">
                     <td class="col-md-1">@item.Id</td>
                     <td class="col-md-4">
                         <a href="#" @onclick="(_ => select(item))" @onclick:preventDefault>
