@@ -2,7 +2,7 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Vue.js 3.0.0-alpha5 (keyed)</h1>
+                <h1>Vue.js 3.0.0-beta2 (keyed)</h1>
             </div>
             <div class="col-md-6">
                 <div class="row">
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { ref, markNonReactive } from 'vue';
+import { ref, markRaw } from 'vue';
 
 let ID = 1;
 let startTime;
@@ -93,7 +93,7 @@ export default {
         const rows = ref([]);
 
         function setRows(update = rows.value.slice()) {
-          rows.value = markNonReactive(update)
+          rows.value = markRaw(update)
         }
 
         function add() {
