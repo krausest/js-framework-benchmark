@@ -7,8 +7,15 @@
     "customURL": "/dist/wwwroot/"
   },
   "scripts": {
-    "build-dev": "dotnet build .\\src\\ -c Debug",
-    "build-prod": "dotnet publish .\\src\\ -c Release -o .\\dist"
+    "postinstall": "run-script-os",
+    "postinstall:win32": "dotnet-install.cmd",
+    "postinstall:nix": "./dotnet-install.sh",
+    "build-dev": "run-script-os",
+    "build-dev:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet.exe build ./src/ -c Debug",
+    "build-dev:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet build ./src/ -c Debug",
+    "build-prod": "run-script-os",
+    "build-prod:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet.exe publish ./src/ -c Release -o ./dist",
+    "build-prod:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet publish ./src/ -c Release -o ./dist"
   },
   "keywords": [
     "blazor",
@@ -21,5 +28,9 @@
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "run-script-os": "1.1.1"
+  }
 }
