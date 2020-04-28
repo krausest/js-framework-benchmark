@@ -11,10 +11,10 @@
 
                 :dev
                 {:output-dir
-                 "dist"
+                 "dev"
 
                  :asset-path
-                 "/frameworks/keyed/helix/dist/"}
+                 "/frameworks/keyed/helix/dev/"}
                 :devtools {:after-load demo.main/after-reload
 
                            :watch-dir "resources/demo/styles"
