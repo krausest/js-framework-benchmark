@@ -7,6 +7,10 @@
                 [lucywang000/hashp "0.1.2"]
                 [binaryage/devtools "1.0.0"]]
 
+ :nrepl {:port 6666
+         :cider true
+         :init-ns user}
+
  :builds {:app {:target :browser
 
                 :dev

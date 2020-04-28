@@ -35,9 +35,11 @@
                    :aria-hidden "true"})))
     (d/td {:class "col-md-6"})))
 
+(defonce id-atom (atom 0))
+
 (defnc main []
-  (let [id-atom (atom 0)
-        [data set-data] (use-state [])
+  (js/console.log "re-render")
+  (let [[data set-data] (use-state [])
         [selected set-selected] (use-state nil)
         print-duration
         (fn print-duration []
@@ -86,7 +88,7 @@
       (d/div
        {:class "row"}
        (d/div {:class "col-md-6"}
-              (d/h1 "Helix"))
+              (d/h1 (str "Helix (total rows " (count data) ")")))
        (d/div {:class "col-md-6"}
               (d/div {:class "row"}
                      (d/div {:class "col-sm-6 smallpad"}
