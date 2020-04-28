@@ -1,0 +1,30 @@
+{:source-paths
+ ["src"
+  "resources"
+  "checkouts/helix/src"]
+
+ :dependencies [[lilactown/helix "0.0.10"]
+                [lucywang000/hashp "0.1.2"]
+                [binaryage/devtools "1.0.0"]]
+
+ :builds {:app {:target :browser
+
+                :dev
+                {:output-dir
+                 "dist"
+
+                 :asset-path
+                 "/frameworks/keyed/helix/dist/"}
+                :devtools {:after-load demo.main/after-reload
+
+                           :watch-dir "resources/demo/styles"
+                           :watch-path "/styles"
+
+                           :preloads [devtools.preload
+                                      hashp.core]}
+
+                :release {:output-dir "dist"
+                          :compiler-options {:optimizations :advanced
+                                             :infer-externs true}}
+
+                :modules {:main {:init-fn demo.main/init!}}}}}
