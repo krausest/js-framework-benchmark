@@ -1,7 +1,7 @@
 {
   "private": true,
   "js-framework-benchmark": {
-    "frameworkVersion": "0.8"
+    "frameworkVersion": "0.0.10"
   },
   "scripts": {
     "watch": "shadow-cljs watch :app",
