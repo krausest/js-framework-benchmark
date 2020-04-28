@@ -9,7 +9,7 @@
     "build-prod": "shadow-cljs release :app"
   },
   "devDependencies": {
-    "shadow-cljs": "2.8.106",
+    "shadow-cljs": "2.8.100",
     "ws": "^7.1.2"
   },
   "dependencies": {
