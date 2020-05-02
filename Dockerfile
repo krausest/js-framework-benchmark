@@ -2,6 +2,7 @@
 FROM ubuntu:19.10
 COPY install_rust.sh /root/
 RUN echo "unsafe-perm = true" > /root/.npmrc
+RUN echo "export NG_CLI_ANALYTICS=ci" >> /root/.npmrc
 RUN echo "{ \"allow_root\": true }" >  /root/.bowerrc
 
 # replace shell with bash so we can source files
