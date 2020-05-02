@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.0.10"
+  },
+  "scripts": {
+    "watch": "shadow-cljs watch :app",
+    "build-dev": "shadow-cljs compile :app",
+    "build-prod": "shadow-cljs release :app"
+  },
+  "devDependencies": {
+    "shadow-cljs": "2.8.100",
+    "ws": "^7.1.2"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-refresh": "0.8.1"
+  }
+}
