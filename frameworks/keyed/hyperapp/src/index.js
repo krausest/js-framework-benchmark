@@ -1,103 +1,43 @@
 import { h, Lazy, app } from "hyperapp"
+import { buildData } from "./store"
 
-let id = 1
+const updateRow = (id, label) => ({
+  id,
+  label: label + " !!!",
+})
 
-const random = (max) => Math.round(Math.random() * 1000) % max
+const append1K = (state) => ({
+  data: state.data.concat(buildData(1000)),
+})
 
-const adjectives = [
-  "pretty",
-  "large",
-  "big",
-  "small",
-  "tall",
-  "short",
-  "long",
-  "handsome",
-  "plain",
-  "quaint",
-  "clean",
-  "elegant",
-  "easy",
-  "angry",
-  "crazy",
-  "helpful",
-  "mushy",
-  "odd",
-  "unsightly",
-  "adorable",
-  "important",
-  "inexpensive",
-  "cheap",
-  "expensive",
-  "fancy",
-]
+const create1K = () => ({
+  data: buildData(1000),
+})
 
-const colors = [
-  "red",
-  "yellow",
-  "blue",
-  "green",
-  "pink",
-  "brown",
-  "purple",
-  "brown",
-  "white",
-  "black",
-  "orange",
-]
+const create10K = () => ({
+  data: buildData(10000),
+})
 
-const nouns = [
-  "table",
-  "chair",
-  "house",
-  "bbq",
-  "desk",
-  "car",
-  "pony",
-  "cookie",
-  "sandwich",
-  "burger",
-  "pizza",
-  "mouse",
-  "keyboard",
-]
+const clearAllRows = () => ({
+  data: [],
+})
 
-const buildData = (count) => {
-  const result = []
-  for (let i = 0; i < count; i++) {
-    result.push({
-      id: id++,
-      label:
-        adjectives[random(adjectives.length)] +
-        " " +
-        colors[random(colors.length)] +
-        " " +
-        nouns[random(nouns.length)],
-    })
-  }
-  return result
-}
+const deleteRow = (state, id) => ({
+  data: state.data.filter((d) => d.id !== id),
+})
 
-const run = () => ({ data: buildData(1000) })
-
-const add = (state) => ({ data: state.data.concat(buildData(1000)) })
-
-const runLots = () => ({ data: buildData(10000) })
-
-const clear = () => ({ data: [] })
-
-const update = (state) => ({
-  data: state.data.map((d, i) => ({
-    id: d.id,
-    label: i % 10 === 0 ? `${d.label} !!!` : d.label,
-  })),
+const updateEveryTenth = (state) => ({
+  data: state.data.map((d, i) => (i % 10 === 0 ? updateRow(d.id, d.label) : d)),
   selected: undefined,
 })
 
+const selectRow = (state, id) => ({
+  data: state.data,
+  selected: id,
+})
+
 const swapRows = (state) => {
-  if (state.data.length <= 998) {
-    return state
-  }
+  if (state.data.length <= 998) return state
 
   const temp = state.data[1]
   state.data[1] = state.data[998]
@@ -108,16 +48,6 @@ const swapRows = (state) => {
     selected: state.selected,
   }
 }
-
-const selectRow = (state, id) => ({
-  data: state.data,
-  selected: id,
-})
-
-const deleteRow = (state, id) => ({
-  data: state.data.filter((d) => d.id !== id),
-  selected: state.selected,
-})
 
 const Row = ({ data, label, styleClass }) =>
   h(
@@ -178,7 +108,7 @@ app({
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "run",
-                    onclick: run,
+                    onclick: create1K,
                   },
                   "Create 1,000 rows"
                 )
@@ -192,7 +122,7 @@ app({
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "runlots",
-                    onclick: runLots,
+                    onclick: create10K,
                   },
                   "Create 10,000 rows"
                 )
@@ -206,7 +136,7 @@ app({
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "add",
-                    onclick: add,
+                    onclick: append1K,
                   },
                   "Append 1,000 rows"
                 )
@@ -220,7 +150,7 @@ app({
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "update",
-                    onclick: update,
+                    onclick: updateEveryTenth,
                   },
                   "Update every 10th row"
                 )
@@ -234,7 +164,7 @@ app({
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "clear",
-                    onclick: clear,
+                    onclick: clearAllRows,
                   },
                   "Clear"
                 )
@@ -277,5 +207,5 @@ app({
         "aria-hidden": "true",
       })
     ),
-  node: document.getElementById("main"),
+  node: document.getElementById("app"),
 })
