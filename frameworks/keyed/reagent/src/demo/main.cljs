@@ -18,18 +18,22 @@
                      (.log js/console (str last " took " (- stop @start-time)))))
                  0)))
 
-(defn row [data selected? on-click on-delete]
-  [:tr
-   {:class (if selected? "danger")}
-   [:td.col-md-1 (:id data)]
-   [:td.col-md-4
-    [:a {:on-click (fn [e] (on-click (:id data)))}
-     (:label data)]]
-   [:td.col-md-1
-    [:a {:on-click (fn [e] (on-delete (:id data)))}
-     [:span.glyphicon.glyphicon-remove
-      {:aria-hidden "true"}]]]
-   [:td.col-md-6]])
+(defn is-selected? [selected id]
+  (= id @selected))
+
+(defn row [data selected on-click on-delete]
+  (let [selected? @(r/track is-selected? selected (:id data))]
+    [:tr
+     {:class (if selected? "danger")}
+     [:td.col-md-1 (:id data)]
+     [:td.col-md-4
+      [:a {:on-click (fn [e] (on-click (:id data)))}
+       (:label data)]]
+     [:td.col-md-1
+      [:a {:on-click (fn [e] (on-delete (:id data)))}
+       [:span.glyphicon.glyphicon-remove
+        {:aria-hidden "true"}]]]
+     [:td.col-md-6]]))
 
 (defn main []
   (let [id-atom (atom 0)
@@ -123,14 +127,13 @@
                 "Swap rows"]]]]]]
           [:table.table.table-hover.table-striped.test-data
            [:tbody
-            (let [s @selected]
-              (for [d @data]
-                ^{:key (:id d)}
-                [row
-                 d
-                 (identical? (:id d) s)
-                 select
-                 delete]))]]
+            (for [d @data]
+              ^{:key (:id d)}
+              [row
+               d
+               selected
+               select
+               delete])]]
           [:span.preloadicon.glyphicon.glyphicon-remove
            {:aria-hidden "true"}]])})))
 
