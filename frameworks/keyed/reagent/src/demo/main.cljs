@@ -1,5 +1,6 @@
 (ns demo.main
   (:require [reagent.core :as r]
+            [reagent.dom :as rdom]
             [demo.utils :as u]))
 
 (defn is-selected? [selected id]
@@ -106,4 +107,4 @@
        [:span.preloadicon.glyphicon.glyphicon-remove
         {:aria-hidden "true"}]])))
 
-(r/render [main] (.getElementById js/document "main"))
+(rdom/render [main] (.getElementById js/document "main"))
