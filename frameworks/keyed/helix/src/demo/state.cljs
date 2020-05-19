@@ -65,6 +65,3 @@
     ::select (assoc state :selected payload)
     ::delete (update state :data delete-row payload)
     ::clear initial-state))
-
-
-

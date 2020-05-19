@@ -8,6 +8,7 @@
 
 (defnc jumbotron
   [{:keys [dispatch]}]
+  {:wrap [(helix/memo)]}
   (d/div
    {:class "jumbotron"}
    (d/div
