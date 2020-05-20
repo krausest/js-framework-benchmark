@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "doz": "3.0.0"
+    "doz": "3.0.1"
   },
   "devDependencies": {
     "webpack": "4.41.4",
