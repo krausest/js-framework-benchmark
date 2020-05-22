@@ -32,8 +32,7 @@
 
 (defn update-some [data]
   (reduce (fn [data index]
-            (let [row (get data index)]
-              (assoc data index (assoc row :label (str (:label row) " !!!")))))
+            (update data index update :label str " !!!"))
           data
           (range 0 (count data) 10)))
 
