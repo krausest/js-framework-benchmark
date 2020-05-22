@@ -11,20 +11,19 @@
 (defn build-data [count]
   ;; eagerly build data
   (loop [i 0
-         data #js []]
+         data (transient [])]
     (if (< i count)
       (recur
        (inc i)
-       (doto data
-         (.push (->Data
-                 (set! id (inc id))
-                 (str (rand-nth adjectives)
-                      " "
-                      (rand-nth colours)
-                      " "
-                      (rand-nth nouns))))))
+       (conj! data (->Data
+                    (set! id (inc id))
+                    (str (rand-nth adjectives)
+                         " "
+                         (rand-nth colours)
+                         " "
+                         (rand-nth nouns)))))
       ;; done
-      (vec data))))
+      (persistent! data))))
 
 (defn add [data]
   (let [last-id (:id (last data) 0)]
