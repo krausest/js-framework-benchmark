@@ -49,6 +49,7 @@ RUN bash /root/install_rust.sh
 # USER user
 
 RUN npm install
+COPY lws.config.js /server
 EXPOSE 8080
-CMD ["/server/node_modules/.bin/http-server","-c-1","/build"]
+CMD ["/server/node_modules/.bin/ws","-c","/server/lws.config.js","--static.maxage", "1"]
 

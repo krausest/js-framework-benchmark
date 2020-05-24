@@ -7,74 +7,70 @@ import * as R from 'ramda';
 import { fork } from 'child_process';
 import { executeBenchmark } from './forkedBenchmarkRunner';
 import mapObjIndexed from 'ramda/es/mapObjIndexed';
+import {writeResults} from './writeResults';
+import { resolve } from 'dns';
 
-function forkedRun(frameworks: FrameworkData[], frameworkName: string, keyed: boolean, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning> {
-    if (config.FORK_CHROMEDRIVER) {
-        return new Promise(function (resolve, reject) {
-            const forked = fork('dist/forkedBenchmarkRunner.js');
-            if (config.LOG_DEBUG) console.log("forked child process");
-            forked.send({ config, frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions });
-            forked.on('message', (msg: ErrorAndWarning) => {
-                if (config.LOG_DEBUG) console.log("main process got message from child", msg);
-                resolve(msg);
+function forkAndCallBenchmark(frameworks: FrameworkData[], frameworkName: string, keyed: boolean, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning> {
+    return new Promise((resolve, reject) => {
+        const forked = fork('dist/forkedBenchmarkRunner.js');
+                if (config.LOG_DEBUG) console.log("forked child process");
+                forked.send({ config, frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions });
+                forked.on('message', async (msg: ErrorAndWarning) => {
+                    if (config.LOG_DEBUG) console.log("main process got message from child", msg);
+                    resolve(msg);
+                });
+                forked.on('close', (msg) => {
+                    if (config.LOG_DEBUG) console.log("child closed", msg);
+                });
+                forked.on('error', (msg) => {
+                    if (config.LOG_DEBUG) console.log("child error", msg);
+                    reject(msg);
+                });
+                forked.on('exit', (code, signal) => {
+                    if (config.LOG_DEBUG) console.log("child exit", code, signal);
+                });
             });
-            forked.on('close', (msg) => {
-                if (config.LOG_DEBUG) console.log("child closed", msg);
-            });
-            forked.on('error', (msg) => {
-                if (config.LOG_DEBUG) console.log("child error", msg);
-            });
-            forked.on('exit', (code, signal) => {
-                if (config.LOG_DEBUG) console.log("child exit", code, signal);
-            });
-        });
-    } else {
-        return executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
-    }
 }
 
-async function performRetryableRun(runFrameworks: FrameworkData[], framework: FrameworkData, benchmark: Benchmark) {
-    let errors: String[] = [];
-    let warnings: String[] = [];
-    let retry = 1;
-    let attemptRetry = true;
+async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: string, keyed: boolean, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<{errors:String[], warnings:String[]}> {
+    if (config.FORK_CHROMEDRIVER) {
+        let runFrameworks = frameworks.filter(f => f.keyed === keyed).filter(f => frameworkName === f.name);
+        let runBenchmarks = benchmarks.filter(b => benchmarkName === b.id);
+        if (runFrameworks.length!=1) throw `Framework name ${frameworkName} is not unique`;
+        if (runBenchmarks.length!=1) throw `Benchmark name ${benchmarkName} is not unique`;
 
-    for (; retry<=5 && attemptRetry; retry++) {
-        errors = [];
-        warnings = [];
-        console.log(`Executing benchmark ${framework.name} and benchmark ${benchmark.id} retry # ${retry}`);
+        let framework = runFrameworks[0];
+        let benchmark = runBenchmarks[0];
 
-        attemptRetry = false;
-        let benchmarkOptions: BenchmarkOptions = {
-            port: config.PORT.toFixed(),
-            remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
-            chromePort: config.CHROME_PORT,
-            headless: args.headless,
-            chromeBinaryPath: args.chromeBinary,
-            numIterationsForCPUBenchmarks: config.REPEAT_RUN,
-            numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
-            numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
-        }
-        // Assumption: For all errors we can handle it won't throw but return a result
-        let benchMsg: any = await forkedRun(runFrameworks, framework.name, framework.keyed, benchmark.id, benchmarkOptions);
-        if (benchMsg.failure) {
-            console.log(`Executing ${framework.uri} and benchmark ${benchmark.id} failed with a technical error: ${benchMsg.failure}`);
-            errors.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed with a technical error: ${benchMsg.failure}`);
-            if (config.EXIT_ON_ERROR) throw "Exiting because of an technical error and config.EXIT_ON_ERROR = true";
+        let warnings : String[] = [];
+        let errors : String[] = [];
+
+        let results: Array<number|LighthouseData> = [];
+        let count = 0;
+        if (benchmark.type == BenchmarkType.CPU) {
+            count = benchmarkOptions.numIterationsForCPUBenchmarks;
+        } else if (benchmark.type == BenchmarkType.MEM) {
+            count = benchmarkOptions.numIterationsForMemBenchmarks;
         } else {
-            let errorsAndWarnings = benchMsg as ErrorAndWarning;
-            if (errorsAndWarnings.error) errors.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed: ` + errorsAndWarnings.error);
-            for (let warning of errorsAndWarnings.warnings) {
-                if (errorsAndWarnings.error) warnings.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed: ` + errorsAndWarnings.error);
-            }
-            if (errorsAndWarnings.error && errorsAndWarnings.error.indexOf("Server terminated early with status 1")>-1) {
-                console.log("******* STRANGE selenium error found - retry");
-                attemptRetry = true;
-            }
-            if (errorsAndWarnings.error && config.EXIT_ON_ERROR) throw "Exiting because of an error and config.EXIT_ON_ERROR = true";
+            count = benchmarkOptions.numIterationsForStartupBenchmark
         }
+
+        for (let i = 0; i < count; i++) {
+            let res = await forkAndCallBenchmark(frameworks, frameworkName, keyed, benchmarkName, benchmarkOptions);
+            if (res.result) {
+                results.push(res.result);
+            }
+            warnings = warnings.concat(res.warnings);
+            if (res.error) {
+                errors.push(res.error);
+            }
+        }
+        console.log("******* result ", results);
+        await writeResults(config, { framework: framework, benchmark: benchmark, results: results });
+        return ({errors, warnings})
+    // } else {
+    //     return executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
     }
-    return {errors: errors, warnings: warnings};
 }
 
 async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]) {
@@ -92,19 +88,28 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
     console.log("Frameworks that will be benchmarked", runFrameworks.map(f => f.fullNameWithKeyedAndVersion));
     console.log("Benchmarks that will be run", runBenchmarks.map(b => b.id));
 
-    let data: [[FrameworkData, Benchmark]] = <any>[];
-    for (let i = 0; i < runFrameworks.length; i++) {
-        for (let j = 0; j < runBenchmarks.length; j++) {
-            data.push([runFrameworks[i], runBenchmarks[j]]);
-        }
+    let benchmarkOptions: BenchmarkOptions = {
+        port: config.PORT.toFixed(),
+        remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
+        chromePort: config.CHROME_PORT,
+        headless: args.headless,
+        chromeBinaryPath: args.chromeBinary,
+        numIterationsForCPUBenchmarks: config.REPEAT_RUN,
+        numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
+        numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
     }
 
-    for (let i = 0; i < data.length; i++) {
-        let framework = data[i][0];
-        let benchmark = data[i][1];
-        let result = await performRetryableRun(runFrameworks, framework, benchmark);
-        errors = errors.concat(result.errors);
-        warnings = warnings.concat(result.warnings);
+    for (let i = 0; i < runFrameworks.length; i++) {
+        for (let j = 0; j < runBenchmarks.length; j++) {
+            try {
+                let result = await runBenchmakLoop(runFrameworks, runFrameworks[i].name, runFrameworks[i].keyed, runBenchmarks[j].id, benchmarkOptions);
+                errors = warnings.concat(result.errors);
+                warnings = warnings.concat(result.warnings);
+            } catch (e) {
+                console.log("UNHANDELED ERROR", e);
+                errors.push(e);
+            }
+        }
     }
 
     if (warnings.length > 0) {
@@ -136,6 +141,7 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
 let args = yargs(process.argv)
     .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError] \n or: $0 [directory1] [directory2] .. [directory3] \n or: $0 installed")
     .help('help')
+    .boolean('onlyKeyed')
     .default('check', 'false')
     .default('fork', 'true')
     .boolean('noResults')
@@ -149,6 +155,8 @@ let args = yargs(process.argv)
     .array("framework").array("benchmark")
     .argv;
 
+console.log("args", args);
+
 let allArgs = args._.length<=2 ? [] : args._.slice(2,args._.length);
 
 let runBenchmarksFromDirectoryNamesArgs = !args.framework;
@@ -157,7 +165,11 @@ async function main() {
 
     let runBenchmarks = (args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""]).map(v => v.toString());
     let runFrameworks: FrameworkData[];
-    if(args.installed){
+    if(args.onlyKeyed){
+        console.log("MODE: Only keyed");
+        let matchesDirectoryArg = (directoryName: string) => directoryName.startsWith("keyed/");
+        runFrameworks = await initializeFrameworks(matchesDirectoryArg);
+    } else if(args.installed){
         console.log("MODE: Installed frameworks.");
         const hasPackageLock = (directoryName: string)=>
             !!fs.existsSync(path.join(path.resolve('..','frameworks'), directoryName, 'package-lock.json'))

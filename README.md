@@ -67,19 +67,19 @@ javac 1.8.0_131
 As stated above building and running the benchmarks for all frameworks can be challenging, thus we start step by step...
 
 Install global dependencies
-This installs just a few top level dependencies for the building the frameworks and a http-server.
+This installs just a few top level dependencies for the building the frameworks and a local web server.
 ```
 npm install
 ```
-We start the http-server in the root directory
+We start the local web server in the root directory
 ```
 npm start
 ```
-Verify that the http-server works:
+Verify that the local web server works:
 Try to open [http://localhost:8080/index.html](http://localhost:8080/index.html). If you see something like that you're on the right track:
 ![Index.html](images/index.png?raw=true "Index.html")
 
-Now open a new terminal window and keep http-server running in background.
+Now open a new terminal window and keep the web server running in background.
 
 ### 3. Building and running a single framework
 
@@ -138,7 +138,7 @@ now run the benchmark driver for the vanillajs-keyed framework:
 ```
 npm run bench keyed/vanillajs
 ```
-Just lean back and watch chrome run the benchmarks. 
+Just lean back and watch chrome run the benchmarks.
 If it doesn't complain then the html for the table should be fine and your categorization as keyed or non-keyed should also be correct.
 
 
@@ -234,7 +234,7 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
 `npm run bench -- --framework angular bob --benchmark 01_ 02_`
 runs the test for all frameworks that contain either angular or bob, which means all angular versions and bobril and all benchmarks whose id contain 01_ or 02_
 * You can also run implementations by passing their directory names (cd to webdriver-ts):
-`npm run bench keyed/angular keyed/react` or if you want to pass more options it becomes: 
+`npm run bench keyed/angular keyed/react` or if you want to pass more options it becomes:
 `npm run bench -- --count 3 keyed/angular keyed/react`.
 * You can run all of the frameworks you've installed using `npm run bench -- --installed`
 * If you can't get one framework to compile or run, just move it out of the root directory and remove it from common.ts, recompile and re-run
@@ -247,7 +247,7 @@ Contributions are very welcome. Please use the following rules:
 * Name your directory frameworks/[keyed|non-keyed]/[FrameworkName]
 * Each contribution must be buildable by `npm install` and `npm run build-prod` command in the directory. What build-prod does is up to you. Often there's an `npm run build-dev` that creates a development build
 * Every implementation must use bootstrap provided in the root css directory.
-* All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server should not be a local dependency. It is installed from the root directory to allow access to bootstrap.
+* All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server or other local web servers should not be local dependencies. It is installed from the root directory to allow access to bootstrap.
 * Please use *fixed version* numbers, no ranges, in package.json. Otherwise the build will break sooner or later - believe me. Updating works IMO best with npm-check-updates, which keeps the version format.
 * Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
 * Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
@@ -267,7 +267,7 @@ This work is derived from a benchmark that Richard Ayotte published on https://g
 Thanks to Baptiste Augrain for making the benchmarks more sophisticated and adding frameworks.
 
 ## History
-Frameworks without activity on github or npm for more than a year will be removed. 
+Frameworks without activity on github or npm for more than a year will be removed.
 The following frameworks were removed 9/16/2019:
 - [x] angular-light Last commit Nov 30, 2017
 - [x] nx. Last commit Feb 2017
