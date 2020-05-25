@@ -168,7 +168,7 @@ function extractRawValue(results: any, id: string) {
     }
 }
 
-async function computeResultsCPU(driver: WebDriver, benchmarkOptions: BenchmarkOptions, framework: FrameworkData, benchmark: Benchmark, warnings: String[]): Promise<number> {
+async function computeResultsCPU(driver: WebDriver, benchmarkOptions: BenchmarkOptions, framework: FrameworkData, benchmark: Benchmark, warnings: String[], expcectedResultCount: number): Promise<number[]> {
     let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
     if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
     const perfLogEvents = (await fetchEventsFromPerformanceLog(driver));
@@ -229,11 +229,11 @@ async function computeResultsCPU(driver: WebDriver, benchmarkOptions: BenchmarkO
         }
         remaining = R.drop(1, evts[1]);
     }
-    if (results.length !== 1) {
-        console.log(`soundness check failed. number or results isn't 1`, results, asString(filteredEvents));
-        throw `soundness check failed. number or results isn't 1`;
+    if (results.length !== expcectedResultCount) {
+        console.log(`soundness check failed. number or results isn't ${expcectedResultCount}`, results, asString(filteredEvents));
+        throw `soundness check failed. number or results isn't ${expcectedResultCount}`;
     }
-    return results[0];
+    return results;
 }
 
 async function computeResultsMEM(driver: WebDriver, benchmarkOptions: BenchmarkOptions, framework: FrameworkData, benchmark: Benchmark, warnings: String[]): Promise<number> {
@@ -357,40 +357,38 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
 
     console.log("benchmarking ", framework, benchmark.id);
     let driver : WebDriver = null;
-    console.timeLog("chromedriver", "runCPU started");
     try {
         driver = buildDriver(benchmarkOptions);
-        console.timeLog("chromedriver", "before setUseShadowRoot");
-        setUseShadowRoot(framework.useShadowRoot);
-        console.timeLog("chromedriver", "before get");
-        await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
-        console.timeLog("chromedriver", "after get");
+        for (let i = 0; i <benchmarkOptions.batchSize; i++) {
+            setUseShadowRoot(framework.useShadowRoot);
+            await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
-        // await (driver as any).sendDevToolsCommand('Network.enable');
-        // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
-            //     offline: false,
-            //     latency: 200, // ms
-            //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
-            //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
-            // });
-            console.log("driver timerstamp *")
-        await driver.executeScript("console.timeStamp('initBenchmark')");
+            // await (driver as any).sendDevToolsCommand('Network.enable');
+            // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
+                //     offline: false,
+                //     latency: 200, // ms
+                //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
+                //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
+                // });
+                console.log("driver timerstamp *")
+            await driver.executeScript("console.timeStamp('initBenchmark')");
 
-        await initBenchmark(driver, benchmark, framework);
-        if (benchmark.throttleCPU) {
-            console.log("CPU slowdown", benchmark.throttleCPU);
-            await (driver as any).sendDevToolsCommand('Emulation.setCPUThrottlingRate', {rate: benchmark.throttleCPU});
+            await initBenchmark(driver, benchmark, framework);
+            if (benchmark.throttleCPU) {
+                console.log("CPU slowdown", benchmark.throttleCPU);
+                await (driver as any).sendDevToolsCommand('Emulation.setCPUThrottlingRate', {rate: benchmark.throttleCPU});
+            }
+            await driver.executeScript("console.timeStamp('runBenchmark')");
+            await runBenchmark(driver, benchmark, framework);
+            if (benchmark.throttleCPU) {
+                console.log("resetting CPU slowdown");
+                await (driver as any).sendDevToolsCommand('Emulation.setCPUThrottlingRate', {rate: 1});
+            }
+            await driver.executeScript("console.timeStamp('finishedBenchmark')");
+            await afterBenchmark(driver, benchmark, framework);
+            await driver.executeScript("console.timeStamp('afterBenchmark')");
         }
-        await driver.executeScript("console.timeStamp('runBenchmark')");
-        await runBenchmark(driver, benchmark, framework);
-        if (benchmark.throttleCPU) {
-            console.log("resetting CPU slowdown");
-            await (driver as any).sendDevToolsCommand('Emulation.setCPUThrottlingRate', {rate: 1});
-        }
-        await driver.executeScript("console.timeStamp('finishedBenchmark')");
-        await afterBenchmark(driver, benchmark, framework);
-        await driver.executeScript("console.timeStamp('afterBenchmark')");
-        let result = await computeResultsCPU(driver, benchmarkOptions, framework, benchmark, warnings);
+        let result = await computeResultsCPU(driver, benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
         await driver.close();
         await driver.quit();
         return {error, warnings, result};
@@ -444,7 +442,7 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
         allResults.push();
         await driver.close();
         await driver.quit();
-        return {error, warnings, result};
+        return {error, warnings, result: [result]};
     } catch (e) {
         error= convertError(e);
         try {

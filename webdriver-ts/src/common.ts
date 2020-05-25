@@ -14,7 +14,7 @@ export type TBenchmarkStatus = 'OK'|'TEST_FAILED'|'TECHNICAL_ERROR';
 export interface ErrorAndWarning {
     error: String;
     warnings: String[];
-    result?: number|LighthouseData;
+    result?: number[]|LighthouseData;
 }
 
 export interface BenchmarkDriverOptions {
@@ -26,9 +26,11 @@ export interface BenchmarkDriverOptions {
 
 export interface BenchmarkOptions extends BenchmarkDriverOptions {
     port: string;
+    batchSize: number;
     numIterationsForCPUBenchmarks: number;
     numIterationsForMemBenchmarks: number;
     numIterationsForStartupBenchmark: number;
+
 }
 
 export let config = {
@@ -36,7 +38,7 @@ export let config = {
     REMOTE_DEBUGGING_PORT: 9999,
     CHROME_PORT: 9998,
     REPEAT_RUN: 10,
-    REPEAT_RUN_MEM: 5,
+    REPEAT_RUN_MEM: 1,
     REPEAT_RUN_STARTUP: 4,
     DROP_WORST_RUN: 0,
     WARMUP_COUNT: 5,
@@ -50,7 +52,8 @@ export let config = {
     STARTUP_SLEEP_DURATION: 1000,
     FORK_CHROMEDRIVER: true,
     WRITE_RESULTS: true,
-    RESULTS_DIRECTORY: "results"
+    RESULTS_DIRECTORY: "results",
+    ALLOW_BATCHING: false
 }
 export type TConfig = typeof config;
 

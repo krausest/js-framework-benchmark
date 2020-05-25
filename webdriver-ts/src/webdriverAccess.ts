@@ -220,7 +220,6 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
         args.push("--no-sandbox");
     }
 
-    console.time("chromedriver");
     let caps = new Capabilities({
         browserName: 'chrome',
         platform: 'ANY',

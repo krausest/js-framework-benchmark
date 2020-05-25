@@ -300,7 +300,8 @@ let benchmarkOptions: BenchmarkOptions = {
     chromeBinaryPath: args.chromeBinary,
     numIterationsForCPUBenchmarks: config.REPEAT_RUN,
     numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
-    numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
+    numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP,
+    batchSize: 1
 }
 async function main() {
     if (args.help) {

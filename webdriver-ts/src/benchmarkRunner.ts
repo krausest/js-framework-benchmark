@@ -13,17 +13,17 @@ import { resolve } from 'dns';
 function forkAndCallBenchmark(frameworks: FrameworkData[], frameworkName: string, keyed: boolean, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning> {
     return new Promise((resolve, reject) => {
         const forked = fork('dist/forkedBenchmarkRunner.js');
-                if (config.LOG_DEBUG) console.log("forked child process");
+                console.log("FORKING:  forked child process");
                 forked.send({ config, frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions });
                 forked.on('message', async (msg: ErrorAndWarning) => {
-                    if (config.LOG_DEBUG) console.log("main process got message from child", msg);
+                    console.log("FORKING: main process got message from child", msg);
                     resolve(msg);
                 });
                 forked.on('close', (msg) => {
-                    if (config.LOG_DEBUG) console.log("child closed", msg);
+                    console.log("FORKING: child closed", msg);
                 });
                 forked.on('error', (msg) => {
-                    if (config.LOG_DEBUG) console.log("child error", msg);
+                    console.log("FORKING: child error", msg);
                     reject(msg);
                 });
                 forked.on('exit', (code, signal) => {
@@ -45,20 +45,28 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
         let warnings : String[] = [];
         let errors : String[] = [];
 
-        let results: Array<number|LighthouseData> = [];
+        let results: Array<number[]|LighthouseData> = [];
         let count = 0;
+
         if (benchmark.type == BenchmarkType.CPU) {
             count = benchmarkOptions.numIterationsForCPUBenchmarks;
+            benchmarkOptions.batchSize = config.ALLOW_BATCHING && benchmark.allowBatching ? count : 1;
         } else if (benchmark.type == BenchmarkType.MEM) {
             count = benchmarkOptions.numIterationsForMemBenchmarks;
+            benchmarkOptions.batchSize = 1;
         } else {
             count = benchmarkOptions.numIterationsForStartupBenchmark
+            benchmarkOptions.batchSize = 1;
         }
 
-        for (let i = 0; i < count; i++) {
+
+        while (results.length < count) {
+            benchmarkOptions.batchSize = Math.min(benchmarkOptions.batchSize, count-results.length);
+            console.log("FORKING: ", benchmark.id, " BatchSize ", benchmarkOptions.batchSize);
             let res = await forkAndCallBenchmark(frameworks, frameworkName, keyed, benchmarkName, benchmarkOptions);
             if (res.result) {
-                results.push(res.result);
+                if (Array.isArray(res.result)) { results = results.concat(res.result)}
+                else results.push(res.result);
             }
             warnings = warnings.concat(res.warnings);
             if (res.error) {
@@ -96,14 +104,15 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
         chromeBinaryPath: args.chromeBinary,
         numIterationsForCPUBenchmarks: config.REPEAT_RUN,
         numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
-        numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP
+        numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP,
+        batchSize: 1
     }
 
     for (let i = 0; i < runFrameworks.length; i++) {
         for (let j = 0; j < runBenchmarks.length; j++) {
             try {
                 let result = await runBenchmakLoop(runFrameworks, runFrameworks[i].name, runFrameworks[i].keyed, runBenchmarks[j].id, benchmarkOptions);
-                errors = warnings.concat(result.errors);
+                errors = errors.concat(result.errors);
                 warnings = warnings.concat(result.warnings);
             } catch (e) {
                 console.log("UNHANDELED ERROR", e);

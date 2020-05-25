@@ -11,7 +11,8 @@ export interface BenchmarkInfo {
     type: BenchmarkType;
     label: string;
     description: string;
-    throttleCPU?: number
+    throttleCPU?: number;
+    allowBatching: boolean;
 }
 
 export abstract class Benchmark {
@@ -20,6 +21,7 @@ export abstract class Benchmark {
     label: string;
     description: string;
     throttleCPU?: number;
+    allowBatching: boolean;
 
     constructor(public benchmarkInfo: BenchmarkInfo) {
         this.id = benchmarkInfo.id;
@@ -27,6 +29,7 @@ export abstract class Benchmark {
         this.label = benchmarkInfo.label;
         this.description = benchmarkInfo.description;
         this.throttleCPU = benchmarkInfo.throttleCPU;
+        this.allowBatching = benchmarkInfo.allowBatching;
     }
     abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
     abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
@@ -54,7 +57,8 @@ const benchRun = new class extends Benchmark {
             id: "01_run1k",
             label: "create rows",
             description: "creating 1,000 rows",
-            type: BenchmarkType.CPU
+            type: BenchmarkType.CPU,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) { await testElementLocatedById(driver, "add", SHORT_TIMEOUT); }
@@ -70,7 +74,8 @@ const benchReplaceAll = new class extends Benchmark {
             id: "02_replace1k",
             label: "replace all rows",
             description: "updating all 1,000 rows (" + config.WARMUP_COUNT + " warmup runs).",
-            type: BenchmarkType.CPU
+            type: BenchmarkType.CPU,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -93,7 +98,8 @@ const benchUpdate = new class extends Benchmark {
             label: "partial update",
             description: "updating every 10th row for 1,000 rows (3 warmup runs). 16x CPU slowdown.",
             type: BenchmarkType.CPU,
-            throttleCPU: 16
+            throttleCPU: 16,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -118,14 +124,15 @@ const benchSelect = new class extends Benchmark {
             label: "select row",
             description: "highlighting a selected row. (" + config.WARMUP_COUNT + " warmup runs). 16x CPU slowdown.",
             type: BenchmarkType.CPU,
-            throttleCPU: 16
+            throttleCPU: 16,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
         await clickElementById(driver, 'run');
         await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
-        for (let i = 0; i <= config.WARMUP_COUNT; i++) {
+        for (let i = 0; i <= 10; i++) {
             await clickElementByXPath(driver, `//tbody/tr[${i + 1}]/td[2]/a`);
         }
     }
@@ -142,7 +149,8 @@ const benchSwapRows = new class extends Benchmark {
             label: "swap rows",
             description: "swap 2 rows for table with 1,000 rows. (" + config.WARMUP_COUNT + " warmup runs). 4x CPU slowdown.",
             type: BenchmarkType.CPU,
-            throttleCPU: 4
+            throttleCPU: 4,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -168,7 +176,8 @@ const benchRemove = new class extends Benchmark {
             id: "06_remove-one-1k",
             label: "remove row",
             description: "removing one row. (" + config.WARMUP_COUNT + " warmup runs).",
-            type: BenchmarkType.CPU
+            type: BenchmarkType.CPU,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -201,7 +210,8 @@ const benchRunBig = new class extends Benchmark {
             id: "07_create10k",
             label: "create many rows",
             description: "creating 10,000 rows",
-            type: BenchmarkType.CPU
+            type: BenchmarkType.CPU,
+            allowBatching: false
         })
     }
     async init(driver: WebDriver) {
@@ -220,7 +230,8 @@ const benchAppendToManyRows = new class extends Benchmark {
             label: "append rows to large table",
             description: "appending 1,000 to a table of 10,000 rows. 2x CPU slowdown",
             type: BenchmarkType.CPU,
-            throttleCPU: 2
+            throttleCPU: 2,
+            allowBatching: false
         })
     }
     async init(driver: WebDriver) {
@@ -241,7 +252,8 @@ const benchClear = new class extends Benchmark {
             label: "clear rows",
             description: "clearing a table with 1,000 rows. 8x CPU slowdown",
             type: BenchmarkType.CPU,
-            throttleCPU: 8
+            throttleCPU: 8,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -262,6 +274,7 @@ const benchReadyMemory = new class extends Benchmark {
             label: "ready memory",
             description: "Memory usage after page load.",
             type: BenchmarkType.MEM,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -283,6 +296,7 @@ const benchRunMemory = new class extends Benchmark {
             label: "run memory",
             description: "Memory usage after adding 1000 rows.",
             type: BenchmarkType.MEM,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -301,6 +315,7 @@ const benchUpdate5Memory = new class extends Benchmark {
             label: "update eatch 10th row for 1k rows (5 cycles)",
             description: "Memory usage after clicking update every 10th row 5 times",
             type: BenchmarkType.MEM,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -322,6 +337,7 @@ const benchReplace5Memory = new class extends Benchmark {
             label: "replace 1k rows (5 cycles)",
             description: "Memory usage after clicking create 1000 rows 5 times",
             type: BenchmarkType.MEM,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -342,6 +358,7 @@ const benchCreateClear5Memory = new class extends Benchmark {
             label: "creating/clearing 1k rows (5 cycles)",
             description: "Memory usage after creating and clearing 1000 rows 5 times",
             type: BenchmarkType.MEM,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -362,7 +379,8 @@ const benchStartupConsistentlyInteractive: StartupBenchmarkResult = {
     label: "consistently interactive",
     description: "a pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)",
     type: BenchmarkType.STARTUP,
-    property: "TimeToConsistentlyInteractive"
+    property: "TimeToConsistentlyInteractive",
+    allowBatching: true
 }
 
 const benchStartupBootup: StartupBenchmarkResult = {
@@ -370,7 +388,8 @@ const benchStartupBootup: StartupBenchmarkResult = {
     label: "script bootup time",
     description: "the total ms required to parse/compile/evaluate all the page's scripts",
     type: BenchmarkType.STARTUP,
-    property: "ScriptBootUpTtime"
+    property: "ScriptBootUpTtime",
+    allowBatching: true
 }
 
 const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
@@ -378,7 +397,8 @@ const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
     label: "main thread work cost",
     description: "total amount of time spent doing work on the main thread. includes style/layout/etc.",
     type: BenchmarkType.STARTUP,
-    property: "MainThreadWorkCost"
+    property: "MainThreadWorkCost",
+    allowBatching: true
 }
 
 const benchStartupTotalBytes: StartupBenchmarkResult = {
@@ -386,7 +406,8 @@ const benchStartupTotalBytes: StartupBenchmarkResult = {
     label: "total kilobyte weight",
     description: "network transfer cost (post-compression) of all the resources loaded into the page.",
     type: BenchmarkType.STARTUP,
-    property: "TotalKiloByteWeight"
+    property: "TotalKiloByteWeight",
+    allowBatching: true
 }
 
 class BenchStartup extends Benchmark {
@@ -396,6 +417,7 @@ class BenchStartup extends Benchmark {
             label: "startup time",
             description: "Time for loading, parsing and starting up",
             type: BenchmarkType.STARTUP,
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) { // not used with lighthouse
