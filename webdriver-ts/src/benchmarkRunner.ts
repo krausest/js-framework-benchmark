@@ -59,6 +59,7 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
             benchmarkOptions.batchSize = 1;
         }
 
+        let retries = 0;
 
         while (results.length < count) {
             benchmarkOptions.batchSize = Math.min(benchmarkOptions.batchSize, count-results.length);
@@ -68,9 +69,19 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
                 if (Array.isArray(res.result)) { results = results.concat(res.result)}
                 else results.push(res.result);
             }
+            for (let warning of res.warnings) {
+                warnings.push(`Executed ${framework.uri} and benchmark ${benchmark.id} with warning: ` + warning);
+            }
             warnings = warnings.concat(res.warnings);
             if (res.error) {
-                errors.push(res.error);
+                if (res.error.indexOf("Server terminated early with status 1")>-1) {
+                    console.log("******* STRANGE selenium error found - retry #",(retries+1));
+                    retries++;
+                    if (retries==3) break;
+                } else {
+                    errors.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed: `+res.error);
+                    break;
+                }
             }
         }
         console.log("******* result ", results);
@@ -151,6 +162,7 @@ let args = yargs(process.argv)
     .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError] \n or: $0 [directory1] [directory2] .. [directory3] \n or: $0 installed")
     .help('help')
     .boolean('onlyKeyed')
+    .boolean('onlyNonKeyed')
     .default('check', 'false')
     .default('fork', 'true')
     .boolean('noResults')
@@ -177,6 +189,10 @@ async function main() {
     if(args.onlyKeyed){
         console.log("MODE: Only keyed");
         let matchesDirectoryArg = (directoryName: string) => directoryName.startsWith("keyed/");
+        runFrameworks = await initializeFrameworks(matchesDirectoryArg);
+    } else if(args.onlyNonKeyed){
+        console.log("MODE: Only non keyed");
+        let matchesDirectoryArg = (directoryName: string) => directoryName.startsWith("non-keyed/");
         runFrameworks = await initializeFrameworks(matchesDirectoryArg);
     } else if(args.installed){
         console.log("MODE: Installed frameworks.");

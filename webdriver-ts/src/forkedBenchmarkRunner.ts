@@ -63,7 +63,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         //     console.log("UPDATELAYER ",JSON.stringify(e));
         //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur, evt: JSON.stringify(e)});
         } else if (e.params.name==='MajorGC' && e.params.args.usedHeapSizeAfter) {
-            filteredEvents.push({type:'gc', ts: +e.params.ts, end:+e.params.ts, mem: Number(e.params.args.usedHeapSizeAfter)/1024/1024});
+            filteredEvents.push({type:'gc', ts: +e.params.ts, dur: +e.params.dur, end:+e.params.ts, mem: Number(e.params.args.usedHeapSizeAfter)/1024/1024});
             if (config.LOG_TIMELINE) console.log("GC ",JSON.stringify(e));
         }
     });
