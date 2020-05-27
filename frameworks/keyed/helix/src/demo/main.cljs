@@ -1,110 +1,102 @@
 (ns demo.main
-  (:require [helix.core :as hx :refer [defnc $]]
+  (:require [helix.core :as helix :refer [defnc $]]
             [helix.dom :as d]
-            [helix.hooks :as hooks :refer [use-state use-effect]]
+            [helix.hooks :as hooks]
             ["react-dom" :as rdom]
-            [demo.utils :as u]))
+            [demo.state :as s]))
 
-(defnc row [{:keys [data selected? on-select on-delete]}]
-  (d/tr {:class (if selected? "danger")}
-    (d/td {:class "col-md-1"}
-          (:id data))
-    (d/td {:class "col-md-4"}
-          (d/a {:on-click (fn [e] (on-select (:id data)))}
-               (:label data)))
-    (d/td {:class "col-md-1"}
-     (d/a {:on-click (fn [e] (on-delete (:id data)))}
-          (d/span {:class "glyphicon glyphicon-remove"
-                   :aria-hidden "true"})))
-    (d/td {:class "col-md-6"})))
 
-(defonce id-atom (atom 0))
+(defnc jumbotron
+  [{:keys [dispatch]}]
+  {:wrap [(helix/memo)]}
+  (d/div
+   {:class "jumbotron"}
+   (d/div
+    {:class "row"}
+    (d/div
+     {:class "col-md-6"}
+     (d/h1 "Helix"))
+    (d/div
+     {:class "col-md-6"}
+     (d/div
+      {:class "row"}
+      (d/div
+       {:class "col-sm-6 smallpad"}
+       (d/button {:class " btn btn-primary btn-block"
+                  :type "button"
+                  :id "run"
+                  :on-click #(dispatch [::s/run])}
+        "Create 1,000 rows"))
+      (d/div
+       {:class "col-sm-6 smallpad"}
+       (d/button {:class "btn btn-primary btn-block"
+                  :type "button"
+                  :id "runlots"
+                  :on-click #(dispatch [::s/run-lots])}
+        "Create 10,000 rows"))
+      (d/div
+       {:class "col-sm-6 smallpad"}
+       (d/button {:class "btn btn-primary btn-block"
+                  :type "button"
+                  :id "add"
+                  :on-click #(dispatch [::s/add])}
+        "Append 1,000 rows"))
+      (d/div
+       {:class "col-sm-6 smallpad"}
+       (d/button {:class " btn btn-primary btn-block"
+                  :type "button"
+                  :id "update"
+                  :on-click #(dispatch [::s/update])}
+        "Update every 10th row"))
+      (d/div
+       {:class "col-sm-6 smallpad"}
+       (d/button {:class "btn btn-primary btn-block"
+                  :type "button"
+                  :id "clear"
+                  :on-click #(dispatch [::s/clear])}
+        "Clear"))
+      (d/div
+       {:class "col-sm-6 smallpad"}
+       (d/button {:class "btn btn-primary btn-block"
+                  :type "button"
+                  :id "swaprows"
+                  :on-click #(dispatch [::s/swap])}
+        "Swap rows")))))))
+
+
+(defnc row [{:keys [data selected? dispatch]}]
+  {:wrap [(helix/memo)]}
+  (d/tr
+   {:class (if selected? "danger")
+    :on-click #(dispatch [::s/select (:id data)])}
+   (d/td {:class "col-md-1"}
+         (:id data))
+   (d/td {:class "col-md-4"}
+         (d/a (:label data)))
+   (d/td
+    {:class "col-md-1"}
+    (d/a
+     {:on-click #(dispatch [::s/delete (:id data)])}
+     (d/span {:class "glyphicon glyphicon-remove"
+              :aria-hidden "true"})))
+   (d/td {:class "col-md-6"})))
+
 
 (defnc main []
-  (js/console.log "re-render")
-  (let [[data set-data] (use-state [])
-        [selected set-selected] (use-state nil)
-        run
-        (fn run [_]
-          (set-data (vec (u/build-data id-atom 1000)))
-          (set-selected nil))
-        run-lots
-        (fn run-lots [_]
-          (set-data (vec (u/build-data id-atom 10000)))
-          (set-selected nil))
-        add
-        (fn add [_]
-          (set-data u/add id-atom))
-        update-some
-        (fn update-some []
-          (set-data u/update-some))
-        clear
-        (fn clear []
-          (set-selected nil)
-          (set-data []))
-        swap-rows
-        (fn swap-rows []
-          (set-data u/swap-rows))
-        select
-        (fn select [id]
-          (set-selected id))
-        delete
-        (fn delete [id]
-          (set-data u/delete-row id))]
+  (let [[{:keys [data selected]} dispatch] (hooks/use-reducer
+                                            s/state-reducer
+                                            s/initial-state)]
     (d/div
      {:class "container"}
-     (d/div
-      {:class "jumbotron"}
-      (d/div
-       {:class "row"}
-       (d/div {:class "col-md-6"}
-              (d/h1 (str "Helix")))
-       (d/div {:class "col-md-6"}
-              (d/div {:class "row"}
-                     (d/div {:class "col-sm-6 smallpad"}
-                            (d/button {:class " btn btn-primary btn-block"
-                                       :type "button"
-                                       :id "run"
-                                       :on-click run}
-                                      "Create 1,000 rows"))
-                     (d/div {:class "col-sm-6 smallpad"}
-                            (d/button {:class "btn btn-primary btn-block"
-                                       :type "button"
-                                       :id "runlots"
-                                       :on-click run-lots}
-                                      "Create 10,000 rows"))
-                     (d/div {:class "col-sm-6 smallpad"}
-                            (d/button {:class "btn btn-primary btn-block"
-                                       :type "button"
-                                       :id "add"
-                                       :on-click add}
-                                      "Append 1,000 rows"))
-                     (d/div {:class "col-sm-6 smallpad"}
-                            (d/button {:class " btn btn-primary btn-block"
-                                       :type "button"
-                                       :id "update"
-                                       :on-click update-some}
-                                      "Update every 10th row"))
-                     (d/div {:class "col-sm-6 smallpad"}
-                            (d/button {:class "btn btn-primary btn-block"
-                                      :type "button"
-                                      :id "clear"
-                                      :on-click clear}
-                             "Clear"))
-                     (d/div {:class "col-sm-6 smallpad"}
-                            (d/button {:class "btn btn-primary btn-block"
-                                       :type "button"
-                                       :id "swaprows"
-                                       :on-click swap-rows}
-                                      "Swap rows"))))))
-     (d/table {:class "table table-hover table-striped test-data"}
-        (d/tbody
-         (for [{:keys [id] :as d} data]
-           ($ row {:key id
-                   :data d
-                   :selected? (identical? id selected)
-                   :on-select select
-                   :on-delete delete}))))
+     ($ jumbotron {:dispatch dispatch})
+     (d/table
+      {:class "table table-hover table-striped test-data"}
+      (d/tbody
+       (for [{:keys [id] :as d} data]
+         ($ row {:key id
+                 :data d
+                 :selected? (identical? id selected)
+                 :dispatch dispatch}))))
      (d/span {:class "preloadicon glyphicon glyphicon-remove"
               :aria-hidden "true"}))))
 
