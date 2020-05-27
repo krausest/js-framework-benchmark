@@ -13,17 +13,17 @@ import { resolve } from 'dns';
 function forkAndCallBenchmark(frameworks: FrameworkData[], frameworkName: string, keyed: boolean, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning> {
     return new Promise((resolve, reject) => {
         const forked = fork('dist/forkedBenchmarkRunner.js');
-                console.log("FORKING:  forked child process");
+                if (config.LOG_DETAILS) console.log("FORKING:  forked child process");
                 forked.send({ config, frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions });
                 forked.on('message', async (msg: ErrorAndWarning) => {
-                    console.log("FORKING: main process got message from child", msg);
+                    if (config.LOG_DETAILS) console.log("FORKING: main process got message from child", msg);
                     resolve(msg);
                 });
                 forked.on('close', (msg) => {
-                    console.log("FORKING: child closed", msg);
+                    if (config.LOG_DETAILS) console.log("FORKING: child closed", msg);
                 });
                 forked.on('error', (msg) => {
-                    console.log("FORKING: child error", msg);
+                    if (config.LOG_DETAILS) console.log("FORKING: child error", msg);
                     reject(msg);
                 });
                 forked.on('exit', (code, signal) => {
@@ -68,9 +68,6 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
             if (res.result) {
                 if (Array.isArray(res.result)) { results = results.concat(res.result)}
                 else results.push(res.result);
-            }
-            for (let warning of res.warnings) {
-                warnings.push(`Executed ${framework.uri} and benchmark ${benchmark.id} with warning: ` + warning);
             }
             warnings = warnings.concat(res.warnings);
             if (res.error) {
