@@ -22,7 +22,7 @@ export default factory(function App({ middleware: { store }}) {
 			return null;
 		}
 		return w(Row, {
-			key,
+			key: item.id,
 			id: item.id,
 			label: item.label,
 			onSelect: store.select
