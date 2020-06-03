@@ -115,19 +115,19 @@ export default factory(({ properties, middleware: { invalidator }}) => {
 		get ids(): number[] {
 			return Array.from(ids);
 		},
-		chunks(size = 500): string[] {
-			const ids = this.ids;
-			const chunks: string[] =[];
-			for (let i = 0; i< ids.length; i+=size) {
-				chunks.push(JSON.stringify(ids.slice(i,i+size)));
-			}
-			return chunks;
-		},
 		get item(): Item | undefined {
 			return data[widgetKey];
 		},
 		get selected(): number | undefined {
 			return selected;
+		},
+		chunks(size = 500): string[] {
+			const ids = this.ids;
+			const chunks: string[] = [];
+			for (let i = 0; i < ids.length; i+=size) {
+				chunks.push(JSON.stringify(ids.slice(i, i + size)));
+			}
+			return chunks;
 		},
 		del: () => {
 			if (typeof widgetKey === 'number') {

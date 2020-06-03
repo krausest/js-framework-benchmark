@@ -9,9 +9,9 @@ export interface RowContainerProperties {
 const factory = create().properties<RowContainerProperties>();
 
 export default factory(function RowContainer({ properties }) {
-    const { ids, onSelect } = properties();
-    console.count('container');
-	return (JSON.parse(ids) as number[]).map((id: number) => {
+	const { ids: idsString, onSelect } = properties();
+	const ids: number[] = JSON.parse(idsString);
+	return ids.map((id: number) => {
 		return w(Row, {
 			id,
 			key: id,
