@@ -1,5 +1,5 @@
 import { create, v, w } from '@dojo/framework/core/vdom';
-import Row from './Row';
+import RowContainer from './RowContainer';
 import Buttons from './Buttons';
 import store from  './Store';
 
@@ -16,10 +16,10 @@ export default factory(function App({ middleware: { store }}) {
 		{ id: 'swaprows', label: 'Swap Rows', onClick: store.swapRows }
 	];
 
-	const rows = store.ids.map((id) => {
-		return w(Row, {
-			id,
-			key: id,
+	const rows = store.chunks().map((ids, i) => {
+		return w(RowContainer, {
+			ids,
+			key: i,
 			onSelect: store.select
 		});
 	});
@@ -27,7 +27,7 @@ export default factory(function App({ middleware: { store }}) {
 	return v('div', { key: 'root', classes: [ 'container' ] }, [
 		w(Buttons, { buttonConfigs }),
 		v('table', { classes: [ 'table', 'table-hover', 'table-striped', 'test-data' ] }, [
-			v('tbody', rows)
+			rows.length ? v('tbody', rows) : null
 		]),
 		v('span', { classes: [ 'preloadicon', 'glyphicon', 'glyphicon-remove' ] })
 	]);
