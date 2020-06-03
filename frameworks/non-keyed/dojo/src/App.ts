@@ -22,10 +22,9 @@ export default factory(function App({ middleware: { store }}) {
 			return null;
 		}
 		return w(Row, {
-			key: item.id,
+			key,
 			id: item.id,
-			label: item.label,
-			onSelect: store.select
+			label: item.label
 		});
 	});
 
