@@ -153,10 +153,12 @@ export default factory(({ properties, middleware: { invalidator } }) => {
       }
       invalidate();
     },
-    select: (id: number) => {
-      selected && invalidate(selected);
-      invalidate(id);
-      selected = id;
+    select: () => {
+      if (typeof widgetKey === "number") {
+        selected && invalidate(selected);
+        selected = widgetKey;
+        invalidate(widgetKey);
+      }
     },
     runLots: () => {
       idx = 0;
@@ -182,6 +184,7 @@ export default factory(({ properties, middleware: { invalidator } }) => {
         const row = data[second];
         data[second] = data[last];
         data[last] = row;
+        selected = selected === 1 ? 998 : selected === 998 ? 1 : selected;
       }
       ids = new Set(idArray);
       invalidate();
