@@ -21,14 +21,14 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "raw-loader": "^4.0.0",
+    "raw-loader": "4.0.0",
     "scarletsframe": "0.26.1",
-    "webpack": "^4.29.2"
+    "webpack": "4.29.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.3",
-    "@babel/preset-env": "^7.3.1",
-    "babel-loader": "^8.0.5",
-    "webpack-cli": "^3.2.3"
+    "@babel/core": "7.3.3",
+    "@babel/preset-env": "7.3.1",
+    "babel-loader": "8.0.5",
+    "webpack-cli": "3.2.3"
   }
 }
