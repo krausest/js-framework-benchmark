@@ -1,16 +1,17 @@
-#![recursion_limit = "256"]
+#![recursion_limit = "1024"]
 
 extern crate byteorder;
-extern crate stdweb;
-#[macro_use]
-extern crate yew;
+extern crate js_sys;
 extern crate rand;
+extern crate wasm_bindgen;
+extern crate yew;
 
 use byteorder::{ByteOrder, LittleEndian};
+use js_sys::Date;
 use rand::prng::XorShiftRng;
 use rand::{Rng, SeedableRng};
 use std::cmp::min;
-use stdweb::web::Date;
+use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 
 static ADJECTIVES: &[&'static str] = &[
@@ -73,6 +74,7 @@ impl Row {
 }
 
 pub struct Model {
+    link: ComponentLink<Self>,
     rows: Vec<Row>,
     next_id: usize,
     selected_id: Option<usize>,
@@ -93,10 +95,11 @@ impl Component for Model {
     type Message = Msg;
     type Properties = ();
 
-    fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
+    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         let mut seed = [0; 16];
         LittleEndian::write_u128(&mut seed, Date::now() as u128);
         Model {
+            link,
             rows: Vec::new(),
             next_id: 1,
             selected_id: None,
@@ -160,10 +163,12 @@ impl Component for Model {
         }
         true
     }
-}
 
-impl Renderable<Model> for Model {
-    fn view(&self) -> Html<Self> {
+    fn change(&mut self, _: Self::Properties) -> ShouldRender {
+        false
+    }
+
+    fn view(&self) -> Html {
         html! {
             <div class="container",>
                 <div class="jumbotron",>
@@ -174,22 +179,22 @@ impl Renderable<Model> for Model {
                         <div class="col-md-6",>
                             <div class="row",>
                                 <div class="col-sm-6 smallpad",>
-                                    <button type="button", class="btn btn-primary btn-block", onclick=|_| Msg::Run(1_000), id="run",>{ "Create 1,000 rows" }</button>
+                                    <button type="button", class="btn btn-primary btn-block", onclick=self.link.callback(|_| Msg::Run(1_000)), id="run",>{ "Create 1,000 rows" }</button>
                                 </div>
                                 <div class="col-sm-6 smallpad",>
-                                    <button type="button", class="btn btn-primary btn-block", onclick=|_| Msg::Run(10_000), id="runlots",>{ "Create 10,000 rows" }</button>
+                                    <button type="button", class="btn btn-primary btn-block", onclick=self.link.callback(|_| Msg::Run(10_000)), id="runlots",>{ "Create 10,000 rows" }</button>
                                 </div>
                                 <div class="col-sm-6 smallpad",>
-                                    <button type="button", class="btn btn-primary btn-block", onclick=|_| Msg::Add(1_000), id="add",>{ "Append 1,000 rows" }</button>
+                                    <button type="button", class="btn btn-primary btn-block", onclick=self.link.callback(|_| Msg::Add(1_000)), id="add",>{ "Append 1,000 rows" }</button>
                                 </div>
                                 <div class="col-sm-6 smallpad",>
-                                    <button type="button", class="btn btn-primary btn-block", onclick=|_| Msg::Update(10), id="update",>{ "Update every 10th row" }</button>
+                                    <button type="button", class="btn btn-primary btn-block", onclick=self.link.callback(|_| Msg::Update(10)), id="update",>{ "Update every 10th row" }</button>
                                 </div>
                                 <div class="col-sm-6 smallpad",>
-                                    <button type="button", class="btn btn-primary btn-block", onclick=|_| Msg::Clear, id="clear",>{ "Clear" }</button>
+                                    <button type="button", class="btn btn-primary btn-block", onclick=self.link.callback(|_| Msg::Clear), id="clear",>{ "Clear" }</button>
                                 </div>
                                 <div class="col-sm-6 smallpad",>
-                                    <button type="button", class="btn btn-primary btn-block", onclick=|_| Msg::Swap, id="swaprows",>{ "Swap Rows" }</button>
+                                    <button type="button", class="btn btn-primary btn-block", onclick=self.link.callback(|_| Msg::Swap), id="swaprows",>{ "Swap Rows" }</button>
                                 </div>
                             </div>
                         </div>
@@ -202,11 +207,11 @@ impl Renderable<Model> for Model {
                             html! {
                                 <tr class=if self.selected_id == Some(id) { "danger" } else  { "" },>
                                     <td class="col-md-1",>{ id.to_string() }</td>
-                                    <td class="col-md-4", onclick=|_| Msg::Select(id),>
+                                    <td class="col-md-4", onclick=self.link.callback(move |_| Msg::Select(id)),>
                                         <a class="lbl",>{ row.label.clone() }</a>
                                     </td>
                                     <td class="col-md-1",>
-                                        <a class="remove", onclick=|_| Msg::Remove(id),>
+                                        <a class="remove", onclick=self.link.callback(move |_| Msg::Remove(id)),>
                                             <span class="glyphicon glyphicon-remove remove", aria-hidden="true",></span>
                                         </a>
                                     </td>
@@ -221,3 +226,10 @@ impl Renderable<Model> for Model {
         }
     }
 }
+
+#[wasm_bindgen(start)]
+pub fn main() {
+    yew::initialize();
+    App::<Model>::new().mount_to_body();
+}
+
