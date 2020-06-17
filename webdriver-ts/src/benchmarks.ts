@@ -208,7 +208,7 @@ const benchRunBig = new class extends Benchmark {
             label: "create many rows",
             description: "creating 10,000 rows",
             type: BenchmarkType.CPU,
-            allowBatching: false
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
@@ -228,7 +228,7 @@ const benchAppendToManyRows = new class extends Benchmark {
             description: "appending 1,000 to a table of 10,000 rows. 2x CPU slowdown",
             type: BenchmarkType.CPU,
             throttleCPU: 2,
-            allowBatching: false
+            allowBatching: true
         })
     }
     async init(driver: WebDriver) {
