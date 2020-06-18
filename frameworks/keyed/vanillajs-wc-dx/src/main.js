@@ -10,20 +10,28 @@ const store = new Store();
 class BenchmarkRowComponent extends HTMLTableRowElement {
   #rowId;
   #label;
-  #linkEl;
-  #rowIdEl;
+  // #linkEl;
   #connected = false;
 
   constructor(rowId, label) {
     super();
     this.#rowId = rowId;
     this.#label = label;
+
+    this.addEventListener('click', (e) => {
+      const el = /** @type {HTMLElement} */ (e.target);
+        if(el.closest('.row-link')) {
+          this._fireEvent('select');
+        } else if (el.closest('.remove-btn')) {
+          this._fireEvent('delete');
+        }
+    })
   }
 
   set rowLabel(val) {
     this.#label = val;
     if (this.#connected) {
-      this.#linkEl.textContent = val;
+      this.querySelector('.row-link').textContent = val;
     }
   }
 
@@ -31,7 +39,7 @@ class BenchmarkRowComponent extends HTMLTableRowElement {
     this.#rowId = val;
     if (this.#connected) {
       this.querySelector('.row-id').textContent = val;
-      this.#linkEl.setAttribute('data-id', val);
+      this.querySelector('.row-link').setAttribute('data-id', val);
     }
   }
 
@@ -52,22 +60,30 @@ class BenchmarkRowComponent extends HTMLTableRowElement {
       </td>
       <td class="col-md-6"></td>
     `;
-    this.#linkEl = this.querySelector('.row-link');
 
-    this.#linkEl.addEventListener('click', () => {
-      this._fireEvent('select');
-    });
+    // createRows 334.5ms ± 5.4
+    // createMany 3,196.0 ± 12.6
+    //   vs. (w/ global listener)
+    //     323.9ms ± 2.5 & 3,130.6 ± 10.3
 
-    this.querySelector('.remove-btn').addEventListener('click', () => {
-      this._fireEvent('delete');
-    });
+    // this.#linkEl = this.querySelector('.row-link');
+    // this.#linkEl.addEventListener('click', () => {
+    //   this._fireEvent('select');
+    // });
+    // this.querySelector('.remove-btn').addEventListener('click', () => {
+    //   this._fireEvent('delete');
+    // });
+
     this.#connected = true;
   }
 
-  disconnectedCallback() {
-    this.#connected = false;
-    this.innerHTML = '';
-  }
+  // good practice but listeners + this slows down clearRows
+  //   512.7 ± 10.3 vs 278.99.3 ± 9.3 without
+
+  // disconnectedCallback() {
+  //   this.#connected = false;
+  //   this.innerHTML = '';
+  // }
 
   _fireEvent(action) {
     this.dispatchEvent(
@@ -85,8 +101,17 @@ class BenchmarkRowComponent extends HTMLTableRowElement {
 customElements.define('benchmark-row', BenchmarkRowComponent, { extends: 'tr' });
 
 class BenchmarkAppComponent extends HTMLElement {
+  /**
+   * @type {BenchmarkRowComponent[]}
+   */
   #rows = [];
+  /**
+   * @type {HTMLElement}
+   */
   #tbody;
+  /**
+   * @type {HTMLTemplateElement}
+   */
   #template;
   /**
    * @type {BenchmarkRowComponent}
@@ -216,6 +241,12 @@ class BenchmarkAppComponent extends HTMLElement {
   }
 
   _appendRows(newData) {
+    // const newRows = newData.map((item) => new BenchmarkRowComponent(item.id, item.label));
+    // this.#tbody.append(...newRows);
+
+    // createRows 323.9 ± 2.5
+    // createMany 3,130.6 ± 10.3
+
     newData.forEach((item) => {
       const newRow = new BenchmarkRowComponent(item.id, item.label);
       this.#rows.push(newRow);
