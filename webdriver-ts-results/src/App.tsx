@@ -180,7 +180,7 @@ class App extends React.Component<{}, State> {
   }
   render() {
     let disclaimer = (false) ? (<div>
-          <h2>Results for js web frameworks benchmark</h2>
+          <h2>Results for js web frameworks benchmark - official run</h2>
           <p>A description of the benchmark and the source code and can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>
         </div>) :
         (<p>Warning: These results are preliminary - use with caution (they may e.g. be from different browser versions). Official results are published on the <a href="https://krausest.github.io/js-framework-benchmark/index.html">results page</a>.</p>);
