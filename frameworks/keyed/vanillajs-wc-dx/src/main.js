@@ -1,0 +1,271 @@
+import { Store } from './store.js';
+
+const store = new Store();
+
+/**
+ * component without shadow dom, for css
+ *
+ * designed for programmatic usage only.
+ */
+class BenchmarkRowComponent extends HTMLTableRowElement {
+  #rowId;
+  #label;
+  #linkEl;
+  #rowIdEl;
+  #connected = false;
+
+  constructor(rowId, label) {
+    super();
+    this.#rowId = rowId;
+    this.#label = label;
+  }
+
+  set rowLabel(val) {
+    this.#label = val;
+    if (this.#connected) {
+      this.#linkEl.textContent = val;
+    }
+  }
+
+  set rowId(val) {
+    this.#rowId = val;
+    if (this.#connected) {
+      this.querySelector('.row-id').textContent = val;
+      this.#linkEl.setAttribute('data-id', val);
+    }
+  }
+
+  get rowId() {
+    return this.#rowId;
+  }
+
+  connectedCallback() {
+    this.innerHTML = /* HTML */ `
+      <td class="row-id col-md-1">${this.#rowId}</td>
+      <td class="col-md-4">
+        <a class="row-link" data-action="select" data-id="${this.#rowId}">${this.#label}</a>
+      </td>
+      <td class="col-md-1">
+        <a>
+          <span class="remove-btn glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+      </td>
+      <td class="col-md-6"></td>
+    `;
+    this.#linkEl = this.querySelector('.row-link');
+
+    this.#linkEl.addEventListener('click', () => {
+      this._fireEvent('select');
+    });
+
+    this.querySelector('.remove-btn').addEventListener('click', () => {
+      this._fireEvent('delete');
+    });
+    this.#connected = true;
+  }
+
+  disconnectedCallback() {
+    this.#connected = false;
+    this.innerHTML = '';
+  }
+
+  _fireEvent(action) {
+    this.dispatchEvent(
+      new CustomEvent('benchmark-row-action', {
+        bubbles: true,
+        detail: {
+          action,
+          rowId: this.#rowId,
+        },
+      })
+    );
+  }
+}
+
+customElements.define('benchmark-row', BenchmarkRowComponent, { extends: 'tr' });
+
+class BenchmarkAppComponent extends HTMLElement {
+  #rows = [];
+  #tbody;
+  #template;
+  /**
+   * @type {BenchmarkRowComponent}
+   */
+  #selectedRow;
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+
+    this.#template = document.createElement('template');
+
+    this.#template.innerHTML = /* HTML */ `
+      <link href="/css/currentStyle.css" rel="stylesheet" />
+      <div class="container">
+        <div class="jumbotron">
+          <div class="row">
+            <div class="col-md-6">
+              <h1>VanillaJS Web Component DX keyed</h1>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="run">
+                    Create 1,000 rows
+                  </button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="runlots">
+                    Create 10,000 rows
+                  </button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="add">
+                    Append 1,000 rows
+                  </button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="update">
+                    Update every 10th row
+                  </button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="clear">Clear</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="swaprows">
+                    Swap Rows
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <table class="table table-hover table-striped test-data">
+          <tbody id="rows-container"></tbody>
+        </table>
+        <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+    `;
+
+    this.shadowRoot.appendChild(this.#template.content.cloneNode(true));
+    this.#tbody = this.shadowRoot.getElementById('rows-container');
+    this.#tbody.addEventListener('benchmark-row-action', (e) => {
+        const {action, rowId} = e.detail;
+        if (action === "delete") {
+            this._delete(rowId);
+        } else if (action === "select") {
+            this._select(rowId)
+        }
+    });
+
+    this.shadowRoot.getElementById('run').addEventListener('click', () => {
+      this._run();
+    });
+    this.shadowRoot.getElementById('runlots').addEventListener('click', () => {
+      this._runLots();
+    });
+    this.shadowRoot.getElementById('add').addEventListener('click', () => {
+      this._add();
+    });
+    this.shadowRoot.getElementById('update').addEventListener('click', () => {
+      this._update();
+    });
+    this.shadowRoot.getElementById('clear').addEventListener('click', () => {
+      this._clear();
+    });
+    this.shadowRoot.getElementById('swaprows').addEventListener('click', () => {
+      this._swapRows();
+    });
+  }
+
+  _handleClick(e) {
+    const { action, id } = e.target.dataset;
+    if (action && id) {
+      this['_' + action](id);
+    }
+  }
+
+  _add() {
+    const newData = store.add();
+    this._appendRows(newData);
+  }
+
+  _runLots() {
+    store.runLots();
+    this._resetRows();
+  }
+
+  _clear() {
+    store.clear();
+    this.#tbody.textContent = '';
+    this.#rows = [];
+  }
+
+  _swapRows() {
+    if (this.#rows.length > 998) {
+      store.swapRows();
+
+      this.#tbody.insertBefore(this.#rows[998], this.#rows[2]);
+      this.#tbody.insertBefore(this.#rows[1], this.#rows[999]);
+
+      const tmp = this.#rows[998];
+      this.#rows[998] = this.#rows[1];
+      this.#rows[1] = tmp;
+    }
+  }
+
+  _appendRows(newData) {
+    newData.forEach((item) => {
+      const newRow = new BenchmarkRowComponent(item.id, item.label);
+      this.#rows.push(newRow);
+      this.#tbody.appendChild(newRow);
+    });
+  }
+
+  _resetRows() {
+    this.#tbody.textContent = '';
+    this.#rows = [];
+    this._appendRows(store.data);
+  }
+
+  _run() {
+    store.run();
+    this._resetRows();
+  }
+
+  _update() {
+    const updated = store.update();
+    for (const [i, item] of updated) {
+      this.#rows[i].rowLabel = item.label;
+      // this is ignored for consistency with the vanilla-wc implementation
+      // this.#rows[i].rowId = item.id;
+    }
+  }
+
+  _delete(id) {
+    const i = this._findRowIndexById(id);
+    store.delete(id);
+    const row = this.#rows[i];
+    this.#rows.splice(i, 1);
+    if (this.#selectedRow === row) {
+      this.#selectedRow = null;
+    }
+    row.remove();
+  }
+
+  _select(id) {
+      store.select(id);
+      if (this.#selectedRow) {
+        this.#selectedRow.classList.remove('danger');
+      }
+      this.#selectedRow = this.#rows[this._findRowIndexById(id)];
+      this.#selectedRow.classList.add('danger');
+  }
+
+  _findRowIndexById(id) {
+    return store.data.findIndex(d => d.id === id);
+  }
+}
+
+customElements.define('main-element', BenchmarkAppComponent);
