@@ -32,11 +32,16 @@ The following operations are benchmarked for each framework:
 * total byte weight: The lighthouse metric TotalByteWeight: Network transfer cost (post-compression) of all the resources loaded into the page.
 
 For all benchmarks the duration is measured including rendering time. You can read some details on this [article](http://www.stefankrause.net/wp/?p=218).
-The results of this benchmark is outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316), [round 5](http://www.stefankrause.net/wp/?p=392), [round 6](http://www.stefankrause.net/wp/?p=431), [round 7](http://www.stefankrause.net/wp/?p=454) and [round 8](http://www.stefankrause.net/wp/?p=504)).
+
+
+## Official results
+Official results are posted on the [official results page](https://krausest.github.io/js-framework-benchmark/index.html).
+My [blog](http://www.stefankrause.net/wp) has a few articles about about the benchmark.
+Older results of this benchmark are outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316), [round 5](http://www.stefankrause.net/wp/?p=392), [round 6](http://www.stefankrause.net/wp/?p=431), [round 7](http://www.stefankrause.net/wp/?p=454) and [round 8](http://www.stefankrause.net/wp/?p=504)).
 
 ## Snapshot of the results
 
-Official results are posted on the blog mentioned above. The current snapshot that may not have the same quality (i.e.
+The current snapshot that may not have the same quality (i.e.
 results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
 [![Results](images/results.png?raw=true "Results")](https://krausest.github.io/js-framework-benchmark/current.html)
 

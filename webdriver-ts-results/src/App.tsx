@@ -180,15 +180,15 @@ class App extends React.Component<{}, State> {
   }
   render() {
     let disclaimer = (false) ? (<div>
-          <h2>Results for js web frameworks benchmark – round 8</h2>
-          <p>Go here for the accompanying article <a href="http://www.stefankrause.net/wp/?p=504">http://www.stefankrause.net/wp/?p=504</a>. Source code can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>
+          <h2>Results for js web frameworks benchmark</h2>
+          <p>A description of the benchmark and the source code and can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>
         </div>) :
-        (<p>Warning: These results are preliminary - use with caution (they may e.g. be from different browser versions).Official results are published on my <a href="http://www.stefankrause.net/">blog</a>.</p>);
+        (<p>Warning: These results are preliminary - use with caution (they may e.g. be from different browser versions). Official results are published on the <a href="https://krausest.github.io/js-framework-benchmark/index.html">results page</a>.</p>);
 
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 32 GB RAM, Ubuntu 20.04 (Linux 5.4.0-31, mitigations=off), Chrome   83.0.4103.106 (64-bit))</p>
+        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 32 GB RAM, Ubuntu 20.04 (Linux 5.4.0-37, mitigations=off), Chrome   83.0.4103.106 (64-bit))</p>
         <SelectBar  benchmarksCPU={this.state.benchmarksCPU}
                     benchmarksStartup={this.state.benchmarksStartup}
                     benchmarksMEM={this.state.benchmarksMEM}
