@@ -2,6 +2,7 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
+require('mobx-react/batchingForReactDom');
 const {Row} = require('./Row');
 var {observer} = require("mobx-react");
 var {observable, computed} = require ("mobx");
