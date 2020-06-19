@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "lib": ["es2015", "es2017", "esnext.asynciterable", "dom", "es2020"]
+  },
+  "include": [
+    "src/*"
+  ],
+  "exclude": []
+}
