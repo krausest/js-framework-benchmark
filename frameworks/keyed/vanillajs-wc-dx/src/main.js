@@ -241,17 +241,21 @@ class BenchmarkAppComponent extends HTMLElement {
   }
 
   _appendRows(newData) {
-    // const newRows = newData.map((item) => new BenchmarkRowComponent(item.id, item.label));
-    // this.#tbody.append(...newRows);
+    // createRows 314.9 ± 6.3
+    // createMany 2,973.8 ± 15.9
+
+    const newRows = newData.map((item) => new BenchmarkRowComponent(item.id, item.label));
+    this.#tbody.append(...newRows);
+    this.#rows.push(...newRows);
 
     // createRows 323.9 ± 2.5
     // createMany 3,130.6 ± 10.3
 
-    newData.forEach((item) => {
-      const newRow = new BenchmarkRowComponent(item.id, item.label);
-      this.#rows.push(newRow);
-      this.#tbody.appendChild(newRow);
-    });
+    // newData.forEach((item) => {
+    //   const newRow = new BenchmarkRowComponent(item.id, item.label);
+    //   this.#rows.push(newRow);
+    //   this.#tbody.appendChild(newRow);
+    // });
   }
 
   _resetRows() {
