@@ -176,7 +176,7 @@ class Main {
     update() {
         this.store.update();
         for (let i=0;i<this.data.length;i+=10) {
-            this.rows[i].childNodes[1].childNodes[0].innerText = this.store.data[i].label;
+            this.rows[i].children[1].children[0].innerText = this.store.data[i].label;
         }
     }
     unselect() {
@@ -311,6 +311,7 @@ class Main {
             </td>
             <td class='col-md-6'></td>
         `;
+        //.replace(/>\s+</g, "><");
         tr.data_id = data.id;
         return tr;
     }
