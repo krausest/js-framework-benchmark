@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "js-framework-benchmark-vanillajs-wc-dx",
+  "name": "js-framework-benchmark-vanillajs-wc-prog",
   "version": "1.0.0",
   "description": "Vanilla.JS WebComponent demo focusing on Developer Experience & style guides",
   "js-framework-benchmark": {

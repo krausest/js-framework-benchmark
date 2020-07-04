@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "js-framework-benchmark-vanillajs-opti",
+  "name": "js-framework-benchmark-non-keyed-vanillajs-opti",
   "version": "1.0.0",
   "description": "over-optimzed Vanilla.JS demo",
   "js-framework-benchmark": {
