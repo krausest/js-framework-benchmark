@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-doz",
+  "name": "js-framework-benchmark-non-keyed-doz",
   "version": "1.0.0",
   "description": "Doz demo",
   "main": "index.js",

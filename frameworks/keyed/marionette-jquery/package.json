@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-marionette",
+  "name": "js-framework-benchmark-marionette-jquery",
   "version": "1.0.0",
   "description": "Marionette v4.0.0 with jQuery",
   "main": "index.js",

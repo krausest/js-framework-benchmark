@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-lit-html",
+  "name": "js-framework-benchmark-non-keyed-lite-html",
   "version": "1.0.1",
   "description": "Lite-HTML demo",
   "main": "index.js",

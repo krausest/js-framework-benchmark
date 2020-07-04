@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-react",
+  "name": "js-framework-benchmark-react-redux-combiner",
   "version": "1.0.0",
   "description": "React+redux-combiner demo",
   "main": "index.js",

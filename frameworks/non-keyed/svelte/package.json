@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-svelte",
+  "name": "js-framework-benchmark-non-keyed-svelte",
   "version": "1.0.0",
   "description": "Boilerplate for Svelte",
   "js-framework-benchmark": {

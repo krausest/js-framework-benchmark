@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-vanillajs",
+  "name": "js-framework-benchmark-non-keyed-vanillajs-1",
   "version": "1.1.1",
   "description": "Vanilla.JS demo",
   "main": "index.js",
@@ -7,8 +7,8 @@
     "frameworkVersion": ""
   },
   "scripts": {
-    "build-dev": "rollup -c -w",
-    "build-prod": "rollup -c --environment production"
+    "build-dev": "echo 0",
+    "build-prod": "echo 0"
   },
   "keywords": [],
   "author": "Stefan Krause",
@@ -17,12 +17,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
-  },
-  "devDependencies": {
-    "@babel/core": "7.1.2",
-    "@babel/preset-env": "7.1.0",
-    "rollup": "1.15.6",
-    "rollup-plugin-babel": "4.0.3",
-    "rollup-plugin-terser": "5.0.0"
   }
 }

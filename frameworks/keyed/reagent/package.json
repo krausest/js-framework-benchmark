@@ -1,4 +1,5 @@
 {
+  "name": "reagent",
   "private": true,
   "js-framework-benchmark": {
     "frameworkVersion": "0.10"
