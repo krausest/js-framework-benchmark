@@ -309,7 +309,7 @@ class Main {
                 el('a', {className: 'remove'}, [
                     el('span', {
                         className: 'remove glyphicon glyphicon-remove',
-                        attributes: [['arria-hidden', 'true']]
+                        attributes: [['aria-hidden', 'true']]
                     })
                 ])
             ]),
