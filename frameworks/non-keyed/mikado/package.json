@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "js-framework-benchmark-mikado",
+  "name": "js-framework-benchmark-non-keyed-mikado",
   "homepage": "https://github.com/nextapps-de/mikado/",
   "author": "Nextapps GmbH",
   "license": "Apache-2.0",

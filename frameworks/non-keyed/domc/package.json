@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-domc",
+  "name": "js-framework-benchmark-non-keyed-domc",
   "version": "1.0.0",
   "description": "domc demo",
   "main": "dist/app.min.js",

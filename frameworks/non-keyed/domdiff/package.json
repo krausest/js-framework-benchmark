@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-domdiff",
+  "name": "js-framework-benchmark-non-keyed-domdiff",
   "version": "1.0.0",
   "description": "domdiff demo",
   "main": "index.js",

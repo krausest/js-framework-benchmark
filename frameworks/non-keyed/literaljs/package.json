@@ -1,5 +1,5 @@
 {
-	"name": "js-framework-benchmark-literaljs",
+	"name": "js-framework-benchmark-non-keyed-literaljs",
 	"version": "1.0.0",
 	"description": "Benchmark for LiteralJS framework",
 	"js-framework-benchmark": {

@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-inferno",
+  "name": "js-framework-benchmark-non-keyed-inferno",
   "version": "1.0.0",
   "description": "Benchmark for inferno framework",
   "js-framework-benchmark": {

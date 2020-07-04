@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-rawact",
+  "name": "js-framework-benchmark-non-keyed-rawact",
   "version": "1.1.1",
   "description": "Rawact demo",
   "main": "index.js",

@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-yew",
+  "name": "js-framework-benchmark-non-keyed-yew",
   "version": "1.0.0",
   "description": "Benchmark for Yew",
   "license": "ISC",

@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-scarletsframe",
+  "name": "js-framework-benchmark-non-keyed-scarletsframe",
   "version": "1.0.1",
   "description": "ScarletsFrame demo",
   "main": "index.js",

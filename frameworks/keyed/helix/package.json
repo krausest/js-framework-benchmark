@@ -1,4 +1,5 @@
 {
+  "name": "helix",
   "private": true,
   "js-framework-benchmark": {
     "frameworkVersion": "0.0.10"

@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-san",
+  "name": "js-framework-benchmark-non-keyed-san",
   "version": "3.7.5",
   "description": "Benchmark for san framework",
   "js-framework-benchmark": {

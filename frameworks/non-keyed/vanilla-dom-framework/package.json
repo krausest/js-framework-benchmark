@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-vanilla-dom",
+  "name": "js-framework-benchmark-non-keyed-vanilla-dom",
   "version": "1.0.0",
   "description": "vanilla-dom demo",
   "main": "index.js",
