@@ -29,19 +29,19 @@ class BenchmarkRow extends HTMLElement {
             append rows to large table 651.3 ± 3.0
             clear rows 305.5 ± 9.5
         */
-        // const style = document.createElement('style');
-        // style.innerHTML = `
-        //     :host {
-        //         display: block;
-        //     }
-        //     tr.danger {
-        //         background-color: #f2dede;
-        //     }
-        //     .lbl {
-        //         color: #337ab7;
-        //     }
-        // `;
-        // shadow.appendChild(style);
+        const style = document.createElement('style');
+        style.innerHTML = `
+            :host {
+                display: block;
+            }
+            tr.danger {
+                background-color: #f2dede;
+            }
+            .lbl {
+                color: #337ab7;
+            }
+        `;
+        shadow.appendChild(style);
         const row = document.createElement('tr');
         row.innerHTML = `
             <td class='col-md-1'>${dataId}</td>
@@ -255,12 +255,12 @@ class Main {
     update() {
         this.store.update();
         for (let i=0;i<this.data.length;i+=10) {
-            this.rows[i].shadowRoot.children[0].children[1].children[0].innerText = this.store.data[i].label;
+            this.rows[i].shadowRoot.children[1].children[1].children[0].innerText = this.store.data[i].label;
         }
     }
     unselect() {
         if (this.selectedRow !== undefined) {
-            this.selectedRow.shadowRoot.children[0].className = "";
+            this.selectedRow.shadowRoot.children[1].className = "";
             this.selectedRow = undefined;
         }
     }
@@ -268,7 +268,7 @@ class Main {
         this.unselect();
         this.store.select(this.data[idx].id);
         this.selectedRow = this.rows[idx];
-        this.selectedRow.shadowRoot.children[0].className = "danger";
+        this.selectedRow.shadowRoot.children[1].className = "danger";
     }
     recreateSelection() {
         let old_selection = this.store.selected;
@@ -276,7 +276,7 @@ class Main {
         if (sel_idx >= 0) {
             this.store.select(this.data[sel_idx].id);
             this.selectedRow = this.rows[sel_idx];
-            this.selectedRow.shadowRoot.children[0].className = "danger";
+            this.selectedRow.shadowRoot.children[1].className = "danger";
         }
     }
     delete(idx) {
