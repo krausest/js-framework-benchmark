@@ -11,21 +11,31 @@ class BenchmarkRow extends HTMLElement {
         super();
         this.dataId = dataId;
         const shadow = this.attachShadow({ mode: "open" });
-        const style = document.createElement('style');
-        style.innerHTML = `
-            :host {
-                display: block;
-            }
-            
-            tr.danger {
-                background-color: #f2dede;
-            }
-
-            .lbl {
-                color: #337ab7;
-            }
-        `;
-        shadow.appendChild(style);
+        /* 
+        with style:
+            create rows 365.52.6 ± 2.6
+            replace all rows 384.31.7 ± 1.7
+            partial update 281.15.2 ± 5.2
+            select row 40.32.1 ± 2.1
+            swap rows 38.43.1 ± 3.1
+            remove row 36.91.4 ± 1.4
+            create many rows 3,529.715.5 ± 15.5
+            append rows to large table 743.95.9 ± 5.9
+            clear rows 322.27.4 ± 7.4
+        */
+        // const style = document.createElement('style');
+        // style.innerHTML = `
+        //     :host {
+        //         display: block;
+        //     }
+        //     tr.danger {
+        //         background-color: #f2dede;
+        //     }
+        //     .lbl {
+        //         color: #337ab7;
+        //     }
+        // `;
+        // shadow.appendChild(style);
         const row = document.createElement('tr');
         row.innerHTML = `
             <td class='col-md-1'>${dataId}</td>
@@ -239,12 +249,12 @@ class Main {
     update() {
         this.store.update();
         for (let i=0;i<this.data.length;i+=10) {
-            this.rows[i].shadowRoot.children[1].children[1].children[0].innerText = this.store.data[i].label;
+            this.rows[i].shadowRoot.children[0].children[1].children[0].innerText = this.store.data[i].label;
         }
     }
     unselect() {
         if (this.selectedRow !== undefined) {
-            this.selectedRow.shadowRoot.children[1].className = "";
+            this.selectedRow.shadowRoot.children[0].className = "";
             this.selectedRow = undefined;
         }
     }
@@ -252,7 +262,7 @@ class Main {
         this.unselect();
         this.store.select(this.data[idx].id);
         this.selectedRow = this.rows[idx];
-        this.selectedRow.shadowRoot.children[1].className = "danger";
+        this.selectedRow.shadowRoot.children[0].className = "danger";
     }
     recreateSelection() {
         let old_selection = this.store.selected;
@@ -260,7 +270,7 @@ class Main {
         if (sel_idx >= 0) {
             this.store.select(this.data[sel_idx].id);
             this.selectedRow = this.rows[sel_idx];
-            this.selectedRow.shadowRoot.children[1].className = "danger";
+            this.selectedRow.shadowRoot.children[0].className = "danger";
         }
     }
     delete(idx) {
