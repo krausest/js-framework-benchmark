@@ -12,16 +12,22 @@ class BenchmarkRow extends HTMLElement {
         this.dataId = dataId;
         const shadow = this.attachShadow({ mode: "open" });
         /* 
-        with style:
-            create rows 365.52.6 ± 2.6
-            replace all rows 384.31.7 ± 1.7
-            partial update 281.15.2 ± 5.2
-            select row 40.32.1 ± 2.1
-            swap rows 38.43.1 ± 3.1
-            remove row 36.91.4 ± 1.4
-            create many rows 3,529.715.5 ± 15.5
-            append rows to large table 743.95.9 ± 5.9
-            clear rows 322.27.4 ± 7.4
+        shadow dom doesn't seem to have any cost by itself
+        but it can lead to way worse rendering performances when it requires to define styles
+
+        with style: worse than Preact
+            create rows 365.5 ± 2.6
+            replace all rows 384.3 ± 1.7
+            create many rows 3,529.7 ± 15.5
+            append rows to large table 743.9 ± 5.9
+            clear rows 322.2 ± 7.4
+
+        without style: ~= custom element w/o shadow
+            create rows 326.1 ± 2.9
+            replace all rows 343.7 ± 1.4
+            create many rows 2,973.6 ± 9.9
+            append rows to large table 651.3 ± 3.0
+            clear rows 305.5 ± 9.5
         */
         // const style = document.createElement('style');
         // style.innerHTML = `
