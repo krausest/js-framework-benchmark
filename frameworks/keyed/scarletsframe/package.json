@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-scarletsframe",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "ScarletsFrame demo",
   "main": "index.js",
   "js-framework-benchmark": {
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "raw-loader": "4.0.0",
-    "scarletsframe": "0.26.1",
+    "scarletsframe": "0.28.7",
     "webpack": "4.29.2"
   },
   "devDependencies": {

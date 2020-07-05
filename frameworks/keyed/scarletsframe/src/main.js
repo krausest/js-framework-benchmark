@@ -1,7 +1,7 @@
 var sf = window.sf = require('scarletsframe');
 
 // Declare variable for the model
-sf.model.for('bench-mark', function(self){
+sf.model('bench-mark', function(self){
     self.list = [];
     self.selectedItem = null;
 
@@ -17,7 +17,7 @@ sf.model.for('bench-mark', function(self){
     }
 
     self.b_add = function(){
-        self.list = self.list.concat(Store.buildData(1000));
+        self.list.push(...Store.buildData(1000));
     }
 
     self.b_update = function(){
