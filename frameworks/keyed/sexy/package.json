@@ -1,0 +1,31 @@
+{
+  "name": "js-framework-benchmark-sexy",
+  "version": "1.0.0",
+  "description": "Benchmark for sexy framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "sexy"
+  },
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack -p"
+  },
+  "keywords": [
+    "sexy"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "babel-loader": "^8.1.0",
+    "sexy": "^0.5.2",
+    "sexy-loader": "^0.5.2"
+  }
+}
