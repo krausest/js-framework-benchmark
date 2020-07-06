@@ -14,11 +14,14 @@
     "react",
     "webpack"
   ],
-  "author": "Stefan Krause",
+  "author": "Noël Macé",
   "license": "Apache-2.0",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@fullweb/helpers": "0.1.0-alpha.1"
   }
 }

@@ -1,4 +1,4 @@
-import {el} from "../node_modules/@fullwebdev/helpers/index.js";
+import {el} from "../node_modules/@fullweb/helpers/index.js";
 
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
@@ -91,7 +91,6 @@ class Main {
         this.run = this.run.bind(this);
         this.update = this.update.bind(this);
         this.start = 0;
-        /** @type {{tr: HTMLTableRowElement, anchor: HTMLAnchorElement}[]} */
         this.rows = [];
         this.data = [];
         this.selectedRow = undefined;
@@ -177,7 +176,7 @@ class Main {
     update() {
         this.store.update();
         for (let i=0;i<this.data.length;i+=10) {
-            this.rows[i].anchor.innerText = this.store.data[i].label;
+            this.rows[i].setLabel(this.store.data[i].label);
         }
     }
     unselect() {
@@ -189,7 +188,7 @@ class Main {
     select(idx) {
         this.unselect();
         this.store.select(this.data[idx].id);
-        this.selectedRow = this.rows[idx].tr;
+        this.selectedRow = this.rows[idx];
         this.selectedRow.className = "danger";
     }
     recreateSelection() {
@@ -197,14 +196,14 @@ class Main {
         let sel_idx = this.store.data.findIndex(d => d.id === old_selection);
         if (sel_idx >= 0) {
             this.store.select(this.data[sel_idx].id);
-            this.selectedRow = this.rows[sel_idx].tr;
+            this.selectedRow = this.rows[sel_idx];
             this.selectedRow.className = "danger";
         }
     }
     delete(idx) {
         // Remove that row from the DOM
         this.store.delete(this.data[idx].id);
-        this.rows[idx].tr.remove();
+        this.rows[idx].remove();
         this.rows.splice(idx, 1);
         this.data.splice(idx, 1);
         this.unselect();
@@ -258,8 +257,8 @@ class Main {
             this.data[1] = this.store.data[1];
             this.data[998] = this.store.data[998];
 
-            this.tbody.insertBefore(this.rows[998].tr, this.rows[2].tr)
-            this.tbody.insertBefore(this.rows[1].tr, this.rows[999].tr)
+            this.tbody.insertBefore(this.rows[998], this.rows[2])
+            this.tbody.insertBefore(this.rows[1], this.rows[999])
 
             let tmp = this.rows[998];
             this.rows[998] = this.rows[1];
@@ -297,7 +296,8 @@ class Main {
             let row = this.createRow(s_data[i]);
             rows[i] = row;
             data[i] = s_data[i];
-            tbody.appendChild(row.tr);
+            // test using append instead
+            tbody.appendChild(row);
         }
     }
     createRow(data) {
@@ -317,8 +317,12 @@ class Main {
             ]),
             el('td', {className: 'col-md-6'})
         ])
+        // test using local eventHandlers
         tr.data_id = data.id;
-        return {tr, anchor};
+        tr.setLabel = (label) => {
+            anchor.innerText = label;
+        };
+        return tr;
     }
 }
 
