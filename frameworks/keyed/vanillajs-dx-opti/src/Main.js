@@ -1,8 +1,25 @@
-import {el} from "../node_modules/@fullwebdev/helpers/index.js";
+'use strict';
 
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
+
+//#region row-template
+const rowTemplate = document.createElement("tr");
+rowTemplate.innerHTML = `
+  <td class="col-md-1"></td>
+  <td class="col-md-4">
+    <a class="lbl"></a>
+  </td>
+  <td class="col-md-1">
+    <a class="remove">
+      <span
+        class="remove glyphicon glyphicon-remove"
+        aria-hidden="true"></span>
+    </a>
+  </td>
+  <td class="col-md-6"></td>`;
+//#endregion row-template
 
 class Store {
     constructor() {
@@ -91,7 +108,6 @@ class Main {
         this.run = this.run.bind(this);
         this.update = this.update.bind(this);
         this.start = 0;
-        /** @type {{tr: HTMLTableRowElement, anchor: HTMLAnchorElement}[]} */
         this.rows = [];
         this.data = [];
         this.selectedRow = undefined;
@@ -177,7 +193,7 @@ class Main {
     update() {
         this.store.update();
         for (let i=0;i<this.data.length;i+=10) {
-            this.rows[i].anchor.innerText = this.store.data[i].label;
+            this.rows[i].childNodes[1].childNodes[0].innerText = this.store.data[i].label;
         }
     }
     unselect() {
@@ -189,7 +205,7 @@ class Main {
     select(idx) {
         this.unselect();
         this.store.select(this.data[idx].id);
-        this.selectedRow = this.rows[idx].tr;
+        this.selectedRow = this.rows[idx];
         this.selectedRow.className = "danger";
     }
     recreateSelection() {
@@ -197,14 +213,14 @@ class Main {
         let sel_idx = this.store.data.findIndex(d => d.id === old_selection);
         if (sel_idx >= 0) {
             this.store.select(this.data[sel_idx].id);
-            this.selectedRow = this.rows[sel_idx].tr;
+            this.selectedRow = this.rows[sel_idx];
             this.selectedRow.className = "danger";
         }
     }
     delete(idx) {
         // Remove that row from the DOM
         this.store.delete(this.data[idx].id);
-        this.rows[idx].tr.remove();
+        this.rows[idx].remove();
         this.rows.splice(idx, 1);
         this.data.splice(idx, 1);
         this.unselect();
@@ -258,8 +274,8 @@ class Main {
             this.data[1] = this.store.data[1];
             this.data[998] = this.store.data[998];
 
-            this.tbody.insertBefore(this.rows[998].tr, this.rows[2].tr)
-            this.tbody.insertBefore(this.rows[1].tr, this.rows[999].tr)
+            this.tbody.insertBefore(this.rows[998], this.rows[2])
+            this.tbody.insertBefore(this.rows[1], this.rows[999])
 
             let tmp = this.rows[998];
             this.rows[998] = this.rows[1];
@@ -294,31 +310,20 @@ class Main {
         // ... than adding directly
         var rows = this.rows, s_data = this.store.data, data = this.data, tbody = this.tbody;
         for(let i=rows.length;i<s_data.length; i++) {
-            let row = this.createRow(s_data[i]);
-            rows[i] = row;
+            let tr = this.createRow(s_data[i]);
+            rows[i] = tr;
             data[i] = s_data[i];
-            tbody.appendChild(row.tr);
+            tbody.appendChild(tr);
         }
     }
     createRow(data) {
-        let anchor;
-        const tr = el('tr', {}, [
-            el('td', {className: 'col-md-1'}, [data.id]),
-            el('td', {className: 'col-md-4'}, [
-                anchor = el('a', {className: 'lbl'}, [data.label])
-            ]),
-            el('td', {className: 'col-md-1'}, [
-                el('a', {className: 'remove'}, [
-                    el('span', {
-                        className: 'remove glyphicon glyphicon-remove',
-                        attributes: [['aria-hidden', 'true']]
-                    })
-                ])
-            ]),
-            el('td', {className: 'col-md-6'})
-        ])
+        //#region create-row
+        const tr = rowTemplate.cloneNode(true);
+        tr.firstChild.textContent = data.id;
+        tr.firstChild.nextSibling.firstChild.textContent = data.label;
+        //#endregion create-row
         tr.data_id = data.id;
-        return {tr, anchor};
+        return tr;
     }
 }
 
