@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-riot",
+  "name": "js-framework-benchmark-non-keyed-riot",
   "version": "1.0.0",
   "description": "Benchmark for riot framework",
   "js-framework-benchmark": {

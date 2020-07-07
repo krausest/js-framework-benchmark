@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-halogen",
+  "name": "js-framework-benchmark-non-keyed-halogen",
   "version": "1.0.0",
   "description": "Purescript Halogen JS Benchmark",
   "main": "index.js",

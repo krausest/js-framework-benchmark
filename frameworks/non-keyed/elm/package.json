@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-elm",
+  "name": "js-framework-benchmark-non-keyed-elm",
   "version": "1.0.0",
   "description": "Elm demo",
   "main": "index.js",

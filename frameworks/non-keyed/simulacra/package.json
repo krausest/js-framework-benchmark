@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-simulacra",
+  "name": "js-framework-benchmark-non-keyed-simulacra",
   "version": "1.0.0",
   "description": "Benchmark for simulacra.js",
   "js-framework-benchmark": {
