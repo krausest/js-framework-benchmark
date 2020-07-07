@@ -1,5 +1,5 @@
 {
-	"name": "js-framework-benchmark-moon",
+	"name": "js-framework-benchmark-non-keyed-moon",
 	"version": "1.0.0",
 	"description": "Benchmark for Moon framework",
 	"js-framework-benchmark": {

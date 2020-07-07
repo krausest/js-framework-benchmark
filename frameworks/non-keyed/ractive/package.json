@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-ractive",
+  "name": "js-framework-benchmark-non-keyed-ractive",
   "version": "1.0.0",
   "description": "Boilerplate for Ractive.js",
   "js-framework-benchmark": {

@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-gruu",
+  "name": "js-framework-benchmark-non-keyed-gruu",
   "version": "1.0.0",
   "description": "Gruu demo",
   "main": "src/main.es6.js",

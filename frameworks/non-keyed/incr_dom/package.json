@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-incr_dom",
+  "name": "js-framework-benchmark-non-keyed-incr_dom",
   "version": "1.0.0",
   "description": "Incr_dom version of benchmark",
   "author": "Michael Boulton",

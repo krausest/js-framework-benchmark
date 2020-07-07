@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-redom",
+  "name": "js-framework-benchmark-non-keyed-redom",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-imba",
+  "name": "js-framework-benchmark-non-keyed-imba",
   "version": "1.0.1",
   "description": "Imba demo",
   "main": "index.js",
