@@ -302,6 +302,7 @@ class Main {
     }
     createRow(data) {
         let anchor;
+        //#region create-row
         const tr = el('tr', {}, [
             el('td', {className: 'col-md-1'}, [data.id]),
             el('td', {className: 'col-md-4'}, [
@@ -317,11 +318,12 @@ class Main {
             ]),
             el('td', {className: 'col-md-6'})
         ])
-        // test using local eventHandlers
-        tr.data_id = data.id;
         tr.setLabel = (label) => {
             anchor.innerText = label;
         };
+        //#endregion create-row
+        // test using local eventHandlers
+        tr.data_id = data.id;
         return tr;
     }
 }

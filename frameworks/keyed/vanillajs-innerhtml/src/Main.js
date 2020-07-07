@@ -300,6 +300,7 @@ class Main {
         }
     }
     createRow(data) {
+        //#region create-row
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class='col-md-1'>${data.id}</td>
@@ -311,6 +312,7 @@ class Main {
             </td>
             <td class='col-md-6'></td>
         `;
+        //#endregion create-row
         //.replace(/>\s+</g, "><");
         tr.data_id = data.id;
         return tr;

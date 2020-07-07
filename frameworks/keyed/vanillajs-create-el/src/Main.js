@@ -300,8 +300,8 @@ class Main {
         }
     }
     createRow(data) {
+        //#region create-row
         const tr = document.createElement('tr');
-        tr.data_id = data.id;
         const tds = [ '', '', '', '' ].map(() => document.createElement('td'));
 
         tds[0].classList.add('col-md-1');
@@ -325,6 +325,8 @@ class Main {
         tds[3].classList.add('col-md-6');
 
         tr.append(...tds);
+        //#endregion create-row
+        tr.data_id = data.id;
 
         return tr;
     }
