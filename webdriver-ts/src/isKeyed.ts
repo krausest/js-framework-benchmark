@@ -180,6 +180,11 @@ export async function checkTRcorrect(driver: WebDriver, timeout = config.TIMEOUT
         return false;
     }
 
+    let a = await findByXPath(driver, '//tbody/tr[1000]/td[3]/a');
+    if (!await assertClassesContained(a, ["remove"], "a in third td")) {
+        return false;
+    }
+
     // span in third td
     let span = await findByXPath(driver, '//tbody/tr[1000]/td[3]/a/span');
     if (!await assertClassesContained(span, ["glyphicon","glyphicon-remove"], "span in a in third td")) {
