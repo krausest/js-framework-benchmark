@@ -272,8 +272,29 @@ This work is derived from a benchmark that Richard Ayotte published on https://g
 Thanks to Baptiste Augrain for making the benchmarks more sophisticated and adding frameworks.
 
 ## History
-Frameworks without activity on github or npm for more than a year will be removed.
-The following frameworks were removed 9/16/2019:
+
+Frameworks without significant activity on github or npm for more than a year will be removed (_automatic commits like dependabot and minor updates, like docs editions, are ignored_).
+
+Will be removed in future:
+- [ ] crui Last significant commit Jul 28, 2019
+- [ ] marionette Last significant commit Apr 20, 2019
+
+### 2020-7-9
+
+- [x] etch Last commit Sep 12, 2018
+- [x] hyperoop Last significant commit Dec 23, 2018
+- [x] faster-dom (to be replaced by a new revact implementation)
+- [x] plastiq (to be replaced by a new Hyperdom implementation)
+- [x] rawact Last commit Dec 3, 2018
+- [x] react-djinn Last NPM publish 2019-05-03 (the Github org a repo aren't available anymore)
+- [x] react-lite Last commit Mar 29, 2019
+- [x] redux-combiner Last commit May 14, 2018
+- [x] surplus Last commit Jan 5, 2019
+- [x] gruu Last commit Jun 23, 2019
+- [x] lite-html Last commit Sep 7, 2018
+
+### 2019-9-16
+
 - [x] angular-light Last commit Nov 30, 2017
 - [x] nx. Last commit Feb 2017
 - [x]  maik-h  Last commit Dec 15, 2017
