@@ -3,6 +3,7 @@ import {buildDriver, setUseShadowRoot, testTextContains, testTextNotContained, t
 import {config, FrameworkData, initializeFrameworks, BenchmarkOptions} from './common'
 import { WebDriver, By, WebElement } from 'selenium-webdriver';
 import * as R from 'ramda';
+import { valid } from 'semver';
 
 
 let args = yargs(process.argv)
@@ -146,14 +147,21 @@ async function assertChildNodes(elem: WebElement, expectedNodes: string[], messa
     return true;
 }
 
+function niceEmptyString(val: string[]): string {
+    if (!val || val.length===0) return "[empty]";
+    if (val.every(v => v.length===0)) return "[empty]";
+    return val.toString();
+}
+
 async function assertClassesContained(elem: WebElement, expectedClassNames: string[], message: string) {
     let actualClassNames = (await elem.getAttribute("class")).split(" ");
     if (!expectedClassNames.every(expected => actualClassNames.includes(expected))) {
-        console.log("css class not correct. Expected for "+ message+ " to be "+expectedClassNames+" but was "+actualClassNames);
+        console.log("css class not correct. Expected for "+ message+ " to be "+expectedClassNames+" but was "+niceEmptyString(actualClassNames));
         return false;
     }
     return true;
 }
+
 
 export async function checkTRcorrect(driver: WebDriver, timeout = config.TIMEOUT): Promise<boolean> {
     let tr = await findByXPath(driver, '//tbody/tr[1000]');
