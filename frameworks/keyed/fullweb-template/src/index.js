@@ -17,7 +17,7 @@ const rowTemplate = new Template('tr', { classList: [["danger", part('selected')
           }]
       ]]
   ]],
-  ['td', {className: 'col-md-6'}]
+  ['td', {classList: 'col-md-6'}]
 ]);
 
 class Store {
