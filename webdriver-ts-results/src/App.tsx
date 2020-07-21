@@ -24,8 +24,9 @@ interface State {
 }
 
 let knownIssues = [
-  {issue: 634, text:"The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
-  {issue: 694, text:"Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694"},
+  {issue: 634, text:"The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634", isError: true},
+  {issue: 694, text:"Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694", isError: true},
+  {issue: 772, text:"Note: Implementation is not data-driven ", link: "https://github.com/krausest/js-framework-benchmark/issues/772", isError: false},
 ];
 
 

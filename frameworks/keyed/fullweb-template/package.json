@@ -4,7 +4,8 @@
   "description": "FullWeb demo using the template helper",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@fullweb/helpers"
+    "frameworkVersionFromPackage": "@fullweb/helpers",
+    "issues": [772]
   },
   "scripts": {
     "build-dev": "rollup -c -w",

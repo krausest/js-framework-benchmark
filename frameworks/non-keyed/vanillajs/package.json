@@ -4,7 +4,8 @@
   "description": "Vanilla.JS demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": ""
+    "frameworkVersion": "",
+    "issues": [772]
   },
   "scripts": {
     "build-dev": "echo 0",
