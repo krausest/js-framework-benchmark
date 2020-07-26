@@ -60,8 +60,6 @@ marko-*/src/xtable.marko
 yarn.lock
 !/yarn.lock
 
-package-lock.json
-
 # angular 2 aot
 angular-*/lib/
 **/app.ngfactory.ts
