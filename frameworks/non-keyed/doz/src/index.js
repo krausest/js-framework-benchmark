@@ -10,15 +10,21 @@ let selected = -1;
 
 const actions = {
     add() {
+        this.mainComponent.prepareCommit();
         this.getStore('records').data = this.getStore('records').data.concat(buildData(1000));
+        this.mainComponent.commit();
     },
 
     run() {
+        this.mainComponent.prepareCommit();
         this.getStore('records').data = buildData(1000);
+        this.mainComponent.commit();
     },
 
     runLots() {
+        this.mainComponent.prepareCommit();
         this.getStore('records').data = buildData(10000);
+        this.mainComponent.commit();
     },
 
     clear() {
@@ -26,9 +32,11 @@ const actions = {
     },
 
     del(id) {
+        this.mainComponent.prepareCommit();
         const data = this.getStore('records').data;
         const idx = data.findIndex(d => d.id === id);
         data.splice(idx, 1);
+        this.mainComponent.commit();
     },
 
     interact(e) {
@@ -43,12 +51,14 @@ const actions = {
     },
 
     select(id) {
+        this.mainComponent.prepareCommit();
         const data = this.getStore('records').data;
         if (selected > -1) {
             data[selected].selected = false;
         }
         selected = data.findIndex(d => d.id === id);
         data[selected].selected = true;
+        this.mainComponent.commit();
     },
 
     swapRows() {
