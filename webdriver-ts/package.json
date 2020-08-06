@@ -38,7 +38,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "cross-env": "5.2.1",
-    "chromedriver": "84.0.1",
+    "chromedriver": "76.0.1",
     "dot": "1.1.2",
     "jstat": "1.9.1",
     "lighthouse": "5.2.0",
