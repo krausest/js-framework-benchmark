@@ -5,8 +5,9 @@ import { render, component, h } from 'literaljs';
 import { Store } from './store';
 
 const App = component({
+	state: { store: new Store() },
 	methods() {
-		const { store } = this.state;
+		const { store } = this.getState();
 		return {
 			run() {
 				store.run();
@@ -43,7 +44,7 @@ const App = component({
 		};
 	},
 	render() {
-		const { store } = this.state;
+		const { store } = this.getState();
 		return (
 			<div class="container">
 				<div class="jumbotron">
@@ -161,4 +162,4 @@ const App = component({
 	}
 });
 
-render(App, 'root', { store: new Store() });
+render(App, 'root', {});

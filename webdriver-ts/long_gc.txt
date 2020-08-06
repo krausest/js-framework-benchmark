@@ -1,0 +1,44 @@
+one iteration with 1641 msecs
+
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"type":"click"}},"cat":"devtools.timeline","dur":752701,"name":"EventDispatch","ph":"X","pid":2452101,"tdur":752019,"tid":1,"ts":175708667988,"tts":1951381}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"columnNumber":52644,"frame":"F24A992E3DB781CA978E666125B65C79","functionName":"mr","lineNumber":1,"scriptId":"8","url":"http://localhost:8080/frameworks/keyed/react-hooks/dist/main.js"}},"cat":"devtools.timeline","dur":9,"name":"FunctionCall","ph":"X","pid":2452101,"tdur":9,"tid":1,"ts":175708668233,"tts":1951626}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"columnNumber":43935,"frame":"F24A992E3DB781CA978E666125B65C79","functionName":"Pn","lineNumber":1,"scriptId":"8","url":"http://localhost:8080/frameworks/keyed/react-hooks/dist/main.js"}},"cat":"devtools.timeline","dur":752405,"name":"FunctionCall","ph":"X","pid":2452101,"tdur":751725,"tid":1,"ts":175708668252,"tts":1951645}}
+{"method":"Tracing.dataCollected","params":{"args":{"type":"allocation failure","usedHeapSizeAfter":31665596,"usedHeapSizeBefore":33840316},"cat":"devtools.timeline,v8","dur":3184,"name":"MinorGC","ph":"X","pid":2452101,"tdur":3038,"tid":1,"ts":175708737687,"tts":2021076}}
+{"method":"Tracing.dataCollected","params":{"args":{"type":"allocation failure","usedHeapSizeAfter":33454884,"usedHeapSizeBefore":34322436},"cat":"devtools.timeline,v8","dur":5065,"name":"MinorGC","ph":"X","pid":2452101,"tdur":4651,"tid":1,"ts":175708775855,"tts":2059093}}
+{"method":"Tracing.dataCollected","params":{"args":{"type":"allocation failure","usedHeapSizeAfter":42120704,"usedHeapSizeBefore":42340088},"cat":"devtools.timeline,v8","dur":6433,"name":"MinorGC","ph":"X","pid":2452101,"tdur":6382,"tid":1,"ts":175708879028,"tts":2161854}}
+{"method":"Tracing.dataCollected","params":{"args":{"type":"allocation failure","usedHeapSizeAfter":44301652,"usedHeapSizeBefore":45027452},"cat":"devtools.timeline,v8","dur":6339,"name":"MinorGC","ph":"X","pid":2452101,"tdur":6276,"tid":1,"ts":175708916981,"tts":2199757}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"type":"DOMActivate"}},"cat":"devtools.timeline","dur":5,"name":"EventDispatch","ph":"X","pid":2452101,"tdur":5,"tid":1,"ts":175709420681,"tts":2703392}}
+{"method":"Tracing.dataCollected","params":{"args":{"beginData":{"frame":"F24A992E3DB781CA978E666125B65C79"},"elementCount":90001},"cat":"blink,devtools.timeline","dur":319624,"name":"UpdateLayoutTree","ph":"X","pid":2452101,"tdur":319625,"tid":1,"ts":175709420793,"tts":2703504}}
+{"method":"Tracing.dataCollected","params":{"args":{"beginData":{"dirtyObjects":120007,"frame":"F24A992E3DB781CA978E666125B65C79","partialLayout":false,"totalObjects":120071},"endData":{"root":[0,0,2384,0,2384,1430,0,1430],"rootNode":15}},"cat":"devtools.timeline","dur":432684,"name":"Layout","ph":"X","pid":2452101,"tdur":432693,"tid":1,"ts":175709743317,"tts":3026028}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"frame":"F24A992E3DB781CA978E666125B65C79"}},"cat":"devtools.timeline","dur":129279,"name":"UpdateLayerTree","ph":"X","pid":2452101,"tdur":129282,"tid":1,"ts":175710176025,"tts":3458743}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"clip":[0,0,2384,0,2384,1430,0,1430],"frame":"F24A992E3DB781CA978E666125B65C79","layerId":9,"nodeId":15}},"cat":"devtools.timeline,rail","dur":14,"name":"Paint","ph":"X","pid":2452101,"tdur":14,"tid":1,"ts":175710305331,"tts":3588051}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"clip":[0,0,2354,0,2354,5430,0,5430],"frame":"F24A992E3DB781CA978E666125B65C79","layerId":11,"nodeId":15}},"cat":"devtools.timeline,rail","dur":4576,"name":"Paint","ph":"X","pid":2452101,"tdur":4577,"tid":1,"ts":175710305354,"tts":3588074}}
+
+total duration = ts last paint + tdur - ts click = 175710305354 + 4577 - 175708667988 = 1641,943 msecs
+time to update = 175709420793 - 175708667988 = 752,805 msecs
+
+dur_GC = 3184 + 5065 + 6433 + 6339 = 21,021 msecs
+
+one iteration with 9272 msecs
+
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"type":"click"}},"cat":"devtools.timeline","dur":8388739,"name":"EventDispatch","ph":"X","pid":2452101,"tdur":8387571,"tid":1,"ts":175737925316,"tts":31017883}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"columnNumber":52644,"frame":"F24A992E3DB781CA978E666125B65C79","functionName":"mr","lineNumber":1,"scriptId":"8","url":"http://localhost:8080/frameworks/keyed/react-hooks/dist/main.js"}},"cat":"devtools.timeline","dur":7,"name":"FunctionCall","ph":"X","pid":2452101,"tdur":7,"tid":1,"ts":175737925420,"tts":31017987}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"columnNumber":43935,"frame":"F24A992E3DB781CA978E666125B65C79","functionName":"Pn","lineNumber":1,"scriptId":"8","url":"http://localhost:8080/frameworks/keyed/react-hooks/dist/main.js"}},"cat":"devtools.timeline","dur":8388585,"name":"FunctionCall","ph":"X","pid":2452101,"tdur":8387418,"tid":1,"ts":175737925436,"tts":31018003}}
+{"method":"Tracing.dataCollected","params":{"args":{"type":"allocation failure","usedHeapSizeAfter":194932976,"usedHeapSizeBefore":197014736},"cat":"devtools.timeline,v8","dur":6829,"name":"MinorGC","ph":"X","pid":2452101,"tdur":6395,"tid":1,"ts":175738473327,"tts":31565893}}
+{"method":"Tracing.dataCollected","params":{"args":{"type":"allocation failure","usedHeapSizeAfter":199534964,"usedHeapSizeBefore":200270600},"cat":"devtools.timeline,v8","dur":7144,"name":"MinorGC","ph":"X","pid":2452101,"tdur":7101,"tid":1,"ts":175740148866,"tts":33240932}}
+{"method":"Tracing.dataCollected","params":{"args":{"type":"allocation failure","usedHeapSizeAfter":204488224,"usedHeapSizeBefore":205061120},"cat":"devtools.timeline,v8","dur":7973,"name":"MinorGC","ph":"X","pid":2452101,"tdur":7686,"tid":1,"ts":175741897353,"tts":34989347}}
+{"method":"Tracing.dataCollected","params":{"args":{"type":"allocation failure","usedHeapSizeAfter":210313232,"usedHeapSizeBefore":210692012},"cat":"devtools.timeline,v8","dur":8028,"name":"MinorGC","ph":"X","pid":2452101,"tdur":7913,"tid":1,"ts":175743871037,"tts":36962712}}
+{"method":"Tracing.dataCollected","params":{"args":{"type":"allocation failure","usedHeapSizeAfter":215287136,"usedHeapSizeBefore":215856808},"cat":"devtools.timeline,v8","dur":7666,"name":"MinorGC","ph":"X","pid":2452101,"tdur":7621,"tid":1,"ts":175745612031,"tts":38703501}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"type":"DOMActivate"}},"cat":"devtools.timeline","dur":8,"name":"EventDispatch","ph":"X","pid":2452101,"tdur":7,"tid":1,"ts":175746314044,"tts":39405443}}
+{"method":"Tracing.dataCollected","params":{"args":{"beginData":{"frame":"F24A992E3DB781CA978E666125B65C79"},"elementCount":90001},"cat":"blink,devtools.timeline","dur":307108,"name":"UpdateLayoutTree","ph":"X","pid":2452101,"tdur":307109,"tid":1,"ts":175746314292,"tts":39405682}}
+{"method":"Tracing.dataCollected","params":{"args":{"beginData":{"dirtyObjects":120007,"frame":"F24A992E3DB781CA978E666125B65C79","partialLayout":false,"totalObjects":120071},"endData":{"root":[0,0,2384,0,2384,1430,0,1430],"rootNode":113}},"cat":"devtools.timeline","dur":434776,"name":"Layout","ph":"X","pid":2452101,"tdur":434778,"tid":1,"ts":175746624367,"tts":39715759}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"frame":"F24A992E3DB781CA978E666125B65C79"}},"cat":"devtools.timeline","dur":133791,"name":"UpdateLayerTree","ph":"X","pid":2452101,"tdur":133788,"tid":1,"ts":175747059168,"tts":40150560}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"clip":[0,0,2384,0,2384,1430,0,1430],"frame":"F24A992E3DB781CA978E666125B65C79","layerId":58,"nodeId":113}},"cat":"devtools.timeline,rail","dur":15,"name":"Paint","ph":"X","pid":2452101,"tdur":15,"tid":1,"ts":175747192985,"tts":40284373}}
+{"method":"Tracing.dataCollected","params":{"args":{"data":{"clip":[0,0,2354,0,2354,5430,0,5430],"frame":"F24A992E3DB781CA978E666125B65C79","layerId":60,"nodeId":113}},"cat":"devtools.timeline,rail","dur":4740,"name":"Paint","ph":"X","pid":2452101,"tdur":4741,"tid":1,"ts":175747193009,"tts":40284397}}
+
+total = 175747193009 + 4741 - 175737925316 = 9272,434 msecs
+time to update = 175746314292 - 175737925316 = 8388,976 msecs
+
+dur_GC = 6829 + 7144 + 7973 + 8028 + 7666 = 37,640 msecs
+
+=> duration of GC doesn't explain the slow duration

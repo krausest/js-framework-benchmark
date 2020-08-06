@@ -202,7 +202,7 @@ jumbotron =
             [ class "row" ]
             [ div
                 [ class "col-md-6" ]
-                [ h1 [] [ text "Elm 0.19.0 (keyed)" ] ]
+                [ h1 [] [ text "Elm" ] ]
             , div
                 [ class "col-md-6" ]
                 (List.map btnPrimaryBlock buttons)

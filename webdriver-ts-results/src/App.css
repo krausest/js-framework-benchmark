@@ -173,3 +173,23 @@ font-size: 8px;
 .sortKey {
   text-decoration: underline;
 }
+
+dl {
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin-bottom: 16px;
+}
+dt {
+    float: left;
+    width: 50px;
+    padding: 0;
+    margin: 0
+}
+dd {
+    padding: 0;
+    margin: 0;
+}
+.with-issues {
+    background-color: #faa;
+}

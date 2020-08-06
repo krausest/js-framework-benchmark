@@ -1,0 +1,32 @@
+{
+  "name": "js-framework-benchmark-vuerx-jsx",
+  "version": "0.0.2",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "vuerx-jsx"
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "author": "Ryan Carniato",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "vuerx-jsx": "0.0.2",
+    "@vue/reactivity": "3.0.0-beta.13"
+  },
+  "devDependencies": {
+    "@babel/core": "7.9.0",
+    "@rollup/plugin-node-resolve": "7.1.1",
+    "@rollup/plugin-replace": "2.3.2",
+    "babel-plugin-jsx-dom-expressions": "0.18.1",
+    "rollup": "2.10.2",
+    "rollup-plugin-babel": "4.4.0",
+    "rollup-plugin-terser": "5.3.0"
+  }
+}

@@ -4,23 +4,6 @@ import san from 'san/dist/san.spa.modern.js';
 
 var store = new Store();
 
-var startTime;
-var lastMeasure;
-var startMeasure = function (name) {
-    startTime = performance.now();
-    lastMeasure = name;
-};
-var stopMeasure = function () {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            var stop = performance.now();
-            console.log(last + " took " + (stop - startTime));
-        }, 0);
-    }
-};
-
 export default san.defineComponent({
     trimWhitespace: 'all',
     updateMode: 'optimized',
@@ -91,52 +74,36 @@ export default san.defineComponent({
         window.app = this;
     },
     add() {
-        startMeasure("add");
         store.add();
         this.sync();
-        stopMeasure();
     },
     remove(id) {
-        startMeasure("remove");
         store.delete(id);
         this.sync();
-        stopMeasure();
     },
     select(id) {
-        startMeasure("select");
         store.select(+id);
         this.sync();
-        stopMeasure();
     },
     run() {
-        startMeasure("run");
         store.run();
         this.sync();
-        stopMeasure();
     },
     update() {
-        startMeasure("update");
         store.update();
         this.sync();
-        stopMeasure();
     },
     runLots() {
-        startMeasure("runLots");
         store.runLots();
         this.sync();
-        stopMeasure();
     },
     clear() {
-        startMeasure("clear");
         store.clear();
         this.sync();
-        stopMeasure();
     },
     swapRows() {
-        startMeasure("swapRows");
         store.swapRows();
         this.sync();
-        stopMeasure();
     },
     sync() {
         this.dataChanges = [];

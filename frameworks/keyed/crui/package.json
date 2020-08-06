@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "main": "dist/main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@crui/core"
+    "frameworkVersionFromPackage": "@crui/core",
+    "issues": [694]
   },
   "scripts": {
     "build-dev": "webpack --watch",

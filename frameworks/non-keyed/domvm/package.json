@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-domvm-non-keyed",
+  "name": "js-framework-benchmark-non-keyed-domvm-non-keyed",
   "version": "3.4.12-non-keyed",
   "description": "Benchmark for domvm framework (non-keyed)",
   "js-framework-benchmark": {

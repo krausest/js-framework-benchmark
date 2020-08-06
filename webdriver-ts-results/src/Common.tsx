@@ -21,6 +21,7 @@ export const DisplayMode_BoxPlot = new DisplayModeSimple(DisplayMode.BoxPlot);
 export interface Framework {
     name: string;
     keyed: boolean;
+    issues?: number[];
 }
 
 export enum BenchmarkType { CPU, MEM, STARTUP }
@@ -82,7 +83,7 @@ let computeColor = function(factor: number): string {
 }
 
 export class TableResultValueEntry implements TableResultEntry {
-    constructor(public key:string, public value: number, public formattedValue: string, public deviation: string, public factor: number, public formattedFactor: string, public bgColor: string, public textColor: string, public statisticallySignificantFactor: string|number|undefined = undefined) {
+    constructor(public key:string, public value: number, public formattedValue: string, public deviation: string|null, public factor: number, public formattedFactor: string, public bgColor: string, public textColor: string, public statisticallySignificantFactor: string|number|undefined = undefined) {
     }
     render() {
         let col = this.bgColor;
@@ -90,7 +91,7 @@ export class TableResultValueEntry implements TableResultEntry {
         return (<td key={this.key} style={{backgroundColor:col, color: textCol}}>
                     {/* <span className="mean">{}</span> */}
                     <span className="mean">{this.formattedValue}</span>
-                    <span className="deviation">{this.deviation}</span>
+                    {this.deviation!=null && <span className="deviation">{this.deviation}</span>}
                     <br />
                     <span className="factor">({this.formattedFactor})</span>
                     {this.statisticallySignificantFactor && <>
@@ -289,29 +290,31 @@ export class ResultTableData {
             let factor = value/min;
             if (this.displayMode.type === DisplayMode.DisplayMean) {
                 let conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
-                let conficenceIntervalStr = conficenceInterval.toFixed(1);
+                let conficenceIntervalStr = benchmark.type==BenchmarkType.MEM ? null : conficenceInterval.toFixed(1);
                 let formattedValue = formatEn.format(value);
                 return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), computeColor(factor), '#000');
             }
             else if (this.displayMode.type === DisplayMode.BoxPlot) {
                 let conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
-                let conficenceIntervalStr = conficenceInterval.toFixed(1);
+                let conficenceIntervalStr = benchmark.type==BenchmarkType.MEM ? null : conficenceInterval.toFixed(1);
                 let formattedValue = formatEn.format(value);
                 return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), computeColor(factor), '#000');
             }
             else if (this.displayMode.type === DisplayMode.DisplayMedian) {
                 let conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
-                let conficenceIntervalStr = conficenceInterval.toFixed(1);
+                let conficenceIntervalStr = benchmark.type==BenchmarkType.MEM ? null : conficenceInterval.toFixed(1);
                 let formattedValue = formatEn.format(value);
                 return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), computeColor(factor), '#000');
             }
             else if (this.displayMode.type === DisplayMode.HighlightVariance) {
                 let formattedValue = formatEn.format(result.mean);
                 let stdDev = result.standardDeviation || 0;
-                let stdDevStr = stdDev.toFixed(1);
-                let stdDevFactor = stdDev/result.mean * 100.0;
+                let stdDevStr = benchmark.type==BenchmarkType.MEM ? null : stdDev.toFixed(1);
+                let stdDevFactor =  benchmark.type==BenchmarkType.MEM ? 1.0 : stdDev/result.mean * 100.0;
+                let stdDevFactorStr = stdDevFactor == null ? ""  : stdDevFactor.toFixed(2) + "%";
                 console.log("variance ",f.name, benchmark.id, stdDev, value, stdDevFactor);
-                return new TableResultValueEntry(f.name, value, formattedValue, stdDevStr, stdDevFactor, stdDevFactor.toFixed(2) + "%", computeColor(stdDevFactor/5.0 + 1.0), '#000');
+                let color = stdDevFactor == null ? "0xfff"  : computeColor(stdDevFactor/5.0 + 1.0);
+                return new TableResultValueEntry(f.name, value, formattedValue, stdDevStr, stdDevFactor, stdDevFactorStr, color, '#000');
             }
             else if (this.displayMode.type === DisplayMode.CompareAgainst && (this.displayMode as DisplayModeCompare).compareAgainst) {
                 let compareWithResults = this.results(benchmark, (this.displayMode as DisplayModeCompare).compareAgainst!)!;

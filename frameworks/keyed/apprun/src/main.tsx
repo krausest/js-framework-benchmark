@@ -1,23 +1,9 @@
-import app, { Component } from 'apprun'
+import { app, Component } from 'apprun';
 import Store from './store';
-
-var startTime;
-var lastMeasure;
-var startMeasure = function (name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function () {
-    window.setTimeout(function () {
-        var stop = performance.now();
-        console.log(lastMeasure + " took " + (stop - startTime));
-    }, 0);
-}
 
 const store = new Store();
 
 const update = {
-    '#benchmark': (store) => store,
 
     run(store) {
         store.run();
@@ -30,20 +16,16 @@ const update = {
     },
 
     remove(store, id) {
-        document.getElementById(id).remove();
         store.delete(id);
-        store.no_render = true;
-        return store;
+        document.getElementById(id).remove();
     },
 
     select(store, id) {
         if (store.selected) {
             document.getElementById(store.selected).className = '';
         }
-        document.getElementById(id).className = 'danger';
         store.select(id);
-        store.no_render = true;
-        return store;
+        document.getElementById(id).className = 'danger';
     },
 
     update(store) {
@@ -58,7 +40,7 @@ const update = {
 
     clear(store) {
         store.clear();
-        return store;
+        document.getElementById("main-table").innerHTML = "";
     },
 
     swaprows(store) {
@@ -68,12 +50,8 @@ const update = {
 }
 
 const view = (model) => {
-    if (model.no_render) {
-        delete model.no_render;
-        return;
-    }
     const rows = model.data.map((curr) => {
-        const selected = curr.id == model.selected ? 'danger' : '';
+        const selected = curr.id == model.selected ? 'danger' : undefined;
         const id = curr.id;
         return <tr className={selected} id={id} key={id}>
             <td className="col-md-1">{id}</td>
@@ -89,7 +67,7 @@ const view = (model) => {
         </tr>;
     });
 
-    return (<div className="container">
+    return (<div className="container" onclick={click}>
         <div className="jumbotron">
             <div className="row">
                 <div className="col-md-6">
@@ -119,7 +97,7 @@ const view = (model) => {
                 </div>
             </div>
         </div>
-        <table className="table table-hover table-striped test-data">
+        <table className="table table-hover table-striped test-data" id="main-table">
             <tbody>
                 {rows}
             </tbody>
@@ -138,29 +116,24 @@ const getId = (elem) => {
     return undefined;
 }
 
-document.body.addEventListener('click', e => {
+const click = (e) => {
     const t = e.target as HTMLElement;
     if (!t) return;
     if (t.tagName === 'BUTTON' && t.id) {
         e.preventDefault();
-        startMeasure(t.id);
         component.run(t.id);
-        stopMeasure();
     } else if (t.matches('.remove')) {
         e.preventDefault();
-        startMeasure('remove');
         component.run('remove', getId(t));
-        stopMeasure();
     } else if (t.matches('.lbl')) {
         e.preventDefault();
-        startMeasure('select');
         component.run('select', getId(t));
-        stopMeasure();
     }
-});
+};
 
-app.on('//', _ => { })
-app.on('#', _ => { })
-
-let component = new Component(store, view, update);
+const component = new Component(store, view, update);
+component['-patch-vdom-on'] = true;
+component.rendered = () => {
+    store.selected && (document.getElementById(store.selected).className = 'danger');
+}
 component.start(document.getElementById('main'));

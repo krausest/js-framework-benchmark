@@ -4,7 +4,8 @@
   "description": "Benchmark for Binding.scala",
   "js-framework-benchmark": {
     "frameworkVersion": "10.0.1",
-    "customURL": "/target/web/stage"
+    "customURL": "/target/web/stage",
+    "issues": [694]
   },
   "scripts": {
     "build-prod": "sbt web-stage"

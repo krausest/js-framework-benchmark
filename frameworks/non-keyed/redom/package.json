@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-redom",
+  "name": "js-framework-benchmark-non-keyed-redom",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,10 +13,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "redom": "3.24.1",
-    "rollup": "1.20.3",
+    "redom": "3.27.0",
+    "rollup": "2.12.0",
     "rollup-plugin-buble": "0.19.8",
     "rollup-plugin-node-resolve": "5.2.0",
-    "rollup-plugin-uglify": "6.0.3"
+    "rollup-plugin-uglify": "6.0.4"
   }
 }

@@ -39,18 +39,6 @@ export class Row extends Component {
     }
 }
 
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function() {
-    window.setTimeout(function() {
-        var stop = performance.now();
-        console.log(lastMeasure+" took "+(stop-startTime));
-    }, 0);
-}
 export class Controller extends Component{
     onInit() {
         this.state = {store: new Store()};
@@ -66,59 +54,48 @@ export class Controller extends Component{
         var target = document.querySelector('#main');
     }
     run() {
-        startMeasure("run");
         this.state.store.run();
         this.state = {store: this.state.store};
         this.update();
     }
     add() {
-        startMeasure("add");
         this.start = performance.now();
         this.state.store.add();
         this.state = {store: this.state.store};
         this.update();
     }
     update10() {
-        startMeasure("update");
         this.start = performance.now();
         this.state.store.update();
         this.state = {store: this.state.store};
         this.update();
     }
     select(id) {
-        startMeasure("select");
         this.start = performance.now();
         this.state.store.select(id);
         this.state = {store: this.state.store};
         this.update();
     }
     delete(id) {
-        startMeasure("delete");
         this.start = performance.now();
         this.state.store.delete(id);
         this.state = {store: this.state.store};
         this.update();
     }
     runLots() {
-        startMeasure("runLots");
         this.state.store.runLots();
         this.state = {store: this.state.store};
         this.update();
     }
     clear() {
-        startMeasure("clear");
         this.state.store.clear();
         this.state = {store: this.state.store};
         this.update();
     }
     swapRows() {
-        startMeasure("swapRows");
         this.state.store.swapRows();
         this.state = {store: this.state.store};
         this.update();
-    }
-    onUpdate() {
-        stopMeasure();
     }
     onRender () {
         var rows = this.state.store.data.map((d,i) => {

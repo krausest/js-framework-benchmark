@@ -1,67 +1,31 @@
-"use strict";
-
 import Mikado from "../node_modules/mikado/src/mikado.js";
 import app from "./template/app.es6.js";
 import item from "./template/item.es6.js";
 import { buildData } from "./data.js";
-import { startMeasure, stopMeasure } from "./bench.js";
 
-const main = document.getElementById("main");
-new Mikado(main, app).render().destroy(true);
+Mikado.once(document.getElementById("main"), app);
 
-const state = { "selected": -1 };
+let data = [], selected = 0;
 const root = document.getElementById("tbody");
-const mikado = Mikado.new(root, item, {
-
-    "store": true,
-    "loose": true,
-    "reuse": true,
-    "state": state  // external reference
-})
-.route("run", function(){
-    if(DEBUG) startMeasure("run");
-    mikado.render(buildData(1000));
-    if(DEBUG) stopMeasure();
-})
-.route("runlots", function(){
-    if(DEBUG) startMeasure("runlots");
-    mikado.render(buildData(10000));
-    if(DEBUG) stopMeasure();
-})
-.route("add", function(){
-    if(DEBUG) startMeasure("add");
-    mikado.append(buildData(1000));
-    if(DEBUG) stopMeasure();
-})
-.route("update", function(){
-    if(DEBUG) startMeasure("update");
-    for(let i = 0, len = mikado.length; i < len; i += 10){
-        mikado.item(i).label += " !!!";
-        mikado.refresh(i);
+const view = new Mikado(root, item)
+.route("run", () => view.render(data = buildData(1000)))
+.route("runlots", () => view.render(buildData(10000)))
+.route("add", () => view.append(buildData(1000)))
+.route("update", () => {
+    for(let i = 0; i < data.length; i += 10){
+        data[i].label += " !!!";
+        view.update(i, data[i]);
     }
-    if(DEBUG) stopMeasure();
 })
-.route("clear", function(){
-    if(DEBUG) startMeasure("clear");
-    mikado.clear();
-    if(DEBUG) stopMeasure();
+.route("clear", () => view.clear())
+.route("swaprows", () => {
+    const tmp = data[998];
+    view.update(998, data[998] = data[1]);
+    view.update(1, data[1] = tmp);
 })
-.route("swaprows", function(){
-    if(DEBUG) startMeasure("swaprows");
-    mikado.swap(1, 998);
-    if(DEBUG) stopMeasure();
-})
-.route("remove", function(target){
-    if(DEBUG) startMeasure("remove");
-    mikado.remove(target);
-    if(DEBUG) stopMeasure();
-})
-.route("select", function(target){
-    if(DEBUG) startMeasure("select");
-    const selected = state["selected"];
-    if(selected >= 0) mikado.node(selected).className = "";
-    target.className = "danger";
-    state["selected"] = mikado.index(target);
-    if(DEBUG) stopMeasure();
+.route("remove", target => view.remove(target))
+.route("select", target => {
+    view.update(selected, data[selected]);
+    view.update(selected = view.index(target), data[selected], selected);
 })
 .listen("click");

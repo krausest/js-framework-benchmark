@@ -58,7 +58,7 @@ const parameter = (function(opt){
     generate_exports: true,
     export_local_property_definitions: true,
     language_in: "ECMASCRIPT6_STRICT",
-    language_out: "ECMASCRIPT5_STRICT",
+    language_out: "ECMASCRIPT6_STRICT",
     process_closure_primitives: true,
     summary_detail_level: 3,
     warning_level: "VERBOSE",

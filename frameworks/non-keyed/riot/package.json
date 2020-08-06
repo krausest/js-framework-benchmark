@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-riot",
+  "name": "js-framework-benchmark-non-keyed-riot",
   "version": "1.0.0",
   "description": "Benchmark for riot framework",
   "js-framework-benchmark": {
@@ -10,12 +10,12 @@
     "build-prod": "webpack -p"
   },
   "devDependencies": {
-    "@riotjs/compiler": "4.3.11",
-    "@riotjs/webpack-loader": "4.0.1",
-    "webpack": "4.39.3",
-    "webpack-cli": "3.3.8"
+    "@riotjs/compiler": "4.8.2",
+    "@riotjs/webpack-loader": "4.0.3",
+    "webpack": "4.42.1",
+    "webpack-cli": "3.3.11"
   },
   "dependencies": {
-    "riot": "4.5.0"
+    "riot": "4.12.0"
   }
 }

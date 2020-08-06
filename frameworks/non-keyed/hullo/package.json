@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-hullo",
+  "name": "js-framework-benchmark-non-keyed-hullo",
   "version": "0.8.2",
   "description": "Hullo demo",
   "main": "index.js",

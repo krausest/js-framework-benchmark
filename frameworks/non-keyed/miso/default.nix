@@ -1,6 +1,6 @@
 with (import (builtins.fetchTarball {
-  url = "https://github.com/dmjio/miso/archive/5647cfd.tar.gz";
-  sha256 = "177d99m4q4ab35xr0kdpczxncbx187bwk54z7cr3khp5w9gcq27g";
+  url = "https://github.com/dmjio/miso/archive/0af726ceeee9dda2ad390619e643fccf637727d6.tar.gz";
+  sha256 = "1wpcc5y5py074nzd1qihgjlbfz1d8h262yqbc4k6wrmnjqiwwri6";
 }) {});
 with pkgs.haskell.packages;
 let

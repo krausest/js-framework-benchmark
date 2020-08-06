@@ -31,7 +31,7 @@ async function main() {
                     encoding:'utf-8'
                 }));
                 if (data.values.some(v => v==null)) console.log(`Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`)
-                let result = {f:data.framework, b:data.benchmark, v:data.values.filter(v => v!=null)};
+                let result: any = {f:data.framework, b:data.benchmark, v:data.values.filter(v => v!=null)};
                 let resultNice = {framework:data.framework, benchmark:data.benchmark, values:data.values.filter(v => v!=null)};
                 resultJS += '\n' + JSON.stringify(result) + ',';
                 jsonResult.push(resultNice)
@@ -49,7 +49,11 @@ async function main() {
     });
 
 resultJS += '];\n';
-resultJS += 'export let frameworks = '+JSON.stringify(frameworks.map(f => ({name: f.fullNameWithKeyedAndVersion, keyed: f.keyed})))+";\n";
+resultJS += 'export let frameworks = '+JSON.stringify(frameworks.map(f =>
+    (f.issues && f.issues.length>0) ?
+        ({name: f.fullNameWithKeyedAndVersion, keyed: f.keyed, issues: f.issues})
+    : ({name: f.fullNameWithKeyedAndVersion, keyed: f.keyed})
+))+";\n";
 resultJS += 'export let benchmarks = '+JSON.stringify(allBenchmarks)+";\n";
 
 fs.writeFileSync('../webdriver-ts-results/src/results.ts', resultJS, {encoding: 'utf-8'});

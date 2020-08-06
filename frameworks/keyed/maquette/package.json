@@ -3,7 +3,8 @@
   "version": "3.0.1-keyed",
   "description": "Benchmark for maquette framework (keyed)",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "maquette"
+    "frameworkVersionFromPackage": "maquette",
+    "issues": [694]
   },
   "scripts": {
     "build-dev": "node build.js",

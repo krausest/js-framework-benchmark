@@ -1,33 +1,28 @@
 {
-  "name": "js-framework-benchmark-mikado",
-  "description": "Web's smartest virtual DOM templating engine.",
+  "private": true,
+  "name": "js-framework-benchmark-mikado-proxy",
   "homepage": "https://github.com/nextapps-de/mikado/",
   "author": "Nextapps GmbH",
-  "version": "1.0.0",
   "license": "Apache-2.0",
-  "main": "src/mikado.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "mikado"
+    "frameworkVersionFromPackage": "mikado",
+    "issues": [694]
   },
-  "browser": "src/browser.js",
   "preferGlobal": false,
-  "bin": {
-    "mikado": "./task/compile.js"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "scripts": {
-    "compile": "node node_modules/mikado/task/compile ./../../src/template/app.html && node node_modules/mikado/task/compile ./../../src/template/item.html && echo Compile Complete. && exit 0",
-    "build": "npm run compile && node task/build RELEASE=custom DEBUG=false USE_POLYFILL=false SUPPORT_CACHE=false SUPPORT_EVENTS=true SUPPORT_STORAGE=true SUPPORT_HELPERS=true SUPPORT_ASYNC=false SUPPORT_TRANSPORT=false SUPPORT_LOOP_INCLUDE=false SUPPORT_CONDITIONAL=false && exit 0",
+    "compile": "mikado-compile src/template/app.html && mikado-compile src/template/item.html && echo Compile Complete. && exit 0",
+    "build": "npm run compile && node task/build RELEASE=custom DEBUG=false USE_POLYFILL=false SUPPORT_CACHE=false SUPPORT_EVENTS=true SUPPORT_STORAGE=true SUPPORT_HELPERS=false SUPPORT_ASYNC=false SUPPORT_TRANSPORT=false SUPPORT_TEMPLATE_EXTENSION=false SUPPORT_REACTIVE=true SUPPORT_CACHE_HELPERS=false SUPPORT_KEYED=false SUPPORT_POOLS=false SUPPORT_CALLBACKS=false SUPPORT_COMPILE=false && exit 0",
     "build-prod": "npm run build"
   },
   "dependencies": {
-    "mikado": "^0.1.2"
+    "mikado": "^0.7.51"
   },
   "devDependencies": {
-    "google-closure-compiler": "^20190910.0.0-nightly",
-    "html2json": "^1.0.2"
+    "google-closure-compiler": "^20191030.0.0-nightly",
+    "mikado-compile": "0.6.5"
   }
 }

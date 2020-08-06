@@ -1,0 +1,39 @@
+{
+  "name": "js-framework-benchmark-non-keyed-lit-element",
+  "version": "1.1.0",
+  "description": "lit-element demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "lit-element",
+    "useShadowRoot": true
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "keywords": [
+    "lit-html"
+  ],
+  "author": "Christian Norrman",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
+  "dependencies": {
+    "lit-element": "^2.2.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "rollup": "1.12.3",
+    "rollup-plugin-minify-html-literals": "^1.2.2",
+    "rollup-plugin-terser": "5.0.0",
+    "rollup-plugin-typescript2": "^0.26.0",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3"
+  }
+}

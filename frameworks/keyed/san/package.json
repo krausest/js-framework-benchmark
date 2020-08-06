@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-san",
-  "version": "3.7.6",
+  "version": "3.9.0",
   "description": "Benchmark for san framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "san"
@@ -29,6 +29,6 @@
     "webpack-cli": "3.1.0"
   },
   "dependencies": {
-    "san": "3.7.7"
+    "san": "^3.9.0"
   }
 }

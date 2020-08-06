@@ -4,24 +4,6 @@ import { Store } from "./store";
 // For who ever will read this: in Bobril you normally don't use bootstrap or class names directly, you use b.styleDef instead.
 b.asset("../../../../css/currentStyle.css");
 
-var startTime: number;
-var lastMeasure: string;
-var startMeasure = function(name) {
-  startTime = performance.now();
-  lastMeasure = name;
-};
-var stopMeasure = function() {
-  var last = lastMeasure;
-  if (lastMeasure) {
-    window.setTimeout(function() {
-      lastMeasure = null;
-      var stop = performance.now();
-      var duration = 0;
-      console.log(last + " took " + (stop - startTime));
-    }, 0);
-  }
-};
-
 function divWithClass(name: string, children: b.IBobrilChildren) {
   return { tag: "div", className: name, children };
 }
@@ -51,7 +33,6 @@ const Button = b.createVirtualComponent<IButtonData>({
     me.children = d.children;
   },
   onClick(ctx: IButtonCtx): boolean {
-    startMeasure(ctx.data.id);
     ctx.data.action();
     b.invalidate();
     return true;
@@ -114,7 +95,6 @@ const Header = b.createComponent<IHeaderData>({
 
 const ClickSelect: b.IBobrilComponent = {
   onClick(ctx: b.IBobrilCtx, event: b.IBobrilMouseEvent): boolean {
-    startMeasure("select");
     store.select(ctx.data);
     b.invalidate();
     return true;
@@ -123,7 +103,6 @@ const ClickSelect: b.IBobrilComponent = {
 
 const ClickRemove: b.IBobrilComponent = {
   onClick(ctx: b.IBobrilCtx, event: b.IBobrilMouseEvent): boolean {
-    startMeasure("delete");
     store.delete(ctx.data);
     b.invalidate();
     return true;
@@ -179,7 +158,6 @@ b.init(() => {
     tag: "div",
     className: "container",
     component: {
-      postUpdateDom: stopMeasure
     },
     children: [
       Header(),

@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import axios from 'axios';
+import { LighthouseData } from './benchmarks';
 
 export interface JSONResult {
     framework: string, keyed: boolean, benchmark: string, type: string, min: number,
@@ -13,6 +14,7 @@ export type TBenchmarkStatus = 'OK'|'TEST_FAILED'|'TECHNICAL_ERROR';
 export interface ErrorAndWarning {
     error: String;
     warnings: String[];
+    result?: number[]|LighthouseData;
 }
 
 export interface BenchmarkDriverOptions {
@@ -24,9 +26,11 @@ export interface BenchmarkDriverOptions {
 
 export interface BenchmarkOptions extends BenchmarkDriverOptions {
     port: string;
+    batchSize: number;
     numIterationsForCPUBenchmarks: number;
     numIterationsForMemBenchmarks: number;
     numIterationsForStartupBenchmark: number;
+
 }
 
 export let config = {
@@ -34,7 +38,7 @@ export let config = {
     REMOTE_DEBUGGING_PORT: 9999,
     CHROME_PORT: 9998,
     REPEAT_RUN: 10,
-    REPEAT_RUN_MEM: 5,
+    REPEAT_RUN_MEM: 1,
     REPEAT_RUN_STARTUP: 4,
     DROP_WORST_RUN: 0,
     WARMUP_COUNT: 5,
@@ -48,7 +52,8 @@ export let config = {
     STARTUP_SLEEP_DURATION: 1000,
     FORK_CHROMEDRIVER: true,
     WRITE_RESULTS: true,
-    RESULTS_DIRECTORY: "results"
+    RESULTS_DIRECTORY: "results",
+    ALLOW_BATCHING: true
 }
 export type TConfig = typeof config;
 
@@ -58,6 +63,8 @@ export interface FrameworkData {
     uri: string;
     keyed: boolean;
     useShadowRoot: boolean;
+    useRowShadowRoot: boolean;
+    issues: number[];
 }
 
 interface Options {
@@ -74,12 +81,13 @@ function computeHash(keyedType: KeyedType, directory: string) {
 export interface FrameworkId {
     keyedType: KeyedType;
     directory: string;
+    issues: number[];
 }
 
 
 abstract class FrameworkVersionInformationValid implements FrameworkId {
     public url: string;
-    constructor(public keyedType: KeyedType, public directory: string, customURL: string|undefined, public useShadowRoot: boolean) {
+    constructor(public keyedType: KeyedType, public directory: string, customURL: string|undefined, public useShadowRoot: boolean, public useRowShadowRoot: boolean, public issues: number[]) {
         this.keyedType = keyedType;
         this.directory = directory;
         this.url = 'frameworks/'+keyedType+'/'+directory + (customURL ? customURL : '');
@@ -88,26 +96,29 @@ abstract class FrameworkVersionInformationValid implements FrameworkId {
 
 export class FrameworkVersionInformationDynamic extends FrameworkVersionInformationValid  {
     constructor(keyedType: KeyedType, directory: string, public packageNames: string[],
-        customURL: string|undefined, useShadowRoot: boolean = false) {
-            super(keyedType, directory, customURL, useShadowRoot);
+        customURL: string|undefined, useShadowRoot: boolean = false, useRowShadowRoot: boolean = false, issues: number[]) {
+            super(keyedType, directory, customURL, useShadowRoot, useRowShadowRoot, issues);
         }
     }
 
 export class FrameworkVersionInformationStatic extends FrameworkVersionInformationValid  {
-    constructor(keyedType: KeyedType, directory: string, public frameworkVersion: string, customURL: string|undefined, useShadowRoot: boolean = false) {
-        super(keyedType, directory, customURL, useShadowRoot);
+    constructor(keyedType: KeyedType, directory: string, public frameworkVersion: string, customURL: string|undefined, useShadowRoot: boolean = false, useRowShadowRoot: boolean = false, issues: number[]) {
+        super(keyedType, directory, customURL, useShadowRoot, useRowShadowRoot, issues);
     }
     getFrameworkData(): FrameworkData {
         return {name: this.directory,
             fullNameWithKeyedAndVersion: this.directory+(this.frameworkVersion ? '-v'+this.frameworkVersion : '')+'-'+this.keyedType,
             uri: this.url,
             keyed: this.keyedType === 'keyed',
-            useShadowRoot: this.useShadowRoot
+            useShadowRoot: this.useShadowRoot,
+            useRowShadowRoot: this.useRowShadowRoot,
+            issues: this.issues
         }
     }
 }
 
 export class FrameworkVersionInformationError implements FrameworkId  {
+    public issues: [];
     constructor(public keyedType: KeyedType, public directory: string, public error: string) {}
 }
 
@@ -154,13 +165,17 @@ async function loadFrameworkInfo(pathInFrameworksDir: string): Promise<Framework
                 return new FrameworkVersionInformationDynamic(keyedType, directory,
                     packageJSON['js-framework-benchmark']['frameworkVersionFromPackage'].split(':'),
                     packageJSON['js-framework-benchmark']['customURL'],
-                    packageJSON['js-framework-benchmark']['useShadowRoot']
+                    packageJSON['js-framework-benchmark']['useShadowRoot'],
+                    packageJSON['js-framework-benchmark']['useRowShadowRoot'],
+                    packageJSON['js-framework-benchmark']['issues']
                 );
             } else if (typeof packageJSON['js-framework-benchmark']['frameworkVersion'] === 'string') {
                 return new FrameworkVersionInformationStatic(keyedType, directory,
                     packageJSON['js-framework-benchmark']['frameworkVersion'],
                     packageJSON['js-framework-benchmark']['customURL'],
-                    packageJSON['js-framework-benchmark']['useShadowRoot']
+                    packageJSON['js-framework-benchmark']['useShadowRoot'],
+                    packageJSON['js-framework-benchmark']['useRowShadowRoot'],
+                    packageJSON['js-framework-benchmark']['issues']
                 );
             } else {
                 return new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'frameworkVersionFromPackage\' or \'frameworkVersion\' in the \'js-framework-benchmark\'.property');
@@ -207,7 +222,9 @@ export class PackageVersionInformationResult {
             fullNameWithKeyedAndVersion: this.framework.directory+'-v'+this.getVersionName()+'-'+this.framework.keyedType,
             uri: this.framework.url,
             keyed: this.framework.keyedType === 'keyed',
-            useShadowRoot: this.framework.useShadowRoot
+            useShadowRoot: this.framework.useShadowRoot,
+            useRowShadowRoot: this.framework.useRowShadowRoot,
+            issues: this.framework.issues
         }
     }
 }

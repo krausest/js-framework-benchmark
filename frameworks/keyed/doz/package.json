@@ -1,0 +1,33 @@
+{
+  "name": "js-framework-benchmark-doz",
+  "version": "1.0.0",
+  "description": "Doz demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "doz"
+  },
+  "scripts": {
+    "build-dev": "webpack --watch --mode=development",
+    "build-prod": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "keywords": [
+    "doz"
+  ],
+  "author": "Fabio Ricali",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
+  "dependencies": {
+    "doz": "3.3.3"
+  },
+  "devDependencies": {
+    "webpack": "4.41.4",
+    "webpack-cli": "3.3.10"
+  }
+}

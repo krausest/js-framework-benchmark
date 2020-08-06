@@ -1,0 +1,6 @@
+lib
+**/*.bs.js
+.merlin
+_esy
+_release
+*.install

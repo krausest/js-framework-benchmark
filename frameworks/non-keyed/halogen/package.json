@@ -1,32 +1,30 @@
 {
-    "name": "js-framework-benchmark-pux",
-    "version": "1.0.0",
-    "description": "Purescript Halogen JS Benchmark",
-    "main": "index.js",
-    "js-framework-benchmark": {
-        "frameworkVersion": "4.0.0"
-    },
-    "scripts": {
-        "postinstall": "bower install",
-        "clean": "rimraf output bower_components node_modules",
-        "build-dev": "pulp browserify --to output/bundle.js",
-        "build-prod": "pulp browserify --optimise --to output/bundle.js"
-    },
-    "keywords": [
-        "purescript",
-        "pux"
-    ],
-    "author": "Thomas Honeyman <hello@thomashoneyman.com>",
-    "license": "ISC",
-    "homepage": "https://github.com/krausest/js-framework-benchmark",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/krausest/js-framework-benchmark.git"
-    },
-    "devDependencies": {
-        "bower": "1.8.4",
-        "pulp": "12.3.0",
-        "purescript": "0.12.0",
-        "rimraf": "2.5.4"
-    }
+  "name": "js-framework-benchmark-non-keyed-halogen",
+  "version": "1.0.0",
+  "description": "Purescript Halogen JS Benchmark",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "5.0.0"
+  },
+  "scripts": {
+    "postinstall": "spago install",
+    "clean": "rm -rf output .spago node_modules",
+    "build": "spago build",
+    "build-prod": "spago bundle-app --to output/bundle.js"
+  },
+  "keywords": [
+    "purescript",
+    "halogen"
+  ],
+  "author": "Thomas Honeyman <hello@thomashoneyman.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "purescript": "0.13.6",
+    "spago": "0.14.0"
+  }
 }

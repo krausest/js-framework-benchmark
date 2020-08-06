@@ -1,9 +1,10 @@
 {
-  "name": "js-framework-benchmark-Datumjs",
+  "name": "js-framework-benchmark-datumjs",
   "version": "1.0.0",
   "description": "Benchmark for Datum v0.8",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "Datum"
+    "frameworkVersionFromPackage": "Datum",
+    "issues": [694]
   },
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",

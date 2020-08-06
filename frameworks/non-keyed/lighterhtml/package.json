@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-lighterhtml",
+  "name": "js-framework-benchmark-non-keyed-lighterhtml",
   "version": "1.0.0",
   "description": "lighterhtml demo",
   "main": "index.js",
@@ -24,16 +24,15 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lighterhtml": "0.16.1"
+    "js-framework-benchmark-utils": "0.2.5",
+    "lighterhtml": "2.5.0"
   },
   "devDependencies": {
-    "@babel/core": "7.5.5",
-    "babel-plugin-remove-ungap": "1.2.0",
-    "rollup": "1.17.0",
-    "rollup-plugin-babel": "4.3.3",
-    "rollup-plugin-minify-html-literals": "1.2.2",
-    "rollup-plugin-node-resolve": "5.2.0",
-    "rollup-plugin-replace": "2.2.0",
-    "rollup-plugin-terser": "5.1.1"
+    "@ungap/degap": "^0.1.7",
+    "rollup": "^2.0.6",
+    "rollup-plugin-includepaths": "^0.2.3",
+    "rollup-plugin-minify-html-literals": "^1.2.3",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.3.0"
   }
 }

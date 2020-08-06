@@ -2,7 +2,6 @@
 import { value, beforeCompute, FidanArray } from "@fidanjs/runtime";
 
 import { buildData, BenchmarkDataRow } from "./data";
-import { startMeasure, stopMeasure } from "./measure";
 import { jsxArrayMap } from "@fidanjs/jsx";
 
 const dataArray = value([]) as FidanArray<BenchmarkDataRow[]>;
@@ -18,69 +17,53 @@ beforeCompute<HTMLElement>(
 );
 
 const run = () => {
-  startMeasure("run");
   const data = buildData(1000);
   dataArray(data);
-  stopMeasure();
 };
 
 const runLots = () => {
-  startMeasure("run");
   selectedTr(null);
   const data = buildData(10000);
   dataArray(data);
-  stopMeasure();
 };
 
 const add = () => {
-  startMeasure("add");
   selectedTr(null);
   const currentData = dataArray();
   const newData = buildData(1000);
   currentData.push.apply(currentData, newData);
-  stopMeasure();
 };
 
 const cleardata = () => {
-  startMeasure("cleardata");
   selectedTr(null);
   dataArray([]);
-  stopMeasure();
 };
 
 const select = e => {
-  startMeasure("select");
   selectedTr(e.target.parentNode.parentNode);
-  stopMeasure();
 };
 
 const del = e => {
-  startMeasure("del");
   const id = parseInt(e.target.getAttribute("data-id"));
   const data = dataArray();
   const idx = data.findIndex(item => item.id() == id);
   data.splice(idx, 1);
-  stopMeasure();
 };
 
 const update = () => {
-  startMeasure("update");
   const data = dataArray();
   for (let i = 0; i < data.length; i += 10) {
     data[i].label(data[i].label() + " !!!");
   }
-  stopMeasure();
 };
 
 const swaprows = () => {
-  startMeasure("swaprows");
   const data = dataArray();
   const x = 1,
     y = 998;
   const sp1 = data.splice(x, 1, data[y])[0];
   data.splice(y, 1, sp1);
   // dataArray().splice(y, 1, dataArray().splice(x, 1, dataArray()[y])[0]);
-  stopMeasure();
 };
 
 const itemView = (dataItem: BenchmarkDataRow) => {

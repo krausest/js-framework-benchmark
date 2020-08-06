@@ -5,25 +5,6 @@ import Bb from 'backbone';
 import { View, CollectionView } from 'backbone.marionette';
 import rowTemplate from './row.tpl';
 
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function() {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        // console.profileEnd(lastMeasure);
-        window.setTimeout(function () {
-            lastMeasure = null;
-            var stop = performance.now();
-            var duration = 0;
-            console.log(last+" took "+(stop-startTime));
-        }, 0);
-    }
-}
-
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
@@ -46,61 +27,45 @@ const Store = Bb.Collection.extend({
         return data;
     },
     updateData(mod = 10) {
-        startMeasure("update");
         for (let i=0;i<this.models.length;i+=10) {
             const label = this.models[i].get('label');
             this.models[i].set('label', label + ' !!!');
         }
-        stopMeasure();
     },
     delete(id, view) {
-        startMeasure("delete");
         view.removeRow(id);
         this.remove(id, { silent: true });
-        stopMeasure();
     },
     run() {
-        startMeasure("run");
         if(this.model.length) this._clear();
         this.reset(this.buildData());
-        stopMeasure();
     },
     addData() {
-        startMeasure("add");
         this.add(this.buildData(1000));
-        stopMeasure();
     },
     select(id, view) {
-        startMeasure("select");
         view.setSelected(id);
         this.selectedId = id;
-        stopMeasure();
     },
     runLots() {
-        startMeasure("runLots");
         if(this.model.length) this._clear();
         this.reset(this.buildData(10000));
-        stopMeasure();
     },
     _clear() {
         _.each(this.models, model => model.off());
         this._reset();
     },
     clear() {
-        startMeasure("clear");
         this._clear();
         this.trigger('reset', this);
-        stopMeasure();
     },
     swapRows() {
-        startMeasure("swapRows");
         if (this.length > 998) {
             const a = this.models[1];
             this.models[1] = this.models[998];
             this.models[998] = a;
             this.trigger('swap', this.models[1], this.models[998]);
         }
-        stopMeasure();
     }
 });
 

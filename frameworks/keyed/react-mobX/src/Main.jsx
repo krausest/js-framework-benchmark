@@ -2,29 +2,11 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
+require('mobx-react/batchingForReactDom');
 const {Row} = require('./Row');
 var {observer} = require("mobx-react");
 var {observable, computed} = require ("mobx");
 const {Store} = require('./Store');
-
-
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function() {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            var stop = performance.now();
-            var duration = 0;
-            console.log(last+" took "+(stop-startTime));
-        }, 0);
-    }
-}
 
 @observer
 export class Main extends React.Component{
@@ -40,47 +22,28 @@ export class Main extends React.Component{
         this.swapRows = this.swapRows.bind(this);
         this.start = 0;
     }
-    printDuration() {
-        stopMeasure();
-    }
-    componentDidUpdate() {
-        this.printDuration();
-    }
-    componentDidMount() {
-        this.printDuration();
-    }
     run() {
-        startMeasure("run");
         this.props.store.run();
     }
     add() {
-        startMeasure("add");
         this.props.store.add();
     }
     update() {
-        startMeasure("update");
         this.props.store.update();
-        stopMeasure();
     }
     select(row) {
-        startMeasure("select");
         this.props.store.select(row);
-        stopMeasure();
     }
     delete(row) {
-        startMeasure("delete");
         this.props.store.delete(row);
     }
     runLots() {
-        startMeasure("runLots");
         this.props.store.runLots();
     }
     clear() {
-        startMeasure("clear");
         this.props.store.clear();
     }
     swapRows() {
-        startMeasure("swapRows");
         this.props.store.swapRows();
     }
     render () {

@@ -1,0 +1,9 @@
+(library
+   (name JsFrameworkBenchmarkComponents)
+   (public_name js-framework-benchmark-components.lib)
+   (preprocess (pps ppx_jane ))
+   (libraries incr_dom)
+   (js_of_ocaml (flags
+      --opt 3
+   ))
+)

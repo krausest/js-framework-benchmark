@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-stage0",
+  "name": "js-framework-benchmark-non-keyed-stage0",
   "version": "1.0.0",
   "description": "stage0 demo",
   "main": "dist/app.min.js",

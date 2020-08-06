@@ -44,10 +44,10 @@
         <tr each={ row in state.rows } key={ row.id } class={ rowClass(row) }>
           <td class='col-md-1'>{ row.id }</td>
           <td class='col-md-4'>
-            <a onclick={ () => select(row) }>{ row.label }</a>
+            <a onclick={() => select(row.id)}>{ row.label }</a>
           </td>
           <td class='col-md-1'>
-            <a onclick={ () => remove(row) }><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>
+            <a><span onclick={() => remove(row.id)} class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>
           </td>
           <td class='col-md-6'></td>
         </tr>
@@ -74,52 +74,36 @@
         })
       },
       add() {
-        startMeasure('add')
         this.store.add()
         this.renderWithNewState()
-        stopMeasure()
       },
-      remove(item) {
-        startMeasure('remove')
-        this.store.delete(item.id)
+      remove(id) {
+        this.store.delete(id)
         this.renderWithNewState()
-        stopMeasure()
       },
-      select(item) {
-        startMeasure('select')
-        this.store.select(item.id)
+      select(id) {
+        this.store.select(id)
         this.renderWithNewState()
-        stopMeasure()
       },
       run() {
-        startMeasure('run')
         this.store.run()
         this.renderWithNewState()
-        stopMeasure()
       },
       updateRows() {
-        startMeasure('update')
         this.store.update()
         this.renderWithNewState()
-        stopMeasure()
       },
       runLots() {
-        startMeasure('runLots')
         this.store.runLots()
         this.renderWithNewState()
-        stopMeasure()
       },
       clear() {
-        startMeasure('clear')
         this.store.clear()
         this.renderWithNewState()
-        stopMeasure()
       },
       swapRows() {
-        startMeasure('swapRows')
         this.store.swapRows()
         this.renderWithNewState()
-        stopMeasure()
       }
     }
   </script>
