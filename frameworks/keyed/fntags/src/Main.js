@@ -1,4 +1,4 @@
-import { fnapp, fnbind, fnstate, findElement, h } from 'https://cdn.jsdelivr.net/npm/fntags@0.2.3/src/fntags.min.js'
+import { findElement, fnapp, fnbind, fnstate, h, resetState } from 'https://cdn.jsdelivr.net/npm/fntags@0.2.3/src/fntags.min.js'
 
 let data = fnstate( [] )
 
@@ -53,6 +53,7 @@ const row = ( item ) => {
                            e.preventDefault()
                            tr.replaceWith( '' )
                            item( null )
+                           resetState(item)
                            tr = null
                        }
                    },
