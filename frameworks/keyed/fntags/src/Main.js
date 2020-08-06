@@ -88,7 +88,7 @@ fnapp( document.body,
                               data()[ i ].patch( { label: data()[ i ]().label + ' !!!' } )
                           }
                       } ),
-                      Button( 'clear', 'Clear', () => data( [] ) && cache.clear() ) ,
+                      Button( 'clear', 'Clear', () => data( [] ) ) ,
                       Button( 'swaprows', 'Swap Rows', () => {
                           const theData = data()
                           if( theData.length > 998 ) {

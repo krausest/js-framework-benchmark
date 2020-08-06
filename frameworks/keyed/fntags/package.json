@@ -11,6 +11,9 @@
     "build-prod": "node build.js"
   },
   "author": "Robert Kempton",
+  "dependencies": {
+    "fntags": "0.2.4"
+  },
   "devDependencies": {
     "fs-extra": "8.1.0",
     "terser": "4.3.8"
