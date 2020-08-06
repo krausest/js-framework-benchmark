@@ -31,21 +31,20 @@ const Button = ( id, title, onclick ) =>
 
 const cache = new Map()
 
-let selected = null
-let selectedId = null
+let selected = fnstate(null)
+
 const row = ( item ) => {
     if( !item || !item() ) return ''
     if( cache.has( item().id ) ) return cache.get(item().id)
     let label = h( 'a', {
         onclick: () => {
-            if( selected ) selected.className = ''
+            if( selected() ) selected().className = ''
             tr.className = 'danger'
-            selected = tr
-            selectedId = item().id
+            selected(tr)
         }
     }, item().label )
     let id = h( 'td', { class: 'col-md-1' }, item().id )
-    let tr = h( 'tr', { id: item().id.toString(), class: selectedId === item().id ? 'danger' : '' },
+    let tr = h( 'tr', { id: item().id.toString(), class: selected() && selected().getAttribute("id") === item().id ? 'danger' : '' },
                 id,
                 h( 'td', { class: 'col-md-4' }, label ),
                 h( 'td', {
