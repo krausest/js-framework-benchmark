@@ -1,4 +1,4 @@
-import { findElement, fnapp, fnbind, fnstate, h, resetState } from 'https://cdn.jsdelivr.net/npm/fntags@0.2.3/src/fntags.min.js'
+import { findElement, fnapp, fnbind, fnstate, h, resetState } from 'https://cdn.jsdelivr.net/npm/fntags@0.2.4/src/fntags.min.js'
 
 let data = fnstate( [] )
 
@@ -29,13 +29,9 @@ const Button = ( id, title, onclick ) =>
        h( 'button', { id, type: 'button', class: 'btn btn-primary btn-block', onclick: onclick }, title )
     )
 
-const cache = new Map()
-
 let selected = fnstate(null)
 
-const row = ( item ) => {
-    if( !item || !item() ) return ''
-    if( cache.has( item().id ) ) return cache.get(item().id)
+const row = ( item ) => item.map(i=>i.id, ()=>{
     let label = h( 'a', {
         onclick: () => {
             if( selected() ) selected().className = ''
@@ -63,16 +59,15 @@ const row = ( item ) => {
                 ),
                 h( 'td', { class: 'col-md-6' } )
     )
-    cache.set( item().id, fnbind(
+    return fnbind(
         item,
         tr,
         () => {
             label.innerText = item().label
             id.innerText = item().id
         }
-    ) )
-    return cache.get( item().id )
-}
+    )
+})
 
 fnapp( document.body,
        h( 'div', { class: 'container' },
