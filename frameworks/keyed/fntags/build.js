@@ -15,6 +15,4 @@ const minify = ( file ) => {
     }
 }
 
-fs.writeFileSync( 'dist/fntags.js', minify( 'node_modules/fntags/src/fntags.js' ) )
-
-fs.writeFileSync( 'dist/Main.js', minify( 'src/Main.js' ).replace( '../node_modules/fntags/src/fntags.js', './fntags.js' ) )
+fs.writeFileSync( 'dist/Main.js', minify( 'src/Main.js' ) )
