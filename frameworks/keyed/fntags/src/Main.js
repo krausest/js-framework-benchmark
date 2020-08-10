@@ -1,4 +1,4 @@
-import { findElement, fnapp, fnbind, fnstate, h, resetState } from 'https://cdn.jsdelivr.net/npm/fntags@0.2.4/src/fntags.min.js'
+import { findElement, fnapp, fnbind, fnstate, h, resetState } from 'https://cdn.jsdelivr.net/npm/fntags@0.2.7/src/fntags.min.js'
 
 let data = fnstate( [] )
 
@@ -31,7 +31,7 @@ const Button = ( id, title, onclick ) =>
 
 let selected = fnstate(null)
 
-const row = ( item ) => item.map(i=>i.id, ()=>{
+const row = ( item ) => {
     let label = h( 'a', {
         onclick: () => {
             if( selected() ) selected().className = ''
@@ -67,7 +67,7 @@ const row = ( item ) => item.map(i=>i.id, ()=>{
             id.innerText = item().id
         }
     )
-})
+}
 
 fnapp( document.body,
        h( 'div', { class: 'container' },
@@ -111,12 +111,7 @@ fnapp( document.body,
           )
        ),
        h( 'table', { class: 'table table-hover table-striped test-data' },
-          fnbind( data, h( 'tbody' ), ( el ) => {
-              while( el.firstChild ) {
-                  el.removeChild( el.firstChild )
-              }
-              el.append( ...data().map( row ) )
-          } )
+          data.mapChildren(h('tbody'), (item)=>item().id, row)
        ),
        h( 'span', { class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
 )
