@@ -1,4 +1,4 @@
-import { findElement, fnapp, fnbind, fnstate, h, resetState } from 'https://cdn.jsdelivr.net/npm/fntags@0.2.7/src/fntags.min.js'
+import { fnapp, fnbind, fnstate, h, resetState } from 'https://cdn.jsdelivr.net/npm/fntags@0.2.9/src/fntags.js'
 
 let data = fnstate( [] )
 
@@ -92,17 +92,10 @@ fnapp( document.body,
                       Button( 'swaprows', 'Swap Rows', () => {
                           const theData = data()
                           if( theData.length > 998 ) {
-
-                              let rowa = findElement( theData[ 1 ], el => el.getAttribute( 'id' ) == theData[ 1 ]().id )
-                              let rowb = findElement( theData[ 998 ], el => el.getAttribute( 'id' ) == theData[ 998 ]().id )
-
                               const a = theData[ 1 ]
                               theData[ 1 ] = theData[ 998 ]
                               theData[ 998 ] = a
-                              let sib = rowa.nextSibling
-                              let parent = rowa.parentNode
-                              parent.insertBefore( rowa, rowb )
-                              parent.insertBefore( rowb, sib )
+                              data(theData)
                           }
                       } )
                    )
