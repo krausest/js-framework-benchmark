@@ -1,4 +1,5 @@
-var sf = window.sf = require('scarletsframe');
+// var sf = window.sf = require('scarletsframe');
+var sf = window.sf = require('scarletsframe/dist/scarletsframe.es6.js');
 
 // Declare variable for the model
 sf.model('bench-mark', function(self){
