@@ -1,4 +1,4 @@
-import { fnapp, fnbind, fnstate, h, resetState } from 'https://cdn.jsdelivr.net/npm/fntags@0.2.9/src/fntags.js'
+import { fnapp, fnbind, fnstate, h } from 'https://cdn.jsdelivr.net/npm/fntags@0.2.10/src/fntags.min.js'
 
 let data = fnstate( [] )
 
@@ -29,44 +29,50 @@ const Button = ( id, title, onclick ) =>
        h( 'button', { id, type: 'button', class: 'btn btn-primary btn-block', onclick: onclick }, title )
     )
 
-let selected = fnstate(null)
+let rowTemplate =
+    h( 'tr',
+       h( 'td', { class: 'col-md-1' } ),
+       h( 'td', { class: 'col-md-4' }, h( 'a' ) ),
+       h( 'td', { class: 'col-md-1' },
+          h( 'a',
+             h( 'span', { class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
+          )
+       ),
+       h( 'td', { class: 'col-md-6' } )
+    )
+let selected = null
 
 const row = ( item ) => {
-    let label = h( 'a', {
-        onclick: () => {
-            if( selected() ) selected().className = ''
-            tr.className = 'danger'
-            selected(tr)
-        }
-    }, item().label )
-    let id = h( 'td', { class: 'col-md-1' }, item().id )
-    let tr = h( 'tr', { id: item().id.toString(), class: selected() && selected().getAttribute("id") === item().id ? 'danger' : '' },
-                id,
-                h( 'td', { class: 'col-md-4' }, label ),
-                h( 'td', {
-                       class: 'col-md-1',
-                       onclick: ( e ) => {
-                           e.preventDefault()
-                           tr.replaceWith( '' )
-                           item( null )
-                           resetState(item)
-                           tr = null
-                       }
-                   },
-                   h( 'a',
-                      h( 'span', { class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
-                   )
-                ),
-                h( 'td', { class: 'col-md-6' } )
-    )
-    return fnbind(
-        item,
-        tr,
-        () => {
-            label.innerText = item().label
-            id.innerText = item().id
-        }
-    )
+    const tr = rowTemplate.cloneNode( true )
+    const id = tr.firstChild
+    const label = id.nextSibling.firstChild
+    const removeBtn = id.nextSibling.nextSibling
+
+    removeBtn.addEventListener( 'click', (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        tr.replaceWith('')
+        item.reset()
+        item(null)
+    } )
+
+    tr.addEventListener( 'click', () => {
+        if( selected ) selected.patch( { selected: false } )
+        tr.className = 'danger'
+        item.patch( { selected: true } )
+        selected = item
+    } )
+
+    tr.setAttribute( 'id', item().id.toString() )
+
+    const update = () => {
+        tr.className = item().selected ? 'danger' : ''
+        label.innerText = item().label
+        id.innerText = item().id
+    }
+
+    update()
+    return fnbind( item, tr, update )
 }
 
 fnapp( document.body,
@@ -88,14 +94,14 @@ fnapp( document.body,
                               data()[ i ].patch( { label: data()[ i ]().label + ' !!!' } )
                           }
                       } ),
-                      Button( 'clear', 'Clear', () => data( [] ) ) ,
+                      Button( 'clear', 'Clear', () => data( [] ) ),
                       Button( 'swaprows', 'Swap Rows', () => {
                           const theData = data()
                           if( theData.length > 998 ) {
                               const a = theData[ 1 ]
                               theData[ 1 ] = theData[ 998 ]
                               theData[ 998 ] = a
-                              data(theData)
+                              data( theData )
                           }
                       } )
                    )
@@ -104,7 +110,7 @@ fnapp( document.body,
           )
        ),
        h( 'table', { class: 'table table-hover table-striped test-data' },
-          data.mapChildren(h('tbody'), (item)=>item().id, row)
+          data.mapChildren( h( 'tbody' ), ( item ) => item().id, row )
        ),
        h( 'span', { class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
 )
