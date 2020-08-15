@@ -143,7 +143,7 @@ new Doz({
         <tbody>
             ${this.props.data.map(
             item => h`
-                    <tr id="${item.id}" class="${item.selected ? 'danger' : ''}" >
+                    <tr item-list id="${item.id}" class="${item.selected ? 'danger' : ''}" >
                         <td class="col-md-1">${item.id}</td>
                         <td class="col-md-4" >
                             <a>${item.label}</a>
