@@ -57,16 +57,14 @@ const row = ( item ) => {
     } )
 
     tr.addEventListener( 'click', () => {
-        if( selected ) selected.patch( { selected: false } )
+        if( selected ) selected.className = ''
         tr.className = 'danger'
-        item.patch( { selected: true } )
-        selected = item
+        selected = tr
     } )
 
     tr.setAttribute( 'id', item().id.toString() )
 
     const update = () => {
-        tr.className = item().selected ? 'danger' : ''
         label.innerText = item().label
         id.innerText = item().id
     }
