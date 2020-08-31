@@ -256,7 +256,6 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
             "performance": "ALL"
         }
     });
-    console.log(`*** CHROMEDRIVER ${benchmarkOptions.chromeBinaryPath}`);
 
     // port probing fails sometimes on windows, the following driver construction avoids probing:
     let service = new chrome.ServiceBuilder()
