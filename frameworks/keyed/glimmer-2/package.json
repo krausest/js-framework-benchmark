@@ -1,0 +1,85 @@
+{
+  "name": "glimmer-2-benchmark",
+  "version": "2.0.0-beta.8",
+  "description": "Example application using @glimmer packages",
+  "main": "dist/index.js",
+  "repository": "https://github.com/krausest/js-framework-benchmark/tree/master/frameworks/keyed/glimmer-2",
+  "author": "Aleksandr Kanunnikov <lifeart92@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack-dev-server",
+    "build-dev": "webpack-dev-server",
+    "build-prod": "webpack"
+  },
+  "browserslist": {
+    "production": [
+      "last 1 Chrome versions",
+      "last 1 Firefox versions",
+      "last 1 Safari versions"
+    ],
+    "development": [
+      "last 1 Chrome version",
+      "last 1 Firefox version",
+      "last 1 Safari version"
+    ]
+  },
+  "resolutions": {
+    "@glimmer/validator": "0.61.2",
+    "@glimmer/runtime": "0.61.2",
+    "@glimmer/global-context": "0.61.2"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@glimmer/core"
+  },
+  "dependencies": {
+    "@glimmer/core": "^2.0.0-beta.8",
+    "@glimmer/component": "^2.0.0-beta.8",
+    "@glimmer/tracking": "^2.0.0-beta.8",
+    "@glimmer/helper": "^2.0.0-beta.8",
+    "@glimmer/modifier": "^2.0.0-beta.8"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@babel/preset-env": "^7.9.0",
+    "terser-webpack-plugin": "4.1.0",
+    "@babel/preset-typescript": "^7.9.0",
+    "@glimmer/babel-plugin-glimmer-env": "^2.0.0-beta.8",
+    "@glimmer/babel-plugin-strict-template-precompile": "^2.0.0-beta.8",
+    "@types/qunit": "^2.9.1",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "babel-loader": "^8.1.0",
+    "dtslint": "^3.4.1",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "fs-extra": "^9.0.0",
+    "glob": "^7.1.6",
+    "lerna-changelog": "^1.0.1",
+    "mkdirp": "^1.0.3",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.2",
+    "qunit": "^2.9.3",
+    "release-it": "^13.5.7",
+    "release-it-lerna-changelog": "^2.3.0",
+    "release-it-yarn-workspaces": "^1.4.0",
+    "rimraf": "^3.0.2",
+    "semver": "^7.1.3",
+    "testem": "^3.2.0",
+    "ts-loader": "^6.2.2",
+    "tsconfig-paths-webpack-plugin": "^3.3.0",
+    "tslib": "^1.11.1",
+    "typescript": "~3.8.3",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "volta": {
+    "node": "12.16.1",
+    "yarn": "1.22.4"
+  }
+}
