@@ -42,9 +42,8 @@ const reducer = (state, action) => {
       return { data: newData, selected };
     }
     case "REMOVE": {
-      const newData = data.slice();
-      newData.splice(data.indexOf(action.item), 1);
-      return { data: newData, selected };
+      const idx = data.findIndex((d) => d.id === action.id);
+      return { data: [...data.slice(0, idx), ...data.slice(idx + 1)], selected };
     }
     case "SELECT":
       return { data, selected: action.id };
@@ -59,7 +58,7 @@ const reducer = (state, action) => {
     }
   }
   return state;
-});
+};
 
 const useValue = () => useReducer(reducer, initialState);
 const { Provider, useTrackedState, useUpdate: useDispatch } = createContainer(useValue);
@@ -68,8 +67,8 @@ const GlyphIcon = <span className="glyphicon glyphicon-remove" aria-hidden="true
 
 const Row = memo(({ item, isSelected }) => {
   const dispatch = useDispatch();
-  const select = useCallback(() => { dispatch({ type: "SELECT", id: item.id }); }, [item]);
-  const remove = useCallback(() => { dispatch({ type: "REMOVE", item: item }); }, [item]);
+  const select = useCallback(() => { dispatch({ type: "SELECT", id: item.id }); }, [item.id]);
+  const remove = useCallback(() => { dispatch({ type: "REMOVE", id: item.id }); }, [item.id]);
   return (
     <tr className={isSelected ? "danger" : ""}>
       <td className="col-md-1">{item.id}</td>
