@@ -5,7 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ls-element",
-    "useShadowRoot": true
+    "useShadowRoot": false
   },
   "scripts": {
     "start": "webpack-dev-server --mode development",
