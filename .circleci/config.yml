@@ -21,3 +21,7 @@ jobs:
           npm run install-webdriver-ts
           npm start &
           npm run build -- --check
+
+dependencies:
+  pre:
+    - curl -s https://raw.githubusercontent.com/chronogolf/circleci-google-chrome/master/use_chrome_stable_version.sh | bash
