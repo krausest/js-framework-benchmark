@@ -1,0 +1,17 @@
+{
+  "name": "skruv-v0.0.5-1-js-benchmark",
+  "version": "1.0.0",
+  "description": "skruv v0.0.5-1 js benchmark",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "skruv"
+  },
+  "dependencies": {
+    "skruv": "0.0.5-1"
+  },
+  "keywords": [
+    "skruv"
+  ],
+  "author": "Svante Richter",
+  "license": "MIT"
+}
