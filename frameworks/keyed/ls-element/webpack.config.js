@@ -7,31 +7,9 @@ const commonConfig = {
     module: {
         rules: [
             {
-                test: /\.css$/i,
-                use: [
-                    'to-string-loader',
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            import: true,
-                            esModule: false,
-                            url: true,
-                            sourceMap: false
-                        }
-                    },
-                ]
-            },
-            {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
-            },
-            {
-              test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
-              loader: 'url-loader',
-              options: {
-                limit: 8192,
-              },
             },
         ],
     },
