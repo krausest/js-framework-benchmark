@@ -18,7 +18,7 @@
               "./*"
           ],
       },
-      "rootDir": "./src",
+      "rootDir": "./",
       "noUnusedLocals": true,
       "noUnusedParameters": true,
       "jsx": "react",

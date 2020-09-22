@@ -1,7 +1,5 @@
-'use strict';
-
 function _random(max) {
-    return Math.round(Math.random()*1000)%max;
+    return Math.round(Math.random() * 1000) % max;
 }
 
 export class Store {
@@ -15,20 +13,22 @@ export class Store {
         var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
         var data = [];
         for (var i = 0; i < count; i++)
-            data.push({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
+            data.push({ id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
         return data;
     }
     updateData(_mod = 10) {
-        // Just assigning setting each tenth this.data doesn't cause a redraw, the following does:
-        var newData = [...this.data];
-
-        for (let i = 0; i < newData.length; i += 10) {
-            newData[i].label += ' !!!';
+        var newData = []
+        for (let i = 0; i < this.data.length; i++) {
+            if (i % _mod === 0) {
+                newData[i] = Object.assign({}, this.data[i], { label: this.data[i].label + ' !!!' })
+            } else {
+                newData[i] = this.data[i]
+            }
         }
-        this.data = newData;
+        this.data = newData
     }
     delete(id) {
-        const idx = this.data.findIndex(d => d.id==id);
+        const idx = this.data.findIndex(d => d.id == id);
         this.data = this.data.slice(0, idx).concat(this.data.slice(idx + 1))
     }
     run() {
@@ -53,20 +53,19 @@ export class Store {
         this.selected = undefined;
     }
     swapRows() {
-      if(this.data.length > 998) {
-        let d1 = this.data[1];
-      let d998 = this.data[998];
+        if (this.data.length > 998) {
+            let d1 = this.data[1];
+            let d998 = this.data[998];
 
-      var newData = this.data.map(function(data, i) {
-        if(i === 1) {
-          return d998;
+            this.data = this.data.map((data, i) => {
+                if (i === 1) {
+                    return d998;
+                }
+                else if (i === 998) {
+                    return d1;
+                }
+                return data;
+            });
         }
-        else if(i === 998) {
-          return d1;
-        }
-        return data;
-      });
-      this.data = newData;
-      }
     }
 }

@@ -1,4 +1,4 @@
-import { Attribute, AutonomousCustomElement, h, LSCustomElement } from '@lsegurado/ls-element/dist/index';
+import { Attribute, AutonomousCustomElement, h, LSCustomElement } from '@lsegurado/ls-element';
 import { Store } from './store';
 
 const store = new Store();
@@ -20,7 +20,7 @@ export class MainElement extends HTMLElement implements LSCustomElement {
                             <div id="4" class="col-md-6">
                                 <div id="5" class="row">
                                     <div id="6" class="col-sm-6 smallpad">
-                                        <button type="button" class="btn btn-primary btn-block" id="run" onpointerup={() => () => this._run()}>Create 1,000 rows</button>
+                                        <button type="button" class="btn btn-primary btn-block" id="run" onpointerup={() => this._run()}>Create 1,000 rows</button>
                                     </div>
                                     <div id="7" class="col-sm-6 smallpad">
                                         <button type="button" class="btn btn-primary btn-block" id="runlots" onpointerup={() => this._runLots()}>Create 10,000 rows</button>
@@ -42,19 +42,19 @@ export class MainElement extends HTMLElement implements LSCustomElement {
                         </div >
                     </div >
                     <table id="table" class="table table-hover table-striped test-data" onpointerup={(ev) => this._handleClick(ev)}>
-                        <tbody id="body">{this._rows.map(item => (
-                            <tr id={item.id} class={item.id == this._selected ? 'danger' : ''}>
-                                <td id={item.id+1} class="col-md-1">{item.id}</td>
-                                <td id={item.id+2} class="col-md-4">
-                                    <a id={item.id+3} data-action="select" data-id={item.id}>{item.label}</a>
+                        <tbody id="body">{this._rows.map((item, index) => (
+                            <tr id={`${index}-${item.id}`} class={item.id == this._selected ? 'danger' : ''}>
+                                <td id={`${index}-${item.id}-1`} class="col-md-1">{item.id}</td>
+                                <td id={`${index}-${item.id}-2`} class="col-md-4">
+                                    <a id={`${index}-${item.id}-3`} data-action="select" data-id={item.id}>{item.label}</a>
                                 </td>
-                                <td id={item.id+4} class="col-md-1">
-                                    <a id={item.id+5}>
-                                        <span id={item.id+6} class="glyphicon glyphicon-remove" aria-hidden="true"
+                                <td id={`${index}-${item.id}-4`} class="col-md-1">
+                                    <a id={`${index}-${item.id}-5`}>
+                                        <span id={`${index}-${item.id}-6`} class="glyphicon glyphicon-remove" aria-hidden="true"
                                             data-action="remove" data-id={item.id}></span>
                                     </a>
                                 </td>
-                                <td id={item.id+7} class="col-md-6"></td>
+                                <td id={`${index}-${item.id}-7`} class="col-md-6"></td>
                             </tr>))}
                         </tbody>
                     </table >
@@ -77,7 +77,6 @@ export class MainElement extends HTMLElement implements LSCustomElement {
     _add() {
         store.add();
         this._sync();
-        console.log(this._rows);
     }
     _remove(id) {
         store.delete(id);
