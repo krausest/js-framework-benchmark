@@ -12,7 +12,7 @@
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "babel-preset-atomic": "^2.4.2",
-    "babel-loader": "7.1.5",
+    "babel-loader": "^8.1.0",
     "jsx-loader": "0.13.2",
     "webpack": "4.16.3",
     "webpack-cli": "^3.1.0"
