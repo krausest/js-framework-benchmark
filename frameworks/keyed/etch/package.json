@@ -18,6 +18,6 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "etch": "0.14.0"
+    "etch": "0.14.1"
   }
 }
