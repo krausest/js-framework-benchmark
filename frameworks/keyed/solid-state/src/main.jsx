@@ -1,4 +1,4 @@
-import { createState, createMemo, createEffect, mapArray, sample, $RAW } from 'solid-js';
+import { createState, createSelector } from 'solid-js';
 import { render } from 'solid-js/dom';
 
 let idCounter = 1;
@@ -24,23 +24,8 @@ const Button = ({ id, text, fn }) =>
     <button id={ id } class='btn btn-primary btn-block' type='button' onClick={ fn }>{ text }</button>
   </div>
 
-const List = props => {
-  const mapped = createMemo(mapArray(() => props.each, props.children));
-  createEffect(tr => {
-    let i, s = props.selected;
-    sample(() => {
-      if (tr) tr.className = "";
-      if ((tr = s && (i = props.each[$RAW].findIndex(el => el.id === s)) > -1 && mapped()[i]))
-        tr.className = "danger";
-    });
-    return tr;
-  });
-  return mapped;
-};
-
 const App = () => {
-  let rowId;
-  const [ state, setState ] = createState({ data: [], selected: null }),
+  const [state, setState] = createState({ data: [], selected: null }),
     run = () => setState({ data: buildData(1000), selected: null }),
     runLots = () => setState({ data: buildData(10000), selected: null }),
     add = () => setState('data', d => [...d, ...buildData(1000)]),
@@ -51,7 +36,8 @@ const App = () => {
     remove = id => setState('data', d => {
       const idx = d.findIndex(d => d.id === id);
       return [...d.slice(0, idx), ...d.slice(idx + 1)];
-    });
+    }),
+    isSelected = createSelector(() => state.selected);
 
   return <div class='container'>
     <div class='jumbotron'><div class='row'>
@@ -66,15 +52,15 @@ const App = () => {
       </div></div>
     </div></div>
     <table class='table table-hover table-striped test-data'><tbody>
-      <List each={ state.data } selected={ state.selected }>{ row => (
-        rowId = row.id,
-        <tr>
+      <For each={ state.data }>{ row => {
+        const rowId = row.id;
+        return <tr class={isSelected(rowId) ? "danger": ""}>
           <td class='col-md-1' textContent={ rowId } />
           <td class='col-md-4'><a onClick={[select, rowId]} textContent={ row.label } /></td>
           <td class='col-md-1'><a onClick={[remove, rowId]}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
           <td class='col-md-6'/>
         </tr>
-      )}</List>
+      }}</For>
     </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>
