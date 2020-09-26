@@ -63,17 +63,17 @@ export class MainElement extends HTMLElement implements LSCustomElement {
           </div >
           <table id="table" class="table table-hover table-striped test-data">
             <tbody id="body">{this._rows.map((item, index) => (
-              <tr id={index.toString()} class={item.id === this._selected ? 'danger' : undefined}>
-                <td id={`${index}-1`} class="col-md-1">{item.id}</td>
-                <td id={`${index}-2`} class="col-md-4">
-                  <a id={`${index}-3`} onpointerup={() => this._select(item.id)}>{item.label}</a>
+              <tr id={`${index}-${item.id}`} class={item.id === this._selected ? 'danger' : undefined}>
+                <td id={`${index}-${item.id}-1`} class="col-md-1">{item.id}</td>
+                <td id={`${index}-${item.id}-2`} class="col-md-4">
+                  <a id={`${index}-${item.id}-3`} onpointerup={() => this._select(item.id)}>{item.label}</a>
                 </td>
-                <td id={`${index}-4`} class="col-md-1">
-                  <a id={`${index}-5`} onpointerup={() => this._remove(item.id)}>
-                    <span id={`${index}-6`} class="glyphicon glyphicon-remove" aria-hidden="true" />
+                <td id={`${index}-${item.id}-4`} class="col-md-1">
+                  <a id={`${index}-${item.id}-5`} onpointerup={() => this._remove(item.id)}>
+                    <span id={`${index}-${item.id}-6`} class="glyphicon glyphicon-remove" aria-hidden="true" />
                   </a>
                 </td>
-                <td id={`${index}-7`} class="col-md-6" />
+                <td id={`${index}-${item.id}-7`} class="col-md-6" />
               </tr>))}
             </tbody>
           </table >
