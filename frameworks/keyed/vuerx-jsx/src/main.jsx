@@ -1,5 +1,5 @@
-import { ref, computed } from "@vue/reactivity";
-import { render, map, effect, untracked } from 'vuerx-jsx';
+import { ref } from "@vue/reactivity";
+import { render, map } from 'vuerx-jsx';
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],
@@ -25,24 +25,19 @@ const Button = ({ id, text, fn }) =>
     <button id={ id } class='btn btn-primary btn-block' type='button' onClick={ fn }>{ text }</button>
   </div>
 
-const List = props => {
-  const mapped = computed(map(() => props.each, props.children));
-  effect(tr => {
-    let i, s = props.selected;
-    untracked(() => {
-      if (tr) tr.className = "";
-      if ((tr = s && (i = props.each.findIndex(el => el.id === s)) > -1 && mapped.value[i]))
-        tr.className = "danger";
-    });
-    return tr;
-  });
-  return () => mapped.value;
-};
-
 const App = () => {
-  let rowId;
   const data = ref([]),
     selected = ref(null);
+
+  const list = map(() => data.value, row => {
+    const rowId = row.id;
+    return <tr class={selected.value === rowId ? "danger" : ""}>
+      <td class='col-md-1' textContent={ rowId } />
+      <td class='col-md-4'><a onClick={[setSelected, rowId]} textContent={ row.label } /></td>
+      <td class='col-md-1'><a onClick={[remove, rowId]}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
+      <td class='col-md-6'/>
+    </tr>
+  })
 
   return <div class='container'>
     <div class='jumbotron'><div class='row'>
@@ -57,15 +52,7 @@ const App = () => {
       </div></div>
     </div></div>
     <table class='table table-hover table-striped test-data'><tbody>
-      <List each={ data.value } selected={ selected.value }>{ row => (
-        rowId = row.id,
-        <tr>
-          <td class='col-md-1' textContent={ rowId } />
-          <td class='col-md-4'><a onClick={[setSelected, rowId]} textContent={ row.label } /></td>
-          <td class='col-md-1'><a onClick={[remove, rowId]}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
-          <td class='col-md-6'/>
-        </tr>
-      )}</List>
+      {list}
     </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
   </div>;
