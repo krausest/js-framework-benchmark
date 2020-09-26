@@ -4,7 +4,11 @@
   "description": "skruv v0.0.5-1 js benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "skruv"
+    "frameworkVersionFromPackage": "skruv",
+    "issues": [796]
+  },
+  "scripts": {
+    "build-prod": "exit 0"
   },
   "dependencies": {
     "skruv": "0.0.5-1"
