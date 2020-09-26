@@ -11,7 +11,7 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@fidanjs/runtime",
-    "issues": [694]
+    "issues": [694,772]
   },
   "repository": {
     "type": "git",

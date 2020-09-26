@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "redom"
+    "frameworkVersionFromPackage": "redom",
+    "issues": [772]
   },
   "scripts": {
     "build-dev": "rollup -f iife -c rollup.config.dev.js src/main.js -o dist/main.js",

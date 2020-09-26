@@ -4,7 +4,8 @@
   "description": "AppRun demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "apprun"
+    "frameworkVersionFromPackage": "apprun",
+    "issues": [772]
   },
   "scripts": {
     "build-dev": "webpack -w -d",
