@@ -37,6 +37,6 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "@lsegurado/ls-element": "1.1.3"
+    "@lsegurado/ls-element": "1.1.4"
   }
 }
