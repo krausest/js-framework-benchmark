@@ -193,3 +193,24 @@ dd {
 .with-issues {
     background-color: #faa;
 }
+
+.textButton {
+    color: rgb(0,0,238);
+    font-size: inherit;
+    border: none;
+    background: none;
+    outline-style: none;
+    cursor: pointer;
+}
+
+
+button:disabled.textButton {
+    color: #666;
+    font-weight: normal;
+}
+.error {
+    background-color: #f99;
+}
+.warning {
+    background-color: #ff6;
+}
