@@ -1,9 +1,10 @@
+#![cfg(target_arch = "wasm32")]
 #[macro_use]
 extern crate serde_derive;
 
 use wasm_bindgen::prelude::*;
 
-use yarte_wasm_app::run;
+use delorean::run;
 
 use crate::app::NonKeyed;
 
