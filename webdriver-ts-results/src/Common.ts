@@ -11,6 +11,7 @@ export interface Framework {
     name: string;
     type: FrameworkType;
     issues: number[];
+    displayname: string;
 }
 
 export const knownIssues = [

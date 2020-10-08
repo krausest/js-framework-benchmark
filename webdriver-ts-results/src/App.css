@@ -125,8 +125,6 @@ table.results th {
     font-weight: normal;
     font-size: 11px;
     text-align: center;
-    word-break:keep-all;
-    word-wrap:break-word;
 }
 table.results th.benchname {
 width: 100px;

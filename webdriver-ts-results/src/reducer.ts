@@ -7,7 +7,12 @@ let results : Result[] = (rawResults as RawResult[]).map(res => Object.assign(({
     median: res.v ? jStat.median(res.v) : Number.NaN,
     standardDeviation: res.v ? jStat.stdev(res.v, true):  Number.NaN}));
 
-let mappedFrameworks = frameworks.map(f => ({name: f.name, issues: f.issues ?? [], type:f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED}));
+let removeKeyedSuffix = (value: string) => {
+    if  (value.endsWith('-non-keyed')) return value.substring(0,value.length-10)
+    else if (value.endsWith('-keyed')) return value.substring(0,value.length-6)
+    return value;
+}
+let mappedFrameworks = frameworks.map(f => ({name: f.name, displayname: removeKeyedSuffix(f.name), issues: f.issues ?? [], type:f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED}));
 
 let allBenchmarks = benchmarks.reduce((set, b) => set.add(b), new Set<Benchmark>() );
 let allFrameworks = mappedFrameworks.reduce((set, f) => set.add(f), new Set<Framework>() );

@@ -11,10 +11,10 @@ const SelectionFilterIssues = () =>
     
     return (
         <>
-        <label htmlFor="filterIssues">Filter implementations</label>
+        <label htmlFor="filterIssues">Suppress implementations</label>
         <div className="hspan" />
         <select id="filterIssues" className="custom-select" value={filerMode} onChange={(evt) => dispatch(selectFilterIssuesMode(Number(evt.target.value) as FilterIssuesMode))}>
-            <option value={FilterIssuesMode.AllImplentations}>no filter</option>
+            <option value={FilterIssuesMode.AllImplentations}>none</option>
             <option value={FilterIssuesMode.FilterErrors}>with errors</option>
             <option value={FilterIssuesMode.FilterSevereIssues}>with severe issues/cheats</option>
             <option value={FilterIssuesMode.FilterWarnings}>with any issues/cheats</option>
