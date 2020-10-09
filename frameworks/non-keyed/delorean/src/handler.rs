@@ -1,7 +1,7 @@
 use std::cmp::min;
 
+use delorean::*;
 use rand::{rngs::SmallRng, seq::SliceRandom};
-use yarte_wasm_app::*;
 
 use crate::{app::NonKeyed, row::Row};
 
@@ -70,17 +70,17 @@ pub enum Msg {
 }
 
 #[inline]
-pub fn create(app: &mut NonKeyed, _mb: &Addr<NonKeyed>) {
+pub fn create(app: &mut NonKeyed, _mb: DeLorean<NonKeyed>) {
     run_n(app, 1_000);
 }
 
 #[inline]
-pub fn create_10(app: &mut NonKeyed, _mb: &Addr<NonKeyed>) {
+pub fn create_10(app: &mut NonKeyed, _mb: DeLorean<NonKeyed>) {
     run_n(app, 10_000);
 }
 
 #[inline]
-pub fn append(app: &mut NonKeyed, _mb: &Addr<NonKeyed>) {
+pub fn append(app: &mut NonKeyed, _mb: DeLorean<NonKeyed>) {
     let n = 1000;
     for i in 0..n {
         app.data.push(Row {
@@ -93,7 +93,7 @@ pub fn append(app: &mut NonKeyed, _mb: &Addr<NonKeyed>) {
 }
 
 #[inline]
-pub fn update(app: &mut NonKeyed, _mb: &Addr<NonKeyed>) {
+pub fn update(app: &mut NonKeyed, _mb: DeLorean<NonKeyed>) {
     for (row, dom) in app
         .data
         .iter_mut()
@@ -108,7 +108,7 @@ pub fn update(app: &mut NonKeyed, _mb: &Addr<NonKeyed>) {
 }
 
 #[inline]
-pub fn clear(app: &mut NonKeyed, _mb: &Addr<NonKeyed>) {
+pub fn clear(app: &mut NonKeyed, _mb: DeLorean<NonKeyed>) {
     app.data.clear();
     app.tbody_children.clear();
     app.tbody.set_text_content(None);
@@ -117,7 +117,7 @@ pub fn clear(app: &mut NonKeyed, _mb: &Addr<NonKeyed>) {
 }
 
 #[inline]
-pub fn swap(app: &mut NonKeyed, _mb: &Addr<NonKeyed>) {
+pub fn swap(app: &mut NonKeyed, _mb: DeLorean<NonKeyed>) {
     if app.data.len() < 999 {
         return;
     }
@@ -129,7 +129,7 @@ pub fn swap(app: &mut NonKeyed, _mb: &Addr<NonKeyed>) {
 }
 
 #[inline]
-pub fn select(app: &mut NonKeyed, msg: usize, _mb: &Addr<NonKeyed>) {
+pub fn select(app: &mut NonKeyed, msg: usize, _mb: DeLorean<NonKeyed>) {
     if let Some(t) = app.selected {
         if t == msg {
             app.selected = None;
@@ -143,7 +143,7 @@ pub fn select(app: &mut NonKeyed, msg: usize, _mb: &Addr<NonKeyed>) {
 }
 
 #[inline]
-pub fn delete(app: &mut NonKeyed, msg: usize, _mb: &Addr<NonKeyed>) {
+pub fn delete(app: &mut NonKeyed, msg: usize, _mb: DeLorean<NonKeyed>) {
     if let Some(position) = app.data.iter().position(|x| x.id == msg) {
         app.data.remove(position);
         app.tbody_children.remove(position).root.remove();

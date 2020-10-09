@@ -1,9 +1,9 @@
+use delorean::*;
 use js_sys::Date;
 use rand::{rngs::SmallRng, SeedableRng};
 use serde_json::from_str;
 use wasm_bindgen::{prelude::*, JsCast, UnwrapThrowExt};
 use web_sys::{Element, Event};
-use yarte_wasm_app::*;
 
 use crate::{
     handler::*,
@@ -32,7 +32,7 @@ pub struct NonKeyed {
 }
 
 #[inline]
-fn each_render(app: &mut NonKeyed, mb: &'static Addr<NonKeyed>) {
+fn each_render(app: &mut NonKeyed, mb: DeLorean<NonKeyed>) {
     if app.t_root & 0b0000_0001 == 0 {
         return;
     }
@@ -100,7 +100,7 @@ impl App for NonKeyed {
     type BlackBox = ();
     type Message = Msg;
 
-    fn __render(&mut self, mb: &'static Addr<Self>) {
+    fn __render(&mut self, mb: DeLorean<Self>) {
         if self.t_root == 0 {
             return;
         }
@@ -111,7 +111,7 @@ impl App for NonKeyed {
         self.t_root = 0;
     }
 
-    fn __hydrate(&mut self, mb: &'static Addr<Self>) {
+    fn __hydrate(&mut self, mb: DeLorean<Self>) {
         let document = web_sys::window().unwrap_throw().document().unwrap_throw();
         let f = document
             .body()
@@ -206,7 +206,7 @@ impl App for NonKeyed {
         }
     }
 
-    fn __dispatch(&mut self, msg: <Self as App>::Message, addr: &'static Addr<Self>) {
+    fn __dispatch(&mut self, msg: <Self as App>::Message, addr: DeLorean<Self>) {
         match msg {
             Msg::Append => append(self, addr),
             Msg::Clear => clear(self, addr),

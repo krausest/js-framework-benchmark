@@ -1,5 +1,5 @@
 [package]
-name = "js-framework-benchmark-yarte"
+name = "js-framework-benchmark-delorean"
 authors = ["Juan Aguilar Santillana <mhpoin@gmail.com>"]
 version = "0.0.1"
 publish = false
@@ -9,7 +9,7 @@ edition = "2018"
 members = ["."]
 
 [dependencies]
-yarte_wasm_app = "0.1"
+delorean = "0.2.1"
 
 serde = "1.0"
 serde_json = "1.0"

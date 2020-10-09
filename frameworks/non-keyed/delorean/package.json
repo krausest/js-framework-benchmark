@@ -1,7 +1,7 @@
 {
-  "name": "js-framework-benchmark-non-keyed-yarte-wasm-app",
+  "name": "js-framework-benchmark-non-keyed-delorean",
   "version": "1.0.0",
-  "description": "Benchmark for yarte wasm app",
+  "description": "Benchmark for DeLorean",
   "license": "ISC",
   "js-framework-benchmark": {
     "frameworkVersion": "0.1.0"
