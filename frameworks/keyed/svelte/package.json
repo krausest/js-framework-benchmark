@@ -25,6 +25,6 @@
     "@rollup/plugin-node-resolve": "^8.0.1",
     "rollup-plugin-svelte": "5.2.2",
     "rollup-plugin-terser": "^6.1.0",
-    "svelte": "3.23.0"
+    "svelte": "3.28.0"
   }
 }
