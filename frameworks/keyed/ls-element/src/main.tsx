@@ -66,10 +66,10 @@ export class MainElement extends HTMLElement implements LSCustomElement {
               <tr id={`row-${item.id}`} class={item.id === this._selected ? 'danger' : undefined}>
                 <td id={`row-${item.id}-1`} class="col-md-1">{item.id}</td>
                 <td id={`row-${item.id}-2`} class="col-md-4">
-                  <a id={`row-${item.id}-3`} onpointerup={() => this._select(item.id)}>{item.label}</a>
+                  <a id={`row-${item.id}-3`} onclick={() => this._select(item.id)}>{item.label}</a>
                 </td>
                 <td id={`row-${item.id}-4`} class="col-md-1">
-                  <a id={`row-${item.id}-5`} onpointerup={() => this._remove(item.id)}>
+                  <a id={`row-${item.id}-5`} onclick={() => this._remove(item.id)}>
                     <span id={`row-${item.id}-6`} class="glyphicon glyphicon-remove" aria-hidden="true" />
                   </a>
                 </td>
