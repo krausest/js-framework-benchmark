@@ -12,7 +12,7 @@ const StartupResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTable
               <thead>
                 <tr>
                   <th className='benchname'><button className={currentSortKey===SORT_BY_NAME ? 'sortKey textButton' : 'textButton'} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_NAME)}}>Name</button></th>
-                  {data.frameworks.map(f => <th key={f.name}>{f.name}</th>)}
+                  {data.frameworks.map(f => <th key={f.displayname}>{f.displayname}</th>)}
                 </tr>
               </thead>
               <tbody>
