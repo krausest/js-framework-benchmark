@@ -40,22 +40,22 @@ export class MainElement extends HTMLElement implements LSCustomElement {
               <div id="4" class="col-md-6">
                 <div id="5" class="row">
                   <div id="6" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="run" onpointerup={() => this._run()}>Create 1,000 rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="run" onclick={() => this._run()}>Create 1,000 rows</button>
                   </div>
                   <div id="7" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="runlots" onpointerup={() => this._runLots()}>Create 10,000 rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="runlots" onclick={() => this._runLots()}>Create 10,000 rows</button>
                   </div>
                   <div id="8" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="add" onpointerup={() => this._add()}>Append 1,000 rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="add" onclick={() => this._add()}>Append 1,000 rows</button>
                   </div>
                   <div id="9" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="update" onpointerup={() => this._update()}>Update every 10th row</button>
+                    <button type="button" class="btn btn-primary btn-block" id="update" onclick={() => this._update()}>Update every 10th row</button>
                   </div>
                   <div id="10" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="clear" onpointerup={() => this._clear()}>Clear</button>
+                    <button type="button" class="btn btn-primary btn-block" id="clear" onclick={() => this._clear()}>Clear</button>
                   </div>
                   <div id="11" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="swaprows" onpointerup={() => this._swapRows()}>Swap Rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="swaprows" onclick={() => this._swapRows()}>Swap Rows</button>
                   </div >
                 </div >
               </div >
