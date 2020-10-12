@@ -4,7 +4,8 @@
   "description": "Marionette v4.0.0 with jQuery",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "backbone.marionette"
+    "frameworkVersionFromPackage": "backbone.marionette",
+    "issues": [772]
   },
   "scripts": {
     "build-dev": "webpack -w -d",

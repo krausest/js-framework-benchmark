@@ -40,22 +40,22 @@ export class MainElement extends HTMLElement implements LSCustomElement {
               <div id="4" class="col-md-6">
                 <div id="5" class="row">
                   <div id="6" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="run" onpointerup={() => this._run()}>Create 1,000 rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="run" onclick={() => this._run()}>Create 1,000 rows</button>
                   </div>
                   <div id="7" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="runlots" onpointerup={() => this._runLots()}>Create 10,000 rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="runlots" onclick={() => this._runLots()}>Create 10,000 rows</button>
                   </div>
                   <div id="8" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="add" onpointerup={() => this._add()}>Append 1,000 rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="add" onclick={() => this._add()}>Append 1,000 rows</button>
                   </div>
                   <div id="9" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="update" onpointerup={() => this._update()}>Update every 10th row</button>
+                    <button type="button" class="btn btn-primary btn-block" id="update" onclick={() => this._update()}>Update every 10th row</button>
                   </div>
                   <div id="10" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="clear" onpointerup={() => this._clear()}>Clear</button>
+                    <button type="button" class="btn btn-primary btn-block" id="clear" onclick={() => this._clear()}>Clear</button>
                   </div>
                   <div id="11" class="col-sm-6 smallpad">
-                    <button type="button" class="btn btn-primary btn-block" id="swaprows" onpointerup={() => this._swapRows()}>Swap Rows</button>
+                    <button type="button" class="btn btn-primary btn-block" id="swaprows" onclick={() => this._swapRows()}>Swap Rows</button>
                   </div >
                 </div >
               </div >
@@ -66,10 +66,10 @@ export class MainElement extends HTMLElement implements LSCustomElement {
               <tr id={`row-${item.id}`} class={item.id === this._selected ? 'danger' : undefined}>
                 <td id={`row-${item.id}-1`} class="col-md-1">{item.id}</td>
                 <td id={`row-${item.id}-2`} class="col-md-4">
-                  <a id={`row-${item.id}-3`} onpointerup={() => this._select(item.id)}>{item.label}</a>
+                  <a id={`row-${item.id}-3`} onclick={() => this._select(item.id)}>{item.label}</a>
                 </td>
                 <td id={`row-${item.id}-4`} class="col-md-1">
-                  <a id={`row-${item.id}-5`} onpointerup={() => this._remove(item.id)}>
+                  <a id={`row-${item.id}-5`} onclick={() => this._remove(item.id)}>
                     <span id={`row-${item.id}-6`} class="glyphicon glyphicon-remove" aria-hidden="true" />
                   </a>
                 </td>

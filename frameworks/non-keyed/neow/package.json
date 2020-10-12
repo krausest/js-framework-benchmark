@@ -1,0 +1,21 @@
+{
+  "name": "neow-0.0.11",
+  "version": "0.0.11",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@neow/core",
+    "useShadowRoot": true
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {
+    "@neow/core": "0.0.11"
+  }
+}

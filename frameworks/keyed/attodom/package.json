@@ -3,7 +3,8 @@
   "version": "0.12.0",
   "description": "Benchmark for attodom",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "attodom"
+    "frameworkVersionFromPackage": "attodom",
+    "issues": [772]
   },
   "scripts": {
     "build-dev": "node -e \"require('@hugov/cjs-to-iife')('./index.js').then(code => {if (!fs.existsSync('./dist')) {fs.mkdirSync('./dist');} fs.writeFileSync('./dist/main.js', code); })\"",

@@ -50,7 +50,7 @@ module.exports = [{
 		rules: loaders
 	},
 	entry: {
-		main: './src/App.tsx'
+		main: './src/index.tsx'
     },
     optimization: {
         splitChunks: {
@@ -75,7 +75,7 @@ module.exports = [{
             filename: 'table.html',
             inject: 'body',
             inlineSource: '.js$' // embed all javascript and css inline
-        }),
+		}),
         new HtmlWebpackInlineSourcePlugin()
         ]
 }];

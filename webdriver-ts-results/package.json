@@ -23,8 +23,8 @@
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
     "@types/node": "11.11.2",
-    "@types/react": "16.8.8",
-    "@types/react-dom": "16.8.2",
+    "@types/react": "^16.9.49",
+    "@types/react-dom": "^16.9.8",
     "babel-loader": "^8.0.5",
     "cpx": "1.5.0",
     "cross-env": "5.2.0",
@@ -35,16 +35,19 @@
     "jsx-loader": "0.13.2",
     "style-loader": "0.23.1",
     "ts-loader": "5.3.3",
-    "typescript": "3.3.3333",
     "url-loader": "1.1.2",
     "webpack": "4.29.6",
     "webpack-bundle-analyzer": "^3.1.0",
-    "webpack-cli": "^3.3.0"
+    "webpack-cli": "^3.3.0",
+    "typescript": "^3.7.5"
   },
   "dependencies": {
-    "jStat": "1.7.1",
-    "react": "16.8.4",
-    "react-dom": "16.8.4",
-    "plotly.js-cartesian-dist": "^1.45.2"
+    "@types/react-redux": "^7.1.9",
+    "jStat": "^1.8.6",
+    "plotly.js-cartesian-dist": "^1.55.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
+    "redux": "^4.0.5"
   }
 }

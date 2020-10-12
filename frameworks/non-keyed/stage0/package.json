@@ -9,7 +9,8 @@
     "start": "ws"
   },
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "stage0"
+    "frameworkVersionFromPackage": "stage0",
+    "issues": [772]
   },
   "repository": {
     "type": "git",

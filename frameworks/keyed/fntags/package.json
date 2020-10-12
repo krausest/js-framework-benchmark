@@ -4,7 +4,8 @@
   "description": "fntags demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "fntags"
+    "frameworkVersionFromPackage": "fntags",
+    "issues": [772]
   },
   "scripts": {
     "build-dev": "node build.js dev",

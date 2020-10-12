@@ -7,6 +7,7 @@
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
