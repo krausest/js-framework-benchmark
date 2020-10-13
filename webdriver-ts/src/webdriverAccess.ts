@@ -242,6 +242,7 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
         platform: 'ANY',
         version: 'stable',
         "goog:chromeOptions": {
+            binary: benchmarkOptions.chromeBinaryPath,
             args: args,
             "perfLoggingPrefs": {
                 "enableNetwork": true,
@@ -255,8 +256,10 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
             "performance": "ALL"
         }
     });
+
     // port probing fails sometimes on windows, the following driver construction avoids probing:
-    let service = new chrome.ServiceBuilder().setPort(benchmarkOptions.chromePort).build();
+    let service = new chrome.ServiceBuilder()
+        .setPort(benchmarkOptions.chromePort).build();
     var driver = chrome.Driver.createSession(caps, service);
 
     return driver;

@@ -45,7 +45,7 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
         let warnings : String[] = [];
         let errors : String[] = [];
 
-        let results: Array<number[]|LighthouseData> = [];
+        let results: Array<number|LighthouseData> = [];
         let count = 0;
 
         if (benchmark.type == BenchmarkType.CPU) {
@@ -81,6 +81,13 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
                 }
             }
         }
+        if (benchmark.type == BenchmarkType.CPU && config.REPEAT_RUN>=10) {
+            // console.log("CPU results before: ", results);
+            (results as number[]).sort((a:number,b:number) => a-b)
+            results = results.slice(0, Math.max(0,results.length-2))
+            // console.log("CPU results after: ", results)
+        }
+    
         console.log("******* result ", results);
         await writeResults(config, { framework: framework, benchmark: benchmark, results: results });
         return ({errors, warnings})

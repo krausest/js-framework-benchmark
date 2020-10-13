@@ -1,5 +1,4 @@
 'use strict';
-/** @jsx preact.h */
 
 var preact = require('preact');
 var { render, h, Component } = preact;

@@ -4,7 +4,8 @@
   "description": "Benchmark for wasm-bindgen",
   "license": "ISC",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.2.47"
+    "frameworkVersion": "0.2.47",
+    "issues": [772]
   },
   "scripts": {
     "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",

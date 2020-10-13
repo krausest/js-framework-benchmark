@@ -125,8 +125,6 @@ table.results th {
     font-weight: normal;
     font-size: 11px;
     text-align: center;
-    word-break:keep-all;
-    word-wrap:break-word;
 }
 table.results th.benchname {
 width: 100px;
@@ -192,4 +190,25 @@ dd {
 }
 .with-issues {
     background-color: #faa;
+}
+
+.textButton {
+    color: rgb(0,0,238);
+    font-size: inherit;
+    border: none;
+    background: none;
+    outline-style: none;
+    cursor: pointer;
+}
+
+
+button:disabled.textButton {
+    color: #666;
+    font-weight: normal;
+}
+.error {
+    background-color: #f99;
+}
+.warning {
+    background-color: #ff6;
 }

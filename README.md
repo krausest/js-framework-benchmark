@@ -173,7 +173,7 @@ cd ..
 cd webdriver-ts
 ```
 
-In the webdriver-ts directory issue the follwing command:
+In the webdriver-ts directory issue the following command:
 ```
 npm run results
 ```

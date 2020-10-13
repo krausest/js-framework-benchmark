@@ -1,4 +1,4 @@
-import { h, Lazy, app } from "hyperapp"
+import { h, memo, text, app } from "hyperapp"
 import { buildData } from "./store"
 
 const updateRow = (id, label) => ({
@@ -50,32 +50,21 @@ const swapRows = (state) => {
 }
 
 const Row = ({ data, label, styleClass }) =>
-  h(
-    "tr",
-    { key: data.id, class: styleClass },
-    h("td", { class: "col-md-1" }, data.id),
-    h(
-      "td",
-      { class: "col-md-4" },
-      h("a", { onclick: [selectRow, data.id] }, label)
+  h("tr", { key: data.id, class: styleClass }, [
+    h("td", { class: "col-md-1" }, text(data.id)),
+    h("td", { class: "col-md-4" },
+      h("a", { onclick: [ selectRow, data.id ] }, text(label)),
     ),
-    h(
-      "td",
-      { class: "col-md-1" },
-      h(
-        "a",
-        { onclick: [deleteRow, data.id] },
+    h("td", { class: "col-md-1" },
+      h("a", { onclick: [ deleteRow, data.id ] },
         h("span", {
           class: "glyphicon glyphicon-remove",
           "aria-hidden": "true",
         })
-      )
+      ),
     ),
-    h("td", { class: "col-md-6" })
-  )
-
-const LazyRow = ({ data, label, styleClass }) =>
-  Lazy({ view: Row, data, label, styleClass })
+    h("td", { class: "col-md-6" }),
+  ])
 
 app({
   init: {
@@ -83,129 +72,88 @@ app({
     selected: false,
   },
   view: (state) =>
-    h(
-      "div",
-      { class: "container" },
-      h(
-        "div",
-        { class: "jumbotron" },
-        h(
-          "div",
-          { class: "row" },
-          h("div", { class: "col-md-6" }, h("h1", null, "Hyperapp")),
-          h(
-            "div",
-            { class: "col-md-6" },
-            h(
-              "div",
-              { class: "row" },
-              h(
-                "div",
-                { class: "col-sm-6 smallpad" },
-                h(
-                  "button",
-                  {
+    h("div", { class: "container" }, [
+      h("div", { class: "jumbotron" },
+        h("div", { class: "row" }, [
+          h("div", { class: "col-md-6" }, h("h1", {}, text("Hyperapp"))),
+          h("div", { class: "col-md-6" },
+            h("div", { class: "row" }, [
+              h("div", { class: "col-sm-6 smallpad" },
+                h("button", {
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "run",
                     onclick: create1K,
                   },
-                  "Create 1,000 rows"
+                  text("Create 1,000 rows")
                 )
               ),
-              h(
-                "div",
-                { class: "col-sm-6 smallpad" },
-                h(
-                  "button",
-                  {
+              h("div", { class: "col-sm-6 smallpad" },
+                h("button", {
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "runlots",
                     onclick: create10K,
                   },
-                  "Create 10,000 rows"
+                  text("Create 10,000 rows")
                 )
               ),
-              h(
-                "div",
-                { class: "col-sm-6 smallpad" },
-                h(
-                  "button",
-                  {
+              h("div", { class: "col-sm-6 smallpad" },
+                h("button", {
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "add",
                     onclick: append1K,
                   },
-                  "Append 1,000 rows"
+                  text("Append 1,000 rows")
                 )
               ),
-              h(
-                "div",
-                { class: "col-sm-6 smallpad" },
-                h(
-                  "button",
-                  {
+              h("div", { class: "col-sm-6 smallpad" },
+                h("button", {
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "update",
                     onclick: updateEveryTenth,
                   },
-                  "Update every 10th row"
+                  text("Update every 10th row")
                 )
               ),
-              h(
-                "div",
-                { class: "col-sm-6 smallpad" },
-                h(
-                  "button",
-                  {
+              h("div", { class: "col-sm-6 smallpad" },
+                h("button", {
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "clear",
                     onclick: clearAllRows,
                   },
-                  "Clear"
+                  text("Clear")
                 )
               ),
-              h(
-                "div",
-                { class: "col-sm-6 smallpad" },
-                h(
-                  "button",
-                  {
+              h("div", { class: "col-sm-6 smallpad" },
+                h("button", {
                     type: "button",
                     class: "btn btn-primary btn-block",
                     id: "swaprows",
                     onclick: swapRows,
                   },
-                  "Swap Rows"
+                  text("Swap Rows")
                 )
               )
-            )
-          )
+            ])
+          )]
         )
       ),
-      h(
-        "table",
-        { class: "table table-hover table-striped test-data" },
-        h(
-          "tbody",
-          null,
-          state.data.map((data) =>
-            LazyRow({
+      h("table", { class: "table table-hover table-striped test-data" },
+        h("tbody", {}, state.data.map((data) => memo(Row, {
               data,
               label: data.label,
               styleClass: data.id === state.selected ? "danger" : "",
-            })
-          )
+          }))
         )
       ),
       h("span", {
         class: "preloadicon glyphicon glyphicon-remove",
         "aria-hidden": "true",
       })
-    ),
+    ]),
   node: document.getElementById("app"),
 })
