@@ -35,6 +35,7 @@ const row = ( item ) => {
                   },
                   item().id
     )
+    let currentLabel = item().label
     let label = h( 'a', item().label )
     let removeBtn = h( 'span', {
         onclick: ( e ) => {
@@ -45,8 +46,10 @@ const row = ( item ) => {
         class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'
     } )
 
+    let isSelected = item().selected
     const tr = h( 'tr', {
                       id: item().id,
+                      class: isSelected ? 'danger' : '',
                       onclick: () => {
                           let currentSelection = data().find( d => d().selected )
                           if( currentSelection ) currentSelection.patch( { selected: false } )
@@ -62,10 +65,6 @@ const row = ( item ) => {
                   ),
                   h( 'td', { class: 'col-md-6' } )
     )
-
-    //cache the current values to prevent reading the dom or making the same change over the top of itself
-    let currentLabel = item().label
-    let isSelected = item().isSelected
 
     item.subscribe( () => {
         if( isSelected && !item().selected ) {
