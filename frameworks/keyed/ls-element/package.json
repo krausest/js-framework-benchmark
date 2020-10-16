@@ -1,10 +1,10 @@
 {
   "name": "js-framework-benchmark-ls-element",
-  "version": "1.1.2",
+  "version": "1.1.7",
   "description": "ls-element demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "ls-element",
+    "frameworkVersionFromPackage": "@lsegurado/ls-element",
     "useShadowRoot": false,
     "customURL": "/dist"
   },
@@ -37,6 +37,6 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "@lsegurado/ls-element": "1.1.4"
+    "@lsegurado/ls-element": "1.1.7"
   }
 }
