@@ -29,16 +29,16 @@ import { DropDownContents } from './DropDownContents'
   };
 
 const SelectBenchmarkCategory = ({ benchmarkType, label}:
-    {   benchmarkType: BenchmarkType, 
-        label: string
+    {   benchmarkType: BenchmarkType; 
+        label: string;
     }) => {
         console.log("SelectBenchmarkCategory");
 
-        let dispatch = useDispatch();
-        let benchmarks = useSelector<State, Benchmark[]>((state) => state.benchmarkLists[benchmarkType]);
-        let selectedBenchmarks = useSelector<State, Set<Benchmark>>((state) => state.selectedBenchmarks);
-        let isNoneSelected = useSelector<State, boolean>((state) => isNoneBenchmarkSelected(state, benchmarkType));
-        let areAllSelected = useSelector<State, boolean>((state) => areAllBenchmarksSelected(state, benchmarkType));
+        const dispatch = useDispatch();
+        const benchmarks = useSelector<State, Benchmark[]>((state) => state.benchmarkLists[benchmarkType]);
+        const selectedBenchmarks = useSelector<State, Set<Benchmark>>((state) => state.selectedBenchmarks);
+        const isNoneSelected = useSelector<State, boolean>((state) => isNoneBenchmarkSelected(state, benchmarkType));
+        const areAllSelected = useSelector<State, boolean>((state) => areAllBenchmarksSelected(state, benchmarkType));
         
     return (<DropDownContents isNoneSelected={isNoneSelected} areAllSelected={areAllSelected} selectNone={() => dispatch(selectAllBenchmarks(benchmarkType, false))} selectAll={() => dispatch(selectAllBenchmarks(benchmarkType, true))}>
         <h3>{label}</h3>

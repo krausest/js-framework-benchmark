@@ -32,14 +32,14 @@ export const SelectBarFrameworks = ({frameworks, isSelected, select}: Props) => 
 
 const SelectFrameworks = () => {
   console.log("SelectFrameworks");
-  let dispatch = useDispatch();
-  let selectedFrameworks = useSelector<State, Set<Framework>>((state) => state.selectedFrameworksDropDown);
-  let frameworksKeyed = useSelector<State, Framework[]>(state => state.frameworkLists[FrameworkType.KEYED]);
-  let frameworksNonKeyed = useSelector<State, Framework[]>(state => state.frameworkLists[FrameworkType.NON_KEYED]);
-  let isNoneKeyedSelected = useSelector<State, boolean>(state => isNoneFrameworkSelected(state, FrameworkType.KEYED));
-  let areAllKeyedSelected = useSelector<State, boolean>(state => areAllFrameworksSelected(state, FrameworkType.KEYED));
-  let isNoneNonKeyedSelected = useSelector<State, boolean>(state => isNoneFrameworkSelected(state, FrameworkType.NON_KEYED));
-  let areAllNoneKeyedSelected = useSelector<State, boolean>(state => areAllFrameworksSelected(state, FrameworkType.NON_KEYED));
+  const dispatch = useDispatch();
+  const selectedFrameworks = useSelector<State, Set<Framework>>((state) => state.selectedFrameworksDropDown);
+  const frameworksKeyed = useSelector<State, Framework[]>(state => state.frameworkLists[FrameworkType.KEYED]);
+  const frameworksNonKeyed = useSelector<State, Framework[]>(state => state.frameworkLists[FrameworkType.NON_KEYED]);
+  const isNoneKeyedSelected = useSelector<State, boolean>(state => isNoneFrameworkSelected(state, FrameworkType.KEYED));
+  const areAllKeyedSelected = useSelector<State, boolean>(state => areAllFrameworksSelected(state, FrameworkType.KEYED));
+  const isNoneNonKeyedSelected = useSelector<State, boolean>(state => isNoneFrameworkSelected(state, FrameworkType.NON_KEYED));
+  const areAllNoneKeyedSelected = useSelector<State, boolean>(state => areAllFrameworksSelected(state, FrameworkType.NON_KEYED));
 
   return <DropDown label="Which frameworks?" width='1024px'>
             <DropDownContents isNoneSelected={isNoneKeyedSelected} areAllSelected={areAllKeyedSelected}  selectNone={() => dispatch(selectAllFrameworks(FrameworkType.KEYED, false))} selectAll={() => dispatch(selectAllFrameworks(FrameworkType.KEYED, true))}>

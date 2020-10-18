@@ -7,10 +7,10 @@ interface Props {
     resultsForBenchmark: Array<TableResultValueEntry|null>;
     benchmarks: Array<Benchmark>;
     currentSortKey: string;
-    sortBy: (name:string) => void;
+    sortBy: (name: string) => void;
 }
 const ValueResultRow = ({benchIdx, resultsForBenchmark, benchmarks, currentSortKey, sortBy}: Props ) => {
-    let sort = (sortValue: string) => (event: any) => {
+    const sort = (sortValue: string) => (event: React.SyntheticEvent) => {
         event.preventDefault();
         sortBy(sortValue)
     }

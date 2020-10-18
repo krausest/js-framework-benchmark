@@ -1,11 +1,11 @@
 import React from 'react'
-import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, DisplayMode, BenchmarkType, Framework, findIssue} from '../Common'; 
+import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, BenchmarkType, Framework, findIssue} from '../Common'; 
 import GeomMeanRow from './GeomMeanRow'
 import CompareRow from './CompareRow'
 import ValueResultRow from './ValueResultRow'
 
 function issueStyle(framework: Framework) {
-  let minSeverity: number = framework.issues.reduce((min, i) => Math.min(min, findIssue(i)?.severity ?? Number.POSITIVE_INFINITY), Number.POSITIVE_INFINITY)
+  const minSeverity: number = framework.issues.reduce((min, i) => Math.min(min, findIssue(i)?.severity ?? Number.POSITIVE_INFINITY), Number.POSITIVE_INFINITY)
   switch (minSeverity) {
     case 0:
     case 1:
@@ -17,8 +17,8 @@ function issueStyle(framework: Framework) {
   }
 }
 
-const CpuResultsTable = ({data, currentSortKey, sortBy, displayMode} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void, displayMode: DisplayMode}) => {
-    let resultsCPU = data.getResult(BenchmarkType.CPU);
+const CpuResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData; currentSortKey: string; sortBy: (name: string) => void}) => {
+    const resultsCPU = data.getResult(BenchmarkType.CPU);
     return resultsCPU.results.length===0 ? null :
           (<div>
             <h3>Duration in milliseconds ± 95% confidence interval (Slowdown = Duration / Fastest)</h3>

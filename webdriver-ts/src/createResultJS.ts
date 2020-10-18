@@ -9,7 +9,7 @@ async function main() {
 
     let results: Map<string, Map<string, JSONResult>> = new Map();
 
-    let resultJS = "import {RawResult} from './Common';\n\nexport let results: RawResult[]=[";
+    let resultJS = "import {RawResult} from './Common';\n\nexport const results: RawResult[]=[";
 
     let allBenchmarks : BenchmarkInfo[] = [];
 
@@ -49,12 +49,12 @@ async function main() {
     });
 
 resultJS += '];\n';
-resultJS += 'export let frameworks = '+JSON.stringify(frameworks.map(f =>
+resultJS += 'export const frameworks = '+JSON.stringify(frameworks.map(f =>
     (f.issues && f.issues.length>0) ?
         ({name: f.fullNameWithKeyedAndVersion, keyed: f.keyed, issues: f.issues})
     : ({name: f.fullNameWithKeyedAndVersion, keyed: f.keyed})
 ))+";\n";
-resultJS += 'export let benchmarks = '+JSON.stringify(allBenchmarks)+";\n";
+resultJS += 'export const benchmarks = '+JSON.stringify(allBenchmarks)+";\n";
 
 fs.writeFileSync('../webdriver-ts-results/src/results.ts', resultJS, {encoding: 'utf-8'});
 fs.writeFileSync('./results.json', JSON.stringify(jsonResult), {encoding: 'utf-8'});

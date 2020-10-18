@@ -1,10 +1,9 @@
 import React from 'react'
 import { TableResultGeommeanEntry, T_SORT_BY_GEOMMEAN} from '../Common'; 
 
-const GeomMeanRow = ({geomMean, currentSortKey, sortBy, sortbyGeommeanEnum} 
-    : {geomMean: Array<TableResultGeommeanEntry|null>, currentSortKey: string,
-    sortBy: (name:string) => void , sortbyGeommeanEnum: T_SORT_BY_GEOMMEAN}) => {
-    let sort = (sortValue: string) => (event: any) => {
+const GeomMeanRow = ({geomMean, currentSortKey, sortBy, sortbyGeommeanEnum}: {geomMean: Array<TableResultGeommeanEntry|null>; currentSortKey: string;
+    sortBy: (name: string) => void ; sortbyGeommeanEnum: T_SORT_BY_GEOMMEAN;}) => {
+    const sort = (sortValue: string) => (event: React.SyntheticEvent) => {
         event.preventDefault();
         sortBy(sortValue)
     }

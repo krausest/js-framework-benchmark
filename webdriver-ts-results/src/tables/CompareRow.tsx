@@ -3,9 +3,8 @@ import { useDispatch } from 'react-redux';
 import { Framework, TableResultComparisonEntry } from '../Common';
 import { compare, stopCompare } from '../reducer';
 
-const CompareRow = ({comparison, compareWith} 
-    : {comparison: Array<TableResultComparisonEntry|null>, compareWith: Framework|undefined}) => {
-    let dispatch = useDispatch()
+const CompareRow = ({comparison, compareWith}: {comparison: Array<TableResultComparisonEntry|null>; compareWith: Framework|undefined}) => {
+    const dispatch = useDispatch()
 
     if (!compareWith) {
         return (<tr>

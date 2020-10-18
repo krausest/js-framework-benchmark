@@ -3,8 +3,8 @@ import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_STARTUP, BenchmarkType} 
 import ValueResultRow from './ValueResultRow'
 import GeomMeanRow from './GeomMeanRow'
 
-const StartupResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void}) => {
-  let resultsStartup = data.getResult(BenchmarkType.STARTUP);
+const StartupResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData; currentSortKey: string; sortBy: (name: string) => void}) => {
+  const resultsStartup = data.getResult(BenchmarkType.STARTUP);
     return resultsStartup.results.length===0 ? null :
           (<div>
             <h3>Startup metrics (lighthouse with mobile simulation)</h3>
