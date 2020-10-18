@@ -1,43 +1,21 @@
-'use strict';
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var InlineChunkHtmlPlugin = require('inline-chunk-html-plugin');
 
 var path = require('path')
-var webpack = require('webpack')
 var cache = {};
 var loaders = [
 	{
-		test: /\.jsx$/,
-		loader: 'babel-loader'
-	},
-	{
-		test: /\.tsx$/,
+		test: /\.tsx$|\.ts$/,
 		loader: 'ts-loader',
-		exclude: /node_modules/
-	},
-	{
-		test: /\.ts$/,
-		loader: 'ts-loader',
-		exclude: /node_modules/
-	},
-	{
-		test: /\.es6\.js$/,
-		loader: 'babel-loader'
+		exclude: /node_modules/,
+    options: {
+        configFile: "tsconfig.prod.json"
+    }
 	},
 	{
 		test: /\.css$/,
 		loader: 'style-loader!css-loader'
-	},
-	{
-		test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-		// Limiting the size of the woff fonts breaks font-awesome ONLY for the extract text plugin
-		// loader: "url?limit=10000"
-		loader: "url-loader"
-	},
-	{
-		test: /\.(svg|ttf|eot|svg)(\?[\s\S]+)?$/,
-		loader: 'file-loader'
 	}
 ];
 var extensions = [
@@ -52,11 +30,28 @@ module.exports = [{
 	entry: {
 		main: './src/index.tsx'
     },
-    optimization: {
-        splitChunks: {
-          chunks: "initial",
+  output: {
+    filename: '[name].[contenthash].js',
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        default: {
+          chunks: 'initial',
+          name: 'bundle',
+          priority: -20,
+          reuseExistingChunk: true,
         },
-    },
+        plotly: {
+          chunks: 'initial',
+          name: 'plotly.js',
+          priority: -10,
+          reuseExistingChunk: false,
+          test: /node_modules\/plotly.js-cartesian-dist\/(.*)\.js/
+        }
+      }
+    }
+  },
 	resolve: {
 		extensions: extensions,
 		modules: [
@@ -69,13 +64,13 @@ module.exports = [{
           }
 	},
     plugins: [
-        // new BundleAnalyzerPlugin(),
+      // new BundleAnalyzerPlugin(),
         new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'index.html'),
+            template: path.join(__dirname, 'public/index.html'),
             filename: 'table.html',
             inject: 'body',
             inlineSource: '.js$' // embed all javascript and css inline
 		}),
-        new HtmlWebpackInlineSourcePlugin()
-        ]
+    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/main/,/bundle/,/plotly/])
+      ]  
 }];

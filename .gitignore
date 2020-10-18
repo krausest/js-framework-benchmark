@@ -42,6 +42,7 @@ tests/results/completed/
 target/
 webdriver-ts/results/
 webdriver-ts/results*/
+webdriver-ts/old_results/
 webdriver-ts-results/table_*.html
 webdriver-ts/table_*.html
 webdriver-ts/error-*.png

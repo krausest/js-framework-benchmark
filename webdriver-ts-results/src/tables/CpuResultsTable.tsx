@@ -26,15 +26,18 @@ const CpuResultsTable = ({data, currentSortKey, sortBy, displayMode} : {data: Re
               <thead>
                 <tr>
                   <th className='benchname'><button className={currentSortKey===SORT_BY_NAME ? 'sortKey textButton' : 'textButton'} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_NAME)}}>Name</button><br/>Duration for...</th>
-                  {data.frameworks.map(f => <th key={f.displayname}>{f.displayname}</th>)}
+                  {data.frameworks.map((f,idx) => <th key={idx}>{f.displayname}</th>)}
                 </tr>
               </thead>
               <thead>
                 <tr>
                     <th className='openIssues'><b>Issues</b> Errors are red, cheats are yellow</th>
-                    {data.frameworks.map(f => <th className={issueStyle(f)} key={f.name}>{
-                      f.issues && f.issues.map(i => <><a key={i.toFixed()} href={'#'+i.toFixed()}>{i.toFixed()}</a><span> </span></> )
-                    }</th>)}
+                    {data.frameworks.map(f => 
+                      <th key={f.name} className={issueStyle(f)} >
+                      {
+                        f.issues && f.issues.map(i => <React.Fragment key={i.toFixed()}><a href={'#'+i.toFixed()}>{i.toFixed()}</a><span> </span></React.Fragment> )
+                      }
+                      </th>)}
                 </tr>
               </thead>
               <tbody>
