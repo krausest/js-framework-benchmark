@@ -35,21 +35,7 @@ module.exports = [{
   },
   optimization: {
     splitChunks: {
-      cacheGroups: {
-        default: {
-          chunks: 'initial',
-          name: 'bundle',
-          priority: -20,
-          reuseExistingChunk: true,
-        },
-        plotly: {
-          chunks: 'initial',
-          name: 'plotly.js',
-          priority: -10,
-          reuseExistingChunk: false,
-          test: /node_modules\/plotly.js-cartesian-dist\/(.*)\.js/
-        }
-      }
+      chunks: 'initial',
     }
   },
 	resolve: {
@@ -71,6 +57,6 @@ module.exports = [{
             inject: 'body',
             inlineSource: '.js$' // embed all javascript and css inline
 		}),
-    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/main/,/bundle/,/plotly/])
+    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/main/])
       ]  
 }];

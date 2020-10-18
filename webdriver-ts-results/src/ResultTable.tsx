@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {ResultTableData, DisplayMode, BenchmarkType, FrameworkType} from './Common';
 import CpuResultsTable from './tables/CpuResultsTable'
-import BoxPlotTable from './tables/BoxPlotTable'
 import MemResultsTable from './tables/MemResultsTable'
 import StartupResultsTable from './tables/StartupResultsTable'
 import { useDispatch, useSelector } from 'react-redux';
 import { sort, State } from './reducer';
+const BoxPlotTable = React.lazy(() => import(/* webpackChunkName: "BoxPlotTable" */ './tables/BoxPlotTable'));
 
 interface Props {
   type: FrameworkType;
@@ -35,9 +35,11 @@ const ResultTable = ({type}: Props) => {
           <p>{texts[type].description}</p>
             {
         displayMode === DisplayMode.BoxPlot ?
-                (<>
-            <BoxPlotTable results={data.results} frameworks={data.frameworks} benchmarks={data.getResult(BenchmarkType.CPU).benchmarks} currentSortKey={currentSortKey} sortBy={sortBy}/>
-                </>)
+                (
+            <React.Suspense fallback={<div>Loading...</div>}>
+              <BoxPlotTable results={data.results} frameworks={data.frameworks} benchmarks={data.getResult(BenchmarkType.CPU).benchmarks} currentSortKey={currentSortKey} sortBy={sortBy}/>
+            </React.Suspense>
+                )
         :
             (<>
             <CpuResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data}/>
