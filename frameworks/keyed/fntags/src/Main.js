@@ -1,4 +1,4 @@
-import { fnstate, h } from 'https://cdn.jsdelivr.net/npm/fntags@0.3.5/src/fntags.min.js'
+import { fnstate, h } from './fntags.min.js'
 
 let data = fnstate( [], d => d.id )
 
