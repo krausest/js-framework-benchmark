@@ -1,4 +1,4 @@
-import { fnstate, h } from 'https://cdn.jsdelivr.net/npm/fntags@0.3.4/src/fntags.min.js'
+import { fnstate, h } from 'https://cdn.jsdelivr.net/npm/fntags@0.3.5/src/fntags.min.js'
 
 let data = fnstate( [], d => d.id )
 
@@ -28,38 +28,6 @@ const Button = ( id, title, onclick ) =>
     h( 'div', { class: 'col-sm-6 smallpad' },
        h( 'button', { id, type: 'button', class: 'btn btn-primary btn-block', onclick: onclick }, title )
     )
-
-const row = ( item ) => {
-    let label = h( 'a', item().label )
-    return item.bindAs(
-        h( 'tr', {
-               id: item().id,
-               onclick: () => data.select( item().id ),
-               onselect: ( e ) => e.target.className = 'danger',
-               ondeselect: ( e ) => e.target.className = ''
-           },
-           h( 'td', {
-                  class: 'col-md-1'
-              },
-              item().id
-           ),
-           h( 'td', { class: 'col-md-4' }, label ),
-           h( 'td', { class: 'col-md-1' },
-              h( 'a',
-                 h( 'span', {
-                     onclick: ( e ) => {
-                         e.stopPropagation()
-                         data( data().filter( d => d().id !== item().id ) )
-                     },
-                     class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'
-                 } )
-              )
-           ),
-           h( 'td', { class: 'col-md-6' } )
-        ),
-        () => label.innerText = item().label
-    )
-}
 
 document.body.append(
     h( 'div', { class: 'container' },
@@ -98,7 +66,32 @@ document.body.append(
        )
     ),
     h( 'table', { class: 'table table-hover table-striped test-data' },
-       data.bindValues( h( 'tbody' ), row )
+       data.bindValues( h( 'tbody' ), ( item ) =>
+           h( 'tr', {
+                  id: item().id,
+                  onclick: () => data.select( item().id ),
+                  onselect: ( e ) => e.target.className = 'danger',
+                  ondeselect: ( e ) => e.target.className = ''
+              },
+              h( 'td', {
+                     class: 'col-md-1'
+                 },
+                 item().id
+              ),
+              h( 'td', { class: 'col-md-4' }, item.bindAs( () => item().label ) ),
+              h( 'td', { class: 'col-md-1' },
+                 h( 'a',
+                    h( 'span', {
+                        onclick: ( e ) => {
+                            e.stopPropagation()
+                            data( data().filter( d => d().id !== item().id ) )
+                        },
+                        class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'
+                    } )
+                 )
+              ),
+              h( 'td', { class: 'col-md-6' } )
+           ) )
     ),
     h( 'span', { class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
 )
