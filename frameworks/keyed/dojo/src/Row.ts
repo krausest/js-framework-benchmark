@@ -31,7 +31,7 @@ export default factory(function Row({ properties, middleware: { store } }) {
 				store.del();
 			} }, [
 				v('span', {
-					'aria-hidden': true,
+					'aria-hidden': 'true',
 					classes: [ 'glyphicon', 'glyphicon-remove' ]
 				})
 			])
