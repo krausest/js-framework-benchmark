@@ -9,7 +9,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "bdc"
+    "frameworkVersionFromPackage": "bdc",
+    "issues": [796]
   },
   "dependencies": {
     "bdc": "0.3.0"

@@ -212,3 +212,7 @@ button:disabled.textButton {
 .warning {
     background-color: #ff6;
 }
+
+.check-full-width::after {
+  display: inline-block;
+}

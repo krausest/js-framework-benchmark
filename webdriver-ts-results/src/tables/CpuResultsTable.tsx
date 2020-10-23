@@ -1,21 +1,8 @@
 import React from 'react'
-import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, BenchmarkType, Framework, findIssue} from '../Common'; 
+import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, BenchmarkType} from '../Common'; 
 import GeomMeanRow from './GeomMeanRow'
 import CompareRow from './CompareRow'
 import ValueResultRow from './ValueResultRow'
-
-function issueStyle(framework: Framework) {
-  const minSeverity: number = framework.issues.reduce((min, i) => Math.min(min, findIssue(i)?.severity ?? Number.POSITIVE_INFINITY), Number.POSITIVE_INFINITY)
-  switch (minSeverity) {
-    case 0:
-    case 1:
-      return 'error';
-    case 2:
-      return 'warning';
-    default:
-      return '';
-  }
-}
 
 const CpuResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData; currentSortKey: string; sortBy: (name: string) => void}) => {
     const resultsCPU = data.getResult(BenchmarkType.CPU);
@@ -31,9 +18,9 @@ const CpuResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData;
               </thead>
               <thead>
                 <tr>
-                    <th className='openIssues'><b>Issues</b> Errors are red, cheats are yellow</th>
+                    <th>Implementationn notes</th>
                     {data.frameworks.map(f => 
-                      <th key={f.name} className={issueStyle(f)} >
+                      <th key={f.name} >
                       {
                         f.issues && f.issues.map(i => <React.Fragment key={i.toFixed()}><a href={'#'+i.toFixed()}>{i.toFixed()}</a><span> </span></React.Fragment> )
                       }

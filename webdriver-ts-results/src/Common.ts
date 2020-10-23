@@ -6,8 +6,6 @@ const jStat: any = require('jStat').jStat;
 export enum StatisticResult {Slower, Undecided, Faster}
 export enum DisplayMode { DisplayMean, DisplayMedian, BoxPlot }
 
-export enum FilterIssuesMode { AllImplentations, FilterErrors, FilterSevereIssues, FilterWarnings }
-
 export enum FrameworkType { KEYED, NON_KEYED }
 
 export interface Framework {
@@ -17,21 +15,34 @@ export interface Framework {
     displayname: string;
 }
 
+export enum Severity {Error, Categorization}
+
+interface Category {
+  id: number;
+  text: string;
+  issues: Array<number>;
+}
+
+export const categories: Category[] = [
+  {id:1, text:"Manual DOM manipulations", issues: [772]},
+  {id:2, text:"View state on the model", issues: [800]},
+  {id:3, text:"Explicit requestAnimationFrame calls", issues: [796]},
+//  {id:4, text:"Manual event delegation", issues: [801]},
+  {id:5, text:"Errors in the implementation", issues: [634, 694]},
+]
+
 export const knownIssues = [
-    {issue: 634, severity: 0, text:"Issue: The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
-    {issue: 694, severity: 0, text:"Issue: Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694"},
-    {issue: 772, severity: 1, text:"Note: Implementation is not data-driven ", link: "https://github.com/krausest/js-framework-benchmark/issues/772"},
-    {issue: 800, severity: 2, text:"Note: state for selected row is kept on each row", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
-    {issue: 796, severity: 2, text:"Note: Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
-    {issue: 801, severity: 2, text:"Note: Implementation uses explicit event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
+    {issue: 634, severity: Severity.Error, text:"The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
+    {issue: 694, severity: Severity.Error, text:"Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694"},
+    {issue: 772, severity: Severity.Categorization, text:"Implementation uses manual DOM manipulations", link: "https://github.com/krausest/js-framework-benchmark/issues/772"},
+    {issue: 796, severity: Severity.Categorization, text:"Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
+    {issue: 800, severity: Severity.Categorization, text:"View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
+    {issue: 801, severity: Severity.Categorization, text:"Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
   ];
 
 export function findIssue(issueNumber: number) {
     return knownIssues.find(i => i.issue === issueNumber)
 }
-export const minSeverity = (framework: Framework): number => 
-    framework.issues.reduce((min, i) => Math.min(min, findIssue(i)?.severity ?? Number.POSITIVE_INFINITY), Number.POSITIVE_INFINITY)
-
 export enum BenchmarkType { CPU, MEM, STARTUP }
 
 export interface Benchmark {
@@ -180,20 +191,26 @@ export class ResultTableData {
 
     constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup,
         public selectedFrameworksInDropdown: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, type: FrameworkType, sortKey: string,
-        public displayMode: DisplayMode, public compareWith: Framework|undefined, public filterIssuesMode: FilterIssuesMode) {     
+        public displayMode: DisplayMode, public compareWith: Framework|undefined, public selectedCategories: Set<number>) {     
 
         this.selectedFameworks = new Set<Framework>();
+
+        const allowedIssues = new Set<number>();
+        categories.forEach(c => {
+          if (selectedCategories.has(c.id)) {
+            for (const i of c.issues) { allowedIssues.add(i); }
+          }
+        });
+
+        console.log("ResultTableData", allowedIssues, selectedCategories);
+
         selectedFrameworksInDropdown.forEach(f => {
-            const min = minSeverity(f)
-            if (filterIssuesMode === FilterIssuesMode.AllImplentations
-                || (filterIssuesMode === FilterIssuesMode.FilterErrors && min >0)
-                || (filterIssuesMode === FilterIssuesMode.FilterSevereIssues && min >1)
-                || (filterIssuesMode === FilterIssuesMode.FilterWarnings && min >2)
-                || (f.name === 'vanillajs-keyed') || (f.name === 'vanillajs-1-keyed')
-                || (f.name === 'vanillajs-non-keyed') || (f.name === 'vanillajs-1-non-keyed')
-                ) {
-                    this.selectedFameworks.add(f);
-                }
+          if (f.issues.every(i => allowedIssues.has(i))
+            || (f.name === 'vanillajs-keyed') || (f.name === 'vanillajs-1-keyed')
+            || (f.name === 'vanillajs-non-keyed') || (f.name === 'vanillajs-1-non-keyed')
+            ) {
+              this.selectedFameworks.add(f);
+          }
         })
         this.frameworks = this.allFrameworks.filter(framework => framework.type === type && this.selectedFameworks.has(framework));
         this.update(sortKey);

@@ -1,4 +1,4 @@
-import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, FilterIssuesMode } from "./Common"
+import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, categories } from "./Common"
 import {benchmarks, frameworks, results as rawResults} from './results';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const jStat: any = require('jStat').jStat;
@@ -43,7 +43,7 @@ export interface State {
     sortKey: string;
     displayMode: DisplayMode;
     compareWith: CompareWith;
-    filterIssuesMode: FilterIssuesMode;
+    categories: Set<number>;
 }
 
 export const areAllBenchmarksSelected = (state: State, type: BenchmarkType) => state.benchmarkLists[type].every(b => state.selectedBenchmarks.has(b))
@@ -79,13 +79,13 @@ const preInitialState: State = {
         [FrameworkType.KEYED]: undefined,
         [FrameworkType.NON_KEYED]: undefined
     },
-    filterIssuesMode: FilterIssuesMode.FilterErrors
+    categories: new Set([1,2,3,4])
 }
 
-function updateResultTable({frameworks, benchmarks, selectedFrameworksDropDown: selectedFrameworks, selectedBenchmarks, sortKey, displayMode, compareWith, filterIssuesMode}: State) {
+function updateResultTable({frameworks, benchmarks, selectedFrameworksDropDown: selectedFrameworks, selectedBenchmarks, sortKey, displayMode, compareWith, categories}: State) {
   return {
-      [FrameworkType.KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.KEYED, sortKey, displayMode, compareWith[FrameworkType.KEYED], filterIssuesMode),
-      [FrameworkType.NON_KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.NON_KEYED, sortKey, displayMode, compareWith[FrameworkType.NON_KEYED], filterIssuesMode)
+      [FrameworkType.KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.KEYED, sortKey, displayMode, compareWith[FrameworkType.KEYED], categories),
+      [FrameworkType.NON_KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.NON_KEYED, sortKey, displayMode, compareWith[FrameworkType.NON_KEYED], categories)
   }
 }
 
@@ -93,47 +93,61 @@ const initialState: State = {
     ...preInitialState,
     resultTables: updateResultTable(preInitialState)
 }
-
-export const selectFramework = (framework: Framework, add: boolean) => {
-    return {type: 'SELECT_FRAMEWORK', data: {framework, add}
-    }
+interface SelectFrameworkAction { type: 'SELECT_FRAMEWORK'; data: {framework: Framework; add: boolean}}
+export const selectFramework = (framework: Framework, add: boolean): SelectFrameworkAction => {
+  return {type: 'SELECT_FRAMEWORK', data: {framework, add}}
 }
 
-export const selectAllFrameworks = (frameworkType: FrameworkType, add: boolean) => {
-    return {type: 'SELECT_ALL_FRAMEWORKS', data: {frameworkType, add}}
+interface SelectAllFrameworksAction { type: 'SELECT_ALL_FRAMEWORKS'; data: {frameworkType: FrameworkType; add: boolean}}
+export const selectAllFrameworks = (frameworkType: FrameworkType, add: boolean): SelectAllFrameworksAction => {
+  return {type: 'SELECT_ALL_FRAMEWORKS', data: {frameworkType, add}}
 }
 
-export const selectBenchmark = (benchmark: Benchmark, add: boolean) => {
-    return {type: 'SELECT_BENCHMARK', data: {benchmark, add}
-    }
+interface SelectCategoryAction { type: 'SELECT_CATEGORY'; data: {categoryId: number; add: boolean}}
+export const selectCategory = (categoryId: number, add: boolean): SelectCategoryAction => {
+  return {type: 'SELECT_CATEGORY', data: {categoryId, add}}
 }
 
-export const selectAllBenchmarks = (benchmarkType: BenchmarkType, add: boolean) => {
-    return {type: 'SELECT_ALL_BENCHMARKS', data: {benchmarkType, add}}
+interface SelectAllCategoriesAction { type: 'SELECT_ALL_CATEGORIES'; data: {add: boolean}}
+export const selectAllCategories = (add: boolean): SelectAllCategoriesAction => {
+  return {type: 'SELECT_ALL_CATEGORIES', data: {add}}
 }
 
-export const selectDisplayMode = (displayMode: DisplayMode) => {
-    return {type: 'SELECT_DISPLAYMODE', data: {displayMode}}
+interface SelectBenchmarkAction { type: 'SELECT_BENCHMARK'; data: {benchmark: Benchmark; add: boolean}}
+export const selectBenchmark = (benchmark: Benchmark, add: boolean): SelectBenchmarkAction => {
+  return {type: 'SELECT_BENCHMARK', data: {benchmark, add}}
 }
 
-export const selectFilterIssuesMode = (filterIssueMode: FilterIssuesMode) => {
-    return {type: 'SELECT_FILTER_ISSUES_MODE', data: {filterIssueMode}}
+interface SelectAllBenchmarksAction { type: 'SELECT_ALL_BENCHMARKS'; data: {benchmarkType: BenchmarkType; add: boolean}}
+export const selectAllBenchmarks = (benchmarkType: BenchmarkType, add: boolean): SelectAllBenchmarksAction => {
+  return {type: 'SELECT_ALL_BENCHMARKS', data: {benchmarkType, add}}
 }
 
-export const compare = (framework: Framework) => {
-    return {type: 'COMPARE', data: {framework}}
-}
-export const stopCompare = (framework: Framework) => {
-    return {type: 'STOP_COMPARE', data: {framework}}
+interface SelectDisplayModeAction { type: 'SELECT_DISPLAYMODE'; data: {displayMode: DisplayMode}}
+export const selectDisplayMode = (displayMode: DisplayMode): SelectDisplayModeAction => {
+  return {type: 'SELECT_DISPLAYMODE', data: {displayMode}}
 }
 
-export const sort = (sortKey: string) => {
-    return {type: 'SORT', data: {sortKey}}
+interface CompareAction { type: 'COMPARE'; data: {framework: Framework}}
+export const compare = (framework: Framework): CompareAction => {
+  return {type: 'COMPARE', data: {framework}}
 }
 
+interface StopCompareAction { type: 'STOP_COMPARE'; data: {framework: Framework}}
+export const stopCompare = (framework: Framework): StopCompareAction => {
+  return {type: 'STOP_COMPARE', data: {framework}}
+}
+
+interface SortAction { type: 'SORT'; data: {sortKey: string}}
+export const sort = (sortKey: string): SortAction => {
+  return {type: 'SORT', data: {sortKey}}
+}
+type Action = SelectFrameworkAction | SelectAllFrameworksAction | SelectBenchmarkAction | SelectAllBenchmarksAction 
+  | SelectDisplayModeAction | CompareAction |StopCompareAction | SortAction
+  | SelectCategoryAction | SelectAllCategoriesAction;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const reducer = (state = initialState, action: any) => {
+export const reducer = (state = initialState, action: Action): State => {
     console.log("reducer", action)
     switch (action.type) {
         case 'SELECT_FRAMEWORK': {
@@ -185,15 +199,25 @@ export const reducer = (state = initialState, action: any) => {
             compareWith[action.data.framework.type] = undefined;
             const t = {...state, compareWith: compareWith};
             return {...t, resultTables: updateResultTable(t)};
-        }
-        case 'SORT': {
+          }
+          case 'SORT': {
             const t = {...state, sortKey: action.data.sortKey};
             return {...t, resultTables: updateResultTable(t)};
-        }
-        case 'SELECT_FILTER_ISSUES_MODE': {
-            const filterIssuesMode = action.data.filterIssueMode;
-            const t = {...state, filterIssuesMode};
+          }
+          case 'SELECT_CATEGORY': {
+            const categories  = new Set(state.categories);
+            if (action.data.add) {
+              categories.add(action.data.categoryId);
+            } else {
+              categories.delete(action.data.categoryId);
+            }
+            const t = {...state, categories};
             return {...t, resultTables: updateResultTable(t)};
+        }
+        case 'SELECT_ALL_CATEGORIES': {
+          const newCategories = (action.data.add) ? new Set(categories.map(c => c.id)) : new Set<number>(); 
+          const t = {...state, categories: newCategories};
+          return {...t, resultTables: updateResultTable(t)};
         }
         default:
             return state;
