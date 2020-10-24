@@ -13,7 +13,9 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ember-source",
     "customURL": "/dist",
-    "issues": [800]
+    "issues": [
+      800
+    ]
   },
   "scripts": {
     "ember": "node_modules/.bin/ember",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "@ember/optional-features": "^1.1.0",
+    "@ember/render-modifiers": "^1.0.2",
     "@embroider/compat": "^0.21.0",
     "@embroider/core": "^0.21.0",
     "@embroider/webpack": "^0.21.0",

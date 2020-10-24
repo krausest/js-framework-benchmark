@@ -1,0 +1,7 @@
+<tbody {{did-insert this.createRef}}>
+{{#if this.fragment}}
+{{#-in-element this.fragment}}
+	{{#each @items key="id" as |item|}}{{yield item}}{{/each}}
+{{/-in-element}}
+{{/if}}
+</tbody>

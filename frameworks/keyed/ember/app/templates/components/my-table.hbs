@@ -43,11 +43,9 @@
 
 {{#if this.data.length}}
   <table class="table table-hover table-striped test-data">
-    <tbody>
-      {{#each this.data key="id" as |item|}}
+    <FastEach @items={{this.data}} as |item|>
         <TableRow @item={{item}} @onSelect={{fn this.select item.id}} @onRemove={{fn this.remove item.id}} />
-      {{/each}}
-    </tbody>
+    </FastEach>
   </table>
 {{/if}}
 
