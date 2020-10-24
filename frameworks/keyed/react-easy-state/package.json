@@ -4,7 +4,7 @@
   "description": "React Easy State demo",
   "main": "src/index.jsx",
   "js-framework-benchmark": {
-    "frameworkVersion": "16.8.6 + 6.3.0"
+    "frameworkVersionFromPackage": "react:@risingstack/react-easy-state"
   },
   "scripts": {
     "build-dev": "webpack -w -d",
