@@ -18,7 +18,7 @@ const CpuResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData;
               </thead>
               <thead>
                 <tr>
-                    <th>Implementationn notes</th>
+                    <th>Implementation notes</th>
                     {data.frameworks.map(f => 
                       <th key={f.name} >
                       {
