@@ -2,8 +2,8 @@ import * as React from 'react';
 
 interface Props<T> {
   children: Array<JSX.Element>;
-  selectNone: (event: React.SyntheticEvent<object>) => void;
-  selectAll: (event: React.SyntheticEvent<object>) => void;
+  selectNone: (event: React.SyntheticEvent) => void;
+  selectAll: (event: React.SyntheticEvent) => void;
   isNoneSelected: boolean;
   areAllSelected: boolean;
 }

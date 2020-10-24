@@ -5,7 +5,7 @@ import CompareRow from './CompareRow'
 import ValueResultRow from './ValueResultRow'
 
 const CpuResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData; currentSortKey: string; sortBy: (name: string) => void}) => {
-    const resultsCPU = data.getResult(BenchmarkType.CPU);
+  const resultsCPU = data.getResult(BenchmarkType.CPU);
     return resultsCPU.results.length===0 ? null :
           (<div>
             <h3>Duration in milliseconds ± 95% confidence interval (Slowdown = Duration / Fastest)</h3>

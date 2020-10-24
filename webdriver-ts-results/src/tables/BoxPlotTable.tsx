@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import {SORT_BY_NAME, Benchmark, Framework, ResultLookup} from '../Common'; 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Plotly = require('plotly.js-cartesian-dist');
@@ -8,17 +8,11 @@ interface BoxPlotData {
     values: number[];
 }
 
-class BoxPlot extends React.Component<{traces: BoxPlotData[]}, {}>
+const BoxPlot = ({traces}: {traces: Array<BoxPlotData>}) => 
 {
-    private elemRef: React.RefObject<HTMLDivElement>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(props: any) {
-        super(props);
-        this.elemRef = React.createRef();
-        this.repaint = this.repaint.bind(this);
-    }
-    repaint() {
-        const traces = this.props.traces.map(t => ({
+    const elemRef = useRef(null);
+    useEffect(() => {
+        const plotlTtraces = traces.map(t => ({
             type: 'box',
             y: t.values,
             boxpoints: false,
@@ -37,17 +31,9 @@ class BoxPlot extends React.Component<{traces: BoxPlotData[]}, {}>
                 pad: 0
               },
         };
-        Plotly.newPlot(this.elemRef.current, traces, layout, {staticPlot: true, editable: false});
-    }
-    componentDidMount() {
-        this.repaint();
-    }
-    componentDidUpdate() {
-        this.repaint();
-    }
-    render() {
-        return <div ref={this.elemRef} style={{height: '100%', width: '100%'}}></div>
-    }
+        Plotly.newPlot(elemRef.current, plotlTtraces, layout, {staticPlot: true, editable: false});
+      }, [traces])
+      return <div ref={elemRef} style={{height: '100%', width: '100%'}}></div>
 }
 
 const RenderBoxPlotsRows = ({frameworks, benchmarks, results, currentSortKey, sortBy}: {frameworks: Array<Framework>; benchmarks: Array<Benchmark>; results: ResultLookup; currentSortKey: string; sortBy: (name: string) => void}) => {
