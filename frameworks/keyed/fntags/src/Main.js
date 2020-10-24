@@ -1,4 +1,4 @@
-import { fnapp, fnstate, h } from 'https://cdn.jsdelivr.net/npm/fntags@0.3.2/src/fntags.min.js'
+import { fnstate, h } from './fntags.min.js'
 
 let data = fnstate( [], d => d.id )
 
@@ -29,94 +29,70 @@ const Button = ( id, title, onclick ) =>
        h( 'button', { id, type: 'button', class: 'btn btn-primary btn-block', onclick: onclick }, title )
     )
 
-const row = ( item ) => {
-    const id = h( 'td', {
-                      class: 'col-md-1'
-                  },
-                  item().id
-    )
-    let currentLabel = item().label
-    let label = h( 'a', item().label )
-    let removeBtn = h( 'span', {
-        onclick: ( e ) => {
-            e.preventDefault()
-            e.stopPropagation()
-            data( data().filter( d => d().id !== item().id ) )
-        },
-        class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'
-    } )
-
-    let isSelected = item().selected
-    const tr = h( 'tr', {
-                      id: item().id,
-                      class: isSelected ? 'danger' : '',
-                      onclick: () => {
-                          let currentSelection = data().find( d => d().selected )
-                          if( currentSelection ) currentSelection.patch( { selected: false } )
-                          item.patch( { selected: true } )
-                      }
-                  },
-                  id,
-                  h( 'td', { class: 'col-md-4' }, label ),
-                  h( 'td', { class: 'col-md-1' },
-                     h( 'a',
-                        removeBtn
-                     )
-                  ),
-                  h( 'td', { class: 'col-md-6' } )
-    )
-
-    item.subscribe( () => {
-        if( isSelected && !item().selected ) {
-            tr.className = ''
-        } else if( !isSelected && item().selected ) {
-            tr.className = 'danger'
-        }
-        isSelected = item().selected
-
-        if( currentLabel != item().label ) {
-            label.innerText = item().label
-            currentLabel = item().label
-        }
-    } )
-
-    return tr
-}
-
-fnapp( document.body,
-       h( 'div', { class: 'container' },
-          h( 'div', { class: 'jumbotron' },
-             h( 'div', { class: 'row' },
-                h( 'div', { class: 'col-md-6' },
-                   h( 'h1', 'fntags keyed' )
-                ),
-                h( 'div', { class: 'col-md-6' },
-                   h( 'div', { class: 'row' },
-                      Button( 'run', 'Create 1,000 rows', () => data( buildData( 1000 ) ) ),
-                      Button( 'runlots', 'Create 10,000 rows', () => data( buildData( 10000 ) ) ),
-                      Button( 'add', 'Append 1,000 rows', () => data( data().concat( buildData( 1000 ) ) ) ),
-                      Button( 'update', 'Update every 10th row', () => {
-                          for( let i = 0; i < data().length; i += 10 ) {
-                              data()[ i ].patch( { label: data()[ i ]().label + ' !!!' } )
-                          }
-                      } ),
-                      Button( 'clear', 'Clear', () => data( [] ) ),
-                      Button( 'swaprows', 'Swap Rows', () => {
-                          const d = data()
-                          if( d.length > 998 ) {
-                              const a = d[ 1 ]
-                              d[ 1 ] = d[ 998 ]
-                              d[ 998 ] = a
-                          }
-                          data( d )
-                      } )
-                   )
+document.body.append(
+    h( 'div', { class: 'container' },
+       h( 'div', { class: 'jumbotron' },
+          h( 'div', { class: 'row' },
+             h( 'div', { class: 'col-md-6' },
+                h( 'h1', 'fntags keyed' )
+             ),
+             h( 'div', { class: 'col-md-6' },
+                h( 'div', { class: 'row' },
+                   Button( 'run', 'Create 1,000 rows', () => data( buildData( 1000 ) ) ),
+                   Button( 'runlots', 'Create 10,000 rows', () => data( buildData( 10000 ) ) ),
+                   Button( 'add', 'Append 1,000 rows', () => data( data().concat( buildData( 1000 ) ) ) ),
+                   Button( 'update', 'Update every 10th row', () => {
+                       let items = data()
+                       for( let i = 0; i < items.length; i += 10 ) {
+                           let d = items[ i ]
+                           let it = d()
+                           it.label += ' !!!'
+                           d( it )
+                       }
+                   } ),
+                   Button( 'clear', 'Clear', () => data( [] ) ),
+                   Button( 'swaprows', 'Swap Rows', () => {
+                       const d = data()
+                       if( d.length > 998 ) {
+                           const a = d[ 1 ]
+                           d[ 1 ] = d[ 998 ]
+                           d[ 998 ] = a
+                       }
+                       data( d )
+                   } )
                 )
              )
           )
        ),
-       h( 'table', { class: 'table table-hover table-striped test-data' },
-          data.bindValues( h( 'tbody' ), row )
-       ),
-       h( 'span', { class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
+      h( 'table', { class: 'table table-hover table-striped test-data' },
+        data.bindValues( h( 'tbody' ), ( item ) =>
+            h( 'tr', {
+                    id: item().id,
+                    onclick: () => data.select( item().id ),
+                    onselect: ( e ) => e.target.className = 'danger',
+                    ondeselect: ( e ) => e.target.className = ''
+                },
+                h( 'td', {
+                      class: 'col-md-1'
+                  },
+                  item().id
+                ),
+                h( 'td', { class: 'col-md-4' }, 
+                  h('a', { class: 'lbl'}, item.bindAs( () => item().label ) )),
+                h( 'td', { class: 'col-md-1' },
+                  h( 'a',
+                      h( 'span', {
+                          onclick: ( e ) => {
+                              e.stopPropagation()
+                              data( data().filter( d => d().id !== item().id ) )
+                          },
+                          class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'
+                      } )
+                  )
+                ),
+                h( 'td', { class: 'col-md-6' } )
+            ) )
+          ),
+    ),
+    h( 'span', { class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
 )
