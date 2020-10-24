@@ -121,7 +121,7 @@ export default factory(({ properties, middleware: { invalidator }}) => {
 		get selected(): number | undefined {
 			return selected;
 		},
-		chunks(size = 500): string[] {
+		chunks(size = 1000): string[] {
 			const ids = this.ids;
 			const chunks: string[] = [];
 			for (let i = 0; i < ids.length; i+=size) {
