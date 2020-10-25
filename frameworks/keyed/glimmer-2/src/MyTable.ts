@@ -72,7 +72,7 @@ setComponentTemplate(
 <div class="jumbotron">
   <div class="row">
     <div class="col-md-6">
-      <h1>Glimmer v2.0.0-beta.8</h1>
+      <h1>Glimmer v2.0.0-beta.10</h1>
     </div>
     <div class="col-md-6">
       <div class="row">

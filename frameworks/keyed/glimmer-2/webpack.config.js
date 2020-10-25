@@ -41,7 +41,6 @@ module.exports = {
         extractComments: false,
 				parallel: true,
 				// Enable file caching
-				cache: true,
 			}),
 		]
 	},
