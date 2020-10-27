@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mikado",
-    "issues": [694, 800]
+    "issues": [800]
   },
   "preferGlobal": false,
   "repository": {
