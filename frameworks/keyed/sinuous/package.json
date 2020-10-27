@@ -3,7 +3,8 @@
   "version": "0.0.2",
   "main": "dist/main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "sinuous"
+    "frameworkVersionFromPackage": "sinuous",
+    "issues": [800]
   },
   "scripts": {
     "build-dev": "rollup -c -w",

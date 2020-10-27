@@ -10,7 +10,8 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@sifrr/dom",
-    "useShadowRoot": true
+    "useShadowRoot": true,
+    "issues": [800]
   },
   "repository": {
     "type": "git",

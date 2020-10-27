@@ -2,14 +2,14 @@ import * as React from 'react';
 
 interface Props<T> {
   children: Array<JSX.Element>;
-  selectNone: (event: React.SyntheticEvent<any>) => void;
-  selectAll: (event: React.SyntheticEvent<any>) => void;
+  selectNone: (event: React.SyntheticEvent) => void;
+  selectAll: (event: React.SyntheticEvent) => void;
   isNoneSelected: boolean;
   areAllSelected: boolean;
 }
 
 export function DropDownContents<T>(props: Props<T>) {
-  let {selectNone, selectAll, isNoneSelected, areAllSelected, children} = props;
+  const {selectNone, selectAll, isNoneSelected, areAllSelected, children} = props;
   return <div className="section">
             {children[0]}
             <div className="float-rt">

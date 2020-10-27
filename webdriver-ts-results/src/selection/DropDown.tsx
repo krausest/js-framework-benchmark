@@ -7,8 +7,8 @@ interface Props {
 }
 
 const DropDown = ({label, children, width}: Props) => {
-    let [open, setOpen] = useState(false);
-    let toggle = useCallback((event: React.SyntheticEvent<HTMLElement>) => {
+    const [open, setOpen] = useState(false);
+    const toggle = useCallback((event: React.SyntheticEvent<HTMLElement>) => {
         event.stopPropagation();
         setOpen(!open)
       }, [open])

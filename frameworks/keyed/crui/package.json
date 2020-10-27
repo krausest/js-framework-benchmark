@@ -4,7 +4,7 @@
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@crui/core",
-    "issues": [694]
+    "issues": [694, 800]
   },
   "scripts": {
     "build-dev": "webpack --watch",

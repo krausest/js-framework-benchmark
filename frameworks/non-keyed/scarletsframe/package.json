@@ -4,7 +4,8 @@
   "description": "ScarletsFrame demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "scarletsframe"
+    "frameworkVersionFromPackage": "scarletsframe",
+    "issues": [800]
   },
   "scripts": {
     "build-dev": "webpack -w -d",

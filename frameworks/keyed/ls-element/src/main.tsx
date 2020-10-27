@@ -31,8 +31,8 @@ export class MainElement extends HTMLElement implements LSCustomElement {
 
     render() {
       return (
-        <div id="container" class="container">
-          <div id="jumbotron" class="jumbotron">
+        <div id="container" class="container" dynamicAttributes={[]}>
+          <div id="jumbotron" class="jumbotron" dynamicAttributes={[]} staticChildren>
             <div id="1" class="row">
               <div id="2" class="col-md-6">
                 <h1 id="3">LS-Element keyed</h1>
@@ -61,23 +61,23 @@ export class MainElement extends HTMLElement implements LSCustomElement {
               </div >
             </div >
           </div >
-          <table id="table" class="table table-hover table-striped test-data">
-            <tbody id="body">{this._rows.map(item => (
-              <tr id={`row-${item.id}`} class={item.id === this._selected ? 'danger' : undefined}>
-                <td id={`row-${item.id}-1`} class="col-md-1">{item.id}</td>
-                <td id={`row-${item.id}-2`} class="col-md-4">
-                  <a id={`row-${item.id}-3`} onclick={() => this._select(item.id)}>{item.label}</a>
+          <table id="table" class="table table-hover table-striped test-data" dynamicAttributes={[]}>
+            <tbody id="body" dynamicAttributes={[]}>{this._rows.map(item => (
+              <tr id={`row-${item.id}`} class={item.id === this._selected ? 'danger' : undefined} dynamicAttributes={['class']}>
+                <td id={`row-${item.id}-1`} class="col-md-1" dynamicAttributes={[]} staticChildren>{item.id}</td>
+                <td id={`row-${item.id}-2`} class="col-md-4" dynamicAttributes={[]}>
+                  <a id={`row-${item.id}-3`} onclick={() => this._select(item.id)} dynamicAttributes={[]}>{item.label}</a>
                 </td>
-                <td id={`row-${item.id}-4`} class="col-md-1">
+                <td id={`row-${item.id}-4`} class="col-md-1" dynamicAttributes={[]} staticChildren>
                   <a id={`row-${item.id}-5`} onclick={() => this._remove(item.id)}>
-                    <span id={`row-${item.id}-6`} class="glyphicon glyphicon-remove" aria-hidden="true" />
+                    <span id={`row-${item.id}-6`} class="glyphicon glyphicon-remove" aria-hidden="true"/>
                   </a>
                 </td>
-                <td id={`row-${item.id}-7`} class="col-md-6" />
+                <td id={`row-${item.id}-7`} class="col-md-6" dynamicAttributes={[]} staticChildren />
               </tr>))}
             </tbody>
           </table >
-          <span id="icon" class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
+          <span id="icon" class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" dynamicAttributes={[]} staticChildren />
         </div >
       );
     }

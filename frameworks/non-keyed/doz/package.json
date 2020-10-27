@@ -4,7 +4,8 @@
   "description": "Doz demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "doz"
+    "frameworkVersionFromPackage": "doz",
+    "issues": [800]
   },
   "scripts": {
     "build-dev": "webpack --watch --mode=development",

@@ -1,10 +1,10 @@
 import React from 'react'
-import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_MEM, DisplayMode, BenchmarkType} from '../Common'; 
+import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_MEM, BenchmarkType} from '../Common'; 
 import ValueResultRow from './ValueResultRow'
 import GeomMeanRow from './GeomMeanRow'
 
-const MemResultsTable = ({data, currentSortKey, sortBy, displayMode} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void, displayMode: DisplayMode}) => {
-  let resultsMEM = data.getResult(BenchmarkType.MEM);
+const MemResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData; currentSortKey: string; sortBy: (name: string) => void}) => {
+  const resultsMEM = data.getResult(BenchmarkType.MEM);
   return (resultsMEM.results.length===0 ? null :
         (<div>
           <h3>Memory allocation in MBs ± 95% confidence interval</h3>

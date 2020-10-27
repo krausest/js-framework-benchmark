@@ -1,34 +1,36 @@
-import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, FilterIssuesMode } from "./Common"
+import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, categories } from "./Common"
 import {benchmarks, frameworks, results as rawResults} from './results';
-var jStat:any = require('jStat').jStat;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const jStat: any = require('jStat').jStat;
 
-let results : Result[] = (rawResults as RawResult[]).map(res => Object.assign(({framework: res.f, benchmark: res.b, values: res.v}),
+const results: Result[] = (rawResults as RawResult[]).map(res => Object.assign(({framework: res.f, benchmark: res.b, values: res.v}),
     {mean: res.v ? jStat.mean(res.v) : Number.NaN,
     median: res.v ? jStat.median(res.v) : Number.NaN,
     standardDeviation: res.v ? jStat.stdev(res.v, true):  Number.NaN}));
 
-let removeKeyedSuffix = (value: string) => {
+const removeKeyedSuffix = (value: string) => {
     if  (value.endsWith('-non-keyed')) return value.substring(0,value.length-10)
     else if (value.endsWith('-keyed')) return value.substring(0,value.length-6)
     return value;
 }
-let mappedFrameworks = frameworks.map(f => ({name: f.name, displayname: removeKeyedSuffix(f.name), issues: f.issues ?? [], type:f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED}));
+const mappedFrameworks = frameworks.map(f => ({name: f.name, displayname: removeKeyedSuffix(f.name), issues: f.issues ?? [], type:f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED}));
 
-let allBenchmarks = benchmarks.reduce((set, b) => set.add(b), new Set<Benchmark>() );
-let allFrameworks = mappedFrameworks.reduce((set, f) => set.add(f), new Set<Framework>() );
-let resultLookup = convertToMap(results);
+const allBenchmarks = benchmarks.reduce((set, b) => set.add(b), new Set<Benchmark>() );
+const allFrameworks = mappedFrameworks.reduce((set, f) => set.add(f), new Set<Framework>() );
+const resultLookup = convertToMap(results);
 
 interface BenchmarkLists {
-    [idx: number]: Benchmark[]    
+    [idx: number]: Benchmark[];    
 }
 interface FrameworkLists {
-    [idx: number]: Framework[]    
+    [idx: number]: Framework[];    
 }
 interface ResultTables {
-    [idx: number]: ResultTableData|undefined  
+    [idx: number]: ResultTableData|undefined;  
 }
 interface CompareWith {
-    [idx: number]: Framework|undefined  
+    [idx: number]: Framework|undefined;  
 }
 
 export interface State {
@@ -42,7 +44,7 @@ export interface State {
     sortKey: string;
     displayMode: DisplayMode;
     compareWith: CompareWith;
-    filterIssuesMode: FilterIssuesMode;
+    categories: Set<number>;
 }
 
 export const areAllBenchmarksSelected = (state: State, type: BenchmarkType) => state.benchmarkLists[type].every(b => state.selectedBenchmarks.has(b))
@@ -52,7 +54,7 @@ export const areAllFrameworksSelected = (state: State, type: FrameworkType) => s
 export const isNoneFrameworkSelected = (state: State, type: FrameworkType) => state.frameworkLists[type].every(f => !state.selectedFrameworksDropDown.has(f))
 
 
-let pre_initialState : State = {    
+const preInitialState: State = {    
     // static
     benchmarks: benchmarks,
     benchmarkLists: {
@@ -78,119 +80,145 @@ let pre_initialState : State = {
         [FrameworkType.KEYED]: undefined,
         [FrameworkType.NON_KEYED]: undefined
     },
-    filterIssuesMode: FilterIssuesMode.FilterErrors
-}
-let initialState: State = {
-    ...pre_initialState,
-    resultTables: updateResultTable(pre_initialState)
+    categories: new Set([1,2,3,4])
 }
 
-function updateResultTable({frameworks, benchmarks, selectedFrameworksDropDown: selectedFrameworks, selectedBenchmarks, sortKey, displayMode, compareWith, filterIssuesMode}: State) {
-    return {
-        [FrameworkType.KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.KEYED, sortKey, displayMode, compareWith[FrameworkType.KEYED], filterIssuesMode),
-        [FrameworkType.NON_KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.NON_KEYED, sortKey, displayMode, compareWith[FrameworkType.NON_KEYED], filterIssuesMode)
-    }
+function updateResultTable({frameworks, benchmarks, selectedFrameworksDropDown: selectedFrameworks, selectedBenchmarks, sortKey, displayMode, compareWith, categories}: State) {
+  return {
+      [FrameworkType.KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.KEYED, sortKey, displayMode, compareWith[FrameworkType.KEYED], categories),
+      [FrameworkType.NON_KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.NON_KEYED, sortKey, displayMode, compareWith[FrameworkType.NON_KEYED], categories)
+  }
 }
 
-export const selectFramework = (framework: Framework, add: boolean) => {
-    return {type: 'SELECT_FRAMEWORK', data: {framework, add}
-    }
+const initialState: State = {
+    ...preInitialState,
+    resultTables: updateResultTable(preInitialState)
+}
+interface SelectFrameworkAction { type: 'SELECT_FRAMEWORK'; data: {framework: Framework; add: boolean}}
+export const selectFramework = (framework: Framework, add: boolean): SelectFrameworkAction => {
+  return {type: 'SELECT_FRAMEWORK', data: {framework, add}}
 }
 
-export const selectAllFrameworks = (frameworkType: FrameworkType, add: boolean) => {
-    return {type: 'SELECT_ALL_FRAMEWORKS', data: {frameworkType, add}}
+interface SelectAllFrameworksAction { type: 'SELECT_ALL_FRAMEWORKS'; data: {frameworkType: FrameworkType; add: boolean}}
+export const selectAllFrameworks = (frameworkType: FrameworkType, add: boolean): SelectAllFrameworksAction => {
+  return {type: 'SELECT_ALL_FRAMEWORKS', data: {frameworkType, add}}
 }
 
-export const selectBenchmark = (benchmark: Benchmark, add: boolean) => {
-    return {type: 'SELECT_BENCHMARK', data: {benchmark, add}
-    }
+interface SelectCategoryAction { type: 'SELECT_CATEGORY'; data: {categoryId: number; add: boolean}}
+export const selectCategory = (categoryId: number, add: boolean): SelectCategoryAction => {
+  return {type: 'SELECT_CATEGORY', data: {categoryId, add}}
 }
 
-export const selectAllBenchmarks = (benchmarkType: BenchmarkType, add: boolean) => {
-    return {type: 'SELECT_ALL_BENCHMARKS', data: {benchmarkType, add}}
+interface SelectAllCategoriesAction { type: 'SELECT_ALL_CATEGORIES'; data: {add: boolean}}
+export const selectAllCategories = (add: boolean): SelectAllCategoriesAction => {
+  return {type: 'SELECT_ALL_CATEGORIES', data: {add}}
 }
 
-export const selectDisplayMode = (displayMode: DisplayMode) => {
-    return {type: 'SELECT_DISPLAYMODE', data: {displayMode}}
+interface SelectBenchmarkAction { type: 'SELECT_BENCHMARK'; data: {benchmark: Benchmark; add: boolean}}
+export const selectBenchmark = (benchmark: Benchmark, add: boolean): SelectBenchmarkAction => {
+  return {type: 'SELECT_BENCHMARK', data: {benchmark, add}}
 }
 
-export const selectFilterIssuesMode = (filterIssueMode: FilterIssuesMode) => {
-    return {type: 'SELECT_FILTER_ISSUES_MODE', data: {filterIssueMode}}
+interface SelectAllBenchmarksAction { type: 'SELECT_ALL_BENCHMARKS'; data: {benchmarkType: BenchmarkType; add: boolean}}
+export const selectAllBenchmarks = (benchmarkType: BenchmarkType, add: boolean): SelectAllBenchmarksAction => {
+  return {type: 'SELECT_ALL_BENCHMARKS', data: {benchmarkType, add}}
 }
 
-export const compare = (framework: Framework) => {
-    return {type: 'COMPARE', data: {framework}}
-}
-export const stopCompare = (framework: Framework) => {
-    return {type: 'STOP_COMPARE', data: {framework}}
+interface SelectDisplayModeAction { type: 'SELECT_DISPLAYMODE'; data: {displayMode: DisplayMode}}
+export const selectDisplayMode = (displayMode: DisplayMode): SelectDisplayModeAction => {
+  return {type: 'SELECT_DISPLAYMODE', data: {displayMode}}
 }
 
-export const sort = (sortKey: string) => {
-    return {type: 'SORT', data: {sortKey}}
+interface CompareAction { type: 'COMPARE'; data: {framework: Framework}}
+export const compare = (framework: Framework): CompareAction => {
+  return {type: 'COMPARE', data: {framework}}
 }
 
+interface StopCompareAction { type: 'STOP_COMPARE'; data: {framework: Framework}}
+export const stopCompare = (framework: Framework): StopCompareAction => {
+  return {type: 'STOP_COMPARE', data: {framework}}
+}
 
-export const reducer = (state = initialState, action: any) => {
+interface SortAction { type: 'SORT'; data: {sortKey: string}}
+export const sort = (sortKey: string): SortAction => {
+  return {type: 'SORT', data: {sortKey}}
+}
+type Action = SelectFrameworkAction | SelectAllFrameworksAction | SelectBenchmarkAction | SelectAllBenchmarksAction 
+  | SelectDisplayModeAction | CompareAction |StopCompareAction | SortAction
+  | SelectCategoryAction | SelectAllCategoriesAction;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const reducer = (state = initialState, action: Action): State => {
     console.log("reducer", action)
     switch (action.type) {
         case 'SELECT_FRAMEWORK': {
-            let newSelectedFramework = new Set(state.selectedFrameworksDropDown);
+            const newSelectedFramework = new Set(state.selectedFrameworksDropDown);
             if (action.data.add) newSelectedFramework.add(action.data.framework);
             else newSelectedFramework.delete(action.data.framework);
-            let t = {...state, selectedFrameworksDropDown: newSelectedFramework};
+            const t = {...state, selectedFrameworksDropDown: newSelectedFramework};
             return {...t, resultTables: updateResultTable(t)};
         }
         case 'SELECT_ALL_FRAMEWORKS': {
-            let newSelectedFramework = new Set(state.selectedFrameworksDropDown);
-            for (let f of (action.data.frameworkType === FrameworkType.KEYED ? state.frameworkLists[FrameworkType.KEYED] : state.frameworkLists[FrameworkType.NON_KEYED])) {
+            const newSelectedFramework = new Set(state.selectedFrameworksDropDown);
+            for (const f of (action.data.frameworkType === FrameworkType.KEYED ? state.frameworkLists[FrameworkType.KEYED] : state.frameworkLists[FrameworkType.NON_KEYED])) {
                 if (action.data.add) newSelectedFramework.add(f);
                 else newSelectedFramework.delete(f);
             }
-            let t = {...state, selectedFrameworksDropDown: newSelectedFramework};
+            const t = {...state, selectedFrameworksDropDown: newSelectedFramework};
             return {...t, resultTables: updateResultTable(t)};
         }
         case 'SELECT_BENCHMARK': {
-            let newSelectedBenchmark = new Set(state.selectedBenchmarks);
+            const newSelectedBenchmark = new Set(state.selectedBenchmarks);
             if (action.data.add) newSelectedBenchmark.add(action.data.benchmark);
             else newSelectedBenchmark.delete(action.data.benchmark);
-            let t = {...state, selectedBenchmarks: newSelectedBenchmark};
+            const t = {...state, selectedBenchmarks: newSelectedBenchmark};
             return {...t, resultTables: updateResultTable(t)};
         }
         case 'SELECT_ALL_BENCHMARKS': {
-            let newSelectedBenchmark = new Set(state.selectedBenchmarks);
+            const newSelectedBenchmark = new Set(state.selectedBenchmarks);
             // action.data.benchmarkType
-            for (let b of state.benchmarkLists[BenchmarkType.CPU]) {
+            for (const b of state.benchmarkLists[BenchmarkType.CPU]) {
                 if (action.data.add) newSelectedBenchmark.add(b)
                 else newSelectedBenchmark.delete(b)
             }
-            let t = {...state, selectedBenchmarks: newSelectedBenchmark}
+            const t = {...state, selectedBenchmarks: newSelectedBenchmark}
             return {...t, resultTables: updateResultTable(t)}
         }
         case 'SELECT_DISPLAYMODE': {
-            let t = {...state, displayMode: action.data.displayMode};
+            const t = {...state, displayMode: action.data.displayMode};
             return {...t, resultTables: updateResultTable(t)};
         }
         case 'COMPARE': {
-            let compareWith = {...state.compareWith};
+            const compareWith = {...state.compareWith};
             compareWith[action.data.framework.type] = action.data.framework;
             
-            let t = {...state, compareWith: compareWith};
+            const t = {...state, compareWith: compareWith};
             return {...t, resultTables: updateResultTable(t)};
         }
         case 'STOP_COMPARE': {
-            let compareWith = {...state.compareWith};
+            const compareWith = {...state.compareWith};
             compareWith[action.data.framework.type] = undefined;
-            let t = {...state, compareWith: compareWith};
+            const t = {...state, compareWith: compareWith};
+            return {...t, resultTables: updateResultTable(t)};
+          }
+          case 'SORT': {
+            const t = {...state, sortKey: action.data.sortKey};
+            return {...t, resultTables: updateResultTable(t)};
+          }
+          case 'SELECT_CATEGORY': {
+            const categories  = new Set(state.categories);
+            if (action.data.add) {
+              categories.add(action.data.categoryId);
+            } else {
+              categories.delete(action.data.categoryId);
+            }
+            const t = {...state, categories};
             return {...t, resultTables: updateResultTable(t)};
         }
-        case 'SORT': {
-            let t = {...state, sortKey: action.data.sortKey};
-            return {...t, resultTables: updateResultTable(t)};
-        }
-        case 'SELECT_FILTER_ISSUES_MODE': {
-            const filterIssuesMode = action.data.filterIssueMode;
-            let t = {...state, filterIssuesMode};
-            return {...t, resultTables: updateResultTable(t)};
+        case 'SELECT_ALL_CATEGORIES': {
+          const newCategories = (action.data.add) ? new Set(categories.map(c => c.id)) : new Set<number>(); 
+          const t = {...state, categories: newCategories};
+          return {...t, resultTables: updateResultTable(t)};
         }
         default:
             return state;

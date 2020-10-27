@@ -8,7 +8,8 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@glimmer/application",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "issues": [800]
   },
   "scripts": {
     "build": "ember build -prod",
