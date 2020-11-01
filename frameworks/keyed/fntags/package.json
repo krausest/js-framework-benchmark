@@ -4,8 +4,7 @@
   "description": "fntags demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "fntags",
-    "issues": [772]
+    "frameworkVersionFromPackage": "fntags"
   },
   "scripts": {
     "build-dev": "node build.js dev",
@@ -13,7 +12,7 @@
   },
   "author": "Robert Kempton",
   "dependencies": {
-    "fntags": "0.3.5"
+    "fntags": "0.4.0"
   },
   "devDependencies": {
     "fs-extra": "8.1.0",
