@@ -1,4 +1,4 @@
-<tr class="{{=data.selected}}" root>
+<tr key="data.id" class="{{(this.selected === index ? 'danger' : '')}}" root>
     <td class="col-md-1">{{=data.id}}</td>
     <td class="col-md-4">
         <a class="lbl" click="select:root">{{=data.label}}</a>
