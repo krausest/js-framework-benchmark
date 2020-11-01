@@ -1,13 +1,12 @@
 import Mikado from "../node_modules/mikado/src/mikado.js";
-import app from "./template/app.es6.js";
-import item from "./template/item.es6.js";
-import { buildData } from "./data.js";
+import tpl_app from "./template/app.es6.js";
+import tpl_item from "./template/item.es6.js";
+import buildData from "./data.js";
 
-Mikado.once(document.getElementById("main"), app);
+Mikado.once(document.getElementById("main"), tpl_app);
 
-let data = [], selected = 0;
-const root = document.getElementById("tbody");
-const view = new Mikado(root, item)
+let data = [];
+const view = new Mikado(document.getElementById("tbody"), tpl_item)
 .route("run", () => view.render(data = buildData(1000)))
 .route("runlots", () => view.render(buildData(10000)))
 .route("add", () => view.append(buildData(1000)))
@@ -25,7 +24,7 @@ const view = new Mikado(root, item)
 })
 .route("remove", target => view.remove(target))
 .route("select", target => {
-    view.update(selected, data[selected]);
-    view.update(selected = view.index(target), data[selected], selected);
-})
-.listen("click");
+    let selected = view.selected;
+    selected && view.update(selected, data[selected]);
+    view.update(selected = view.selected = view.index(target), data[selected], selected);
+});
