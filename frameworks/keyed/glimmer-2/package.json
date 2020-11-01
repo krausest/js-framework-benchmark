@@ -26,7 +26,8 @@
     ]
   },
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@glimmer/core"
+    "frameworkVersionFromPackage": "@glimmer/core",
+    "issues": [800]
   },
   "dependencies": {
     "@glimmer/core": "^2.0.0-beta.10",
