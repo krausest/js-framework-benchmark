@@ -7,6 +7,11 @@ import { run, runLots, add, update, swapRows, deleteRow } from './utils/benchmar
 
 import TableRow from './TableRow';
 import BsButton from './BsButton';
+import { helper } from './utils/helper';
+
+const eq = helper(([a,b]) => {
+  return a === b;
+})
 
 export default class MyTable extends Component {
   @tracked id = 1;
@@ -47,27 +52,18 @@ export default class MyTable extends Component {
   }
 
   @action remove(id): void {
-    const selected = this.data.find(({ selected }) => selected === true);
-    if (selected) {
-      selected.selected = false;
-    }
     this.data = deleteRow(this.data, id);
     this.selected = undefined;
   }
 
   @action select(id): void {
     this.selected = id;
-    const selected = this.data.find(({ selected }) => selected === true);
-    if (selected) {
-      selected.selected = false;
-    }
-    this.data.find((item) => item.id === id).selected = true;
   }
 }
 
 setComponentTemplate(
   createTemplate(
-    { on, fn, TableRow, BsButton },
+    { on, fn, eq, TableRow, BsButton },
     `
 <div class="jumbotron">
   <div class="row">
@@ -112,7 +108,7 @@ setComponentTemplate(
 </div>
 <table class="table table-hover table-striped test-data">
   <tbody>
-    {{#each this.data key="id" as |item|}}<TableRow @item={{item}} @onSelect={{fn this.select item.id}} @onRemove={{fn this.remove item.id}} />{{/each}}
+    {{#each this.data key="id" as |item|}}<TableRow class={{if (eq this.selected item.id) 'danger'}} @item={{item}} @onSelect={{fn this.select item.id}} @onRemove={{fn this.remove item.id}} />{{/each}}
   </tbody>
 </table>
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>`), MyTable
