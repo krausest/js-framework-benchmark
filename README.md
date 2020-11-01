@@ -261,11 +261,15 @@ Contributions are very welcome. Please use the following rules:
 * Please don't commit any of the result file webdriver-ts/table.html, webdriver-ts-results/src/results.ts or webdriver-ts-results/table.html. I use to run the benchmarks after merging and publish updated (temporary) results.
 * The latest stable chrome can be used regarding web features and language level (babel-preset-env "last 1 chrome versions")
 * The vanillajs implementations and some others include code that try to approximate the repaint duration through javascript code. Implemenatations are not required to include that measurement. Remember: The real measurements are taken by the automated test driver by examining chrome timeline entries.
-* **Please don't over-optimize. Other contributors will review your implementation so beware of discussions ([#521](https://github.com/krausest/js-framework-benchmark/pull/521), [#519](https://github.com/krausest/js-framework-benchmark/pull/519), [#430](https://github.com/krausest/js-framework-benchmark/issues/430)) and rejection if the community finds you cheating. When are you safe?**
-  * If the initial rendering is able to render the selection state
-  * The implementation uses only the idiomatic style of its library
-  * If you don't use userland hacks in your implementation like dom manipulations or request animation frame calls
-Tip: If you start with your implementation do not take vanillajs as the reference. It violates those rules and serves only as a performance baseline and not as a best practice implementation.
+* **Please don't over-optimize.** This benchmark is most useful if you apply an idiomatic style for the framework you're using. We've sharpened the rules what kind of implementation is considered correct and will add notes when an implementations handles things in a way that looks like a shortcut. 
+  * The html must be identical with the one created by the refrence implemenation vanillajs. It also must include all the aria-hidden attributes. Otherwise the implemenation is considered erroneous and will be marked with issue [#634](https://github.com/krausest/js-framework-benchmark/issues/634).
+  * Keyed implementations must pass the `npm isKeyed` test in the test driver otherwise they are erroneous. Not that this test might not be sufficient, but just necessary to be keyed. There's error [#694](https://github.com/krausest/js-framework-benchmark/issues/694) for such cases.
+  * Using request animation frame calls in client code, especially when applied only for some benchmark operations, is considered bad style and gets note [#796](https://github.com/krausest/js-framework-benchmark/issues/796) applied. Note that frameworks are free to choose whether they use RAF of not.
+  * Manual DOM manipulation (like setting the danger class directly on the selected row) lead to some controversial debates. Depending on the framework you're using it might be idiomatic style or not. In any case it gets note [#772](https://github.com/krausest/js-framework-benchmark/issues/772) applied.
+  * Keeping the selected row on the table is often a bit slower than having a flag on each row whether the row is selected. Thus those implemenations get note [#800](https://github.com/krausest/js-framework-benchmark/issues/800).
+  * Explicit event delegation is another area where many discussions came up. Implemenations that use explicit event delegation in client code get note [#801](https://github.com/krausest/js-framework-benchmark/issues/801). Frameworks themselves are free to use event delegation.
+
+Tip: If you start with your implementation do not take vanillajs as the reference. It uses direct dom manipulation (and thus has note 772) and serves only as a performance baseline but not as a best practice implementation.
 
 This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
 
