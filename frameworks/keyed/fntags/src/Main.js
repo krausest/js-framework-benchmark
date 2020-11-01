@@ -64,35 +64,34 @@ document.body.append(
              )
           )
        ),
-      h( 'table', { class: 'table table-hover table-striped test-data' },
-        data.bindValues( h( 'tbody' ), ( item ) =>
-            h( 'tr', {
-                    id: item().id,
-                    onclick: () => data.select( item().id ),
-                    onselect: ( e ) => e.target.className = 'danger',
-                    ondeselect: ( e ) => e.target.className = ''
-                },
-                h( 'td', {
-                      class: 'col-md-1'
-                  },
-                  item().id
-                ),
-                h( 'td', { class: 'col-md-4' }, 
-                  h('a', { class: 'lbl'}, item.bindAs( () => item().label ) )),
-                h( 'td', { class: 'col-md-1' },
-                  h( 'a',
-                      h( 'span', {
-                          onclick: ( e ) => {
-                              e.stopPropagation()
-                              data( data().filter( d => d().id !== item().id ) )
-                          },
-                          class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'
-                      } )
-                  )
-                ),
-                h( 'td', { class: 'col-md-6' } )
-            ) )
-          ),
+       h( 'table', { class: 'table table-hover table-striped test-data' },
+          data.bindValues( h( 'tbody' ), ( item ) =>
+              h( 'tr', {
+                     id: item().id,
+                     class: item.bindSelectAttr( () => data.selected() === item().id ? 'danger' : '' ),
+                     onclick: () => data.select( item().id )
+                 },
+                 h( 'td', {
+                        class: 'col-md-1'
+                    },
+                    item().id
+                 ),
+                 h( 'td', { class: 'col-md-4' },
+                    h( 'a', { class: 'lbl' }, item.bindAs( () => item().label ) ) ),
+                 h( 'td', { class: 'col-md-1' },
+                    h( 'a',
+                       h( 'span', {
+                           onclick: ( e ) => {
+                               e.stopPropagation()
+                               data( data().filter( d => d().id !== item().id ) )
+                           },
+                           class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true'
+                       } )
+                    )
+                 ),
+                 h( 'td', { class: 'col-md-6' } )
+              ) )
+       )
     ),
     h( 'span', { class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
 )
