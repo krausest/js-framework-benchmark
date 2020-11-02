@@ -6,18 +6,9 @@ const len_ADJECTIVES = ADJECTIVES.length;
 const len_COLOURS = COLOURS.length;
 const len_NOUNS = NOUNS.length;
 
-let _nextId = 1;
+let nextId = 1;
 
-export function buildData(count){
-
-    // if(count === 1){
-    //
-    //     return {
-    //
-    //         id: _nextId++,
-    //         label: ADJECTIVES[_random(len_ADJECTIVES)] + " " + COLOURS[_random(len_COLOURS)] + " " + NOUNS[_random(len_NOUNS)]
-    //     }
-    // }
+export default function(count){
 
     const data = new Array(count);
 
@@ -25,16 +16,15 @@ export function buildData(count){
 
         data[i] = {
 
-            "id": _nextId++,
-            "label": ADJECTIVES[_random(len_ADJECTIVES)] + " " + COLOURS[_random(len_COLOURS)] + " " + NOUNS[_random(len_NOUNS)],
-            "selected": ""
+            "id": nextId++,
+            "label": ADJECTIVES[random(len_ADJECTIVES)] + " " + COLOURS[random(len_COLOURS)] + " " + NOUNS[random(len_NOUNS)]
         };
     }
 
     return data;
 }
 
-function _random(max){
+function random(max){
 
     return (Math.random() * max) | 0;
 }
