@@ -183,7 +183,7 @@ function doBindValues( ctx, parent, element, update ) {
     if( parent === undefined ) throw new Error( 'You must provide a parent element to bind the children to. aka Need Bukkit.' )
     if( typeof element !== 'function' && typeof update !== 'function' )
         throw new Error( 'You must pass an update function when passing a non function element' )
-    if( typeof ctx.mapKey !== 'function') {
+    if( typeof ctx.mapKey !== 'function' ) {
         console.warn( 'Using value index as key, may not work correctly when moving items...' )
         ctx.mapKey = ( o, i ) => i
     }
@@ -257,13 +257,13 @@ const doBindAs = ( ctx, element, update ) =>
  */
 function reconcile( ctx ) {
     for( let bindContext of ctx.bindContexts ) {
-        if( bindContext.boundElementByKey === undefined) bindContext.boundElementByKey = {}
+        if( bindContext.boundElementByKey === undefined ) bindContext.boundElementByKey = {}
         arrangeElements( ctx, bindContext )
     }
 }
 
 function setKey( ctx, element ) {
-    if( element.key === undefined  && ctx.mapKey !== undefined  ) element.key = keyMapper( ctx.mapKey, ctx.currentValue )
+    if( element.key === undefined && ctx.mapKey !== undefined ) element.key = keyMapper( ctx.mapKey, ctx.currentValue )
     return element
 }
 
@@ -284,17 +284,24 @@ function arrangeElements( ctx, bindContext ) {
         return
     }
 
-    let seenKeys = {}
-    let prev = null
-    let parent = bindContext.parent
-
-    for( let i = ctx.currentValue.length - 1; i >= 0; i-- ) {
+    let keys = {}
+    let keysArr = []
+    for( let i in ctx.currentValue ) {
         let valueState = ctx.currentValue[ i ]
         if( valueState === null || valueState === undefined || !valueState.isFnState )
             valueState = ctx.currentValue[ i ] = fnstate( valueState )
         let key = keyMapper( ctx.mapKey, valueState() )
-        if( seenKeys[ key ] ) throw new Error( 'Duplicate keys in a bound array are not allowed.' )
-        seenKeys[ key ] = true
+        if( keys[ key ] ) throw new Error( 'Duplicate keys in a bound array are not allowed.' )
+        keys[ key ] = i
+        keysArr[ i ] = key
+    }
+
+    let prev = null
+    let parent = bindContext.parent
+
+    for( let i = ctx.currentValue.length - 1; i >= 0; i-- ) {
+        let key = keysArr[ i ]
+        let valueState = ctx.currentValue[ i ]
         let current = bindContext.boundElementByKey[ key ]
         let isNew = false
         //ensure the parent state is always set and can be accessed by the child states to lsiten to the selection change and such
@@ -315,13 +322,19 @@ function arrangeElements( ctx, bindContext ) {
                 else
                     parent.insertBefore( current, prev )
             } else if( prev.previousSibling.key !== current.key ) {
-                //if it's a new key, always insert it
-                if( isNew )
+                //the previous was deleted all together, so we will delete it and replace the element
+                if( keys[ prev.previousSibling.key ] === undefined ) {
+                    delete bindContext.boundElementByKey[ prev.previousSibling.key ]
+                    if( ctx.selectObservers[ prev.previousSibling.key ] !== undefined )
+                        delete ctx.selectObservers[ prev.previousSibling.key ]
+                    prev.previousSibling.replaceWith( current )
+                } else if( isNew ) {
                     //insertAdjacentElement is faster, but some nodes don't have it (lookin' at you text)
                     if( prev.insertAdjacentElement !== undefined )
                         prev.insertAdjacentElement( 'beforeBegin', current )
                     else
                         parent.insertBefore( current, prev )
+                }
                 //if it's an existing key, replace the current object with the correct object
                 else
                     prev.previousSibling.replaceWith( current )
@@ -330,9 +343,9 @@ function arrangeElements( ctx, bindContext ) {
         prev = current
     }
 
-    //remove keys
+    //catch any strays
     for( let key of Object.keys( bindContext.boundElementByKey ) ) {
-        if( !seenKeys[ key ] ) {
+        if( keys[ key ] === undefined ) {
             bindContext.boundElementByKey[ key ].remove()
             delete bindContext.boundElementByKey[ key ]
             if( ctx.selectObservers[ key ] !== undefined )
@@ -370,9 +383,9 @@ let setAttribute = function( attrName, attr, element ) {
     } else if( attrName === 'style' && typeof attr === 'object' ) {
         for( let style in attr ) {
             let st = attr[ style ].toString()
-            let impt = st.lastIndexOf( '!important')
-            if( impt > -1)
-                element.style.setProperty( style, st.substring(0, impt), st.substring(impt) )
+            let impt = st.lastIndexOf( '!important' )
+            if( impt > -1 )
+                element.style.setProperty( style, st.substring( 0, impt ), st.substring( impt ) )
             else
                 element.style.setProperty( style, attr[ style ] )
         }
