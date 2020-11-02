@@ -7,8 +7,8 @@
     "frameworkVersionFromPackage": "fntags"
   },
   "scripts": {
-    "build-dev": "node build.js dev",
-    "build-prod": "node build.js"
+    "build-dev": "npm i && node build.js dev",
+    "build-prod": "npm i && node build.js"
   },
   "author": "Robert Kempton",
   "dependencies": {
