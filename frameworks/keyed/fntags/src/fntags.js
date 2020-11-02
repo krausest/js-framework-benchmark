@@ -280,6 +280,7 @@ function arrangeElements( ctx, bindContext ) {
     if( ctx.currentValue.length === 0 ) {
         bindContext.parent.textContent = ''
         bindContext.boundElementByKey = {}
+        ctx.selectObservers = {}
         return
     }
 
@@ -334,6 +335,8 @@ function arrangeElements( ctx, bindContext ) {
         if( !seenKeys[ key ] ) {
             bindContext.boundElementByKey[ key ].remove()
             delete bindContext.boundElementByKey[ key ]
+            if( ctx.selectObservers[ key ] !== undefined )
+                delete ctx.selectObservers[ key ]
         }
     }
 }
