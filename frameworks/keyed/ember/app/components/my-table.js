@@ -48,20 +48,11 @@ export default class MyTable extends Component {
   }
 
   @action remove(id) {
-    const selected = this.data.find(({selected}) => selected === true);
-    if (selected) {
-      selected.selected = false;
-    }
     this.data = deleteRow(this.data, id);
     this.selected = undefined;
   }
 
   @action select(id) {
     this.selected = id;
-    const selected = this.data.find(({selected}) => selected === true);
-    if (selected) {
-      selected.selected = false;
-    }
-    this.data.find((item)=>item.id === id).selected = true;
   }
 }
