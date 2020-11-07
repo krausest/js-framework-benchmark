@@ -11,7 +11,7 @@
   "author": "Utkarsh Kukreti",
   "license": "MIT",
   "dependencies": {
-    "preact": "10.5.2",
+    "preact": "^10.5.5",
     "reaml": "0.15.0"
   },
   "devDependencies": {
