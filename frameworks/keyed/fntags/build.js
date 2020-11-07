@@ -14,5 +14,5 @@ const minify = ( file ) => {
         return code
     }
 }
-fs.copySync('src/fntags.min.js', 'dist/fntags.min.js')
+fs.writeFileSync('dist/fntags.min.js', minify('node_modules/fntags/src/fntags.js'))
 fs.writeFileSync( 'dist/Main.js', minify( 'src/Main.js' ) )
