@@ -4,6 +4,7 @@ import { Callbag } from 'callbag';
 import pipe from 'callbag-pipe';
 import take from 'callbag-take';
 import map from 'callbag-map';
+import combine from 'callbag-combine';
 import subscribe from 'callbag-subscribe';
 import { makeRenderer, For, Conditional } from 'callbag-jsx';
 
@@ -23,7 +24,7 @@ renderer.render(
     <div class='jumbotron'>
       <div class='row'>
         <div class='col-md-6'>
-          <h1>Callbag JSX (keyed)</h1>
+          <h1>Callbag JSX</h1>
         </div>
         <div class='col-md-6'>
           <div class='row'>
@@ -70,7 +71,7 @@ renderer.render(
       <Conditional if={pipe(data, map(l => l.length > 0))}
         then={() => <tbody>
           <For of={data} each={item =>
-            <tr class={{ danger: pipe(selected, map(s => s === item.get()?.id)) }}>
+            <tr class={{ danger: pipe(combine(selected, item), map(([s, i]) => s === i.id)) }}>
               <td class='col-md-1'>{pipe(item, map(i => i?.id))}</td>
               <td class='col-md-4'>
                 <a onclick={() => selected(1, item.get()!!.id)}>{pipe(item, map(i => i?.label))}</a>
@@ -86,7 +87,7 @@ renderer.render(
               </td>
               <td class='col-md-6'/>
             </tr>
-          } key={i => i.id}/>
+          }/>
         </tbody>
         }
       />
