@@ -1,8 +1,8 @@
 'use strict';
 
 import _ from 'underscore';
+import { View, CollectionView } from 'marionette';
 import Bb from 'backbone';
-import { View, CollectionView } from 'backbone.marionette';
 import rowTemplate from './row.tpl';
 
 function _random(max) {
@@ -85,7 +85,7 @@ const ChildView = View.extend({
 const MyCollectionView = CollectionView.extend({
     monitorViewEvents: false,
     viewComparator: false,
-    el: '#tbody',
+    el: document.querySelector('#tbody'),
     childView: ChildView,
     collectionEvents() {
         return {
@@ -99,13 +99,16 @@ const MyCollectionView = CollectionView.extend({
             'click .js-del': this.onDeleteRow
         };
     },
+    _getRowId(target) {
+        return target.parentNode.parentNode.dataset.id;
+    },
     onSelectRow(e) {
-        const rowId = this.$(e.currentTarget).parent().parent().data('id');
+        const rowId = this._getRowId(e.target);
         // setSelected(rowId);  // moved to collection for measuring
         this.collection.select(rowId, this);
     },
     onDeleteRow(e) {
-        const rowId = this.$(e.currentTarget).parent().parent().data('id');
+        const rowId = this._getRowId(e.target.parentNode);
         // this.removeRow(rowId);  // moved to collection for measuring
         this.collection.delete(rowId, this);
     },
@@ -114,7 +117,7 @@ const MyCollectionView = CollectionView.extend({
 
         const model = this.collection.get(id);
         const view = this.children.findByModelCid(model.cid);
-        view.$el.addClass('danger');
+        view.el.classList.add('danger');
     },
     removeRow(id) {
         const model = this.collection.get(id);
@@ -129,7 +132,7 @@ const MyCollectionView = CollectionView.extend({
     },
     onChangeLabel(model, label) {
         const view = this.children.findByModelCid(model.cid);
-        view.$('.js-link').text(label);
+        view.el.querySelectorAll('.js-link')[0].textContent = label;
     },
     onRender() {
         this.clearSelected();
@@ -142,7 +145,7 @@ const MyCollectionView = CollectionView.extend({
             return;
         }
         const curSelected = this.children.findByModelCid(selected.cid);
-        curSelected.$el.removeClass('danger');
+        curSelected.el.classList.remove('danger');
     }
 });
 
@@ -153,7 +156,7 @@ const collectionView = new MyCollectionView({
 collectionView.render();
 
 const MainView = View.extend({
-    el : '.jumbotron',
+    el : document.querySelector('.jumbotron'),
     events: {
         'click #run'() { store.run(); },
         'click #runlots'() { store.runLots(); },

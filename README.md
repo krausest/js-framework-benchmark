@@ -281,7 +281,6 @@ Frameworks without significant activity on github or npm for more than a year wi
 
 Will be removed in future:
 - [ ] crui Last significant commit Jul 28, 2019
-- [ ] marionette Last significant commit Apr 20, 2019
 
 ### 2020-7-9
 
