@@ -39,7 +39,7 @@ const store = createStore((state = initialState, action) => {
     case 'RUN_LOTS':
       return state.set('data', buildData(10000)).set('selected', 0);
     case 'ADD':
-      return state.set('data', buildData(1000)).set('selected', data.selected);
+      return state.updateIn(['data'], data => data.concat(buildData(1000)));
     case 'UPDATE': {
       return state.updateIn(['data'], data =>
         data.map((item, i) =>
