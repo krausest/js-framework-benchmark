@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
 
 import {
   run, runLots, add, update, swapRows, deleteRow,
@@ -12,7 +13,17 @@ export default class MyTable extends Component {
   @tracked
   data = [];
   @tracked
-  selected = undefined;
+  _selected = undefined;
+
+  @service('state') state;
+
+  get selected() {
+    return this._selected;
+  }
+  set selected(value) {
+    this.state.updateSelection(value);
+    this._selected = value;
+  }
 
   @action create() {
     const result = run(this.id);
@@ -47,12 +58,12 @@ export default class MyTable extends Component {
     this.data = swapRows(this.data);
   }
 
-  @action remove(id) {
+  @action remove({id}) {
     this.data = deleteRow(this.data, id);
     this.selected = undefined;
   }
 
-  @action select(id) {
+  @action select({id}) {
     this.selected = id;
   }
 }
