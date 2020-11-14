@@ -30,6 +30,7 @@ td4.className = 'col-md-6';
 tr.appendChild(td4);
 
 export default function(data) {
+    tr.className = data.className;
     td1.innerText = data.id;
     a2.innerText = data.label;
     tr.dataset.id = data.id;
