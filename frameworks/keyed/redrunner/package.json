@@ -1,0 +1,38 @@
+{
+  "name": "js-framework-benchmark-redrunner",
+  "version": "0.0.1",
+  "description": "RedRunner demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "redrunner"
+  },
+  "scripts": {
+    "build-dev": "webpack -d",
+    "build-prod": "webpack -p",
+    "start": "webpack-dev-server",
+    "watch": "webpack --watch"
+  },
+  "keywords": [
+    "redrunner",
+    "webpack"
+  ],
+  "author": "Andrew Buchan",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-redrunner": "0.8.0",
+    "redrunner": "0.8.1",
+    "terser-webpack-plugin": "^3.0.6",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  }
+}
