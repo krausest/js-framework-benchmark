@@ -21,6 +21,7 @@
         "./src/updateFrameworks.ts",
         "./src/isKeyed.ts",
         "./src/rebuild.ts",
+        "./src/writeResults.ts"
     ],
     "exclude": [
         "node_modules"

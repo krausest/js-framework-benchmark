@@ -1,7 +1,7 @@
 'use strict';
 /** @jsx etch.dom */
 
-var etch = require('etch');
+const etch = require('etch');
 const {Row} = require('./Row');
 const {Store} = require('./Store');
 

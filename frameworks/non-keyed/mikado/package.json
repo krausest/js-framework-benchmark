@@ -1,11 +1,12 @@
 {
   "private": true,
-  "name": "js-framework-benchmark-mikado",
+  "name": "js-framework-benchmark-non-keyed-mikado",
   "homepage": "https://github.com/nextapps-de/mikado/",
   "author": "Nextapps GmbH",
   "license": "Apache-2.0",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "mikado"
+    "frameworkVersionFromPackage": "mikado",
+    "issues": []
   },
   "preferGlobal": false,
   "repository": {
@@ -13,15 +14,14 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "scripts": {
-    "compile": "mikado-compile src/template/app.html && mikado-compile src/template/item.html && echo Compile Complete. && exit 0",
+    "compile": "npx mikado-compile src/template -f -t es6 && echo Compile Complete. && exit 0",
     "build": "npm run compile && node task/build RELEASE=custom DEBUG=false USE_POLYFILL=false SUPPORT_CACHE=true SUPPORT_EVENTS=true SUPPORT_STORAGE=false SUPPORT_HELPERS=false SUPPORT_ASYNC=false SUPPORT_TRANSPORT=false SUPPORT_TEMPLATE_EXTENSION=false SUPPORT_REACTIVE=false SUPPORT_CACHE_HELPERS=false SUPPORT_KEYED=false SUPPORT_POOLS=false SUPPORT_CALLBACKS=false SUPPORT_COMPILE=false && exit 0",
     "build-prod": "npm run build"
   },
   "dependencies": {
-    "mikado": "^0.7.51"
+    "mikado": "^0.7.64"
   },
   "devDependencies": {
-    "google-closure-compiler": "20191105.0.0-nightly",
-    "mikado-compile": "0.6.5"
+    "google-closure-compiler": "^20201006.0.0"
   }
 }

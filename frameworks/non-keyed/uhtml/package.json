@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-uhtml",
+  "name": "js-framework-benchmark-non-keyed-uhtml",
   "version": "1.0.0",
   "description": "uhtml demo",
   "main": "index.js",

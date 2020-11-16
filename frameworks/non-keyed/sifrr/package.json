@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-sifrr",
+  "name": "js-framework-benchmark-non-keyed-sifrr",
   "version": "1.0.0",
   "description": "sifrr demo",
   "main": "dist/app.min.js",
@@ -10,7 +10,8 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@sifrr/dom",
-    "useShadowRoot": true
+    "useShadowRoot": true,
+    "issues": [800]
   },
   "repository": {
     "type": "git",

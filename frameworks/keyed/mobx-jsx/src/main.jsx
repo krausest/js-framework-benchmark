@@ -1,5 +1,5 @@
-import { observable, action, autorun, untracked } from 'mobx';
-import { Component, map, render, wrap } from 'mobx-jsx';
+import { observable, action } from 'mobx';
+import { Component, map, render } from 'mobx-jsx';
 
 function _random (max) { return Math.round(Math.random() * 1000) % max; };
 
@@ -23,22 +23,6 @@ const Button = ({ id, text, fn }) =>
   <div class='col-sm-6 smallpad'>
     <button id={ id } class='btn btn-primary btn-block' type='button' onClick={ fn }>{ text }</button>
   </div>
-
-const List = props => {
-  const mapped = map(props.each, props.children),
-    cache = observable.box();
-  autorun(() => cache.set(mapped()));
-  wrap(tr => {
-    let i, s = props.selected;
-    untracked(() => {
-      if (tr) tr.className = "";
-      if ((tr = s && (i = props.each.findIndex(el => el.id === s)) > -1 && cache.get()[i]))
-        tr.className = "danger";
-    });
-    return tr;
-  });
-  return cache.get.bind(cache);
-};
 
 class App extends Component {
   @observable data = [];
@@ -74,8 +58,17 @@ class App extends Component {
   @action.bound select(itemId) { this.selected = itemId };
 
   render() {
-    let rowId;
     const { run, runLots, add, update, clear, swapRows, select, remove } = this;
+
+    const list = map(this.data, row => {
+      const rowId = row.id;
+      return <tr class={this.selected === rowId ? "danger" : ""}>
+        <td class='col-md-1' textContent={ rowId } />
+        <td class='col-md-4'><a onClick={[select, rowId]} textContent={ row.label } /></td>
+        <td class='col-md-1'><a onClick={[remove, row]}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
+        <td class='col-md-6'/>
+      </tr>
+    });
 
     return <div class='container'>
       <div class='jumbotron'><div class='row'>
@@ -90,15 +83,7 @@ class App extends Component {
         </div></div>
       </div></div>
       <table class='table table-hover table-striped test-data'><tbody>
-        <List each={ this.data } selected={ this.selected }>{ row => (
-          rowId = row.id,
-          <tr>
-            <td class='col-md-1' textContent={ rowId } />
-            <td class='col-md-4'><a onClick={[select, rowId]} textContent={ row.label } /></td>
-            <td class='col-md-1'><a onClick={[remove, row]}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
-            <td class='col-md-6'/>
-          </tr>
-        )}</List>
+        {list}
       </tbody></table>
       <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
     </div>

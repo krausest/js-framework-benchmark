@@ -1,10 +1,11 @@
 {
-  "name": "js-framework-benchmark-domdiff",
+  "name": "js-framework-benchmark-non-keyed-domdiff",
   "version": "1.0.0",
   "description": "domdiff demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "domdiff"
+    "frameworkVersionFromPackage": "domdiff",
+    "issues": [772]
   },
   "scripts": {
     "build-dev": "rollup -c -w",

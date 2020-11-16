@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-aurelia",
+  "name": "js-framework-benchmark-non-keyed-aurelia",
   "version": "1.0.0",
   "description": "Benchmark for aurelia framework",
   "js-framework-benchmark": {

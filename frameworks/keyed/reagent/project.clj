@@ -3,12 +3,12 @@
   :license {:name "Apache-2.0"}
   :description "Reagent demo"
 
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.946"]
-                 [reagent "0.8.0-alpha2"]
-                 [cljsjs/react "16.2.0-1"]
-                 [cljsjs/react-dom "16.2.0-1"]
-                 [cljsjs/react-dom-server "16.2.0-1"]]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [org.clojure/clojurescript "1.10.597"]
+                 [reagent "0.10.0"]
+                 [cljsjs/react "16.13.0-0"]
+                 [cljsjs/react-dom "16.13.0-0"]
+                 [cljsjs/react-dom-server "16.13.0-0"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]]
 

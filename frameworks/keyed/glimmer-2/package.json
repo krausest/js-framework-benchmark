@@ -1,0 +1,63 @@
+{
+  "name": "glimmer-2-benchmark",
+  "version": "2.0.0-beta.10",
+  "description": "Example application using @glimmer packages",
+  "main": "dist/index.js",
+  "repository": "https://github.com/krausest/js-framework-benchmark/tree/master/frameworks/keyed/glimmer-2",
+  "author": "Aleksandr Kanunnikov <lifeart92@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack serve",
+    "build-dev": "webpack-dev-server",
+    "build-prod": "webpack"
+  },
+  "browserslist": {
+    "production": [
+      "last 1 Chrome versions",
+      "last 1 Firefox versions",
+      "last 1 Safari versions"
+    ],
+    "development": [
+      "last 1 Chrome version",
+      "last 1 Firefox version",
+      "last 1 Safari version"
+    ]
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@glimmer/core",
+    "issues": []
+  },
+  "dependencies": {
+    "@glimmer/core": "^2.0.0-beta.10",
+    "@glimmer/component": "^2.0.0-beta.10",
+    "@glimmer/tracking": "^2.0.0-beta.10",
+    "@glimmer/helper": "^2.0.0-beta.10",
+    "@glimmer/modifier": "^2.0.0-beta.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-decorators": "^7.12.1",
+    "@babel/preset-env": "^7.9.0",
+    "terser-webpack-plugin": "5.0.1",
+    "@babel/preset-typescript": "^7.12.1",
+    "@glimmer/babel-plugin-glimmer-env": "^2.0.0-beta.10",
+    "@glimmer/babel-plugin-strict-template-precompile": "^2.0.0-beta.10",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "babel-loader": "^8.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.14.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.1.2",
+    "ts-loader": "^6.2.2",
+    "tsconfig-paths-webpack-plugin": "^3.3.0",
+    "tslib": "^1.11.1",
+    "typescript": "~4.0.3",
+    "webpack": "^5.2.0",
+    "webpack-cli": "^4.1.0",
+    "webpack-dev-server": "^3.11.0"
+  }
+}

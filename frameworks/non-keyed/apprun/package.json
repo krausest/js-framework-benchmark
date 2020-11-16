@@ -1,10 +1,11 @@
 {
-  "name": "js-framework-benchmark-apprun-v2.23.10",
+  "name": "js-framework-benchmark-non-keyed-apprun-v2.23.10",
   "version": "1.0.0",
   "description": "AppRun demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "apprun"
+    "frameworkVersionFromPackage": "apprun",
+    "issues": [772]
   },
   "scripts": {
     "build-dev": "webpack -w -d",

@@ -42,6 +42,7 @@ tests/results/completed/
 target/
 webdriver-ts/results/
 webdriver-ts/results*/
+webdriver-ts/old_results/
 webdriver-ts-results/table_*.html
 webdriver-ts/table_*.html
 webdriver-ts/error-*.png
@@ -59,8 +60,6 @@ marko-*/src/xtable.marko
 # keep root yarn.lock in repo so that travis will install yarn
 yarn.lock
 !/yarn.lock
-
-package-lock.json
 
 # angular 2 aot
 angular-*/lib/

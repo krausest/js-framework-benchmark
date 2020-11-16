@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-riot",
+  "name": "js-framework-benchmark-non-keyed-riot",
   "version": "1.0.0",
   "description": "Benchmark for riot framework",
   "js-framework-benchmark": {
@@ -16,6 +16,6 @@
     "webpack-cli": "3.3.11"
   },
   "dependencies": {
-    "riot": "4.12.0"
+    "riot": "5.0.0"
   }
 }

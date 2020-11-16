@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-svelte",
+  "name": "js-framework-benchmark-non-keyed-svelte",
   "version": "1.0.0",
   "description": "Boilerplate for Svelte",
   "js-framework-benchmark": {
@@ -21,10 +21,10 @@
   },
   "devDependencies": {
     "rollup": "1.15.6",
-    "rollup-plugin-commonjs": "^10.0.0",
-    "rollup-plugin-node-resolve": "^5.0.3",
+    "rollup-plugin-commonjs": "10.0.0",
+    "rollup-plugin-node-resolve": "5.0.3",
     "rollup-plugin-svelte": "5.1.0",
-    "rollup-plugin-terser": "^5.0.0",
-    "svelte": "3.18.1"
+    "rollup-plugin-terser": "5.0.0",
+    "svelte": "3.29.4"
   }
 }

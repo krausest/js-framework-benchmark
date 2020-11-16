@@ -1,0 +1,7 @@
+{
+  "packages": [
+    "frameworks/keyed/*",
+    "frameworks/non-keyed/*"
+  ],
+  "version": "0.0.0"
+}

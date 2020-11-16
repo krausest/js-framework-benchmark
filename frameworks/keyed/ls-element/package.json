@@ -1,0 +1,42 @@
+{
+  "name": "js-framework-benchmark-ls-element",
+  "version": "1.1.7",
+  "description": "ls-element demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@lsegurado/ls-element",
+    "useShadowRoot": false,
+    "customURL": "/dist"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --mode development",
+    "build-dev": "webpack --watch",
+    "build-prod": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "keywords": [
+    "ls-element"
+  ],
+  "author": "Lucas M. Segurado",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^4.3.0",
+    "terser-webpack-plugin": "^4.1.0",
+    "ts-loader": "^8.0.2",
+    "typescript": "^3.9.6",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "dependencies": {
+    "@lsegurado/ls-element": "1.1.7"
+  }
+}

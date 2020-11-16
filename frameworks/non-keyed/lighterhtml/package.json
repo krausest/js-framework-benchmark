@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-lighterhtml",
+  "name": "js-framework-benchmark-non-keyed-lighterhtml",
   "version": "1.0.0",
   "description": "lighterhtml demo",
   "main": "index.js",

@@ -1,0 +1,32 @@
+{
+  "name": "js-framework-benchmark-marionette-backbone",
+  "version": "1.0.0",
+  "description": "Marionette v5.0.0 with Backbone",
+  "browserslist": "> 0.25%, not dead",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "marionette",
+    "issues": [
+      772
+    ]
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "devDependencies": {
+    "@babel/core": "7.12.3",
+    "@babel/preset-env": "7.12.1",
+    "@rollup/plugin-babel": "5.2.1",
+    "@rollup/plugin-commonjs": "16.0.0",
+    "@rollup/plugin-node-resolve": "10.0.0",
+    "@rollup/plugin-virtual": "2.0.3",
+    "rollup": "2.33.1",
+    "rollup-plugin-terser": "7.0.2"
+  },
+  "dependencies": {
+    "backbone": "1.4.0",
+    "marionette": "5.0.0-alpha.2",
+    "underscore": "1.11.0"
+  }
+}

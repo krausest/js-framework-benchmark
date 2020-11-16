@@ -1,4 +1,4 @@
-import { store } from 'react-easy-state'
+import { store } from '@risingstack/react-easy-state'
 import randomSentence from './randomSentence'
 
 let idCounter = 1

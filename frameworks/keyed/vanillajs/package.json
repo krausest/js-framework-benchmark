@@ -4,11 +4,12 @@
   "description": "Vanilla.JS demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": ""
+    "frameworkVersion": "",
+    "issues": [772]
   },
   "scripts": {
-    "build-dev": "webpack -w -d",
-    "build-prod": "webpack -p"
+    "build-dev": "exit 0",
+    "build-prod": "exit 0"
   },
   "keywords": [
     "react",
@@ -20,12 +21,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
-  },
-  "devDependencies": {
-    "@babel/core": "7.4.5",
-    "@babel/preset-env": "7.4.5",
-    "babel-loader": "8.0.6",
-    "webpack": "4.34.0",
-    "webpack-cli": "^3.3.4"
   }
 }

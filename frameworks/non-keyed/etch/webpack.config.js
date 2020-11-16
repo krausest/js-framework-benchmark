@@ -1,5 +1,4 @@
 'use strict';
-require("babel-plugin-syntax-jsx")
 var path = require('path')
 var webpack = require('webpack')
 var cache = {};
