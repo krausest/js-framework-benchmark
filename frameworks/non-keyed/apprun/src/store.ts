@@ -74,12 +74,13 @@ export const update: Update<State, Events> = {
     return state;
   },
 
-  select: (state, id) => {
-    state.selected = id
-  },
+  select: (state, selected) => ({
+    ...state, selected
+  }),
 
   delete: (state, id) => {
     state.selected === state.selected ? null : state.selected;
     state.data = state.data.filter(d => d.id != id);
-  }
+    return state;
+  },
 }
