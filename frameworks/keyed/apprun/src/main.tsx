@@ -53,7 +53,6 @@ const view:View<State> = state => <div class="container" $onclick={click}>
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 </div>;
 
-
 const getId = (elem: any) => {
   while (elem) {
     if (elem.tagName === "TR") {
@@ -73,20 +72,11 @@ const click = (state: State, e: Event) => {
   } else if (t.matches('.remove')) {
     const id = getId(t);
     component.run('delete', id);
-    document.getElementById(id)?.remove();
-  } else if (t.matches('.lbl')) {
+  } else if (t.matches('td')) {
     const id = getId(t);
-    let el;
-    if (state.selected) {
-      el = document.getElementById(`${state.selected}`);
-      el && (el.className = '');
-    }
     component.run('select', id);
-    el = document.getElementById(id);
-    el && (el.className = 'danger');
   }
 }
 
 const component = app.start<State, Events>('main', state, view, update);
-(component as any)['-patch-vdom-on'] = true;
 
