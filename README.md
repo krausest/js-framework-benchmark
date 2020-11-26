@@ -45,11 +45,11 @@ The current snapshot that may not have the same quality (i.e.
 results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
 [![Results](images/results.png?raw=true "Results")](https://krausest.github.io/js-framework-benchmark/current.html)
 
-## How to get started - building and running
+## 1. Using the benchmark tool
 
 There are currently ~60 framework entries in this repository. Installing (and maintaining) those can be challenging, but here are simplified instructions how to get started.
 
-### 1. Prerequisites
+### 1.1 Prerequisites
 
 Have *node.js (>=10.0)* installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node v10.16.3.
 For some frameworks you'll also need *java* (>=8, e.g. openjdk-8-jre on ubuntu).
@@ -67,7 +67,7 @@ java version "1.8.0_131" ...
 javac 1.8.0_131
 ```
 
-### 2. Start installing
+### 1.2 Start installing
 
 As stated above building and running the benchmarks for all frameworks can be challenging, thus we start step by step...
 
@@ -86,7 +86,7 @@ Try to open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
 Now open a new terminal window and keep the web server running in background.
 
-### 3. Building and running a single framework
+### 1.3 Building and viewing a single framework
 
 We now try to build the first framework. Go to the vanillajs reference implementation
 ```
@@ -105,25 +105,7 @@ There should be no build errors and we can open the framework in the browser:
 
 Some frameworks like binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a customURL property under js-framework-benchmark in the [package.json](https://github.com/krausest/js-framework-benchmark/blob/master/frameworks/keyed/ember/package.json#L10) that represents the url.
 
-## Optional 3.1: Contributing a new implementation
-
-For contributions it is basically sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional. Let's simulate that by copying vanillajs.
-```
-cd ../frameworks/keyed
-cp -r vanillajs super-vanillajs
-cd super-vanillajs
-```
-Then we edit super-vanillajs/index.html to have a correct index.html:
-```
-<title>Super-VanillaJS-"keyed"</title>
-...
-                    <h1>Super-VanillaJS-"keyed"</h1>
-```
-In most cases you'll need `npm install` and `npm run build-prod` and then check whether it works in the browser on [http://localhost:8080/frameworks/keyed/super-vanillajs/](http://localhost:8080/frameworks/keyed/super-vanillajs/).
-
-(Of course in reality you'd rather throw out the javascript source files and use your framework there instead of only changing the html file.)
-
-## 4. Running a single framework with the automated benchmark driver
+### 1.4 Running benchmarks for a single framework
 
 The benchmark uses an automated benchmark driver using chromedriver to measure the duration for each operation using chrome's timeline. Here are the steps to run is for a single framework:
 
@@ -162,9 +144,9 @@ npm run check keyed/vanillajs
 ```
 If it finds anything it'll report an ERROR.
 
-## 6. Building the result table
+### 1.5 Building the result table
 
-Install libraries
+Install libraries:
 ```
 cd ..
 cd webdriver-ts-results
@@ -181,7 +163,73 @@ Now a result table should have been created which can be opened on [http://local
 There's nothing in table except for the column vanillajs-keyed at the right end of the first table.
 ![First Run Results](images/staticResults.png?raw=true "First Run Results")
 
-## 6.1 Adding your new implementation to the results table.
+### 1.6 [Optional] Updating the index.html file
+
+This simply rebuilds the file used to display the table, not the results.
+
+```
+npm run index
+```
+
+### 1.7 [Optional] Building and running the benchmarks for all frameworks
+
+This is not for the faint at heart. You can build all frameworks simply by issuing:
+
+```
+cd ..
+npm run build-prod
+```
+
+After downloading the whole internet it starts building it. Basically there should be no errors during the build, but I can't guarantee that the dependencies won't break. (There's a docker build on the way which might make building it more robust. See https://github.com/krausest/js-framework-benchmark/wiki/%5BUnder-construction%5D-Build-all-frameworks-with-docker)
+
+You can now run the benchmark for all frameworks by invoking:
+
+````
+npm run bench-all
+````
+
+in the root directory.
+
+After that you can check all results in [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html).
+
+### 1.8 Tips and tricks
+
+* You can select multiple frameworks and benchmarks for running with prefixes like in the following example in the webdriver-ts directory:
+  `npm run bench -- --framework angular bob --benchmark 01_ 02_`
+  runs the test for all frameworks that contain either angular or bob, which means all angular versions and bobril and all benchmarks whose id contain 01_ or 02_
+* You can also run implementations by passing their directory names (cd to webdriver-ts):
+  `npm run bench keyed/angular keyed/react` or if you want to pass more options it becomes:
+  `npm run bench -- --count 3 keyed/angular keyed/react`.
+* You can run all of the frameworks you've installed using `npm run bench -- --installed`
+* If you can't get one framework to compile or run, just move it out of the root directory and remove it from common.ts, recompile and re-run
+* To achieve good precision you should run each framework often enough. I recommend at least 10 times, more is better. The result table contains the mean and the standard deviation. You can seen the effect on the latter pretty well if you increase the count.
+* One can check whether an implementation is keyed or non-keyed via `npm run isKeyed` in the webdriver-ts directory. You can limit which frameworks to check in the same way as the webdriver test runner like e.g. `npm run isKeyed -- --framework svelte`. The program will report an error if a benchmark implementation is incorrectly classified.
+
+## 2. Contributing a new implementation
+
+### 2.1 Building the app
+
+For contributions it is basically sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional. Let's simulate that by copying vanillajs.
+
+```
+cd ../frameworks/keyed
+cp -r vanillajs super-vanillajs
+cd super-vanillajs
+```
+
+Then we edit super-vanillajs/index.html to have a correct index.html:
+
+```
+<title>Super-VanillaJS-"keyed"</title>
+...
+                    <h1>Super-VanillaJS-"keyed"</h1>
+```
+
+In most cases you'll need `npm install` and `npm run build-prod` and then check whether it works in the browser on [http://localhost:8080/frameworks/keyed/super-vanillajs/](http://localhost:8080/frameworks/keyed/super-vanillajs/).
+
+(Of course in reality you'd rather throw out the javascript source files and use your framework there instead of only changing the html file.)
+
+### 2.2 Adding your new implementation to the results table.
 
 (Notice: Updating common.ts is no longer necessary, super-vanillajs is visible in the result table)
 
@@ -192,11 +240,11 @@ Your package.json must include some information for the benchmark. Since you cop
     "frameworkVersion": ""
   },
   ...
-
 ```
 This one is a bit exceptional since vanillajs has no version. If you use a normal framework like react it carries a version information. For most frameworks you'll add a
 dependency to your framework in package.json. The benchmark can automatically determine the correct version information from package.json and package-lock.json if you specify the
 package name like that:
+
 ```
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react"
@@ -212,43 +260,10 @@ The other important, but optional properties for js-framework-benchmark are show
 ````
 You can set an optional different URL if needed or specify that your DOM uses a shadow root.
 
-## Optional 6.2 Updating the index.html file
-With
-```
-npm run index
-```
-you include Super-VanillaJS-keyed in [http://localhost:8080/index.html](http://localhost:8080/index.html)
-
-## Optional 7. Building and running the benchmarks for all frameworks
-
-This is not for the faint at heart. You can build all frameworks simply by issuing
-```
-cd ..
-npm run build-prod
-```
-After downloading the whole internet it starts building it. Basically there should be no errors during the build, but I can't guarantee that the dependencies won't break. (There's a docker build on the way which might make building it more robust. See https://github.com/krausest/js-framework-benchmark/wiki/%5BUnder-construction%5D-Build-all-frameworks-with-docker)
-You can now run the benchmark for all frameworks by invoking
-`npm run bench-all`
-in the root directory.
-
-After that you can check all results in [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html).
-
-## Tips and tricks
-
-* You can select multiple frameworks and benchmarks for running with prefixes like in the following example in the webdriver-ts directory:
-`npm run bench -- --framework angular bob --benchmark 01_ 02_`
-runs the test for all frameworks that contain either angular or bob, which means all angular versions and bobril and all benchmarks whose id contain 01_ or 02_
-* You can also run implementations by passing their directory names (cd to webdriver-ts):
-`npm run bench keyed/angular keyed/react` or if you want to pass more options it becomes:
-`npm run bench -- --count 3 keyed/angular keyed/react`.
-* You can run all of the frameworks you've installed using `npm run bench -- --installed`
-* If you can't get one framework to compile or run, just move it out of the root directory and remove it from common.ts, recompile and re-run
-* To achieve good precision you should run each framework often enough. I recommend at least 10 times, more is better. The result table contains the mean and the standard deviation. You can seen the effect on the latter pretty well if you increase the count.
-* One can check whether an implementation is keyed or non-keyed via `npm run isKeyed` in the webdriver-ts directory. You can limit which frameworks to check in the same way as the webdriver test runner like e.g. `npm run isKeyed -- --framework svelte`. The program will report an error if a benchmark implementation is incorrectly classified.
-
-## How to contribute
+### 2.3 Submitting your framework
 
 Contributions are very welcome. Please use the following rules:
+
 * Name your directory frameworks/[keyed|non-keyed]/[FrameworkName]
 * Each contribution must be buildable by `npm install` and `npm run build-prod` command in the directory. What build-prod does is up to you. Often there's an `npm run build-dev` that creates a development build
 * Every implementation must use bootstrap provided in the root css directory.
@@ -257,19 +272,26 @@ Contributions are very welcome. Please use the following rules:
 * Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
 * Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
 * Please push only files in your framework folder (not index.html or results.json)
-* **Please make sure your implementation is validated by the test tool.** cd to webdriver-ts and invoke it with `npm run check [keyed|non-keyed]/[FrameworkName]`. It'll print an error if your framework behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation.
+* **Please make sure your implementation is validated by the test tool.** cd to webdriver-ts and invoke it with `npm run check [keyed|non-keyed]/[FrameworkName]`. It'll print an error if your framework behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation. Some common errors include:
+  * Your package.json is missing some required fields
+  * Incorrect classification (Keyed/NonKeyed)
+  * You have gzipped files in /dist (unfortunately the web server prefers these when they exist)
 * Please don't commit any of the result file webdriver-ts/table.html, webdriver-ts-results/src/results.ts or webdriver-ts-results/table.html. I use to run the benchmarks after merging and publish updated (temporary) results.
 * The latest stable chrome can be used regarding web features and language level (babel-preset-env "last 1 chrome versions")
-* The vanillajs implementations and some others include code that try to approximate the repaint duration through javascript code. Implemenatations are not required to include that measurement. Remember: The real measurements are taken by the automated test driver by examining chrome timeline entries.
+* The vanillajs implementations and some others include code that try to approximate the repaint duration through javascript code. Implementations are not required to include that measurement. Remember: The real measurements are taken by the automated test driver by examining chrome timeline entries.
 * **Please don't over-optimize.** This benchmark is most useful if you apply an idiomatic style for the framework you're using. We've sharpened the rules what kind of implementation is considered correct and will add errors or notes when an implementations handles things wrongly (errors) or in a way that looks like a shortcut (notes). 
-  * The html must be identical with the one created by the reference implemenation vanillajs. It also must include all the aria-hidden attributes. Otherwise the implemenation is considered erroneous and will be marked with issue [#634](https://github.com/krausest/js-framework-benchmark/issues/634).
+  * The html must be identical with the one created by the reference implementation vanillajs. It also must include all the aria-hidden attributes. Otherwise the implementation is considered erroneous and will be marked with issue [#634](https://github.com/krausest/js-framework-benchmark/issues/634).
   * Keyed implementations must pass the `npm run isKeyed` test in the test driver otherwise they are erroneous. Not that this test might not be sufficient, but just necessary to be keyed (from time to time we find new loop holes). There's error [#694](https://github.com/krausest/js-framework-benchmark/issues/694) for such cases.
   * Using request animation frame calls in client code, especially when applied only for some benchmark operations, is considered bad style and gets note [#796](https://github.com/krausest/js-framework-benchmark/issues/796) applied. Note that frameworks are free to choose whether they use RAF of not.
   * Manual DOM manipulation (like setting the danger class directly on the selected row) lead to some controversial debates. Depending on the framework you're using it might be idiomatic style or not. In any case it gets note [#772](https://github.com/krausest/js-framework-benchmark/issues/772) applied.
-  * Implementations should keep the selected rows in the state (i.e. not a flag for each row, but one reference, id or index for the table) and use that information for rendering. Keeping a selection flag for each row might be faster, but it's considered bad style. Thus those implemenations get note [#800](https://github.com/krausest/js-framework-benchmark/issues/800).
-  * Explicit event delegation is another area where many discussions came up. Implemenations that use explicit event delegation in client code get note [#801](https://github.com/krausest/js-framework-benchmark/issues/801). Frameworks themselves are free to use event delegation.
+  * Implementations should keep the selected rows in the state (i.e. not a flag for each row, but one reference, id or index for the table) and use that information for rendering. Keeping a selection flag for each row might be faster, but it's considered bad style. Thus those implementations get note [#800](https://github.com/krausest/js-framework-benchmark/issues/800).
+  * Explicit event delegation is another area where many discussions came up. Implementations that use explicit event delegation in client code get note [#801](https://github.com/krausest/js-framework-benchmark/issues/801). Frameworks themselves are free to use event delegation.
 
-Tip: If you start with your implementation do not take vanillajs as the reference. It uses direct dom manipulation (and thus has note 772) and serves only as a performance baseline but not as a best practice implementation.
+Helpful tips:
+
+* Do not start with your implementation do not take vanillajs as the reference. It uses direct DOM manipulation (and thus has note 772) and serves only as a performance baseline but not as a best practice implementation. Instead pick a framework which is similar to yours.
+* Do not forget to preload the glyphicon by adding this somewhere in your HTML: `<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>` or you will get terrible performance.
+* Be careful not to leave gzipped files in your /dist directory. Unfortunately the web server prefers these when they exist and we cannot change that (meaning you could be observing an outdated build).
 
 This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
 
