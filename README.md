@@ -289,7 +289,7 @@ Contributions are very welcome. Please use the following rules:
 
 Helpful tips:
 
-* Do not start with your implementation do not take vanillajs as the reference. It uses direct DOM manipulation (and thus has note 772) and serves only as a performance baseline but not as a best practice implementation. Instead pick a framework which is similar to yours.
+* Do not start your implementation using vanillajs as the reference. It uses direct DOM manipulation (and thus has note  [#772](https://github.com/krausest/js-framework-benchmark/issues/772)) and serves only as a performance baseline but not as a best practice implementation. Instead pick a framework which is similar to yours.
 * Do not forget to preload the glyphicon by adding this somewhere in your HTML: `<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>` or you will get terrible performance.
 * Be careful not to leave gzipped files in your /dist directory. Unfortunately the web server prefers these when they exist and we cannot change that (meaning you could be observing an outdated build).
 
