@@ -159,10 +159,12 @@ async function loadFrameworkInfo(pathInFrameworksDir: string): Promise<Framework
     const packageJSONPath = path.resolve(frameworkPath, 'package.json');
 
     const distDir = path.resolve(frameworkPath, 'dist');
-    const files = fs.readdirSync(distDir);
-    const gzFiles = files.filter(file => path.extname(file).toLowerCase() === '.gz');
-    if (gzFiles.length > 0) {
-        return new FrameworkVersionInformationError(keyedType, directory, `Found gzipped files in "${pathInFrameworksDir}/dist".`);
+    if (fs.existsSync(distDir)) {
+        const files = fs.readdirSync(distDir);
+        const gzFiles = files.filter(file => path.extname(file).toLowerCase() === '.gz');
+        if (gzFiles.length > 0) {
+            return new FrameworkVersionInformationError(keyedType, directory, `Found gzipped files in "${pathInFrameworksDir}/dist".`);
+        }
     }
 
     if (fs.existsSync(packageJSONPath)) {
