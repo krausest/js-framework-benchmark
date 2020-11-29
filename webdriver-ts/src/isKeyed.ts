@@ -288,7 +288,7 @@ async function runBench(frameworkNames: string[]) {
             try {
                 await driver.quit();
             } catch (e) {
-                console.log("error calling driver.quit - ignoring this excpetion");
+                console.log("error calling driver.quit - ignoring this exception");
             }
         }
     }
