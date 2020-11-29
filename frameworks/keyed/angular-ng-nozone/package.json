@@ -1,0 +1,38 @@
+{
+  "name": "js-framework-benchmark-angular-ng",
+  "version": "0.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@angular/core",
+    "customURL": "/dist/angular-ng/"
+  },
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "build-prod": "ng build --prod=true --buildOptimizer=true --sourceMap=false",
+    "build-dev": "ng serve"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "11.0.2",
+    "@angular/common": "11.0.2",
+    "@angular/compiler": "11.0.2",
+    "@angular/core": "11.0.2",
+    "@angular/platform-browser": "11.0.2",
+    "@angular/platform-browser-dynamic": "11.0.2",
+    "rxjs": "6.5.5",
+    "tslib": "^2.0.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "0.1100.2",
+    "@angular/cli": "11.0.2",
+    "@angular/compiler-cli": "11.0.2",
+    "@angular/language-service": "11.0.2",
+    "@types/node": "13.13.0",
+    "ts-node": "8.8.2",
+    "tslint": "~6.1.0",
+    "typescript": "4.0.5"
+  }
+}
