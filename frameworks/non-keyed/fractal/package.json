@@ -16,7 +16,7 @@
         "build-prod": "webpack -p"
     },
     "dependencies": {
-        "@fract/core": "0.2.0",
+        "@fract/core": "0.2.1",
         "@fract/jsx": "0.2.0"
     },
     "devDependencies": {
