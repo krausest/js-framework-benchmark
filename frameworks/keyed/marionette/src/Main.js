@@ -1,71 +1,65 @@
 'use strict';
 
-import _ from 'underscore';
-import Bb from 'backbone';
-import { View, CollectionView, setDomApi } from 'backbone.marionette';
-import './mn-native-view';
+import { View, CollectionView, MnObject } from 'marionette';
 import morphdomRenderer from './mn-morphdom-renderer';
 import rowTemplate from './rowtemplate';
-import DomApi from './mn-domapi';
-
-setDomApi(DomApi);
 
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
 
-const Store = Bb.Collection.extend({
+const Store = MnObject.extend({
     initialize() {
-        this.id = 1;
+        this.cid = 1;
+        this.models = [];
         this.selectedId = null;
-    },
-    getSelected() {
-        if(this.selectedId) return this.get(this.selectedId);
     },
     buildData(count = 1000) {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
         var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
         var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
         var data = [];
-        for (var i = 0; i < count; i++)
-            data.push({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
+        for (var i = 0; i < count; i++) {
+            const id = this.cid + '';
+            data.push({cid: id, attributes: { id, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] }});
+            this.cid++;
+        }
         return data;
     },
     updateData(mod = 10) {
         for (let i=0;i<this.models.length;i+=10) {
-            const label = this.models[i].get('label');
-            this.models[i].set('label', label + ' !!!');
+            this.models[i].attributes.label += ' !!!';
+            this.trigger('change:label', this.models[i]);
         }
     },
-    delete(id, view) {
-        view.removeRow(id);
-        this.remove(id, { silent: true });
-    },
     run() {
-        if(this.model.length) this._clear();
         this.reset(this.buildData());
     },
     addData() {
         this.add(this.buildData(1000));
     },
-    select(id, view) {
-        view.setSelected(id);
-        this.selectedId = id;
-    },
     runLots() {
-        if(this.model.length) this._clear();
         this.reset(this.buildData(10000));
     },
-    _clear() {
-        _.each(this.models, model => model.off());
-        this._reset();
+    select(id) {
+        const prevId = this.selectedId;
+        this.selectedId = id;
+        this.trigger('change:selected', id, prevId);
     },
-    clear() {
-        this._clear();
+    add(models) {
+        this.models = this.models.concat(models);
+        this.trigger('update', this, { changes: { added: models, removed: [] }});
+    },
+    remove(id) {
+        const [removed] = this.models.splice(this.models.findIndex(model => model.cid === id), 1);
+        this.trigger('remove', removed);
+    },
+    reset(models = []) {
+        this.models = models;
         this.trigger('reset', this);
     },
     swapRows() {
-        if (this.length > 998) {
+        if (this.models.length > 998) {
             const a = this.models[1];
             this.models[1] = this.models[998];
             this.models[998] = a;
@@ -79,7 +73,12 @@ const store = new Store();
 const ChildView = View.extend({
     el: document.createElement('div'),
     monitorViewEvents: false,
-    template: rowTemplate
+    template: rowTemplate,
+    templateContext() {
+        return {
+            className: (store.selectedId === this.model.cid) ? 'danger': ''
+        };
+    }
 });
 
 ChildView.setRenderer(morphdomRenderer);
@@ -87,12 +86,14 @@ ChildView.setRenderer(morphdomRenderer);
 const MyCollectionView = CollectionView.extend({
     monitorViewEvents: false,
     viewComparator: false,
-    el: [document.querySelector('#tbody')],
+    el: document.querySelector('#tbody'),
     childView: ChildView,
     collectionEvents() {
         return {
             'swap': this.onSwapRows,
-            'change:label': this.onChangeLabel
+            'remove': this.onRemoveRow,
+            'change:label': this.onChangeLabel,
+            'change:selected': this.onChangeSelected,
         };
     },
     events() {
@@ -106,23 +107,15 @@ const MyCollectionView = CollectionView.extend({
     },
     onSelectRow(e) {
         const rowId = this._getRowId(e.target);
-        // setSelected(rowId);  // moved to collection for measuring
-        this.collection.select(rowId, this);
+
+        this.collection.select(rowId);
     },
     onDeleteRow(e) {
         const rowId = this._getRowId(e.target.parentNode);
-        // this.removeRow(rowId);  // moved to collection for measuring
-        this.collection.delete(rowId, this);
-    },
-    setSelected(id) {
-        this.clearSelected();
 
-        const model = this.collection.get(id);
-        const view = this.children.findByModelCid(model.cid);
-        view.el.classList.add('danger');
+        this.collection.remove(rowId);
     },
-    removeRow(id) {
-        const model = this.collection.get(id);
+    onRemoveRow(model) {
         const view = this.children.findByModelCid(model.cid);
         this.removeChildView(view);
     },
@@ -132,23 +125,21 @@ const MyCollectionView = CollectionView.extend({
 
         this.swapChildViews(view1, view2);
     },
-    onChangeLabel(model, label) {
+    onChangeLabel(model) {
         const view = this.children.findByModelCid(model.cid);
-        view.el.querySelectorAll('.js-link')[0].textContent = label;
+        view.render();
     },
-    onRender() {
-        this.clearSelected();
-        this.collection.selectedId = null;
-    },
-    clearSelected() {
-        const selected = this.collection.getSelected();
-
-        if (!selected) {
-            return;
+    onChangeSelected(id, prevId) {
+        if (prevId) {
+            const curSelected = this.children.findByModelCid(prevId);
+            curSelected && curSelected.render();
         }
-        const curSelected = this.children.findByModelCid(selected.cid);
-        curSelected.el.classList.remove('danger');
-    }
+
+        if (!id) return;
+
+        const selected = this.children.findByModelCid(id);
+        selected.render();
+    },
 });
 
 const collectionView = new MyCollectionView({
@@ -158,13 +149,13 @@ const collectionView = new MyCollectionView({
 collectionView.render();
 
 const MainView = View.extend({
-    el: [document.querySelector('.jumbotron')],
+    el: document.querySelector('.jumbotron'),
     events: {
         'click #run'() { store.run(); },
         'click #runlots'() { store.runLots(); },
         'click #add'() { store.addData(); },
         'click #update'() { store.updateData(); },
-        'click #clear'() { store.clear(); },
+        'click #clear'() { store.reset(); },
         'click #swaprows'() { store.swapRows(); },
     }
 });

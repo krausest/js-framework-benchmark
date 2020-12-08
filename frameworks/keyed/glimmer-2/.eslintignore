@@ -1,0 +1,19 @@
+# compiled output
+**/dist/**
+**/tmp/**
+
+# dependencies
+/bower_components/
+/node_modules/
+
+**/node_modules/**
+**/bower_components/**
+
+# These are fixtures for tests, should be ignored
+typescript.ts
+babel.js
+
+**/fixtures/**/*.js
+**/fixtures-options/**/*.js
+
+test/types/utils.ts

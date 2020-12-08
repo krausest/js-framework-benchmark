@@ -2,11 +2,9 @@ import { tracked } from '@glimmer/tracking';
 
 class TodoItem {
     @tracked label;
-    @tracked selected;
     @tracked id
-    constructor({label,selected, id}) {
+    constructor({label, id}) {
         this.label = label;
-        this.selected = selected;
         this.id = id;
     }
 }
@@ -43,7 +41,6 @@ export const buildData = (id, count = 1000) => {
     for (var i = 0; i < count; i++)
         data.push(new TodoItem({
           id: id++,
-          selected: false,
           label: adjectives[_random(adjectives.length)]
             + " "
             + colours[_random(colours.length)]

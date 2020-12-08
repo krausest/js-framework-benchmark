@@ -5,13 +5,18 @@
   "js-framework-benchmark": {
     "frameworkVersion": "10.0.1",
     "customURL": "/target/web/stage",
-    "issues": [694]
+    "issues": [
+      694
+    ]
   },
   "scripts": {
-    "build-prod": "sbt web-stage"
+    "install": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to build use: && echo npm run install-force",
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "install-force": "npm install sbt-bin@0.1.2",
+    "build-prod-force": "sbt web-stage"
   },
-  "devDependencies": {
-    "sbt-bin": "0.1.2"
-  },
-  "author": "杨博 (Yang Bo) <pop.atry@gmail.com>"
+  "author": "杨博 (Yang Bo) <pop.atry@gmail.com>",
+  "dependencies": {
+    "sbt-bin": "^0.1.2"
+  }
 }

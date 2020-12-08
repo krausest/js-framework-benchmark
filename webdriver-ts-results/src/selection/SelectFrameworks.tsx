@@ -23,7 +23,7 @@ export const SelectBarFrameworks = ({frameworks, isSelected, select}: Props) => 
                     checked={isSelected(item)}
                 />
                 <label htmlFor={'inp-'+item.name+'-'+item.type} className="form-check-label">
-                    {item.name}
+                    {item.displayname}
                 </label>
             </div>
         )}

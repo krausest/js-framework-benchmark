@@ -1,7 +1,7 @@
 <div class="jumbotron">
   <div class="row">
     <div class="col-md-6">
-      <h1>Ember v3.20.4</h1>
+      <h1>Ember v3.22.0</h1>
     </div>
     <div class="col-md-6">
       <div class="row">
@@ -42,13 +42,9 @@
 
 
 {{#if this.data.length}}
-  <table class="table table-hover table-striped test-data">
-    <tbody>
-      {{#each this.data key="id" as |item|}}
-        <TableRow @item={{item}} @onSelect={{fn this.select item.id}} @onRemove={{fn this.remove item.id}} />
-      {{/each}}
-    </tbody>
-  </table>
+  <FastEach class="table table-hover table-striped test-data" @items={{this.data}} as |item|>
+    <TableRow class={{if (eq item) 'danger'}} @item={{item}} @onSelect={{fn this.select item}} @onRemove={{fn this.remove item}} />
+  </FastEach>
 {{/if}}
 
 
