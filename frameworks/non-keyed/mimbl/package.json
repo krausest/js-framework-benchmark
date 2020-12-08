@@ -1,14 +1,12 @@
 {
-  "name": "js-framework-benchmark-non-keyed-mimbl",
-  "version": "0.1.8",
-  "description": "Benchmark for Mimbl framework (non-keyed)",
+  "name": "js-framework-benchmark-keyed-mimbl",
+  "version": "0.5.6",
+  "description": "Benchmark for Mimbl framework (keyed)",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "mimbl",
-    "issues": [800]
+    "frameworkVersionFromPackage": "mimbl"
   },
   "scripts": {
-    "build-dev": "webpack -w -d",
-    "build-prod": "webpack -p"
+    "build-prod": "webpack"
   },
   "keywords": [
     "benchmark",
@@ -22,14 +20,14 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "acorn": "^7.0.0",
+    "acorn": "^7.4.1",
     "source-map-loader": "0.2.4",
     "ts-loader": "6.1.0",
     "typescript": "3.6.3",
     "webpack": "4.34.0",
-    "webpack-cli": "3.3.4"
+    "webpack-cli": "^4.1.0"
   },
   "dependencies": {
-    "mimbl": "0.1.10"
+    "mimbl": "0.5.6"
   }
 }
