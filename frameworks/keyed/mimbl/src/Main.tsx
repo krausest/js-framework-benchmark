@@ -1,103 +1,74 @@
 import * as mim from "mimbl"
-import {Store, StoreItem} from "./Store"
+
+
+
+let adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+let colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+let nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+
+function _random( max: number)
+{
+    return Math.round(Math.random() * 1000) % max;
+}
+
+let nextID = 1;
+
+function buildRows( main: Main, count: number): Row[]
+{
+    let rows = new Array<Row>( count);
+    for( let i = 0; i < count; i++)
+        rows[i] = new Row( main, nextID++,
+            `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`);
+
+    return rows;
+}
+
+
 
 export class Main extends mim.Component
 {
-    private store: Store = new Store();
+    nextID = 1;
 
     // Flat array of Row components
-    private rows: Row[] = null;
-
-    // // Map of item IDs to Row components - needed to understand what Row components we can reuse
-    // // when data changes
-    // private rowMap = new Map<number,Row>();
+    private rows: Row[] = [];
 
     // Currently selected Row component
     public selectedRow: Row = undefined;
 
 
-    public disableRenderWatcher() { return true; }
-
-
-    private buildRows(): void
-    {
-        let data = this.store.data;
-        let i = 0;
-        this.rows = new Array<Row>( data.length);
-        for( let item of data)
-            this.rows[i++] = new Row( this, item.id, item.label);
-
-        this.updateMe( this.renderRows);
-    }
-
-
-    private addRows(): void
-    {
-        let data = this.store.data;
-        if (data.length === 0)
-            return;
-
-        let newRows = new Array<Row>( data.length);
-        let i = 0;
-
-        if (this.rows)
-        {
-            for( ; i < this.rows.length; i++)
-                newRows[i] = this.rows[i];
-        }
-
-        for( ; i < data.length; i++)
-        {
-            let item = data[i];
-            newRows[i] = new Row( this, item.id, item.label);
-        }
-
-        this.rows = newRows;
-        this.updateMe( this.renderRows);
-    }
-
-
-    private updateRows( mod: number)
-    {
-        if (!this.rows)
-            return;
-
-        for (let i = 0; i < this.rows.length; i += mod)
-            this.rows[i].updateLabel( this.store.data[i].label)
-    }
 
     onCreate1000()
     {
-        this.store.run();
-        this.buildRows();
+        this.rows = buildRows( this, 1000);
         this.selectedRow = undefined;
+        this.updateMe( this.renderRows);
     }
 
     onAppend1000()
     {
-        this.store.add( 1000);
-        this.addRows();
+    	let newRows = buildRows( this, 1000);
+        this.rows = this.rows ? this.rows.concat( newRows) : newRows;
+        this.updateMe( this.renderRows);
     }
 
     onUpdateEvery10th()
     {
-        if (this.store.data.length === 0)
+        if (!this.rows)
             return;
 
-        this.store.update(10);
-        this.updateRows( 10);
+        for (let i = 0; i < this.rows.length; i += 10)
+            this.rows[i].updateLabel()
     }
 
     onCreate10000()
     {
-        this.store.runLots();
-        this.buildRows();
+        this.rows = buildRows( this, 10000);
         this.selectedRow = undefined;
+        this.updateMe( this.renderRows);
     }
 
     onClear()
     {
-        this.store.clear();
         this.rows = null;
         this.selectedRow = undefined;
         this.updateMe( this.renderRows);
@@ -105,9 +76,8 @@ export class Main extends mim.Component
 
     onSwapRows()
     {
-		if (this.store.data.length > 998)
+		if (this.rows && this.rows.length > 998)
 		{
-            this.store.swapRows( 1, 998);
             let t = this.rows[1];
             this.rows[1] = this.rows[998];
             this.rows[998] = t;
@@ -133,7 +103,6 @@ export class Main extends mim.Component
             this.selectedRow = undefined;
 
         let id = rowToDelete.id;
-        this.store.delete( id);
         let i = 0;
         for( let row of this.rows)
         {
@@ -148,6 +117,10 @@ export class Main extends mim.Component
 
         this.updateMe( this.renderRows);
     }
+
+
+    disableRenderWatcher() { return true; }
+
 
     render()
     {
@@ -219,9 +192,9 @@ export class Row extends mim.Component
 
     public disableRenderWatcher() { return true; }
 
-	updateLabel( newLabel: string)
+	updateLabel()
 	{
-        this.label = newLabel;
+        this.label += " !!!";
         this.updateMe( this.renderLabel);
 	}
 
@@ -251,7 +224,7 @@ export class Row extends mim.Component
 	{
 		return <mim.Fragment>
 			<td class="col-md-1">{this.id}</td>
-			<td class="col-md-4">{this.renderLabel}</td>
+			<td class="col-md-4"><a click={this.onSelectClicked}>{this.renderLabel}</a></td>
 			<td class="col-md-1"><a click={this.onDeleteClicked}>{Row.glyphVN}</a></td>
 			{Row.lastCellVN}
 		</mim.Fragment>;
@@ -259,7 +232,7 @@ export class Row extends mim.Component
 
 	renderLabel()
 	{
-		return <a click={this.onSelectClicked}>{this.label}</a>;
+		return this.label;
 	}
 }
 
