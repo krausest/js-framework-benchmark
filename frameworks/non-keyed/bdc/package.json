@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-bdc",
+  "name": "js-framework-benchmark-non-keyed-bdc",
   "description": "Benchmark for BDC",
   "author": "Ben Mather <bwhmather@bwhmather.com> (bwhmather.com)",
   "license": "Apache-2.0",
