@@ -1,5 +1,5 @@
 
-FROM ubuntu:19.10
+FROM ubuntu:20.10
 COPY install_rust.sh /root/
 RUN echo "unsafe-perm = true" > /root/.npmrc
 RUN echo "NG_CLI_ANALYTICS=ci" >> /root/.npmrc

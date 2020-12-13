@@ -14,7 +14,7 @@ depends: [
   "base"        {>= "v0.13" & < "v0.14"}
   "variantslib" {>= "v0.13" & < "v0.14"}
   "dune"        {>= "1.5.1"}
-  "ppxlib"      {>= "0.9.0"}
+  "ppxlib"      {>= "0.9.0" & < "0.14.0"}
 ]
 synopsis: "Generation of accessor and iteration functions for ocaml variant types"
 description: "
