@@ -18,7 +18,7 @@
     "incr_dom"
   ],
   "devDependencies": {
-    "esy": "0.6.2"
+    "esy": "0.6.7"
   },
   "scripts": {
     "prebuild-prod": "esy @esy install",
