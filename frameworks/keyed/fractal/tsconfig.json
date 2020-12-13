@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "esnext",
+        "target": "esnext",
+        "moduleResolution": "node",
+        "importHelpers": true,
+        "declaration": true,
+        "sourceMap": true,
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "allowSyntheticDefaultImports": true,
+        "lib": ["esnext", "dom"],
+        "jsx": "preserve",
+        "rootDir": "./src",
+        "baseUrl": "./",
+        "paths": {
+            "*": ["src/*", "src/root/*", "node_modules/*"]
+        }
+    }
+}
