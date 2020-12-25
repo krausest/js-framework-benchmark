@@ -37,9 +37,10 @@ export let config = {
     PORT: 8080,
     REMOTE_DEBUGGING_PORT: 9999,
     CHROME_PORT: 9998,
-    REPEAT_RUN: 12, // Currently we're dropping the two worst results for CPU benchmarks for REPEAT_RUN >= 10
-    REPEAT_RUN_MEM: 1,
-    REPEAT_RUN_STARTUP: 4,
+    NUM_ITERATIONS_FOR_BENCHMARK_CPU: 10, 
+    NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT: 2, // drop the # of slowest results
+    NUM_ITERATIONS_FOR_BENCHMARK_MEM: 1,
+    NUM_ITERATIONS_FOR_BENCHMARK_STARTUP: 4,
     WARMUP_COUNT: 5,
     TIMEOUT: 60 * 1000,
     LOG_PROGRESS: true,

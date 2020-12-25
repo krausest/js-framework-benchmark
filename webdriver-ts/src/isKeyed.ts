@@ -305,9 +305,9 @@ let benchmarkOptions: BenchmarkOptions = {
     chromePort: config.CHROME_PORT,
     headless: args.headless,
     chromeBinaryPath: args.chromeBinary,
-    numIterationsForCPUBenchmarks: config.REPEAT_RUN,
-    numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
-    numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP,
+    numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU,
+    numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
+    numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
     batchSize: 1
 }
 async function main() {
