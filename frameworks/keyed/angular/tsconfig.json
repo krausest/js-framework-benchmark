@@ -1,29 +1,26 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "target": "es2015",
-    "module": "es2015",
-    "moduleResolution": "node",
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
-    "emitDecoratorMetadata": true,
+    "declaration": false,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
+    "module": "es2020",
+    "moduleResolution": "node",
     "importHelpers": true,
-    "lib": [
-      "es2015",
-      "dom"
+    "target": "es2015",
+    "typeRoots": [
+      "node_modules/@types"
     ],
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "outDir": "tmp"
+    "lib": [
+      "es2018",
+      "dom"
+    ]
   },
   "angularCompilerOptions": {
-    "annotationsAs": "static fields",
-    "annotateForClosureCompiler": true,
-    "preserveWhitespaces": false,
-    "strictMetadataEmit": true
-  },
-  "exclude": [
-    "node_modules",
-    "tmp",
-    "dist"
-  ]
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
 }

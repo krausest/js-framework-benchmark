@@ -1,9 +1,9 @@
 {
-  "name": "js-framework-benchmark-angular-ng",
+  "name": "js-framework-benchmark-angular-nozone",
   "version": "0.0.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@angular/core",
-    "customURL": "/dist/angular-ng/"
+    "customURL": "/dist/angular/"
   },
   "scripts": {
     "ng": "ng",
@@ -23,8 +23,7 @@
     "@angular/platform-browser": "11.0.2",
     "@angular/platform-browser-dynamic": "11.0.2",
     "rxjs": "6.5.5",
-    "tslib": "^2.0.0",
-    "zone.js": "0.10.3"
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.1100.2",
