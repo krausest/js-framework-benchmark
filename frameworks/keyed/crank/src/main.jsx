@@ -1,3 +1,4 @@
+/** @jsx createElement */
 import {Copy, createElement} from "@bikeshaving/crank";
 import {renderer} from "@bikeshaving/crank/dom";
 
@@ -105,16 +106,11 @@ function *Row({selected, item}) {
     }));
   };
 
-  let initial = true;
-  for (const newProps of this) {
-    if (
-      initial ||
-      selected !== newProps.selected ||
-      item !== newProps.item
-    ) {
-      initial = false;
-      selected = newProps.selected;
-      item = newProps.item;
+  let oldSelected, oldLabel;
+  for ({selected, item} of this) {
+    if (oldSelected !== selected || oldLabel !== item.label) {
+      oldSelected = selected;
+      oldLabel = item.label;
       yield (
         <tr class={selected ? "danger" : null}>
           <td class="col-md-1">{item.id}</td>
@@ -148,10 +144,9 @@ function *Main() {
     this.refresh();
   });
 
-  this.addEventListener("jsfb_update", (ev) => {
+  this.addEventListener("jsfb_update", () => {
     for (let i = 0; i < data.length; i += 10) {
-      const item = data[i];
-      data[i] = {...item, label: data[i].label + " !!!"};
+      data[i].label += " !!!";
     }
 
     this.refresh();
