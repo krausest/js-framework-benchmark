@@ -13,7 +13,7 @@
     "issues": [796]
   },
   "dependencies": {
-    "bdc": "0.3.0"
+    "bdc": "1.0.0"
   },
   "devDependencies": {
     "rollup": "2.29.0",
