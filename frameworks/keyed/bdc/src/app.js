@@ -173,16 +173,9 @@ function render() {
 }
 
 let $root;
-let redrawQueued = false;
 
 function redraw() {
-  if (!redrawQueued) {
-    redrawQueued = true;
-    window.requestAnimationFrame(() => {
-      redrawQueued = false;
-      clobber($root, render());
-    });
-  }
+  clobber($root, render());
 }
 
 export function install($newRoot) {
