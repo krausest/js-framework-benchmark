@@ -1,6 +1,6 @@
-import React, { useReducer } from "react";
+import React, { memo, useReducer } from "react";
 import ReactDOM from "react-dom";
-import { createContainer, memo } from "react-tracked";
+import { proxy, useProxy } from "valtio";
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
   "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive",
@@ -23,63 +23,65 @@ function buildData(count) {
   return data;
 }
 
-const initialState = { data: [], selected: 0 };
-const reducer = (state, action) => {
-  const { data, selected } = state;
+const state = proxy({ data: [], selected: 0 });
+const dispatch = (action) => {
   switch (action.type) {
     case "RUN":
-      return { data: buildData(1000), selected: 0 };
+      state.data = buildData(1000);
+      state.selected = 0;
+      break;
     case "RUN_LOTS":
-      return { data: buildData(10000), selected: 0 };
+      state.data = buildData(10000);
+      state.selected = 0;
+      break;
     case "ADD":
-      return { data: data.concat(buildData(1000)), selected };
+      state.data = state.data.concat(buildData(1000));
+      state.selected = 0;
+      break;
     case "UPDATE": {
-      const newData = data.slice();
-      for (let i = 0; i < newData.length; i += 10) {
-        const r = newData[i];
-        newData[i] = { id: r.id, label: r.label + " !!!" };
+      for (let i = 0; i < state.data.length; i += 10) {
+        const r = state.data[i];
+        state.data[i] = { id: r.id, label: r.label + " !!!" };
       }
-      return { data: newData, selected };
+      break;
     }
     case "REMOVE": {
-      const idx = data.findIndex((d) => d.id === action.id);
-      return { data: [...data.slice(0, idx), ...data.slice(idx + 1)], selected };
+      const idx = state.data.findIndex((d) => d.id === action.id);
+      state.data.splice(idx, 1);
+      break;
     }
     case "SELECT":
-      return { data, selected: action.id };
+      state.selected = action.id;
+      break;
     case "CLEAR":
-      return { data: [], selected: 0 };
+      state.data = [];
+      state.selected = 0;
+      break;
     case "SWAP_ROWS": {
-      const newData = data.slice();
-      const tmp = newData[1];
-      newData[1] = newData[998];
-      newData[998] = tmp;
-      return { data: newData, selected };
+      const tmp = state.data[1];
+      state.data[1] = state.data[998];
+      state.data[998] = tmp;
+      break;
     }
   }
-  return state;
 };
-
-const useValue = () => useReducer(reducer, initialState);
-const { Provider, useTrackedState, useUpdate: useDispatch } = createContainer(useValue);
 
 const GlyphIcon = <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>;
 
-const Row = memo(({ item, isSelected }) => {
-  const dispatch = useDispatch();
+const Row = memo(({ id, label, isSelected }) => {
   return (
     <tr className={isSelected ? "danger" : ""}>
-      <td className="col-md-1">{item.id}</td>
-      <td className="col-md-4"><a onClick={() => dispatch({ type: "SELECT", id: item.id })}>{item.label}</a></td>
-      <td className="col-md-1"><a onClick={() => dispatch({ type: "REMOVE", id: item.id })}>{GlyphIcon}</a></td>
+      <td className="col-md-1">{id}</td>
+      <td className="col-md-4"><a onClick={() => dispatch({ type: "SELECT", id })}>{label}</a></td>
+      <td className="col-md-1"><a onClick={() => dispatch({ type: "REMOVE", id })}>{GlyphIcon}</a></td>
       <td className="col-md-6"></td>
     </tr>
   )
 });
 
 const RowList = memo(() => {
-  const { data, selected } = useTrackedState();
-  return data.map((item) => <Row key={item.id} item={item} isSelected={selected === item.id} />);
+  const { data, selected } = useProxy(state);
+  return data.map((item) => <Row key={item.id} id={item.id} label={item.label} isSelected={selected === item.id} />);
 });
 
 const Button = memo(({ id, title, cb }) => (
@@ -89,12 +91,11 @@ const Button = memo(({ id, title, cb }) => (
 ));
 
 const Main = () => {
-  const dispatch = useDispatch();
   return (
     <div className="container">
       <div className="jumbotron">
         <div className="row">
-          <div className="col-md-6"><h1>React Tracked</h1></div>
+          <div className="col-md-6"><h1>Valtio</h1></div>
           <div className="col-md-6"><div className="row">
             <Button id="run" title="Create 1,000 rows" cb={() => dispatch({ type: "RUN" })} />
             <Button id="runlots" title="Create 10,000 rows" cb={() => dispatch({ type: "RUN_LOTS" })} />
@@ -112,6 +113,6 @@ const Main = () => {
 };
 
 ReactDOM.render(
-  <Provider><Main /></Provider>,
+  <Main />,
   document.getElementById("main")
 );

@@ -1,6 +1,6 @@
 import {h, clobber} from 'bdc';
 
-var TITLE = 'bdc v0.3.0'
+var TITLE = 'bdc v1.0.0'
 
 var ADJECTIVES = [
   "pretty", "large", "big", "small", "tall", "short", "long", "handsome",
@@ -120,19 +120,19 @@ function renderButtons() {
 
 function renderRow(rec) {
   const id = rec.id;
-  
+
   function onClickLabel(evt) {
     evt.preventDefault();
     select(id);
     redraw();
   }
-  
+
   function onClickRemove(evt) {
     evt.preventDefault();
     remove(id);
     redraw();
   }
-  
+
   return h(
     'tr', {
       'x-bdc-key': "" + id,
@@ -164,7 +164,7 @@ function render() {
           )
         )
       ),
-      h('table', {class: 'table table-hover table-striped test-data'}, 
+      h('table', {class: 'table table-hover table-striped test-data'},
         h('tbody', {id: 'tbody'}, data.map(renderRow)),
       ),
       h('span', {class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': ''})
@@ -173,16 +173,9 @@ function render() {
 }
 
 let $root;
-let redrawQueued = false;
 
 function redraw() {
-  if (!redrawQueued) {
-    redrawQueued = true;
-    window.requestAnimationFrame(() => {
-      redrawQueued = false;
-      clobber($root, render());
-    });
-  }
+  clobber($root, render());
 }
 
 export function install($newRoot) {

@@ -1,17 +1,16 @@
 {
-  "name": "skruv-v0.0.5-1-js-benchmark",
+  "name": "skruv-v0.1.0-js-benchmark",
   "version": "1.0.0",
-  "description": "skruv v0.0.5-1 js benchmark",
+  "description": "skruv v0.1.0 js benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "skruv",
-    "issues": [796]
+    "frameworkVersionFromPackage": "skruv"
   },
   "scripts": {
     "build-prod": "exit 0"
   },
   "dependencies": {
-    "skruv": "0.0.5-1"
+    "skruv": "0.1.0"
   },
   "keywords": [
     "skruv"

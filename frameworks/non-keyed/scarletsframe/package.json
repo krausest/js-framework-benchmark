@@ -2,7 +2,7 @@
   "name": "js-framework-benchmark-non-keyed-scarletsframe",
   "version": "1.0.3",
   "description": "ScarletsFrame demo",
-  "main": "index.js",
+  "main": "src/index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "scarletsframe",
     "issues": [800]
@@ -23,12 +23,13 @@
   },
   "dependencies": {
     "raw-loader": "4.0.0",
-    "scarletsframe": "0.29.4",
+    "scarletsframe": "0.33.1",
     "webpack": "4.29.2"
   },
   "devDependencies": {
-    "@babel/core": "7.3.3",
-    "@babel/preset-env": "7.3.1",
+    "@babel/core": "7.12.10",
+    "@babel/plugin-proposal-optional-chaining": "^7.12.7",
+    "@babel/preset-env": "7.12.11",
     "babel-loader": "8.0.5",
     "webpack-cli": "3.2.3"
   }

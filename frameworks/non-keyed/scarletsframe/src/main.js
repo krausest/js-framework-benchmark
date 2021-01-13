@@ -1,90 +1,87 @@
 // var sf = window.sf = require('scarletsframe');
-var sf = window.sf = require('scarletsframe/dist/scarletsframe.es6.js');
+const sf = window.sf = require('scarletsframe/dist/scarletsframe.es6.js');
 
 // Declare variable for the model
-sf.model('bench-mark', function(self){
-    self.list = [];
-    self.selectedItem = null;
+sf.model('benchmark', function(My){
+    My.list = [];
+    My.selectedItem = null;
 
     // Handle button
-    self.b_run = function(){
-        self.list.assign(Store.buildData());
-        self.selectedItem = null;
+    My.run = function(){
+        My.selectedItem = null;
+        My.list.assign(Store.buildData(1000));
     }
 
-    self.b_runlots = function(){
-        self.list.assign(Store.buildData(10000));
-        self.selectedItem = null;
+    My.runlots = function(){
+        My.selectedItem = null;
+        My.list.assign(Store.buildData(10000));
     }
 
-    self.b_add = function(){
-        self.list.push(...Store.buildData(1000));
+    My.add = function(){
+        My.list.push(...Store.buildData(1000));
     }
 
-    self.b_update = function(){
-        for (var i = 0; i < self.list.length; i += 10) {
-            self.list[i].label += ' !!!';
-        }
+    My.update = function(){
+        for (var i = 0; i < My.list.length; i += 10)
+            My.list[i].label += ' !!!';
     }
 
-    self.b_clear = function(){
-        self.list.splice(0);
-        self.selectedItem = null;
+    My.clear = function(){
+        My.list.splice(0);
+        My.selectedItem = null;
     }
 
-    self.b_swaprows = function(){
+    My.swaprows = function(){
     	// Copy the object value
-        var ref = Object.assign({}, self.list[1]);
+        var ref = Object.assign({}, My.list[1]);
 
         // Swap values between object
-        self.list.assign(1, self.list[998]);
-        self.list.assign(998, ref);
+        My.list.assign(1, My.list[998]);
+        My.list.assign(998, ref);
     }
 
-    self.b_select = function(item){
+    My.select = function(item){
         // Reset last item selection
-        if(self.selectedItem !== item && self.selectedItem !== null)
-            self.selectedItem.selected = false;
+        if(My.selectedItem !== item && My.selectedItem !== null)
+            My.selectedItem.selected = false;
 
         // Select current item
         item.selected = true;
-        self.selectedItem = item;
+        My.selectedItem = item;
     }
 
-    self.b_remove = function(item){
+    My.remove = function(item){
         // Find item index from the list
-        var i = self.list.indexOf(item);
-
-        // Invalidate the selected item
-        if(self.selectedItem === item)
-            self.selectedItem = null;
+        var i = My.list.indexOf(item);
 
         // Remove item and the element
         if(i !== -1)
-            self.list.splice(i, 1);
+            My.list.splice(i, 1);
+
+        // Invalidate the selected item
+        if(My.selectedItem === item)
+            My.selectedItem = null;
     }
 });
 
 
 // ==== Other stuff ====
-var Store = new function(){
-    var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-    var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-    var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+const Store = new function(){
+    const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+    const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+    const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
-    function _random(max) {
-        return Math.round(Math.random()*1000)%max;
-    }
+    const _random = (max)=> Math.round(Math.random() * 1000) % max;
 
-    var nextId = 1;
-    this.buildData = function(count = 1000){
-        var data = [];
-        for (var i = 0; i < count; i++)
-            data.push({
+    let nextId = 1;
+    this.buildData = function(count){
+        let data = new Array(count);
+        for (let i = 0; i < count; i++){
+            data[i] = {
                 id: nextId++,
-                selected:'',
-                label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)]
-            });
+                label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`
+            };
+        }
 
         return data;
     }

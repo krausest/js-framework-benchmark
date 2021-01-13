@@ -81,10 +81,10 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
                 }
             }
         }
-        if (benchmark.type == BenchmarkType.CPU && config.REPEAT_RUN>=10) {
+        if (benchmark.type == BenchmarkType.CPU) {
             // console.log("CPU results before: ", results);
             (results as number[]).sort((a:number,b:number) => a-b)
-            results = results.slice(0, Math.max(0,results.length-2))
+            results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU)
             // console.log("CPU results after: ", results)
         }
     
@@ -117,9 +117,9 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
         chromePort: config.CHROME_PORT,
         headless: args.headless,
         chromeBinaryPath: args.chromeBinary,
-        numIterationsForCPUBenchmarks: config.REPEAT_RUN,
-        numIterationsForMemBenchmarks: config.REPEAT_RUN_MEM,
-        numIterationsForStartupBenchmark: config.REPEAT_RUN_STARTUP,
+        numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+        numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
+        numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
         batchSize: 1
     }
 
@@ -215,9 +215,9 @@ async function main() {
     }
     let count = Number(args.count);
     config.PORT = Number(args.port);
-    if (count < Number.MAX_SAFE_INTEGER) config.REPEAT_RUN = count;
-    config.REPEAT_RUN_MEM = Math.min(count, config.REPEAT_RUN_MEM);
-    config.REPEAT_RUN_STARTUP = Math.min(count, config.REPEAT_RUN_STARTUP);
+    if (count < Number.MAX_SAFE_INTEGER) config.NUM_ITERATIONS_FOR_BENCHMARK_CPU = count;
+    config.NUM_ITERATIONS_FOR_BENCHMARK_MEM = Math.min(count, config.NUM_ITERATIONS_FOR_BENCHMARK_MEM);
+    config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP = Math.min(count, config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP);
     config.FORK_CHROMEDRIVER = args.fork === 'true';
     config.WRITE_RESULTS = !args.noResults;
 
