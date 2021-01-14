@@ -118,7 +118,7 @@ class Main extends mim.Component
         this.updateMe( this.renderRows);
     }
 
-    render()
+    @mim.noWatcher render()
     {
         return (<div class="container">
             <div class="jumbotron">
@@ -157,7 +157,7 @@ class Main extends mim.Component
         </div>);
     }
 
-    renderRows()
+    @mim.noWatcher renderRows()
     {
         if (!this.rows)
             return null;
@@ -228,7 +228,7 @@ class Row extends mim.Component
 		this.main.onSelectRowClicked( this);
 	}
 
-	render()
+	@mim.noWatcher render()
 	{
         return this.trVN;
 		// return <tr vnref={this.trVNRef} class={this.main.selectedRow === this ? "danger" : undefined}>

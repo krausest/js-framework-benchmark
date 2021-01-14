@@ -153,7 +153,7 @@ class Main extends mim.Component
         </div>);
     }
 
-    renderRows()
+    @mim.noWatcher renderRows()
     {
         if (!this.rows)
             return null;
@@ -220,7 +220,7 @@ class Row extends mim.Component
 		this.main.onSelectRowClicked( this);
 	}
 
-	render()
+	@mim.noWatcher render()
 	{
         return this.trVN;
 		// return <tr vnref={this.trRef} class={this.main.selectedRow === this ? "danger" : undefined}>

@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-keyed-mimbl",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Benchmark for Mimbl framework (keyed)",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mimbl"
@@ -27,6 +27,6 @@
     "webpack-cli": "4.3.1"
   },
   "dependencies": {
-    "mimbl": "0.6.1"
+    "mimbl": "0.6.2"
   }
 }
