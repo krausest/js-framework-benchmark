@@ -25,15 +25,6 @@ function buildRows( main: Main, count: number): Row[]
 
 
 
-function Button( props: mim.IHtmlButtonElementProps, children: any[]): any
-{
-    return <div class="col-sm-6 smallpad">
-        <button type="button" class="btn btn-primary btn-block" {...props}>{children}</button>
-    </div>
-}
-
-
-
 class Main extends mim.Component
 {
     nextID = 1;
@@ -51,7 +42,6 @@ class Main extends mim.Component
         this.rows = buildRows( this, 1000);
         this.selectedRow = undefined;
         this.updateMe( this.renderRows);
-        // this.vnRefTBody.r.setChildren( this.rows);
     }
 
     onAppend1000()
@@ -59,7 +49,6 @@ class Main extends mim.Component
     	let newRows = buildRows( this, 1000);
         this.rows = this.rows ? this.rows.concat( newRows) : newRows;
         this.updateMe( this.renderRows);
-        // this.vnRefTBody.r.setChildren( this.rows);
     }
 
     onUpdateEvery10th()
@@ -76,7 +65,6 @@ class Main extends mim.Component
         this.rows = buildRows( this, 10000);
         this.selectedRow = undefined;
         this.updateMe( this.renderRows);
-        // this.vnRefTBody.r.setChildren( this.rows);
     }
 
     onClear()
@@ -84,7 +72,6 @@ class Main extends mim.Component
         this.rows = null;
         this.selectedRow = undefined;
         this.updateMe( this.renderRows);
-        // this.vnRefTBody.r.setChildren( this.rows);
     }
 
     onSwapRows()
@@ -95,7 +82,6 @@ class Main extends mim.Component
             this.rows[1] = this.rows[998];
             this.rows[998] = t;
             this.updateMe( this.renderRows);
-            // this.vnRefTBody.r.setChildren( this.rows);
 		}
     }
 
@@ -117,37 +103,55 @@ class Main extends mim.Component
             this.selectedRow = undefined;
 
         let id = rowToDelete.id;
-        let i = this.rows.findIndex( row => row.id == id);
-        this.rows.splice( i, 1);
+        let i = 0;
+        for( let row of this.rows)
+        {
+            if (row.id == id)
+            {
+                this.rows.splice( i, 1);
+                break;
+            }
+            else
+                i++;
+        }
+
         this.updateMe( this.renderRows);
-        // this.vnRefTBody.r.setChildren( this.rows);
     }
 
-    render()
+    @mim.noWatcher render()
     {
         return (<div class="container">
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-md-6">
-                        <h1>Mimbl (keyed)</h1>
+                        <h1>Mimbl (non-keyed)</h1>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <Button id="run" click={this.onCreate1000}>Create 1,000 rows</Button>
-                            <Button id="runlots" click={this.onCreate10000}>Create 10,000 rows</Button>
-                            <Button id="add" click={this.onAppend1000}>Append 1,000 rows</Button>
-                            <Button id="update" click={this.onUpdateEvery10th}>Update every 10th row</Button>
-                            <Button id="clear" click={this.onClear}>Clear</Button>
-                            <Button id="swaprows" click={this.onSwapRows}>Swap Rows</Button>
+                            <div class="col-sm-6 smallpad">
+                                <button type="button" class="btn btn-primary btn-block" id="run" click={this.onCreate1000}>Create 1,000 rows</button>
+                            </div>
+                            <div class="col-sm-6 smallpad">
+                                <button type="button" class="btn btn-primary btn-block" id="runlots" click={this.onCreate10000}>Create 10,000 rows</button>
+                            </div>
+                            <div class="col-sm-6 smallpad">
+                                <button type="button" class="btn btn-primary btn-block" id="add" click={this.onAppend1000}>Append 1,000 rows</button>
+                            </div>
+                            <div class="col-sm-6 smallpad">
+                                <button type="button" class="btn btn-primary btn-block" id="update" click={this.onUpdateEvery10th}>Update every 10th row</button>
+                            </div>
+                            <div class="col-sm-6 smallpad">
+                                <button type="button" class="btn btn-primary btn-block" id="clear" click={this.onClear}>Clear</button>
+                            </div>
+                            <div class="col-sm-6 smallpad">
+                                <button type="button" class="btn btn-primary btn-block" id="swaprows" click={this.onSwapRows}>Swap Rows</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <table class="table table-hover table-striped test-data">
                 {this.renderRows}
-                {/* <tbody vnref={this.vnRefTBody} updateStrategy={{disableKeyedNodeRecycling: true}}>
-                    {this.rows}
-                </tbody> */}
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>);
@@ -158,12 +162,8 @@ class Main extends mim.Component
         if (!this.rows)
             return null;
 
-        return <tbody updateStrategy={{disableKeyedNodeRecycling: true}}>
-            {this.rows}
-        </tbody>
+        return <tbody>{this.rows}</tbody>
     }
-
-    // private vnRefTBody = new mim.ElmRef<HTMLElement>();
 }
 
 let glyphVN = <span class="glyphicon glyphicon-remove" aria-hidden="true"/>;
@@ -174,7 +174,7 @@ class Row extends mim.Component
 	main: Main;
 	id: number;
     label: string;
-    // trRef = new mim.ElmRef<HTMLTableRowElement>();
+    // trVNRef = new mim.ElmRef<HTMLTableRowElement>();
     labelVN: mim.ITextVN;
     trVN: mim.IElmVN<HTMLTableRowElement>;
 
@@ -192,10 +192,18 @@ class Row extends mim.Component
     {
         this.trVN = <tr class={this.main.selectedRow === this ? "danger" : undefined}>
             <td class="col-md-1">{this.id}</td>
-            <td class="col-md-4"><a click={{func: this.onSelectClicked, schedulingType: "s"}}>{this.labelVN}</a></td>
+            <td class="col-md-4"><a click={this.onSelectClicked}>{this.labelVN}</a></td>
             <td class="col-md-1"><a click={this.onDeleteClicked}>{glyphVN}</a></td>
             {lastCellVN}
-        </tr> as mim.IElmVN<HTMLTableRowElement>;
+            {/* <td class="col-md-1"><a click={this.onDeleteClicked}><span class="glyphicon glyphicon-remove" aria-hidden="true"/></a></td>
+            <td class="col-md-6"/> */}
+        </tr>;
+    }
+
+    didReplace( oldComp: Row): void
+    {
+        this.labelVN = oldComp.labelVN;
+        this.trVN = oldComp.trVN;
     }
 
 	updateLabel()
@@ -206,7 +214,7 @@ class Row extends mim.Component
 
 	select( selected: boolean)
 	{
-        // this.trRef.r.setProps( {class: selected ? "danger" : undefined});
+        // this.trVNRef.r.setProps( {class: selected ? "danger" : undefined});
         this.trVN.setProps( {class: selected ? "danger" : undefined});
 	}
 
@@ -223,7 +231,7 @@ class Row extends mim.Component
 	@mim.noWatcher render()
 	{
         return this.trVN;
-		// return <tr vnref={this.trRef} class={this.main.selectedRow === this ? "danger" : undefined}>
+		// return <tr vnref={this.trVNRef} class={this.main.selectedRow === this ? "danger" : undefined}>
 		// 	<td class="col-md-1">{this.id}</td>
 		// 	<td class="col-md-4"><a click={this.onSelectClicked}>{this.labelVN}</a></td>
 		// 	<td class="col-md-1"><a click={this.onDeleteClicked}>{glyphVN}</a></td>
