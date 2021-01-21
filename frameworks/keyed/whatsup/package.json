@@ -1,11 +1,11 @@
 {
-    "name": "js-framework-benchmark-fractal",
+    "name": "js-framework-benchmark-whatsup",
     "version": "1.0.0",
-    "description": "Benchmark for Fractal framework",
+    "description": "Benchmark for WhatsUp framework",
     "author": "Denis Churbanov",
     "license": "MIT",
     "js-framework-benchmark": {
-        "frameworkVersionFromPackage": "@fract/core"
+        "frameworkVersionFromPackage": "whatsup"
     },
     "repository": {
         "type": "git",
@@ -16,8 +16,8 @@
         "build-prod": "webpack -p"
     },
     "dependencies": {
-        "@fract/core": "0.2.1",
-        "@fract/jsx": "0.2.0"
+        "whatsup": "1.1.1",
+        "@whatsup/jsx": "0.1.4"
     },
     "devDependencies": {
         "@babel/cli": "7.10.4",
@@ -27,7 +27,7 @@
         "@babel/plugin-transform-typescript": "7.10.4",
         "@babel/preset-env": "7.10.4",
         "@babel/preset-typescript": "7.10.4",
-        "@fract/babel-plugin-transform-jsx": "0.2.1",
+        "@whatsup/babel-plugin-transform-jsx": "0.2.2",
         "babel-loader": "8.1.0",
         "core-js": "3.6.5",
         "prettier": "2.0.5",

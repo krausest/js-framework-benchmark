@@ -1,5 +1,5 @@
-import { observable, computed, factor, list, Stream, Fractal, Observable, Event, List, Context } from '@fract/core'
-import { render } from '@fract/jsx'
+import { conse, cause, list, Stream, Fractal, Conse, Event, List, Context } from 'whatsup'
+import { render } from '@whatsup/jsx'
 
 // prettier-ignore
 const A = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy']
@@ -11,8 +11,6 @@ const N = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 's
 function rnd(max: number) {
     return Math.round(Math.random() * 1000) % max
 }
-
-const Selected = factor<Observable<number>>()
 
 class SelectRowEvent extends Event {
     constructor(readonly row: Row) {
@@ -26,20 +24,22 @@ class DeleteRowEvent extends Event {
     }
 }
 
+class SelectedRowId extends Conse<number> {}
+
 class Row extends Fractal<JSX.Element> {
     readonly id: number
-    readonly label: Observable<string>
+    readonly label: Conse<string>
 
     constructor(id: number, label: string) {
         super()
         this.id = id
-        this.label = observable(label)
+        this.label = conse(label)
     }
 
-    *stream(ctx: Context) {
+    *whatsUp(ctx: Context) {
         const { id } = this
-        const selected = ctx.get(Selected)!
-        const className = computed(function* () {
+        const selected = ctx.find(SelectedRowId)!
+        const className = cause(function* () {
             while (true) {
                 yield (yield* selected) === id ? 'danger' : ''
             }
@@ -68,7 +68,7 @@ class Row extends Fractal<JSX.Element> {
 
 class Main extends Fractal<JSX.Element> {
     readonly rows = list<Row>([])
-    readonly selected = observable<number>(NaN)
+    readonly selected = new SelectedRowId(NaN)
     private nextRowId = 1
 
     private buildRows(count = 1000) {
@@ -129,8 +129,8 @@ class Main extends Fractal<JSX.Element> {
         }
     }
 
-    *stream(ctx: Context) {
-        ctx.set(Selected, this.selected)
+    *whatsUp(ctx: Context) {
+        ctx.share(this.selected)
         ctx.on(SelectRowEvent, (e) => this.select(e.row))
         ctx.on(DeleteRowEvent, (e) => this.delete(e.row))
 
@@ -147,7 +147,7 @@ class Main extends Fractal<JSX.Element> {
                     <div className="jumbotron">
                         <div className="row">
                             <div className="col-md-6">
-                                <h1>fractal</h1>
+                                <h1>WhatsUp</h1>
                             </div>
                             <div className="col-md-6">
                                 <div className="row">

@@ -15,9 +15,6 @@
         "lib": ["esnext", "dom"],
         "jsx": "preserve",
         "rootDir": "./src",
-        "baseUrl": "./",
-        "paths": {
-            "*": ["src/*", "src/root/*", "node_modules/*"]
-        }
+        "baseUrl": "./"
     }
 }
