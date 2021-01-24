@@ -1,4 +1,4 @@
-import { Component, NgModule, AfterViewChecked, VERSION } from '@angular/core';
+import { Component, NgModule, VERSION } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 interface Data {

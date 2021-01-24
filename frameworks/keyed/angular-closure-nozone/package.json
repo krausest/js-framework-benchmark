@@ -6,9 +6,11 @@
     "frameworkVersionFromPackage": "@angular/core"
   },
   "scripts": {
+    "postinstall": "npm run ngcc",
     "start": "echo 'please start in root project'",
     "test": "karma start",
     "ngc": "ngc",
+    "ngcc": "ngcc",
     "preclosure": "rimraf dist",
     "closure": "google-closure-compiler --flagfile closure.conf",
     "build-prod": "npm run ngc && npm run closure",
@@ -17,25 +19,24 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@angular/common": "8.0.1",
-    "@angular/compiler": "8.0.1",
-    "@angular/compiler-cli": "8.0.1",
-    "@angular/core": "8.0.1",
-    "@angular/platform-browser": "8.0.1",
-    "core-js": "3.1.4",
-    "rxjs": "6.5.2",
-    "tsickle": "0.35.0",
-    "zone.js": "0.9.1"
+    "@angular/common": "11.0.2",
+    "@angular/compiler": "11.0.2",
+    "@angular/core": "11.0.2",
+    "@angular/platform-browser": "11.0.2",
+    "core-js": "^3.8.1",
+    "rxjs": "6.5.5",
+    "tsickle": "0.39.1",
+    "zone.js": "0.10.3"
   },
   "devDependencies": {
-    "google-closure-compiler": "20190528.0.0",
-    "http-server": "0.11.1",
-    "rimraf": "2.6.3",
-    "rollup": "1.15.5",
-    "rollup-plugin-commonjs": "10.0.0",
-    "rollup-plugin-node-resolve": "5.0.2",
-    "rollup-plugin-uglify": "6.0.2",
-    "typescript": "3.4.5",
-    "yargs": "13.2.4"
+    "@angular/compiler-cli": "11.0.2",
+    "@rollup/plugin-commonjs": "13.0.0",
+    "@rollup/plugin-node-resolve": "8.0.1",
+    "google-closure-compiler": "20201207.0.0",
+    "http-server": "0.12.1",
+    "rimraf": "3.0.1",
+    "rollup": "2.13.1",
+    "rollup-plugin-terser": "6.1.0",
+    "typescript": "4.0.5"
   }
 }

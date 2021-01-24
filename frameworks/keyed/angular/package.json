@@ -16,14 +16,12 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "11.0.2",
     "@angular/common": "11.0.2",
     "@angular/compiler": "11.0.2",
     "@angular/core": "11.0.2",
     "@angular/platform-browser": "11.0.2",
-    "@angular/platform-browser-dynamic": "11.0.2",
     "rxjs": "6.5.5",
-    "tslib": "^2.0.0",
+    "tslib": "^2.0.3",
     "zone.js": "0.10.3"
   },
   "devDependencies": {

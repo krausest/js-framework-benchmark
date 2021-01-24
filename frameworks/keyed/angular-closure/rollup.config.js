@@ -1,4 +1,8 @@
-import nodeResolve from 'rollup-plugin-node-resolve';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import { terser } from 'rollup-plugin-terser';
+
+const plugins = [resolve(), commonjs(), terser()];
 
 export default {
   input: 'tmp/src/main.js',
@@ -6,9 +10,5 @@ export default {
     file: 'dist/bundle.js',
     format: 'iife',
   },
-  plugins: [
-    nodeResolve({
-      module: true,
-    }),
-  ]
+  plugins
 }

@@ -1,6 +1,6 @@
 import { platformBrowser } from '@angular/platform-browser';
 import { enableProdMode, ApplicationRef } from '@angular/core';
-import { AppModuleNgFactory } from './app.ngfactory';
+import { AppModule } from './app';
 
 window['Zone'] = {
   get current() { return this },
@@ -12,4 +12,4 @@ window['Zone'] = {
 }
 
 enableProdMode();
-platformBrowser().bootstrapModuleFactory(AppModuleNgFactory, { ngZone: 'noop' })
+platformBrowser().bootstrapModule(AppModule, { ngZone: 'noop' })

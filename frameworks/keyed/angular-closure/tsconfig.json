@@ -6,7 +6,6 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "importHelpers": true,
     "lib": [
       "es2015",
       "dom"
