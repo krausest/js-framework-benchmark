@@ -72,7 +72,7 @@ As stated above building and running the benchmarks for all frameworks can be ch
 Install global dependencies
 This installs just a few top level dependencies for the building the frameworks and a local web server.
 ```
-npm install
+npm ci
 ```
 We start the local web server in the root directory
 ```
@@ -92,7 +92,7 @@ cd frameworks/keyed/vanillajs
 ```
 and install the dependencies
 ```
-npm install
+npm ci
 ```
 and build the framework
 ```
@@ -113,7 +113,7 @@ cd webdriver-ts
 ```
 and install the dependencies
 ```
-npm install
+npm ci
 ```
 and build the benchmark driver
 ```
@@ -148,7 +148,7 @@ Install libraries:
 ```
 cd ..
 cd webdriver-ts-results
-npm install
+npm ci
 cd ..
 cd webdriver-ts
 ```
