@@ -12,4 +12,4 @@ window['Zone'] = {
 }
 
 enableProdMode();
-platformBrowser().bootstrapModule(AppModule, { ngZone: 'noop' })
+platformBrowser().bootstrapModule(AppModule, { ngZone: 'noop' });

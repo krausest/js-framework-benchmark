@@ -36,7 +36,7 @@
     "http-server": "0.12.1",
     "rimraf": "3.0.1",
     "rollup": "2.13.1",
-    "rollup-plugin-terser": "6.1.0",
+    "rollup-plugin-serve": "^1.1.0",
     "typescript": "4.0.5"
   }
 }

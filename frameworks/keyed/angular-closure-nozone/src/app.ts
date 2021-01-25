@@ -1,4 +1,4 @@
-import { AfterViewChecked, ApplicationRef, Component, NgModule, VERSION } from '@angular/core';
+import { ApplicationRef, Component, NgModule, VERSION } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 interface Data {
@@ -13,7 +13,7 @@ interface Data {
           <div class="jumbotron">
               <div class="row">
                   <div class="col-md-6">
-                      <h1>Angular keyed (no Zone.js)</h1>
+                      <h1>Angular closure keyed (Zoneless)</h1>
                   </div>
                   <div class="col-md-6">
                       <div class="col-sm-6 smallpad">

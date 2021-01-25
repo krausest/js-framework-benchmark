@@ -12,7 +12,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "build-prod": "ng build --prod=true --buildOptimizer=true --sourceMap=false",
-    "build-dev": "ng serve"
+    "build-dev": "ng serve --prod=true"
   },
   "private": true,
   "dependencies": {
