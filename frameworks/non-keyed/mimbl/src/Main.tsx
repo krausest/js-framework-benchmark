@@ -78,10 +78,9 @@ class Main extends mim.Component
     {
 		if (this.rows && this.rows.length > 998)
 		{
-            let t = this.rows[1];
-            this.rows[1] = this.rows[998];
-            this.rows[998] = t;
-            this.updateMe( this.renderRows);
+            let t = this.rows[1].label;
+            this.rows[1].setLabel( this.rows[998].label);
+            this.rows[998].setLabel( t);
 		}
     }
 
@@ -205,6 +204,12 @@ class Row extends mim.Component
         this.labelVN = oldComp.labelVN;
         this.trVN = oldComp.trVN;
     }
+
+	setLabel( s: string)
+	{
+        this.label = s;
+        this.labelVN.setText( s);
+	}
 
 	updateLabel()
 	{

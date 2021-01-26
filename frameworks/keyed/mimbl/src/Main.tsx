@@ -1,4 +1,5 @@
 import * as mim from "mimbl"
+import { ITextVN } from "mimbl";
 
 
 
@@ -36,94 +37,11 @@ function Button( props: mim.IHtmlButtonElementProps, children: any[]): any
 
 class Main extends mim.Component
 {
-    nextID = 1;
-
-    // Flat array of Row components
     private rows: Row[] = null;
-
-    // Currently selected Row component
     public selectedRow: Row = undefined;
+    private vnTBody: mim.IElmVN<HTMLElement>;
 
-
-
-    onCreate1000()
-    {
-        this.rows = buildRows( this, 1000);
-        this.selectedRow = undefined;
-        this.updateMe( this.renderRows);
-        // this.vnRefTBody.r.setChildren( this.rows);
-    }
-
-    onAppend1000()
-    {
-    	let newRows = buildRows( this, 1000);
-        this.rows = this.rows ? this.rows.concat( newRows) : newRows;
-        this.updateMe( this.renderRows);
-        // this.vnRefTBody.r.setChildren( this.rows);
-    }
-
-    onUpdateEvery10th()
-    {
-        if (!this.rows)
-            return;
-
-        for (let i = 0; i < this.rows.length; i += 10)
-            this.rows[i].updateLabel()
-    }
-
-    onCreate10000()
-    {
-        this.rows = buildRows( this, 10000);
-        this.selectedRow = undefined;
-        this.updateMe( this.renderRows);
-        // this.vnRefTBody.r.setChildren( this.rows);
-    }
-
-    onClear()
-    {
-        this.rows = null;
-        this.selectedRow = undefined;
-        this.updateMe( this.renderRows);
-        // this.vnRefTBody.r.setChildren( this.rows);
-    }
-
-    onSwapRows()
-    {
-		if (this.rows && this.rows.length > 998)
-		{
-            let t = this.rows[1];
-            this.rows[1] = this.rows[998];
-            this.rows[998] = t;
-            this.updateMe( this.renderRows);
-            // this.vnRefTBody.r.setChildren( this.rows);
-		}
-    }
-
-    onSelectRowClicked( rowToSelect: Row)
-    {
-        if (rowToSelect === this.selectedRow)
-            return;
-
-        if (this.selectedRow)
-            this.selectedRow.select( false);
-
-        this.selectedRow = rowToSelect;
-        rowToSelect.select( true);
-    }
-
-    onDeleteRowClicked( rowToDelete: Row)
-    {
-        if (rowToDelete === this.selectedRow)
-            this.selectedRow = undefined;
-
-        let id = rowToDelete.id;
-        let i = this.rows.findIndex( row => row.id == id);
-        this.rows.splice( i, 1);
-        this.updateMe( this.renderRows);
-        // this.vnRefTBody.r.setChildren( this.rows);
-    }
-
-    render()
+    public render()
     {
         return (<div class="container">
             <div class="jumbotron">
@@ -144,26 +62,84 @@ class Main extends mim.Component
                 </div>
             </div>
             <table class="table table-hover table-striped test-data">
-                {this.renderRows}
-                {/* <tbody vnref={this.vnRefTBody} updateStrategy={{disableKeyedNodeRecycling: true}}>
+                <tbody vnref={(r) => this.vnTBody = r} updateStrategy={{disableKeyedNodeRecycling: true}}>
                     {this.rows}
-                </tbody> */}
+                </tbody>
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>);
     }
 
-    @mim.noWatcher renderRows()
+    private onCreate1000()
     {
-        if (!this.rows)
-            return null;
-
-        return <tbody updateStrategy={{disableKeyedNodeRecycling: true}}>
-            {this.rows}
-        </tbody>
+        this.rows = buildRows( this, 1000);
+        this.selectedRow = undefined;
+        this.vnTBody.setChildren( this.rows);
     }
 
-    // private vnRefTBody = new mim.ElmRef<HTMLElement>();
+    private onAppend1000()
+    {
+    	let newRows = buildRows( this, 1000);
+        this.rows = this.rows ? this.rows.concat( newRows) : newRows;
+        this.vnTBody.growChildren( undefined, newRows);
+    }
+
+    private onUpdateEvery10th()
+    {
+        if (!this.rows)
+            return;
+
+        for (let i = 0; i < this.rows.length; i += 10)
+            this.rows[i].updateLabel()
+    }
+
+    private onCreate10000()
+    {
+        this.rows = buildRows( this, 10000);
+        this.selectedRow = undefined;
+        this.vnTBody.setChildren( this.rows);
+    }
+
+    private onClear()
+    {
+        this.rows = null;
+        this.selectedRow = undefined;
+        this.vnTBody.setChildren( null);
+    }
+
+    private onSwapRows()
+    {
+		if (this.rows && this.rows.length > 998)
+		{
+            let t = this.rows[1];
+            this.rows[1] = this.rows[998];
+            this.rows[998] = t;
+            this.vnTBody.swapChildren( 1, 1, 998, 1);
+		}
+    }
+
+    public onSelectRowClicked( rowToSelect: Row)
+    {
+        if (rowToSelect === this.selectedRow)
+            return;
+
+        if (this.selectedRow)
+            this.selectedRow.trVN.setProps( {class: undefined});
+
+        this.selectedRow = rowToSelect;
+        this.selectedRow.trVN.setProps( {class: "danger"});
+    }
+
+    public onDeleteRowClicked( rowToDelete: Row)
+    {
+        if (rowToDelete === this.selectedRow)
+            this.selectedRow = undefined;
+
+        let id = rowToDelete.id;
+        let i = this.rows.findIndex( row => row.id == id);
+        this.rows.splice( i, 1);
+        this.vnTBody.spliceChildren( i, 1);
+    }
 }
 
 let glyphVN = <span class="glyphicon glyphicon-remove" aria-hidden="true"/>;
@@ -174,7 +150,6 @@ class Row extends mim.Component
 	main: Main;
 	id: number;
     label: string;
-    // trRef = new mim.ElmRef<HTMLTableRowElement>();
     labelVN: mim.ITextVN;
     trVN: mim.IElmVN<HTMLTableRowElement>;
 
@@ -188,47 +163,42 @@ class Row extends mim.Component
         this.labelVN = mim.createTextVN( label);
 	}
 
-    willMount()
+    public willMount()
     {
-        this.trVN = <tr class={this.main.selectedRow === this ? "danger" : undefined}>
+        this.trVN = <tr>
             <td class="col-md-1">{this.id}</td>
-            <td class="col-md-4"><a click={{func: this.onSelectClicked, schedulingType: "s"}}>{this.labelVN}</a></td>
+            <td class="col-md-4"><a click={this.onSelectClicked}>{this.labelVN}</a></td>
             <td class="col-md-1"><a click={this.onDeleteClicked}>{glyphVN}</a></td>
+            {/* <td class="col-md-4"><a>{this.labelVN}</a></td>
+            <td class="col-md-1"><a>{glyphVN}</a></td> */}
             {lastCellVN}
         </tr> as mim.IElmVN<HTMLTableRowElement>;
     }
 
-	updateLabel()
+    @mim.noWatcher
+    public render()
 	{
-        this.label += " !!!";
-        this.labelVN.setText( this.label);
+        return this.trVN;
 	}
 
-	select( selected: boolean)
+	public updateLabel()
 	{
-        // this.trRef.r.setProps( {class: selected ? "danger" : undefined});
-        this.trVN.setProps( {class: selected ? "danger" : undefined});
+        this.labelVN.setText( this.label += " !!!");
 	}
 
-	onDeleteClicked()
+	// public select( selected: boolean)
+	// {
+    //     this.trVN.setProps( {class: selected ? "danger" : undefined});
+	// }
+
+	private onDeleteClicked()
 	{
 		this.main.onDeleteRowClicked( this);
 	}
 
-	onSelectClicked()
+	private onSelectClicked()
 	{
 		this.main.onSelectRowClicked( this);
-	}
-
-	@mim.noWatcher render()
-	{
-        return this.trVN;
-		// return <tr vnref={this.trRef} class={this.main.selectedRow === this ? "danger" : undefined}>
-		// 	<td class="col-md-1">{this.id}</td>
-		// 	<td class="col-md-4"><a click={this.onSelectClicked}>{this.labelVN}</a></td>
-		// 	<td class="col-md-1"><a click={this.onDeleteClicked}>{glyphVN}</a></td>
-		// 	{lastCellVN}
-		// </tr>;
 	}
 }
 
