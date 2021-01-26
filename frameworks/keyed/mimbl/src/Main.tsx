@@ -1,5 +1,4 @@
 import * as mim from "mimbl"
-import { ITextVN } from "mimbl";
 
 
 
@@ -169,8 +168,6 @@ class Row extends mim.Component
             <td class="col-md-1">{this.id}</td>
             <td class="col-md-4"><a click={this.onSelectClicked}>{this.labelVN}</a></td>
             <td class="col-md-1"><a click={this.onDeleteClicked}>{glyphVN}</a></td>
-            {/* <td class="col-md-4"><a>{this.labelVN}</a></td>
-            <td class="col-md-1"><a>{glyphVN}</a></td> */}
             {lastCellVN}
         </tr> as mim.IElmVN<HTMLTableRowElement>;
     }
@@ -185,11 +182,6 @@ class Row extends mim.Component
 	{
         this.labelVN.setText( this.label += " !!!");
 	}
-
-	// public select( selected: boolean)
-	// {
-    //     this.trVN.setProps( {class: selected ? "danger" : undefined});
-	// }
 
 	private onDeleteClicked()
 	{

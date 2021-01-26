@@ -173,7 +173,6 @@ class Row extends mim.Component
 	main: Main;
 	id: number;
     label: string;
-    // trVNRef = new mim.ElmRef<HTMLTableRowElement>();
     labelVN: mim.ITextVN;
     trVN: mim.IElmVN<HTMLTableRowElement>;
 
@@ -194,8 +193,6 @@ class Row extends mim.Component
             <td class="col-md-4"><a click={this.onSelectClicked}>{this.labelVN}</a></td>
             <td class="col-md-1"><a click={this.onDeleteClicked}>{glyphVN}</a></td>
             {lastCellVN}
-            {/* <td class="col-md-1"><a click={this.onDeleteClicked}><span class="glyphicon glyphicon-remove" aria-hidden="true"/></a></td>
-            <td class="col-md-6"/> */}
         </tr>;
     }
 
@@ -219,7 +216,6 @@ class Row extends mim.Component
 
 	select( selected: boolean)
 	{
-        // this.trVNRef.r.setProps( {class: selected ? "danger" : undefined});
         this.trVN.setProps( {class: selected ? "danger" : undefined});
 	}
 
@@ -236,12 +232,6 @@ class Row extends mim.Component
 	@mim.noWatcher render()
 	{
         return this.trVN;
-		// return <tr vnref={this.trVNRef} class={this.main.selectedRow === this ? "danger" : undefined}>
-		// 	<td class="col-md-1">{this.id}</td>
-		// 	<td class="col-md-4"><a click={this.onSelectClicked}>{this.labelVN}</a></td>
-		// 	<td class="col-md-1"><a click={this.onDeleteClicked}>{glyphVN}</a></td>
-		// 	{lastCellVN}
-		// </tr>;
 	}
 }
 
