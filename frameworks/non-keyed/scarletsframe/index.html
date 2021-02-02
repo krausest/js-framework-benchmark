@@ -39,18 +39,18 @@
       </div>
       <table class="table table-hover table-striped test-data">
         <tbody id="tbody">
-            <tr sf-each="x in list" class="{{ x.selected ? 'danger' : '' }}">
-              <td class="col-md-1">{{ x.id }}</td>
-              <td class="col-md-4">
-                <a class="lbl" @click="select(x)">{{ x.label }}</a>
-              </td>
-              <td class="col-md-1">
-               <a class="remove" @click="remove(x)">
-                 <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
-               </a>
-              </td>
-              <td class="col-md-6"></td>
-            </tr>
+          <tr sf-each="x in list" class="{{ x.selected ? 'danger' : '' }}">
+            <td class="col-md-1">{{ x.id }}</td>
+            <td class="col-md-4">
+              <a class="lbl" @click="select(x)">{{ x.label }}</a>
+            </td>
+            <td class="col-md-1">
+             <a class="remove" @click="remove(x)">
+               <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
+             </a>
+            </td>
+            <td class="col-md-6"></td>
+          </tr>
         </tbody>
       </table>
       <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>

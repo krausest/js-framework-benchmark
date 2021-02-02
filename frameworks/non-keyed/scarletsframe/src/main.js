@@ -1,8 +1,7 @@
-// var sf = window.sf = require('scarletsframe');
-const sf = window.sf = require('scarletsframe/dist/scarletsframe.es6.js');
+import { model } from "scarletsframe";
 
-// Declare variable for the model
-sf.model('benchmark', function(My){
+// Create template model
+model('benchmark', function(My){
     My.list = [];
     My.selectedItem = null;
 
