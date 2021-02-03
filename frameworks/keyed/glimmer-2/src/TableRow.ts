@@ -1,4 +1,4 @@
-import { on } from '@glimmer/modifier';
+import { on } from '@glimmer/runtime';
 import { createTemplate, setComponentTemplate, templateOnlyComponent } from '@glimmer/core';
 
 export default setComponentTemplate(
