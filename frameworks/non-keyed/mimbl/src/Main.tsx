@@ -204,6 +204,7 @@ class Row extends mim.Component
 
     didReplace( oldComp: Row): void
     {
+        this.idVN = oldComp.idVN;
         this.labelVN = oldComp.labelVN;
         this.trVN = oldComp.trVN;
     }
