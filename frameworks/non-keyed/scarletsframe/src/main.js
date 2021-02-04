@@ -32,7 +32,7 @@ model('benchmark', function(My){
 
     My.swaprows = function(){
     	// Copy the object value
-        var ref = Object.assign({}, My.list[1]);
+        var ref = {...My.list[1]};
 
         // Swap values between object
         My.list.assign(1, My.list[998]);
