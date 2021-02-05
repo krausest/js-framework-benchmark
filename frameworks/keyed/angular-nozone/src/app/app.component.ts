@@ -1,16 +1,15 @@
-import { Component, VERSION, AfterViewChecked} from '@angular/core';
+import { Component } from '@angular/core';
 import { ɵmarkDirty } from '@angular/core';
-import { ɵdetectChanges } from '@angular/core';
 
 interface Data {
-  id: number;
-  label: string;
+    id: number;
+    label: string;
 }
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styles: []
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styles: []
 })
 export class AppComponent {
     data: Array<Data> = [];
@@ -18,10 +17,6 @@ export class AppComponent {
     id: number = 1;
     backup: Array<Data> = undefined;
     version: string;
-
-    constructor() {
-        this.version = VERSION.full;
-    }
 
     buildData(count: number = 1000): Array<Data> {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];

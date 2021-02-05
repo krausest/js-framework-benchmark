@@ -1,4 +1,4 @@
-import { Component, NgModule, VERSION } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 interface Data {
@@ -56,10 +56,6 @@ export class AppComponent {
     selected: number = undefined;
     id: number = 1;
     backup: Array<Data> = undefined;
-
-    constructor() {
-        console.info(VERSION.full);
-    }
 
     buildData(count: number = 1000): Array<Data> {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
