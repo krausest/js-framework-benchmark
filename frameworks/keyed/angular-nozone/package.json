@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-angular",
+  "name": "js-framework-benchmark-angular-nozone",
   "version": "0.0.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@angular/core",
@@ -16,13 +16,13 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "11.0.2",
     "@angular/common": "11.0.2",
     "@angular/compiler": "11.0.2",
     "@angular/core": "11.0.2",
     "@angular/platform-browser": "11.0.2",
     "rxjs": "6.5.5",
-    "tslib": "^2.0.3",
-    "zone.js": "0.10.3"
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.1100.2",
