@@ -1,20 +1,19 @@
-// var sf = window.sf = require('scarletsframe');
-const sf = window.sf = require('scarletsframe/dist/scarletsframe.es6.js');
+import { model } from "scarletsframe";
 
-// Declare variable for the model
-sf.model('benchmark', function(My){
+// Create template model
+model('benchmark', function(My){
     My.list = [];
     My.selectedItem = null;
 
     // Handle button
     My.run = function(){
         My.selectedItem = null;
-        My.list = Store.buildData(1000);
+        My.list.assign(Store.buildData(1000));
     }
 
     My.runlots = function(){
         My.selectedItem = null;
-        My.list = Store.buildData(10000);
+        My.list.assign(Store.buildData(10000));
     }
 
     My.add = function(){
@@ -32,20 +31,34 @@ sf.model('benchmark', function(My){
     }
 
     My.swaprows = function(){
-        if(My.list.length > 998)
-            My.list.swap(1, 998);
+    	// Copy the object value
+        var ref = {...My.list[1]};
+
+        // Swap values between object
+        My.list.assign(1, My.list[998]);
+        My.list.assign(998, ref);
+    }
+
+    My.select = function(item){
+        // Reset last item selection
+        if(My.selectedItem !== item && My.selectedItem !== null)
+            My.selectedItem.selected = false;
+
+        // Select current item
+        item.selected = true;
+        My.selectedItem = item;
     }
 
     My.remove = function(item){
         // Find item index from the list
-        const i = My.list.indexOf(item);
+        var i = My.list.indexOf(item);
 
         // Remove item and the element
         if(i !== -1)
             My.list.splice(i, 1);
 
         // Invalidate the selected item
-        if(item === My.selectedItem)
+        if(My.selectedItem === item)
             My.selectedItem = null;
     }
 });
