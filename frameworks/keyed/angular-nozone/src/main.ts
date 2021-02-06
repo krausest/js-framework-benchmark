@@ -5,5 +5,7 @@ import { AppModule } from './app/app.module';
 
 enableProdMode();
 
-platformBrowser().bootstrapModule(AppModule)
+platformBrowser().bootstrapModule(AppModule, {
+  ngZone: 'noop'
+})
   .catch(err => console.error(err));
