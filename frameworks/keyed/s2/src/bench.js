@@ -21,13 +21,12 @@ var state = {
   },
   swaprows: function () {
     bench('swapRows', function () {
-      var a, b
+      var a
 
       if (state.rows.length > 998) {
-        a = Object.assign({}, state.rows[1])
-        b = Object.assign({}, state.rows[998])
-        Object.assign(state.rows[1], b)
-        Object.assign(state.rows[998], a)
+        a = state.rows[1]
+        state.rows[1] = state.rows[998]
+        state.rows[998] = a
       }
     })
   },
@@ -44,11 +43,9 @@ function remove () {
 }
 
 function select () {
-  var i, rows = proxy.rows;
-  for (i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    if (row && row.cls) row.cls = '';
-  }
+  var selected = proxy.rows.find(row => row.cls === 'danger');
+  if (selected) selected.cls = '';
+
   this.cls = 'danger';
 }
 
