@@ -23,10 +23,10 @@ var state = {
     bench('swapRows', function () {
       var a
 
-      if (state.rows.length > 998) {
-        a = state.rows[1]
-        state.rows[1] = state.rows[998]
-        state.rows[998] = a
+      if (proxy.rows.length > 998) {
+        a = proxy.rows[1]
+        proxy.rows[1] = proxy.rows[998]
+        proxy.rows[998] = a
       }
     })
   },
