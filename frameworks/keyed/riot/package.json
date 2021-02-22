@@ -16,6 +16,6 @@
     "webpack-cli": "3.3.11"
   },
   "dependencies": {
-    "riot": "5.1.1"
+    "riot": "5.3.0"
   }
 }
