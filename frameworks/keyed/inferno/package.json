@@ -32,6 +32,6 @@
     "rollup-plugin-terser": "5.1.1"
   },
   "dependencies": {
-    "inferno": "7.2.1"
+    "inferno": "7.4.8"
   }
 }
