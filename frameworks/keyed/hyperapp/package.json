@@ -1,7 +1,7 @@
 {
-  "name": "hyperapp-v2.0.12-js-benchmark",
+  "name": "hyperapp-js-benchmark",
   "version": "1.0.0",
-  "description": "hyperapp v2.0.12 js benchmark",
+  "description": "hyperapp js framework benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "hyperapp"
