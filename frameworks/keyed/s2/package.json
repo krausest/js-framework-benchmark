@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "s2 demo",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "s2",
     "frameworkVersion": "1.0.0"
   },
   "scripts": {
