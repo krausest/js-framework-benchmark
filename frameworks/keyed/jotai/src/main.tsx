@@ -23,19 +23,21 @@ const appendRowsAtom = atom(null, (_, set) =>
 
 const updateRowsAtom = atom(null, (_, set) =>
   set(stateAtom, (state) => {
-    for (let i = 0; i < state.data.length; i += 10) {
-      const r = state.data[i];
-      state.data[i] = { id: r.id, label: r.label + " !!!" };
+    const newState = { ...state };
+    for (let i = 0; i < newState.data.length; i += 10) {
+      const r = newState.data[i];
+      newState.data[i] = { id: r.id, label: r.label + " !!!" };
     }
-    return state;
+    return newState;
   })
 );
 
 const removeRowAtom = atom(null, (_, set, id: number) =>
   set(stateAtom, (state) => {
-    const idx = state.data.findIndex((d) => d.id === id);
-    state.data.splice(idx, 1);
-    return state;
+    const newState = { ...state };
+    const idx = newState.data.findIndex((d) => d.id === id);
+    newState.data.splice(idx, 1);
+    return newState;
   })
 );
 
@@ -52,10 +54,11 @@ const clearStateAtom = atom(null, (_, set) =>
 
 const swapRowsAtom = atom(null, (_, set) =>
   set(stateAtom, (state) => {
-    const tmp = state.data[1];
-    state.data[1] = state.data[998];
-    state.data[998] = tmp;
-    return state;
+    const newState = { ...state };
+    const tmp = newState.data[1];
+    newState.data[1] = newState.data[998];
+    newState.data[998] = tmp;
+    return newState;
   })
 );
 
