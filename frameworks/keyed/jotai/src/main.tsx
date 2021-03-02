@@ -22,22 +22,20 @@ const appendRowsAtom = atom(null, (_, set) =>
 );
 
 const updateRowsAtom = atom(null, (_, set) =>
-  set(stateAtom, (state) => {
-    const newState = { ...state };
-    for (let i = 0; i < newState.data.length; i += 10) {
-      const r = newState.data[i];
-      newState.data[i] = { id: r.id, label: r.label + " !!!" };
+  set(stateAtom, ({ data, selected }) => {
+    const newData = data.slice(0);
+    for (let i = 0; i < newData.length; i += 10) {
+      const r = newData[i];
+      newData[i] = { id: r.id, label: r.label + " !!!" };
     }
-    return newState;
+    return { data: newData, selected };
   })
 );
 
 const removeRowAtom = atom(null, (_, set, id: number) =>
-  set(stateAtom, (state) => {
-    const newState = { ...state };
-    const idx = newState.data.findIndex((d) => d.id === id);
-    newState.data.splice(idx, 1);
-    return newState;
+  set(stateAtom, ({ data, selected }) => {
+    const idx = data.findIndex((d) => d.id === id);
+    return { data: [...data.slice(0, idx), ...data.slice(idx + 1)], selected };
   })
 );
 
@@ -54,11 +52,13 @@ const clearStateAtom = atom(null, (_, set) =>
 
 const swapRowsAtom = atom(null, (_, set) =>
   set(stateAtom, (state) => {
-    const newState = { ...state };
-    const tmp = newState.data[1];
-    newState.data[1] = newState.data[998];
-    newState.data[998] = tmp;
-    return newState;
+    const { data, selected } = state;
+    return data.length > 998
+      ? {
+          data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]],
+          selected,
+        }
+      : state;
   })
 );
 
@@ -149,26 +149,14 @@ const Main: FC = () => {
                 title="Create 10,000 rows"
                 cb={() => createRows(10000)}
               />
-              <Button
-                id="add"
-                title="Append 1,000 rows"
-                cb={appendRows}
-              />
+              <Button id="add" title="Append 1,000 rows" cb={appendRows} />
               <Button
                 id="update"
                 title="Update every 10th row"
                 cb={updateRows}
               />
-              <Button
-                id="clear"
-                title="Clear"
-                cb={clearState}
-              />
-              <Button
-                id="swaprows"
-                title="Swap Rows"
-                cb={swapRows}
-              />
+              <Button id="clear" title="Clear" cb={clearState} />
+              <Button id="swaprows" title="Swap Rows" cb={swapRows} />
             </div>
           </div>
         </div>
