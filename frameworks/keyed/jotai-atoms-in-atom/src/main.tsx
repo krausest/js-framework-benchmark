@@ -5,69 +5,60 @@ import { useUpdateAtom, useAtomValue } from "jotai/utils";
 
 import { buildData, Data } from "./utils";
 
+type RowAtom = PrimitiveAtom<Data & { selected: boolean }>;
+
 function buildAtomData(amount: number) {
-  return buildData(amount).map((data) => atom(data));
+  return buildData(amount).map((data) => atom({ ...data, selected: false }));
 }
 
-const stateAtom = atom<{ data: PrimitiveAtom<Data>[]; selected: number }>({
-  data: [],
-  selected: 0,
-});
-
-const selectedIdAtom = atom((get) => get(stateAtom).selected);
+const stateAtom = atom<RowAtom[]>([]);
 
 const createRowsAtom = atom(null, (_, set, amount: number) =>
-  set(stateAtom, { data: buildAtomData(amount), selected: 0 })
+  set(stateAtom, buildAtomData(amount))
 );
 
 const appendRowsAtom = atom(null, (_, set) =>
-  set(stateAtom, (state) => ({
-    data: state.data.concat(buildAtomData(1000)),
-    selected: 0,
-  }))
+  set(stateAtom, (state) => state.concat(buildAtomData(1000)))
 );
 
 const updateRowsAtom = atom(null, (get, set) =>
-  set(stateAtom, ({ data, selected }) => {
-    const newData = data.slice(0);
+  set(stateAtom, (state) => {
+    const newData = state.slice(0);
     for (let i = 0; i < newData.length; i += 10) {
-      const r = newData[i];
-      newData[i] = atom({ id: get(r).id, label: get(r).label + " !!!" });
+      const row = get(newData[i]);
+      newData[i] = atom({
+        id: row.id,
+        label: row.label + " !!!",
+        selected: row.selected,
+      });
     }
-    return { data: newData, selected };
+    return newData;
   })
 );
 
-const removeRowAtom = atom(null, (_, set, atom: PrimitiveAtom<Data>) =>
-  set(stateAtom, ({ data, selected }) => {
-    const idx = data.findIndex((d) => d === atom);
-    return { data: [...data.slice(0, idx), ...data.slice(idx + 1)], selected };
+const removeRowAtom = atom(null, (_, set, atom: RowAtom) =>
+  set(stateAtom, (state) => {
+    const idx = state.findIndex((d) => d === atom);
+    return [...state.slice(0, idx), ...state.slice(idx + 1)];
   })
 );
 
-const selectRowAtom = atom(null, (get, set, atom: PrimitiveAtom<Data>) => {
+const selectRowAtom = atom(null, (get, set, atom: RowAtom) => {
   const rowAtoms = get(stateAtom);
-  const rowAtom = rowAtoms.data.find((rowAtom) => rowAtom === atom);
-  if (rowAtom) {
-    set(stateAtom, (prev) => ({ data: prev.data, selected: get(rowAtom).id }));
-  }
+  const rowAtom = rowAtoms.find((rowAtom) => rowAtom === atom);
+  const selectedAtom = rowAtoms.find(
+    (rowAtom) => get(rowAtom).selected === true
+  );
+  selectedAtom && set(selectedAtom, (prev) => ({ ...prev, selected: false }));
+  rowAtom && set(rowAtom, (prev) => ({ ...prev, selected: true }));
 });
 
-const clearStateAtom = atom(null, (_, set) =>
-  set(stateAtom, () => ({
-    data: [],
-    selected: 0,
-  }))
-);
+const clearStateAtom = atom(null, (_, set) => set(stateAtom, []));
 
 const swapRowsAtom = atom(null, (_, set) =>
   set(stateAtom, (state) => {
-    const { data, selected } = state;
-    return data.length > 998
-      ? {
-          data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]],
-          selected,
-        }
+    return state.length > 998
+      ? [state[0], state[998], ...state.slice(2, 998), state[1], state[999]]
       : state;
   })
 );
@@ -77,17 +68,16 @@ const GlyphIcon = (
 );
 
 interface RowProps {
-  atom: PrimitiveAtom<Data>;
+  atom: RowAtom;
 }
 
 const Row = memo<RowProps>(({ atom }) => {
   const rowAtom = useAtomValue(atom);
   const [, selectRow] = useAtom(selectRowAtom);
   const [, removeRow] = useAtom(removeRowAtom);
-  const selectedRow = useAtomValue(selectedIdAtom);
-  const isSelected = rowAtom.id === selectedRow;
+
   return (
-    <tr className={isSelected ? "danger" : ""}>
+    <tr className={rowAtom.selected ? "danger" : ""}>
       <td className="col-md-1">{rowAtom.id}</td>
       <td className="col-md-4">
         <a onClick={() => selectRow(atom)}>{rowAtom.label}</a>
@@ -101,10 +91,10 @@ const Row = memo<RowProps>(({ atom }) => {
 });
 
 const RowList = memo(() => {
-  const { data } = useAtomValue(stateAtom);
+  const rowAtoms = useAtomValue(stateAtom);
   return (
     <>
-      {data.map((atom) => (
+      {rowAtoms.map((atom) => (
         <Row key={String(atom)} atom={atom} />
       ))}
     </>
