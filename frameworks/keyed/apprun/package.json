@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build-dev": "esbuild src/main.tsx --bundle --outfile=dist/main.js --serve=8080 --servedir=.",
-    "build-prod": "esbuild src/main.tsx --bundle --outfile=dist/main.js"
+    "build-prod": "esbuild src/main.tsx --bundle --outfile=dist/main.js --minify"
   },
   "keywords": [
     "apprun",
