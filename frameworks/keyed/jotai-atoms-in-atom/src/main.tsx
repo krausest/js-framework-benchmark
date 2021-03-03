@@ -36,21 +36,20 @@ const updateRowsAtom = atom(null, (get, set) =>
   })
 );
 
-const removeRowAtom = atom(null, (_, set, atom: RowAtom) =>
+const removeRowAtom = atom(null, (_, set, row: RowAtom) =>
   set(stateAtom, (state) => {
-    const idx = state.findIndex((d) => d === atom);
+    const idx = state.indexOf(row);
     return [...state.slice(0, idx), ...state.slice(idx + 1)];
   })
 );
 
-const selectRowAtom = atom(null, (get, set, atom: RowAtom) => {
+const selectRowAtom = atom(null, (get, set, row: RowAtom) => {
   const rowAtoms = get(stateAtom);
-  const rowAtom = rowAtoms.find((rowAtom) => rowAtom === atom);
   const selectedAtom = rowAtoms.find(
     (rowAtom) => get(rowAtom).selected === true
   );
   selectedAtom && set(selectedAtom, (prev) => ({ ...prev, selected: false }));
-  rowAtom && set(rowAtom, (prev) => ({ ...prev, selected: true }));
+  set(row, (prev) => ({ ...prev, selected: true }));
 });
 
 const clearStateAtom = atom(null, (_, set) => set(stateAtom, []));
