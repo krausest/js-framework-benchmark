@@ -1,6 +1,23 @@
 import { app, View } from 'apprun';
 import { state, update, State, Events } from './store';
 
+const getId = (elem: any) => elem.closest('tr').id;
+
+const click = (state: State, e: Event) => {
+  const t = e.target as HTMLElement;
+  if (!t) return;
+  e.preventDefault();
+  if (t.tagName === 'BUTTON' && t.id) {
+    component.run(t.id as Events);
+  } else if (t.matches('.remove')) {
+    const id = getId(t);
+    component.run('delete', id);
+  } else if (t.matches('.lbl')) {
+    const id = getId(t);
+    component.run('select', id);
+  }
+}
+
 const view:View<State> = state => <div class="container" $onclick={click}>
   <div class="jumbotron">
     <div class="row">
@@ -52,31 +69,6 @@ const view:View<State> = state => <div class="container" $onclick={click}>
   </table>
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 </div>;
-
-const getId = (elem: any) => {
-  while (elem) {
-    if (elem.tagName === "TR") {
-      return elem.id;
-    }
-    elem = elem.parentNode;
-  }
-  return undefined;
-}
-
-const click = (state: State, e: Event) => {
-  const t = e.target as HTMLElement;
-  if (!t) return;
-  e.preventDefault();
-  if (t.tagName === 'BUTTON' && t.id) {
-    component.run(t.id as Events);
-  } else if (t.matches('.remove')) {
-    const id = getId(t);
-    component.run('delete', id);
-  } else if (t.matches('td')) {
-    const id = getId(t);
-    component.run('select', id);
-  }
-}
 
 const component = app.start<State, Events>('main', state, view, update);
 

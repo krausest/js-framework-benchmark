@@ -79,7 +79,7 @@ export const update: Update<State, Events> = {
   }),
 
   delete: (state, id) => {
-    state.selected === state.selected ? null : state.selected;
+    if (state.selected == id) state.selected = 0;
     state.data = state.data.filter(d => d.id != id);
     return state;
   },

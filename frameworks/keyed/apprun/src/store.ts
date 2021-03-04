@@ -1,7 +1,7 @@
 import { Update } from 'apprun';
 
 function _random(max: number) {
-  return Math.round(Math.random()*1000)%max;
+  return Math.round(Math.random() * 1000) % max;
 }
 
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
@@ -74,13 +74,13 @@ export const update: Update<State, Events> = {
     return state;
   },
 
-  select: (state, id) => {
-    state.selected = id
-  },
+  select: (state, selected) => ({
+    ...state, selected
+  }),
 
   delete: (state, id) => {
-    state.selected === state.selected ? null : state.selected;
+    if (state.selected == id) state.selected = 0;
     state.data = state.data.filter(d => d.id != id);
-  }
+    return state;
+  },
 }
-

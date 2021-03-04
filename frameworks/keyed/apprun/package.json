@@ -28,6 +28,6 @@
     "esbuild": "^0.8.54"
   },
   "dependencies": {
-    "apprun": "^2.27.6"
+    "apprun": "^2.27.7"
   }
 }
