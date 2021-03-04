@@ -8,9 +8,6 @@ const rimraf = require('rimraf');
 let args = process.argv.length<=2 ? [] : process.argv.slice(2,process.argv.length);
 
 let frameworks = args.filter(a => !a.startsWith("--"));
-let justCopyAndBuild = args.some(f => f=="--justCopyAndBuild")
-
-console.log("justCopyAndBuild", justCopyAndBuild);
 
 if (frameworks.length==0) {
     console.log("ERROR: Missing arguments. Command: docker-rebuild keyed/framework1 non-keyed/framework2 ...");
@@ -31,29 +28,22 @@ for (f of frameworks) {
     }
     let [keyed,name] = components;
     let path = `frameworks/${keyed}/${name}`
-    if (justCopyAndBuild) {
-        rsync(keyed,name);
-        exec('npm run build-prod', {
-            cwd: path,
-            stdio: 'inherit'
-        });
-    } else {
-        if (fs.existsSync(path)) {
-            console.log("deleting folder ",path);
-            exec(`rm -r ${path}`);
-        }
-        rsync(keyed,name);
-        exec('rm -rf package-lock.json yarn.lock dist elm-stuff bower_components node_modules', {
-            cwd: path,
-            stdio: 'inherit'
-        });
-        console.log("running npm install && npm run build-prod");
-        exec('npm install && npm run build-prod', {
-            cwd: path,
-            stdio: 'inherit'
-        });
-
-    }
+      if (fs.existsSync(path)) {
+          console.log("deleting folder ",path);
+          exec(`rm -r ${path}`);
+      }
+      rsync(keyed,name);
+      exec('rm -rf package-lock.json yarn.lock dist elm-stuff bower_components node_modules output', {
+          cwd: path,
+          stdio: 'inherit'
+      });
+      console.log("running npm install && npm run build-prod");
+      exec('npm install && npm run build-prod', {
+          cwd: path,
+          stdio: 'inherit'
+      });
+      let packageLockPath = path+"/package-lock.json";
+      fs.copyFileSync(packageLockPath, "/src/"+packageLockPath)
 }
 
 let frameworkNames = frameworks.join(" ");
