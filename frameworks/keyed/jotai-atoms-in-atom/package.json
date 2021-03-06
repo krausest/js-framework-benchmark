@@ -24,7 +24,7 @@
   "dependencies": {
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "jotai": "0.15.0"
+    "jotai": "0.15.2"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.1.0",
