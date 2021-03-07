@@ -75,10 +75,6 @@ interface RowProps {
 }
 
 const Row = memo<RowProps>(({ id, label, isSelected, selectRow, removeRow }) => {
-  /*
-  const [, selectRow] = useAtom(selectRowAtom);
-  const [, removeRow] = useAtom(removeRowAtom);
-  */
   return (
     <tr className={isSelected ? "danger" : ""}>
       <td className="col-md-1">{id}</td>
@@ -136,13 +132,6 @@ const Button = memo<ButtonProps>(({ id, title, cb }) => (
 ));
 
 const Main: FC = () => {
-  /*
-  const [, createRows] = useAtom(createRowsAtom);
-  const [, appendRows] = useAtom(appendRowsAtom);
-  const [, updateRows] = useAtom(updateRowsAtom);
-  const [, clearState] = useAtom(clearStateAtom);
-  const [, swapRows] = useAtom(swapRowsAtom);
-  */
   const createRows = useUpdateAtom(createRowsAtom);
   const appendRows = useUpdateAtom(appendRowsAtom);
   const updateRows = useUpdateAtom(updateRowsAtom);
