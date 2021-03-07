@@ -1,7 +1,7 @@
 import { memo, FC } from "react";
 import ReactDOM from "react-dom";
 import { atom, useAtom, PrimitiveAtom } from "jotai";
-import { useUpdateAtom, useAtomValue } from "jotai/utils";
+import { useUpdateAtom } from "jotai/utils";
 
 import { buildData, Data } from "./utils";
 
@@ -11,53 +11,64 @@ function buildAtomData(amount: number) {
   return buildData(amount).map((data) => atom({ ...data, selected: false }));
 }
 
-const stateAtom = atom<RowAtom[]>([]);
+const stateAtom = atom<{
+  data: RowAtom[];
+  selectedAtom: RowAtom | null;
+}>({ data: [], selectedAtom: null });
 
 const createRowsAtom = atom(null, (_, set, amount: number) =>
-  set(stateAtom, buildAtomData(amount))
+  set(stateAtom, { data: buildAtomData(amount), selectedAtom: null })
 );
 
 const appendRowsAtom = atom(null, (_, set) =>
-  set(stateAtom, (state) => state.concat(buildAtomData(1000)))
+  set(stateAtom, (state) => ({
+    ...state,
+    data: state.data.concat(buildAtomData(1000))
+  }))
 );
 
-const updateRowsAtom = atom(null, (get, set) =>
-  set(stateAtom, (state) => {
-    const newData = state.slice(0);
-    for (let i = 0; i < newData.length; i += 10) {
-      const row = get(newData[i]);
-      newData[i] = atom({
-        id: row.id,
-        label: row.label + " !!!",
-        selected: row.selected,
-      });
-    }
-    return newData;
-  })
-);
+const updateRowsAtom = atom(null, (get, set) => {
+  const { data } = get(stateAtom);
+  for (let i = 0; i < data.length; i += 10) {
+    set(data[i], (row) => ({
+      id: row.id,
+      label: row.label + " !!!",
+      selected: row.selected,
+    }));
+  }
+});
 
 const removeRowAtom = atom(null, (_, set, row: RowAtom) =>
   set(stateAtom, (state) => {
-    const idx = state.indexOf(row);
-    return [...state.slice(0, idx), ...state.slice(idx + 1)];
+    const idx = state.data.indexOf(row);
+    return {
+      ...state,
+      data: [...state.data.slice(0, idx), ...state.data.slice(idx + 1)]
+    };
   })
 );
 
 const selectRowAtom = atom(null, (get, set, row: RowAtom) => {
-  const rowAtoms = get(stateAtom);
-  const selectedAtom = rowAtoms.find(
-    (rowAtom) => get(rowAtom).selected === true
-  );
-  selectedAtom && set(selectedAtom, (prev) => ({ ...prev, selected: false }));
+  const { data, selectedAtom } = get(stateAtom);
+  if (selectedAtom) {
+    set(selectedAtom, (prev) => ({ ...prev, selected: false }));
+  }
   set(row, (prev) => ({ ...prev, selected: true }));
+  set(stateAtom, { data, selectedAtom: row });
 });
 
-const clearStateAtom = atom(null, (_, set) => set(stateAtom, []));
+const clearStateAtom = atom(null, (_, set) => set(stateAtom, {
+  data: [],
+  selectedAtom: null,
+}));
 
 const swapRowsAtom = atom(null, (_, set) =>
   set(stateAtom, (state) => {
-    return state.length > 998
-      ? [state[0], state[998], ...state.slice(2, 998), state[1], state[999]]
+    return state.data.length > 998
+      ? {
+        ...state,
+        data: [state.data[0], state.data[998], ...state.data.slice(2, 998), state.data[1], state.data[999]]
+      }
       : state;
   })
 );
@@ -68,12 +79,16 @@ const GlyphIcon = (
 
 interface RowProps {
   atom: RowAtom;
+  selectRow: (atom: RowAtom) => void;
+  removeRow: (atom: RowAtom) => void;
 }
 
-const Row = memo<RowProps>(({ atom }) => {
-  const rowAtom = useAtomValue(atom);
+const Row = memo<RowProps>(({ atom, selectRow, removeRow }) => {
+  const [rowAtom] = useAtom(atom);
+  /*
   const [, selectRow] = useAtom(selectRowAtom);
   const [, removeRow] = useAtom(removeRowAtom);
+  */
 
   return (
     <tr className={rowAtom.selected ? "danger" : ""}>
@@ -89,12 +104,17 @@ const Row = memo<RowProps>(({ atom }) => {
   );
 });
 
-const RowList = memo(() => {
-  const rowAtoms = useAtomValue(stateAtom);
+interface RowListProp {
+  selectRow: (atom: RowAtom) => void;
+  removeRow: (atom: RowAtom) => void;
+}
+
+const RowList = memo<RowListProp>(({ selectRow, removeRow }) => {
+  const [state] = useAtom(stateAtom);
   return (
     <>
-      {rowAtoms.map((atom) => (
-        <Row key={String(atom)} atom={atom} />
+      {state.data.map((atom) => (
+        <Row key={String(atom)} atom={atom} selectRow={selectRow} removeRow={removeRow} />
       ))}
     </>
   );
@@ -120,11 +140,20 @@ const Button = memo<ButtonProps>(({ id, title, cb }) => (
 ));
 
 const Main: FC = () => {
+  /*
+  const [, createRows] = useAtom(createRowsAtom);
+  const [, appendRows] = useAtom(appendRowsAtom);
+  const [, updateRows] = useAtom(updateRowsAtom);
+  const [, clearState] = useAtom(clearStateAtom);
+  const [, swapRows] = useAtom(swapRowsAtom);
+  */
   const createRows = useUpdateAtom(createRowsAtom);
   const appendRows = useUpdateAtom(appendRowsAtom);
   const updateRows = useUpdateAtom(updateRowsAtom);
   const clearState = useUpdateAtom(clearStateAtom);
   const swapRows = useUpdateAtom(swapRowsAtom);
+  const selectRow = useUpdateAtom(selectRowAtom);
+  const removeRow = useUpdateAtom(removeRowAtom);
   return (
     <div className="container">
       <div className="jumbotron">
@@ -158,7 +187,7 @@ const Main: FC = () => {
       </div>
       <table className="table table-hover table-striped test-data">
         <tbody>
-          <RowList />
+          <RowList selectRow={selectRow} removeRow={removeRow} />
         </tbody>
       </table>
       <span

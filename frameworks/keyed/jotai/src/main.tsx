@@ -1,7 +1,7 @@
 import { memo, FC } from "react";
 import ReactDOM from "react-dom";
 import { atom, useAtom } from "jotai";
-import { useUpdateAtom, useAtomValue } from "jotai/utils";
+import { useUpdateAtom } from "jotai/utils";
 
 import { buildData, Data } from "./utils";
 
@@ -70,11 +70,15 @@ interface RowProps {
   id: number;
   label: string;
   isSelected: boolean;
+  selectRow: (id: number) => void;
+  removeRow: (id: number) => void;
 }
 
-const Row = memo<RowProps>(({ id, label, isSelected }) => {
-  const selectRow = useUpdateAtom(selectRowAtom);
-  const removeRow = useUpdateAtom(removeRowAtom);
+const Row = memo<RowProps>(({ id, label, isSelected, selectRow, removeRow }) => {
+  /*
+  const [, selectRow] = useAtom(selectRowAtom);
+  const [, removeRow] = useAtom(removeRowAtom);
+  */
   return (
     <tr className={isSelected ? "danger" : ""}>
       <td className="col-md-1">{id}</td>
@@ -89,8 +93,13 @@ const Row = memo<RowProps>(({ id, label, isSelected }) => {
   );
 });
 
-const RowList = memo(() => {
-  const { data, selected } = useAtomValue(stateAtom);
+interface RowListProp {
+  selectRow: (id: number) => void;
+  removeRow: (id: number) => void;
+}
+
+const RowList = memo<RowListProp>(({ selectRow, removeRow }) => {
+  const [{ data, selected }] = useAtom(stateAtom);
   return (
     <>
       {data.map((item) => (
@@ -99,6 +108,8 @@ const RowList = memo(() => {
           id={item.id}
           label={item.label}
           isSelected={selected === item.id}
+          selectRow={selectRow}
+          removeRow={removeRow}
         />
       ))}
     </>
@@ -125,11 +136,20 @@ const Button = memo<ButtonProps>(({ id, title, cb }) => (
 ));
 
 const Main: FC = () => {
+  /*
+  const [, createRows] = useAtom(createRowsAtom);
+  const [, appendRows] = useAtom(appendRowsAtom);
+  const [, updateRows] = useAtom(updateRowsAtom);
+  const [, clearState] = useAtom(clearStateAtom);
+  const [, swapRows] = useAtom(swapRowsAtom);
+  */
   const createRows = useUpdateAtom(createRowsAtom);
   const appendRows = useUpdateAtom(appendRowsAtom);
   const updateRows = useUpdateAtom(updateRowsAtom);
   const clearState = useUpdateAtom(clearStateAtom);
   const swapRows = useUpdateAtom(swapRowsAtom);
+  const selectRow = useUpdateAtom(selectRowAtom);
+  const removeRow = useUpdateAtom(removeRowAtom);
   return (
     <div className="container">
       <div className="jumbotron">
@@ -163,7 +183,7 @@ const Main: FC = () => {
       </div>
       <table className="table table-hover table-striped test-data">
         <tbody>
-          <RowList />
+          <RowList selectRow={selectRow} removeRow={removeRow} />
         </tbody>
       </table>
       <span
