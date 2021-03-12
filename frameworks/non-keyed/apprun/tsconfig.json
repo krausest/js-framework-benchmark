@@ -4,7 +4,9 @@
 		"module": "es2015",
 		"moduleResolution": "node",
 		"jsx": "react",
-		"reactNamespace": "app",
-		"lib": ["dom", "es2015.promise", "es5"]
+		"jsxFactory": "app.h",
+		"jsxFragmentFactory": "app.Fragment",
+		"lib": ["dom", "es2015", "es5"],
+		"strict": true
 	}
 }
