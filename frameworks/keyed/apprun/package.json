@@ -4,7 +4,8 @@
   "description": "AppRun demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "apprun"
+    "frameworkVersionFromPackage": "apprun",
+    "issues": [801]
   },
   "scripts": {
     "build-dev": "esbuild src/main.tsx --bundle --outfile=dist/main.js --serve=8080 --servedir=.",
