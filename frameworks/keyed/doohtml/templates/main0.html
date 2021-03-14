@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<template>
+<div>
+    <link href="${link}" rel="preload" as="style" />
+
+    <link href="${link}" rel="stylesheet"/>
+        <table class="table table-hover table-striped test-data"><tbody><tr bind="rows"><td>{{id}}</td><td><a>{{label}}</a></td><td><a><span aria-hidden="true"></span></a></td><td></td></tr></tbody></table>
+        <style>
+            .table tbody tr td:last-child, .table tbody tr td:nth-child(3) {
+                padding: 5px;
+            }
+            .table tbody tr td:first-child {
+                position:relative;min-height:1px;padding-right:15px;padding-left:15px            
+            }
+            .table {
+    table-layout: fixed;
+    font-family: Arial;
+    font-size: 15px;
+}
+.table tr {
+    height: 20px;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+.table td.col-md-1 {
+    width: 50px;
+}
+.table td.col-md-4 {
+    width: 350px;
+}
+.table td.col-md-6 {
+    width: 400px;
+}
+tr.danger td {
+    background-color: #faa;
+} 
+.table tbody tr td:nth-child(3) a span  {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.table tbody tr td:nth-child(3) a span:after {
+    content: '\e014'
+}
+
+        </style>
+        <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+    </div>
+</template>
