@@ -1,17 +1,16 @@
+'use strict';
 
-let startTime;
-let lastMeasure;
-const startMeasure = function(name) {
-    startTime = new Date().getTime();
-    lastMeasure = name;
+let startTime = {};
+const start = function(name) {
+    if (!startTime[name]) {
+        startTime[name] = [ new Date().getTime()]    
+    }    
 };
-const stopMeasure = function() {
-    const last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            console.log(last+" took "+(new Date().getTime()-startTime));
-        }, 0);
+const stop = function(name) {
+    if (startTime[name]) {
+        startTime[name].push(new Date().getTime())
+        console.log('DooHTML', name, 'took:', startTime[name][1] - startTime[name][0]);
+        startTime[name] = undefined
     }
 };
 
@@ -22,9 +21,8 @@ Doo.define(
   class Main extends Doo {
         constructor() {
             super(10000)
-            //sthis.scrollTarget = Doo.$Config.FLEX_BODY
-			this.defaultDataSet = 'rows'
-			this.ID = 0
+ 			this.defaultDataSet = 'rows'
+			this.ID = 1
             this.data = {
 				[this.defaultDataSet]: []
 			}
@@ -51,7 +49,6 @@ Doo.define(
             return Math.round(Math.random()*1000)%max;
         })
 
-
         const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
         const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
         const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
@@ -64,19 +61,13 @@ Doo.define(
             data.push({id: this.ID++, label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)] });
         return data;
     }
-/*
+
     run() {
         this.removeAllRows();
         this.store.clear();
-        this.rows = [];
+        this.data.rows = [];
         this.data = [];
-        this.store.run();
         this.appendRows();
-        this.unselect();
-    }
-    runLots() {
-        this.data = this.buildData(10000);
-        this.selected = null;
     }
 
     add() {
@@ -114,15 +105,17 @@ Doo.define(
         this.unselect();
         this.recreateSelection();
     }
-    */
+
+/* =========================== */
+
     run() {
-        this.ID = 1
-        startMeasure('1000')
-
+        start('buildData')
         this.data.rows = this.buildData()
-        stopMeasure()
-
+        stop('buildData')
+        start('run')
         this.render()
+        stop('run')
+ 
     }
     add() {
         this.data.rows = this.data.rows.concat(this.buildData())
@@ -130,25 +123,12 @@ Doo.define(
     }
 
     runLots() {
-        this.ID = 1
-        startMeasure('lots main0')
-        let data = this.data.rows = this.buildData(10000);
-// let tbl = document.querySelector('.table')
-// let pageSize = 10000
-//         for (let i=0;i<10;i++) {
-//             let newElem = document.createElement('tbody')
-//             newElem.setAttribute("page", i);
-//                 newElem.innerHTML = this.renderNode(this.place[0].templateArray,this.place[0].templateArray.xHtml, data,   i * pageSize, pageSize)
-//             tbl.append(newElem)
-//         }
-
-
+        start('buildLots')
+        this.data.rows = this.buildData(10000);
+        stop('buildLots')
+        start('runLots')
         this.render()
-        // let x = document.querySelector('tbody')
-
-        // let newNode = x.parentElement.appendChild(x.cloneNode(true))
-        // newNode.setAttribute('page', 1)
-        stopMeasure()
+        stop('runLots')
     }
     update() {
         for (let i=0, len = this.data.rows.length;i<len;i+=10) {
@@ -157,8 +137,8 @@ Doo.define(
         this.render()
     }
     select(row,idx) {
-        this.data.rows[idx].selected = !this.data.rows[idx].selected
-        row.classList.toggle('danger')
+ //       this.data.rows[idx].selected = !this.data.rows[idx].selected
+ //       row.classList.toggle('danger')
     }
 
 
@@ -175,7 +155,7 @@ Doo.define(
 
        //     this.tbody.insertBefore(this.rows[998], this.rows[2])
        //     this.tbody.insertBefore(this.rows[1], this.rows[999])
-            this.render()
+     //       this.render()
         }
 
 

@@ -1,5 +1,19 @@
 'use strict';
 
+let startTime = {};
+const start = function(name) {
+    if (!startTime[name]) {
+        startTime[name] = [ new Date().getTime()]    
+    }    
+};
+const stop = function(name) {
+    if (startTime[name]) {
+        startTime[name].push(new Date().getTime())
+        console.log('Vanilla', name, 'took:', startTime[name][1] - startTime[name][0]);
+        startTime[name] = undefined
+    }
+};
+
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
@@ -164,13 +178,17 @@ class Main {
         return undefined;
     }
     run() {
+        start('buildRows')
         this.removeAllRows();
         this.store.clear();
         this.rows = [];
         this.data = [];
         this.store.run();
+        stop('buildRows')
+        start('run')
         this.appendRows();
         this.unselect();
+        stop('run')
     }
     add() {
         this.store.add();
@@ -236,13 +254,19 @@ class Main {
         // while (last = tbody.lastChild) tbody.removeChild(last);
     }
     runLots() {
+        start('buildLots')
+
         this.removeAllRows();
         this.store.clear();
         this.rows = [];
         this.data = [];
         this.store.runLots();
+        stop('buildLots')
+        start('runLots')
         this.appendRows();
         this.unselect();
+        stop('runLots')
+
     }
     clear() {
         this.store.clear();
