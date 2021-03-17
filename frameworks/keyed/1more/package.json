@@ -1,0 +1,31 @@
+{
+  "name": "js-framework-benchmark-1more",
+  "version": "0.1.0",
+  "description": "1more demo",
+  "main": "dist/app.min.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "1more"
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c"
+  },
+  "keywords": [
+    "1more"
+  ],
+  "author": "Pavel Martynov",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "rollup": "^0.58.2",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-terser": "^1.0.1"
+  },
+  "dependencies": {
+    "1more": "0.1.0"
+  }
+}
