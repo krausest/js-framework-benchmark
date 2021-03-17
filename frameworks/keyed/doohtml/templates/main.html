@@ -1,9 +1,23 @@
 <!DOCTYPE html>
 <template>
-        <table class="table table-hover table-striped test-data">
-                <link href="${link}" rel="preload" as="style" >
-                <link href="${link}" rel="stylesheet">
-                <tbody><tr bind="rows"><td class="col-md-1">{{id}}</td><td class="col-md-4"><a>{{label}}</a></td><td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr></tbody>
-        </table>
-
-        </template>
+	<table class="table table-hover table-striped test-data">
+			<link href="${link}" rel="stylesheet">
+			<tbody id="tbody"><tr bind="rows"><td class="col-md-1">{{id}}</td><td class="col-md-4"><a>{{label}}</a></td><td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr></tbody>
+			<style>
+				#tbody tr td:nth-child(3) a span  {
+					position: relative;
+					top: 1px;
+					display: inline-block;
+					font-family: 'Glyphicons Halflings';
+					font-style: normal;
+					font-weight: normal;
+					line-height: 1;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+				}
+				#tbody tr td:nth-child(3) a span:after {
+						content: '\e014'
+				}
+		</style>
+	</table>
+</template>

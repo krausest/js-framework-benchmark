@@ -32,6 +32,7 @@ Doo.define(
   class Main extends Doo {
         constructor() {
             super(10000)
+            this.scrollTarget='.table'
  			this.defaultDataSet = 'rows'
 			this.ID = 1
             this.data = {
@@ -66,10 +67,15 @@ Doo.define(
     
         }
 */
-        async dooAfterRender() {
-            this.scrollElem = this.shadow.querySelector('.table')
+        // async dooAfterRender() {
+        //     this.scrollElem = this.shadow.querySelector('.table')
 
-        }    
+        // }    
+        // async init() {
+        //     this.renderAll()
+
+        // }    
+
 
     buildData(count = 1000) {
         const data = [];
