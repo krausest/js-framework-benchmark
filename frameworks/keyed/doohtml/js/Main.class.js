@@ -186,7 +186,6 @@ Doo.define(
             let r998 = this.data.rows[998];
             this.data.rows[1] = r998;
             this.data.rows[998] = r1;
-
        //     this.tbody.insertBefore(this.rows[998], this.rows[2])
        //     this.tbody.insertBefore(this.rows[1], this.rows[999])
      //       this.render()
