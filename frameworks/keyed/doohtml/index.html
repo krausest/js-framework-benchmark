@@ -6,9 +6,10 @@
   <link href="/css/currentStyle.css" rel="preload" as="style" />
   <link href="/css/currentStyle.css" rel="stylesheet"/>
 
-  <script src="https://cdn.jsdelivr.net/gh/hman61/doo.html@latest/dist/doo.html.min.js"></script>
-  <script type="module" src="Main.class.js"></script>
-
+  <!-- <script src="https://cdn.jsdelivr.net/gh/hman61/doo.html@latest/dist/doo.html.min.js"></script> -->
+  <script src="./js/doo.html.min.js"></script> 
+  <script type="module" src="./js/Main.class.js"></script>
+ 
  </head>
 
 <body>
@@ -44,8 +45,9 @@
               </div>
           </div>
       </div>
+      <input id="xxx" />
     <doo-main
-        context="document"
+        context="shadow"
         link="/css/currentStyle.css"
         bind="rows"
         template="./templates/main.html"

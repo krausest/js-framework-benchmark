@@ -10,7 +10,7 @@ const stop = function(name) {
     if (startTime[name]) {
         startTime[name].push(new Date().getTime())
         console.log('Vanilla', name, 'took:', startTime[name][1] - startTime[name][0]);
-        startTime[name] = undefined
+startTime[name] = undefined
     }
 };
 
@@ -170,6 +170,7 @@ class Main {
             }
         });
         this.tbody = document.getElementById("tbody");
+        Main.xxx = document.getElementById("xxx");
     }
     findIdx(id) {
         for (let i=0;i<this.data.length;i++){
@@ -188,6 +189,7 @@ class Main {
         start('run')
         this.appendRows();
         this.unselect();
+        Main.xxx.focus()
         stop('run')
     }
     add() {
@@ -265,6 +267,9 @@ class Main {
         start('runLots')
         this.appendRows();
         this.unselect();
+  //      document.getElementById('xxx').value = 'Done!'
+Main.xxx.focus()
+
         stop('runLots')
 
     }

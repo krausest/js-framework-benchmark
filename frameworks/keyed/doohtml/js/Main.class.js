@@ -14,6 +14,17 @@ const stop = function(name) {
     }
 };
 
+const _random = ((max) => {
+    return Math.round(Math.random()*1000)%max;
+})
+
+const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+
+const lenA = adjectives.length
+const lenB = colours.length
+const lenC = nouns.length
 
 
 
@@ -34,34 +45,40 @@ Doo.define(
             this.update = this.update.bind(this)
             this.clear = this.clear.bind(this)
             this.swaprows = this.swapRows.bind(this)
-        
+            //this.renderOnLoad = false
             this.addEventListeners()
+            Main.xxx = document.getElementById("xxx");
+
         }
-
 /*
-        let ID = 1;
+        async init() {
+            const observer = new MutationObserver(	
+                (mutationsList, observer) => {	
+                        if (mutationsList[0].type === 'childList' ) {
+                                
+                            this.componentContainer.style.visibility = 'visible'	
+                                	
+                        }	
+                }			
+            )	
+            observer.observe(this.shadow.firstElementChild, { childList: true });	
+	
+    
+        }
+*/
+        async dooAfterRender() {
+            this.scrollElem = this.shadow.querySelector('.table')
 
-        
-                
-    */   
+        }    
+
     buildData(count = 1000) {
-        const _random = ((max) => {
-            return Math.round(Math.random()*1000)%max;
-        })
-
-        const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-        const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-        const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
         const data = [];
-        let lenA = adjectives.length
-        let lenB = colours.length
-        let lenC = nouns.length
-
+ 
         for (let i = 0; i < count; i++)
-            data.push({id: this.ID++, label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)] });
+            data.push({id: this.ID++ , label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)] });
         return data;
     }
-
+/*
     run() {
         this.removeAllRows();
         this.store.clear();
@@ -105,17 +122,34 @@ Doo.define(
         this.unselect();
         this.recreateSelection();
     }
-
+*/
 /* =========================== */
+
+    // render() {
+    //     this.renderNode(this.place[0].templateArray,this.place[0].templateArray.xHtml, this.data.rows,  0, this.PAGE_SIZE)
+
+    // }
+
+/*
+    async attributeChangedCallback(name, oldVal, newVal) {
+		//TODO do we need length???
+		if (newVal.length > 0 && oldVal !== newVal) {
+			if (name === 'key') {
+				console.log(oldval)
+			} 	
+		}	
+	}
+*/
+
 
     run() {
         start('buildData')
         this.data.rows = this.buildData()
         stop('buildData')
         start('run')
-        this.render()
+        this.renderAll()
+        Main.xxx.focus()
         stop('run')
- 
     }
     add() {
         this.data.rows = this.data.rows.concat(this.buildData())
@@ -127,7 +161,7 @@ Doo.define(
         this.data.rows = this.buildData(10000);
         stop('buildLots')
         start('runLots')
-        this.render()
+        this.renderAll()
         stop('runLots')
     }
     update() {
