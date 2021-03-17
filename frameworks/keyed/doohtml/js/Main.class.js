@@ -162,6 +162,7 @@ Doo.define(
         stop('buildLots')
         start('runLots')
         this.renderAll()
+        Main.xxx.focus()
         stop('runLots')
     }
     update() {
