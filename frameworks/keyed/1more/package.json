@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-1more",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "1more demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
