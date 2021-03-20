@@ -47,7 +47,7 @@ Doo.define(
             this.data = {
 				[this.defaultDataSet]: []
 			}
-//            this.select = this.select.bind(this)
+            this.select = this.select.bind(this)
 //            this.delete = this.delete.bind(this)
             this.add = this.add.bind(this)
             this.run = this.run.bind(this)
@@ -58,6 +58,7 @@ Doo.define(
             //this.renderOnLoad = false
             this.addEventListeners()
             Main.xxx = document.getElementById("xxx");
+            this.selectedRow = undefined
 
         }
 /*
@@ -78,23 +79,39 @@ Doo.define(
 */
         async dooAfterRender() {
              this.tbody = this.shadow.querySelector('#tbody')
-
+             this.shadow.querySelector(".table").addEventListener('click', e => {
+                e.preventDefault();
+                if (e.target.matches('.remove')) {
+                    let id = getParentId(e.target);
+                    let idx = this.findIdx(id);
+                    this.delete(idx);
+                }
+                else if (e.target.tagName === 'A') {
+                    this.select(e.target);
+                }
+            });
         }    
         // async init() {
         //     this.renderAll()
 
         // }    
 
-
+        getParentRow(elem) {
+            while (elem) {
+                if (elem.tagName==="TR") {
+                    return elem
+                }
+                elem = elem.parentNode;
+            }
+            return undefined;
+        }
 
 
 
     buildData(count = 1000) {
         const data = [];
- 
         for (let i = 0; i < count; i++) {
             data.push({id: this.ID++ , label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)] });
-      //      data.push({id: this.ID++ , label:''});
         }
         return data;
     }
@@ -180,14 +197,13 @@ Doo.define(
             data.push('</td><td class="col-md-4"><a>')
             data.push(this.data.rows[i].label)
             data.push('</a></td><td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>')
-    }
+        }
 
-    this.tbody.textContent = ""
+        this.tbody.textContent = ""
 
-    this.tbody.innerHTML = data.join('')
-
-
+        this.tbody.innerHTML = data.join('')
     }    
+
     runLots() {
         start('buildLots')
         this.data.rows = this.buildData(10000);
@@ -197,34 +213,29 @@ Doo.define(
         Main.xxx.focus()
 
         stop('runLots')
-/*
-        start('run2')
-        let tr = this.shadow.querySelectorAll("#tbody tr a span  ");
-        for (let i=0, len = this.data.rows.length;i<len;i++) {
-          //  this.data.rows[i].label = adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]
-          tr[i].classList.add('glyphicon','glyphicon-remove')
-          //         tr.classList.add('g')
-         }
-   //     this.shadow.querySelector("#tbody").style.display=""
-       
-   //   //  this.tbody.setAttribute('done', 2)
-   Main.xxx.focus()
-
-   stop('run2')
-*/
 
     }
+
     update() {
+        let tr = this.tbody.querySelectorAll('tr')
         for (let i=0, len = this.data.rows.length;i<len;i+=10) {
             this.data.rows[i].label += ' !!!';
+            tr[i].childNodes[1].childNodes[0].innerHTML = this.data.rows[i].label
+
         }
-        this.render()
-    }
-    select(row,idx) {
- //       this.data.rows[idx].selected = !this.data.rows[idx].selected
- //       row.classList.toggle('danger')
     }
 
+    select(elem) {
+        if (this.selectedRow) {
+            this.selectedRow.classList.remove('danger')
+            this.selectedRow = undefined
+        }
+        let row = this.getParentRow(elem)
+        if (row) {
+            row.classList.toggle('danger')
+            this.selectedRow = row
+        }    
+    }
 
     clear() {
         this.data.rows = []
@@ -246,52 +257,33 @@ Doo.define(
     addEventListeners() {
         document.getElementById("main").addEventListener('click', e => {
             //console.log("listener",e);
+            e.preventDefault();
             if (e.target.matches('#add')) {
-                e.preventDefault();
                 this.add();
             }
             else if (e.target.matches('#run')) {
-                e.preventDefault();
                 this.run();
             }
             else if (e.target.matches('#update')) {
-                e.preventDefault();
                 this.update();
             }
             else if (e.target.matches('#hideall')) {
-                e.preventDefault();
                 this.hideAll();
             }
             else if (e.target.matches('#showall')) {
-                e.preventDefault();
                 this.showAll();
             }
             else if (e.target.matches('#runlots')) {
-                e.preventDefault();
                 this.runLots();
             }
             else if (e.target.matches('#clear')) {
-                e.preventDefault();
                 this.clear();
             }
             else if (e.target.matches('#swaprows')) {
-                e.preventDefault();
                 this.swapRows();
             }
-            else if (e.target.matches('.remove')) {
-                e.preventDefault();
-                let id = getParentId(e.target);
-                let idx = this.findIdx(id);
-                this.delete(idx);
-            }
-            else if (e.target.tagName === 'A') {
-                e.preventDefault();
-                //let id = getParentId(e.target);
-                //let idx = this.findIdx(id);
-                //console.log("select",idx);
-                this.select(e.target);
-            }
-        });
+        })    
+
     }   
 
 /*
