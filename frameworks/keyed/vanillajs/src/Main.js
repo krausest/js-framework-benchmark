@@ -293,7 +293,6 @@ Main.xxx.focus()
             this.store.swapRows();
             this.data[1] = this.store.data[1];
             this.data[998] = this.store.data[998];
-debugger
             this.tbody.insertBefore(this.rows[998], this.rows[2])
             this.tbody.insertBefore(this.rows[1], this.rows[999])
 
