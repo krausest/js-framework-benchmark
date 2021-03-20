@@ -2,6 +2,7 @@
 'use strict';
 let startTime = {};
 let tot = []
+
 const start = function(name) {
     tot.push(new Date().getTime())
     if (!startTime[name]) {
@@ -11,9 +12,6 @@ const start = function(name) {
 const stop = function(name) {
     if (startTime[name]) {
         startTime[name].push(new Date().getTime())
-//        if (!tot.length) {
-
-//        }
         console.log('DooHTML', name, 'took:', startTime[name][1] - startTime[name][0]);
         if (tot.length === 2) {
             console.log('DooHTML Tot:', startTime[name][1] - tot[0]);
@@ -35,295 +33,155 @@ const lenA = adjectives.length
 const lenB = colours.length
 const lenC = nouns.length
 
-
-
 Doo.define(
-  class Main extends Doo {
-        constructor() {
-            super()
-            this.scrollTarget='.table'
- 			this.defaultDataSet = 'rows'
+  	class Main extends Doo {
+		constructor() {
+			super()
+			this.scrollTarget = '.table'
+			this.defaultDataSet = 'rows'
 			this.ID = 1
-            this.data = {
+			this.data = {
 				[this.defaultDataSet]: []
 			}
-            this.select = this.select.bind(this)
-//            this.delete = this.delete.bind(this)
-            this.add = this.add.bind(this)
-            this.run = this.run.bind(this)
-            this.runLots = this.runLots.bind(this)
-            this.update = this.update.bind(this)
-            this.clear = this.clear.bind(this)
-            this.swaprows = this.swapRows.bind(this)
-            this.addEventListeners()
-            Main.xxx = document.getElementById("xxx");
-            this.selectedRow = undefined
+			this.add = this.add.bind(this)
+			this.run = this.run.bind(this)
+			this.runLots = this.runLots.bind(this)
+			this.update = this.update.bind(this)
+			this.clear = this.clear.bind(this)
+			this.swaprows = this.swapRows.bind(this)
+			this.addEventListeners()
+			Main.xxx = document.getElementById("xxx");
+			this.selectedRow = undefined
+			document.querySelector(".jumbotron H1").innerHTML += ` ${Doo.version} (keyed)`
+  		}
 
-        }
-        async dooAfterRender() {
-             this.tbody = this.shadow.querySelector('#tbody')
-             this.shadow.querySelector(".table").addEventListener('click', e => {
-                e.preventDefault();
-                if (e.target.matches('.remove')) {
-                    let id = getParentId(e.target);
-                    let idx = this.findIdx(id);
-                    this.delete(idx);
-                }
-                else if (e.target.tagName === 'A') {
-                    this.select(e.target);
-                }
-            });
-        }    
+		async dooAfterRender() {
+			this.tbody = this.shadow.querySelector('#tbody')
+			this.shadow.querySelector(this.scrollTarget).addEventListener('click', e => {
+				e.preventDefault();
+				if (e.target.parentElement.matches('.remove')) {
+					this.delete(e.target.parentElement);
+				} else if (e.target.tagName === 'A') {
+					this.select(e.target);
+				}
+			});
+		}
 
         getParentRow(elem) {
-            while (elem) {
-                if (elem.tagName==="TR") {
-                    return elem
-                }
-                elem = elem.parentNode;
-            }
-            return undefined;
+        	while (elem) {
+        		if (elem.tagName === "TR") {return elem}
+        		elem = elem.parentNode;
+        	}
+        	return undefined;
         }
 
+		buildData(count = 1000) {
+			const data = [];
+			for (let i = 0; i < count; i++) 
+				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]});
+			return data;
+		}
 
-    buildData(count = 1000) {
-        const data = [];
-        for (let i = 0; i < count; i++) {
-            data.push({id: this.ID++ , label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)] });
-        }
-        return data;
-    }
-/*
-    run() {
-        this.removeAllRows();
-        this.store.clear();
-        this.data.rows = [];
-        this.data = [];
-        this.appendRows();
-    }
+		delete(elem) {
+			let row = this.getParentRow(elem)
+			if (row) {
+				this.tbody.removeChild(row)
+				this.data.rows[row.getAttribute('key')] = undefined
+			}
+		}  
 
-    add() {
-        this.store.add();
-        this.appendRows();
-    }
-    update() {
-        this.store.update();
-        let len = this.data.length
-        for (let i=0, len = this.data.length;i<len;i+=10) {
-            this.rows[i].childNodes[1].childNodes[0].innerText = this.store.data[i].label;
-        }
-    }
-    unselect() {
-        if (this.selectedRow !== undefined) {
-            this.selectedRow.className = "";
-            this.selectedRow = undefined;
-        }
-    }
-    recreateSelection() {
-        let old_selection = this.store.selected;
-        let sel_idx = this.store.data.findIndex(d => d.id === old_selection);
-        if (sel_idx >= 0) {
-            this.store.select(this.data[sel_idx].id);
-            this.selectedRow = this.rows[sel_idx];
-            this.selectedRow.className = "danger";
-        }
-    }
-    delete(idx) {
-        // Remove that row from the DOM
-        this.store.delete(this.data[idx].id);
-        this.rows[idx].remove();
-        this.rows.splice(idx, 1);
-        this.data.splice(idx, 1);
-        this.unselect();
-        this.recreateSelection();
-    }
-*/
-/* =========================== */
+		run() {
+			start('buildData')
+			this.data.rows = this.buildData()
+			stop('buildData')
+			start('run')
+			this.tbody.textContent = ""
+			this.renderAll()
+			Main.xxx.focus()
+			stop('run')
+		}
 
-    // render() {
-    //     this.renderNode(this.place[0].templateArray,this.place[0].templateArray.xHtml, this.data.rows,  0, this.PAGE_SIZE)
+		add() {
+			start('append')
+			let len = this.data.rows.length
+			this.data.rows = this.data.rows.concat(this.buildData())
+			stop('append')
+			start('runAppend')
+			this.appendData(this.data.rows, len)
+			Main.xxx.focus()
+			stop('runAppend')
+		}    
 
-    // }
+		runLots() {
+			start('buildLots')
+			this.data.rows = this.buildData(10000);
+			stop('buildLots')
+			start('runLots')
+			this.tbody.textContent = ""
+			this.renderAll()
+			Main.xxx.focus()
+			stop('runLots')
+		}
 
+		update() {
+			let tr = this.tbody.querySelectorAll('tr')
+			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
+				this.data.rows[i].label += ' !!!';
+				tr[i].childNodes[1].childNodes[0].innerHTML = this.data.rows[i].label
 
+			}
+		}
 
-    run() {
-        start('buildData')
-        this.data.rows = this.buildData()
-        stop('buildData')
-        start('run')
-        this.tbody.textContent = ""
-        this.renderAll()
-        Main.xxx.focus()
-        stop('run')
-    }
-    add() {
-        start('append')
+		select(elem) {
+			if (this.selectedRow) {
+				this.selectedRow.classList.remove('danger')
+				this.selectedRow = undefined
+				return
+			}
+			let row = this.getParentRow(elem)
+			if (row) {
+				row.classList.toggle('danger')
+				this.selectedRow = row
+			}    
+		}
 
-        let len = this.data.rows.length
-        this.data.rows = this.data.rows.concat(this.buildData())
-        stop('append')
-        start('runAppend')
- 
-        this.appendData(this.data.rows, len)
-        Main.xxx.focus()
+		clear() {
+			this.data.rows = []
+			this.clearAll()
+		}
 
-        stop('runAppend')
- 
-    }    
-/*
-    renderAll(page=0) {
+		swapRows() {
+			if (this.data.rows.length>10) {
+				let tr = this.tbody.querySelectorAll('tr')
+				let swapNodeIdx =  Math.min(tr.length - 2, 998)
+				let node1 = tr[1].cloneNode(true)
+				let node2 = tr[swapNodeIdx].cloneNode(true)
+				let tmp = this.data.rows[1]
+				this.data.rows[1] = this.data.rows[swapNodeIdx];
+				this.data.rows[swapNodeIdx] = tmp;
+				this.tbody.replaceChild(node2, tr[1])
+				this.tbody.replaceChild(node1, tr[swapNodeIdx])
+			}
+		}
 
+		addEventListeners() {
+			document.getElementById("main").addEventListener('click', e => {
+				e.preventDefault();
+				if (e.target.matches('#runlots')) {
+					this.runLots();
+				} else if (e.target.matches('#run')) {
+					this.run();
+				} else if (e.target.matches('#add')) {
+					this.add();
+				} else if (e.target.matches('#update')) {
+					this.update();
+				} else if (e.target.matches('#clear')) {
+					this.clear();
+				} else if (e.target.matches('#swaprows')) {
+					this.swapRows();
+				}
+			})    
 
-        let len = this.data.rows.length
-
-        let data = []
-
-        for (let i=0;i<len;i++) {
-
-            data.push('<tr><td class="col-md-1">')
-            data.push(this.data.rows[i].id)
-            data.push('</td><td class="col-md-4"><a>')
-            data.push(this.data.rows[i].label)
-            data.push('</a></td><td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>')
-        }
-
-        this.tbody.textContent = ""
-
-        this.tbody.innerHTML = data.join('')
-    }    
-*/
-    runLots() {
-        start('buildLots')
-        this.data.rows = this.buildData(10000);
-        stop('buildLots')
-        start('runLots')
-        this.tbody.textContent = ""
-
-        this.renderAll()
-        Main.xxx.focus()
-
-        stop('runLots')
-
-    }
-
-    update() {
-        let tr = this.tbody.querySelectorAll('tr')
-        for (let i=0, len = this.data.rows.length;i<len;i+=10) {
-            this.data.rows[i].label += ' !!!';
-            tr[i].childNodes[1].childNodes[0].innerHTML = this.data.rows[i].label
-
-        }
-    }
-
-    select(elem) {
-        if (this.selectedRow) {
-            this.selectedRow.classList.remove('danger')
-            this.selectedRow = undefined
-            return
-        }
-        let row = this.getParentRow(elem)
-        if (row) {
-            row.classList.toggle('danger')
-            this.selectedRow = row
-        }    
-    }
-
-    clear() {
-        this.data.rows = []
-        this.clearAll()
-    }
-    swapRows() {
-        if (this.data.rows.length>10) {
-            let tr = this.tbody.querySelectorAll('tr')
-            let node1 = tr[1].cloneNode(true)
-            let node2 = tr[998].cloneNode(true)
-            let tmp = this.data.rows[1]
-            this.data.rows[1] = this.data.rows[998];
-            this.data.rows[998] = tmp;
-            this.tbody.replaceChild(node2, tr[1])
-            this.tbody.replaceChild(node1, tr[998])
-        }
-
-
-    }
-    addEventListeners() {
-        document.getElementById("main").addEventListener('click', e => {
-            e.preventDefault();
-            if (e.target.matches('#add')) {
-                this.add();
-            }
-            else if (e.target.matches('#run')) {
-                this.run();
-            }
-            else if (e.target.matches('#update')) {
-                this.update();
-            }
-            else if (e.target.matches('#hideall')) {
-                this.hideAll();
-            }
-            else if (e.target.matches('#showall')) {
-                this.showAll();
-            }
-            else if (e.target.matches('#runlots')) {
-                this.runLots();
-            }
-            else if (e.target.matches('#clear')) {
-                this.clear();
-            }
-            else if (e.target.matches('#swaprows')) {
-                this.swapRows();
-            }
-        })    
-
-    }   
-
-/*
-    async attributeChangedCallback(name, oldVal, newVal) {
-		//TODO do we need length???
-		if (newVal.length > 0 && oldVal !== newVal) {
-			if (name === 'key') {
-				console.log(oldval)
-			} 	
-		}	
+    	}   
 	}
-*/
-
-    // async attributeChangedCallback(name, oldVal, newVal) {
-    //     //TODO do we need length???
-    //     if (newVal.length > 0 && oldVal !== newVal) {
-    //         if (name === 'id') {
-    //             Doo.debug = true
-    //         }	
-    //     }	
-    // }
-/*
-    async dooAfterRender() {
-        const observer =new MutationObserver(	
-            (mutationsList, observer) => {	
-                    if (mutationsList[0].type === 'attributes' ) {
-
-                        // this.tbody = this.shadow.querySelector("#tbody");
-                        start('run2')
-
-                         let tr = this.shadow.querySelectorAll("#tbody tr");
-                         for (let i=0, len = this.data.rows.length;i<len;i++) {
-                            this.data.rows[i].label = adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]
-                            tr[i].childNodes[1].innerHTML = this.data.rows[i].label
-                            //                            tr.childNodes[i].childNodes[1].innerHTML = this.data.rows[i].label
-                            
-                        }
-                        stop('run2')
-
-                        //this.render() 
-                    }	
-            }			
-        )		
-        this.tbody = this.shadow.querySelector("#tbody");
-        observer.observe(this.tbody, { attributes: true });
-        this.tbody.setAttribute('done', true)
-    }        
-*/
-
-
-})
+)

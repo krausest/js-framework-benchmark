@@ -327,13 +327,23 @@ Main.xxx.focus()
         // this.tbody.appendChild(docfrag);
 
         // ... than adding directly
+        start('appendRows')
+ 
         var rows = this.rows, s_data = this.store.data, data = this.data, tbody = this.tbody;
+        stop('appendRows')
+  
+        start('runAppend')
+
         for(let i=rows.length;i<s_data.length; i++) {
             let tr = this.createRow(s_data[i]);
             rows[i] = tr;
             data[i] = s_data[i];
             tbody.appendChild(tr);
         }
+        Main.xxx.focus()
+
+        stop('runAppend')
+
     }
     createRow(data) {
         const tr = rowTemplate.cloneNode(true),
