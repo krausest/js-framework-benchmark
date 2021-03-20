@@ -40,7 +40,7 @@ const lenC = nouns.length
 Doo.define(
   class Main extends Doo {
         constructor() {
-            super(10000)
+            super()
             this.scrollTarget='.table'
  			this.defaultDataSet = 'rows'
 			this.ID = 1
@@ -55,28 +55,11 @@ Doo.define(
             this.update = this.update.bind(this)
             this.clear = this.clear.bind(this)
             this.swaprows = this.swapRows.bind(this)
-            //this.renderOnLoad = false
             this.addEventListeners()
             Main.xxx = document.getElementById("xxx");
             this.selectedRow = undefined
 
         }
-/*
-        async init() {
-            const observer = new MutationObserver(	
-                (mutationsList, observer) => {	
-                        if (mutationsList[0].type === 'childList' ) {
-                                
-                            this.componentContainer.style.visibility = 'visible'	
-                                	
-                        }	
-                }			
-            )	
-            observer.observe(this.shadow.firstElementChild, { childList: true });	
-	
-    
-        }
-*/
         async dooAfterRender() {
              this.tbody = this.shadow.querySelector('#tbody')
              this.shadow.querySelector(".table").addEventListener('click', e => {
@@ -91,10 +74,6 @@ Doo.define(
                 }
             });
         }    
-        // async init() {
-        //     this.renderAll()
-
-        // }    
 
         getParentRow(elem) {
             while (elem) {
@@ -105,7 +84,6 @@ Doo.define(
             }
             return undefined;
         }
-
 
 
     buildData(count = 1000) {
@@ -174,15 +152,26 @@ Doo.define(
         this.data.rows = this.buildData()
         stop('buildData')
         start('run')
+        this.tbody.textContent = ""
         this.renderAll()
         Main.xxx.focus()
         stop('run')
     }
     add() {
-        this.data.rows = this.data.rows.concat(this.buildData())
-        this.render()
-    }
+        start('append')
 
+        let len = this.data.rows.length
+        this.data.rows = this.data.rows.concat(this.buildData())
+        stop('append')
+        start('runAppend')
+ 
+        this.appendData(this.data.rows, len)
+        Main.xxx.focus()
+
+        stop('runAppend')
+ 
+    }    
+/*
     renderAll(page=0) {
 
 
@@ -203,12 +192,14 @@ Doo.define(
 
         this.tbody.innerHTML = data.join('')
     }    
-
+*/
     runLots() {
         start('buildLots')
         this.data.rows = this.buildData(10000);
         stop('buildLots')
         start('runLots')
+        this.tbody.textContent = ""
+
         this.renderAll()
         Main.xxx.focus()
 
@@ -229,6 +220,7 @@ Doo.define(
         if (this.selectedRow) {
             this.selectedRow.classList.remove('danger')
             this.selectedRow = undefined
+            return
         }
         let row = this.getParentRow(elem)
         if (row) {
@@ -239,24 +231,24 @@ Doo.define(
 
     clear() {
         this.data.rows = []
-        this.render()
+        this.clearAll()
     }
     swapRows() {
         if (this.data.rows.length>10) {
-            let r1 = this.data.rows[1];
-            let r998 = this.data.rows[998];
-            this.data.rows[1] = r998;
-            this.data.rows[998] = r1;
-       //     this.tbody.insertBefore(this.rows[998], this.rows[2])
-       //     this.tbody.insertBefore(this.rows[1], this.rows[999])
-     //       this.render()
+            let tr = this.tbody.querySelectorAll('tr')
+            let node1 = tr[1].cloneNode(true)
+            let node2 = tr[998].cloneNode(true)
+            let tmp = this.data.rows[1]
+            this.data.rows[1] = this.data.rows[998];
+            this.data.rows[998] = tmp;
+            this.tbody.replaceChild(node2, tr[1])
+            this.tbody.replaceChild(node1, tr[998])
         }
 
 
     }
     addEventListeners() {
         document.getElementById("main").addEventListener('click', e => {
-            //console.log("listener",e);
             e.preventDefault();
             if (e.target.matches('#add')) {
                 this.add();
