@@ -1,7 +1,9 @@
 'use strict';
-
+'use strict';
 let startTime = {};
+let tot = []
 const start = function(name) {
+    tot.push(new Date().getTime())
     if (!startTime[name]) {
         startTime[name] = [ new Date().getTime()]    
     }    
@@ -9,7 +11,14 @@ const start = function(name) {
 const stop = function(name) {
     if (startTime[name]) {
         startTime[name].push(new Date().getTime())
+//        if (!tot.length) {
+
+//        }
         console.log('DooHTML', name, 'took:', startTime[name][1] - startTime[name][0]);
+        if (tot.length === 2) {
+            console.log('DooHTML Tot:', startTime[name][1] - tot[0]);
+            tot = []
+        }
         startTime[name] = undefined
     }
 };
@@ -67,21 +76,26 @@ Doo.define(
     
         }
 */
-        // async dooAfterRender() {
-        //     this.scrollElem = this.shadow.querySelector('.table')
+        async dooAfterRender() {
+             this.tbody = this.shadow.querySelector('#tbody')
 
-        // }    
+        }    
         // async init() {
         //     this.renderAll()
 
         // }    
 
 
+
+
+
     buildData(count = 1000) {
         const data = [];
  
-        for (let i = 0; i < count; i++)
+        for (let i = 0; i < count; i++) {
             data.push({id: this.ID++ , label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)] });
+      //      data.push({id: this.ID++ , label:''});
+        }
         return data;
     }
 /*
@@ -136,16 +150,6 @@ Doo.define(
 
     // }
 
-/*
-    async attributeChangedCallback(name, oldVal, newVal) {
-		//TODO do we need length???
-		if (newVal.length > 0 && oldVal !== newVal) {
-			if (name === 'key') {
-				console.log(oldval)
-			} 	
-		}	
-	}
-*/
 
 
     run() {
@@ -162,6 +166,28 @@ Doo.define(
         this.render()
     }
 
+    renderAll(page=0) {
+
+
+        let len = this.data.rows.length
+
+        let data = []
+
+        for (let i=0;i<len;i++) {
+
+            data.push('<tr><td class="col-md-1">')
+            data.push(this.data.rows[i].id)
+            data.push('</td><td class="col-md-4"><a>')
+            data.push(this.data.rows[i].label)
+            data.push('</a></td><td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>')
+    }
+
+    this.tbody.textContent = ""
+
+    this.tbody.innerHTML = data.join('')
+
+
+    }    
     runLots() {
         start('buildLots')
         this.data.rows = this.buildData(10000);
@@ -169,7 +195,24 @@ Doo.define(
         start('runLots')
         this.renderAll()
         Main.xxx.focus()
+
         stop('runLots')
+/*
+        start('run2')
+        let tr = this.shadow.querySelectorAll("#tbody tr a span  ");
+        for (let i=0, len = this.data.rows.length;i<len;i++) {
+          //  this.data.rows[i].label = adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]
+          tr[i].classList.add('glyphicon','glyphicon-remove')
+          //         tr.classList.add('g')
+         }
+   //     this.shadow.querySelector("#tbody").style.display=""
+       
+   //   //  this.tbody.setAttribute('done', 2)
+   Main.xxx.focus()
+
+   stop('run2')
+*/
+
     }
     update() {
         for (let i=0, len = this.data.rows.length;i<len;i+=10) {
@@ -250,4 +293,53 @@ Doo.define(
             }
         });
     }   
+
+/*
+    async attributeChangedCallback(name, oldVal, newVal) {
+		//TODO do we need length???
+		if (newVal.length > 0 && oldVal !== newVal) {
+			if (name === 'key') {
+				console.log(oldval)
+			} 	
+		}	
+	}
+*/
+
+    // async attributeChangedCallback(name, oldVal, newVal) {
+    //     //TODO do we need length???
+    //     if (newVal.length > 0 && oldVal !== newVal) {
+    //         if (name === 'id') {
+    //             Doo.debug = true
+    //         }	
+    //     }	
+    // }
+/*
+    async dooAfterRender() {
+        const observer =new MutationObserver(	
+            (mutationsList, observer) => {	
+                    if (mutationsList[0].type === 'attributes' ) {
+
+                        // this.tbody = this.shadow.querySelector("#tbody");
+                        start('run2')
+
+                         let tr = this.shadow.querySelectorAll("#tbody tr");
+                         for (let i=0, len = this.data.rows.length;i<len;i++) {
+                            this.data.rows[i].label = adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]
+                            tr[i].childNodes[1].innerHTML = this.data.rows[i].label
+                            //                            tr.childNodes[i].childNodes[1].innerHTML = this.data.rows[i].label
+                            
+                        }
+                        stop('run2')
+
+                        //this.render() 
+                    }	
+            }			
+        )		
+        this.tbody = this.shadow.querySelector("#tbody");
+        observer.observe(this.tbody, { attributes: true });
+        this.tbody.setAttribute('done', true)
+    }        
+*/
+
+
 })

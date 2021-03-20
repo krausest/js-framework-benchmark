@@ -1,7 +1,8 @@
 'use strict';
-
 let startTime = {};
+let tot = []
 const start = function(name) {
+    tot.push(new Date().getTime())
     if (!startTime[name]) {
         startTime[name] = [ new Date().getTime()]    
     }    
@@ -9,8 +10,15 @@ const start = function(name) {
 const stop = function(name) {
     if (startTime[name]) {
         startTime[name].push(new Date().getTime())
+//        if (!tot.length) {
+
+//        }
         console.log('Vanilla', name, 'took:', startTime[name][1] - startTime[name][0]);
-startTime[name] = undefined
+        if (tot.length === 2) {
+            console.log('Vanilla Tot:', startTime[name][1] - tot[0]);
+            tot = []
+        }
+        startTime[name] = undefined
     }
 };
 
