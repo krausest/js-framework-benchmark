@@ -4,10 +4,10 @@ const Button = ({id, text, fn}) => (
   </div>
 )
 
-export default function({data, selected, run, runLots, add, update, clear, swapRows, remove}) {
+export default function({data, isSelected, selected, run, runLots, add, update, clear, swapRows, remove}) {
   const list = data.memoMap(row => {
     const rowId = row.id;
-    return <tr class={selected() === rowId ? "danger" : ""}>
+    return <tr class={isSelected(rowId) ? "danger" : ""}>
       <td class='col-md-1' textContent={ rowId } />
       <td class='col-md-4'><a onClick={[selected, rowId]} textContent={ row.label() } /></td>
       <td class='col-md-1'><a onClick={[remove, rowId]}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>

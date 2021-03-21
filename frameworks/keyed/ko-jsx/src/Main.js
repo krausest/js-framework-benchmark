@@ -1,4 +1,4 @@
-import { render } from 'ko-jsx';
+import { render, createSelector } from 'ko-jsx';
 import { observable, observableArray } from 'knockout';
 import template from './template';
 
@@ -22,11 +22,13 @@ function buildData(count) {
 
 function HomeViewModel() {
   const selected = observable(null),
-    data = observableArray();
+    data = observableArray(),
+    isSelected = createSelector(selected);
 
   return {
     data,
     selected,
+    isSelected,
     run () {
       data(buildData(1000));
       selected(null);
