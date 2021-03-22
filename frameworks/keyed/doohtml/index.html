@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>DooHTML</title>
-  <link href="/css/currentStyle.css" rel="preload" as="style" />
   <link href="/css/currentStyle.css" rel="stylesheet"/>
-
-  <script src="https://cdn.jsdelivr.net/gh/hman61/doo.html@latest/dist/doo.html.min.js"></script>
-  <script type="module" src="Main.class.js"></script>
-
+  <!-- <script src="https://cdn.jsdelivr.net/gh/hman61/doo.html@v0.20.8/dist/doo.html.min.js"></script> -->
+  <script type="module" src="http://localhost:8001/src/js/doo.html.js"></script>
+  <!-- <script src="./js/doo.html.min.js"></script>  -->
+  <script type="module" src="./js/Main.class.js"></script>
  </head>
 
 <body>
@@ -18,7 +17,7 @@
       <div class="jumbotron">
           <div class="row">
               <div class="col-md-6">
-                  <h1>DooHTML 0.20.4 (non-keyed)</h1>
+                  <h1>DooHTML</h1>
               </div>
               <div class="col-md-6">
                   <div class="row">
@@ -44,12 +43,11 @@
               </div>
           </div>
       </div>
-    <doo-main
-        context="document"
-        link="/css/currentStyle.css"
-        bind="rows"
-        template="./templates/main.html"
-
+        <doo-main
+            context="shadow"
+            link="/css/currentStyle.css"
+            bind="rows"
+            template="./templates/main.html"
         ></doo-main>
     </div>  
     <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>

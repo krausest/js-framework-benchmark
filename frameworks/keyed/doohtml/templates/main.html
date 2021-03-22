@@ -1,4 +1,7 @@
 <!DOCTYPE html>
 <template>
-        <table class="table table-hover table-striped test-data"><tbody><tr bind="rows"><td class="col-md-1">{{id}}</td><td class="col-md-4"><a>{{label}}</a></td><td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr></tbody></table>
+	<table class="table table-hover table-striped test-data">
+		<link href="${link}" rel="stylesheet">
+		<tbody id="tbody"><tr bind="rows" key="{{i()}}"><td class="col-md-1">{{id}}</td><td class="col-md-4"><a>{{label}}</a></td><td class="col-md-1"><a class="remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr></tbody>
+	</table>
 </template>
