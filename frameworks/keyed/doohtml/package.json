@@ -1,6 +1,6 @@
 {
     "name": "js-framework-benchmark-doohtml",
-    "version": "0.20.4",
+    "version": "0.20.8",
     "description": "DooHTML JS-Benchmark",
     "main": "Main.class.js",
     "js-framework-benchmark": {

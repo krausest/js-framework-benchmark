@@ -5,9 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersion": "",
-    "issues": [
-      772
-    ]
+    "issues": [772]
   },
   "scripts": {
     "build-dev": "exit 0",
