@@ -1,4 +1,23 @@
 'use strict';
+let startTime = {};
+let tot = []
+const start = function(name) {
+    tot.push(new Date().getTime())
+    if (!startTime[name]) {
+        startTime[name] = [ new Date().getTime()]    
+    }    
+};
+const stop = function(name) {
+    if (startTime[name]) {
+        startTime[name].push(new Date().getTime())
+        console.log('Vanilla', name, 'took:', startTime[name][1] - startTime[name][0]);
+        if (tot.length === 2) {
+            console.log('Vanilla Tot:', startTime[name][1] - tot[0]);
+            tot = []
+        }
+        startTime[name] = undefined
+    }
+};
 
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
@@ -156,6 +175,7 @@ class Main {
             }
         });
         this.tbody = document.getElementById("tbody");
+        Main.xxx = document.getElementById("xxx");
     }
     findIdx(id) {
         for (let i=0;i<this.data.length;i++){
@@ -164,13 +184,18 @@ class Main {
         return undefined;
     }
     run() {
+        start('buildRows')
         this.removeAllRows();
         this.store.clear();
         this.rows = [];
         this.data = [];
         this.store.run();
+        stop('buildRows')
+        start('run')
         this.appendRows();
         this.unselect();
+        Main.xxx.focus()
+        stop('run')
     }
     add() {
         this.store.add();
@@ -236,13 +261,22 @@ class Main {
         // while (last = tbody.lastChild) tbody.removeChild(last);
     }
     runLots() {
+        start('buildLots')
+
         this.removeAllRows();
         this.store.clear();
         this.rows = [];
         this.data = [];
         this.store.runLots();
+        stop('buildLots')
+        start('runLots')
         this.appendRows();
         this.unselect();
+  //      document.getElementById('xxx').value = 'Done!'
+Main.xxx.focus()
+
+        stop('runLots')
+
     }
     clear() {
         this.store.clear();
@@ -259,7 +293,6 @@ class Main {
             this.store.swapRows();
             this.data[1] = this.store.data[1];
             this.data[998] = this.store.data[998];
-
             this.tbody.insertBefore(this.rows[998], this.rows[2])
             this.tbody.insertBefore(this.rows[1], this.rows[999])
 
@@ -294,13 +327,17 @@ class Main {
         // this.tbody.appendChild(docfrag);
 
         // ... than adding directly
+ 
         var rows = this.rows, s_data = this.store.data, data = this.data, tbody = this.tbody;
+  
+ 
         for(let i=rows.length;i<s_data.length; i++) {
             let tr = this.createRow(s_data[i]);
             rows[i] = tr;
             data[i] = s_data[i];
             tbody.appendChild(tr);
         }
+   
     }
     createRow(data) {
         const tr = rowTemplate.cloneNode(true),
