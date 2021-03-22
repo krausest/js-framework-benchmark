@@ -1,10 +1,10 @@
 'use strict';
-'use strict';
+
 let startTime = {};
 let tot = []
 
 const start = function(name) {
-    tot.push(new Date().getTime())
+   	tot.push(new Date().getTime())
     if (!startTime[name]) {
         startTime[name] = [ new Date().getTime()]    
     }    
@@ -13,11 +13,11 @@ const stop = function(name) {
     if (startTime[name]) {
         startTime[name].push(new Date().getTime())
         console.log('DooHTML', name, 'took:', startTime[name][1] - startTime[name][0]);
-        if (tot.length === 2) {
-            console.log('DooHTML Tot:', startTime[name][1] - tot[0]);
-            tot = []
-        }
-        startTime[name] = undefined
+		if (tot.length === 2) {
+    		console.log('DooHTML Tot:', startTime[name][1] - tot[0]);
+    		tot = []
+    	}
+    	startTime[name] = undefined
     }
 };
 
@@ -32,6 +32,10 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 const lenA = adjectives.length
 const lenB = colours.length
 const lenC = nouns.length
+
+const rowTemplate = document.createElement("tr");
+rowTemplate.innerHTML = "<td class='col-md-1'></td><td class='col-md-4'><a class='lbl'></a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td>";
+
 
 Doo.define(
   	class Main extends Doo {
@@ -53,6 +57,7 @@ Doo.define(
 			Main.xxx = document.getElementById("xxx");
 			this.selectedRow = undefined
 			document.querySelector(".jumbotron H1").innerHTML += ` ${Doo.version} (keyed)`
+			document.title += ` ${Doo.version} (keyed)`
   		}
 
 		async dooAfterRender() {
@@ -77,11 +82,12 @@ Doo.define(
 
 		buildData(count = 1000) {
 			const data = [];
-			for (let i = 0; i < count; i++) 
-				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]});
-			return data;
+			for (let i = 0; i < count; i++) {
+				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
+			}
+			return data	
 		}
-
+	
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
@@ -95,7 +101,7 @@ Doo.define(
 			this.data.rows = this.buildData()
 			stop('buildData')
 			start('run')
-			this.tbody.textContent = ""
+	//		this.tbody.textContent = ""
 			this.renderAll()
 			Main.xxx.focus()
 			stop('run')
@@ -128,7 +134,6 @@ Doo.define(
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
 				this.data.rows[i].label += ' !!!';
 				tr[i].childNodes[1].childNodes[0].innerHTML = this.data.rows[i].label
-
 			}
 		}
 
@@ -136,7 +141,7 @@ Doo.define(
 			if (this.selectedRow) {
 				this.selectedRow.classList.remove('danger')
 				this.selectedRow = undefined
-				return
+				//	return  should toggle IMO
 			}
 			let row = this.getParentRow(elem)
 			if (row) {
@@ -181,7 +186,6 @@ Doo.define(
 					this.swapRows();
 				}
 			})    
-
     	}   
 	}
 )
