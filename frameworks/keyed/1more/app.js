@@ -1,4 +1,4 @@
-import { html, render, key, component } from "./1more";
+import { html, render, key, component } from "1more";
 
 function random(max) {
   return Math.round(Math.random() * 1000) % max;
