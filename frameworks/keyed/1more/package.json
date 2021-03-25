@@ -26,6 +26,6 @@
     "rollup-plugin-terser": "^1.0.1"
   },
   "dependencies": {
-    "1more": "0.1.2"
+    "1more": "0.1.4"
   }
 }
