@@ -4,7 +4,10 @@
     "description": "DooHTML JS-Benchmark",
     "main": "Main.class.js",
     "js-framework-benchmark": {
-      "frameworkVersion": ""
+      "frameworkVersion": "",
+      "useShadowRoot": true,
+      "shadowRootName": "doo-main",
+      "buttonsInShadowRoot": false
     },
     "scripts": {
       "build-dev": "exit 0",
