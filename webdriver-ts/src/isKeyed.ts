@@ -122,7 +122,7 @@ function isKeyedRemove(result: any, shouldBeKeyed:boolean): boolean {
     return r;
 }
 function isKeyedSwapRow(result: any, shouldBeKeyed:boolean): boolean {
-   console.log("isKeyedSwapRow", result);
+  //  console.log("isKeyedSwapRow", result);
     let r = result.tradded>0 && result.trremoved>0 && (!shouldBeKeyed || result.newNodes == 0);
     if ((r && !shouldBeKeyed)) {
         console.log(`Non-keyed test for swap failed. Expected than no TRs are added or removed, but there were ${result.tradded} added and ${result.trremoved} removed`);
