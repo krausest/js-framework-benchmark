@@ -1,11 +1,4 @@
 import { html, render, key, component } from "1more";
-import {
-  box,
-  read,
-  write,
-  useSubscription,
-  usePropSubscription,
-} from "1more/box";
 
 function random(max) {
   return Math.round(Math.random() * 1000) % max;
@@ -74,174 +67,176 @@ function buildData(count) {
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: nextId++,
-      label: box(
-        `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`,
-      ),
+      label: `${A[random(A.length)]} ${C[random(C.length)]} ${
+        N[random(N.length)]
+      }`,
     };
   }
   return data;
 }
 
-const state = {
-  data: box([]),
-  selected: box(undefined),
+let state = {
+  data: [],
+  selected: undefined,
 };
 
 const actions = {
   run() {
-    write(buildData(1000), state.data);
+    state = { ...state, data: buildData(1000) };
+    _render();
   },
   add() {
-    const data = read(state.data);
-    write(data.concat(buildData(1000)), state.data);
+    state = { ...state, data: state.data.concat(buildData(1000)) };
+    _render();
   },
   runlots() {
-    write(buildData(10000), state.data);
+    state = { ...state, data: buildData(10000) };
+    _render();
   },
   cleardata() {
-    write([], state.data);
-    write(undefined, state.selected);
+    state = { data: [], selected: undefined };
+    _render();
   },
   update() {
-    const data = read(state.data);
+    const data = state.data.slice();
     for (let i = 0; i < data.length; i += 10) {
       const item = data[i];
-      write(read(item.label) + " !!!", item.label);
+      data[i] = { ...item, label: item.label + " !!!" };
     }
+    state = { ...state, data };
+    _render();
   },
   select(id) {
-    write(id, state.selected);
+    state = { ...state, selected: id };
+    _render();
   },
   remove(id) {
-    const data = read(state.data).slice();
+    const data = state.data.slice();
     const idx = data.findIndex(item => item.id === id);
     data.splice(idx, 1);
-    write(data, state.data);
+    state = { ...state, data };
+    _render();
   },
   swaprows() {
-    const data = read(state.data).slice();
+    const data = state.data.slice();
     const tmp = data[1];
     data[1] = data[998];
     data[998] = tmp;
-    write(data, state.data);
+    state = { ...state, data };
+    _render();
   },
 };
 
-const Item = component(c => {
-  const getSelected = useSubscription(
-    c,
-    state.selected,
-    (selected, id) => id === selected,
-  );
-  const getLabel = usePropSubscription(c);
+const Item = component(() => item => html`
+  <tr class=${item.selected ? "danger" : null}>
+    <td class="col-md-1">${item.id}</td>
+    <td class="col-md-4">
+      <a onclick=${() => actions.select(item.id)}>${item.label}</a>
+    </td>
+    <td class="col-md-1">
+      <a onclick=${() => actions.remove(item.id)}>
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </a>
+    </td>
+    <td class="col-md-6"></td>
+  </tr>
+`);
 
-  return item => html`
-    <tr class=${getSelected(item.id) ? "danger" : null}>
-      <td class="col-md-1">${item.id}</td>
-      <td class="col-md-4">
-        <a onclick=${() => actions.select(item.id)}>
-          ${getLabel(item.label)}
-        </a>
-      </td>
-      <td class="col-md-1">
-        <a onclick=${() => actions.remove(item.id)}>
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-        </a>
-      </td>
-      <td class="col-md-6"></td>
-    </tr>
-  `;
-});
-
-const App = component(c => {
-  const getData = useSubscription(c, state.data);
-
-  return () => html`
-    <div class="container">
-      <div class="jumbotron">
-        <div class="row">
-          <div class="col-md-6">
-            <h1>1more</h1>
-          </div>
-          <div class="col-md-6">
-            <div class="row">
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="run"
-                  onclick=${actions.run}
-                >
-                  Create 1,000 rows
-                </button>
-              </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="runlots"
-                  onclick=${actions.runlots}
-                >
-                  Create 10,000 rows
-                </button>
-              </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="add"
-                  onclick=${actions.add}
-                >
-                  Append 1,000 rows
-                </button>
-              </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="update"
-                  onclick=${actions.update}
-                >
-                  Update every 10th row
-                </button>
-              </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="clear"
-                  onclick=${actions.cleardata}
-                >
-                  Clear
-                </button>
-              </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="swaprows"
-                  onclick=${actions.swaprows}
-                >
-                  Swap Rows
-                </button>
-              </div>
+const App = component(() => state => html`
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>1more</h1>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-sm-6 smallpad">
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="run"
+                onclick=${actions.run}
+              >
+                Create 1,000 rows
+              </button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="runlots"
+                onclick=${actions.runlots}
+              >
+                Create 10,000 rows
+              </button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="add"
+                onclick=${actions.add}
+              >
+                Append 1,000 rows
+              </button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="update"
+                onclick=${actions.update}
+              >
+                Update every 10th row
+              </button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="clear"
+                onclick=${actions.cleardata}
+              >
+                Clear
+              </button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                id="swaprows"
+                onclick=${actions.swaprows}
+              >
+                Swap Rows
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <table class="table table-hover table-striped test-data">
-        <tbody>
-          ${getData().map(item => key(item.id, Item(item)))}
-        </tbody>
-      </table>
-      <span
-        class="preloadicon glyphicon glyphicon-remove"
-        aria-hidden="true"
-      ></span>
     </div>
-  `;
-});
+    <table class="table table-hover table-striped test-data">
+      <tbody>
+        ${state.data.map(item =>
+          key(
+            item.id,
+            Item(
+              state.selected === item.id ? { ...item, selected: true } : item,
+            ),
+          ),
+        )}
+      </tbody>
+    </table>
+    <span
+      class="preloadicon glyphicon glyphicon-remove"
+      aria-hidden="true"
+    ></span>
+  </div>
+`);
 
 const container = document.getElementById("main");
 
-render(App(), container);
+const _render = () => {
+  render(App(state), container);
+};
+_render();
