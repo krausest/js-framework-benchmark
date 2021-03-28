@@ -1,6 +1,6 @@
 import {WebDriver, logging} from 'selenium-webdriver'
 import {BenchmarkType, Benchmark, benchmarks, fileName, LighthouseData} from './benchmarks'
-import {setUseShadowRoot, buildDriver, setUseRowShadowRoot} from './webdriverAccess'
+import {setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot} from './webdriverAccess'
 
 const lighthouse = require('lighthouse');
 const chromeLauncher = require('chrome-launcher');
@@ -362,6 +362,8 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
             setUseShadowRoot(framework.useShadowRoot);
             setUseRowShadowRoot(framework.useRowShadowRoot);
+            setShadowRootName(framework.shadowRootName);
+            setButtonsInShadowRoot(framework.buttonsInShadowRoot);
             await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
             // await (driver as any).sendDevToolsCommand('Network.enable');
@@ -420,6 +422,8 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
         driver = buildDriver(benchmarkOptions);
         setUseShadowRoot(framework.useShadowRoot);
         setUseRowShadowRoot(framework.useRowShadowRoot);
+        setShadowRootName(framework.shadowRootName);
+        setButtonsInShadowRoot(framework.buttonsInShadowRoot);
         await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
         await driver.executeScript("console.timeStamp('initBenchmark')");

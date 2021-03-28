@@ -1,0 +1,25 @@
+{
+    "name": "js-framework-benchmark-doohtml",
+    "version": "0.20.8",
+    "description": "DooHTML JS-Benchmark",
+    "main": "Main.class.js",
+    "js-framework-benchmark": {
+      "frameworkVersion": "",
+      "useShadowRoot": true,
+      "shadowRootName": "doo-main",
+      "buttonsInShadowRoot": false
+    },
+    "scripts": {
+      "build-dev": "exit 0",
+      "build-prod": "exit 0"
+    },
+    "keywords": [],
+    "author": "Henrik Javen",
+    "license": "Apache-2.0",
+    "homepage": "https://github.com/hman61/doodads",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/krausest/doodads"
+    }
+  }
+  

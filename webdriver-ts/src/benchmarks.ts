@@ -61,10 +61,10 @@ const benchRun = new class extends Benchmark {
             allowBatching: true
         })
     }
-    async init(driver: WebDriver) { await testElementLocatedById(driver, "add", SHORT_TIMEOUT); }
+    async init(driver: WebDriver) { await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true); }
     async run(driver: WebDriver) {
-        await clickElementById(driver, "add");
-        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a");
+        await clickElementById(driver, "add", true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
     }
 }
 
@@ -79,15 +79,15 @@ const benchReplaceAll = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, 'run', SHORT_TIMEOUT);
+        await testElementLocatedById(driver, 'run', SHORT_TIMEOUT, true);
         for (let i = 0; i < config.WARMUP_COUNT; i++) {
-            await clickElementById(driver, 'run');
-            await testTextContains(driver, '//tbody/tr[1]/td[1]', (i*1000+1).toFixed());
+            await clickElementById(driver, 'run', true);
+            await testTextContains(driver, '//tbody/tr[1]/td[1]', (i*1000+1).toFixed(), config.TIMEOUT, false);
         }
     }
     async run(driver: WebDriver) {
-        await clickElementById(driver, 'run');
-        await testTextContains(driver, '//tbody/tr[1]/td[1]', '5001');
+        await clickElementById(driver, 'run', true);
+        await testTextContains(driver, '//tbody/tr[1]/td[1]', '5001', config.TIMEOUT, false);
     }
 }
 
@@ -103,17 +103,17 @@ const benchUpdate = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
-        await clickElementById(driver, 'run');
-        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a");
+        await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
+        await clickElementById(driver, 'run', true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT,false);
         for (let i = 0; i < 3; i++) {
-            await clickElementById(driver, 'update');
-            await testTextContains(driver, '//tbody/tr[991]/td[2]/a', ' !!!'.repeat(i + 1));
+            await clickElementById(driver, 'update', true);
+            await testTextContains(driver, '//tbody/tr[991]/td[2]/a', ' !!!'.repeat(i + 1), config.TIMEOUT, false);
         }
     }
     async run(driver: WebDriver) {
-        await clickElementById(driver, 'update');
-        await testTextContains(driver, '//tbody/tr[991]/td[2]/a', ' !!!'.repeat(3 + 1));
+        await clickElementById(driver, 'update', true);
+        await testTextContains(driver, '//tbody/tr[991]/td[2]/a', ' !!!'.repeat(3 + 1), config.TIMEOUT, false);
     }
 }
 
@@ -129,13 +129,13 @@ const benchSelect = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
-        await clickElementById(driver, 'run');
-        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
+        await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
+        await clickElementById(driver, 'run', true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
     }
     async run(driver: WebDriver) {
-        await clickElementByXPath(driver, "//tbody/tr[2]/td[2]/a");
-        await testClassContains(driver, "//tbody/tr[2]", "danger");
+        await clickElementByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
+        await testClassContains(driver, "//tbody/tr[2]", "danger", config.TIMEOUT, false);
     }
 }
 
@@ -151,19 +151,19 @@ const benchSwapRows = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
-        await clickElementById(driver, 'run');
-        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
+        await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
+        await clickElementById(driver, 'run', true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
         for (let i = 0; i <= config.WARMUP_COUNT; i++) {
-            let text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a")
-            await clickElementById(driver, 'swaprows');
-            await testTextContains(driver, "//tbody/tr[999]/td[2]/a", text);
+            let text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
+            await clickElementById(driver, 'swaprows', true);
+            await testTextContains(driver, "//tbody/tr[999]/td[2]/a", text, config.TIMEOUT, false);
         }
     }
     async run(driver: WebDriver) {
-        let text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a");
-        await clickElementById(driver, 'swaprows');
-        await testTextContains(driver, "//tbody/tr[999]/td[2]/a", text);
+        let text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
+        await clickElementById(driver, 'swaprows', true);
+        await testTextContains(driver, "//tbody/tr[999]/td[2]/a", text, config.TIMEOUT, false);
     }
 }
 
@@ -178,26 +178,26 @@ const benchRemove = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
-        await clickElementById(driver, 'run');
-        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
+        await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
+        await clickElementById(driver, 'run', true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
         for (let i = 0; i < config.WARMUP_COUNT; i++) {
-            await testTextContains(driver, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`, (config.WARMUP_COUNT - i + 4).toString());
-            await clickElementByXPath(driver, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[3]/a/span[1]`);
-            await testTextContains(driver, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`, '10');
+            await testTextContains(driver, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`, (config.WARMUP_COUNT - i + 4).toString(), config.TIMEOUT, false);
+            await clickElementByXPath(driver, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[3]/a/span[1]`, false);
+            await testTextContains(driver, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`, '10', config.TIMEOUT, false);
         }
-        await testTextContains(driver, '//tbody/tr[5]/td[1]', '10');
-        await testTextContains(driver, '//tbody/tr[4]/td[1]', '4');
+        await testTextContains(driver, '//tbody/tr[5]/td[1]', '10', config.TIMEOUT, false);
+        await testTextContains(driver, '//tbody/tr[4]/td[1]', '4', config.TIMEOUT, false);
 
         // Click on a row the second time
-        await testTextContains(driver, `//tbody/tr[6]/td[1]`, '11');
-        await clickElementByXPath(driver, `//tbody/tr[6]/td[3]/a/span[1]`);
-        await testTextContains(driver, `//tbody/tr[6]/td[1]`, '12');
+        await testTextContains(driver, `//tbody/tr[6]/td[1]`, '11', config.TIMEOUT, false);
+        await clickElementByXPath(driver, `//tbody/tr[6]/td[3]/a/span[1]`, false);
+        await testTextContains(driver, `//tbody/tr[6]/td[1]`, '12', config.TIMEOUT, false);
 
     }
     async run(driver: WebDriver) {
-        await clickElementByXPath(driver, "//tbody/tr[4]/td[3]/a/span[1]");
-        await testTextContains(driver, '//tbody/tr[4]/td[1]', '10');
+        await clickElementByXPath(driver, "//tbody/tr[4]/td[3]/a/span[1]", false);
+        await testTextContains(driver, '//tbody/tr[4]/td[1]', '10', config.TIMEOUT, false);
     }
 }
 
@@ -212,11 +212,11 @@ const benchRunBig = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "runlots", SHORT_TIMEOUT);
+        await testElementLocatedById(driver, "runlots", SHORT_TIMEOUT, true);
     }
     async run(driver: WebDriver) {
-        await clickElementById(driver, 'runlots');
-        await testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a");
+        await clickElementById(driver, 'runlots', true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a", config.TIMEOUT, false);
     }
 }
 
@@ -232,13 +232,13 @@ const benchAppendToManyRows = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
-        await clickElementById(driver, 'run');
-        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a");
+        await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
+        await clickElementById(driver, 'run', true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
     }
     async run(driver: WebDriver) {
-        await clickElementById(driver, 'add');
-        await testElementLocatedByXpath(driver, "//tbody/tr[1100]/td[2]/a");
+        await clickElementById(driver, 'add', true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[1100]/td[2]/a", config.TIMEOUT, false);
     }
 }
 
@@ -254,13 +254,13 @@ const benchClear = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "run", SHORT_TIMEOUT);
-        await clickElementById(driver, 'run');
-        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a");
+        await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
+        await clickElementById(driver, 'run', true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
     }
     async run(driver: WebDriver) {
-        await clickElementById(driver, 'clear');
-        await testElementNotLocatedByXPath(driver, "//tbody/tr[1]");
+        await clickElementById(driver, 'clear', true);
+        await testElementNotLocatedByXPath(driver, "//tbody/tr[1]", config.TIMEOUT, false);
     }
 }
 
@@ -275,14 +275,14 @@ const benchReadyMemory = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "add", SHORT_TIMEOUT);
+        await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
     }
     async run(driver: WebDriver) {
-        await testElementNotLocatedByXPath(driver, "//tbody/tr[1]");
+        await testElementNotLocatedByXPath(driver, "//tbody/tr[1]", config.TIMEOUT, false);
     }
     async after(driver: WebDriver, framework: FrameworkData) {
-        await clickElementById(driver, 'run');
-        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
+        await clickElementById(driver, 'run', true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
     }
 }
 
@@ -297,11 +297,11 @@ const benchRunMemory = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "add", SHORT_TIMEOUT);
+        await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
     }
     async run(driver: WebDriver) {
-        await clickElementById(driver, 'run');
-        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a");
+        await clickElementById(driver, 'run', true);
+        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
     }
 }
 
@@ -316,13 +316,13 @@ const benchUpdate5Memory = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "add", SHORT_TIMEOUT);
+        await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
     }
     async run(driver: WebDriver) {
-        await clickElementById(driver, 'run');
+        await clickElementById(driver, 'run', true);
         for (let i = 0; i < 5; i++) {
-            await clickElementById(driver, 'update');
-            await testTextContains(driver, '//tbody/tr[1]/td[2]/a', ' !!!'.repeat(i));
+            await clickElementById(driver, 'update', true);
+            await testTextContains(driver, '//tbody/tr[1]/td[2]/a', ' !!!'.repeat(i), config.TIMEOUT, false);
         }
     }
 }
@@ -338,12 +338,12 @@ const benchReplace5Memory = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "add", SHORT_TIMEOUT);
+        await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
     }
     async run(driver: WebDriver) {
         for (let i = 0; i < 5; i++) {
-            await clickElementById(driver, 'run');
-            await testTextContains(driver, "//tbody/tr[1000]/td[1]", (1000 * (i + 1)).toFixed());
+            await clickElementById(driver, 'run', true);
+            await testTextContains(driver, "//tbody/tr[1000]/td[1]", (1000 * (i + 1)).toFixed(), config.TIMEOUT, false);
         }
     }
 }
@@ -359,14 +359,14 @@ const benchCreateClear5Memory = new class extends Benchmark {
         })
     }
     async init(driver: WebDriver) {
-        await testElementLocatedById(driver, "add", SHORT_TIMEOUT);
+        await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
     }
     async run(driver: WebDriver) {
         for (let i = 0; i < 5; i++) {
-            await clickElementById(driver, 'run');
-            await testTextContains(driver, "//tbody/tr[1000]/td[1]", (1000 * (i + 1)).toFixed());
-            await clickElementById(driver, 'clear');
-            await testElementNotLocatedByXPath(driver, "//tbody/tr[1000]/td[1]");
+            await clickElementById(driver, 'run', true);
+            await testTextContains(driver, "//tbody/tr[1000]/td[1]", (1000 * (i + 1)).toFixed(), config.TIMEOUT, false);
+            await clickElementById(driver, 'clear', true);
+            await testElementNotLocatedByXPath(driver, "//tbody/tr[1000]/td[1]", config.TIMEOUT, false);
         }
     }
 }
@@ -429,7 +429,6 @@ class BenchStartup extends Benchmark {
         return [
             benchStartupConsistentlyInteractive,
             benchStartupBootup,
-            // benchStartupMainThreadWorkCost,
             benchStartupTotalBytes,
         ];
     }
