@@ -1,5 +1,5 @@
 import * as yargs from 'yargs';
-import {buildDriver, setUseShadowRoot, testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, mainRoot, findByXPath, setUseRowShadowRoot} from './webdriverAccess'
+import {buildDriver, setUseShadowRoot, testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, mainRoot, findByXPath, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot} from './webdriverAccess'
 import {config, FrameworkData, initializeFrameworks, BenchmarkOptions} from './common'
 import { WebDriver, By, WebElement } from 'selenium-webdriver';
 import * as R from 'ramda';
@@ -39,14 +39,13 @@ function countDiff(list1, list2) {
     for (let o of list2) {
         s.delete(o);
     }
-    debugger;
     return s.size;
 }
 
 window.nonKeyedDetector_instrument = function() {
     let node = document;
     if (window.nonKeyedDetector_shadowRoot) {
-        let main = document.querySelector("main-element");
+        let main = document.querySelector(nonKeyedDetector_shadowRoot);
         if (!main) return;
         node = main.shadowRoot;
     }
@@ -90,7 +89,8 @@ window.nonKeyedDetector_instrument = function() {
     return true;
 }
 window.nonKeyedDetector_result = function() {
-    return {tradded: nonKeyedDetector_tradded.length, trremoved: nonKeyedDetector_trremoved.length, removedStoredTr: nonKeyedDetector_removedStoredTr.length, newNodes: countDiff(window.nonKeyedDetector_tradded, window.nonKeyedDetector_trremoved)};
+    return {tradded: nonKeyedDetector_tradded.length, trremoved: nonKeyedDetector_trremoved.length, removedStoredTr: nonKeyedDetector_removedStoredTr.length, newNodes: countDiff(window.nonKeyedDetector_tradded, window.nonKeyedDetector_trremoved),
+    traddedDebug: JSON.stringify(nonKeyedDetector_tradded.map(d => d.innerHTML))};
 }
 window.nonKeyedDetector_storeTr = function() {
     let node = document;
@@ -122,6 +122,7 @@ function isKeyedRemove(result: any, shouldBeKeyed:boolean): boolean {
     return r;
 }
 function isKeyedSwapRow(result: any, shouldBeKeyed:boolean): boolean {
+   console.log("isKeyedSwapRow", result);
     let r = result.tradded>0 && result.trremoved>0 && (!shouldBeKeyed || result.newNodes == 0);
     if ((r && !shouldBeKeyed)) {
         console.log(`Non-keyed test for swap failed. Expected than no TRs are added or removed, but there were ${result.tradded} added and ${result.trremoved} removed`);
@@ -164,32 +165,32 @@ async function assertClassesContained(elem: WebElement, expectedClassNames: stri
 
 
 export async function checkTRcorrect(driver: WebDriver, timeout = config.TIMEOUT): Promise<boolean> {
-    let tr = await findByXPath(driver, '//tbody/tr[1000]');
+    let tr = await findByXPath(driver, '//tbody/tr[1000]', false);
     if (!await assertChildNodes(tr, [ 'td', 'td', 'a', 'td', 'a', 'span', 'td' ], "tr")) {
         return false;
     }
 
     // first td
-    let td1 = await findByXPath(driver, '//tbody/tr[1000]/td[1]');
+    let td1 = await findByXPath(driver, '//tbody/tr[1000]/td[1]', false);
     if (!await assertClassesContained(td1, ["col-md-1"], "first td")) {
         return false;
     }
 
 
     // second td
-    let td2 = await findByXPath(driver, '//tbody/tr[1000]/td[2]');
+    let td2 = await findByXPath(driver, '//tbody/tr[1000]/td[2]', false);
     if (!await assertClassesContained(td2, ["col-md-4"], "second td")) {
         return false;
     }
 
     // third td
-    let td3 = await findByXPath(driver, '//tbody/tr[1000]/td[3]');
+    let td3 = await findByXPath(driver, '//tbody/tr[1000]/td[3]', false);
     if (!await assertClassesContained(td3, ["col-md-1"], "third td")) {
         return false;
     }
 
     // span in third td
-    let span = await findByXPath(driver, '//tbody/tr[1000]/td[3]/a/span');
+    let span = await findByXPath(driver, '//tbody/tr[1000]/td[3]/a/span', false);
     if (!await assertClassesContained(span, ["glyphicon","glyphicon-remove"], "span in a in third td")) {
         return false;
     }
@@ -201,7 +202,7 @@ export async function checkTRcorrect(driver: WebDriver, timeout = config.TIMEOUT
 
 
     // fourth td
-    let td4 = await findByXPath(driver, '//tbody/tr[1000]/td[4]');
+    let td4 = await findByXPath(driver, '//tbody/tr[1000]/td[4]', false);
     if (!await assertClassesContained(td4, ["col-md-6"], "fourth td")) {
         return false;
     }
@@ -211,7 +212,7 @@ export async function checkTRcorrect(driver: WebDriver, timeout = config.TIMEOUT
 }
 
 export async function getInnerHTML(driver: WebDriver, xpath: string, timeout = config.TIMEOUT): Promise<string> {
-    let elem = await findByXPath(driver, xpath);
+    let elem = await findByXPath(driver, xpath, false);
     return elem.getAttribute("innerHTML");
 }
 
@@ -236,10 +237,13 @@ async function runBench(frameworkNames: string[]) {
             let framework: FrameworkData = runFrameworks[i];
             setUseShadowRoot(framework.useShadowRoot);
             setUseRowShadowRoot(framework.useRowShadowRoot);
+            setShadowRootName(framework.shadowRootName);
+            setButtonsInShadowRoot(framework.buttonsInShadowRoot);
+    
             await driver.get(`http://localhost:${config.PORT}/${framework.uri}/index.html`);
-            await testElementLocatedById(driver, "add");
-            await clickElementById(driver,'run');
-            await testTextContains(driver,'//tbody/tr[1000]/td[1]','1000');
+            await testElementLocatedById(driver, "add", config.TIMEOUT, true);
+            await clickElementById(driver,'run', true);
+            await testTextContains(driver,'//tbody/tr[1000]/td[1]','1000', config.TIMEOUT, false);
 
             // check html for tr
             let htmlCorrect = await checkTRcorrect(driver);
@@ -249,27 +253,31 @@ async function runBench(frameworkNames: string[]) {
             }
 
             await driver.executeScript(init);
-            await driver.executeScript(`window.nonKeyedDetector_setUseShadowDom(${framework.useShadowRoot});`);
+            if (framework.useShadowRoot) {
+              await driver.executeScript(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`);
+            } else {
+              await driver.executeScript(`window.nonKeyedDetector_setUseShadowDom(undefined);`);
+            }
             await driver.executeScript('window.nonKeyedDetector_instrument()');
             // swap
             await driver.executeScript('nonKeyedDetector_storeTr()');
-            await clickElementById(driver,'swaprows');
-            await testTextContains(driver,'//tbody/tr[2]/td[1]','999');
+            await clickElementById(driver,'swaprows', true);
+            await testTextContains(driver,'//tbody/tr[2]/td[1]','999', config.TIMEOUT, false);
             let res = await driver.executeScript('return nonKeyedDetector_result()');
             let keyedSwap = isKeyedSwapRow(res, framework.keyed);
             // run
             await driver.executeScript('nonKeyedDetector_storeTr()');
             await driver.executeScript('window.nonKeyedDetector_reset()');
-            await clickElementById(driver,'run');
-            await testTextContains(driver,'//tbody/tr[1000]/td[1]','2000');
+            await clickElementById(driver,'run', true);
+            await testTextContains(driver,'//tbody/tr[1000]/td[1]','2000', config.TIMEOUT, false);
             res = await driver.executeScript('return nonKeyedDetector_result()');
             let keyedRun =isKeyedRun(res, framework.keyed);
             // remove
             await driver.executeScript('nonKeyedDetector_storeTr()');
-            let text = await getTextByXPath(driver, `//tbody/tr[2]/td[2]/a`);
+            let text = await getTextByXPath(driver, `//tbody/tr[2]/td[2]/a`, false);
             await driver.executeScript('window.nonKeyedDetector_reset()');
-            await clickElementByXPath(driver, `//tbody/tr[2]/td[3]/a/span[1]`);
-            await testTextNotContained(driver, `//tbody/tr[2]/td[2]/a`, text);
+            await clickElementByXPath(driver, `//tbody/tr[2]/td[3]/a/span[1]`,false);
+            await testTextNotContained(driver, `//tbody/tr[2]/td[2]/a`, text, config.TIMEOUT, false);
             res = await driver.executeScript('return nonKeyedDetector_result()');
             let keyedRemove = isKeyedRemove(res, framework.keyed);
             let keyed = keyedRemove && keyedRun && keyedSwap;
