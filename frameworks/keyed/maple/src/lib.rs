@@ -165,9 +165,9 @@ fn App() -> TemplateResult {
                             let is_selected = *selected.get() == Some(row_id);
                             cloned!((selected, remove) => template! {
                                 tr(class=if is_selected { "danger" } else { "" }) {
-                                    td(class="col-md-1", textContent=row_id)
+                                    td(class="col-md-1") { (row_id) }
                                     td(class="col-md-4") {
-                                        a(textContent=row.label.get(), on:click=move |_| selected.set(Some(row_id)))
+                                        a(on:click=move |_| selected.set(Some(row_id))) { (row.label.get()) }
                                     }
                                     td(class="col-md-1") {
                                         a(on:click=move |_| remove(row_id)) {
