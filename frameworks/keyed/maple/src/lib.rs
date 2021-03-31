@@ -63,7 +63,7 @@ fn Button(props: ButtonProps) -> TemplateResult {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 struct RowData {
     id: usize,
     label: Signal<String>,
