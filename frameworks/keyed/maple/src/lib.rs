@@ -171,8 +171,7 @@ fn App() -> TemplateResult {
                                     }
                                     td(class="col-md-1") {
                                         a(on:click=move |_| remove(row_id)) {
-                                            // TODO: support attributes with '-'
-                                            span(class="glyphicon glyphicon-remove", /* aria-hidden="true" */)
+                                            span(class="glyphicon glyphicon-remove", aria-hidden="true")
                                         }
                                     }
                                     td(class="col-md-6")
