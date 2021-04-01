@@ -429,7 +429,7 @@ async function init(input) {
         var ret = getObject(arg0) instanceof Window;
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper700 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper709 = function(arg0, arg1, arg2) {
         var ret = makeClosure(arg0, arg1, 29, __wbg_adapter_14);
         return addHeapObject(ret);
     };
