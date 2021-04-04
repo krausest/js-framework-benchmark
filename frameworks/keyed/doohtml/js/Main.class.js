@@ -14,14 +14,14 @@ const start = function(name) {
 const stop = function(name) {
     if (startTime[name]) {
         startTime[name].push(new Date().getTime())
-    //    console.log('DooHTML', name, 'took:', startTime[name][1] - startTime[name][0]);
-        document.querySelector('#time').value += `${name} took: ${startTime[name][1] - startTime[name][0]}\n`
+        console.log('DooHTML', name, 'took:', startTime[name][1] - startTime[name][0]);
+        // document.querySelector('#time').value += `${name} took: ${startTime[name][1] - startTime[name][0]}\n`
 		if (tot.length === 2) {
     		console.log('DooHTML Tot:', startTime[name][1] - tot[0])
 	//document.querySelector('#time').scrollIntoView()
-			document.querySelector('#time').value =`Tot: ${startTime[name][1] - tot[0]}\n`
-			document.querySelector('#time').value +=`Len ${Main[0].tbody.childNodes.length}\n`
-    		document.querySelector('#time').focus()
+			// document.querySelector('#time').value =`Tot: ${startTime[name][1] - tot[0]}\n`
+			// document.querySelector('#time').value +=`Len ${Main[0].tbody.childNodes.length}\n`
+    		// document.querySelector('#time').focus()
 
 			tot = []
     	}
@@ -63,9 +63,9 @@ Doo.define(
 			this.swaprows = this.swapRows.bind(this)
 			this.addEventListeners()
 			this.selectedRow = undefined
-			document.querySelector(".jumbotron").firstElementChild.innerHTML += ` ${Doo.version} (keyed)`
+			document.querySelector(".ver").innerHTML += ` ${Doo.version} (keyed)`
 			document.title += ` ${Doo.version} (keyed)`
-			this.time = document.querySelector('#time')
+			//this.time = document.querySelector('#time')
 			this.stop = stop
 			this.start = start
 		}
@@ -81,23 +81,6 @@ Doo.define(
 				}
 			});
 		}
-
-/*
-		async attributeChangedCallback(name, oldVal, newVal) {
-			//TODO do we need length???
-			if (newVal.length > 0 && oldVal !== newVal) {
-				if (name === 'key') {
-					this.rowList.innerHTML = this.renderNode(this.place[0], this.data.rows, newVal  , 1 )
-					this.tbody.querySelector(newVal).innerHTML = await this.render()
-				} else if (name === 'page-size') {
-					this.PAGE_SIZE = newVal
-				} else if (name === 'debug') {
-					Doo.debug = true
-				}	
-			}	
-		}
-*/	
-	
 	
 		getParentRow(elem) {
         	while (elem) {
@@ -141,28 +124,17 @@ Doo.define(
 			this.data.rows = this.data.rows.concat(this.buildData())
 			stop('append')
 			start('runAppend')
-//debugger
 			this.renderSlice(this.data.rows, len)
 			e.target.blur()
 			stop('runAppend')
 		}    
 
-		renderSlice(dataSet=this.data[this.defaultDataSet], pointer=0, stop=null,e) {
-//			let empty1 = document.createElement('tbody')
-//			empty1.innerHTML = '<tr><td class="col-md-1">x</td><tr>'
-
+		async renderSlice(dataSet=this.data[this.defaultDataSet], pointer=0, stop=null,e) {
 			let tableRef = this.tbody.parentElement
 
-this.k=0
-
-			this.PAGE_SIZE = 10
 			let rowList = []
 			let rowList2 = []
-			let frag = []
-			let d = document.createDocumentFragment();
-			let tb = document.createElement('tbody')
-
-
+	/*
 			const observer = new MutationObserver(	
 				(mutationsList, observer) => {	
 					debugger
@@ -175,43 +147,33 @@ this.k=0
 						}	
 				}			
 			)		
-
-
-//			for (let i=0;i<this.PAGE_SIZE;i++) {
-		//	let tb = document.createElement('tbody')
-		observer.observe(this.tbody, {attributes:true})	
+*/
 
 
 			for (let i=0;i<10000;i++) {
-
 				let newRow = tableRef.insertRow(-1)
-		//		newRow.setAttribute('key',"")
-				//newRow.innerHTML = this.renderNode(this.place[0], this.data.rows, i  , 1 )
-				let newCell = newRow.insertCell(0)
-				newCell.classList.add("col-md-1")
 				rowList.push(newRow)
-				
 				rowList2.push(this.renderNode(this.place[0], this.data.rows, i  , 1 ))
 	
-
-
-				//	tb.innerHTML = this.renderNode(this.place[0], this.data.rows, i  , 1 )
-			//	frag.push(tb.firstElementChild)
-				//d.appendChild(tb.firstElementChild)
-//				frag.push(frag1)
-			//	console.log(frag1) 
-				//newCell.appendChild(newText);
-	
 			}
-	//		alert(d.outerHTML)
-	
-			for (let i=0;i<100;i++) {
-//				this.tbody.replaceChild(frag[i], rowList[i])
-//				rowList[i].setAttribute('key',i)
+			for (let i=0;i<10000;i++) {
+				//rowList[i].innerHTML = tb.childNodes[i].innerHTML
 				rowList[i].innerHTML = rowList2[i]
-//				this.tbody.replaceChild(frag[i], rowList[i])
 
 			}
+			rowList = undefined
+			rowList2 = undefined
+			return
+			/*
+			let promise = new Promise((resolve) => {
+				for (let i=100;i<10000;i++) {
+					rowList[i].innerHTML = rowList2[i]
+
+				}
+				setTimeout(()=>resolve(), 5000)
+			})	
+			await promise
+		*/
 			// for (let i=0;i<100;i++) {
 			// 	//				this.tbody.replaceChild(frag[i], rowList[i])
 			// 	//				rowList[i].setAttribute('key',i)
@@ -221,7 +183,7 @@ this.k=0
 			// 				}
 				
 
-			return
+	//		return
 		}	
 
 		appendData(dataSet, start) {
@@ -240,9 +202,6 @@ this.k=0
 			}	
 		}
 
-	
-
-
 		runLots(e) {
 			start('buildLots')
 			this.data.rows = this.buildData(10000);
@@ -250,10 +209,7 @@ this.k=0
 			start('runLots')
 			this.tbody.textContent = ""
 			this.renderSlice(this.data.rows, 0, 1000,e)
-			//this.PAGE_SIZE = 10000
-			//this.render()
 			e.target.blur()
-
 			stop('runLots')
 		}
 
