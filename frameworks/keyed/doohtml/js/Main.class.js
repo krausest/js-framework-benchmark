@@ -4,7 +4,9 @@ let startTime = {};
 let tot = []
 
 const start = function(name) {
-   	tot.push(new Date().getTime())
+//	document.querySelector('#time').blur()
+
+	tot.push(new Date().getTime())
     if (!startTime[name]) {
         startTime[name] = [ new Date().getTime()]    
     }    
@@ -12,10 +14,16 @@ const start = function(name) {
 const stop = function(name) {
     if (startTime[name]) {
         startTime[name].push(new Date().getTime())
-        console.log('DooHTML', name, 'took:', startTime[name][1] - startTime[name][0]);
+    //    console.log('DooHTML', name, 'took:', startTime[name][1] - startTime[name][0]);
+        document.querySelector('#time').value += `${name} took: ${startTime[name][1] - startTime[name][0]}\n`
 		if (tot.length === 2) {
-    		console.log('DooHTML Tot:', startTime[name][1] - tot[0]);
-    		tot = []
+    		console.log('DooHTML Tot:', startTime[name][1] - tot[0])
+	//document.querySelector('#time').scrollIntoView()
+			document.querySelector('#time').value =`Tot: ${startTime[name][1] - tot[0]}\n`
+			document.querySelector('#time').value +=`Len ${Main[0].tbody.childNodes.length}\n`
+    		document.querySelector('#time').focus()
+
+			tot = []
     	}
     	startTime[name] = undefined
     }
@@ -40,7 +48,7 @@ rowTemplate.innerHTML = "<td class='col-md-1'></td><td class='col-md-4'><a class
 Doo.define(
   	class Main extends Doo {
 		constructor() {
-			super()
+			super(10000)
 			this.scrollTarget = '.table'
 			this.defaultDataSet = 'rows'
 			this.ID = 1
@@ -54,11 +62,13 @@ Doo.define(
 			this.clear = this.clear.bind(this)
 			this.swaprows = this.swapRows.bind(this)
 			this.addEventListeners()
-			Main.xxx = document.getElementById("xxx");
 			this.selectedRow = undefined
-			document.querySelector(".jumbotron H1").innerHTML += ` ${Doo.version} (keyed)`
+			document.querySelector(".jumbotron").firstElementChild.innerHTML += ` ${Doo.version} (keyed)`
 			document.title += ` ${Doo.version} (keyed)`
-  		}
+			this.time = document.querySelector('#time')
+			this.stop = stop
+			this.start = start
+		}
 
 		async dooAfterRender() {
 			this.tbody = this.shadow.querySelector('#tbody')
@@ -72,7 +82,24 @@ Doo.define(
 			});
 		}
 
-        getParentRow(elem) {
+/*
+		async attributeChangedCallback(name, oldVal, newVal) {
+			//TODO do we need length???
+			if (newVal.length > 0 && oldVal !== newVal) {
+				if (name === 'key') {
+					this.rowList.innerHTML = this.renderNode(this.place[0], this.data.rows, newVal  , 1 )
+					this.tbody.querySelector(newVal).innerHTML = await this.render()
+				} else if (name === 'page-size') {
+					this.PAGE_SIZE = newVal
+				} else if (name === 'debug') {
+					Doo.debug = true
+				}	
+			}	
+		}
+*/	
+	
+	
+		getParentRow(elem) {
         	while (elem) {
         		if (elem.tagName === "TR") {return elem}
         		elem = elem.parentNode;
@@ -87,7 +114,7 @@ Doo.define(
 			}
 			return data	
 		}
-	
+
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
@@ -96,36 +123,137 @@ Doo.define(
 			}
 		}  
 
-		run() {
+		run(e) {
 			start('buildData')
 			this.data.rows = this.buildData()
 			stop('buildData')
 			start('run')
-	//		this.tbody.textContent = ""
-			this.renderAll()
-			Main.xxx.focus()
+			this.tbody.textContent = ""
+			
+			this.render()
+			e.target.blur()
 			stop('run')
 		}
 
-		add() {
+		add(e) {
 			start('append')
 			let len = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
 			stop('append')
 			start('runAppend')
-			this.appendData(this.data.rows, len)
-			Main.xxx.focus()
+//debugger
+			this.renderSlice(this.data.rows, len)
+			e.target.blur()
 			stop('runAppend')
 		}    
 
-		runLots() {
+		renderSlice(dataSet=this.data[this.defaultDataSet], pointer=0, stop=null,e) {
+//			let empty1 = document.createElement('tbody')
+//			empty1.innerHTML = '<tr><td class="col-md-1">x</td><tr>'
+
+			let tableRef = this.tbody.parentElement
+
+this.k=0
+
+			this.PAGE_SIZE = 10
+			let rowList = []
+			let rowList2 = []
+			let frag = []
+			let d = document.createDocumentFragment();
+			let tb = document.createElement('tbody')
+
+
+			const observer = new MutationObserver(	
+				(mutationsList, observer) => {	
+					debugger
+						if (mutationsList[0].type === 'attributes' ) {
+							console.log('coolio')
+							let test = document.createElement('td')
+							test.innerHTML = 'coolio' + this.k
+							
+							mutationsList[0].target.parentNode.appendChild(test)
+						}	
+				}			
+			)		
+
+
+//			for (let i=0;i<this.PAGE_SIZE;i++) {
+		//	let tb = document.createElement('tbody')
+		observer.observe(this.tbody, {attributes:true})	
+
+
+			for (let i=0;i<10000;i++) {
+
+				let newRow = tableRef.insertRow(-1)
+		//		newRow.setAttribute('key',"")
+				//newRow.innerHTML = this.renderNode(this.place[0], this.data.rows, i  , 1 )
+				let newCell = newRow.insertCell(0)
+				newCell.classList.add("col-md-1")
+				rowList.push(newRow)
+				
+				rowList2.push(this.renderNode(this.place[0], this.data.rows, i  , 1 ))
+	
+
+
+				//	tb.innerHTML = this.renderNode(this.place[0], this.data.rows, i  , 1 )
+			//	frag.push(tb.firstElementChild)
+				//d.appendChild(tb.firstElementChild)
+//				frag.push(frag1)
+			//	console.log(frag1) 
+				//newCell.appendChild(newText);
+	
+			}
+	//		alert(d.outerHTML)
+	
+			for (let i=0;i<100;i++) {
+//				this.tbody.replaceChild(frag[i], rowList[i])
+//				rowList[i].setAttribute('key',i)
+				rowList[i].innerHTML = rowList2[i]
+//				this.tbody.replaceChild(frag[i], rowList[i])
+
+			}
+			// for (let i=0;i<100;i++) {
+			// 	//				this.tbody.replaceChild(frag[i], rowList[i])
+			// 	//				rowList[i].setAttribute('key',i)
+			// 					rowList[i].innerHTML = rowList2[i]
+			// 	//				this.tbody.replaceChild(frag[i], rowList[i])
+				
+			// 				}
+				
+
+			return
+		}	
+
+		appendData(dataSet, start) {
+			if (start) {
+				let len = this.PAGE_SIZE
+				let d = document.createDocumentFragment();
+				for (let i=0;i<len;i++) {
+					let tb = document.createElement(this.place[0].tagName)
+					//let tr = document.createElement('tr')
+					tb.innerHTML = this.renderNode(this.place[0], this.data.rows, i, len)
+					d.appendChild(tb.firstElementChild)
+				}
+				this.place[0].appendChild(d)	
+			} else {
+				this.renderAll()
+			}	
+		}
+
+	
+
+
+		runLots(e) {
 			start('buildLots')
 			this.data.rows = this.buildData(10000);
 			stop('buildLots')
 			start('runLots')
 			this.tbody.textContent = ""
-			this.renderAll()
-			Main.xxx.focus()
+			this.renderSlice(this.data.rows, 0, 1000,e)
+			//this.PAGE_SIZE = 10000
+			//this.render()
+			e.target.blur()
+
 			stop('runLots')
 		}
 
@@ -173,11 +301,11 @@ Doo.define(
 			document.getElementById("main").addEventListener('click', e => {
 				e.preventDefault();
 				if (e.target.matches('#runlots')) {
-					this.runLots();
+					this.runLots(e);
 				} else if (e.target.matches('#run')) {
-					this.run();
+					this.run(e);
 				} else if (e.target.matches('#add')) {
-					this.add();
+					this.add(e);
 				} else if (e.target.matches('#update')) {
 					this.update();
 				} else if (e.target.matches('#clear')) {
