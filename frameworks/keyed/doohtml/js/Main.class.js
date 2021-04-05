@@ -48,7 +48,7 @@ rowTemplate.innerHTML = "<td class='col-md-1'></td><td class='col-md-4'><a class
 Doo.define(
   	class Main extends Doo {
 		constructor() {
-			super(10000)
+			super()
 			this.scrollTarget = '.table'
 			this.defaultDataSet = 'rows'
 			this.ID = 1
@@ -65,9 +65,6 @@ Doo.define(
 			this.selectedRow = undefined
 			document.querySelector(".ver").innerHTML += ` ${Doo.version} (keyed)`
 			document.title += ` ${Doo.version} (keyed)`
-			//this.time = document.querySelector('#time')
-			this.stop = stop
-			this.start = start
 		}
 
 		async dooAfterRender() {
@@ -112,8 +109,7 @@ Doo.define(
 			stop('buildData')
 			start('run')
 			this.tbody.textContent = ""
-			
-			this.render()
+			this.renderTable()
 			e.target.blur()
 			stop('run')
 		}
@@ -124,68 +120,12 @@ Doo.define(
 			this.data.rows = this.data.rows.concat(this.buildData())
 			stop('append')
 			start('runAppend')
-			this.renderSlice(this.data.rows, len)
+			this.appendData(this.data.rows, len, 1000)
 			e.target.blur()
 			stop('runAppend')
 		}    
 
-		async renderSlice(dataSet=this.data[this.defaultDataSet], pointer=0, stop=null,e) {
-			let tableRef = this.tbody.parentElement
-
-			let rowList = []
-			let rowList2 = []
-	/*
-			const observer = new MutationObserver(	
-				(mutationsList, observer) => {	
-					debugger
-						if (mutationsList[0].type === 'attributes' ) {
-							console.log('coolio')
-							let test = document.createElement('td')
-							test.innerHTML = 'coolio' + this.k
-							
-							mutationsList[0].target.parentNode.appendChild(test)
-						}	
-				}			
-			)		
-*/
-
-
-			for (let i=0;i<10000;i++) {
-				let newRow = tableRef.insertRow(-1)
-				rowList.push(newRow)
-				rowList2.push(this.renderNode(this.place[0], this.data.rows, i  , 1 ))
-	
-			}
-			for (let i=0;i<10000;i++) {
-				//rowList[i].innerHTML = tb.childNodes[i].innerHTML
-				rowList[i].innerHTML = rowList2[i]
-
-			}
-			rowList = undefined
-			rowList2 = undefined
-			return
-			/*
-			let promise = new Promise((resolve) => {
-				for (let i=100;i<10000;i++) {
-					rowList[i].innerHTML = rowList2[i]
-
-				}
-				setTimeout(()=>resolve(), 5000)
-			})	
-			await promise
-		*/
-			// for (let i=0;i<100;i++) {
-			// 	//				this.tbody.replaceChild(frag[i], rowList[i])
-			// 	//				rowList[i].setAttribute('key',i)
-			// 					rowList[i].innerHTML = rowList2[i]
-			// 	//				this.tbody.replaceChild(frag[i], rowList[i])
-				
-			// 				}
-				
-
-	//		return
-		}	
-
+/*
 		appendData(dataSet, start) {
 			if (start) {
 				let len = this.PAGE_SIZE
@@ -201,14 +141,14 @@ Doo.define(
 				this.renderAll()
 			}	
 		}
-
+*/
 		runLots(e) {
 			start('buildLots')
 			this.data.rows = this.buildData(10000);
 			stop('buildLots')
 			start('runLots')
 			this.tbody.textContent = ""
-			this.renderSlice(this.data.rows, 0, 1000,e)
+			this.renderTable(this.data.rows, 0, 1000,e)
 			e.target.blur()
 			stop('runLots')
 		}
@@ -241,15 +181,16 @@ Doo.define(
 
 		swapRows() {
 			if (this.data.rows.length>10) {
-				let tr = this.tbody.querySelectorAll('tr')
-				let swapNodeIdx =  Math.min(tr.length - 2, 998)
-				let node1 = tr[1].cloneNode(true)
-				let node2 = tr[swapNodeIdx].cloneNode(true)
-				let tmp = this.data.rows[1]
-				this.data.rows[1] = this.data.rows[swapNodeIdx];
-				this.data.rows[swapNodeIdx] = tmp;
-				this.tbody.replaceChild(node2, tr[1])
-				this.tbody.replaceChild(node1, tr[swapNodeIdx])
+				let node1 = this.tbody.childNodes[1]
+				let node2 = this.tbody.childNodes[998]
+
+				let row1 = this.data.rows[1];
+				this.data.rows[1] = this.data.rows[998];
+				this.data.rows[998] = row1
+				
+				this.tbody.insertBefore(node2, node1)
+				this.tbody.insertBefore(node1, this.tbody.childNodes[999])
+
 			}
 		}
 
