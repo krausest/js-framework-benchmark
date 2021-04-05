@@ -176,7 +176,7 @@ Doo.define(
 
 		clear() {
 			this.data.rows = []
-			this.clearAll()
+			this.tbody.textContext = ''
 		}
 
 		swapRows() {
