@@ -1,6 +1,6 @@
 import React, { memo, useReducer } from "react";
 import ReactDOM from "react-dom";
-import { proxy, useProxy } from "valtio";
+import { proxy, useSnapshot } from "valtio";
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
   "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive",
@@ -80,7 +80,7 @@ const Row = memo(({ id, label, isSelected }) => {
 });
 
 const RowList = memo(() => {
-  const { data, selected } = useProxy(state);
+  const { data, selected } = useSnapshot(state);
   return data.map((item) => <Row key={item.id} id={item.id} label={item.label} isSelected={selected === item.id} />);
 });
 
