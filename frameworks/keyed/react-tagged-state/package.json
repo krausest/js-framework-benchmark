@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "@babel/core": "7.12.3",
-    "@babel/plugin-proposal-class-properties": "7.12.1",
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.1",
     "babel-loader": "8.1.0",
@@ -34,6 +33,6 @@
   "dependencies": {
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-tagged-state": "0.1.21"
+    "react-tagged-state": "^0.1.40"
   }
 }
