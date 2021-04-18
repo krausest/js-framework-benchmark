@@ -148,7 +148,7 @@ class Row extends mim.Component
 {
 	main: Main;
 	id: number;
-    label: string;
+    // label: string;
     labelVN: mim.ITextVN;
     trVN: mim.IElmVN<HTMLTableRowElement>;
 
@@ -158,7 +158,7 @@ class Row extends mim.Component
 
 		this.main = main;
 		this.id = id;
-        this.label = label;
+        // this.label = label;
         this.labelVN = mim.createTextVN( label);
 	}
 
@@ -180,7 +180,8 @@ class Row extends mim.Component
 
 	public updateLabel()
 	{
-        this.labelVN.setText( this.label += " !!!");
+        // this.labelVN.setText( this.label += " !!!");
+        this.labelVN.setText( this.labelVN.text + " !!!");
 	}
 
 	private onDeleteClicked()
