@@ -1,13 +1,13 @@
 {
-  "name": "hyperapp-v2.0.4-js-benchmark",
+  "name": "hyperapp-js-benchmark",
   "version": "1.0.0",
-  "description": "hyperapp v2.0.4 js benchmark",
+  "description": "hyperapp js framework benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "hyperapp"
   },
   "dependencies": {
-    "hyperapp": "2.0.8"
+    "hyperapp": "2.0.12"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^7.1.3",

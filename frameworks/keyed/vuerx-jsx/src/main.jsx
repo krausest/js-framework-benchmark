@@ -1,5 +1,5 @@
 import { ref } from "@vue/reactivity";
-import { render, map } from 'vuerx-jsx';
+import { render, map, createSelector } from 'vuerx-jsx';
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],
@@ -27,11 +27,12 @@ const Button = ({ id, text, fn }) =>
 
 const App = () => {
   const data = ref([]),
-    selected = ref(null);
+    selected = ref(null),
+    isSelected = createSelector(() => selected.value);
 
   const list = map(() => data.value, row => {
     const rowId = row.id;
-    return <tr class={selected.value === rowId ? "danger" : ""}>
+    return <tr class={isSelected(rowId) ? "danger" : ""}>
       <td class='col-md-1' textContent={ rowId } />
       <td class='col-md-4'><a onClick={[setSelected, rowId]} textContent={ row.label } /></td>
       <td class='col-md-1'><a onClick={[remove, rowId]}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
