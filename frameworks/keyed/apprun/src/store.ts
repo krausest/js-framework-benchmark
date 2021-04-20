@@ -1,72 +1,86 @@
-function _random(max) {
-    return Math.round(Math.random()*1000)%max;
+import { Update } from 'apprun';
+
+function _random(max: number) {
+  return Math.round(Math.random() * 1000) % max;
 }
 
-export default class Store {
-    data = [];
-    backup = null;
-    selected = null;
-    id = 1;
-    constructor() {
+const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+
+export type Data = {
+  id: number
+  label: string
+}
+
+export type State = {
+  data: Array<Data>;
+  selected: number;
+}
+
+export type Events = 'run' | 'runlost' | 'add' | 'udate' | 'swaprows' | 'clear' | 'delete' | 'select';
+
+export const state: State = {
+  data: [],
+  selected: 0
+}
+
+let id = 1
+function buildData(count: number): Array<Data> {
+  return new Array(count).fill(0).map(_ => ({
+    id: id++,
+    label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`
+  }))
+}
+
+export const update: Update<State, Events> = {
+  run: () => ({
+    data: buildData(1000),
+    selected: 0
+  }),
+
+  add: state => ({
+    data: state.data.concat(buildData(1000)),
+    selected: state.selected,
+  }),
+
+  runlots: () => ({
+    data: buildData(10000),
+    selected: 0
+  }),
+
+  clear: () => ({
+    data: [],
+    selected: 0
+  }),
+
+  update: state => ({
+    data: state.data.map((d, i) => {
+      if (i % 10 === 0) {
+        d.label = `${d.label} !!!`
+      }
+      return d
+    }),
+    selected: state.selected
+  }),
+
+  swaprows: state => {
+    if (state.data.length > 4) {
+      const idx = state.data.length - 2;
+      const a = state.data[1];
+      state.data[1] = state.data[idx];
+      state.data[idx] = a;
     }
-    buildData(count = 1000) {
-        var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-        var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-        var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-        var data = [];
-        for (var i = 0; i < count; i++)
-            data.push({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
-        return data;
-    }
-    updateData(mod = 10) {
-        for (let i=0;i<this.data.length;i+=10) {
-            this.data[i].label += ' !!!';
-            // this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label +' !!!'});
-        }
-    }
-    delete(id) {
-        // const idx = this.data.findIndex(d => d.id==id);
-        this.data = this.data.filter((e, i) => e.id != id);
-        if (id === this.selected) this.selected = null;
-    }
-    run() {
-        this.data = this.buildData();
-        this.selected = null;
-    }
-    add() {
-        this.data = this.data.concat(this.buildData(1000));
-        this.selected = null;
-    }
-    update() {
-        this.updateData();
-    }
-    select(id) {
-        this.selected = id;
-    }
-    hideAll() {
-        this.backup = this.data;
-        this.data = [];
-        this.selected = null;
-    }
-    showAll() {
-        this.data = this.backup;
-        this.backup = null;
-        this.selected = null;
-    }
-    runLots() {
-        this.data = this.buildData(10000);
-        this.selected = null;
-    }
-    clear() {
-        this.data = [];
-        this.selected = null;
-    }
-    swapRows() {
-        if (this.data.length > 4) {
-            var idx = this.data.length - 2;
-            var a = this.data[1];
-            this.data[1] = this.data[idx];
-            this.data[idx] = a;
-        }
-    }
+    return state;
+  },
+
+  select: (state, selected) => ({
+    ...state, selected
+  }),
+
+  delete: (state, id) => {
+    if (state.selected == id) state.selected = 0;
+    state.data = state.data.filter(d => d.id != id);
+    return state;
+  },
 }

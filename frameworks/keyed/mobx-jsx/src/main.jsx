@@ -1,5 +1,5 @@
-import { observable, action } from 'mobx';
-import { Component, map, render } from 'mobx-jsx';
+import { action, observable } from "mobx";
+import { map, render, createSelector } from "mobx-jsx";
 
 function _random (max) { return Math.round(Math.random() * 1000) % max; };
 
@@ -24,70 +24,67 @@ const Button = ({ id, text, fn }) =>
     <button id={ id } class='btn btn-primary btn-block' type='button' onClick={ fn }>{ text }</button>
   </div>
 
-class App extends Component {
-  @observable data = [];
-  @observable selected = null;
-  @action.bound run() {
-    this.data.replace(buildData(1000));
-    this.selected = null;
-  };
-  @action.bound runLots() {
-    this.data.replace(buildData(10000));
-    this.selected = null;
-  };
-  @action.bound add() { this.data.spliceWithArray(this.data.length, 0, buildData(1000)); };
-  @action.bound update() {
-    let index = 0;
-    while (index < this.data.length) {
-      this.data[index].label += ' !!!';
-      index += 10;
-    }
-  }
-  @action.bound swapRows() {
-    if (this.data.length > 998) {
-      let a = this.data[1];
-    	this.data[1] = this.data[998];
-      this.data[998] = a;
-    }
-  }
-  @action.bound clear() {
-    this.data.clear();
-    this.selected = null;
-  }
-  @action.bound remove(item) { this.data.remove(item) };
-  @action.bound select(itemId) { this.selected = itemId };
+const App = () => {
+  const data = observable([]),
+    selected = observable.box(null),
+    isSelected = createSelector(() => selected.get()),
+    run = action(() => {
+      data.replace(buildData(1000));
+      selected.set(null);
+    }),
+    runLots = action(() => {
+      data.replace(buildData(10000));
+      selected.set(null);
+    }),
+    add = action(() => data.spliceWithArray(data.length, 0, buildData(1000))),
+    update = action(() => {
+      let index = 0;
+      while (index < data.length) {
+        data[index].label += " !!!";
+        index += 10;
+      }
+    }),
+    swapRows = action(() => {
+      if (data.length > 998) {
+        let a = data[1];
+        data[1] = data[998];
+        data[998] = a;
+      }
+    }),
+    clear = action(() => {
+      data.clear();
+      selected.set(null);
+    }),
+    remove = action((item) => data.remove(item)),
+    select = action((itemId) => selected.set(itemId));
 
-  render() {
-    const { run, runLots, add, update, clear, swapRows, select, remove } = this;
+  const list = map(data, row => {
+    const rowId = row.id;
+    return <tr class={isSelected(rowId) ? "danger" : ""}>
+      <td class='col-md-1' textContent={ rowId } />
+      <td class='col-md-4'><a onClick={[select, rowId]} textContent={ row.label } /></td>
+      <td class='col-md-1'><a onClick={[remove, row]}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
+      <td class='col-md-6'/>
+    </tr>
+  });
 
-    const list = map(this.data, row => {
-      const rowId = row.id;
-      return <tr class={this.selected === rowId ? "danger" : ""}>
-        <td class='col-md-1' textContent={ rowId } />
-        <td class='col-md-4'><a onClick={[select, rowId]} textContent={ row.label } /></td>
-        <td class='col-md-1'><a onClick={[remove, row]}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
-        <td class='col-md-6'/>
-      </tr>
-    });
-
-    return <div class='container'>
-      <div class='jumbotron'><div class='row'>
-        <div class='col-md-6'><h1>MobX-JSX Keyed</h1></div>
-        <div class='col-md-6'><div class='row'>
-          <Button id='run' text='Create 1,000 rows' fn={ run } />
-          <Button id='runlots' text='Create 10,000 rows' fn={ runLots } />
-          <Button id='add' text='Append 1,000 rows' fn={ add } />
-          <Button id='update' text='Update every 10th row' fn={ update } />
-          <Button id='clear' text='Clear' fn={ clear } />
-          <Button id='swaprows' text='Swap Rows' fn={ swapRows } />
-        </div></div>
+  return <div class='container'>
+    <div class='jumbotron'><div class='row'>
+      <div class='col-md-6'><h1>MobX-JSX Keyed</h1></div>
+      <div class='col-md-6'><div class='row'>
+        <Button id='run' text='Create 1,000 rows' fn={ run } />
+        <Button id='runlots' text='Create 10,000 rows' fn={ runLots } />
+        <Button id='add' text='Append 1,000 rows' fn={ add } />
+        <Button id='update' text='Update every 10th row' fn={ update } />
+        <Button id='clear' text='Clear' fn={ clear } />
+        <Button id='swaprows' text='Swap Rows' fn={ swapRows } />
       </div></div>
-      <table class='table table-hover table-striped test-data'><tbody>
-        {list}
-      </tbody></table>
-      <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
-    </div>
-  }
-}
+    </div></div>
+    <table class='table table-hover table-striped test-data'><tbody>
+      {list}
+    </tbody></table>
+    <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
+  </div>
+};
 
 render(() => <App />, document.getElementById("main"));
