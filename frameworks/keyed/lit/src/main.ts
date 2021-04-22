@@ -1,4 +1,6 @@
-import { LitElement, html, customElement, property } from 'lit-element';
+import { LitElement, html } from "lit";
+import { property, customElement } from "lit/decorators.js";
+import { repeat } from "lit/directives/repeat.js";
 import { Store } from './store';
 
 const store = new Store();
@@ -18,7 +20,7 @@ export class MainElement extends LitElement {
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-md-6">
-                        <h1>lit-element</h1>
+                        <h1>Lit keyed</h1>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
@@ -45,8 +47,8 @@ export class MainElement extends LitElement {
                 </div>
             </div>
             <table class="table table-hover table-striped test-data" @click=${this._handleClick}>
-                <tbody>${this._rows.map(item => html`
-                <tr id=${item.id} class=${this._selected == item.id ? 'danger' : ''}>
+                <tbody>${repeat(this._rows, item => item.id, item => html`
+                <tr id=${item.id} class=${item.id == this._selected ? 'danger' : ''}>
                     <td class="col-md-1">${item.id}</td>
                     <td class="col-md-4">
                     <a data-action="select" data-id=${item.id}>${item.label}</a>
