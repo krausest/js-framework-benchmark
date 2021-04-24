@@ -183,9 +183,9 @@ export function testElementLocatedById(driver: WebDriver, id: string, timeout = 
 async function retry<T>(retryCount: number, driver: WebDriver, fun : (driver:  WebDriver, retryCount: number) => Promise<T>):  Promise<T> {
     for (let i=0; i<retryCount; i++) {
         try {
-            return fun(driver, i);
+            return await fun(driver, i);
         } catch (err) {
-            console.log("retry failed");
+            console.log("comand failed. Retry #", i+1);
         }
     }
 }
