@@ -1,9 +1,5 @@
 'use strict';
 
-let startTime = {};
-let tot = []
-
-
 const _random = ((max) => {
     return Math.round(Math.random()*1000)%max;
 })
@@ -32,9 +28,9 @@ Doo.define(
 			this.swaprows = this.swapRows.bind(this)
 			this.addEventListeners()
 			this.selectedRow = undefined
-			document.querySelector(".jumbotron H1").innerHTML += ` ${Doo.version} (keyed)`
+			document.querySelector(".ver").innerHTML += ` ${Doo.version} (keyed)`
 			document.title += ` ${Doo.version} (keyed)`
-  		}
+		}
 
 		async dooAfterRender() {
 			this.tbody = this.shadow.querySelector('#tbody')
@@ -47,8 +43,8 @@ Doo.define(
 				}
 			});
 		}
-
-        getParentRow(elem) {
+	
+		getParentRow(elem) {
         	while (elem) {
         		if (elem.tagName === "TR") {return elem}
         		elem = elem.parentNode;
@@ -63,7 +59,7 @@ Doo.define(
 			}
 			return data	
 		}
-	
+
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
@@ -74,18 +70,20 @@ Doo.define(
 
 		run() {
 			this.data.rows = this.buildData()
-			this.renderAll()
+			this.tbody.textContent = ''
+			this.renderTable()
 		}
 
 		add() {
 			let len = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.appendData(this.data.rows, len)
+			this.appendData(this.data.rows, len, 1000)
 		}    
 
 		runLots() {
-			this.data.rows = this.buildData(10000);
-			this.renderAll()
+			this.data.rows = this.buildData(10000)
+			this.tbody.textContent = ''
+			this.renderTable()
 		}
 
 		update() {
@@ -111,20 +109,21 @@ Doo.define(
 
 		clear() {
 			this.data.rows = []
-			this.tbody.textContent = ''
+			this.tbody.innerHTML = ''
 		}
 
 		swapRows() {
 			if (this.data.rows.length>10) {
-				let tr = this.tbody.querySelectorAll('tr')
-				let swapNodeIdx =  Math.min(tr.length - 2, 998)
-				let node1 = tr[1].cloneNode(true)
-				let node2 = tr[swapNodeIdx].cloneNode(true)
-				let tmp = this.data.rows[1]
-				this.data.rows[1] = this.data.rows[swapNodeIdx];
-				this.data.rows[swapNodeIdx] = tmp;
-				this.tbody.replaceChild(node2, tr[1])
-				this.tbody.replaceChild(node1, tr[swapNodeIdx])
+				let node1 = this.tbody.childNodes[1]
+				let node2 = this.tbody.childNodes[998]
+
+				let row1 = this.data.rows[1];
+				this.data.rows[1] = this.data.rows[998];
+				this.data.rows[998] = row1
+				
+				this.tbody.insertBefore(node2, node1)
+				this.tbody.insertBefore(node1, this.tbody.childNodes[999])
+
 			}
 		}
 
@@ -132,11 +131,11 @@ Doo.define(
 			document.getElementById("main").addEventListener('click', e => {
 				e.preventDefault();
 				if (e.target.matches('#runlots')) {
-					this.runLots();
+					this.runLots(e);
 				} else if (e.target.matches('#run')) {
-					this.run();
+					this.run(e);
 				} else if (e.target.matches('#add')) {
-					this.add();
+					this.add(e);
 				} else if (e.target.matches('#update')) {
 					this.update();
 				} else if (e.target.matches('#clear')) {
