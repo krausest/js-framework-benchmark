@@ -5,7 +5,8 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "lit",
-    "useShadowRoot": true
+    "useShadowRoot": true,
+    "issues": [801]
   },
   "scripts": {
     "build-dev": "rollup -c -w",
