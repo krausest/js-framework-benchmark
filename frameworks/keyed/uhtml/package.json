@@ -4,7 +4,8 @@
   "description": "uhtml demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "uhtml"
+    "frameworkVersionFromPackage": "uhtml",
+    "issues": [801]
   },
   "scripts": {
     "build-dev": "rollup -c -w",
