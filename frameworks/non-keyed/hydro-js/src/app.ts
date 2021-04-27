@@ -175,5 +175,5 @@ function renderItem(item: typeof data[number], i: number) {
     remove: () => remove(item.id),
     select: () => selected(item.id),
   });
-  $("#tbody")!.appendChild(tr);
+  $("tbody")!.appendChild(tr);
 }

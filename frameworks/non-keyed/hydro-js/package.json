@@ -6,6 +6,9 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "hydro-js"
   },
+  "issues": [
+    772
+  ],
   "scripts": {
     "build-dev": "html-bundle --hmr",
     "build-prod": "html-bundle",
