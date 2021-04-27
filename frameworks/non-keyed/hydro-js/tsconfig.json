@@ -2,8 +2,6 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "jsx": "preserve",
-    "jsxFactory": "h",
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
