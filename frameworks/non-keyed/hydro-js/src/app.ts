@@ -5,6 +5,7 @@ import {
   $,
   setReactivity,
   observe,
+  template,
 } from "hydro-js";
 
 const ADJECTIVES = [
@@ -161,19 +162,23 @@ function merge(newData: typeof data, oldData: typeof data) {
 }
 
 function renderItem(item: typeof data[number], i: number) {
-  const tr = ($("#singleRow") as HTMLTemplateElement).content.cloneNode(true)
-    .firstChild as HTMLTableRowElement;
-
-  tr.classList.add(
-    String(ternary((val: number) => val === item.id, "danger", "", selected))
-  );
-  tr.setAttribute("bind", String(data[i]));
-  tr.querySelector(".col-md-1")!.textContent = String(data[i].id);
-  tr.querySelector(".col-md-4 > a")!.textContent = String(data[i].label);
-
-  setReactivity(tr, {
-    remove: () => remove(item.id),
-    select: () => selected(item.id),
-  });
+  const tr = template(
+    $("#singleRow")!,
+    {
+      ternaryClass: ternary(
+        (val: number) => val === item.id,
+        "danger",
+        "",
+        selected
+      ),
+      bindData: data[i],
+      dataId: data[i].id,
+      dataLabel: data[i].label,
+    },
+    {
+      remove: () => remove(item.id),
+      select: () => selected(item.id),
+    }
+  )!;
   $("tbody")!.appendChild(tr);
 }

@@ -91,18 +91,23 @@
     </div>
 
     <template id="singleRow">
-      <tr class="">
-        <td class="col-md-1"></td>
-        <td class="col-md-4">
-          <a onclick="select"></a>
-        </td>
-        <td class="col-md-1">
-          <a onclick="remove"
-            ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span
-          ></a>
-        </td>
-        <td class="col-md-6"></td>
-      </tr>
+      <tbody>
+        <tr class="ternaryClass" bind="bindData">
+          <td class="col-md-1">dataId</td>
+          <td class="col-md-4">
+            <a onclick="select">dataLabel</a>
+          </td>
+          <td class="col-md-1">
+            <a onclick="remove"
+              ><span
+                class="glyphicon glyphicon-remove"
+                aria-hidden="true"
+              ></span
+            ></a>
+          </td>
+          <td class="col-md-6"></td>
+        </tr>
+      </tbody>
     </template>
   </body>
 </html>
