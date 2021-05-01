@@ -1,4 +1,6 @@
 import {
+  render,
+  html,
   reactive,
   getValue,
   ternary,
@@ -6,6 +8,8 @@ import {
   setReactivity,
   observe,
   template,
+  onCleanup,
+  unset,
 } from "hydro-js";
 
 const ADJECTIVES = [
@@ -99,6 +103,15 @@ const selected = reactive(-1);
 
 observe(data, (newData: typeof data, oldData: typeof data) => {
   merge(newData, oldData);
+
+  for (let i = oldData.length; i < newData.length; i++) {
+    renderItem(newData[i], i);
+  }
+
+  if (!newData.length) {
+    render(html`<tbody></tbody>`, "tbody");
+  }
+
   if (!newData.length || !oldData.length) selected(-1);
 });
 
@@ -115,9 +128,14 @@ function clear() {
   data([]);
 }
 function update() {
-  getValue(data).forEach((item: typeof data[number], index: number) => {
-    if (index % 10 === 0) item.label += " !!!";
-  });
+  const d = getValue(data);
+  let index = 0;
+  while (index < d.length) {
+    data[index].setter((item: typeof data[number]) => {
+      item.label += " !!!";
+    });
+    index += 10;
+  }
 }
 function swapRows() {
   data((prev: typeof data) => {
@@ -155,22 +173,19 @@ function merge(newData: typeof data, oldData: typeof data) {
     oldData[i].label = newData[i].label;
     newData[i] = oldData[i];
   }
-
-  for (let i = oldData.length; i < newData.length; i++) {
-    renderItem(newData[i], i);
-  }
 }
 
 function renderItem(item: typeof data[number], i: number) {
+  const ternaryClass = ternary(
+    (val: number) => val === item.id,
+    "danger",
+    "",
+    selected
+  );
   const tr = template(
     $("#singleRow")!,
     {
-      ternaryClass: ternary(
-        (val: number) => val === item.id,
-        "danger",
-        "",
-        selected
-      ),
+      ternaryClass,
       bindData: data[i],
       dataId: data[i].id,
       dataLabel: data[i].label,
@@ -180,5 +195,8 @@ function renderItem(item: typeof data[number], i: number) {
       select: () => selected(item.id),
     }
   )!;
+
+  onCleanup(unset, tr as Element, ternaryClass);
+
   $("tbody")!.appendChild(tr);
 }
