@@ -1,4 +1,32 @@
 'use strict';
+let tot = []
+const startTime = {}
+const start = function(name) {
+	//  document.querySelector('#time').blur()
+	
+		tot.push(new Date().getTime())
+		if (!startTime[name]) {
+			startTime[name] = [ new Date().getTime()]    
+		}    
+	};
+	const stop = function(name) {
+		if (startTime[name]) {
+			startTime[name].push(new Date().getTime())
+			console.log('DooHTML', name, 'took:', startTime[name][1] - startTime[name][0]);
+			// document.querySelector('#time').value += `${name} took: ${startTime[name][1] - startTime[name][0]}\n`
+			if (tot.length === 2) {
+				console.log('DooHTML Tot:', startTime[name][1] - tot[0])
+		//document.querySelector('#time').scrollIntoView()
+				// document.querySelector('#time').value =`Tot: ${startTime[name][1] - tot[0]}\n`
+				// document.querySelector('#time').value +=`Len ${Main[0].tbody.childNodes.length}\n`
+				// document.querySelector('#time').focus()
+	
+				tot = []
+			}
+			startTime[name] = undefined
+		}
+	};
+	
 
 const _random = ((max) => {
     return Math.round(Math.random()*1000)%max;
@@ -80,11 +108,141 @@ Doo.define(
 			this.appendData(this.data.rows, len, 1000)
 		}    
 
+		run(e) {
+            start('buildData')
+            this.data.rows = this.buildData()
+            stop('buildData')
+            start('run')
+            this.tbody.textContent = ""
+            this.renderTable()
+            e.target.blur()
+            stop('run')
+        }
+
+        add(e) {
+            start('append')
+            let len = this.data.rows.length
+            this.data.rows = this.data.rows.concat(this.buildData())
+            stop('append')
+            start('runAppend')
+            this.appendData(this.data.rows, len, 1000)
+            e.target.blur()
+            stop('runAppend')
+        }    
+
+
+		appendData(dataSet=this.data[this.defaultDataSet], start, stop) {
+			let tableRef = this.place[0].parentElement
+	
+			let rowList = []
+			let rowList2 = []
+			for (let i=0;i<stop;i++) {
+				let newRow = tableRef.insertRow(-1)
+				rowList.push(newRow)
+				rowList2.push(this.renderNode(this.place[0], this.data.rows, i+start  , 1 ))
+			}
+			for (let i=0;i<stop;i++) {
+				rowList[i].innerHTML = rowList2[i]
+			}
+			rowList = undefined
+			rowList2 = undefined
+			return
+	
+	
+	
+	
+		}	
+
+		static get observedAttributes() {
+			//		return ['doo-refresh','key','doo-foreach','orientation','doo-dao', 'data-src','implements','doo-db-update','doo-db','doo-theme', Doo.$Config.DATA_BIND,'index','page-size','debug']
+			return ['key']
+		}
+			
+	
+		async attributeChangedCallback(name, oldVal, newVal) {
+			if (name === 'key') {
+				this.place[0].childNodes[newVal].innerHTML = this.rowList2[newVal]
+			}	
+		}
+	
+
+
+		async renderTable(dataSet=this.data[this.defaultDataSet]) {
+			
+		// 	const observer = new MutationObserver(	
+		// 		(mutationsList, observer) => {	
+		// 				if (mutationsList[0].type === 'attributes' ) {
+
+		// 					rowList[i].innerHTML = rowList2[i].innerHTML
+		// 				}	
+		// 		}			
+		// 	)		
+
+
+
+		 	let tableRef = this.place[0].parentElement
+			//observer.observe(this, { attributes: true });
+	
+
+			let rowList = []
+			this.rowList2 = []
+			let len = dataSet.length
+			for (let i=0;i<len;i++) {
+				let newRow = tableRef.insertRow(-1)
+				
+				rowList.push(newRow)
+				this.rowList2.push(this.renderNode(this.place[0], this.data.rows, i  , 1 ))
+	
+			}
+			for (let i=0;i<100;i++) {
+				rowList[i].innerHTML = this.rowList2[i]
+	
+			}
+			for (let i=100;i<len;i++) {
+				rowList[i].innerHTML = `<td class="col-md-1">${i+1}</td>` //<td class="col-md-4"></a></td><td class="col-md-1"><a class="remove"><span xaria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>`
+			}
+			let promise = new Promise((resolve) => {
+				setTimeout(()=>resolve(), 100)
+			}) 
+			await promise
+			for (let i=100;i<len;i++) {
+				this.setAttribute('key', i)
+			}
+			// for (let i=9000;i<10000;i++) {
+			// 	this.setAttribute('key', i)
+			// }
+
+
+
+
+//			rowList = undefined
+//			rowList2 = undefined
+			return
+		}	
+	
+	
+	
+
+
+
 		runLots() {
 			this.data.rows = this.buildData(10000)
 			this.tbody.textContent = ''
 			this.renderTable()
 		}
+
+		runLots(e) {
+			start('buildLots')
+			this.data.rows = this.buildData(10000);
+			stop('buildLots')
+			start('runLots')
+			this.tbody.textContent = ""
+			this.renderTable(this.data.rows, 0, 1000,e)
+			e.target.blur()
+			stop('runLots')
+		}
+		
+
 
 		update() {
 			let tr = this.tbody.querySelectorAll('tr')
