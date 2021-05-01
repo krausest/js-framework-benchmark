@@ -267,9 +267,7 @@ Doo.define(
 
 		clear() {
 			this.data.rows = []
-//			this.tbody.innerHTML = ''
-			this.tbody.textContext = ''
-
+			this.tbody.innerHTML = ''
 		}
 
 		swapRows() {

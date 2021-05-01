@@ -1,5 +1,23 @@
 'use strict';
-
+let startTime = {};
+let tot = []
+const start = function(name) {
+    tot.push(new Date().getTime())
+    if (!startTime[name]) {
+        startTime[name] = [ new Date().getTime()]    
+    }    
+};
+const stop = function(name) {
+    if (startTime[name]) {
+        startTime[name].push(new Date().getTime())
+        console.log('Vanilla', name, 'took:', startTime[name][1] - startTime[name][0]);
+        if (tot.length === 2) {
+            console.log('Vanilla Tot:', startTime[name][1] - tot[0]);
+            tot = []
+        }
+        startTime[name] = undefined
+    }
+};
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
@@ -128,7 +146,7 @@ class Main {
             else if (e.target.matches('#runlots')) {
                 e.preventDefault();
                 //console.log("runLots");
-                this.runLots();
+                this.runLots(e);
             }
             else if (e.target.matches('#clear')) {
                 e.preventDefault();
@@ -235,14 +253,21 @@ class Main {
         // var last;
         // while (last = tbody.lastChild) tbody.removeChild(last);
     }
-    runLots() {
+
+
+    runLots(e) {
+        start('buildLots')
         this.removeAllRows();
         this.store.clear();
         this.rows = [];
         this.data = [];
         this.store.runLots();
+        stop('buildLots')
+        start('runLots')
         this.appendRows();
         this.unselect();
+        e.target.blur()
+        stop('runLots')
     }
     clear() {
         this.store.clear();
