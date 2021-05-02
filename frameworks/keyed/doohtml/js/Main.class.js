@@ -113,7 +113,7 @@ Doo.define(
             this.data.rows = this.buildData()
             stop('buildData')
             start('run')
-            this.tbody.textContent = ""
+            this.tbody.textContent = ''
             this.renderTable()
             e.target.blur()
 
@@ -160,14 +160,11 @@ Doo.define(
 		// }
 			
 	
-		// async attributeChangedCallback(name, oldVal, newVal) {
-		// 	if (name === 'key' && newVal.length > 0) {
-		// 		this.tbody.childNodes[newVal].childNodes[1].childNodes[0].innerHTML = this.data.rows[newVal].label
-		// 		// if (newVal == 9999) {
-		// 		// 	stop('runLots')
-		// 		// }
-		// 	}	
-		// }
+		async attributeChangedCallback(name, oldVal, newVal) {
+			if (name === 'key') {
+				this.tbody.replaceChild(this.tr[newVal], this.tbody.childNodes[newVal])
+			}	
+		}
 	
 
 
@@ -180,13 +177,43 @@ Doo.define(
 			elem.id = 'tbody'
 			let len = dataSet.length
 			elem.innerHTML = this.renderNode(this.place[0], this.data.rows, 0  , len) 
-			let tr = elem.querySelectorAll('tr')
+			this.tr = elem.querySelectorAll('tr')
 
-			for (let i=0;i<len;i++) {
-				let newRow = tableRef.insertRow(-1)
-				newRow.parentElement.replaceChild(tr[i], newRow)
+	// 		for (let i=0;i<len;i++) {
+	// 			//let newRow = tableRef.insertRow(-1)
+	// 			//newRow.innerHTML = appendChild()
+	// 			this.setAttribute('key', i)
+
+	// //			this.tbody.append(tr[i])
+	// 		}	
+			for (let i=0;i<100;i++) {
+				//let newRow = tableRef.insertRow(-1)
+				//newRow.innerHTML = appendChild()
+				//this.setAttribute('key', i)
+
+				this.tbody.append(this.tr[i])
 			}	
-		//	this.tbody = this.shadow.querySelector('#tbody')
+			for (let i=100;i<len;i++) {
+				let newRow = tableRef.insertRow(-1)
+				newRow.innerHTML = this.tr[i].childNodes[0].outerHTML
+	//			this.tbody.append(this.tr[i])
+			}	
+
+
+		//	this.tbody.childNodes[len-1].scrollIntoView()
+			setTimeout(() => {
+				for (let i=100;i<len;i++) {
+					//let newRow = tableRef.insertRow(-1)
+					//newRow.innerHTML = appendChild()
+					this.setAttribute('key', i)
+
+	//				this.tbody.append(tr[i])
+				}
+			}, 1)	
+
+
+
+			//	this.tbody = this.shadow.querySelector('#tbody')
 		//	elem.textContent = ''
 		//	this.lastRun = elem
 		//	this.tbody.childNodes[len-1].scrollIntoView()
