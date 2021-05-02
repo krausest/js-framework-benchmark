@@ -99,7 +99,7 @@ Doo.define(
 
 		run() {
 			this.data.rows = this.buildData()
-	//		this.tbody.textContent = ''
+			this.tbody.textContent = ''
 			this.renderTable()
 		}
 
@@ -114,7 +114,7 @@ Doo.define(
             this.data.rows = this.buildData()
             stop('buildData')
             start('run')
-           // this.tbody.textContent = ''
+            this.tbody.textContent = ''
             this.renderTable()
             e.target.blur()
 
