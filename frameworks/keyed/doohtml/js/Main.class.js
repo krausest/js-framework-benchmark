@@ -117,7 +117,6 @@ Doo.define(
             this.tbody.textContent = ''
             this.renderTable()
             e.target.blur()
-
             stop('run')
         }
 
@@ -131,50 +130,12 @@ Doo.define(
             e.target.blur()
             stop('runAppend')
         }    
-
-		appendData(containerElem, start) {
-			let elem = document.createElement('tbody')
-			elem.id = 'tbody'
-			let len = this.data[this.defaultDataSet].length  // TODO read dataset name from an attribute on place[n] 
-			elem.innerHTML = this.renderNode(this.place[0], this.data.rows, start  , len) 
-			this.tableRows = elem.querySelectorAll('tr')
-
-			for (let i=start;i<len;i++) {
-				containerElem.appendChild(this.tableRows[i-start])
-			}	
-		}	
 	
 		async attributeChangedCallback(name, oldVal, i) {
 			if (name === 'key') {
 				this.tbody.replaceChild(this.tableRows[i], this.tbody.childNodes[i])
 			}	
 		}
-
-		async renderTable(dataSet=this.data[this.defaultDataSet],start=0) {
-
-			let tableRef = this.place[0].parentElement
-
-			let elem = document.createElement('tbody')
-			elem.id = 'tbody'
-			let len = dataSet.length
-			elem.innerHTML = this.renderNode(this.place[0], this.data.rows, start  , len) 
-			this.tableRows = elem.querySelectorAll('tr')
-
-			for (let i=start;i<this.PAGE_SIZE;i++) {
-				this.tbody.appendChild(this.tableRows[i])
-			}	
-			for (let i=this.PAGE_SIZE;i<len;i++) {
-				let newRow = tableRef.insertRow(-1)
-				newRow.innerHTML = this.tableRows[i].childNodes[0].outerHTML
-			}	
-
-			setTimeout(() => {
-				for (let i=100;i<len;i++) {
-					this.setAttribute('key', i)
-				}
-			}, 1)	
-			return
-		}	
 
 		runLots() {
 			this.data.rows = this.buildData(10000)
