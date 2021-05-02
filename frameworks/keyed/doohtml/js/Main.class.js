@@ -13,7 +13,7 @@ const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 Doo.define(
   	class Main extends Doo {
 		constructor() {
-			super()
+			super(100)
 			this.scrollTarget = '.table'
 			this.defaultDataSet = 'rows'
 			this.ID = 1
@@ -28,6 +28,7 @@ Doo.define(
 			this.swaprows = this.swapRows.bind(this)
 			this.addEventListeners()
 			this.selectedRow = undefined
+			this.tableRows = undefined
 			document.querySelector(".ver").innerHTML += ` ${Doo.version} (keyed)`
 			document.title += ` ${Doo.version} (keyed)`
 		}
@@ -75,10 +76,16 @@ Doo.define(
 		}
 
 		add() {
-			let len = this.data.rows.length
+			let startRow = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.appendData(this.data.rows, len, 1000)
+			this.appendData(this.tbody, startRow)
 		}    
+
+		async attributeChangedCallback(name, oldVal, i) {
+			if (name === 'key') {
+				this.tbody.replaceChild(this.tableRows[i], this.tbody.childNodes[i])
+			}	
+		}
 
 		runLots() {
 			this.data.rows = this.buildData(10000)
