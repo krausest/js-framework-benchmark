@@ -5,7 +5,10 @@
     "main": "Main.class.js",
     "js-framework-benchmark": {
       "frameworkVersion": "",
-      "issues": [772]
+      "useShadowRoot": true,
+      "shadowRootName": "doo-main",
+      "buttonsInShadowRoot": false,
+      "issues": [772]      
     },
     "scripts": {
       "build-dev": "exit 0",
