@@ -1,10 +1,11 @@
 {
     "name": "js-framework-benchmark-doohtml",
-    "version": "0.20.8",
+    "version": "0.30.6",
     "description": "DooHTML JS-Benchmark",
     "main": "Main.class.js",
     "js-framework-benchmark": {
-      "frameworkVersion": ""
+      "frameworkVersion": "",
+      "issues": [772]
     },
     "scripts": {
       "build-dev": "exit 0",
