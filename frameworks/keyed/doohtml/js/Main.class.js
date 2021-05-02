@@ -318,14 +318,9 @@ Doo.define(
 			this.data.rows = this.buildData(10000);
 			stop('buildLots')
 			start('runLots')
-			this.renderTable(this.data.rows,e)
 			this.tbody.textContent = ''
+			this.renderTable(this.data.rows,e)
 			e.target.blur()
-			// setTimeout(() => {
-			// 	for (let i=100;i<10000;i++) {
-			// 		this.setAttribute('key', i)
-			// 	}
-			//  },1)
 
 			stop('runLots')
 		}
