@@ -124,9 +124,9 @@ class Main {
                 this.add();
             }
             else if (e.target.matches('#run')) {
-                e.preventDefault();
+                e.preventDefault(e);
                 //console.log("run");
-                this.run();
+                this.run(e);
             }
             else if (e.target.matches('#update')) {
                 e.preventDefault();
@@ -181,14 +181,21 @@ class Main {
         }
         return undefined;
     }
-    run() {
+    run(e) {
+        start('build')
         this.removeAllRows();
         this.store.clear();
         this.rows = [];
         this.data = [];
         this.store.run();
+        stop('build')
+        start('run')
         this.appendRows();
         this.unselect();
+        e.target.blur()
+   //     this.tbody.childNodes[999].scrollIntoView()
+        stop('run')
+
     }
     add() {
         this.store.add();
@@ -267,6 +274,7 @@ class Main {
         this.appendRows();
         this.unselect();
         e.target.blur()
+     //   this.tbody.childNodes[9999].scrollIntoView()
         stop('runLots')
     }
     clear() {

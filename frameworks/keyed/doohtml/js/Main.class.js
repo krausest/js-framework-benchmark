@@ -116,6 +116,7 @@ Doo.define(
             this.tbody.textContent = ""
             this.renderTable()
             e.target.blur()
+
             stop('run')
         }
 
@@ -153,61 +154,141 @@ Doo.define(
 	
 		}	
 
-		static get observedAttributes() {
-			//		return ['doo-refresh','key','doo-foreach','orientation','doo-dao', 'data-src','implements','doo-db-update','doo-db','doo-theme', Doo.$Config.DATA_BIND,'index','page-size','debug']
-			return ['key']
-		}
+		// static get observedAttributes() {
+		// 	//		return ['doo-refresh','key','doo-foreach','orientation','doo-dao', 'data-src','implements','doo-db-update','doo-db','doo-theme', Doo.$Config.DATA_BIND,'index','page-size','debug']
+		// 	return ['key']
+		// }
 			
 	
-		async attributeChangedCallback(name, oldVal, newVal) {
-			if (name === 'key') {
-				this.place[0].childNodes[newVal].innerHTML = this.rowList2[newVal]
+		// async attributeChangedCallback(name, oldVal, newVal) {
+		// 	if (name === 'key' && newVal.length > 0) {
+		// 		this.tbody.childNodes[newVal].childNodes[1].childNodes[0].innerHTML = this.data.rows[newVal].label
+		// 		// if (newVal == 9999) {
+		// 		// 	stop('runLots')
+		// 		// }
+		// 	}	
+		// }
+	
+
+
+		async renderTable(dataSet=this.data[this.defaultDataSet],e) {
+			
+
+			let tableRef = this.place[0].parentElement
+
+			let elem = document.createElement('tbody')
+			elem.id = 'tbody'
+			let len = dataSet.length
+			elem.innerHTML = this.renderNode(this.place[0], this.data.rows, 0  , len) 
+			let tr = elem.querySelectorAll('tr')
+
+			for (let i=0;i<len;i++) {
+				let newRow = tableRef.insertRow(-1)
+				newRow.parentElement.replaceChild(tr[i], newRow)
 			}	
-		}
-	
-
-
-		async renderTable(dataSet=this.data[this.defaultDataSet]) {
-			
-		// 	const observer = new MutationObserver(	
-		// 		(mutationsList, observer) => {	
-		// 				if (mutationsList[0].type === 'attributes' ) {
-
-		// 					rowList[i].innerHTML = rowList2[i].innerHTML
-		// 				}	
-		// 		}			
-		// 	)		
+		//	this.tbody = this.shadow.querySelector('#tbody')
+		//	elem.textContent = ''
+		//	this.lastRun = elem
+		//	this.tbody.childNodes[len-1].scrollIntoView()
+			return
 
 
 
-		 	let tableRef = this.place[0].parentElement
+
 			//observer.observe(this, { attributes: true });
-	
+	/*
 
 			let rowList = []
 			this.rowList2 = []
 			let len = dataSet.length
+
+			this.renderNode(this.place[0], this.data.rows, i  , 1)
+
+
+			//let elem
+			let newRow
+			for (let i=0;i<100;i++) {
+				newRow = tableRef.insertRow(-1)
+				newRow.innerHTML = `<td class="col-md-1">${i+1}</td><td class="col-md-4"><a></a></td><td class="col-md-1"><a class="remove"><span xclass="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>`
+				//newRow.childNodes[1].childNodes[0].innerHTML = this.data.rows[i].label
+				this.setAttribute('key', i)
+
+				//		newRow.outerHTML = this.renderNode(this.place[0], this.data.rows, i  , 1)
+				//rowList.push(newRow)
+			//	this.data.rows[i]['html'] = this.renderNode(this.place[0], this.data.rows, i  , 1)
+				//this.rowList2.push(this.renderNode(this.place[0], this.data.rows, i  , 1 ))
+	
+			}
+			for (let i=100;i<len;i++) {
+				newRow = tableRef.insertRow(-1)
+				newRow.innerHTML = `<td class="col-md-1">${i+1}</td><td class="col-md-4"><a></a></td><td class="col-md-1"><a class="remove"><span xclass="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>`
+				//newRow.childNodes[1].childNodes[0].innerHTML = this.data.rows[i].label
+				this.setAttribute('key', i)
+
+				//		newRow.outerHTML = this.renderNode(this.place[0], this.data.rows, i  , 1)
+				//rowList.push(newRow)
+			//	this.data.rows[i]['html'] = this.renderNode(this.place[0], this.data.rows, i  , 1)
+				//this.rowList2.push(this.renderNode(this.place[0], this.data.rows, i  , 1 ))
+	
+			}
+*/
+			/*
 			for (let i=0;i<len;i++) {
 				let newRow = tableRef.insertRow(-1)
-				
-				rowList.push(newRow)
-				this.rowList2.push(this.renderNode(this.place[0], this.data.rows, i  , 1 ))
+				elem = document.createElement('tr')
+
+				elem.innerHTML = this.renderNode(this.place[0], this.data.rows, i  , 1)
+				this.tbody.replaceChild(elem, newRow)
+				//this.tbody.appendChild(elem)
+				//this.data.rows[i]['html'] = this.renderNode(this.place[0], this.data.rows, i  , 1)
+				//this.rowList2.push(this.renderNode(this.place[0], this.data.rows, i  , 1 ))
 	
 			}
-			for (let i=0;i<100;i++) {
-				rowList[i].innerHTML = this.rowList2[i]
+*/
+
+			// for (let i=0;i<100;i++) {
+			// 	rowList[i].innerHTML = this.data.rows[i]['html']
 	
-			}
-			for (let i=100;i<len;i++) {
-				rowList[i].innerHTML = `<td class="col-md-1">${i+1}</td>` //<td class="col-md-4"></a></td><td class="col-md-1"><a class="remove"><span xaria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>`
-			}
-			let promise = new Promise((resolve) => {
-				setTimeout(()=>resolve(), 100)
-			}) 
-			await promise
-			for (let i=100;i<len;i++) {
-				this.setAttribute('key', i)
-			}
+			// }
+			
+			// for (let i=100;i<len;i++) {
+			// 	rowList[i].innerHTML = `<td class="col-md-1">${i+1}</td>` //<td class="col-md-4"></a></td><td class="col-md-1"><a class="remove"><span xaria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>`
+			// }
+			
+//			this.tbody.childNodes[len-1].scrollIntoView()
+
+			// let promise = new Promise((resolve) => {
+			// let x = 0
+			this.tbody.childNodes[9999].scrollIntoView()
+			e.target.blur()
+			stop('runLots')
+	
+			// let clearID = setInterval(() => {
+			// //	this.tbody.childNodes[x].scrollIntoView()
+
+			// 	for (let i=x;i<x+1000;i++) {
+			// 		this.place[0].childNodes[i].innerHTML = this.renderNode(this.place[0], this.data.rows, i  , 1)
+
+			//  		//this.setAttribute('key', i)
+			//  	}
+			// 	x=x+1000
+			// 	if (x>len-1) {
+			// 		clearInterval(clearID)
+			// 		e.target.blur()
+			// 		stop('runLots')
+		
+			// 	}
+			// }, 200);
+			// 	for (let i=100;i<len;i++) {
+			// 		this.setAttribute('key', i)
+			// 	}
+	
+			// 	setTimeout(()=>resolve(), 200)
+			// }) 
+			// await promise
+
+
+
 			// for (let i=9000;i<10000;i++) {
 			// 	this.setAttribute('key', i)
 			// }
@@ -232,13 +313,20 @@ Doo.define(
 		}
 
 		runLots(e) {
+
 			start('buildLots')
 			this.data.rows = this.buildData(10000);
 			stop('buildLots')
 			start('runLots')
-			this.tbody.textContent = ""
-			this.renderTable(this.data.rows, 0, 1000,e)
+			this.renderTable(this.data.rows,e)
+			this.tbody.textContent = ''
 			e.target.blur()
+			// setTimeout(() => {
+			// 	for (let i=100;i<10000;i++) {
+			// 		this.setAttribute('key', i)
+			// 	}
+			//  },1)
+
 			stop('runLots')
 		}
 		
