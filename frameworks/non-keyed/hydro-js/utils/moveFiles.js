@@ -6,5 +6,7 @@ glob("build/**/*", {}, (err, files) => {
 
   for (const file of files) fs.copyFileSync(file, file.replace("build/", ""));
 
-  fs.rmSync("build", { force: true, recursive: true });
+  try {
+    fs.rmdirSync("build", { force: true, recursive: true });
+  } catch (e) {}
 });

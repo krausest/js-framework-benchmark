@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "glob": "^7.1.6",
-    "html-bundle": "^5.4.5",
+    "html-bundle": "^5.4.12",
     "typescript": "^4.2.4"
   },
   "dependencies": {
