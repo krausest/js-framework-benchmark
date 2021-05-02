@@ -8,9 +8,7 @@ const plugins = [
     exclude: "node_modules/**",
     babelHelpers: "bundled",
     plugins: [
-      ["jsx-dom-expressions", { moduleName: "mobx-jsx" }],
-      ["@babel/plugin-proposal-decorators", { legacy: true }],
-      ["@babel/plugin-proposal-class-properties", { loose: true }],
+      ["jsx-dom-expressions", { moduleName: "mobx-jsx" }]
     ],
   }),
   resolve({ extensions: [".js", ".jsx"] }),

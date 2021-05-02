@@ -12,7 +12,18 @@ const DropDown = ({label, children, width}: Props) => {
         event.stopPropagation();
         setOpen(!open)
       }, [open])
-      return (<div className={(open ? 'open dropdown-container' : 'dropdown-container')}>
+    const click = (event: React.SyntheticEvent<HTMLElement>) => {
+      // There's a pretty strange corner case: Click on which frameworks and deselect all keyed
+      // frameworks. Then select one keyed framework. This will cause scrolling such that the
+      // which frameworks drop down will be scrolled out of the visible area.
+      // We prevent this by re-setting the scroll position.
+      const x = window.scrollX;
+      const y = window.scrollY; 
+      window.requestAnimationFrame(() => {
+        window.scrollTo(x, y);
+      });
+    }
+      return (<div onClick={click} className={(open ? 'open dropdown-container' : 'dropdown-container')}>
         <button type="button" onClick={toggle} className={(open ? 'open dropdown' : 'dropdown')}>
           {label} <span className="caret"></span>
         </button>

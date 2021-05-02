@@ -27,7 +27,7 @@ export const categories: Category[] = [
   {id:1, text:"Manual DOM manipulations", issues: [772]},
   {id:2, text:"View state on the model", issues: [800]},
   {id:3, text:"Explicit requestAnimationFrame calls", issues: [796]},
-//  {id:4, text:"Manual event delegation", issues: [801]},
+  {id:4, text:"Manual event delegation", issues: [801]},
   {id:5, text:"Errors in the implementation", issues: [634, 694]},
 ]
 
