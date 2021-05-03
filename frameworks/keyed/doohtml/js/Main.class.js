@@ -28,7 +28,6 @@ Doo.define(
 			this.swaprows = this.swapRows.bind(this)
 			this.addEventListeners()
 			this.selectedRow = undefined
-			this.tableRows = undefined
 			document.querySelector(".ver").innerHTML += ` ${Doo.version} (keyed)`
 			document.title += ` ${Doo.version} (keyed)`
 		}
@@ -80,12 +79,6 @@ Doo.define(
 			this.data.rows = this.data.rows.concat(this.buildData())
 			this.appendData(this.tbody, startRow)
 		}    
-
-		async attributeChangedCallback(name, oldVal, i) {
-			if (name === 'key') {
-				this.tbody.replaceChild(this.tableRows[i], this.tbody.childNodes[i])
-			}	
-		}
 
 		runLots() {
 			this.data.rows = this.buildData(10000)
