@@ -4,9 +4,8 @@
     "description": "DooHTML JS-Benchmark",
     "main": "Main.class.js",
     "js-framework-benchmark": {
-      "frameworkVersion": "",
-      "useShadowRoot": true,
-      "shadowRootName": "doo-main",
+      "frameworkVersion": "doohtml",
+      "useShadowRoot": false,
       "buttonsInShadowRoot": false,
       "issues": [772]      
     },
