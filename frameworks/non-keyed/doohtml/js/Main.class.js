@@ -88,7 +88,6 @@ Doo.define(
 			let row = this.getParentRow(elem)
 			if (row) {
 				this.tbody.removeChild(row)
-				this.data.rows[row.getAttribute('key')] = undefined
 			}
 		}  
 
