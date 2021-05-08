@@ -186,6 +186,7 @@ async function retry<T>(retryCount: number, driver: WebDriver, fun : (driver:  W
             return await fun(driver, i);
         } catch (err) {
             console.log("comand failed. Retry #", i+1);
+            await driver.sleep(200);
         }
     }
 }
