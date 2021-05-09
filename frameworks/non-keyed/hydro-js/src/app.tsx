@@ -101,7 +101,6 @@ setReactivity($("#main")!, { run, runLots, add, update, clear, swapRows });
 const data = reactive<Array<{ id: number; label: string }>>([]);
 const selected = reactive(-1);
 
-//@ts-ignore
 view("tbody", data, (item, i) => {
   const className = ternary(
     (val: number) => val === item.id,
