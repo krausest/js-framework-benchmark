@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-hydro-js",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "hydro-js demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
@@ -27,6 +27,6 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "hydro-js": "^1.4.0"
+    "hydro-js": "^1.4.1"
   }
 }
