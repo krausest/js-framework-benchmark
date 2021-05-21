@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-non-keyed-hydro-js",
+  "name": "js-framework-benchmark-hydro-js",
   "version": "1.4.1",
   "description": "hydro-js demo",
   "main": "dist/app.min.js",
