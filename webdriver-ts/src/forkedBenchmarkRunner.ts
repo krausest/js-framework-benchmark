@@ -157,7 +157,7 @@ function extractRawValue(results: any, id: string) {
 
         let LighthouseData: LighthouseData = {
             TimeToConsistentlyInteractive: extractRawValue(results.lhr, 'interactive'),
-            ScriptBootUpTtime: Math.max(16, extractRawValue(results.lhr, 'bootup-time')),
+            ScriptBootUpTtime: extractRawValue(results.lhr, 'bootup-time'),
             MainThreadWorkCost: extractRawValue(results.lhr, 'mainthread-work-breakdown'),
             TotalKiloByteWeight: extractRawValue(results.lhr, 'total-byte-weight')/1024.0
         };
