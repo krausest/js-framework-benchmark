@@ -1,16 +1,23 @@
 import {
-  render,
-  html,
+  h,
   reactive,
   getValue,
   ternary,
   $,
   setReactivity,
-  observe,
-  template,
-  onCleanup,
+  view,
+  setReuseElements,
   unset,
+  onCleanup,
 } from "hydro-js";
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      [key: string]: HTMLElement & any;
+    }
+  }
+}
 
 const ADJECTIVES = [
   "pretty",
@@ -67,16 +74,12 @@ const NOUNS = [
   "mouse",
   "keyboard",
 ];
-
 const len_ADJECTIVES = ADJECTIVES.length;
 const len_COLOURS = COLOURS.length;
 const len_NOUNS = NOUNS.length;
-
 let nextId = 1;
-
 function buildData(count: number) {
   const data = new Array(count);
-
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: nextId++,
@@ -88,44 +91,59 @@ function buildData(count: number) {
         NOUNS[random(len_NOUNS)],
     };
   }
-
   return data;
 }
-
 function random(max: number) {
   return (Math.random() * max) | 0;
 }
 
+setReuseElements(false);
 setReactivity($("#main")!, { run, runLots, add, update, clear, swapRows });
 
 const data = reactive<Array<{ id: number; label: string }>>([]);
 const selected = reactive(-1);
 
-observe(data, (newData: typeof data, oldData: typeof data) => {
-  merge(newData, oldData);
+view("tbody", data, (item, i) => {
+  const className = ternary(
+    (val: number) => val === item.id,
+    "danger",
+    "",
+    selected
+  );
 
-  for (let i = oldData.length; i < newData.length; i++) {
-    renderItem(newData[i], i);
-  }
+  const tr = (
+    <tr class={className} bind={data[i]}>
+      <td class="col-md-1">{data[i].id}</td>
+      <td class="col-md-4">
+        <a onclick={() => selected(item.id)}>{data[i].label}</a>
+      </td>
+      <td class="col-md-1">
+        <a onclick={() => remove(item.id)}>
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+      </td>
+      <td class="col-md-6"></td>
+    </tr>
+  );
 
-  if (!newData.length) {
-    render(html`<tbody></tbody>`, "tbody");
-  }
-
-  if (!newData.length || !oldData.length) selected(-1);
+  onCleanup(unset, tr, className);
+  return tr;
 });
 
 function add() {
   data((prev: typeof data) => [...prev, ...buildData(1000)]);
 }
 function run() {
+  selected(null);
   data(buildData(1000));
 }
 function runLots() {
+  selected(null);
   data(buildData(10000));
 }
 function clear() {
   data([]);
+  selected(null);
 }
 function update() {
   const d = getValue(data);
@@ -140,63 +158,15 @@ function update() {
 function swapRows() {
   data((prev: typeof data) => {
     if (prev.length > 998) {
-      fixSelectedOnSwap(prev);
-
       [prev[1], prev[998]] = [prev[998], prev[1]];
     }
   });
 }
-
 function remove(id: number) {
   const index = getValue(data).findIndex(
-    (i: typeof data[number]) => i.id === id
+    (i: typeof data[number]) => i?.id === id
   );
-  data[index].setter(null);
   data((curr: typeof data) => {
-    curr.splice(index, 1);
+    curr[index] = null;
   });
-}
-
-function fixSelectedOnSwap(prev: typeof data) {
-  const second = prev[1].id;
-  const secondLast = prev[998].id;
-  if ([second, secondLast].includes(getValue(selected))) {
-    selected((prev: typeof selected) =>
-      prev === second ? secondLast : second
-    );
-  }
-}
-
-function merge(newData: typeof data, oldData: typeof data) {
-  for (let i = 0; i < oldData.length && newData.length; i++) {
-    oldData[i].id = newData[i].id;
-    oldData[i].label = newData[i].label;
-    newData[i] = oldData[i];
-  }
-}
-
-function renderItem(item: typeof data[number], i: number) {
-  const ternaryClass = ternary(
-    (val: number) => val === item.id,
-    "danger",
-    "",
-    selected
-  );
-  const tr = template(
-    $("#singleRow")!,
-    {
-      ternaryClass,
-      bindData: data[i],
-      dataId: data[i].id,
-      dataLabel: data[i].label,
-    },
-    {
-      remove: () => remove(item.id),
-      select: () => selected(item.id),
-    }
-  )!;
-
-  onCleanup(unset, tr as Element, ternaryClass);
-
-  $("tbody")!.appendChild(tr);
 }
