@@ -6,7 +6,7 @@ import * as R from 'ramda';
 import { valid } from 'semver';
 
 
-let args = yargs(process.argv)
+let args: any = yargs(process.argv)
     .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...]")
     .help('help')
     .default('port', config.PORT)
@@ -222,7 +222,7 @@ async function runBench(frameworkNames: string[]) {
         let frameworks = await initializeFrameworks();
         runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name)>-1));
     } else {
-        let matchesDirectoryArg = (directoryName: string) => allArgs.length==0 || allArgs.some(arg => arg==directoryName)
+        let matchesDirectoryArg = (directoryName: string) => allArgs.length==0 || allArgs.some((arg:string) => arg==directoryName)
         runFrameworks = await initializeFrameworks(matchesDirectoryArg);
     }
     console.log("Frameworks that will be checked", runFrameworks.map(f => f.fullNameWithKeyedAndVersion).join(' '));
@@ -305,7 +305,7 @@ async function runBench(frameworkNames: string[]) {
 
 config.PORT = Number(args.port);
 
-let runFrameworks = (args.framework && args.framework.length>0 ? args.framework : [""]).map(v => v.toString());
+let runFrameworks = (args.framework && args.framework.length>0 ? args.framework : [""]).map((v:string) => v.toString());
 
 let benchmarkOptions: BenchmarkOptions = {
     port: config.PORT.toFixed(),
