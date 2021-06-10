@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-uhydro",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "uhydro demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
@@ -27,6 +27,6 @@
     "typescript": "^4.3.2"
   },
   "dependencies": {
-    "uhydro": "^1.0.2"
+    "uhydro": "^1.0.5"
   }
 }
