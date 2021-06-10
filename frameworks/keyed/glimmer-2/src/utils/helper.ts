@@ -14,19 +14,20 @@ interface HelperBucket<
 }
 
 class HelperWithServicesManager implements HelperManager<HelperBucket> {
-  capabilities = helperCapabilities('3.23');
+  capabilities = helperCapabilities('3.23', { hasValue: true });
 
   createHelper(fn: helperFunc, args: any): HelperBucket {
-    return { fn, args };
+    return { fn, args: args.positional };
   }
 
   getValue(instance: HelperBucket): unknown {
-    const { args } = instance;
-    return instance.fn(args.positional);
+    return instance.fn(instance.args);
   }
 }
 
-const HelperWithServicesManagerFactory = (): HelperWithServicesManager => new HelperWithServicesManager();
+const Factory = new HelperWithServicesManager();
+
+const HelperWithServicesManagerFactory = (): HelperWithServicesManager => Factory;
 
 export function helper<T extends Function>(fn: T): T {
   setHelperManager(HelperWithServicesManagerFactory, fn);
