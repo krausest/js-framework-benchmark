@@ -3,8 +3,6 @@ import { precompileTemplate, setComponentTemplate, templateOnlyComponent } from 
 import MyTable from './MyTable';
 
 export default setComponentTemplate(
-  precompileTemplate(`<div class="container"><MyTable /></div>`,  { scope: () => {
-    return { MyTable };
-  }, strictMode: true }),
+  precompileTemplate(`<div class="container"><MyTable /></div>`,  { scope: () => ({ MyTable }), strictMode: true }),
   templateOnlyComponent()
 );

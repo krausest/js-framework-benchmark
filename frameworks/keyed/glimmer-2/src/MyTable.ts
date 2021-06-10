@@ -7,11 +7,13 @@ import { run, runLots, add, update, swapRows, deleteRow } from './utils/benchmar
 
 import TableRow from './TableRow';
 import BsButton from './BsButton';
-import { helper } from './utils/helper';
 
-const eq = helper(([a,b]) => {
-  return a === b;
-})
+// if we use eq for class attribute manipulation glimmer failing
+// import { helper } from './utils/helper';
+
+// const eq = ([a,b]) => {
+//   return a === b;
+// }
 
 export default class MyTable extends Component {
   @tracked id = 1;
@@ -56,7 +58,9 @@ export default class MyTable extends Component {
     this.selected = undefined;
   }
 
-  @action select(id): void {
+  @action select(id, e): void {
+    e.target.parentNode.parentNode.parentNode.querySelector('.danger')?.classList.toggle('danger');
+    e.target.parentNode.parentNode.classList.toggle('danger')
     this.selected = id;
   }
 }
@@ -107,11 +111,9 @@ setComponentTemplate(
 </div>
 <table class="table table-hover table-striped test-data">
   <tbody>
-    {{#each this.data key="id" as |item|}}<TableRow class={{if (eq this.selected item.id) 'danger'}} @item={{item}} @onSelect={{fn this.select item.id}} @onRemove={{fn this.remove item.id}} />{{/each}}
+    {{#each this.data key="id" as |item|}}<TableRow @item={{item}} @onSelect={{fn this.select item.id}} @onRemove={{fn this.remove item.id}} />{{/each}}
   </tbody>
 </table>
 <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>`,
-  { scope: () =>  {
-    return { on, fn, eq, TableRow, BsButton };
-  }, strictMode: true }), MyTable
+  { scope: () =>  ({ on, fn, TableRow, BsButton }), strictMode: true }), MyTable
 );
