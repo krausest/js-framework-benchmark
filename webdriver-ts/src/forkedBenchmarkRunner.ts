@@ -1,6 +1,6 @@
 import {WebDriver, logging} from 'selenium-webdriver'
 import {BenchmarkType, Benchmark, benchmarks, fileName, LighthouseData} from './benchmarks'
-import {setUseShadowRoot, buildDriver, setUseRowShadowRoot} from './webdriverAccess'
+import {setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot} from './webdriverAccess'
 
 const lighthouse = require('lighthouse');
 const chromeLauncher = require('chrome-launcher');
@@ -157,7 +157,7 @@ function extractRawValue(results: any, id: string) {
 
         let LighthouseData: LighthouseData = {
             TimeToConsistentlyInteractive: extractRawValue(results.lhr, 'interactive'),
-            ScriptBootUpTtime: Math.max(16, extractRawValue(results.lhr, 'bootup-time')),
+            ScriptBootUpTtime: extractRawValue(results.lhr, 'bootup-time'),
             MainThreadWorkCost: extractRawValue(results.lhr, 'mainthread-work-breakdown'),
             TotalKiloByteWeight: extractRawValue(results.lhr, 'total-byte-weight')/1024.0
         };
@@ -362,6 +362,8 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
             setUseShadowRoot(framework.useShadowRoot);
             setUseRowShadowRoot(framework.useRowShadowRoot);
+            setShadowRootName(framework.shadowRootName);
+            setButtonsInShadowRoot(framework.buttonsInShadowRoot);
             await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
             // await (driver as any).sendDevToolsCommand('Network.enable');
@@ -420,6 +422,8 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
         driver = buildDriver(benchmarkOptions);
         setUseShadowRoot(framework.useShadowRoot);
         setUseRowShadowRoot(framework.useRowShadowRoot);
+        setShadowRootName(framework.shadowRootName);
+        setButtonsInShadowRoot(framework.buttonsInShadowRoot);
         await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
         await driver.executeScript("console.timeStamp('initBenchmark')");

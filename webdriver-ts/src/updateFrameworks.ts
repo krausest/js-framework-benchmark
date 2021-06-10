@@ -7,7 +7,7 @@ import {loadFrameworkVersionInformation, determineInstalledVersions, FrameworkVe
     PackageVersionInformation, PackageVersionInformationValid, PackageVersionInformationErrorUnknownPackage, PackageVersionInformationErrorNoPackageJSONLock, PackageVersionInformationResult} from './common';
 var exec = require('child_process').execSync;
 
-let args = yargs(process.argv)
+let args: any = yargs(process.argv)
     .usage("$0 --updade true|false --dir")
     .default('update', 'true')
     .array('dir')
@@ -16,7 +16,7 @@ let args = yargs(process.argv)
 let updatePackages = args.update;
 console.log("ARGS", args._.slice(2, args._.length));
 let directories = args._.slice(2, args._.length);
-let checkDirectory = (keyedType:string, folderName: string) => directories.length===0 || args._.some(a => path.join(keyedType, folderName).startsWith(a));
+let checkDirectory = (keyedType:string, folderName: string) => directories.length===0 || args._.some((a:string) => path.join(keyedType, folderName).startsWith(a.toString()));
 
 async function ncuReportsUpdatedVersion(packageVersionInfo: PackageVersionInformationResult) {
     let ncuInfo = await ncu.run({

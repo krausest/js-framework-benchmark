@@ -1,6 +1,6 @@
 import React, { memo, useReducer } from "react";
 import ReactDOM from "react-dom";
-import { proxy, useProxy } from "valtio";
+import { proxy, useSnapshot } from "valtio";
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
   "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive",
@@ -12,9 +12,9 @@ const N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "s
 const random = (max) => Math.round(Math.random() * 1000) % max;
 
 let nextId = 1;
-function buildData(count) {
-  const data = new Array(count);
-  for (let i = 0; i < count; i++) {
+function assignData(data, offset = 0) {
+  const count = data.length;
+  for (let i = offset; i < count; i++) {
     data[i] = {
       id: nextId++,
       label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`,
@@ -27,15 +27,19 @@ const state = proxy({ data: [], selected: 0 });
 const dispatch = (action) => {
   switch (action.type) {
     case "RUN":
-      state.data = buildData(1000);
+      state.data = new Array(1000);
+      assignData(state.data);
       state.selected = 0;
       break;
     case "RUN_LOTS":
-      state.data = buildData(10000);
+      state.data = new Array(10000);
+      assignData(state.data);
       state.selected = 0;
       break;
     case "ADD":
-      state.data = state.data.concat(buildData(1000));
+      const offset = state.data.length;
+      state.data.length += 1000;
+      assignData(state.data, offset);
       state.selected = 0;
       break;
     case "UPDATE": {
@@ -80,7 +84,7 @@ const Row = memo(({ id, label, isSelected }) => {
 });
 
 const RowList = memo(() => {
-  const { data, selected } = useProxy(state);
+  const { data, selected } = useSnapshot(state);
   return data.map((item) => <Row key={item.id} id={item.id} label={item.label} isSelected={selected === item.id} />);
 });
 

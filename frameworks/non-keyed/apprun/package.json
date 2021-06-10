@@ -5,11 +5,13 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "apprun",
-    "issues": [772]
+    "issues": [
+      772
+    ]
   },
   "scripts": {
-    "build-dev": "webpack -w -d",
-    "build-prod": "webpack -p"
+    "build-dev": "esbuild src/main.tsx --bundle --outfile=dist/main.js --serve=8080 --servedir=.",
+    "build-prod": "esbuild src/main.tsx --bundle --outfile=dist/main.js --minify"
   },
   "keywords": [
     "apprun",
@@ -23,13 +25,9 @@
     "url": "https://github.com/yysun/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "json-loader": "0.5.7",
-    "ts-loader": "6.2.2",
-    "typescript": "3.8.3",
-    "webpack": "4.42.1",
-    "webpack-cli": "3.3.11"
+    "esbuild": "^0.8.54"
   },
   "dependencies": {
-    "apprun": "2.23.12"
+    "apprun": "^2.27.7"
   }
 }

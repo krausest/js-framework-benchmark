@@ -13,7 +13,7 @@ RUN apt-get install -y m4 libtinfo5 libghc-zlib-dev rsync ghc haskell-stack curl
 
 ENV NVM_DIR /usr/local/nvm
 RUN mkdir -p $NVM_DIR
-ENV NODE_VERSION 14.4.0
+ENV NODE_VERSION 14.17.0
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
 
 # install node and npm

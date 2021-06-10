@@ -1,42 +1,37 @@
 {
   "name": "js-framework-benchmark-angular",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@angular/core"
+    "frameworkVersionFromPackage": "@angular/core",
+    "customURL": "/dist/angular/"
   },
-  "description": "An angular app using closure compiler",
   "scripts": {
-    "start": "echo 'please start in root project'",
-    "test": "karma start",
-    "ngc": "ngc",
-    "preclosure": "rimraf dist",
-    "closure": "google-closure-compiler --flagfile closure.conf",
-    "build-prod": "npm run ngc && npm run closure",
-    "rollup": "rollup -c rollup.config.js",
-    "build-dev": "npm run ngc && npm run rollup"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "build-prod": "ng build --prod=true --buildOptimizer=true --sourceMap=false",
+    "build-dev": "ng serve --prod=true"
   },
-  "license": "MIT",
+  "private": true,
   "dependencies": {
-    "@angular/common": "8.2.14",
-    "@angular/compiler": "8.2.14",
-    "@angular/compiler-cli": "8.2.14",
-    "@angular/core": "8.2.14",
-    "@angular/platform-browser": "8.2.14",
-    "core-js": "3.6.4",
-    "rxjs": "6.5.4",
-    "tsickle": "0.38.0",
-    "tslib": "1.10.0",
-    "zone.js": "0.10.2"
+    "@angular/common": "12.0.1",
+    "@angular/compiler": "12.0.1",
+    "@angular/core": "12.0.1",
+    "@angular/platform-browser": "12.0.1",
+    "rxjs": "6.5.5",
+    "tslib": "^2.0.3",
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "google-closure-compiler": "20190528.0.0",
-    "http-server": "0.12.1",
-    "rimraf": "3.0.1",
-    "rollup": "1.15.5",
-    "rollup-plugin-commonjs": "10.0.0",
-    "rollup-plugin-node-resolve": "5.0.2",
-    "rollup-plugin-uglify": "6.0.2",
-    "typescript": "~3.5.3",
-    "yargs": "15.1.0"
+    "@angular-devkit/build-angular": "12.0.1",
+    "@angular/cli": "12.0.1",
+    "@angular/compiler-cli": "12.0.1",
+    "@angular/language-service": "12.0.1",
+    "@types/node": "13.13.0",
+    "ts-node": "8.8.2",
+    "tslint": "~6.1.0",
+    "typescript": "4.2.4"
   }
 }
