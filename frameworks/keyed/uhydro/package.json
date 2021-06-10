@@ -1,0 +1,32 @@
+{
+  "name": "js-framework-benchmark-uhydro",
+  "version": "1.0.0",
+  "description": "uhydro demo",
+  "main": "dist/app.min.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "uhydro"
+  },
+  "scripts": {
+    "build-dev": "html-bundle --hmr",
+    "build-prod": "html-bundle",
+    "postbuild-prod": "node utils/moveFiles.js"
+  },
+  "keywords": [
+    "uhydro"
+  ],
+  "author": "Fabian Krutsch",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "glob": "^7.1.7",
+    "html-bundle": "^5.4.16",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "uhydro": "^1.0.0"
+  }
+}
