@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { action, on } from '@glimmer/modifier';
 import { tracked } from '@glimmer/tracking';
-import { createTemplate, setComponentTemplate } from '@glimmer/core';
+import { precompileTemplate, setComponentTemplate } from '@glimmer/core';
 import { fn } from '@glimmer/helper';
 import { run, runLots, add, update, swapRows, deleteRow } from './utils/benchmark-helpers';
 
@@ -62,8 +62,7 @@ export default class MyTable extends Component {
 }
 
 setComponentTemplate(
-  createTemplate(
-    { on, fn, eq, TableRow, BsButton },
+  precompileTemplate(
     `
 <div class="jumbotron">
   <div class="row">
@@ -111,5 +110,8 @@ setComponentTemplate(
     {{#each this.data key="id" as |item|}}<TableRow class={{if (eq this.selected item.id) 'danger'}} @item={{item}} @onSelect={{fn this.select item.id}} @onRemove={{fn this.remove item.id}} />{{/each}}
   </tbody>
 </table>
-<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>`), MyTable
+<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>`,
+  { scope: () =>  {
+    return { on, fn, eq, TableRow, BsButton };
+  }, strictMode: true }), MyTable
 );

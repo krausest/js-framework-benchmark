@@ -1,6 +1,6 @@
 {
   "name": "glimmer-2-benchmark",
-  "version": "2.0.0-beta.12",
+  "version": "2.0.0-beta.16",
   "description": "Example application using @glimmer packages",
   "main": "dist/index.js",
   "repository": "https://github.com/krausest/js-framework-benchmark/tree/master/frameworks/keyed/glimmer-2",
@@ -30,11 +30,12 @@
     "issues": []
   },
   "dependencies": {
-    "@glimmer/core": "^2.0.0-beta.12",
-    "@glimmer/component": "^2.0.0-beta.12",
-    "@glimmer/tracking": "^2.0.0-beta.12",
-    "@glimmer/helper": "^2.0.0-beta.12",
-    "@glimmer/modifier": "^2.0.0-beta.12"
+    "@glimmer/babel-preset": "^2.0.0-beta.13",
+    "@glimmer/component": "^2.0.0-beta.16",
+    "@glimmer/core": "^2.0.0-beta.16",
+    "@glimmer/helper": "^2.0.0-beta.16",
+    "@glimmer/modifier": "^2.0.0-beta.16",
+    "@glimmer/tracking": "^2.0.0-beta.16"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

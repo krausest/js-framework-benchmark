@@ -14,7 +14,7 @@ interface HelperBucket<
 }
 
 class HelperWithServicesManager implements HelperManager<HelperBucket> {
-  capabilities = helperCapabilities('glimmerjs-2.0.0');
+  capabilities = helperCapabilities('3.23');
 
   createHelper(fn: helperFunc, args: any): HelperBucket {
     return { fn, args };
