@@ -1,4 +1,4 @@
-import { h, reactive, view, render, observe, getValue } from "uhydro";
+import { h, reactive, view, render, observe, getValue, swap } from "uhydro";
 
 declare global {
   namespace JSX {
@@ -212,13 +212,7 @@ function update() {
 }
 function swapRows() {
   const d = getValue(data);
-  if (d.length > 998) {
-    const tmp = getValue(d[1]);
-    //@ts-ignore
-    d[1](getValue(d[998]));
-    //@ts-ignore
-    d[998](tmp);
-  }
+  swap(d[1], d[998]);
 }
 function remove(id: number) {
   //@ts-ignore
