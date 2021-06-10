@@ -15,13 +15,17 @@ interface HelperBucket<
 
 class HelperWithServicesManager implements HelperManager<HelperBucket> {
   capabilities = helperCapabilities('3.23', { hasValue: true });
+  fn: any;
 
   createHelper(fn: helperFunc, args: any): HelperBucket {
-    return { fn, args: args.positional };
+    if (this.fn === undefined) {
+      this.fn = fn;
+    }
+    return args.positional;
   }
 
-  getValue(instance: HelperBucket): unknown {
-    return instance.fn(instance.args);
+  getValue(args): unknown {
+    return this.fn(args);
   }
 }
 
