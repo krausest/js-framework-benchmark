@@ -2,13 +2,19 @@ import { terser } from "rollup-plugin-terser";
 import resolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "@rollup/plugin-typescript";
+import babel from "@rollup/plugin-babel";
+
+const extensions = [".js", ".ts", ".tsx"];
 
 export default {
   input: `src/main.tsx`,
   output: { file: `dist/main.js`, format: "iife" },
   plugins: [
-    resolve(),
+    babel({
+      extensions,
+      babelHelpers: "bundled",
+    }),
+    resolve({ extensions }),
     replace({
       preventAssignment: true,
       values: {
@@ -16,7 +22,6 @@ export default {
       },
     }),
     commonjs(),
-    typescript(),
     terser({ warnings: true, mangle: { module: true } }),
   ],
 };

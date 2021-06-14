@@ -1,4 +1,4 @@
-import { memo, FC } from "react";
+import React, { memo, FC } from "react";
 import ReactDOM from "react-dom";
 import { atom, useAtom } from "jotai";
 import { useUpdateAtom } from "jotai/utils";
