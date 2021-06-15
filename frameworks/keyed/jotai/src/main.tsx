@@ -1,111 +1,91 @@
-import { memo, FC } from "react";
+import React, { memo, FC } from "react";
 import ReactDOM from "react-dom";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, PrimitiveAtom } from "jotai";
 import { useUpdateAtom } from "jotai/utils";
 
-import { buildData, Data } from "./utils";
+import { Data, buildDataAtoms } from "./utils";
 
-const stateAtom = atom<{ data: Data[]; selected: number }>({
-  data: [],
-  selected: 0,
+const dataAtom = atom<PrimitiveAtom<Data>[]>([]);
+const selectedAtom = atom<PrimitiveAtom<Data> | null>(null);
+
+const createRowsAtom = atom(null, (_, set, amount: number) => {
+  set(dataAtom, buildDataAtoms(amount));
+  set(selectedAtom, null);
 });
 
-const createRowsAtom = atom(null, (_, set, amount: number) =>
-  set(stateAtom, { data: buildData(amount), selected: 0 })
-);
+const appendRowsAtom = atom(null, (_, set) => {
+  set(dataAtom, (data) => data.concat(buildDataAtoms(1000)));
+  set(selectedAtom, null);
+});
 
-const appendRowsAtom = atom(null, (_, set) =>
-  set(stateAtom, (state) => ({
-    data: state.data.concat(buildData(1000)),
-    selected: 0,
-  }))
-);
+const updateRowsAtom = atom(null, (get, set) => {
+  const data = get(dataAtom);
+  for (let i = 0; i < data.length; i += 10) {
+    set(data[i], (r) => ({ id: r.id, label: r.label + " !!!" }));
+  }
+});
 
-const updateRowsAtom = atom(null, (_, set) =>
-  set(stateAtom, ({ data, selected }) => {
-    const newData = data.slice(0);
-    for (let i = 0; i < newData.length; i += 10) {
-      const r = newData[i];
-      newData[i] = { id: r.id, label: r.label + " !!!" };
-    }
-    return { data: newData, selected };
+const removeRowAtom = atom(null, (_, set, item: PrimitiveAtom<Data>) =>
+  set(dataAtom, (data) => {
+    const idx = data.findIndex((d) => d === item);
+    return [...data.slice(0, idx), ...data.slice(idx + 1)];
   })
 );
 
-const removeRowAtom = atom(null, (_, set, id: number) =>
-  set(stateAtom, ({ data, selected }) => {
-    const idx = data.findIndex((d) => d.id === id);
-    return { data: [...data.slice(0, idx), ...data.slice(idx + 1)], selected };
-  })
-);
+const selectRowAtom = atom(null, (_, set, selected: PrimitiveAtom<Data>) => {
+  set(selectedAtom, selected);
+});
 
-const selectRowAtom = atom(null, (_, set, selected: number) =>
-  set(stateAtom, (state) => ({ data: state.data, selected }))
-);
+const clearStateAtom = atom(null, (_, set) => {
+  set(dataAtom, []);
+  set(selectedAtom, null);
+});
 
-const clearStateAtom = atom(null, (_, set) =>
-  set(stateAtom, () => ({
-    data: [],
-    selected: 0,
-  }))
-);
-
-const swapRowsAtom = atom(null, (_, set) =>
-  set(stateAtom, (state) => {
-    const { data, selected } = state;
-    return data.length > 998
-      ? {
-          data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]],
-          selected,
-        }
-      : state;
-  })
-);
+const swapRowsAtom = atom(null, (get, set) => {
+  const data = get(dataAtom);
+  if (data.length > 998) {
+    set(dataAtom, [data[0], data[998], ...data.slice(2, 998), data[1], data[999]])
+  }
+});
 
 const GlyphIcon = (
   <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>
 );
 
 interface RowProps {
-  id: number;
-  label: string;
+  item: PrimitiveAtom<Data>;
   isSelected: boolean;
-  selectRow: (id: number) => void;
-  removeRow: (id: number) => void;
 }
 
-const Row = memo<RowProps>(({ id, label, isSelected, selectRow, removeRow }) => {
+const Row = memo<RowProps>(({ item, isSelected }) => {
+  const [{ id, label }] = useAtom(item);
+  const selectRow = useUpdateAtom(selectRowAtom);
+  const removeRow = useUpdateAtom(removeRowAtom);
   return (
     <tr className={isSelected ? "danger" : ""}>
       <td className="col-md-1">{id}</td>
       <td className="col-md-4">
-        <a onClick={() => selectRow(id)}>{label}</a>
+        <a onClick={() => selectRow(item)}>{label}</a>
       </td>
       <td className="col-md-1">
-        <a onClick={() => removeRow(id)}>{GlyphIcon}</a>
+        <a onClick={() => removeRow(item)}>{GlyphIcon}</a>
       </td>
       <td className="col-md-6"></td>
     </tr>
   );
 });
 
-interface RowListProp {
-  selectRow: (id: number) => void;
-  removeRow: (id: number) => void;
-}
 
-const RowList = memo<RowListProp>(({ selectRow, removeRow }) => {
-  const [{ data, selected }] = useAtom(stateAtom);
+const RowList = memo(() => {
+  const [data] = useAtom(dataAtom);
+  const [selected] = useAtom(selectedAtom);
   return (
     <>
       {data.map((item) => (
         <Row
-          key={item.id}
-          id={item.id}
-          label={item.label}
-          isSelected={selected === item.id}
-          selectRow={selectRow}
-          removeRow={removeRow}
+          key={String(item)}
+          item={item}
+          isSelected={item === selected}
         />
       ))}
     </>
@@ -137,8 +117,7 @@ const Main: FC = () => {
   const updateRows = useUpdateAtom(updateRowsAtom);
   const clearState = useUpdateAtom(clearStateAtom);
   const swapRows = useUpdateAtom(swapRowsAtom);
-  const selectRow = useUpdateAtom(selectRowAtom);
-  const removeRow = useUpdateAtom(removeRowAtom);
+  
   return (
     <div className="container">
       <div className="jumbotron">
@@ -172,7 +151,7 @@ const Main: FC = () => {
       </div>
       <table className="table table-hover table-striped test-data">
         <tbody>
-          <RowList selectRow={selectRow} removeRow={removeRow} />
+          <RowList />
         </tbody>
       </table>
       <span
