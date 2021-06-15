@@ -3,26 +3,13 @@ import ReactDOM from "react-dom";
 import { atom, useAtom, PrimitiveAtom } from "jotai";
 import { useUpdateAtom } from "jotai/utils";
 
-import { Data, buildNextItem, buildDataAtoms } from "./utils";
+import { Data, buildDataAtoms } from "./utils";
 
 const dataAtom = atom<PrimitiveAtom<Data>[]>([]);
 const selectedAtom = atom<PrimitiveAtom<Data> | null>(null);
 
-const createRowsAtom = atom(null, (get, set, amount: number) => {
-  const prevData = get(dataAtom);
-  const data = new Array(amount);
-  for (let i = 0; i < amount; i++) {
-    const prev = prevData[i]
-    if (prev) {
-      data[i] = prev;
-      set(prev, buildNextItem());
-    } else {
-      data[i] = atom(buildNextItem());
-    }
-  }
-  if (prevData.length !== data.length) {
-    set(dataAtom, data);
-  }
+const createRowsAtom = atom(null, (_, set, amount: number) => {
+  set(dataAtom, buildDataAtoms(amount));
   set(selectedAtom, null);
 });
 
@@ -57,9 +44,7 @@ const clearStateAtom = atom(null, (_, set) => {
 const swapRowsAtom = atom(null, (get, set) => {
   const data = get(dataAtom);
   if (data.length > 998) {
-    const tmp = get(data[1]);
-    set(data[1], get(data[998]));
-    set(data[998], tmp);
+    set(dataAtom, [data[0], data[998], ...data.slice(2, 998), data[1], data[999]])
   }
 });
 

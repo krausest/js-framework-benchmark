@@ -15,19 +15,15 @@ export interface Data {
   label: string;
 }
 
-export function buildNextItem(): Data {
-  return {
+export function buildDataAtoms(count: number): PrimitiveAtom<Data>[] {
+  const data = new Array(count);
+  for (let i = 0; i < count; i++) {
+    data[i] = atom({
     id: nextId++,
     label: `${A[random(A.length)]} ${C[random(C.length)]} ${
       N[random(N.length)]
     }`,
-  };
-}
-
-export function buildDataAtoms(count: number): PrimitiveAtom<Data>[] {
-  const data = new Array(count);
-  for (let i = 0; i < count; i++) {
-    data[i] = atom(buildNextItem());
+    });
   }
   return data;
 }
