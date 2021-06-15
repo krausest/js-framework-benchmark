@@ -2,7 +2,8 @@
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const { Webpack } = require('@embroider/webpack');
-module.exports = function(defaults) {
+
+module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     hinting: false
     // Add options here
