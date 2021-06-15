@@ -70,11 +70,11 @@ interface RowProps {
   id: number;
   label: string;
   isSelected: boolean;
-  selectRow: (id: number) => void;
-  removeRow: (id: number) => void;
 }
 
-const Row = memo<RowProps>(({ id, label, isSelected, selectRow, removeRow }) => {
+const Row = memo<RowProps>(({ id, label, isSelected }) => {
+  const selectRow = useUpdateAtom(selectRowAtom);
+  const removeRow = useUpdateAtom(removeRowAtom);
   return (
     <tr className={isSelected ? "danger" : ""}>
       <td className="col-md-1">{id}</td>
@@ -89,12 +89,8 @@ const Row = memo<RowProps>(({ id, label, isSelected, selectRow, removeRow }) => 
   );
 });
 
-interface RowListProp {
-  selectRow: (id: number) => void;
-  removeRow: (id: number) => void;
-}
 
-const RowList = memo<RowListProp>(({ selectRow, removeRow }) => {
+const RowList = memo(() => {
   const [{ data, selected }] = useAtom(stateAtom);
   return (
     <>
@@ -104,8 +100,6 @@ const RowList = memo<RowListProp>(({ selectRow, removeRow }) => {
           id={item.id}
           label={item.label}
           isSelected={selected === item.id}
-          selectRow={selectRow}
-          removeRow={removeRow}
         />
       ))}
     </>
@@ -137,8 +131,7 @@ const Main: FC = () => {
   const updateRows = useUpdateAtom(updateRowsAtom);
   const clearState = useUpdateAtom(clearStateAtom);
   const swapRows = useUpdateAtom(swapRowsAtom);
-  const selectRow = useUpdateAtom(selectRowAtom);
-  const removeRow = useUpdateAtom(removeRowAtom);
+  
   return (
     <div className="container">
       <div className="jumbotron">
@@ -172,7 +165,7 @@ const Main: FC = () => {
       </div>
       <table className="table table-hover table-striped test-data">
         <tbody>
-          <RowList selectRow={selectRow} removeRow={removeRow} />
+          <RowList />
         </tbody>
       </table>
       <span
