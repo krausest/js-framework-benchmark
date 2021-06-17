@@ -1,4 +1,4 @@
-import { h, reactive, view, render, observe, getValue, swap } from "uhydro";
+import { h, reactive, view, render, observe, getValue } from "uhydro";
 
 declare global {
   namespace JSX {
@@ -161,7 +161,7 @@ view("tbody", data, (item) => {
   const className = reactive<"" | "danger">("");
 
   const tr = (
-    <tr class={className}>
+    <tr class={className} data-bind>
       <td class="col-md-1">{item.id}</td>
       <td class="col-md-4">
         <a onclick={() => selected(item.id)}>{item.label}</a>
@@ -212,10 +212,15 @@ function update() {
 }
 function swapRows() {
   const d = getValue(data);
-  swap(d[1], d[998]);
+  if (d.length > 998) {
+    const tmp = d[1];
+    //@ts-ignore
+    d[1](d[998]);
+    //@ts-ignore
+    d[998](tmp);
+  }
 }
 function remove(id: number) {
-  //@ts-ignore
   const copy = [...getValue(data)];
 
   const index = copy.findIndex((i: typeof data[number]) => i?.id === id);
