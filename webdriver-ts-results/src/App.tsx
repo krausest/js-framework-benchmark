@@ -20,7 +20,7 @@ const App = () => {
          <ResultTable type={FrameworkType.KEYED}/>
          <ResultTable type={FrameworkType.NON_KEYED}/>
 
-          <h3>Known Issues</h3>
+          <h3>Known issues and notes</h3>
           {knownIssues.map(issue =>
             <dl key={issue.issue.toFixed()} id={issue.issue.toFixed()}>
               <dt><a target="_blank" rel="noopener noreferrer" href={issue.link}>{issue.issue.toFixed()}</a></dt>

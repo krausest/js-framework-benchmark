@@ -24,11 +24,11 @@ interface Category {
 }
 
 export const categories: Category[] = [
-  {id:1, text:"Manual DOM manipulations", issues: [772]},
-  {id:2, text:"View state on the model", issues: [800]},
-  {id:3, text:"Explicit requestAnimationFrame calls", issues: [796]},
-  {id:4, text:"Manual event delegation", issues: [801]},
-  {id:5, text:"Errors in the implementation", issues: [634, 694]},
+  {id:1, text:"[Note]: Manual DOM manipulations", issues: [772]},
+  {id:2, text:"[Note]:View state on the model", issues: [800]},
+  {id:3, text:"[Note]: Explicit requestAnimationFrame calls", issues: [796]},
+  {id:4, text:"[Note]: Manual event delegation", issues: [801]},
+  {id:5, text:"[Issue]: Errors in the implementation", issues: [634, 694]},
 ]
 
 export const knownIssues = [
