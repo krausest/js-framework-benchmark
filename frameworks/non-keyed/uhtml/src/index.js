@@ -2,7 +2,7 @@ import {State} from 'js-framework-benchmark-utils';
 import {html, render} from 'uhtml';
 
 import Jumbotron from './jumbotron.js';
-import Table from './table.js';
+import Table from './table-delegate.js';
 
 const state = State(update);
 const main = document.getElementById('container');

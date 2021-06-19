@@ -10,27 +10,27 @@ export default ({run, runLots, add, update, clear, swapRows}) => html`
         <div class="row">
           <div class="col-sm-6 smallpad">
             <button type="button" class="btn btn-primary btn-block"
-                    id="run" onclick=${run}>Create 1,000 rows</button>
+                    id="run" @click=${run}>Create 1,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
             <button type="button" class="btn btn-primary btn-block"
-                    id="runlots" onclick=${runLots}>Create 10,000 rows</button>
+                    id="runlots" @click=${runLots}>Create 10,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
             <button type="button" class="btn btn-primary btn-block"
-                    id="add" onclick=${add}>Append 1,000 rows</button>
+                    id="add" @click=${add}>Append 1,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
             <button type="button" class="btn btn-primary btn-block"
-                    id="update" onclick=${update}>Update every 10th row</button>
+                    id="update" @click=${update}>Update every 10th row</button>
           </div>
           <div class="col-sm-6 smallpad">
             <button type="button" class="btn btn-primary btn-block"
-                    id="clear" onclick=${clear}>Clear</button>
+                    id="clear" @click=${clear}>Clear</button>
           </div>
           <div class="col-sm-6 smallpad">
             <button type="button" class="btn btn-primary btn-block"
-                    id="swaprows" onclick=${swapRows}>Swap Rows</button>
+                    id="swaprows" @click=${swapRows}>Swap Rows</button>
           </div>
         </div>
       </div>
