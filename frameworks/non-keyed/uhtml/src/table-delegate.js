@@ -1,16 +1,16 @@
 import {html} from 'uhtml';
 
-const click = ({currentTarget, target}) => {
+const handler = ({currentTarget, target}) => {
   const a = target.closest('a');
   const {action} = a.dataset;
-  currentTarget.props[action](+a.closest('tr').id);
+  currentTarget.state[action](+a.closest('tr').id);
 };
 
 export default (state) => {
   const {data, selected} = state;
   return html`
-    <table onclick=${click} .props=${state}
-      class="table table-hover table-striped test-data">
+    <table class="table table-hover table-striped test-data"
+      @click=${handler} .state=${state}>
       <tbody>${
       data.map(({id, label}) => html`
         <tr id=${id} class=${id === selected ? 'danger' : ''}>
@@ -20,7 +20,7 @@ export default (state) => {
           </td>
           <td class="col-md-1">
             <a data-action="remove">
-              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              <span class="glyphicon glyphicon-remove" aria-hidden="true" />
             </a>
           </td>
           <td class="col-md-6" />
