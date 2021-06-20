@@ -32,12 +32,12 @@ export const categories: Category[] = [
 ]
 
 export const knownIssues = [
-    {issue: 634, severity: Severity.Error, text:"The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
-    {issue: 694, severity: Severity.Error, text:"Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694"},
-    {issue: 772, severity: Severity.Categorization, text:"Implementation uses manual DOM manipulations", link: "https://github.com/krausest/js-framework-benchmark/issues/772"},
-    {issue: 796, severity: Severity.Categorization, text:"Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
-    {issue: 800, severity: Severity.Categorization, text:"View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
-    {issue: 801, severity: Severity.Categorization, text:"Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
+    {issue: 634, severity: Severity.Error, text:"[Issue]: The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
+    {issue: 694, severity: Severity.Error, text:"[Issue]: Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694"},
+    {issue: 772, severity: Severity.Categorization, text:"[Note]: Implementation uses manual DOM manipulations", link: "https://github.com/krausest/js-framework-benchmark/issues/772"},
+    {issue: 796, severity: Severity.Categorization, text:"[Note]: Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
+    {issue: 800, severity: Severity.Categorization, text:"[Note]: View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
+    {issue: 801, severity: Severity.Categorization, text:"[Note]: Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
   ];
 
 export function findIssue(issueNumber: number) {
