@@ -13,16 +13,17 @@ let nextId = 1;
 export interface Data {
   id: number;
   label: string;
+  isSelected?: boolean;
 }
 
 export function buildDataAtoms(count: number): PrimitiveAtom<Data>[] {
   const data = new Array(count);
   for (let i = 0; i < count; i++) {
     data[i] = atom({
-    id: nextId++,
-    label: `${A[random(A.length)]} ${C[random(C.length)]} ${
-      N[random(N.length)]
-    }`,
+      id: nextId++,
+      label: `${A[random(A.length)]} ${C[random(C.length)]} ${
+        N[random(N.length)]
+      }`,
     });
   }
   return data;
