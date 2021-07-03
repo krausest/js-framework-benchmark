@@ -2,9 +2,9 @@ import {State} from 'js-framework-benchmark-utils';
 import {html, render} from 'uhtml';
 
 import Jumbotron from './jumbotron.js';
-import Table from './table-delegate.js';
+import Table from './table.js';
 
-const state = State(Table);
+const state = State(Table, false, html.for);
 
 render(document.getElementById('container'), html`
   <div class="container">
