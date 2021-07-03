@@ -12,7 +12,7 @@
   },
   "author": "Robert Kempton",
   "dependencies": {
-    "@srfnstack/fntags": "0.1.1"
+    "@srfnstack/fntags": "0.1.7"
   },
   "devDependencies": {
     "fs-extra": "8.1.0",
