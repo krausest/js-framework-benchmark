@@ -1,9 +1,7 @@
-#![allow(non_snake_case)]
-
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use maple_core::prelude::*;
 use rand::prelude::*;
+use sycamore::prelude::*;
 use wasm_bindgen::prelude::*;
 use web_sys::window;
 
@@ -51,7 +49,8 @@ struct ButtonProps {
     callback: Box<dyn Fn()>,
 }
 
-fn Button(props: ButtonProps) -> TemplateResult {
+#[component(Button<G>)]
+fn button(props: ButtonProps) -> Template<G> {
     let ButtonProps { id, text, callback } = props;
 
     template! {
@@ -63,7 +62,7 @@ fn Button(props: ButtonProps) -> TemplateResult {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct RowData {
     id: usize,
     label: Signal<String>,
@@ -96,7 +95,8 @@ fn build_data(count: usize) -> Vec<RowData> {
     data
 }
 
-fn App() -> TemplateResult {
+#[component(App<G>)]
+fn app() -> Template<G> {
     let data = Signal::new(Vec::<RowData>::new());
     let selected = Signal::new(None::<usize>);
 
@@ -143,7 +143,7 @@ fn App() -> TemplateResult {
         div(class="container") {
             div(class="jumbotron") {
                 div(class="row") {
-                    div(class="col-md-6") { h1 { "Maple Keyed" } }
+                    div(class="col-md-6") { h1 { "Sycamore Keyed" } }
                     div(class="col-md-6") {
                         div(class="row") {
                             Button(ButtonProps { id: "run", text: "Create 1,000 rows", callback: Box::new(run) })
@@ -190,5 +190,5 @@ fn App() -> TemplateResult {
 pub fn start() {
     let document = window().unwrap().document().unwrap();
     let mount_el = document.query_selector("#main").unwrap().unwrap();
-    render_to(|| template! { App() }, &mount_el);
+    sycamore::render_to(|| template! { App() }, &mount_el);
 }
