@@ -201,100 +201,44 @@ Slim.element(
     static useShadow = false;
 
     deleteOne(item) {
-      store.delete(item.id);
+      this.store.delete(item.id);
       this.items = store.data;
     }
 
     selectOne(item) {
-      console.time('select1');
       this.selected = item;
-      console.timeEnd('select1');
-    }
-
-    create1k() {
-      store.clear();
-      store.run(1000);
-      this.items = [...store.data];
-    }
-
-    append1k() {
-      console.time('append1k');
-      store.add(1000);
-      this.items = [...store.data];
-      console.timeEnd('append1k');
     }
 
     update10() {
-      console.time('update10');
-      store.update();
-      this.items = [...store.data];
-      console.timeEnd('update10');
-    }
-
-    testClear() {
-      console.time('clear');
-      store.clear();
-      this.items = [...store.data];
-      console.timeEnd('clear');
-    }
-
-    create10k() {
-      performance.mark('create10kstart');
-      store.runLots();
-      this.items = [...store.data];
-      performance.mark('create10kend');
-      console.log(
-        performance.measure('create10k', 'create10kstart', 'create10kend')
-      );
-    }
-
-    swap() {
-      store.swapRows();
-      this.items = [...store.data];
-    }
-
-    update10() {
-      console.time('update10');
       this.store.update();
       this.items = this.store.data;
-      console.timeEnd('update10');
     }
 
     testClear() {
-      console.time('clear');
       this.store.clear();
       this.items = this.store.data;
-      console.timeEnd('clear');
     }
 
     append1k() {
-      console.time('append1k');
       this.store.add(1000);
       this.items = this.store.data;
-      console.timeEnd('append1k');
     }
 
     swap() {
-      console.time('swap');
       this.store.swapRows();
       this.items = this.store.data;
-      console.timeEnd('swap');
     }
 
     create10k() {
-      console.time('create10k');
       this.store.clear();
       this.store.runLots();
       this.items = this.store.data;
-      console.timeEnd('create10k');
     }
 
     create1k() {
-      console.time('create1k');
       this.store.clear();
       this.store.run(1000);
       this.items = this.store.data;
-      console.timeEnd('create1k');
     }
   }
 );
