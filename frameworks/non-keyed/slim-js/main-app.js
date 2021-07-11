@@ -202,7 +202,7 @@ Slim.element(
 
     deleteOne(item) {
       this.store.delete(item.id);
-      this.items = store.data;
+      this.items = this.store.data;
     }
 
     selectOne(item) {
