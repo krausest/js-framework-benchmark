@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": "3.3.0"
+    "frameworkVersionFromPackage": "slim-js"
   },
   "scripts": {
     "build-prod": "exit 0",
