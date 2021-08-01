@@ -66,7 +66,7 @@ const actions = [
 				new Array(count)
 				.fill(null)
 				.map(item_generate)
-			)
+			),
 		],
 	}),
 	
@@ -77,7 +77,7 @@ const actions = [
 		selected: (
 			state.selected === id
 			?	null
-			: state.selected
+			:	state.selected
 		),
 	}),
 	
@@ -195,7 +195,7 @@ const Row = ({
 					dispatch(ACTION_REMOVE, id);
 				}),
 			}, [
-				node_dom('span[className=glyphicon glyphicon-remove][aria-hidden]'),
+				node_dom('span[className=glyphicon glyphicon-remove][ariaHidden]'),
 			]),
 		]),
 		node_dom('td[className=col-md-6]'),
@@ -218,7 +218,7 @@ init(() => {
 					}),
 				]),
 			]),
-			node_dom('span[className=preloadicon glyphicon glyphicon-remove][aria-hidden]'),
+			node_dom('span[className=preloadicon glyphicon glyphicon-remove][ariaHidden]'),
 		]),
 	]];
 });
