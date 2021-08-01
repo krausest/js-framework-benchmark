@@ -203,7 +203,13 @@ const Row = ({
 );
 
 init(() => {
-	const [store, dispatch] = hook_reducer(actions);
+	const [
+		{
+			data,
+			selected,
+		},
+		dispatch,
+	] = hook_reducer(actions);
 	
 	return [null, [
 		node_dom('div[className=container]', null, [
@@ -212,9 +218,9 @@ init(() => {
 			}),
 			node_dom('table[className=table table-hover table-striped test-data]', null, [
 				node_dom('tbody', null, [
-					node_map(Row, store.data, {
+					node_map(Row, data, {
 						dispatch,
-						selected: store.selected,
+						selected,
 					}),
 				]),
 			]),
