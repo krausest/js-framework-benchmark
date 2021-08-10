@@ -504,7 +504,7 @@ export async function performBenchmark(frameworks: FrameworkData[], keyed: boole
     return errorAndWarnings;
 }
 
-process.on('message', (msg) => {
+process.on('message', (msg:any) => {
     config = msg.config;
     console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
     // if (config.LOG_DEBUG) console.log("child process got message", msg);
