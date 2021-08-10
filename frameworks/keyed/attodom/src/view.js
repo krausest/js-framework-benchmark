@@ -2,7 +2,7 @@
 var h = require('attodom/el'),
     list = require('attodom/list')
 
-var TITLE = 'attodom v0.13.1'
+var TITLE = 'attodom'
 
 module.exports = function(store) {
   function clickHandlerMenu(e) {
