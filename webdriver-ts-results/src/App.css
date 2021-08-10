@@ -94,11 +94,7 @@ input + label {
 }
 
 .grid {
-    display: flex;
-    flex-wrap: wrap;
-}
-.col-3 {
-    width: 33%;
+    column-count: 3;
 }
 
 .hspan {
