@@ -1,7 +1,7 @@
 {
   "name": "js-framework-benchmark-fre",
   "version": "1.2.0",
-  "description": "React Hooks demo",
+  "description": "fre demo",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react"
@@ -25,12 +25,13 @@
     "@babel/core": "7.12.3",
     "@babel/preset-env": "7.12.1",
     "babel-loader": "8.1.0",
-    "terser-webpack-plugin": "1.3.0"
+    "terser-webpack-plugin": "1.3.0",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0",
+    "@babel/plugin-transform-react-jsx": "^7.14.9"
   },
   "dependencies": {
-    "@babel/plugin-transform-react-jsx": "^7.14.9",
-    "fre": "^2.1.1",
-    "webpack": "^5.51.1",
-    "webpack-cli": "^4.8.0"
+    "fre": "^2.1.1"
+
   }
 }
