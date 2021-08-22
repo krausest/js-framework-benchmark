@@ -58,10 +58,10 @@ for (f of buildable) {
       // rsync(keyed,name);
       let rm_cmd = `rm -rf ${ci ? '' : 'package-lock.json'} yarn.lock dist elm-stuff bower_components node_modules output`
       console.log(rm_cmd);
-      exec(rm_cmd, {
-        cwd: path,
-        stdio: 'inherit'
-      });
+      // exec(rm_cmd, {
+      //   cwd: path,
+      //   stdio: 'inherit'
+      // });
 
       let install_cmd = `npm ${ci ? 'ci' : 'install'} && npm run build-prod`;
       console.log(install_cmd);

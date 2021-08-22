@@ -1,4 +1,4 @@
-import { h, render, useReducer, useMemo, useEffect, shouldYield } from "../../src/index"
+import { h,render, useReducer } from "fre"
 
 function random(max) {
   return Math.round(Math.random() * 1000) % max
