@@ -7,11 +7,11 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
-wasm-bindgen = "0.2.47"
-js-sys = "0.3.24"
+wasm-bindgen = "0.2.76"
+js-sys = "0.3.53"
 
 [dependencies.web-sys]
-version = "0.3.24"
+version = "0.3.53"
 features = [
   'Document',
   'DomTokenList',
