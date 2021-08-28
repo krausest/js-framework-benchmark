@@ -30,7 +30,7 @@
     "rollup-plugin-terser": "7.0.2"
   },
   "dependencies": {
-    "compostate": "^0.2.1-beta.2",
-    "compostate-jsx": "^0.2.1-beta.2"
+    "compostate": "^0.2.1-beta.4",
+    "compostate-jsx": "^0.2.1-beta.4"
   }
 }

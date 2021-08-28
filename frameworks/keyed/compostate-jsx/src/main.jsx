@@ -2,7 +2,7 @@ import {
   render,
 } from 'compostate-jsx';
 import {
-  atom,
+  signal,
   map,
   selector,
 } from 'compostate';
@@ -19,7 +19,7 @@ function buildData(count) {
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: idCounter++,
-      label: atom(`${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`)
+      label: signal(`${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`)
     };
   }
   return data;
@@ -34,22 +34,22 @@ const Button = ({ id, text, fn }) => (
 );
 
 const Main = () => {
-  const data = atom([]);
-  const selected = atom(null);
+  const [data, setData] = signal([]);
+  const [selected, setSelected] = signal(null);
   function run() {
-    data(buildData(1000));
+    setData(buildData(1000));
   }
   function runLots() {
-    data(buildData(10000));
+    setData(buildData(10000));
   }
   function add() {
-    data([...data(), ...buildData(1000)]);
+    setData([...data(), ...buildData(1000)]);
   }
   function update() {
     const state = data();
     for (let i = 0, len = state.length; i < len ; i += 10) {
-      const { label } = state[i];
-      label(label() + ' !!!');
+      const { label: [read, write] } = state[i];
+      write(read() + ' !!!');
     }
   }
   function swapRows() {
@@ -58,19 +58,19 @@ const Main = () => {
       let tmp = newData[1];
       newData[1] = newData[998];
       newData[998] = tmp;
-      data(newData);
+      setData(newData);
     }
   }
   function clear() {
-    data([]);
+    setData([]);
   }
   function remove(id) {
     const state = data();
     const idx = state.findIndex(d => d.id === id);
-    data([...state.slice(0, idx), ...state.slice(idx + 1)]);
+    setData([...state.slice(0, idx), ...state.slice(idx + 1)]);
   }
   function select(id) {
-    selected(id);
+    setSelected(id);
   }
   const isSelected = selector(() => selected());
 
@@ -95,23 +95,20 @@ const Main = () => {
       </div>
       <table class='table table-hover table-striped test-data'>
         <tbody>
-          {map(() => data(), () => (row) => {
-            const rowId = row.id;
-            return (
-              <tr class={isSelected(rowId) ? 'danger' : ''}>
-                <td class='col-md-1' textContent={rowId} />
-                <td class='col-md-4'>
-                  <a onClick={[select, rowId]} textContent={row.label()} />
-                </td>
-                <td class='col-md-1'>
-                  <a onClick={[remove, rowId]}>
-                    <span class='glyphicon glyphicon-remove' aria-hidden="true" />
-                  </a>
-                </td>
-                <td class='col-md-6'/>
-              </tr>
-            );
-          })}
+          {map(() => data(), ({ id, label: [label] }) => (
+            <tr class={isSelected(id) ? 'danger' : ''}>
+              <td class='col-md-1' textContent={id} />
+              <td class='col-md-4'>
+                <a onClick={[select, id]} textContent={label()} />
+              </td>
+              <td class='col-md-1'>
+                <a onClick={[remove, id]}>
+                  <span class='glyphicon glyphicon-remove' aria-hidden="true" />
+                </a>
+              </td>
+              <td class='col-md-6'/>
+            </tr>
+          ))}
         </tbody>
       </table>
       <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
