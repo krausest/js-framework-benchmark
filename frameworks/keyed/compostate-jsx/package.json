@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "compostate": "^0.2.1-beta.6",
-    "compostate-jsx": "^0.2.1-beta.6"
+    "compostate-jsx": "^0.2.1-beta.7"
   }
 }
