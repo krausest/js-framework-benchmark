@@ -4,7 +4,7 @@
   "description": "fre demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react"
+    "frameworkVersionFromPackage": "fre"
   },
   "scripts": {
     "build-dev": "webpack --watch",
