@@ -17,6 +17,5 @@
   },
   "author": "杨博 (Yang Bo) <pop.atry@gmail.com>",
   "dependencies": {
-    "sbt-bin": "^0.1.2"
   }
 }

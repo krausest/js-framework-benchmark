@@ -15,7 +15,7 @@
     "build-dev": "stencil build --dev --watch"
   },
   "dependencies": {
-    "@stencil/core": "^2.0.0"
+    "@stencil/core": "^2.6.0"
   },
   "license": "Apache-2.0"
 }
