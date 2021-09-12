@@ -115,6 +115,95 @@ export async function testTextContains(driver: WebDriver, xpath: string, text: s
         }, timeout);
 }
 
+export async function testTextContainsJS(driver: WebDriver, xpath: string, text: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
+    let value = await driver.executeAsyncScript(`
+    let callback = arguments[arguments.length - 1];
+
+    let convertPath = (path) => {
+        let parts = path.split(/\\//).filter(v => !!v);
+        let res = [];
+        for (let part of parts) {
+            let components = part.split(/\\[|]/).filter(v => !!v);
+            let tagName = components[0];
+            let index = 0;
+            if (components.length==2) {
+                index = Number(components[1]);
+                if (!index) {
+                    console.log("Index can't be parsed", components[1])
+                    throw "Index can't be parsed "+components[1];
+                }
+            } else {
+                index = 1;
+            }
+            res.push({tagName, index});
+        }
+        return res;
+    }
+    
+    let findByXPath = (paths) => {
+        function shadowRoot () {
+            if (${useShadowRoot}) {
+                if (!${buttonsInShadowRoot} && ${isInButtonArea}) {
+                    return driver.findElement(By.tagName("body"))
+                } else {
+                    return document.querySelector("${shadowRootName}").shadowRoot; 
+                }
+            } else {
+                return document.querySelector("body"); 
+            }
+        }
+
+        let n = shadowRoot();
+
+        for (let p of paths) {  
+            let elem;
+            if (false && useRowShadowRoot && p.tagName === 'tr') {
+                /*elem = n.querySelector(p.tagName+":nth-of-type("+p.index+")"); 
+                if (elem==null) { return null};
+                const shadowHost = await shadowRoot(driver, benchmark-row:nth-of-type($ { p.index}));
+                elem = await shadowHost.findElement(By.tagName('tr'));
+                if (elem === null) {
+                    return null;
+                }*/
+            } else {
+                elem = n.querySelector(p.tagName+":nth-of-type("+p.index+")"); 
+                if (elem==null) { return null};
+            }
+            n = elem;
+        }
+        return n;
+    }
+    
+    let checkTestTextContains = (xpath, text) => {
+        let n = findByXPath(xpath);
+        if (!n) return false;  
+        return (n.innerText.indexOf(text)>-1);  
+    }
+    
+    
+    let testTextContains = (xpath, text, timeout) => {
+        let paths = convertPath(xpath);
+        let i = 0;
+        let cb = () => {
+            if (checkTestTextContains(paths, text)) {
+                callback(true);
+            } else {
+                if (i*1000 < timeout) {
+                    i++;
+                    window.setTimeout(cb, 1000);
+                } else {
+                    callback(false);
+                }
+            }
+        }
+        cb();
+    }
+
+    testTextContains("${xpath}","${text}",${timeout});
+            `);
+    return value;
+}
+
 export function testTextNotContained(driver: WebDriver, xpath: string, text: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
     return waitForCondition(driver)(`testTextNotContained ${xpath} ${text}`,
         async function(driver) {
