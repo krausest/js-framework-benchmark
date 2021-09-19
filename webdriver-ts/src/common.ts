@@ -53,6 +53,7 @@ export let config = {
     FORK_CHROMEDRIVER: true,
     WRITE_RESULTS: true,
     RESULTS_DIRECTORY: "results",
+    TRACES_DIRECTORY: "traces",
     ALLOW_BATCHING: true
 }
 export type TConfig = typeof config;

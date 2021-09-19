@@ -1,5 +1,8 @@
-import * as chrome from 'selenium-webdriver/chrome'
-import {By, until, Builder, Capabilities, WebDriver, Locator, promise, logging, WebElement, Condition} from 'selenium-webdriver'
+//import * as chrome from 'selenium-webdriver/chrome'
+//import {By, until, Builder, Capabilities, WebDriver, Locator, promise, logging, WebElement, Condition} from 'selenium-webdriver'
+import * as puppeteer from "puppeteer-core";
+import {Browser, Page} from "puppeteer-core";
+import { Driver } from "selenium-webdriver/chrome";
 
 import {config, BenchmarkDriverOptions} from './common'
 
@@ -49,7 +52,7 @@ function convertPath(path: string): Array<PathPart> {
     }
     return res;
 }
-
+/*
 async function shadowRoot(driver: WebDriver, selector: string): Promise<WebElement> {
     const el = await driver.findElement(By.css(selector));
     return driver.executeScript(`return arguments[0].shadowRoot`, el);
@@ -158,13 +161,13 @@ export async function testTextContainsJS(driver: WebDriver, xpath: string, text:
         for (let p of paths) {  
             let elem;
             if (false && useRowShadowRoot && p.tagName === 'tr') {
-                /*elem = n.querySelector(p.tagName+":nth-of-type("+p.index+")"); 
+                / *elem = n.querySelector(p.tagName+":nth-of-type("+p.index+")"); 
                 if (elem==null) { return null};
                 const shadowHost = await shadowRoot(driver, benchmark-row:nth-of-type($ { p.index}));
                 elem = await shadowHost.findElement(By.tagName('tr'));
                 if (elem === null) {
                     return null;
-                }*/
+                }* /
             } else {
                 elem = n.querySelector(p.tagName+":nth-of-type("+p.index+")"); 
                 if (elem==null) { return null};
@@ -231,19 +234,12 @@ export function testClassContains(driver: WebDriver, xpath: string, text: string
             }
         }, timeout);
 }
-
-export function testElementLocatedByXpath(driver: WebDriver, xpath: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
-    return waitForCondition(driver)(`testElementLocatedByXpath ${xpath}`,
-        async function(driver) {
-            try {
-                let elem = await findByXPath(driver, xpath, isInButtonArea);
-                return elem ? true : false;
-            } catch(err) {
-                console.log("ignoring error in testElementLocatedByXpath for xpath = "+xpath,err.toString())
-            }
-        }, timeout);
+*/
+export async function testElementLocatedByXpath(page: Page, xpath: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
+    let element = await page.waitForXPath(xpath, {timeout: timeout});
+    await element.dispose();
 }
-
+/*
 export function testElementNotLocatedByXPath(driver: WebDriver, xpath: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
     return waitForCondition(driver)(`testElementNotLocatedByXPath ${xpath}`,
         async function(driver) {
@@ -255,20 +251,13 @@ export function testElementNotLocatedByXPath(driver: WebDriver, xpath: string, t
             }
     }, timeout);
 }
-
-export function testElementLocatedById(driver: WebDriver, id: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
-    return waitForCondition(driver)(`testElementLocatedById ${id}`,
-        async function(driver) {
-            try {
-                let elem = await mainRoot(driver, isInButtonArea);
-                elem = await elem.findElement(By.id(id));
-                return true;
-            } catch(err) {
-                // console.log("ignoring error in testElementLocatedById for id = "+id,err.toString().split("\n")[0]);
-            }
-        }, timeout);
-    }
-
+*/
+export async function testElementLocatedById(page: Page, id: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
+    let element = await page.waitForSelector(`#${id}`, {timeout});
+    await element.dispose();
+}
+    
+/*
 async function retry<T>(retryCount: number, driver: WebDriver, fun : (driver:  WebDriver, retryCount: number) => Promise<T>):  Promise<T> {
     for (let i=0; i<retryCount; i++) {
         try {
@@ -279,17 +268,19 @@ async function retry<T>(retryCount: number, driver: WebDriver, fun : (driver:  W
         }
     }
 }
-
-// Stale element prevention. For aurelia even after a testElementLocatedById clickElementById for the same id can fail
-// No idea how that can be explained
-export function clickElementById(driver: WebDriver, id: string, isInButtonArea: boolean) {
-    return retry(5, driver, async function (driver) {
+*/
+export async function clickElementById(page: Page, id: string, isInButtonArea: boolean) {
+    let element = await page.waitForSelector(`#${id}`);
+    await element.click();
+    await element.dispose();
+    
+/*    return retry(5, driver, async function (driver) {
         let elem = await mainRoot(driver, isInButtonArea);
         elem = await elem.findElement(By.id(id));
         await elem.click();
-    });
+    });*/
 }
-
+/*
 export function clickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
     return retry(5, driver, async function(driver, count) {
         if (count>1 && config.LOG_DETAILS) console.log("clickElementByXPath ",xpath," attempt #",count);
@@ -319,11 +310,27 @@ export async function mainRoot(driver: WebDriver, isInButtonArea: boolean) : Pro
     return driver.findElement(By.tagName("body"))
   }
 }
-
+*/
 // node_modules\.bin\chromedriver.cmd --verbose --port=9998 --log-path=chromedriver.log
 // SELENIUM_REMOTE_URL=http://localhost:9998
-export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver {
+export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Promise<puppeteer.Browser> {
+    const width = 1280;
+    const height = 800;
 
+    const browser = await puppeteer.launch({
+        headless: false /*benchmarkOptions.headless*/,
+        // FIXME
+        executablePath: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
+        ignoreDefaultArgs: ["--enable-automation"],
+        args: [`--window-size=${width},${height}`],
+        defaultViewport: {
+          width,
+          height,
+        },
+      });
+
+    return browser;
+/*
     let args = [
         "--js-flags=--expose-gc",
         "--enable-precise-memory-info",
@@ -376,4 +383,5 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
     var driver = chrome.Driver.createSession(caps, service);
 
     return driver;
+    */
 }

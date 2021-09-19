@@ -1,6 +1,9 @@
-import { testTextContains, testTextContainsJS, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath } from './webdriverAccess'
+// import { testTextContains, testTextContainsJS, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath } from './webdriverAccess'
+
+import { Browser, Page } from 'puppeteer-core';
 import { Builder, WebDriver, promise, logging } from 'selenium-webdriver'
 import { config, FrameworkData } from './common'
+import { clickElementById, testElementLocatedById, testElementLocatedByXpath } from './webdriverAccess';
 
 export enum BenchmarkType { CPU, MEM, STARTUP };
 
@@ -92,9 +95,9 @@ export abstract class Benchmark {
         this.throttleCPU = benchmarkInfo.throttleCPU;
         this.allowBatching = benchmarkInfo.allowBatching;
     }
-    abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
-    abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
-    after(driver: WebDriver, framework: FrameworkData): Promise<any> { return null; }
+    abstract init(page: Page, framework: FrameworkData): Promise<any>;
+    abstract run(page: Page, framework: FrameworkData): Promise<any>;
+    after(page: Page, framework: FrameworkData): Promise<any> { return null; }
     // Good fit for a single result creating Benchmark
     resultKinds(): Array<BenchmarkInfo> { return [this.benchmarkInfo]; }
     extractResult(results: any[], resultKind: BenchmarkInfo): number[] { return results; };
@@ -123,14 +126,15 @@ const benchRun = new class extends Benchmark {
           allowBatching: true,
         });
     }
-    async init(driver: WebDriver) { await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true); 
+    async init(page: Page) { 
+        await testElementLocatedById(page, "add", SHORT_TIMEOUT, true); 
     }
-    async run(driver: WebDriver) {
-        await clickElementById(driver, "add", true);
-        await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
+    async run(page: Page) {
+        await clickElementById(page, "add", true);
+        await testElementLocatedByXpath(page, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
     }
 }
-
+/*
 const benchReplaceAll = new class extends Benchmark {
     constructor() {
         super({
@@ -507,25 +511,29 @@ class BenchStartup extends Benchmark {
     }
 }
 const benchStartup = new BenchStartup();
-
+*/
 export let benchmarks : Array<Benchmark> = [
     benchRun,
-    benchReplaceAll,
-    benchUpdate,
-    benchSelect,
-    benchSwapRows,
-    benchRemove,
-    benchRunBig,
-    benchAppendToManyRows,
-    benchClear,
-    benchReadyMemory,
-    benchRunMemory,
-    benchUpdate5Memory,
-    benchReplace5Memory,
-    benchCreateClear5Memory,
-    benchStartup,
+    // benchReplaceAll,
+    // benchUpdate,
+    // benchSelect,
+    // benchSwapRows,
+    // benchRemove,
+    // benchRunBig,
+    // benchAppendToManyRows,
+    // benchClear,
+    // benchReadyMemory,
+    // benchRunMemory,
+    // benchUpdate5Memory,
+    // benchReplace5Memory,
+    // benchCreateClear5Memory,
+    // benchStartup,
 ];
 
 export function fileName(framework: FrameworkData, benchmark: BenchmarkInfo) {
     return `${framework.fullNameWithKeyedAndVersion}_${benchmark.id}.json`;
+}
+
+export function fileNameTrace(framework: FrameworkData, benchmark: BenchmarkInfo, run: number) {
+    return `${config.TRACES_DIRECTORY}/${framework.fullNameWithKeyedAndVersion}_${benchmark.id}_${run}.json`;
 }

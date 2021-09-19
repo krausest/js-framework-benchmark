@@ -1,6 +1,6 @@
 import * as yargs from 'yargs';
-import {buildDriver, setUseShadowRoot, testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, mainRoot, findByXPath, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot} from './webdriverAccess'
-import {config, FrameworkData, initializeFrameworks, BenchmarkOptions} from './common'
+import {buildDriver, setUseShadowRoot, testTextContains, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath, mainRoot, findByXPath, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot} from '../src/webdriverAccess'
+import {config, FrameworkData, initializeFrameworks, BenchmarkOptions} from '../src/common'
 import { WebDriver, By, WebElement } from 'selenium-webdriver';
 import * as R from 'ramda';
 import { valid } from 'semver';

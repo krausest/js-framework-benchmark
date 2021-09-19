@@ -232,6 +232,9 @@ async function main() {
     if (!fs.existsSync(config.RESULTS_DIRECTORY))
     fs.mkdirSync(config.RESULTS_DIRECTORY);
 
+    if (!fs.existsSync(config.TRACES_DIRECTORY))
+    fs.mkdirSync(config.TRACES_DIRECTORY);
+
     if (args.help) {
         yargs.showHelp();
     } else {

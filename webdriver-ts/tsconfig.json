@@ -19,7 +19,6 @@
         "./src/createResultJS.ts",
         "./src/createIndex.ts",
         "./src/updateFrameworks.ts",
-        "./src/isKeyed.ts",
         "./src/rebuild.ts",
         "./src/writeResults.ts"
     ],
