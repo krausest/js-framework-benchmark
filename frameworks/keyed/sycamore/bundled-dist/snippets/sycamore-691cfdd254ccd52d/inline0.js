@@ -1,1 +1,0 @@
-export function set_node_id(node, id) {node.$$$nodeId = id}export function get_node_id(node) {return node.$$$nodeId}
