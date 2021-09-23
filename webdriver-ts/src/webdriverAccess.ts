@@ -1,8 +1,5 @@
-//import * as chrome from 'selenium-webdriver/chrome'
-//import {By, until, Builder, Capabilities, WebDriver, Locator, promise, logging, WebElement, Condition} from 'selenium-webdriver'
 import * as puppeteer from "puppeteer-core";
 import {Browser, Page} from "puppeteer-core";
-import { Driver } from "selenium-webdriver/chrome";
 
 import {config, BenchmarkDriverOptions} from './common'
 
@@ -32,23 +29,25 @@ export function setButtonsInShadowRoot(val: boolean) {
     buttonsInShadowRoot = val;
 }
 
-function convertPath(path: string): Array<PathPart> {
+function convertPath(path: string): string {
     let parts = path.split(/\//).filter(v => !!v);
-    let res: Array<PathPart> = [];
+    let res = "";
     for (let part of parts) {
         let components = part.split(/\[|]/).filter(v => !!v);
         let tagName = components[0];
         let index:number = 0;
+        if (res.length>0) res += " > ";
         if (components.length==2) {
             index = Number(components[1]);
             if (!index) {
                 console.log("Index can't be parsed", components[1])
                 throw "Index can't be parsed "+components[1];
             }
+            res += `${tagName}:nth-of-type(${index})`;
         } else {
             index = 1;
+            res += tagName;
         }
-        res.push({tagName, index});
     }
     return res;
 }
@@ -220,9 +219,19 @@ export function testTextNotContained(driver: WebDriver, xpath: string, text: str
             }
         }, timeout);
 }
+*/
+export async function testClassContains(page: Page, xpath: string, className: string, isInButtonArea: boolean) {
+    let selector = convertPath(xpath);
+    let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    let fn = locateInShadowRoot ? 
+        `document.querySelector('${shadowRootName}')?.shadowRoot?.querySelector('${selector}')`
+        : `document.querySelector('${selector}')`;
+    fn += `?.classList.contains('${className}')`;
+    console.log(`testClassContains xpath ${xpath} className '${className}' JS-Selector: ${fn}`);
+    let res = await page.waitForFunction(fn, {polling: 100});
+    await res.dispose();
 
-export function testClassContains(driver: WebDriver, xpath: string, text: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
-    return waitForCondition(driver)(`testClassContains ${xpath} ${text}`,
+/*    return waitForCondition(driver)(`testClassContains ${xpath} ${text}`,
         async function(driver) {
             try {
                 let elem = await findByXPath(driver, xpath, isInButtonArea);
@@ -233,12 +242,37 @@ export function testClassContains(driver: WebDriver, xpath: string, text: string
                 console.log("ignoring error in testClassContains for xpath = "+xpath+" text = "+text,err.toString().split("\n")[0])
             }
         }, timeout);
+        */
 }
-*/
-export async function testElementLocatedByXpath(page: Page, xpath: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
-    let element = await page.waitForXPath(xpath, {timeout: timeout});
-    await element.dispose();
+
+
+export async function testElementNotLocatedByXPath(page: Page, xpath: string, isInButtonArea: boolean) {
+    let selector = convertPath(xpath);
+    let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    let fn = locateInShadowRoot ? `document.querySelector('${shadowRootName}')?.shadowRoot?.querySelector('${selector}')` : `!document.querySelector('${selector}')`;
+    console.log(`testElementNotLocatedByXPath xpath ${xpath} JS-Selector: ${fn}`);
+    let res = await page.waitForFunction(fn);
+    await res.dispose();
 }
+
+
+    /*    if (useShadowRoot) {
+        if (!buttonsInShadowRoot && isInButtonArea) {
+          let elem = await page.waitForXPath(xpath);
+          elem.dispose();
+        } else {
+          let selector = convertPath(xpath);
+          let fn = `document.querySelector('${shadowRootName}').shadowRoot.querySelector('${selector}')`;
+          console.log("selector", fn);
+          let shadowRoot = await page.waitForFunction(fn);
+          console.log("shadowRoot", shadowRoot);
+          return shadowRoot;
+        }
+      } else {
+        let elem = await page.waitForXPath(xpath);
+        elem.dispose();
+    }*/
+
 /*
 export function testElementNotLocatedByXPath(driver: WebDriver, xpath: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
     return waitForCondition(driver)(`testElementNotLocatedByXPath ${xpath}`,
@@ -252,9 +286,40 @@ export function testElementNotLocatedByXPath(driver: WebDriver, xpath: string, t
     }, timeout);
 }
 */
-export async function testElementLocatedById(page: Page, id: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
-    let element = await page.waitForSelector(`#${id}`, {timeout});
-    await element.dispose();
+
+export async function testElementLocatedById(page: Page, id: string, isInButtonArea: boolean) {
+    //useShadowRoot  isInButtonArea    buttonsInShadowRoot    locateInShadowRoot
+    //t                   t            t                        t
+    //t                   t            f                        f
+    //t                   f            t                        t
+    //t                   f            f                        t
+    let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    let fn = (locateInShadowRoot: boolean,shadowRootName: string, selector: string) => 
+    {
+        let elem: HTMLElement = locateInShadowRoot ? document.querySelector(shadowRootName)?.shadowRoot?.querySelector(selector) 
+        : document.querySelector(selector);
+        if (!elem) return false;
+        return true;
+    }
+    console.log(`testElementLocatedById id ${id}`);
+    let res = await page.waitForFunction(fn, {polling: 100}, locateInShadowRoot, shadowRootName, "#"+id);
+    await res.dispose();
+/*
+    if (useShadowRoot ) {
+        if (!buttonsInShadowRoot && isInButtonArea) {
+          let elem = await page.waitForSelector(`#${id}`);
+          elem.dispose();
+        } else {
+          let fn = `document.querySelector('${shadowRootName}')?.shadowRoot?.querySelector('#${id}')`;
+          console.log("selector", fn);
+          let shadowRoot = await page.waitForFunction(fn);
+          console.log("shadowRoot", shadowRoot);
+          return shadowRoot;
+        }
+      } else {
+        let elem = await page.waitForSelector(`#${id}`);
+        elem.dispose();
+    }*/
 }
     
 /*
@@ -270,35 +335,135 @@ async function retry<T>(retryCount: number, driver: WebDriver, fun : (driver:  W
 }
 */
 export async function clickElementById(page: Page, id: string, isInButtonArea: boolean) {
-    let element = await page.waitForSelector(`#${id}`);
-    await element.click();
-    await element.dispose();
-    
-/*    return retry(5, driver, async function (driver) {
-        let elem = await mainRoot(driver, isInButtonArea);
-        elem = await elem.findElement(By.id(id));
+    let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    let fn = (locateInShadowRoot: boolean,shadowRootName: string, selector: string) => 
+    {
+        console.log("HERE!!");
+        let elem: HTMLElement = locateInShadowRoot ? document.querySelector(shadowRootName).shadowRoot.querySelector(selector) 
+        : document.querySelector(selector);
+        if (!elem) return false;
+        elem.click();
+        return true;
+    }
+    let res = await page.evaluate(fn, locateInShadowRoot, shadowRootName, "#"+id);
+    /*    let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    let fn = locateInShadowRoot ? `document.querySelector('${shadowRootName}')?.shadowRoot?.querySelector('#${id}')` : `document.querySelector('#${id}')`;
+    console.log(`clickElementById id ${id} JS-Selector: ${fn}`);
+    let res = await page.waitForFunction(fn);
+    await res.asElement().click()
+    await res.dispose();
+*/
+/*    if (useShadowRoot) {
+        if (!buttonsInShadowRoot && isInButtonArea) {
+          let elem = await page.waitForSelector(`#${id}`);
+          await elem.click();
+          await elem.dispose();
+        } else {
+          let fn = `document.querySelector('${shadowRootName}').shadowRoot.querySelector('#${id}')`;
+          console.log("selector", fn);
+          let shadowRoot = await page.waitForFunction(fn);
+          await shadowRoot.asElement().click()
+          console.log("shadowRoot", shadowRoot);
+          return shadowRoot;
+        }
+      } else {
+        console.log(`SELECTOR #${id}`);
+        let elem = await page.waitForSelector(`#${id}`, {visible:true});
         await elem.click();
-    });*/
+        await elem.dispose();
+    }*/
 }
+
+export async function clickElementByXPath(page: Page, xpath: string, isInButtonArea: boolean) {
+   /* let selector = convertPath(xpath);
+    let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    let fn = (locateInShadowRoot: boolean,shadowRootName: string, selector: string) => 
+    {
+        let elem: HTMLElement = locateInShadowRoot ? document.querySelector(shadowRootName)?.shadowRoot?.querySelector(selector) 
+        : document.querySelector(selector);
+        return elem;
+    }
+    console.log("locateInShadowRoot, shadowRootName, selector", locateInShadowRoot, shadowRootName, selector);
+    let res = await page.waitForFunction(fn, {polling: 20}, locateInShadowRoot, shadowRootName, selector);
+    await res.asElement().click();
+    console.log("clickElementByXPath returned");
+*/
+
+    let selector = convertPath(xpath);
+    let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    let fn = (locateInShadowRoot: boolean,shadowRootName: string, selector: string) => 
+    {
+        console.log("HERE!!", locateInShadowRoot, shadowRootName, selector);
+        let elem: HTMLElement = locateInShadowRoot ? document.querySelector(shadowRootName).shadowRoot.querySelector(selector) 
+        : document.querySelector(selector);
+        elem.click();
+        return 42;
+    }
+    let res = await page.evaluate(fn, locateInShadowRoot, shadowRootName, selector);
+    console.log(`clickElementByXPath ${xpath}, res ${res}`);
+}
+
+export async function testElementLocatedByXpath(page: Page, xpath: string, isInButtonArea: boolean) {
+    let selector = convertPath(xpath);
+    let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    let fn = (locateInShadowRoot: boolean,shadowRootName: string, selector: string) => 
+    {
+        console.log("HERE!!");
+        let elem: HTMLElement = locateInShadowRoot ? document.querySelector(shadowRootName)?.shadowRoot?.querySelector(selector) 
+        : document.querySelector(selector);
+        if (!elem) return false;
+        return elem.innerText.length >0;
+    }
+    console.log(`testElementLocatedByXpath xpath ${xpath} JS-Selector: ${fn}`);
+    let res = await page.waitForFunction(fn, {polling: 100}, locateInShadowRoot, shadowRootName, selector);
+    await res.dispose();
+}
+
+export async function testTextContains(page: Page, xpath: string, expectedText: string, isInButtonArea: boolean): Promise<void> {
+    let selector = convertPath(xpath);
+    let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    let fn = (locateInShadowRoot: boolean,shadowRootName: string, selector: string, expectedText: string) => 
+    {
+        console.log("HERE!!");
+        let elem: HTMLElement = locateInShadowRoot ? document.querySelector(shadowRootName)?.shadowRoot?.querySelector(selector) 
+        : document.querySelector(selector);
+        if (!elem) return false;
+        return elem.innerText.includes(expectedText);
+    }
+    console.log(`testTextContains xpath ${xpath} JS-Selector: ${fn}`);
+    let res = await page.waitForFunction(fn, {polling: 100}, locateInShadowRoot, shadowRootName, selector, expectedText);
+    await res.dispose();
+
+    // let selector = convertPath(xpath);
+    // let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    // let fn = locateInShadowRoot ? 
+    //     `document.querySelector('${shadowRootName}')?.shadowRoot?.querySelector('${selector}')?.innerText?.includes('${expectedText}')` 
+    //     : `document.querySelector('${selector}')?.innerText?.includes('${expectedText}')`;
+    // console.log(`testTextContains ${xpath} expected '${expectedText}' JS-Selector: ${fn}`);
+
+    // let res = await page.waitForFunction(fn);
+    // // let actual:string = await res.jsonValue();
+    // // if (actual!==expectedText) {
+    // //     throw `testTextContains failed for xpath ${xpath} and text ${expectedText} but was ${actual}`;
+    // // }
+    // await res.dispose();
+
+    // let selector = convertPath(xpath);
+    // let locateInShadowRoot = useShadowRoot && (!isInButtonArea  || buttonsInShadowRoot);
+    // let fn = locateInShadowRoot ? 
+    //     `document.querySelector('${shadowRootName}')?.shadowRoot?.querySelector('${selector}')?.innerText === '${expectedText}'` 
+    //     : `document.querySelector('${selector}')?.innerText === '${expectedText}'`;
+    // try {
+    //     let res = await page.waitForFunction(fn);
+    //     await res.dispose();
+    // } catch (e) {
+    //     throw `testTextContains failed for xpath ${xpath} and text ${expectedText}`;
+    // }
+}
+
+
+
 /*
-export function clickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
-    return retry(5, driver, async function(driver, count) {
-        if (count>1 && config.LOG_DETAILS) console.log("clickElementByXPath ",xpath," attempt #",count);
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
-        await  elem.click();
-    });
-    // Stale element possible:
-    // return to(driver.findElement(By.xpath(xpath)).click());
-}
-
-export async function getTextByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean): Promise<string> {
-    return await retry(5, driver, async function(driver, count) {
-        if (count>1 && config.LOG_DETAILS) console.log("getTextByXPath ",xpath," attempt #",count);
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
-        return await elem.getText();
-    });
-}
-
 export async function mainRoot(driver: WebDriver, isInButtonArea: boolean) : Promise<WebElement> {
   if (useShadowRoot) {
     if (!buttonsInShadowRoot && isInButtonArea) {
@@ -318,11 +483,12 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
     const height = 800;
 
     const browser = await puppeteer.launch({
-        headless: false /*benchmarkOptions.headless*/,
+        headless: benchmarkOptions.headless,
         // FIXME
         executablePath: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
         ignoreDefaultArgs: ["--enable-automation"],
-        args: [`--window-size=${width},${height}`],
+        args: [`--window-size=${width},${height}`], // , '--disable-features=IsolateOrigins,site-per-process'
+        dumpio: true,
         defaultViewport: {
           width,
           height,

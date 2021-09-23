@@ -30,17 +30,19 @@ function extractRelevantEvents(entries: any[]) {
     let protocolEvents: any[] = [];
     entries.forEach(x => {
         let e = x;
-        if (config.LOG_DETAILS) console.log(JSON.stringify(e));
+        // console.log(JSON.stringify(e));
         if (e.name==='EventDispatch') {
             if (e.args.data.type==="click") {
-                if (config.LOG_TIMELINE) console.log("CLICK ",JSON.stringify(e));
+                console.log("CLICK ",+e.ts);
                 filteredEvents.push({type:'click', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur});
             }
         } else if (e.name==='Paint' && e.ph==="X") {
-            console.log("PAINT ",+e.ts+e.dur);
+            console.log("PAINT X",+e.ts+e.dur);
             filteredEvents.push({type:'paint', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
-        }
-/*        } else if (e.name==='Rasterize' && e.ph==="X") {
+        } else if (e.name==='Paint') {
+            console.log("PAINT I ",+e.ts);
+            filteredEvents.push({type:'paint', ts: +e.ts, dur: 0, end: +e.ts, evt: JSON.stringify(e)});
+        } else if (e.name==='Rasterize' && e.ph==="X") {
             console.log("RASTERIZE ",+e.ts+e.dur);
             // filteredEvents.push({type:'paint', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
         } else if (e.name==='CompositeLayers' && e.ph==="X") {
@@ -52,8 +54,10 @@ function extractRelevantEvents(entries: any[]) {
         } else if (e.name==='UpdateLayerTree' && e.ph==="X") {
             console.log("UPDATELAYER ",+e.ts);
             // filteredEvents.push({type:'paint', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
+        } else if (e.name==='UpdateLayoutTree' && e.ph==="X") {
+            console.log("UPDATELAYOUT ",+e.ts);
+            // filteredEvents.push({type:'paint', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
         }
-        */
     });
     return {filteredEvents, protocolEvents};
 }
@@ -162,7 +166,7 @@ async function computeResultsCPU(fileName: string, benchmarkOptions: BenchmarkOp
     const perfLogEvents = (await fetchEventsFromPerformanceLog(fileName));
     let eventsDuringBenchmark = perfLogEvents.timingResults;
 
-    console.log("eventsDuringBenchmark ", asString(eventsDuringBenchmark));
+    // console.log("eventsDuringBenchmark ", asString(eventsDuringBenchmark));
 
     let clicks = R.filter(type_eq('click'))(eventsDuringBenchmark)
     if (clicks.length !== 1) {
@@ -308,8 +312,9 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
     let browser : Browser = null;
     try {
         browser = await startBrowser(benchmarkOptions);
-        const page = await browser.newPage();
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
+            const page = await browser.newPage();
+
             setUseShadowRoot(framework.useShadowRoot);
             setUseRowShadowRoot(framework.useRowShadowRoot);
             setShadowRootName(framework.shadowRootName);
@@ -323,27 +328,30 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
                 //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
                 //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
                 // });
-            console.log("driver timerstamp *")
-            await page.evaluate("console.timeStamp('initBenchmark')");
-
+            console.log("initBenchmark");
             await initBenchmark(page, benchmark, framework);
+
             await page.tracing.start({path: fileNameTrace(framework, benchmark, i), screenshots: true});
 /*            if (benchmark.throttleCPU) {
                 console.log("CPU slowdown", benchmark.throttleCPU);
                 await (driver as any).sendDevToolsCommand('Emulation.setCPUThrottlingRate', {rate: benchmark.throttleCPU});
             }*/
-            await page.evaluate("console.timeStamp('runBenchmark')");
+            console.log("runBenchmark");
             await runBenchmark(page, benchmark, framework);
             /*if (benchmark.throttleCPU) {
                 console.log("resetting CPU slowdown");
                 await (driver as any).sendDevToolsCommand('Emulation.setCPUThrottlingRate', {rate: 1});
-            }*/
+            }*/            
+            await page.waitForTimeout(1000);
             await page.tracing.stop();
-            await page.evaluate("console.timeStamp('finishedBenchmark')");
             await afterBenchmark(page, benchmark, framework);
-            await page.evaluate("console.timeStamp('afterBenchmark')");
+            console.log("afterBenchmark");
             let result = await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
             results.push(result);
+            console.log(`duration for ${framework.name} and ${benchmark.id}: ${result}`);
+            if (result < 0)
+                throw new Error(`duration ${result} < 0`);
+            await page.close();
         }
         await browser.close();
         return {error, warnings, result: results};
