@@ -50,10 +50,10 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
 
         if (benchmark.type == BenchmarkType.CPU) {
             count = benchmarkOptions.numIterationsForCPUBenchmarks;
-            benchmarkOptions.batchSize = config.ALLOW_BATCHING && benchmark.allowBatching ? count : 1;
+            benchmarkOptions.batchSize = count;
         } else if (benchmark.type == BenchmarkType.MEM) {
             count = benchmarkOptions.numIterationsForMemBenchmarks;
-            benchmarkOptions.batchSize = 1;
+            benchmarkOptions.batchSize = count;
         } else {
             count = benchmarkOptions.numIterationsForStartupBenchmark
             benchmarkOptions.batchSize = 1;
@@ -81,12 +81,12 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
                 }
             }
         }
-        if (benchmark.type == BenchmarkType.CPU) {
-            // console.log("CPU results before: ", results);
-            (results as number[]).sort((a:number,b:number) => a-b)
-            results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU)
-            // console.log("CPU results after: ", results)
-        }
+        // if (benchmark.type == BenchmarkType.CPU) {
+        //     // console.log("CPU results before: ", results);
+        //     (results as number[]).sort((a:number,b:number) => a-b)
+        //     results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU)
+        //     // console.log("CPU results after: ", results)
+        // }
     
         console.log("******* result ", results);
         await writeResults(config, { framework: framework, benchmark: benchmark, results: results });
@@ -113,11 +113,8 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
 
     let benchmarkOptions: BenchmarkOptions = {
         port: config.PORT.toFixed(),
-        remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
-        chromePort: config.CHROME_PORT,
         headless: args.headless,
-        chromeBinaryPath: args.chromeBinary,
-        numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+        numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU,
         numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
         numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
         batchSize: 1
@@ -175,12 +172,13 @@ let args: any = yargs(process.argv)
     .default('port', config.PORT)
     .string('chromeBinary')
     .string('chromeDriver')
-    .boolean('headless')
+    .default('headless', false)
     .boolean('installed')
     .array("framework").array("benchmark")
     .argv;
 
 console.log("args", args);
+console.log("headless", args);
 
 let allArgs = args._.length<=2 ? [] : args._.slice(2,args._.length);
 

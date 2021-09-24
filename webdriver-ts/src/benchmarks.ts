@@ -1,9 +1,8 @@
 // import { testTextContains, testTextContainsJS, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath } from './webdriverAccess'
 
 import { Browser, Page } from 'puppeteer-core';
-import { Builder, WebDriver, promise, logging } from 'selenium-webdriver'
 import { config, FrameworkData } from './common'
-import { clickElementById, clickElementByXPath, testClassContains, testElementLocatedById, testElementLocatedByXpath, testElementNotLocatedByXPath, testTextContains } from './webdriverAccess';
+import { clickElementById, clickElementByXPath, waitForClassContained, waitForElementLocatedById, waitForElementLocatedByXpath, waitForElementNotLocatedByXPath, waitForTextContains } from './webdriverAccess';
 
 export enum BenchmarkType { CPU, MEM, STARTUP };
 
@@ -107,8 +106,9 @@ export interface LighthouseData {
     TimeToConsistentlyInteractive: number;
     ScriptBootUpTtime: number;
     MainThreadWorkCost: number;
+    SpeedIndex: number;
+    FirstMeaningfulPaint: number;
     TotalKiloByteWeight: number;
-    [propName: string]: number;
 }
 
 export interface StartupBenchmarkResult extends BenchmarkInfo {
@@ -127,11 +127,11 @@ const benchRun = new class extends Benchmark {
         });
     }
     async init(page: Page) { 
-        await testElementLocatedById(page, "add", true); 
+        await waitForElementLocatedById(page, "add", true); 
     }
     async run(page: Page) {
         await clickElementById(page, "add", true);
-        await testTextContains(page, "//tbody/tr[1000]/td[1]", "1000", false);
+        await waitForTextContains(page, "//tbody/tr[1000]/td[1]", "1000", false);
     }
 }
 
@@ -148,15 +148,15 @@ const benchReplaceAll = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(page, 'run', true);
+        await waitForElementLocatedById(page, 'run', true);
         for (let i = 0; i < config.WARMUP_COUNT; i++) {
             await clickElementById(page, 'run', true);
-            await testTextContains(page, '//tbody/tr[1]/td[1]', (i*1000+1).toFixed(), false);
+            await waitForTextContains(page, '//tbody/tr[1]/td[1]', (i*1000+1).toFixed(), false);
         }
     }
     async run(page: Page) {
         await clickElementById(page, 'run', true);
-        await testTextContains(page, '//tbody/tr[1]/td[1]', '5001', false);
+        await waitForTextContains(page, '//tbody/tr[1]/td[1]', '5001', false);
     }
 }
 
@@ -173,17 +173,17 @@ const benchUpdate = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(page, "run", true);
+        await waitForElementLocatedById(page, "run", true);
         await clickElementById(page, 'run', true);
-        await testElementLocatedByXpath(page, "//tbody/tr[1000]/td[2]/a", false);
+        await waitForElementLocatedByXpath(page, "//tbody/tr[1000]/td[2]/a", false);
         for (let i = 0; i < 3; i++) {
             await clickElementById(page, 'update', true);
-            await testTextContains(page, '//tbody/tr[991]/td[2]/a', ' !!!'.repeat(i + 1), false);
+            await waitForTextContains(page, '//tbody/tr[991]/td[2]/a', ' !!!'.repeat(i + 1), false);
         }
     }
     async run(page: Page) {
         await clickElementById(page, 'update', true);
-        await testTextContains(page, '//tbody/tr[991]/td[2]/a', ' !!!'.repeat(3 + 1), false);
+        await waitForTextContains(page, '//tbody/tr[991]/td[2]/a', ' !!!'.repeat(3 + 1), false);
     }
 }
 
@@ -200,14 +200,14 @@ const benchSelect = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(page, "run", true);
-        await testElementLocatedById(page, 'run', true);
-        await clickElementById(page, 'run', true);
-        await testTextContains(page, "//tbody/tr[1000]/td[1]", "1000", false);
+        await waitForElementLocatedById(page, 'add', true);
+        await clickElementById(page, 'add', true);
+        await page.waitForTimeout(200);
+        await waitForTextContains(page, "//tbody/tr[1000]/td[1]", "1000", false);
     }
     async run(page: Page) {
         await clickElementByXPath(page, "//tbody/tr[2]/td[2]/a", false);
-        await testClassContains(page, "//tbody/tr[2]", "danger", false);
+        await waitForClassContained(page, "//tbody/tr[2]", "danger", false);
     }
 }
 
@@ -225,19 +225,19 @@ const benchSwapRows = new class extends Benchmark {
       });
     }
     async init(page: Page) {
-        await testElementLocatedById(page, "run", true);
+        await waitForElementLocatedById(page, "run", true);
         await clickElementById(page, 'run', true);
-        await testElementLocatedByXpath(page, "//tbody/tr[1]/td[1]",  false);
+        await waitForElementLocatedByXpath(page, "//tbody/tr[1]/td[1]",  false);
         for (let i = 0; i <= config.WARMUP_COUNT; i++) {
             let text = ((i%2) == 0) ? "2" : "999";
             await clickElementById(page, 'swaprows', true);
-            await testTextContains(page, "//tbody/tr[999]/td[1]", text, false);
+            await waitForTextContains(page, "//tbody/tr[999]/td[1]", text, false);
         }
     }
     async run(page: Page) {
         await clickElementById(page, 'swaprows', true);
-        await testTextContains(page, "//tbody/tr[999]/td[1]", "2", false);
-        await testTextContains(page, "//tbody/tr[2]/td[1]", "999", false);
+        await waitForTextContains(page, "//tbody/tr[999]/td[1]", "2", false);
+        await waitForTextContains(page, "//tbody/tr[2]/td[1]", "999", false);
     }
 }
 
@@ -254,26 +254,26 @@ const benchRemove = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(page, "run", true);
+        await waitForElementLocatedById(page, "run", true);
         await clickElementById(page, 'run', true);
-        await testElementLocatedByXpath(page, "//tbody/tr[1]/td[2]/a",  false);
+        await waitForElementLocatedByXpath(page, "//tbody/tr[1]/td[2]/a",  false);
         for (let i = 0; i < config.WARMUP_COUNT; i++) {
-            await testTextContains(page, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`, (config.WARMUP_COUNT - i + 4).toString(), false);
+            await waitForTextContains(page, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`, (config.WARMUP_COUNT - i + 4).toString(), false);
             await clickElementByXPath(page, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[3]/a/span[1]`, false);
-            await testTextContains(page, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`, '10', false);
+            await waitForTextContains(page, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`, '10', false);
         }
-        await testTextContains(page, '//tbody/tr[5]/td[1]', '10', false);
-        await testTextContains(page, '//tbody/tr[4]/td[1]', '4', false);
+        await waitForTextContains(page, '//tbody/tr[5]/td[1]', '10', false);
+        await waitForTextContains(page, '//tbody/tr[4]/td[1]', '4', false);
 
         // Click on a row the second time
-        await testTextContains(page, `//tbody/tr[6]/td[1]`, '11', false);
+        await waitForTextContains(page, `//tbody/tr[6]/td[1]`, '11', false);
         await clickElementByXPath(page, `//tbody/tr[6]/td[3]/a/span[1]`, false);
-        await testTextContains(page, `//tbody/tr[6]/td[1]`, '12', false);
+        await waitForTextContains(page, `//tbody/tr[6]/td[1]`, '12', false);
 
     }
     async run(page: Page) {
         await clickElementByXPath(page, "//tbody/tr[4]/td[3]/a/span[1]", false);
-        await testTextContains(page, '//tbody/tr[4]/td[1]', '10', false);
+        await waitForTextContains(page, '//tbody/tr[4]/td[1]', '10', false);
     }
 }
 
@@ -289,11 +289,11 @@ const benchRunBig = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(page, "runlots", true);
+        await waitForElementLocatedById(page, "runlots", true);
     }
     async run(page: Page) {
         await clickElementById(page, 'runlots', true);
-        await testElementLocatedByXpath(page, "//tbody/tr[10000]/td[2]/a", false);
+        await waitForElementLocatedByXpath(page, "//tbody/tr[10000]/td[2]/a", false);
     }
 }
 
@@ -310,13 +310,13 @@ const benchAppendToManyRows = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(page, "run", true);
+        await waitForElementLocatedById(page, "run", true);
         await clickElementById(page, 'run', true);
-        await testElementLocatedByXpath(page, "//tbody/tr[1000]/td[2]/a",  false);
+        await waitForElementLocatedByXpath(page, "//tbody/tr[1000]/td[2]/a",  false);
     }
     async run(page: Page) {
         await clickElementById(page, 'add', true);
-        await testElementLocatedByXpath(page, "//tbody/tr[1100]/td[2]/a",  false);
+        await waitForElementLocatedByXpath(page, "//tbody/tr[1100]/td[2]/a",  false);
     }
 }
 
@@ -332,17 +332,17 @@ const benchClear = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(page, "run", true);
+        await waitForElementLocatedById(page, "run", true);
         await clickElementById(page, 'run', true);
-        await testElementLocatedByXpath(page, "//tbody/tr[1000]/td[1]",  false);
+        await waitForElementLocatedByXpath(page, "//tbody/tr[1000]/td[1]",  false);
     }
     async run(page: Page) {
         await clickElementById(page, 'clear', true);
-        await testElementNotLocatedByXPath(page, "//tbody/tr[1000]/td[1]",  false);
+        await waitForElementNotLocatedByXPath(page, "//tbody/tr[1000]/td[1]",  false);
     }
 }
 
-/*
+
 const benchReadyMemory = new class extends Benchmark {
     constructor() {
         super({
@@ -354,14 +354,14 @@ const benchReadyMemory = new class extends Benchmark {
       });
     }
     async init(page: Page) {
-        await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
+        await waitForElementLocatedById(page, "add", true);
     }
     async run(page: Page) {
-        await testElementNotLocatedByXPath(driver, "//tbody/tr[1]",  false);
+        await waitForElementNotLocatedByXPath(page, "//tbody/tr[1]",  false);
     }
     async after(page: Page, framework: FrameworkData) {
-        await clickElementById(driver, 'run', true);
-        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a",  false);
+        await clickElementById(page, 'run', true);
+        await waitForElementLocatedByXpath(page, "//tbody/tr[1]/td[2]/a",  false);
     }
 }
 
@@ -376,11 +376,11 @@ const benchRunMemory = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
+        await waitForElementLocatedById(page, "add", true);
     }
     async run(page: Page) {
-        await clickElementById(driver, 'run', true);
-        await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a",  false);
+        await clickElementById(page, 'run', true);
+        await waitForElementLocatedByXpath(page, "//tbody/tr[1]/td[2]/a",  false);
     }
 }
 
@@ -395,13 +395,13 @@ const benchUpdate5Memory = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
+        await waitForElementLocatedById(page, "add", true);
     }
     async run(page: Page) {
-        await clickElementById(driver, 'run', true);
+        await clickElementById(page, 'run', true);
         for (let i = 0; i < 5; i++) {
-            await clickElementById(driver, 'update', true);
-            await testTextContainsJS(driver, '//tbody/tr[1]/td[2]/a', ' !!!'.repeat(i),  false);
+            await clickElementById(page, 'update', true);
+            await waitForTextContains(page, '//tbody/tr[1]/td[2]/a', ' !!!'.repeat(i),  false);
         }
     }
 }
@@ -417,12 +417,12 @@ const benchReplace5Memory = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
+        await waitForElementLocatedById(page, "add", true);
     }
     async run(page: Page) {
         for (let i = 0; i < 5; i++) {
-            await clickElementById(driver, 'run', true);
-            await testTextContainsJS(driver, "//tbody/tr[1000]/td[1]", (1000 * (i + 1)).toFixed(),  false);
+            await clickElementById(page, 'run', true);
+            await waitForTextContains(page, "//tbody/tr[1000]/td[1]", (1000 * (i + 1)).toFixed(),  false);
         }
     }
 }
@@ -438,14 +438,14 @@ const benchCreateClear5Memory = new class extends Benchmark {
         });
     }
     async init(page: Page) {
-        await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
+        await waitForElementLocatedById(page, "add", true);
     }
     async run(page: Page) {
         for (let i = 0; i < 5; i++) {
-            await clickElementById(driver, 'run', true);
-            await testTextContainsJS(driver, "//tbody/tr[1000]/td[1]", (1000 * (i + 1)).toFixed(),  false);
-            await clickElementById(driver, 'clear', true);
-            await testElementNotLocatedByXPath(driver, "//tbody/tr[1000]/td[1]",  false);
+            await clickElementById(page, 'run', true);
+            await waitForTextContains(page, "//tbody/tr[1000]/td[1]", (1000 * (i + 1)).toFixed(),  false);
+            await clickElementById(page, 'clear', true);
+            await waitForElementNotLocatedByXPath(page, "//tbody/tr[1000]/td[1]",  false);
         }
     }
 }
@@ -477,8 +477,26 @@ const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
     allowBatching: false
 }
 
+const benchStartupSpeedIndex: StartupBenchmarkResult = {
+    id: "34_startup-speedindex",
+    label: "lighthouse Speed Indext",
+    description: "Shows how quickly the contents of a page are visibly populated.",
+    type: BenchmarkType.STARTUP,
+    property: "SpeedIndex",
+    allowBatching: false
+}
+
+const benchStartupFMP: StartupBenchmarkResult = {
+    id: "35_startup-fmp",
+    label: "First Meaningful Paint",
+    description: "Measures when the primary content of a page is visible.",
+    type: BenchmarkType.STARTUP,
+    property: "FirstMeaningfulPaint",
+    allowBatching: false
+}
+
 const benchStartupTotalBytes: StartupBenchmarkResult = {
-    id: "34_startup-totalbytes",
+    id: "36_startup-totalbytes",
     label: "total kilobyte weight",
     description: "network transfer cost (post-compression) of all the resources loaded into the page.",
     type: BenchmarkType.STARTUP,
@@ -508,28 +526,31 @@ class BenchStartup extends Benchmark {
         return [
             benchStartupConsistentlyInteractive,
             benchStartupBootup,
+            benchStartupMainThreadWorkCost,
+            benchStartupSpeedIndex,
+            benchStartupFMP,
             benchStartupTotalBytes,
         ];
     }
 }
 const benchStartup = new BenchStartup();
-*/
+
 export let benchmarks : Array<Benchmark> = [
-    // benchRun,
-    // benchReplaceAll,
-    // benchUpdate,
+    benchRun,
+    benchReplaceAll,
+    benchUpdate,
     benchSelect,
-    // benchSwapRows,
-    // benchRemove,
-    // benchRunBig,
-    // benchAppendToManyRows,
-    // benchClear,
-    // benchReadyMemory,
-    // benchRunMemory,
-    // benchUpdate5Memory,
-    // benchReplace5Memory,
-    // benchCreateClear5Memory,
-    // benchStartup,
+    benchSwapRows,
+    benchRemove,
+    benchRunBig,
+    benchAppendToManyRows,
+    benchClear,
+    benchReadyMemory,
+    benchRunMemory,
+    benchUpdate5Memory,
+    benchReplace5Memory,
+    benchCreateClear5Memory,
+    benchStartup,
 ];
 
 export function fileName(framework: FrameworkData, benchmark: BenchmarkInfo) {

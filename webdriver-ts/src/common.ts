@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import axios from 'axios';
+
 import { LighthouseData } from './benchmarks';
 
 export interface JSONResult {
@@ -19,9 +20,6 @@ export interface ErrorAndWarning {
 
 export interface BenchmarkDriverOptions {
     headless?: boolean;
-    chromeBinaryPath?: string;
-    remoteDebuggingPort: number;
-    chromePort: number;
 }
 
 export interface BenchmarkOptions extends BenchmarkDriverOptions {
@@ -38,9 +36,8 @@ export let config = {
     REMOTE_DEBUGGING_PORT: 9999,
     CHROME_PORT: 9998,
     NUM_ITERATIONS_FOR_BENCHMARK_CPU: 10, 
-    NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT: 2, // drop the # of slowest results
-    NUM_ITERATIONS_FOR_BENCHMARK_MEM: 1,
-    NUM_ITERATIONS_FOR_BENCHMARK_STARTUP: 4,
+    NUM_ITERATIONS_FOR_BENCHMARK_MEM: 3,
+    NUM_ITERATIONS_FOR_BENCHMARK_STARTUP: 1,
     WARMUP_COUNT: 5,
     TIMEOUT: 60 * 1000,
     LOG_PROGRESS: true,
