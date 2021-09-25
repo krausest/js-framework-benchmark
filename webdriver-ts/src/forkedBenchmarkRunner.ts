@@ -225,9 +225,8 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
    
             await page.tracing.start({path: fileNameTrace(framework, benchmark, i), 
                 screenshots: false,
-                categories:[ "devtools.timeline","blink.user_timing"]
+                // categories:[ "devtools.timeline","blink.user_timing"]
                 },
-                
                 );
             console.log("runBenchmark");
             await runBenchmark(page, benchmark, framework);
