@@ -81,12 +81,12 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
                 }
             }
         }
-        // if (benchmark.type == BenchmarkType.CPU) {
-        //     // console.log("CPU results before: ", results);
-        //     (results as number[]).sort((a:number,b:number) => a-b)
-        //     results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU)
-        //     // console.log("CPU results after: ", results)
-        // }
+        if (benchmark.type == BenchmarkType.CPU) {
+            // console.log("CPU results before: ", results);
+            (results as number[]).sort((a:number,b:number) => a-b)
+            results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU)
+            // console.log("CPU results after: ", results)
+        }
     
         console.log("******* result ", results);
         await writeResults(config, { framework: framework, benchmark: benchmark, results: results });
@@ -114,7 +114,7 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
     let benchmarkOptions: BenchmarkOptions = {
         port: config.PORT.toFixed(),
         headless: args.headless,
-        numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU,
+        numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
         numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
         numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
         batchSize: 1

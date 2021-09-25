@@ -200,11 +200,12 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
                 console.log("CPU slowdown", benchmark.throttleCPU);
                 await page.emulateCPUThrottling(benchmark.throttleCPU);
             }
-            page.on('console', (msg) => {
-                for (let i = 0; i < msg.args().length; ++i)
-                  console.log(`BROWSER: ${msg.args()[i]}`);
-              });
-
+            if (config.LOG_DETAILS) {
+                page.on('console', (msg) => {
+                    for (let i = 0; i < msg.args().length; ++i)
+                    console.log(`BROWSER: ${msg.args()[i]}`);
+                });
+            }
             setUseShadowRoot(framework.useShadowRoot);
             setUseRowShadowRoot(framework.useRowShadowRoot);
             setShadowRootName(framework.shadowRootName);
@@ -281,10 +282,12 @@ async function runMemBenchmark(framework: FrameworkData, benchmark: Benchmark, b
         browser = await startBrowser(benchmarkOptions);
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
             const page = await browser.newPage();
-            page.on('console', (msg) => {
+            if (config.LOG_DETAILS) {
+                page.on('console', (msg) => {
                 for (let i = 0; i < msg.args().length; ++i)
                   console.log(`BROWSER: ${msg.args()[i]}`);
               });
+            }
 
             setUseShadowRoot(framework.useShadowRoot);
             setUseRowShadowRoot(framework.useRowShadowRoot);

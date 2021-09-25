@@ -207,6 +207,16 @@ export async function waitForTextContains(page: Page, xpath: string, expectedTex
     await res.dispose();
 }
 
+function browserPath() {
+    if (process.platform == "darwin") {
+        return '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+    } else if (process.platform == "linux") {
+        return 'google-chrome';
+    } else {
+        throw new Error("Path to Google Chrome executable must be specified");
+    } 
+}
+
 export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Promise<puppeteer.Browser> {
     const width = 1280;
     const height = 800;
@@ -214,7 +224,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
     const browser = await puppeteer.launch({
         headless: benchmarkOptions.headless,
         // FIXME
-        executablePath: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
+        executablePath: 'google-chrome', //'/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
         ignoreDefaultArgs: ["--enable-automation"],
         args: [`--window-size=${width},${height}`], 
         dumpio: false,

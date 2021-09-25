@@ -41,6 +41,7 @@
     "lighthouse": "8.1.0",
     "lodash": "4.17.21",
     "npm-check-updates": "11.8.3",
+    "puppeteer-core": "^10.4.0",
     "ramda": "0.27.1",
     "semver": "7.3.5",
     "yargs": "17.0.1"
