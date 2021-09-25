@@ -42,22 +42,21 @@ type ISlowDowns = {
   [key in TBenchmarkID]?: number;
 };
 
-const slowDownsOSX: ISlowDowns = {
-  [BENCHMARK_03]: 2,
-  [BENCHMARK_04]: 8,
-  [BENCHMARK_05]: 2,
-  [BENCHMARK_09]: 2,
-};
-
-const slowDownsLinux: ISlowDowns = {
-  [BENCHMARK_03]: 16,
-  [BENCHMARK_04]: 16,
+const slowDowns: ISlowDowns = {
+  [BENCHMARK_03]: 4,
+  [BENCHMARK_04]: 6,
   [BENCHMARK_05]: 4,
-  [BENCHMARK_08]: 2,
-  [BENCHMARK_09]: 8,
+  [BENCHMARK_09]: 4,
 };
 
-const slowDowns: ISlowDowns = process.platform == "darwin" ? slowDownsOSX : slowDownsLinux;
+// const slowDownsLinux: ISlowDowns = {
+//     [BENCHMARK_03]: 4,
+//     [BENCHMARK_04]: 6,
+//     [BENCHMARK_05]: 4,
+//     [BENCHMARK_09]: 4,
+// };
+
+// const slowDowns: ISlowDowns = process.platform == "darwin" ? slowDownsOSX : slowDownsLinux;
 
 function slowDownNote(benchmark: TBenchmarkID): string {
   return slowDowns[benchmark] ? " " + slowDowns[benchmark] + "x CPU slowdown." : "";
