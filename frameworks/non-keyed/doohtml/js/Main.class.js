@@ -8,6 +8,8 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 
+import Timer from './doo.timer.js'
+
 Doo.define(
   	class Main extends Doo {
 		constructor() {
@@ -69,25 +71,57 @@ Doo.define(
 		run() {
 			this.data.rows = this.buildData()
 			this.renderTable()
+			if (this.tbody.childNodes.length > this.data.rows.length) {
+				this.tbody.textContent = ''
+			}
+
+		}
+		run(e) {
+			Timer.start('tot')
+			this.data.rows = this.buildData()
+			if (this.tbody.childNodes.length > this.data.rows.length) {
+				this.tbody.textContent = ''
+			}
+			this.renderTable()
+	//		e.target.blur()
+			Timer.stop('tot')
 		}
 
-		add() {
+		add(e) {
+			Timer.start('tot')
 			let startRow = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
 			this.renderTable(this.data.rows, startRow)
-		}    
+			Timer.stop('tot')
 
-		runLots() {
+		}  
+
+
+		runLots(e) {
 			this.data.rows = this.buildData(10000)
+			if (this.tbody.childNodes.length > this.data.rows.length) {
+				this.tbody.textContent = ''
+			}
 			this.renderTable()
 		}
 
-		update() {
-			let tr = this.tbody.querySelectorAll('tr')
-			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
-				this.data.rows[i].label += ' !!!';
-				tr[i].childNodes[1].childNodes[0].textContent = this.data.rows[i].label
+		runLots(e) {
+			Timer.start('tot')
+			this.data.rows = this.buildData(10000)
+			if (this.tbody.childNodes.length > this.data.rows.length) {
+				this.tbody.textContent = ''
 			}
+			this.renderTable()
+	//		e.target.blur()
+			Timer.stop('tot')
+		}
+
+		update(e) {
+			Timer.start('tot')
+			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
+				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
+			}
+			Timer.stop('tot')
 		}
 
 		select(elem) {
@@ -118,7 +152,6 @@ Doo.define(
 				
 				this.tbody.insertBefore(node2, node1)
 				this.tbody.insertBefore(node1, this.tbody.childNodes[999])
-
 			}
 		}
 
@@ -126,17 +159,17 @@ Doo.define(
 			document.getElementById("main").addEventListener('click', e => {
 				e.preventDefault();
 				if (e.target.matches('#runlots')) {
-					this.runLots();
+					this.runLots(e);
 				} else if (e.target.matches('#run')) {
-					this.run();
+					this.run(e);
 				} else if (e.target.matches('#add')) {
-					this.add();
+					this.add(e);
 				} else if (e.target.matches('#update')) {
-					this.update();
+					this.update(e);
 				} else if (e.target.matches('#clear')) {
 					this.clear();
 				} else if (e.target.matches('#swaprows')) {
-					this.swapRows();
+					this.swapRows(e);
 				}
 			})    
     	}   
