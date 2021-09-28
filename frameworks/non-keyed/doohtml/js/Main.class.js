@@ -68,32 +68,6 @@ Doo.define(
 			}
 		}  
 
-		renderTable(dataSet=this.data[this.defaultDataSet]) {
-			let len = dataSet.length
-			if (!this.xxx) {
-				this.newParser(this.templateNode, dataSet[0])
-			}	
-			let newElem;
-			for (let i=0;i<len;i++) {
-			
-				if (this.place[0].childNodes[i]) {
-					newElem = this.place[0].childNodes[i]
-				}  else {
-					newElem = this.xxx.cloneNode(true) 
-					this.place[0].appendChild(newElem)
-				}
-				for (const node of this.nodeArr) {
-					if (node.type===1) {
-						newElem.querySelector(node.selector).textContent = dataSet[i][node.fld]
-					} else if (node.type===4) {
-						let value = newElem.querySelector(node.selector).getAttribute(node.name).replace('{{' + node.fld + '}}', dataSet[i][node.fld])
-						newElem.querySelector(node.selector).setAttribute(node.name, value)
-					}    
-				}
-			}
-				
-			return
-		}	
 		run() {
 			this.data.rows = this.buildData()
 			if (this.tbody.childNodes.length > this.data.rows.length) {
