@@ -8,6 +8,8 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 
+import Timer from './doo.timer.js'
+
 Doo.define(
   	class Main extends Doo {
 		constructor() {
@@ -27,7 +29,8 @@ Doo.define(
 			this.addEventListeners()
 			this.selectedRow = undefined
 			document.querySelector(".ver").innerHTML += ` ${Doo.version} (non-keyed)`
-			document.title += ` ${Doo.version} (non-keyed)`		}
+			document.title += ` ${Doo.version} (non-keyed)`
+		}
 
 		async dooAfterRender() {
 			this.tbody = this.shadow.querySelector('#tbody')
@@ -65,22 +68,61 @@ Doo.define(
 			}
 		}  
 
+		renderTable(dataSet=this.data[this.defaultDataSet]) {
+			let len = dataSet.length
+			if (!this.xxx) {
+				this.newParser(this.templateNode, dataSet[0])
+			}	
+			let newElem;
+			for (let i=0;i<len;i++) {
+			
+				if (this.place[0].childNodes[i]) {
+					newElem = this.place[0].childNodes[i]
+				}  else {
+					newElem = this.xxx.cloneNode(true) 
+					this.place[0].appendChild(newElem)
+				}
+				for (const node of this.nodeArr) {
+					if (node.type===1) {
+						newElem.querySelector(node.selector).textContent = dataSet[i][node.fld]
+					} else if (node.type===4) {
+						let value = newElem.querySelector(node.selector).getAttribute(node.name).replace('{{' + node.fld + '}}', dataSet[i][node.fld])
+						newElem.querySelector(node.selector).setAttribute(node.name, value)
+					}    
+				}
+			}
+				
+			return
+		}	
 		run() {
 			this.data.rows = this.buildData()
 			if (this.tbody.childNodes.length > this.data.rows.length) {
 				this.tbody.textContent = ''
 			}
 			this.renderTable()
-
 		}
 
-		add() {
+		run(e) {
+			Timer.start('tot')
+			this.data.rows = this.buildData()
+			if (this.tbody.childNodes.length > this.data.rows.length) {
+				this.tbody.textContent = ''
+			}
+			this.renderTable()
+	//		e.target.blur()
+			Timer.stop('tot')
+		}
+
+		add(e) {
+			Timer.start('tot')
 			let startRow = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
 			this.renderTable(this.data.rows, startRow)
-		}  
+			Timer.stop('tot')
 
-		runLots() {
+		}    
+
+		runLots(e) {
 			this.data.rows = this.buildData(10000)
 			if (this.tbody.childNodes.length > this.data.rows.length) {
 				this.tbody.textContent = ''
@@ -88,7 +130,18 @@ Doo.define(
 			this.renderTable()
 		}
 
-		update() {
+		runLots(e) {
+			Timer.start('tot')
+			this.data.rows = this.buildData(10000)
+			if (this.tbody.childNodes.length > this.data.rows.length) {
+				this.tbody.textContent = ''
+			}
+			this.renderTable()
+	//		e.target.blur()
+			Timer.stop('tot')
+		}
+
+		update(e) {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
 				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
 			}
@@ -122,6 +175,7 @@ Doo.define(
 				
 				this.tbody.insertBefore(node2, node1)
 				this.tbody.insertBefore(node1, this.tbody.childNodes[999])
+
 			}
 		}
 
@@ -129,17 +183,17 @@ Doo.define(
 			document.getElementById("main").addEventListener('click', e => {
 				e.preventDefault();
 				if (e.target.matches('#runlots')) {
-					this.runLots();
+					this.runLots(e);
 				} else if (e.target.matches('#run')) {
-					this.run();
+					this.run(e);
 				} else if (e.target.matches('#add')) {
-					this.add();
+					this.add(e);
 				} else if (e.target.matches('#update')) {
-					this.update();
+					this.update(e);
 				} else if (e.target.matches('#clear')) {
 					this.clear();
 				} else if (e.target.matches('#swaprows')) {
-					this.swapRows();
+					this.swapRows(e);
 				}
 			})    
     	}   
