@@ -67,10 +67,10 @@ Doo.define(
 
 		run() {
 			this.data.rows = this.buildData()
-			this.renderTable()
 			if (this.tbody.childNodes.length > this.data.rows.length) {
 				this.tbody.textContent = ''
 			}
+			this.renderTable()
 
 		}
 
