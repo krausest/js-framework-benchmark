@@ -82,10 +82,10 @@ async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: strin
             }
         }
         if (benchmark.type == BenchmarkType.CPU) {
-            // console.log("CPU results before: ", results);
+            console.log("CPU results before: ", results);
             (results as number[]).sort((a:number,b:number) => a-b)
             results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU)
-            // console.log("CPU results after: ", results)
+            console.log("CPU results after: ", results)
         }
     
         console.log("******* result ", results);

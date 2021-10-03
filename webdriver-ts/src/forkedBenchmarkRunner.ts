@@ -225,19 +225,33 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
    
             await page.tracing.start({path: fileNameTrace(framework, benchmark, i), 
                 screenshots: false,
-                // categories:[ "devtools.timeline","blink.user_timing"]
-                },
-                );
+                categories:["devtools.timeline","blink.user_timing"]
+                // '-*',
+                // 'devtools.timeline',
+                // 'v8.execute',
+                // 'disabled-by-default-devtools.timeline',
+                // 'disabled-by-default-devtools.timeline.frame',
+                // 'toplevel',
+                // 'blink.console',
+                // 'blink.user_timing',
+                // 'latencyInfo',
+                // 'disabled-by-default-devtools.timeline.stack',
+                // 'disabled-by-default-v8.cpu_profiler',                
+                // ]
+            });
             console.log("runBenchmark");
+            // let m1 = await page.metrics();
             await runBenchmark(page, benchmark, framework);
             await wait(40);
             await page.tracing.stop();
+            // let m2 = await page.metrics();
             await afterBenchmark(page, benchmark, framework);
             if (benchmark.throttleCPU) {
                 console.log("resetting CPU slowdown");
                 await page.emulateCPUThrottling(null);
             }
-            console.log("afterBenchmark");
+            // console.log("afterBenchmark", m1, m2);
+            // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
             let result = await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
             results.push(result);
             console.log(`duration for ${framework.name} and ${benchmark.id}: ${result}`);
@@ -245,7 +259,6 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: Benchmark, b
                 throw new Error(`duration ${result} < 0`);
             await page.close();
         }
-        await browser.close();
         return {error, warnings, result: results};
     } catch (e) {
         console.log("ERROR ", e);

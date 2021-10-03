@@ -224,7 +224,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
     const browser = await puppeteer.launch({
         headless: benchmarkOptions.headless,
         // FIXME
-        executablePath: 'google-chrome', //'/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
+        executablePath: process.platform == "darwin" ? '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome' : 'google-chrome',
         ignoreDefaultArgs: ["--enable-automation"],
         args: [`--window-size=${width},${height}`], 
         dumpio: false,
