@@ -15,7 +15,6 @@ const createRowsAtom = atom(null, (_, set, amount: number) => {
 
 const appendRowsAtom = atom(null, (_, set) => {
   set(dataAtom, (data) => data.concat(buildDataAtoms(1000)));
-  set(selectedAtom, null);
 });
 
 const updateRowsAtom = atom(null, (get, set) => {
@@ -32,7 +31,15 @@ const removeRowAtom = atom(null, (_, set, item: PrimitiveAtom<Data>) =>
   })
 );
 
-const selectRowAtom = atom(null, (_, set, selected: PrimitiveAtom<Data>) => {
+const selectRowAtom = atom(null, (get, set, selected: PrimitiveAtom<Data>) => {
+  const prevSelected = get(selectedAtom);
+  if (prevSelected === selected) {
+    return;
+  }
+  if (prevSelected) {
+    set(prevSelected, (prev) => ({ ...prev, isSelected: false }))
+  }
+  set(selected, (prev) => ({ ...prev, isSelected: true }))
   set(selectedAtom, selected);
 });
 
@@ -54,11 +61,10 @@ const GlyphIcon = (
 
 interface RowProps {
   item: PrimitiveAtom<Data>;
-  isSelected: boolean;
 }
 
-const Row = memo<RowProps>(({ item, isSelected }) => {
-  const [{ id, label }] = useAtom(item);
+const Row = memo<RowProps>(({ item }) => {
+  const [{ id, label, isSelected }] = useAtom(item);
   const selectRow = useUpdateAtom(selectRowAtom);
   const removeRow = useUpdateAtom(removeRowAtom);
   return (
@@ -78,14 +84,12 @@ const Row = memo<RowProps>(({ item, isSelected }) => {
 
 const RowList = memo(() => {
   const [data] = useAtom(dataAtom);
-  const [selected] = useAtom(selectedAtom);
   return (
     <>
       {data.map((item) => (
         <Row
           key={String(item)}
           item={item}
-          isSelected={item === selected}
         />
       ))}
     </>
