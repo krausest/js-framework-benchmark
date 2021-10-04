@@ -48,7 +48,6 @@ export let config = {
     EXIT_ON_ERROR: null as boolean, // set from command line
     STARTUP_DURATION_FROM_EVENTLOG: true,
     STARTUP_SLEEP_DURATION: 1000,
-    FORK_CHROMEDRIVER: true,
     WRITE_RESULTS: true,
     RESULTS_DIRECTORY: "results",
     TRACES_DIRECTORY: "traces",
