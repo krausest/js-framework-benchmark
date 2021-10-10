@@ -114,8 +114,11 @@ Doo.define(
 		run(e) {
 
 			Timer.start('tot')
-			this.clear(e)
 			this.data.rows = this.buildData()
+			Timer.start('clear')
+			this.tbody.textContent = ''
+			Timer.stop('clear')
+
 			this.renderTable()
 	//		e.target.blur()
 			Timer.start('add')
@@ -156,8 +159,11 @@ Doo.define(
 
 		runLots(e) {
 			Timer.start('tot')
-			this.clear(e)
 			this.data.rows = this.buildData(10000)
+			Timer.start('clear')
+			this.tbody.textContent = ''
+			Timer.stop('clear')
+
 			this.renderTable()
 			//e.target.blur()
 			Timer.start('add')
