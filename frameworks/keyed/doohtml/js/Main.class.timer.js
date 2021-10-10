@@ -10,9 +10,6 @@ const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 
 import Timer from './doo.timer.js'
 
-const rowTemplate = document.createElement("tr");
-rowTemplate.innerHTML = "<td class='col-md-1'></td><td class='col-md-4'><a class='lbl'></a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td>";
-
 
 Doo.define(
   	class Main extends Doo {
@@ -66,15 +63,16 @@ Doo.define(
 			
 			const data = []
 			for (let i = 0; i < count; i++) 
-				// data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
-
+				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
+/*
 			{
 				label = [adjectives[_random(lenA)],colours[_random(lenB)],nouns[_random(lenC)]]
 				labelStr = label.join(' ')
 				//id = this.ID++
 				data.push({id:this.ID++, label:labelStr})
 			}
-/*
+*/
+			/*
 			const data = new Map()
 			Object.defineProperty(data, 'length', {
 				get() { return data.size },
