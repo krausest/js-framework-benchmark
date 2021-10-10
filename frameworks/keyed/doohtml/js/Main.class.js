@@ -89,8 +89,7 @@ Doo.define(
 		update() {
 			let tr = this.tbody.querySelectorAll('tr')
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
-				this.data.rows[i].label += ' !!!';
-				tr[i].childNodes[1].childNodes[0].textContent = this.data.rows[i].label
+				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
 			}
 		}
 
