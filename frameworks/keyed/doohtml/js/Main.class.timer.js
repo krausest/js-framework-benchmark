@@ -58,7 +58,7 @@ Doo.define(
 
 		buildData(count = 1000) {
 			Timer.start('build') 
-			let label, labelStr
+//			let label, labelStr
 
 			
 			const data = []
@@ -219,8 +219,9 @@ Doo.define(
 
 		clear(e) {
 			Timer.start('clear')
-			this.data.rows = []
 			this.tbody.textContent = ''
+			this.data.rows = []
+
 			Timer.stop('clear')
 
 		}
