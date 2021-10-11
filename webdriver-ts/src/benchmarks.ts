@@ -4,6 +4,67 @@ import { config, FrameworkData } from './common'
 
 export enum BenchmarkType { CPU, MEM, STARTUP };
 
+const BENCHMARK_01 = "01_run1k";
+const BENCHMARK_02 = "02_replace1k";
+const BENCHMARK_03 = "03_update10th1k_x16";
+const BENCHMARK_04 = "04_select1k";
+const BENCHMARK_05 = "05_swap1k";
+const BENCHMARK_06 = "06_remove-one-1k";
+const BENCHMARK_07 = "07_create10k";
+const BENCHMARK_08 = "08_create1k-after1k_x2";
+const BENCHMARK_09 = "09_clear1k_x8";
+const BENCHMARK_21 = "21_ready-memory";
+const BENCHMARK_22 = "22_run-memory";
+const BENCHMARK_23 = "23_update5-memory";
+const BENCHMARK_24 = "24_run5-memory";
+const BENCHMARK_25 = "25_run-clear-memory";
+const BENCHMARK_31 = "31_startup-ci";
+
+type TBenchmarkID =
+  | typeof BENCHMARK_01
+  | typeof BENCHMARK_02
+  | typeof BENCHMARK_03
+  | typeof BENCHMARK_04
+  | typeof BENCHMARK_05
+  | typeof BENCHMARK_06
+  | typeof BENCHMARK_07
+  | typeof BENCHMARK_08
+  | typeof BENCHMARK_09
+  | typeof BENCHMARK_21
+  | typeof BENCHMARK_22
+  | typeof BENCHMARK_23
+  | typeof BENCHMARK_25
+  | typeof BENCHMARK_31;
+
+type ISlowDowns = {
+  [key in TBenchmarkID]?: number;
+};
+
+const slowDownsOSX: ISlowDowns = {
+  [BENCHMARK_03]: 2,
+  [BENCHMARK_04]: 4,
+  [BENCHMARK_05]: 2,
+  [BENCHMARK_09]: 2,
+};
+
+const slowDownsLinux: ISlowDowns = {
+  [BENCHMARK_03]: 16,
+  [BENCHMARK_04]: 16,
+  [BENCHMARK_05]: 4,
+  [BENCHMARK_08]: 2,
+  [BENCHMARK_09]: 8,
+};
+
+const slowDowns: ISlowDowns = process.platform == "darwin" ? slowDownsOSX : slowDownsLinux;
+
+function slowDownNote(benchmark: TBenchmarkID): string {
+  return slowDowns[benchmark] ? " " + slowDowns[benchmark] + "x CPU slowdown." : "";
+}
+
+function slowDownFactor(benchmark: TBenchmarkID): number | undefined {
+  return slowDowns[benchmark] ? slowDowns[benchmark] : undefined;
+}
+
 const SHORT_TIMEOUT = 20 * 1000;
 
 export interface BenchmarkInfo {
@@ -54,12 +115,13 @@ export interface StartupBenchmarkResult extends BenchmarkInfo {
 const benchRun = new class extends Benchmark {
     constructor() {
         super({
-            id: "01_run1k",
-            label: "create rows",
-            description: "creating 1,000 rows",
-            type: BenchmarkType.CPU,
-            allowBatching: true
-        })
+          id: BENCHMARK_01,
+          label: "create rows",
+          description: "creating 1,000 rows" + slowDownNote(BENCHMARK_01),
+          type: BenchmarkType.CPU,
+          throttleCPU: slowDownFactor(BENCHMARK_01),
+          allowBatching: true,
+        });
     }
     async init(driver: WebDriver) { await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true); }
     async run(driver: WebDriver) {
@@ -71,12 +133,14 @@ const benchRun = new class extends Benchmark {
 const benchReplaceAll = new class extends Benchmark {
     constructor() {
         super({
-            id: "02_replace1k",
-            label: "replace all rows",
-            description: "updating all 1,000 rows (" + config.WARMUP_COUNT + " warmup runs).",
-            type: BenchmarkType.CPU,
-            allowBatching: true
-        })
+          id: BENCHMARK_02,
+          label: "replace all rows",
+          description: "updating all 1,000 rows (" + config.WARMUP_COUNT +
+                      " warmup runs)." + slowDownNote(BENCHMARK_02),
+          type: BenchmarkType.CPU,
+          throttleCPU: slowDownFactor(BENCHMARK_02),
+          allowBatching: true,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, 'run', SHORT_TIMEOUT, true);
@@ -94,13 +158,14 @@ const benchReplaceAll = new class extends Benchmark {
 const benchUpdate = new class extends Benchmark {
     constructor() {
         super({
-            id: "03_update10th1k_x16",
-            label: "partial update",
-            description: "updating every 10th row for 1,000 rows (3 warmup runs). 16x CPU slowdown.",
-            type: BenchmarkType.CPU,
-            throttleCPU: 16,
-            allowBatching: true
-        })
+          id: BENCHMARK_03,
+          label: "partial update",
+          description: "updating every 10th row for 1,000 rows (3 warmup runs)." +
+                      slowDownNote(BENCHMARK_03),
+          type: BenchmarkType.CPU,
+          throttleCPU: slowDownFactor(BENCHMARK_03),
+          allowBatching: true,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -120,13 +185,14 @@ const benchUpdate = new class extends Benchmark {
 const benchSelect = new class extends Benchmark {
     constructor() {
         super({
-            id: "04_select1k",
-            label: "select row",
-            description: "highlighting a selected row. (no warmup runs). 16x CPU slowdown.",
-            type: BenchmarkType.CPU,
-            throttleCPU: 16,
-            allowBatching: true
-        })
+          id: BENCHMARK_04,
+          label: "select row",
+          description: "highlighting a selected row. (no warmup runs)." +
+                      slowDownNote(BENCHMARK_04),
+          type: BenchmarkType.CPU,
+          throttleCPU: slowDownFactor(BENCHMARK_04),
+          allowBatching: true,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -142,13 +208,15 @@ const benchSelect = new class extends Benchmark {
 const benchSwapRows = new class extends Benchmark {
     constructor() {
         super({
-            id: "05_swap1k",
-            label: "swap rows",
-            description: "swap 2 rows for table with 1,000 rows. (" + config.WARMUP_COUNT + " warmup runs). 4x CPU slowdown.",
-            type: BenchmarkType.CPU,
-            throttleCPU: 4,
-            allowBatching: true
-        })
+          id: BENCHMARK_05,
+          label: "swap rows",
+          description: "swap 2 rows for table with 1,000 rows. (" +
+                        config.WARMUP_COUNT +" warmup runs)." +
+                        slowDownNote(BENCHMARK_05),
+          type: BenchmarkType.CPU,
+          throttleCPU: slowDownFactor(BENCHMARK_05),
+          allowBatching: true,
+      });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -170,12 +238,14 @@ const benchSwapRows = new class extends Benchmark {
 const benchRemove = new class extends Benchmark {
     constructor() {
         super({
-            id: "06_remove-one-1k",
-            label: "remove row",
-            description: "removing one row. (" + config.WARMUP_COUNT + " warmup runs).",
-            type: BenchmarkType.CPU,
-            allowBatching: true
-        })
+          id: BENCHMARK_06,
+          label: "remove row",
+          description: "removing one row. (" +config.WARMUP_COUNT +" warmup runs)." +
+                      slowDownNote(BENCHMARK_06),
+          type: BenchmarkType.CPU,
+          throttleCPU: slowDownFactor(BENCHMARK_06),
+          allowBatching: true,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -204,12 +274,13 @@ const benchRemove = new class extends Benchmark {
 const benchRunBig = new class extends Benchmark {
     constructor() {
         super({
-            id: "07_create10k",
-            label: "create many rows",
-            description: "creating 10,000 rows",
-            type: BenchmarkType.CPU,
-            allowBatching: true
-        })
+          id: BENCHMARK_07,
+          label: "create many rows" + slowDownNote(BENCHMARK_07),
+          description: "creating 10,000 rows",
+          type: BenchmarkType.CPU,
+          throttleCPU: slowDownFactor(BENCHMARK_07),
+          allowBatching: true,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "runlots", SHORT_TIMEOUT, true);
@@ -223,13 +294,14 @@ const benchRunBig = new class extends Benchmark {
 const benchAppendToManyRows = new class extends Benchmark {
     constructor() {
         super({
-            id: "08_create1k-after1k_x2",
-            label: "append rows to large table",
-            description: "appending 1,000 to a table of 10,000 rows. 2x CPU slowdown",
-            type: BenchmarkType.CPU,
-            throttleCPU: 2,
-            allowBatching: true
-        })
+          id: BENCHMARK_08,
+          label: "append rows to large table",
+          description: "appending 1,000 to a table of 10,000 rows." +
+                      slowDownNote(BENCHMARK_08),
+          type: BenchmarkType.CPU,
+          throttleCPU: slowDownFactor(BENCHMARK_08),
+          allowBatching: true,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -245,13 +317,13 @@ const benchAppendToManyRows = new class extends Benchmark {
 const benchClear = new class extends Benchmark {
     constructor() {
         super({
-            id: "09_clear1k_x8",
-            label: "clear rows",
-            description: "clearing a table with 1,000 rows. 8x CPU slowdown",
-            type: BenchmarkType.CPU,
-            throttleCPU: 8,
-            allowBatching: true
-        })
+          id: BENCHMARK_09,
+          label: "clear rows",
+          description: "clearing a table with 1,000 rows." + slowDownNote(BENCHMARK_09),
+          type: BenchmarkType.CPU,
+          throttleCPU: slowDownFactor(BENCHMARK_09),
+          allowBatching: true,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -267,12 +339,12 @@ const benchClear = new class extends Benchmark {
 const benchReadyMemory = new class extends Benchmark {
     constructor() {
         super({
-            id: "21_ready-memory",
-            label: "ready memory",
-            description: "Memory usage after page load.",
-            type: BenchmarkType.MEM,
-            allowBatching: false
-        })
+          id: BENCHMARK_21,
+          label: "ready memory",
+          description: "Memory usage after page load.",
+          type: BenchmarkType.MEM,
+        allowBatching: false,
+      });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
@@ -289,12 +361,12 @@ const benchReadyMemory = new class extends Benchmark {
 const benchRunMemory = new class extends Benchmark {
     constructor() {
         super({
-            id: "22_run-memory",
-            label: "run memory",
-            description: "Memory usage after adding 1000 rows.",
-            type: BenchmarkType.MEM,
-            allowBatching: false
-        })
+          id: BENCHMARK_22,
+          label: "run memory",
+          description: "Memory usage after adding 1000 rows.",
+          type: BenchmarkType.MEM,
+          allowBatching: false,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
@@ -308,12 +380,12 @@ const benchRunMemory = new class extends Benchmark {
 const benchUpdate5Memory = new class extends Benchmark {
     constructor() {
         super({
-            id: "23_update5-memory",
-            label: "update eatch 10th row for 1k rows (5 cycles)",
-            description: "Memory usage after clicking update every 10th row 5 times",
-            type: BenchmarkType.MEM,
-            allowBatching: false
-        })
+          id: BENCHMARK_23,
+          label: "update eatch 10th row for 1k rows (5 cycles)",
+          description: "Memory usage after clicking update every 10th row 5 times",
+          type: BenchmarkType.MEM,
+          allowBatching: false,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
@@ -330,12 +402,12 @@ const benchUpdate5Memory = new class extends Benchmark {
 const benchReplace5Memory = new class extends Benchmark {
     constructor() {
         super({
-            id: "24_run5-memory",
-            label: "replace 1k rows (5 cycles)",
-            description: "Memory usage after clicking create 1000 rows 5 times",
-            type: BenchmarkType.MEM,
-            allowBatching: false
-        })
+          id: BENCHMARK_24,
+          label: "replace 1k rows (5 cycles)",
+          description: "Memory usage after clicking create 1000 rows 5 times",
+          type: BenchmarkType.MEM,
+          allowBatching: false,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
@@ -351,12 +423,12 @@ const benchReplace5Memory = new class extends Benchmark {
 const benchCreateClear5Memory = new class extends Benchmark {
     constructor() {
         super({
-            id: "25_run-clear-memory",
-            label: "creating/clearing 1k rows (5 cycles)",
-            description: "Memory usage after creating and clearing 1000 rows 5 times",
-            type: BenchmarkType.MEM,
-            allowBatching: false
-        })
+          id: BENCHMARK_25,
+          label: "creating/clearing 1k rows (5 cycles)",
+          description: "Memory usage after creating and clearing 1000 rows 5 times",
+          type: BenchmarkType.MEM,
+          allowBatching: false,
+        });
     }
     async init(driver: WebDriver) {
         await testElementLocatedById(driver, "add", SHORT_TIMEOUT, true);
@@ -372,7 +444,7 @@ const benchCreateClear5Memory = new class extends Benchmark {
 }
 
 const benchStartupConsistentlyInteractive: StartupBenchmarkResult = {
-    id: "31_startup-ci",
+    id: BENCHMARK_31,
     label: "consistently interactive",
     description: "a pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)",
     type: BenchmarkType.STARTUP,
@@ -387,7 +459,7 @@ const benchStartupBootup: StartupBenchmarkResult = {
     type: BenchmarkType.STARTUP,
     property: "ScriptBootUpTtime",
     allowBatching: false
-}
+  }
 
 const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
     id: "33_startup-mainthreadcost",

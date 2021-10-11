@@ -4,7 +4,8 @@
   "description": "hyper(HTML) demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "hyperhtml"
+    "frameworkVersionFromPackage": "hyperhtml",
+    "issues": [801]
   },
   "scripts": {
     "build-dev": "rollup -c -w",

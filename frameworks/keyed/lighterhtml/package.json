@@ -4,7 +4,8 @@
   "description": "lighterhtml demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "lighterhtml"
+    "frameworkVersionFromPackage": "lighterhtml",
+    "issues": [801]
   },
   "scripts": {
     "build-dev": "rollup -c -w",

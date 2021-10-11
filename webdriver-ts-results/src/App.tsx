@@ -15,12 +15,12 @@ const App = () => {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 64 GB RAM, Fedora 34 (Linux 5.11.13, mitigations=off), Chrome 90.0.4430.72 (64-bit))</p>
+        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 64 GB RAM, Fedora 34 (Linux 5.13.16, mitigations=off), Chrome 94.0.4606.54 (64-bit))</p>
          <SelectionBar/>
          <ResultTable type={FrameworkType.KEYED}/>
          <ResultTable type={FrameworkType.NON_KEYED}/>
 
-          <h3>Known Issues</h3>
+          <h3>Known issues and notes</h3>
           {knownIssues.map(issue =>
             <dl key={issue.issue.toFixed()} id={issue.issue.toFixed()}>
               <dt><a target="_blank" rel="noopener noreferrer" href={issue.link}>{issue.issue.toFixed()}</a></dt>

@@ -51,7 +51,7 @@ Doo.define(
         }
 
 		buildData(count = 1000) {
-			const data = [];
+			const data = []
 			for (let i = 0; i < count; i++) {
 				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
 			}
@@ -91,7 +91,6 @@ Doo.define(
 		}    
 
 		runLots() {
-
 			this.clear()
 			this.data.rows = this.buildData(10000)
 			this.renderTable()
@@ -130,8 +129,8 @@ Doo.define(
 				let node1 = this.tbody.childNodes[1]
 				let node2 = this.tbody.childNodes[998]
 
-				let row1 = this.data.rows[1];
-				this.data.rows[1] = this.data.rows[998];
+				let row1 = this.data.rows[1]
+				this.data.rows[1] = this.data.rows[998]
 				this.data.rows[998] = row1
 				
 				this.tbody.insertBefore(node2, node1)

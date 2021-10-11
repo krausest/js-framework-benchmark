@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-alpine",
-  "version": "2.7.0",
+  "version": "3.2.3",
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "alpinejs"
@@ -16,11 +16,11 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "alpinejs": "2.8.1"
+    "alpinejs": "3.2.3"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "9.0.0",
-    "rollup": "2.29.0",
+    "@rollup/plugin-node-resolve": "13.0.0",
+    "rollup": "2.51.2",
     "rollup-plugin-terser": "7.0.2"
   }
 }

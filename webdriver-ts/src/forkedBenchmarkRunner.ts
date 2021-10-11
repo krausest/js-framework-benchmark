@@ -157,7 +157,7 @@ function extractRawValue(results: any, id: string) {
 
         let LighthouseData: LighthouseData = {
             TimeToConsistentlyInteractive: extractRawValue(results.lhr, 'interactive'),
-            ScriptBootUpTtime: Math.max(16, extractRawValue(results.lhr, 'bootup-time')),
+            ScriptBootUpTtime: extractRawValue(results.lhr, 'bootup-time'),
             MainThreadWorkCost: extractRawValue(results.lhr, 'mainthread-work-breakdown'),
             TotalKiloByteWeight: extractRawValue(results.lhr, 'total-byte-weight')/1024.0
         };
@@ -504,7 +504,7 @@ export async function performBenchmark(frameworks: FrameworkData[], keyed: boole
     return errorAndWarnings;
 }
 
-process.on('message', (msg) => {
+process.on('message', (msg:any) => {
     config = msg.config;
     console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
     // if (config.LOG_DEBUG) console.log("child process got message", msg);
