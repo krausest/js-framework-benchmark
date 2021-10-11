@@ -1,14 +1,14 @@
-'use strict'
+'use strict';
 
-const _random = max => Math.random() * max | 0
+const _random = ((max) => {
+    return Math.round(Math.random()*1000)%max;
+})
 
-const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"]
-const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"]
-const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"]
+const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
-
-import Timer from './doo.timer.js'
 
 Doo.define(
   	class Main extends Doo {
@@ -35,21 +35,21 @@ Doo.define(
 		async dooAfterRender() {
 			this.tbody = this.shadow.querySelector('#tbody')
 			this.shadow.querySelector(this.scrollTarget).addEventListener('click', e => {
-				e.preventDefault()
+				e.preventDefault();
 				if (e.target.parentElement.matches('.remove')) {
-					this.delete(e.target.parentElement)
+					this.delete(e.target.parentElement);
 				} else if (e.target.tagName === 'A') {
-					this.select(e.target)
+					this.select(e.target);
 				}
-			})
+			});
 		}
 	
 		getParentRow(elem) {
         	while (elem) {
         		if (elem.tagName === "TR") {return elem}
-        		elem = elem.parentNode
+        		elem = elem.parentNode;
         	}
-        	return undefined
+        	return undefined;
         }
 
 		buildData(count = 1000) {
@@ -60,58 +60,35 @@ Doo.define(
 			return data	
 		}
 
-		getIndex(row) {
-			let idx =  this.data.rows.findIndex((item, i) => {
-				if (item.id === row.key) {
-					return i
-				}
-			}) 
-			return idx
-		}
-
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
 				this.tbody.removeChild(row)
-				let idx = this.getIndex(row)
-				console.log('coolio', idx,this.data.rows.length, this.data.rows[idx].label)
-				if (idx !== undefined) {
-					this.data.rows.splice(idx,1)
-				}
-				console.log('foolio', this.data.rows.length)
-
+				this.data.rows[row.getAttribute('key')] = undefined
 			}
 		}  
-		run(e) {
-			Timer.start('tot')
-			this.clear(e)
+
+		run() {
+			this.clear()
 			this.data.rows = this.buildData()
+			this.tbody.textContent = ''
 			this.renderTable()
-	//		e.target.blur()
-			Timer.start('add')
-			Timer.stop('add')
-			Timer.stop('tot')
 		}
 
-		add(e) {
-			Timer.start('tot')
+		add() {
+			let startRow = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.renderTable(this.data.rows)
-			Timer.stop('tot')
+			this.appendData(this.tbody, startRow)
 		}    
 
-		runLots(e) {
-			Timer.start('tot')
-			this.clear(e)
-			this.data.rows = this.buildData(10000)	
+		runLots() {
+			this.data.rows = this.buildData(10000)
+			this.tbody.textContent = ''
 			this.renderTable()
-			//e.target.blur()
-			Timer.start('add')
-			Timer.stop('add')
-			Timer.stop('tot')
 		}
 
-		update(e) {
+		update() {
+			let tr = this.tbody.querySelectorAll('tr')
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
 				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
 			}
@@ -121,37 +98,32 @@ Doo.define(
 			if (this.selectedRow) {
 				this.selectedRow.classList.remove('danger')
 				this.selectedRow = undefined
+				//	return  should toggle IMO
 			}
-			this.toggleSelect(this.getParentRow(elem))
-		}
-
-		toggleSelect(row) {
+			let row = this.getParentRow(elem)
 			if (row) {
 				row.classList.toggle('danger')
-				if (row.classList.contains('danger')) {
-					this.selectedRow = row
-				}	
+				this.selectedRow = row
 			}    
 		}
 
-		clear(e) {
-			Timer.start('clear')
+		clear() {
 			this.data.rows = []
 			this.tbody.textContent = ''
-			Timer.stop('clear')
 		}
 
-		swapRows(e) {
+		swapRows() {
 			if (this.data.rows.length>10) {
 				let node1 = this.tbody.childNodes[1]
 				let node2 = this.tbody.childNodes[998]
 
-				let row1 = this.data.rows[1];
-				this.data.rows[1] = this.data.rows[998];
+				let row1 = this.data.rows[1]
+				this.data.rows[1] = this.data.rows[998]
 				this.data.rows[998] = row1
 				
 				this.tbody.insertBefore(node2, node1)
 				this.tbody.insertBefore(node1, this.tbody.childNodes[999])
+
 			}
 		}
 
@@ -165,13 +137,13 @@ Doo.define(
 				} else if (e.target.matches('#add')) {
 					this.add(e)
 				} else if (e.target.matches('#update')) {
-					this.update(e)
+					this.update()
 				} else if (e.target.matches('#clear')) {
-					this.clear(e)
+					this.clear()
 				} else if (e.target.matches('#swaprows')) {
-					this.swapRows(e)
+					this.swapRows()
 				}
 			})    
-    	}
+    	}   
 	}
 )
