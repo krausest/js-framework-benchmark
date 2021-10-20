@@ -12,7 +12,7 @@
     "results": "cd webdriver-ts && npm run results",
     "bench-all": "cd webdriver-ts && npm run bench && npm run results",
     "selenium": "cd webdriver-ts && npm run bench && npm run results",
-    "install-webdriver-ts": "cd webdriver-ts && npm install && npm run build-prod",
+    "install-webdriver-ts": "cd webdriver-ts && npm install",
     "install-webdriver-ts-results": "cd webdriver-ts-results && npm install",
     "install-local": "npm run install-webdriver-ts && npm run install-webdriver-ts-results",
     "docker-build-image": "docker build -t js-framework-benchmark-ubuntu -f Dockerfile .",
