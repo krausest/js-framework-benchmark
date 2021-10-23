@@ -8,8 +8,6 @@ const MemResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData;
   return (resultsMEM.results.length===0 ? null :
         (<div>
           <h3>Memory allocation in MBs ± 95% confidence interval</h3>
-          <p>Please note that currently issue <a href="https://github.com/krausest/js-framework-benchmark/issues/916">#916</a> causes wrong values for some frameworks. 
-          </p>
           <table className='results'>
             <thead>
               <tr>
