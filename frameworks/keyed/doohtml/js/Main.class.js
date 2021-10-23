@@ -79,20 +79,20 @@ Doo.define(
 		}  
 
 		run() {
-			this.clear()
 			this.data.rows = this.buildData()
+			this.tbody.textContent = ''
 			this.renderTable()
-
 		}
 
 		add() {
+			let startRow = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.renderTable(this.data.rows)
+			this.appendData(this.tbody, startRow)
 		}    
 
 		runLots() {
-			this.clear()
 			this.data.rows = this.buildData(10000)
+			this.tbody.textContent = ''
 			this.renderTable()
 		}
 
@@ -106,16 +106,12 @@ Doo.define(
 			if (this.selectedRow) {
 				this.selectedRow.classList.remove('danger')
 				this.selectedRow = undefined
+				//	return  should toggle IMO
 			}
-			this.toggleSelect(this.getParentRow(elem))
-		}
-
-		toggleSelect(row) {
+			let row = this.getParentRow(elem)
 			if (row) {
 				row.classList.toggle('danger')
-				if (row.classList.contains('danger')) {
-					this.selectedRow = row
-				}	
+				this.selectedRow = row
 			}    
 		}
 
@@ -129,7 +125,7 @@ Doo.define(
 				let node1 = this.tbody.childNodes[1]
 				let node2 = this.tbody.childNodes[998]
 
-				let row1 = this.data.rows[1]
+				let row1 = this.data.rows[1];
 				this.data.rows[1] = this.data.rows[998]
 				this.data.rows[998] = row1
 				
