@@ -1,4 +1,4 @@
-import { setUseShadowRoot, startBrowser, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./puppeteerAccess";
+import { startBrowser } from "./puppeteerAccess";
 
 const lighthouse = require("lighthouse");
 
@@ -88,10 +88,6 @@ async function runMemBenchmark(
         });
       }
 
-      setUseShadowRoot(framework.useShadowRoot);
-      setUseRowShadowRoot(framework.useRowShadowRoot);
-      setShadowRootName(framework.shadowRootName);
-      setButtonsInShadowRoot(framework.buttonsInShadowRoot);
       await page.goto(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
@@ -112,7 +108,7 @@ async function runMemBenchmark(
 
       await afterBenchmark(page, benchmark, framework);
       console.log("afterBenchmark");
-      let result = metrics.JSHeapUsedSize;
+      let result = metrics.JSHeapUsedSize / 1024.0 / 1024.0;
       results.push(result);
       console.log(`memory result for ${framework.name} and ${benchmark.id}: ${result}`);
       if (result < 0) throw new Error(`memory result ${result} < 0`);

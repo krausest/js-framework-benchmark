@@ -221,6 +221,8 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
 - You can select multiple frameworks and benchmarks for running with prefixes like in the following example in the webdriver-ts directory:
   `npm run bench -- --benchmark 01_ 02_ --framework keyed/vanillajs keyed/react-hooks`
   runs the test for all frameworks that contain either angular or bob, which means all angular versions and bobril and all benchmarks whose id contain 01* or 02*
+- The memory benchmarks assume certain paths for the chrome installation. If it doesn't fit use
+  `npm run bench -- --chromeBinary /usr/bin/google-chrome`
 - If you can't get one framework to compile or run, just move it out of the frameworks directory and re-run
 - One can check whether an implementation is keyed or non-keyed via `npm run isKeyed` in the webdriver-ts directory. You can limit which frameworks to check in the same way as the webdriver test runner like e.g. `npm run isKeyed keyed/svelte`. The program will report an error if a benchmark implementation is incorrectly classified.
 

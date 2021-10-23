@@ -107,12 +107,7 @@ abstract class FrameworkVersionInformationValid implements FrameworkId {
   ) {
     this.keyedType = keyedType;
     this.directory = directory;
-    this.url =
-      "frameworks/" +
-      keyedType +
-      "/" +
-      directory +
-      (customURL ? customURL : "");
+    this.url = "frameworks/" + keyedType + "/" + directory + (customURL ? customURL : "");
   }
 }
 
@@ -128,16 +123,7 @@ export class FrameworkVersionInformationDynamic extends FrameworkVersionInformat
     public buttonsInShadowRoot: boolean,
     issues: number[]
   ) {
-    super(
-      keyedType,
-      directory,
-      customURL,
-      useShadowRoot,
-      useRowShadowRoot,
-      shadowRootName,
-      buttonsInShadowRoot,
-      issues
-    );
+    super(keyedType, directory, customURL, useShadowRoot, useRowShadowRoot, shadowRootName, buttonsInShadowRoot, issues);
   }
 }
 
@@ -153,25 +139,12 @@ export class FrameworkVersionInformationStatic extends FrameworkVersionInformati
     public buttonsInShadowRoot: boolean,
     issues: number[]
   ) {
-    super(
-      keyedType,
-      directory,
-      customURL,
-      useShadowRoot,
-      useRowShadowRoot,
-      shadowRootName,
-      buttonsInShadowRoot,
-      issues
-    );
+    super(keyedType, directory, customURL, useShadowRoot, useRowShadowRoot, shadowRootName, buttonsInShadowRoot, issues);
   }
   getFrameworkData(): FrameworkData {
     return {
       name: this.directory,
-      fullNameWithKeyedAndVersion:
-        this.directory +
-        (this.frameworkVersion ? "-v" + this.frameworkVersion : "") +
-        "-" +
-        this.keyedType,
+      fullNameWithKeyedAndVersion: this.directory + (this.frameworkVersion ? "-v" + this.frameworkVersion : "") + "-" + this.keyedType,
       uri: this.url,
       keyed: this.keyedType === "keyed",
       useShadowRoot: this.useShadowRoot,
@@ -185,11 +158,7 @@ export class FrameworkVersionInformationStatic extends FrameworkVersionInformati
 
 export class FrameworkVersionInformationError implements FrameworkId {
   public issues: [];
-  constructor(
-    public keyedType: KeyedType,
-    public directory: string,
-    public error: string
-  ) {}
+  constructor(public keyedType: KeyedType, public directory: string, public error: string) {}
 }
 
 export type FrameworkVersionInformation =
@@ -220,9 +189,7 @@ export interface IMatchPredicate {
 
 const matchAll: IMatchPredicate = (frameworkDirectory: string) => true;
 
-async function loadFrameworkInfo(
-  pathInFrameworksDir: string
-): Promise<FrameworkVersionInformation> {
+async function loadFrameworkInfo(pathInFrameworksDir: string): Promise<FrameworkVersionInformation> {
   let keyedType: KeyedType;
   let directory: string;
   if (pathInFrameworksDir.startsWith("keyed")) {
@@ -232,10 +199,7 @@ async function loadFrameworkInfo(
     keyedType = "non-keyed";
     directory = pathInFrameworksDir.substring(10);
   } else {
-    throw (
-      "pathInFrameworksDir must start with keyed or non-keyed, but is " +
-      pathInFrameworksDir
-    );
+    throw "pathInFrameworksDir must start with keyed or non-keyed, but is " + pathInFrameworksDir;
   }
   const frameworkPath = path.resolve("..", "frameworks", pathInFrameworksDir);
   const packageJSONPath = path.resolve(frameworkPath, "package.json");
@@ -243,42 +207,28 @@ async function loadFrameworkInfo(
   const distDir = path.resolve(frameworkPath, "dist");
   if (fs.existsSync(distDir)) {
     const files = fs.readdirSync(distDir);
-    const gzFiles = files.filter(
-      (file) => path.extname(file).toLowerCase() === ".gz"
-    );
+    const gzFiles = files.filter((file) => path.extname(file).toLowerCase() === ".gz");
     if (gzFiles.length > 0) {
-      return new FrameworkVersionInformationError(
-        keyedType,
-        directory,
-        `Found gzipped files in "${pathInFrameworksDir}/dist".`
-      );
+      return new FrameworkVersionInformationError(keyedType, directory, `Found gzipped files in "${pathInFrameworksDir}/dist".`);
     }
   }
 
   if (fs.existsSync(packageJSONPath)) {
     let packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
     if (packageJSON["js-framework-benchmark"]) {
-      if (
-        packageJSON["js-framework-benchmark"]["frameworkVersionFromPackage"]
-      ) {
+      if (packageJSON["js-framework-benchmark"]["frameworkVersionFromPackage"]) {
         return new FrameworkVersionInformationDynamic(
           keyedType,
           directory,
-          packageJSON["js-framework-benchmark"][
-            "frameworkVersionFromPackage"
-          ].split(":"),
+          packageJSON["js-framework-benchmark"]["frameworkVersionFromPackage"].split(":"),
           packageJSON["js-framework-benchmark"]["customURL"],
           packageJSON["js-framework-benchmark"]["useShadowRoot"],
           packageJSON["js-framework-benchmark"]["useRowShadowRoot"],
-          packageJSON["js-framework-benchmark"]["shadowRootName"] ??
-            "main-element",
+          packageJSON["js-framework-benchmark"]["shadowRootName"] ?? "main-element",
           packageJSON["js-framework-benchmark"]["buttonsInShadowRoot"] ?? true,
           packageJSON["js-framework-benchmark"]["issues"]
         );
-      } else if (
-        typeof packageJSON["js-framework-benchmark"]["frameworkVersion"] ===
-        "string"
-      ) {
+      } else if (typeof packageJSON["js-framework-benchmark"]["frameworkVersion"] === "string") {
         return new FrameworkVersionInformationStatic(
           keyedType,
           directory,
@@ -286,8 +236,7 @@ async function loadFrameworkInfo(
           packageJSON["js-framework-benchmark"]["customURL"],
           packageJSON["js-framework-benchmark"]["useShadowRoot"],
           packageJSON["js-framework-benchmark"]["useRowShadowRoot"],
-          packageJSON["js-framework-benchmark"]["shadowRootName"] ??
-            "main-element",
+          packageJSON["js-framework-benchmark"]["shadowRootName"] ?? "main-element",
           packageJSON["js-framework-benchmark"]["buttonsInShadowRoot"] ?? true,
           packageJSON["js-framework-benchmark"]["issues"]
         );
@@ -299,24 +248,14 @@ async function loadFrameworkInfo(
         );
       }
     } else {
-      return new FrameworkVersionInformationError(
-        keyedType,
-        directory,
-        "package.json must contain a 'js-framework-benchmark' property"
-      );
+      return new FrameworkVersionInformationError(keyedType, directory, "package.json must contain a 'js-framework-benchmark' property");
     }
   } else {
-    return new FrameworkVersionInformationError(
-      keyedType,
-      directory,
-      "No package.json found"
-    );
+    return new FrameworkVersionInformationError(keyedType, directory, "No package.json found");
   }
 }
 
-export async function loadFrameworkVersionInformation(
-  matchPredicate: IMatchPredicate = matchAll
-): Promise<FrameworkVersionInformation[]> {
+export async function loadFrameworkVersionInformation(matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkVersionInformation[]> {
   let results = new Array<Promise<FrameworkVersionInformation>>();
   let frameworksPath = path.resolve("..", "frameworks");
   ["keyed", "non-keyed"].forEach((keyedType: KeyedType) => {
@@ -340,30 +279,15 @@ export class PackageVersionInformationResult {
     this.versions.push(packageVersionInformation);
   }
   public getVersionName(): string {
-    if (
-      this.versions.filter(
-        (pi) => pi instanceof PackageVersionInformationErrorNoPackageJSONLock
-      ).length > 0
-    ) {
+    if (this.versions.filter((pi) => pi instanceof PackageVersionInformationErrorNoPackageJSONLock).length > 0) {
       return "invalid (no package-lock)";
     }
-    return this.versions
-      .map((version) =>
-        version instanceof PackageVersionInformationValid
-          ? version.version
-          : "invalid"
-      )
-      .join(" + ");
+    return this.versions.map((version) => (version instanceof PackageVersionInformationValid ? version.version : "invalid")).join(" + ");
   }
   getFrameworkData(): FrameworkData {
     return {
       name: this.framework.directory,
-      fullNameWithKeyedAndVersion:
-        this.framework.directory +
-        "-v" +
-        this.getVersionName() +
-        "-" +
-        this.framework.keyedType,
+      fullNameWithKeyedAndVersion: this.framework.directory + "-v" + this.getVersionName() + "-" + this.framework.keyedType,
       uri: this.framework.url,
       keyed: this.framework.keyedType === "keyed",
       useShadowRoot: this.framework.useShadowRoot,
@@ -375,43 +299,26 @@ export class PackageVersionInformationResult {
   }
 }
 
-export async function determineInstalledVersions(
-  framework: FrameworkVersionInformationDynamic
-): Promise<PackageVersionInformationResult> {
+export async function determineInstalledVersions(framework: FrameworkVersionInformationDynamic): Promise<PackageVersionInformationResult> {
   let versions = new PackageVersionInformationResult(framework);
   try {
-    console.log(
-      `http://localhost:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`
-    );
+    console.log(`http://localhost:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`);
     let packageLock: any = (
-      await axios.get(
-        `http://localhost:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`
-      )
+      await axios.get(`http://localhost:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`)
     ).data;
     for (let packageName of framework.packageNames) {
       if (packageLock.dependencies[packageName]) {
-        versions.add(
-          new PackageVersionInformationValid(
-            packageName,
-            packageLock.dependencies[packageName].version
-          )
-        );
+        versions.add(new PackageVersionInformationValid(packageName, packageLock.dependencies[packageName].version));
       } else {
-        versions.add(
-          new PackageVersionInformationErrorUnknownPackage(packageName)
-        );
+        versions.add(new PackageVersionInformationErrorUnknownPackage(packageName));
       }
     }
   } catch (err) {
     if (err.errno === "ECONNREFUSED") {
-      console.log(
-        "Can't load package-lock.json via http. Make sure the http-server is running on port 8080"
-      );
+      console.log("Can't load package-lock.json via http. Make sure the http-server is running on port 8080");
       throw "Can't load package-lock.json via http. Make sure the http-server is running on port 8080";
     } else if (err.response && err.response.status === 404) {
-      console.log(
-        `package-lock.json not found for ${framework.keyedType}/${framework.directory}`
-      );
+      console.log(`package-lock.json not found for ${framework.keyedType}/${framework.directory}`);
       versions.add(new PackageVersionInformationErrorNoPackageJSONLock());
     } else {
       console.log("err", err);
@@ -421,26 +328,14 @@ export async function determineInstalledVersions(
   return versions;
 }
 
-export async function initializeFrameworks(
-  matchPredicate: IMatchPredicate = matchAll
-): Promise<FrameworkData[]> {
-  let frameworkVersionInformations = await loadFrameworkVersionInformation(
-    matchPredicate
-  );
+export async function initializeFrameworks(matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkData[]> {
+  let frameworkVersionInformations = await loadFrameworkVersionInformation(matchPredicate);
 
   let frameworks: FrameworkData[] = [];
   for (let frameworkVersionInformation of frameworkVersionInformations) {
-    if (
-      frameworkVersionInformation instanceof FrameworkVersionInformationDynamic
-    ) {
-      frameworks.push(
-        (
-          await determineInstalledVersions(frameworkVersionInformation)
-        ).getFrameworkData()
-      );
-    } else if (
-      frameworkVersionInformation instanceof FrameworkVersionInformationStatic
-    ) {
+    if (frameworkVersionInformation instanceof FrameworkVersionInformationDynamic) {
+      frameworks.push((await determineInstalledVersions(frameworkVersionInformation)).getFrameworkData());
+    } else if (frameworkVersionInformation instanceof FrameworkVersionInformationStatic) {
       frameworks.push(frameworkVersionInformation.getFrameworkData());
     } else {
       console.log(

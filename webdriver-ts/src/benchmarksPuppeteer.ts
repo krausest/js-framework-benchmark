@@ -3,15 +3,7 @@
 import { Browser, Page } from "puppeteer-core";
 import { BenchmarkInfo, BenchmarkType } from "./benchmarksGeneric";
 import { config, FrameworkData } from "./common";
-import {
-  clickElementById,
-  clickElementByXPath,
-  waitForClassContained,
-  waitForElementLocatedById,
-  waitForElementLocatedByXpath,
-  waitForElementNotLocatedByXPath,
-  waitForTextContains,
-} from "./puppeteerAccess";
+import { clickElementById, waitForElement, waitForElementNotLocatedByXPath, waitForTextContains } from "./puppeteerAccess";
 
 const BENCHMARK_21 = "21_ready-memory";
 const BENCHMARK_22 = "22_run-memory";
@@ -19,8 +11,6 @@ const BENCHMARK_23 = "23_update5-memory";
 const BENCHMARK_24 = "24_run5-memory";
 const BENCHMARK_25 = "25_run-clear-memory";
 const BENCHMARK_31 = "31_startup-ci";
-
-type TBenchmarkID = typeof BENCHMARK_21 | typeof BENCHMARK_22 | typeof BENCHMARK_23 | typeof BENCHMARK_25 | typeof BENCHMARK_31;
 
 export abstract class BenchmarkPuppeteer {
   id: string;
@@ -63,15 +53,10 @@ const benchReadyMemory = new (class extends BenchmarkPuppeteer {
     });
   }
   async init(page: Page) {
-    await waitForElementLocatedById(page, "add", true);
+    await waitForElement(page, "pierce/#run");
   }
-  async run(page: Page) {
-    await waitForElementNotLocatedByXPath(page, "//tbody/tr[1]", false);
-  }
-  async after(page: Page, framework: FrameworkData) {
-    await clickElementById(page, "run", true);
-    await waitForElementLocatedByXpath(page, "//tbody/tr[1]/td[2]/a", false);
-  }
+  async run(page: Page) {}
+  async after(page: Page, framework: FrameworkData) {}
 })();
 
 const benchRunMemory = new (class extends BenchmarkPuppeteer {
@@ -85,11 +70,11 @@ const benchRunMemory = new (class extends BenchmarkPuppeteer {
     });
   }
   async init(page: Page) {
-    await waitForElementLocatedById(page, "add", true);
+    await waitForElement(page, "pierce/#run");
   }
   async run(page: Page) {
-    await clickElementById(page, "run", true);
-    await waitForElementLocatedByXpath(page, "//tbody/tr[1]/td[2]/a", false);
+    await clickElementById(page, "pierce/#run");
+    await waitForElement(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(2)>a");
   }
 })();
 
@@ -104,13 +89,13 @@ const benchUpdate5Memory = new (class extends BenchmarkPuppeteer {
     });
   }
   async init(page: Page) {
-    await waitForElementLocatedById(page, "add", true);
+    await waitForElement(page, "pierce/#run");
   }
   async run(page: Page) {
-    await clickElementById(page, "run", true);
+    await clickElementById(page, "pierce/#run");
     for (let i = 0; i < 5; i++) {
-      await clickElementById(page, "update", true);
-      await waitForTextContains(page, "//tbody/tr[1]/td[2]/a", " !!!".repeat(i), false);
+      await clickElementById(page, "pierce/#update");
+      await waitForTextContains(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(2)>a", " !!!".repeat(i));
     }
   }
 })();
@@ -126,12 +111,12 @@ const benchReplace5Memory = new (class extends BenchmarkPuppeteer {
     });
   }
   async init(page: Page) {
-    await waitForElementLocatedById(page, "add", true);
+    await waitForElement(page, "pierce/#run");
   }
   async run(page: Page) {
     for (let i = 0; i < 5; i++) {
-      await clickElementById(page, "run", true);
-      await waitForTextContains(page, "//tbody/tr[1000]/td[1]", (1000 * (i + 1)).toFixed(), false);
+      await clickElementById(page, "pierce/#run");
+      await waitForTextContains(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed());
     }
   }
 })();
@@ -147,14 +132,14 @@ const benchCreateClear5Memory = new (class extends BenchmarkPuppeteer {
     });
   }
   async init(page: Page) {
-    await waitForElementLocatedById(page, "add", true);
+    await waitForElement(page, "pierce/#run");
   }
   async run(page: Page) {
     for (let i = 0; i < 5; i++) {
-      await clickElementById(page, "run", true);
-      await waitForTextContains(page, "//tbody/tr[1000]/td[1]", (1000 * (i + 1)).toFixed(), false);
-      await clickElementById(page, "clear", true);
-      await waitForElementNotLocatedByXPath(page, "//tbody/tr[1000]/td[1]", false);
+      await clickElementById(page, "pierce/#run");
+      await waitForTextContains(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed());
+      await clickElementById(page, "pierce/#clear");
+      await waitForElementNotLocatedByXPath(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }
   }
 })();

@@ -14,7 +14,7 @@ function forkAndCallBenchmark(
 ): Promise<ErrorAndWarning> {
   return new Promise((resolve, reject) => {
     const forked = fork(
-      benchmark.type == BenchmarkType.MEM ? "src/forkedBenchmarkRunnerPuppeteer.ts" : "src/forkedBenchmarkRunnerWebdriver.ts"
+      benchmark.type == BenchmarkType.MEM ? "dist/forkedBenchmarkRunnerPuppeteer.js" : "dist/forkedBenchmarkRunnerWebdriver.js"
     );
     if (config.LOG_DETAILS) console.log("FORKING:  forked child process");
     forked.send({
@@ -185,12 +185,13 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
 
 let args: any = yargs(process.argv)
   .usage(
-    "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError] \n or: $0 [directory1] [directory2] .. [directory3] \n or: $0 installed"
+    "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
   )
   .help("help")
   .default("headless", false)
   .array("framework")
-  .array("benchmark").argv;
+  .array("benchmark")
+  .string("chromeBinary").argv;
 
 let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
 let frameworkArgument = !args.framework ? allArgs : args.framework;

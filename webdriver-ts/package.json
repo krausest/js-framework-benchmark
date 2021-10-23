@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bench": "cross-env LANG=\"en_US.UTF-8\" ts-node src/benchmarkRunner.ts",
+    "tsbench": "cross-env LANG=\"en_US.UTF-8\" ts-node src/benchmarkRunner.ts",
+    "bench": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
+    "compile": "tsc",
     "results": "ts-node src/createResultJS.ts && cd .. && cd webdriver-ts-results && npm run build-prod",
     "index": "ts-node src/createIndex.ts",
     "isKeyed": "cross-env LANG=\"en_US.UTF-8\" ts-node src/isKeyed.ts"
