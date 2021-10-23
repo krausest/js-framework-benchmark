@@ -4,40 +4,32 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "rimraf ./node-modules/.bin/npm && echo 'manually removed node-modules/.bin/npm'",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc",
-    "build-prod": "tsc",
+    "tsbench": "cross-env LANG=\"en_US.UTF-8\" ts-node src/benchmarkRunner.ts",
     "bench": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
-    "selenium": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
-    "checkSelenium": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js --check true",
-    "results": "npm run interactive-results",
-    "static-results": "echo \"no longer supported\" && exit 1",
-    "interactive-results": "node dist/createResultJS.js && cd .. && cd webdriver-ts-results && npm run build-prod",
-    "index": "node dist/createIndex.js",
-    "update": "node dist/updateFrameworks.js",
-    "checkUpdate": "node dist/updateFrameworks.js -- --update false",
-    "check": "cross-env LANG=\"en_US.UTF-8\" node dist/isKeyed.js",
-    "isKeyed": "cross-env LANG=\"en_US.UTF-8\" node dist/isKeyed.js",
-    "rebuild": "node dist/rebuild.js"
+    "compile": "tsc",
+    "results": "ts-node src/createResultJS.ts && cd .. && cd webdriver-ts-results && npm run build-prod",
+    "index": "ts-node src/createIndex.ts",
+    "isKeyed": "cross-env LANG=\"en_US.UTF-8\" ts-node src/isKeyed.ts"
   },
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/lodash": "4.14.173",
-    "@types/node": "16.9.6",
-    "@types/ramda": "0.27.44",
+    "@types/lodash": "4.14.175",
+    "@types/node": "16.11.1",
+    "@types/ramda": "0.27.45",
     "@types/selenium-webdriver": "4.0.15",
-    "@types/semver": "7.3.8",
-    "@types/yargs": "17.0.3",
+    "@types/semver": "7.3.9",
+    "@types/yargs": "17.0.4",
     "dockerode": "^3.3.1",
     "rimraf": "^3.0.2",
-    "ts-node": "10.2.1",
-    "typescript": "4.4.3"
+    "ts-node": "10.3.0",
+    "typescript": "4.4.4"
   },
   "dependencies": {
-    "axios": "^0.21.4",
-    "chromedriver": "^93.0.1",
+    "axios": "^0.23.0",
+    "chromedriver": "^94.0.0",
+    "puppeteer-core": "^10.4.0",
     "cross-env": "7.0.3",
     "dot": "1.1.3",
     "jstat": "1.9.5",
@@ -46,8 +38,8 @@
     "marky": "^1.2.2",
     "npm-check-updates": "11.8.5",
     "ramda": "0.27.1",
-    "selenium-webdriver": "4.0.0-rc-1",
+    "selenium-webdriver": "4.0.0",
     "semver": "7.3.5",
-    "yargs": "17.2.0"
+    "yargs": "17.2.1"
   }
 }

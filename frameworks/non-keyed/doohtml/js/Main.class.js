@@ -27,8 +27,7 @@ Doo.define(
 			this.addEventListeners()
 			this.selectedRow = undefined
 			document.querySelector(".ver").innerHTML += ` ${Doo.version} (non-keyed)`
-			document.title += ` ${Doo.version} (non-keyed)`
-		}
+			document.title += ` ${Doo.version} (non-keyed)`		}
 
 		async dooAfterRender() {
 			this.tbody = this.shadow.querySelector('#tbody')
@@ -68,25 +67,30 @@ Doo.define(
 
 		run() {
 			this.data.rows = this.buildData()
+			if (this.tbody.childNodes.length > this.data.rows.length) {
+				this.tbody.textContent = ''
+			}
 			this.renderTable()
+
 		}
 
 		add() {
 			let startRow = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
 			this.renderTable(this.data.rows, startRow)
-		}    
+		}  
 
 		runLots() {
 			this.data.rows = this.buildData(10000)
+			if (this.tbody.childNodes.length > this.data.rows.length) {
+				this.tbody.textContent = ''
+			}
 			this.renderTable()
 		}
 
 		update() {
-			let tr = this.tbody.querySelectorAll('tr')
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
-				this.data.rows[i].label += ' !!!';
-				tr[i].childNodes[1].childNodes[0].textContent = this.data.rows[i].label
+				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
 			}
 		}
 
@@ -118,7 +122,6 @@ Doo.define(
 				
 				this.tbody.insertBefore(node2, node1)
 				this.tbody.insertBefore(node1, this.tbody.childNodes[999])
-
 			}
 		}
 

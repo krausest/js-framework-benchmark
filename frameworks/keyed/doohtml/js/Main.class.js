@@ -1,12 +1,10 @@
-'use strict';
+'use strict'
 
-const _random = ((max) => {
-    return Math.round(Math.random()*1000)%max;
-})
+const _random = max => Math.random() * max | 0
 
-const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"]
+const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"]
+const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"]
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 
@@ -35,25 +33,25 @@ Doo.define(
 		async dooAfterRender() {
 			this.tbody = this.shadow.querySelector('#tbody')
 			this.shadow.querySelector(this.scrollTarget).addEventListener('click', e => {
-				e.preventDefault();
+				e.preventDefault()
 				if (e.target.parentElement.matches('.remove')) {
-					this.delete(e.target.parentElement);
+					this.delete(e.target.parentElement)
 				} else if (e.target.tagName === 'A') {
-					this.select(e.target);
+					this.select(e.target)
 				}
-			});
+			})
 		}
 	
 		getParentRow(elem) {
         	while (elem) {
         		if (elem.tagName === "TR") {return elem}
-        		elem = elem.parentNode;
+        		elem = elem.parentNode
         	}
-        	return undefined;
+        	return undefined
         }
 
 		buildData(count = 1000) {
-			const data = [];
+			const data = []
 			for (let i = 0; i < count; i++) {
 				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
 			}
@@ -69,28 +67,25 @@ Doo.define(
 		}  
 
 		run() {
+			this.clear()
 			this.data.rows = this.buildData()
-			this.tbody.textContent = ''
 			this.renderTable()
 		}
 
 		add() {
-			let startRow = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.appendData(this.tbody, startRow)
+			this.renderTable(this.data.rows)
 		}    
 
 		runLots() {
+			this.clear()
 			this.data.rows = this.buildData(10000)
-			this.tbody.textContent = ''
 			this.renderTable()
 		}
 
-		update() {
-			let tr = this.tbody.querySelectorAll('tr')
+		update(e) {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
-				this.data.rows[i].label += ' !!!';
-				tr[i].childNodes[1].childNodes[0].textContent = this.data.rows[i].label
+				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
 			}
 		}
 
@@ -98,7 +93,6 @@ Doo.define(
 			if (this.selectedRow) {
 				this.selectedRow.classList.remove('danger')
 				this.selectedRow = undefined
-				//	return  should toggle IMO
 			}
 			let row = this.getParentRow(elem)
 			if (row) {
@@ -117,8 +111,8 @@ Doo.define(
 				let node1 = this.tbody.childNodes[1]
 				let node2 = this.tbody.childNodes[998]
 
-				let row1 = this.data.rows[1];
-				this.data.rows[1] = this.data.rows[998];
+				let row1 = this.data.rows[1]
+				this.data.rows[1] = this.data.rows[998]
 				this.data.rows[998] = row1
 				
 				this.tbody.insertBefore(node2, node1)
@@ -129,19 +123,19 @@ Doo.define(
 
 		addEventListeners() {
 			document.getElementById("main").addEventListener('click', e => {
-				e.preventDefault();
+				e.preventDefault()
 				if (e.target.matches('#runlots')) {
-					this.runLots(e);
+					this.runLots()
 				} else if (e.target.matches('#run')) {
-					this.run(e);
+					this.run()
 				} else if (e.target.matches('#add')) {
-					this.add(e);
+					this.add()
 				} else if (e.target.matches('#update')) {
-					this.update();
+					this.update()
 				} else if (e.target.matches('#clear')) {
-					this.clear();
+					this.clear()
 				} else if (e.target.matches('#swaprows')) {
-					this.swapRows();
+					this.swapRows()
 				}
 			})    
     	}   
