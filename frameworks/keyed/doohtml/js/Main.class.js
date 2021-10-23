@@ -57,12 +57,24 @@ Doo.define(
 			}
 			return data	
 		}
+		getIndex(row) {
+			let idx =  this.data.rows.findIndex((item, i) => {
+				if (item.id === row.key) {
+					return i
+				}
+			}) 
+			return idx
+		}
 
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
 				this.tbody.removeChild(row)
-				this.data.rows[row.getAttribute('key')] = undefined
+				let idx = this.getIndex(row)
+				if (idx !== undefined) {
+					this.data.rows.splice(idx,1)
+				}
+
 			}
 		}  
 
@@ -70,6 +82,7 @@ Doo.define(
 			this.clear()
 			this.data.rows = this.buildData()
 			this.renderTable()
+
 		}
 
 		add() {
@@ -83,7 +96,7 @@ Doo.define(
 			this.renderTable()
 		}
 
-		update(e) {
+		update() {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
 				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
 			}
@@ -94,10 +107,15 @@ Doo.define(
 				this.selectedRow.classList.remove('danger')
 				this.selectedRow = undefined
 			}
-			let row = this.getParentRow(elem)
+			this.toggleSelect(this.getParentRow(elem))
+		}
+
+		toggleSelect(row) {
 			if (row) {
 				row.classList.toggle('danger')
-				this.selectedRow = row
+				if (row.classList.contains('danger')) {
+					this.selectedRow = row
+				}	
 			}    
 		}
 
@@ -138,6 +156,6 @@ Doo.define(
 					this.swapRows()
 				}
 			})    
-    	}   
+    	}
 	}
 )
