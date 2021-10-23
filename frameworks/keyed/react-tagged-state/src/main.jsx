@@ -1,6 +1,6 @@
 import { memo }  from "react";
 import { render } from "react-dom";
-import { createTagged , useTagged } from "react-tagged-state";
+import { createState , useSelector } from "react-tagged-state";
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
   "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive",
@@ -27,9 +27,9 @@ const buildData = (count) => {
   return res;
 }
 
-const dataState = createTagged([]);
+const dataState = createState([]);
 
-const selectedState = createTagged(0);
+const selectedState = createState(0);
 
 const update = (data) => {
   const newData = data.slice();
@@ -78,8 +78,8 @@ const Row = memo(({ item, isSelected }) => (
 ));
 
 const RowList = () => {
-  const data = useTagged(dataState);
-  const selected = useTagged(selectedState);
+  const data = useSelector(dataState);
+  const selected = useSelector(selectedState);
 
   return data.map((item) => <Row key={item.id} item={item} isSelected={item.id === selected} />);
 };
