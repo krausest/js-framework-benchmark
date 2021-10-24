@@ -57,6 +57,21 @@ Doo.define(
 			}
 			return data	
 		}
+
+		renderTable(dataSet=this.data[this.defaultDataSet], start=0) {
+			let len = dataSet.length - start
+			let elem = document.createElement('tbody')
+			elem.innerHTML = this.renderNode(this.place[0], dataSet, start , len) 
+			let tableRows = elem.querySelectorAll('tr')
+			let newElem
+			for (let i=0;i<len;i++) {
+				newElem = this.place[0].appendChild(tableRows.item(i))
+				newElem.key = dataSet[i].id
+			}	
+
+			return
+		}
+	
 		getIndex(row) {
 			let idx =  this.data.rows.findIndex((item, i) => {
 				if (item.id === row.key) {
@@ -69,8 +84,8 @@ Doo.define(
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
-				this.tbody.removeChild(row)
 				let idx = this.getIndex(row)
+				this.tbody.removeChild(row)
 				if (idx !== undefined) {
 					this.data.rows.splice(idx,1)
 				}
@@ -87,7 +102,7 @@ Doo.define(
 		add() {
 			let startRow = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.appendData(this.tbody, startRow)
+			this.renderTable(this.data.rows, startRow)
 		}    
 
 		runLots() {
@@ -106,9 +121,9 @@ Doo.define(
 			if (this.selectedRow) {
 				this.selectedRow.classList.remove('danger')
 				this.selectedRow = undefined
-				//	return  should toggle IMO
 			}
 			let row = this.getParentRow(elem)
+
 			if (row) {
 				row.classList.toggle('danger')
 				this.selectedRow = row
