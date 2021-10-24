@@ -57,20 +57,6 @@ Doo.define(
 			}
 			return data	
 		}
-
-		renderTable(dataSet=this.data[this.defaultDataSet], start=0) {
-			let len = dataSet.length - start
-			let elem = document.createElement('tbody')
-			elem.innerHTML = this.renderNode(this.place[0], dataSet, start , len) 
-			let tableRows = elem.querySelectorAll('tr')
-			let newElem
-			for (let i=0;i<len;i++) {
-				newElem = this.place[0].appendChild(tableRows.item(i))
-				newElem.key = dataSet[i].id
-			}	
-
-			return
-		}
 	
 		getIndex(row) {
 			let idx =  this.data.rows.findIndex((item, i) => {
@@ -140,7 +126,7 @@ Doo.define(
 				let node1 = this.tbody.childNodes[1]
 				let node2 = this.tbody.childNodes[998]
 
-				let row1 = this.data.rows[1];
+				let row1 = this.data.rows[1]
 				this.data.rows[1] = this.data.rows[998]
 				this.data.rows[998] = row1
 				
