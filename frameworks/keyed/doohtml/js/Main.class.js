@@ -57,6 +57,7 @@ Doo.define(
 			}
 			return data	
 		}
+	
 		getIndex(row) {
 			let idx =  this.data.rows.findIndex((item, i) => {
 				if (item.id === row.key) {
@@ -69,8 +70,8 @@ Doo.define(
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
-				this.tbody.removeChild(row)
 				let idx = this.getIndex(row)
+				this.tbody.removeChild(row)
 				if (idx !== undefined) {
 					this.data.rows.splice(idx,1)
 				}
@@ -79,20 +80,20 @@ Doo.define(
 		}  
 
 		run() {
-			this.clear()
 			this.data.rows = this.buildData()
+			this.tbody.textContent = ''
 			this.renderTable()
-
 		}
 
 		add() {
+			let startRow = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.renderTable(this.data.rows)
+			this.renderTable(this.data.rows, startRow)
 		}    
 
 		runLots() {
-			this.clear()
 			this.data.rows = this.buildData(10000)
+			this.tbody.textContent = ''
 			this.renderTable()
 		}
 
@@ -107,15 +108,11 @@ Doo.define(
 				this.selectedRow.classList.remove('danger')
 				this.selectedRow = undefined
 			}
-			this.toggleSelect(this.getParentRow(elem))
-		}
+			let row = this.getParentRow(elem)
 
-		toggleSelect(row) {
 			if (row) {
 				row.classList.toggle('danger')
-				if (row.classList.contains('danger')) {
-					this.selectedRow = row
-				}	
+				this.selectedRow = row
 			}    
 		}
 
