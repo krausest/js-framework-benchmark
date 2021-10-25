@@ -132,7 +132,7 @@ npm ci
 and build the benchmark driver
 
 ```
-npm run build-prod
+npm run compile
 ```
 
 now run the benchmark driver for the vanillajs-keyed framework:
