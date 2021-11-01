@@ -188,7 +188,8 @@ let args: any = yargs(process.argv)
     "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
   )
   .help("help")
-  .default("headless", false)
+  .boolean("headless")
+  .boolean("smoketest")
   .array("framework")
   .array("benchmark")
   .string("chromeBinary").argv;
@@ -205,14 +206,17 @@ async function main() {
     frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
   runFrameworks = await initializeFrameworks(matchesDirectoryArg);
 
-  config.WRITE_RESULTS = !args.noResults;
-
-  console.log(args, "no-results", args.noResults, config.WRITE_RESULTS);
-
-  let exitOnError = args.exitOnError === "true";
-
-  config.EXIT_ON_ERROR = exitOnError;
-
+  console.log("ARGS.smotest", args.smoketest)
+  if (args.smoketest) {
+    config.WRITE_RESULTS = false;
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU = 1;
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT = 0;
+    config.NUM_ITERATIONS_FOR_BENCHMARK_MEM = 1;
+    config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP = 1;
+    config.EXIT_ON_ERROR = true;
+    console.log('Using smoketest config ', JSON.stringify(config));
+  }
+    
   if (!fs.existsSync(config.RESULTS_DIRECTORY)) fs.mkdirSync(config.RESULTS_DIRECTORY);
 
   if (args.help) {

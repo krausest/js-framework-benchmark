@@ -26,9 +26,6 @@ RUN source $NVM_DIR/nvm.sh \
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
-RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb > /root/google-chrome-stable_current_amd64.deb
-RUN apt install -y /root/google-chrome-stable_current_amd64.deb
-
 RUN mkdir /server
 RUN mkdir /build
 RUN mkdir /src

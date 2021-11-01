@@ -265,6 +265,7 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
   let args = [
     "--js-flags=--expose-gc",
     "--enable-precise-memory-info",
+    "--enable-gpu-rasterization",
     "--no-first-run",
     "--disable-background-networking",
     "--disable-background-timer-throttling",

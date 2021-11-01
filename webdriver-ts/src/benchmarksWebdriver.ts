@@ -293,8 +293,8 @@ const benchAppendToManyRows = new (class extends BenchmarkWebdriver {
   constructor() {
     super({
       id: BENCHMARK_08,
-      label: "append rows to large table",
-      description: "appending 1,000 to a table of 10,000 rows." + slowDownNote(BENCHMARK_08),
+      label: "append rows to table",
+      description: "appending 1,000 to a table of 1,000 rows." + slowDownNote(BENCHMARK_08),
       type: BenchmarkType.CPU,
       throttleCPU: slowDownFactor(BENCHMARK_08),
       allowBatching: true,

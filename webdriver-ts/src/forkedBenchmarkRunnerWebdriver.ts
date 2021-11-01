@@ -226,14 +226,6 @@ async function computeResultsCPU(
       }
 
       console.log("# of paint events ", paints.length);
-      if (paints.length > 2) {
-        warnings.push(
-          `For framework ${framework.name} and benchmark ${benchmark.id} the number of paint calls is higher than expected. There were ${paints.length} paints though at most 2 are expected. Please consider re-running and check the results`
-        );
-        console.log(
-          `For framework ${framework.name} and benchmark ${benchmark.id} the number of paint calls is higher than expected. There were ${paints.length} paints though at most 2 are expected. Please consider re-running and check the results`
-        );
-      }
       paints.forEach((p) => {
         console.log("duration to paint ", (p.end - clicks[0].ts) / 1000.0);
       });
