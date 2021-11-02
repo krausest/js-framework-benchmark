@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-ls-element",
-  "version": "2.0.7",
+  "version": "2.0.9",
   "description": "ls-element demo",
   "main": "index.js",
   "js-framework-benchmark": {
@@ -37,6 +37,6 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "@lsegurado/ls-element": "2.0.7"
+    "@lsegurado/ls-element": "2.0.9"
   }
 }
