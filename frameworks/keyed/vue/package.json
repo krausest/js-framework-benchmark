@@ -26,6 +26,6 @@
     "webpack-cli": "4.7.2"
   },
   "dependencies": {
-    "vue": "3.2.20"
+    "vue": "3.2.21"
   }
 }
