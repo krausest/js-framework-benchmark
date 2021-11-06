@@ -36,7 +36,7 @@ try {
     }
 
     if (docker) {
-        let build_cmd = `podman exec -it js-framework-benchmark cp /src/rebuild-build-single.js /build/ && podman exec -it js-framework-benchmark node rebuild-build-single.js ${args.join(" ")}`;
+        let build_cmd = `docker exec -it js-framework-benchmark cp /src/rebuild-build-single.js /build/ && docker exec -it js-framework-benchmark node rebuild-build-single.js ${args.join(" ")}`;
         console.log(build_cmd);
         exec(build_cmd,
             {
