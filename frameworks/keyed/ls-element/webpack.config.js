@@ -54,19 +54,7 @@ const prodConfig = {
     devtool: false,
     optimization: {
         minimizer: [
-            new TerserPlugin({
-                // Use multi-process parallel running to improve the build speed
-                // Default number of concurrent runs: os.cpus().length - 1
-                parallel: true,
-                // Enable file caching
-                cache: true,
-                sourceMap: true,
-                terserOptions: {
-                    keep_classnames: true,
-                    keep_fnames: true,
-                    mangle: false
-                }
-            }),
+            new TerserPlugin(),
         ],
     },
     performance: {
