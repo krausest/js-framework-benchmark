@@ -6,7 +6,7 @@ import { SelectionBar } from './selection/SelectionBar';
 
 const App = () => {
   // eslint-disable-next-line no-constant-condition
-  const disclaimer = (false) ? (<div>
+  const disclaimer = (true) ? (<div>
         <h2>Results for js web frameworks benchmark - official run</h2>
         <p>A description of the benchmark and the source code and can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>
       </div>) :
@@ -15,7 +15,7 @@ const App = () => {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 64 GB RAM, Fedora 35 (Linux 5.14.14, mitigations=off, Wayland), Chrome 95.0.4638.54 (64-bit))</p>
+        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 64 GB RAM, Fedora 34 (Linux 5.14.17, mitigations=off, Xorg), Chrome 96.0.4664.45 (64-bit))</p>
          <SelectionBar/>
          <ResultTable type={FrameworkType.KEYED}/>
          <ResultTable type={FrameworkType.NON_KEYED}/>

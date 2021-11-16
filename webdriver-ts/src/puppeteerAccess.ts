@@ -76,12 +76,6 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
   let window_width = width,
     window_height = height;
 
-  // Fix for chrome 95:
-  if (process.platform === "linux") {
-    window_width *= 2;
-    window_height *= 2;
-  }
-
   const browser = await puppeteer.launch({
     headless: benchmarkOptions.headless,
     executablePath: browserPath(benchmarkOptions),

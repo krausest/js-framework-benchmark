@@ -256,12 +256,6 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
   let width = 1280;
   let height = 800;
 
-  // Fix for chrome 95:
-  if (process.platform === "linux") {
-    width *= 2;
-    height *= 2;
-  }
-
   let args = [
     "--js-flags=--expose-gc",
     "--enable-precise-memory-info",
