@@ -1,6 +1,6 @@
 /** @jsx createElement */
-import {Copy, createElement} from "@bikeshaving/crank";
-import {renderer} from "@bikeshaving/crank/dom";
+import {Copy, createElement} from "@b9g/crank/crank";
+import {renderer} from "@b9g/crank/dom";
 
 function random(max) { return Math.round(Math.random() * 1000) % max; }
 

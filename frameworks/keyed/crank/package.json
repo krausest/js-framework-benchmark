@@ -30,6 +30,6 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
-    "@bikeshaving/crank": "0.3.8"
+    "@b9g/crank": "0.4.1"
   }
 }
