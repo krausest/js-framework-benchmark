@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Blazor WebAssembly demo",
   "js-framework-benchmark": {
-    "frameworkVersion": "5.0.100-rc.2.20479.15",
+    "frameworkVersion": "6.0.100",
     "customURL": "/bundeled-dist/wwwroot/"
   },
   "scripts": {
