@@ -2,15 +2,16 @@
 name = "js-framework-benchmark-yew"
 version = "1.0.0"
 authors = ["Isamu Mogi <isamu@leafytree.jp>"]
-edition = "2018"
+edition = "2021"
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-rand = { version = "0.7.3", features = ["wasm-bindgen", "small_rng"] }
-wasm-bindgen = "0.2.62"
-yew = "0.17.2"
+rand = { version = "0.8.4", features = ["small_rng"] }
+getrandom = { version = "0.2.1", features = ["js"] }
+wasm-bindgen = "0.2.78"
+yew = "0.18"
 
 [profile.release]
 lto = true

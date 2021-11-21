@@ -52,12 +52,11 @@ struct RowData {
 
 impl RowData {
     fn new(id: usize, rng: &mut SmallRng) -> Self {
-        let mut label = String::new();
-        label.push_str(ADJECTIVES.choose(rng).unwrap());
-        label.push(' ');
-        label.push_str(COLOURS.choose(rng).unwrap());
-        label.push(' ');
-        label.push_str(NOUNS.choose(rng).unwrap());
+        let adjective = *ADJECTIVES.choose(rng).unwrap();
+        let colour = *COLOURS.choose(rng).unwrap();
+        let noun = *NOUNS.choose(rng).unwrap();
+
+        let label = [adjective, colour, noun].join(" ");
 
         Self { id, label }
     }
