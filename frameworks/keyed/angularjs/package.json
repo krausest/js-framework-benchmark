@@ -28,6 +28,6 @@
     "webpack-cli": "^3.3.4"
   },
   "dependencies": {
-    "angular": "1.7.8"
+    "angular": "1.8.0"
   }
 }
