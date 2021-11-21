@@ -4,7 +4,7 @@
   "description": "Benchmark for Crank.js",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@bikeshaving/crank"
+    "frameworkVersionFromPackage": "@b9g/crank"
   },
   "scripts": {
     "build-dev": "CRANK_ENV=development rollup -c",
