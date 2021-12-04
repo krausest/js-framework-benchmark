@@ -1,0 +1,39 @@
+{
+  "name": "js-framework-benchmark-lwc",
+  "version": "1.0.0",
+  "description": "Benchmark for LWC framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "lwc"
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "dependencies": {
+    "lwc": "2.5.10"
+  },
+  "devDependencies": {
+    "@lwc/rollup-plugin": "2.5.10",
+    "@rollup/plugin-replace": "3.0.0",
+    "rollup": "2.60.0",
+    "rollup-plugin-terser": "7.0.2"
+  },
+  "license": "MIT",
+  "keywords": [
+    "LWC",
+    "Lightning Web Components"
+  ],
+  "authors": [
+    "Dinko Bajric <dbajric@salesforce.com>",
+    "Pierre-Marie Dartus <p.dartus@salesforce.com>",
+    "Nolan Lawson <nlawson@salesforce.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme"
+}
