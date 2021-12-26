@@ -8,7 +8,7 @@ const useStore = create((set) => ({
 	selected: null,
 	run: () => set({ data: buildData(1000) }),
 	runLots: () => set({ data: buildData(10000) }),
-	add: () => set((state) => ({ data: [...state.data, buildData(1000)] })),
+	add: () => set((state) => ({ data: [...state.data, ...buildData(1000)] })),
 	update: () =>
 		set((state) => {
 			let newData = state.data.slice(0)
