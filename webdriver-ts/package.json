@@ -33,7 +33,7 @@
     "cross-env": "7.0.3",
     "dot": "1.1.3",
     "jstat": "1.9.5",
-    "lighthouse": "8.6.0",
+    "lighthouse": "9.2.0",
     "lodash": "4.17.21",
     "marky": "^1.2.2",
     "npm-check-updates": "11.8.5",
