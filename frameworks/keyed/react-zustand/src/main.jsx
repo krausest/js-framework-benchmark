@@ -120,27 +120,21 @@ const getSelect = (state) => state.select
 const getRemove = (state) => state.remove
 
 const Row = memo(
-	({ itemId }) => {
+	({ item }) => {
 		const select = useStore(getSelect)
 		const remove = useStore(getRemove)
-		const itemLabel = useStore(
-			useCallback(
-				(state) => state.data.find((item) => item.id === itemId).label,
-				[itemId]
-			)
-		)
 		const isSelected = useStore(
-			useCallback((state) => state.selected === itemId, [itemId])
+			useCallback((state) => state.selected === item.id, [item.id])
 		)
 
 		return (
 			<tr className={isSelected ? "danger" : ""}>
-				<td className="col-md-1">{itemId}</td>
+				<td className="col-md-1">{item.id}</td>
 				<td className="col-md-4">
-					<a onClick={() => select(itemId)}>{itemLabel}</a>
+					<a onClick={() => select(item.id)}>{item.label}</a>
 				</td>
 				<td className="col-md-1">
-					<a onClick={() => remove(itemId)}>
+					<a onClick={() => remove(item.id)}>
 						<span className="glyphicon glyphicon-remove" aria-hidden="true" />
 					</a>
 				</td>
@@ -148,7 +142,7 @@ const Row = memo(
 			</tr>
 		)
 	},
-	(prevProps, nextProps) => prevProps.itemId === nextProps.itemId
+	(prevProps, nextProps) => prevProps.item === nextProps.item
 )
 
 const Button = ({ id, cb, title }) => (
@@ -211,21 +205,21 @@ const Jumbotron = memo(
 	() => true
 )
 
-const getIds = (state) => state.data.map((el) => el.id)
+const getItems = (state) => state.data
 
 const Main = () => {
 	/**
 	 * @type {string[]}
 	 */
-	const ids = useStore(getIds, shallow)
+	const items = useStore(getItems, shallow)
 
 	return (
 		<div className="container">
 			<Jumbotron />
 			<table className="table table-hover table-striped test-data">
 				<tbody>
-					{ids.map((id, i) => (
-						<Row key={id} itemId={id} />
+					{items.map((item, i) => (
+						<Row key={item.id} item={item} />
 					))}
 				</tbody>
 			</table>
