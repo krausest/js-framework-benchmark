@@ -218,7 +218,7 @@ const Main = () => {
 			<Jumbotron />
 			<table className="table table-hover table-striped test-data">
 				<tbody>
-					{items.map((item, i) => (
+					{items.map((item) => (
 						<Row key={item.id} item={item} />
 					))}
 				</tbody>
