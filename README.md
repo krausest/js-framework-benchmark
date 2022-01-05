@@ -158,7 +158,7 @@ As you can see the mean duration for create 1000 rows was 144 msecs.
 You can also check whether the implementation appears to be compliant to the rules:
 
 ```
-npm run check keyed/vanillajs
+npm run isKeyed keyed/vanillajs
 ```
 
 If it finds anything it'll report an ERROR.
@@ -298,7 +298,7 @@ Contributions are very welcome. Please use the following rules:
 - Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
 - Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
 - Please push only files in your framework folder (not index.html or results.json)
-- **Please make sure your implementation is validated by the test tool.** cd to webdriver-ts and invoke it with `npm run check [keyed|non-keyed]/[FrameworkName]`. It'll print an error if your framework behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation. Some common errors include:
+- **Please make sure your implementation is validated by the test tool.** cd to webdriver-ts and invoke it with `npm run isKeyed [keyed|non-keyed]/[FrameworkName]`. It'll print an error if your framework behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation. Some common errors include:
   - Your package.json is missing some required fields
   - Incorrect classification (Keyed/NonKeyed)
   - You have gzipped files in /dist (unfortunately the web server prefers these when they exist)
