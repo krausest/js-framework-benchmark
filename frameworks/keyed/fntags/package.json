@@ -12,10 +12,10 @@
   },
   "author": "Robert Kempton",
   "dependencies": {
-    "@srfnstack/fntags": "0.1.7"
+    "@srfnstack/fntags": "0.3.3"
   },
   "devDependencies": {
     "fs-extra": "8.1.0",
-    "terser": "4.3.8"
+    "terser": "5.10.0"
   }
 }
