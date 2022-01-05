@@ -1,6 +1,6 @@
 import { memo }  from "react";
 import { render } from "react-dom";
-import { createState , useSelector } from "react-tagged-state";
+import { createState , observer, compute } from "react-tagged-state";
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
   "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive",
@@ -64,8 +64,8 @@ const swapRows = (data) => {
   return newData;
 };
 
-const Row = memo(({ item, isSelected }) => (
-    <tr className={isSelected ? "danger" : ""}>
+const Row = memo(observer(({ item }) => (
+    <tr className={compute(() => selectedState() === item.id) ? "danger" : ""}>
       <td className="col-md-1">{item.id}</td>
       <td className="col-md-4">
         <a onClick={() => selectedState(item.id)}>{item.label}</a>
@@ -75,14 +75,9 @@ const Row = memo(({ item, isSelected }) => (
       </td>
       <td className="col-md-6"/>
     </tr>
-));
+)));
 
-const RowList = () => {
-  const data = useSelector(dataState);
-  const selected = useSelector(selectedState);
-
-  return data.map((item) => <Row key={item.id} item={item} isSelected={item.id === selected} />);
-};
+const RowList = observer(() => dataState().map((item) => <Row key={item.id} item={item} />));
 
 const Button = ({ id, title, cb }) => (
   <div className="col-sm-6 smallpad">
