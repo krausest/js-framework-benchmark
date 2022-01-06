@@ -66,7 +66,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         end: +e.params.ts,
       });
       if (config.LOG_TIMELINE) console.log("NAVIGATION START ", JSON.stringify(e));
-    } else if (e.params.name === "Paint") {
+    } else if (e.params.name === "Paint" && e.params.ph=="X") {
       if (config.LOG_TIMELINE) console.log("PAINT ", JSON.stringify(e));
       filteredEvents.push({
         type: "paint",
@@ -75,6 +75,15 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         end: +e.params.ts + e.params.dur,
         evt: JSON.stringify(e),
       });
+    } else if (e.params.name === "Paint" && e.params.ph=="I") {
+        if (config.LOG_TIMELINE) console.log("PAINT ", JSON.stringify(e));
+        filteredEvents.push({
+          type: "paint",
+          ts: +e.params.ts,
+          dur: 0,
+          end: +e.params.ts,
+          evt: JSON.stringify(e),
+        });
       // } else if (e.params.name==='Rasterize') {
       //     console.log("RASTERIZE ",JSON.stringify(e));
       //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur, evt: JSON.stringify(e)});
@@ -227,7 +236,7 @@ async function computeResultsCPU(
 
       console.log("# of paint events ", paints.length);
       paints.forEach((p) => {
-        console.log("duration to paint ", (p.end - clicks[0].ts) / 1000.0);
+        console.log("duration to paint ", (p.end - clicks[0].ts) / 1000.0, p.end!=p.ts);
       });
       let lastPaint = R.reduce((max, elem) => (max.end > elem.end ? max : elem), { end: 0 } as Timingresult, paints);
 
