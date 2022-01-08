@@ -1,5 +1,5 @@
-import * as jsx from "@xania/glow.js";
-import { viewList, RowContext } from "@xania/glow.js";
+import * as jsx from "@xania/view";
+import { viewList, RowContext } from "@xania/view";
 import { TableStore, DataRow } from "./table-store";
 
 interface JumbotronProps {
@@ -149,4 +149,4 @@ function Row(context: RowContext<DataRow>, store: TableStore) {
 // }
 
 const main = document.getElementById("main");
-jsx.render2(main, <Container />);
+jsx.render(main, <Container />);

@@ -21,6 +21,6 @@ module.exports = {
     path: fspath.resolve(__dirname, "dist"),
   },
   optimization: {
-    minimize: false,
+    minimize: true,
   },
 };

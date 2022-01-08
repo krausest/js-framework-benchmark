@@ -1,4 +1,4 @@
-import { State, ListMutation, ListMutationType } from "@xania/glow.js";
+import { State, ListMutation, ListMutationType } from "@xania/view";
 
 export interface DataRow {
   id: number;
