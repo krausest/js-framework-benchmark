@@ -1,0 +1,15 @@
+{
+    "include": ["src"],
+    "compilerOptions": {
+        "outDir": "dist/src",
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "target": "es5",
+        "jsx": "react",
+        "jsxFactory": "jsx.factory",
+        "baseUrl": "./src",
+        "allowJs": true,
+    }
+}

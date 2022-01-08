@@ -22,12 +22,10 @@
     "docker-sync-package-lock-back": "docker exec -it js-framework-benchmark bash sync-package-lock.sh",
     "docker-build-frameworks": "npm run docker-sync && docker exec -it js-framework-benchmark npm install && docker exec -it js-framework-benchmark node rebuild-all.js --ci --docker --",
     "docker-build-frameworks-non-ci": "npm run docker-sync && docker exec -it js-framework-benchmark npm install && docker exec -it js-framework-benchmark node rebuild-all.js --docker --",
-    
     "rebuild": "node rebuild-single.js --",
     "rebuild-ci": "node rebuild-single.js -- --ci",
     "docker-rebuild": "node rebuild-single.js -- --docker",
     "docker-rebuild-ci": "node rebuild-single.js -- --ci --docker",
-    
     "docker-shell": "docker exec -it js-framework-benchmark /bin/bash"
   },
   "keywords": [
@@ -56,6 +54,5 @@
     "rimraf": "^3.0.2",
     "yargs": "^15.3.1"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
