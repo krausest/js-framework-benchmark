@@ -227,7 +227,7 @@ fn jumbotron(props: &JumbotronProps) -> Html {
         <div class="jumbotron">
             <div class="row">
                 <div class="col-md-6">
-                    <h1>{ "Yew" }</h1>
+                    <h1>{ "Yew-Hooks" }</h1>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
