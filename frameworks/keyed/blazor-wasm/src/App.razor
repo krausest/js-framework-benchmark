@@ -32,16 +32,17 @@
     </div>
     <table class="table table-hover table-striped test-data">
         <tbody id="tbody">
-            <Virtualize Items="@data" Context="item">
-                <tr @key="item.Id" class="@((item.Id == selected ? "danger" : ""))">
+            @foreach (var item in Data)
+            {
+                <tr @key="item.Id" class="@((item.Id == Selected ? "danger" : ""))">
                     <td class="col-md-1">@item.Id</td>
                     <td class="col-md-4">
-                        <a href="#" @onclick="(_ => Select(item))" @onclick:preventDefault>
+                        <a href="#" @onclick="item.Select" @onclick:preventDefault>
                             @item.Label
                         </a>
                     </td>
                     <td class="col-md-1">
-                        <a href="#" @onclick="(_ => Delete(item))" @onclick:preventDefault>
+                        <a href="#" @onclick="item.Remove" @onclick:preventDefault>
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         </a>
                     </td>
