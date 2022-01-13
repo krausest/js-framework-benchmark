@@ -1,4 +1,4 @@
-dist/
+bundeled-dist/
 dotnet/
 obj/
 bin/
