@@ -21,9 +21,10 @@
   },
   "keywords": [
     "blazor",
-    "webassembly"
+    "webassembly",
+    "aot"
   ],
-  "author": "Stefan Krause",
+  "author": "Juan Barahona",
   "license": "Apache-2.0",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {

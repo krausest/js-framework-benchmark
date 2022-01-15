@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <RunAOTCompilation>true</RunAOTCompilation>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
