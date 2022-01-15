@@ -16,7 +16,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "alpinejs": "3.5.0"
+    "alpinejs": "3.8.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "13.0.0",
