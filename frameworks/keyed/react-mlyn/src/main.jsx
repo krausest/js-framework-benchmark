@@ -1,7 +1,7 @@
 import { batch, createSubject } from "mlyn";
 import React, { Component } from "react";
 import { render } from "react-dom";
-import { For, useMemoize } from "react-mlyn";
+import { For, useMemoize, useSubjectValue } from "react-mlyn";
 
 const random = (max) => Math.round(Math.random() * 1000) % max;
 
