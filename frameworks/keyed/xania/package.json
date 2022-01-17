@@ -8,7 +8,7 @@
     },
     "scripts": {
         "build-dev": "npx rimraf dist && webpack",
-        "build-prod": "npx rimraf dist && webpack"
+        "build-prod": "webpack --mode=production"
     },
     "keywords": [
         "xania",
@@ -22,7 +22,7 @@
         "url": "https://github.com/xania/view.git"
     },
     "dependencies": {
-        "@xania/view": "0.2.16",
+        "@xania/view": "0.3.1",
         "webpack": "^5.66.0"
     },
     "devDependencies": {

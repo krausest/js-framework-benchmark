@@ -1,9 +1,9 @@
-import { State, ListMutation, ListMutationType } from "@xania/view";
+import { ViewContext, ViewContainer } from "@xania/view";
 
 export interface DataRow {
   id: number;
-  label: State<string>;
-  className?: State<string>;
+  label: string;
+  className?: string;
 }
 
 var adjectives = [
@@ -64,89 +64,77 @@ var nouns = [
 
 export class TableStore {
   private counter = 1;
-  constructor(private list: { add(mut: ListMutation<DataRow>): any }) {}
+  constructor(private container: ViewContainer<DataRow>) {}
 
-  private data: DataRow[] = [];
+  selected?: Node;
 
-  selected?: DataRow;
-
-  select = (row: DataRow) => {
-    const { selected } = this;
-    if (selected !== row) {
-      if (selected) {
-        selected.className.update(() => null);
+  select = (context: ViewContext) => {
+    const { selected, container } = this;
+    const node = context.node;
+    if (selected !== node) {
+      if (selected?.parentNode) {
+        container.updateAt(selected["rowIndex"], "className", () => null);
       }
-      this.selected = row;
-      if (row) {
-        row.className.update(() => "danger");
-      }
+      this.selected = node;
+      container.updateAt(node["rowIndex"], "className", () => "danger");
     }
   };
 
-  delete = ({ values }) => {
-    this.list.add({
-      type: ListMutationType.REMOVE,
-      item: values,
-    });
+  delete = (context: ViewContext) => {
+    this.container.removeAt(context.node["rowIndex"]);
   };
 
   private appendRows(count: number) {
-    let { counter, data, list } = this;
+    let { counter, container } = this;
+    const data = new Array(count);
     for (let i = 0; i < count; i++) {
-      var row = {
+      data[i] = {
         id: counter++,
-        label: new State(
+        label:
           adjectives[_random(adjectives.length)] +
-            " " +
-            colours[_random(colours.length)] +
-            " " +
-            nouns[_random(nouns.length)]
-        ),
-        className: new State(null),
+          " " +
+          colours[_random(colours.length)] +
+          " " +
+          nouns[_random(nouns.length)],
+        className: null,
       };
-      data.push(row);
     }
 
-    list.add({
-      type: ListMutationType.PUSH_MANY,
-      items: data,
-      start: data.length - count,
-      count,
-    });
-
+    container.push(data);
     this.counter = counter;
   }
+
   create1000Rows = (): void => {
     this.clear();
     this.appendRows(1000);
   };
+
   create10000Rows = (): void => {
     this.clear();
     this.appendRows(10000);
   };
+
   append1000Rows = (): void => {
     this.appendRows(1000);
   };
+
   updateEvery10thRow = (): void => {
-    const { length } = this.data;
+    const { container } = this;
+    const length = container.length;
+
     for (let i = 0; i < length; i += 10) {
-      this.data[i].label.update((prev) => prev + " !!!");
+      container.updateAt(i, "label", (value) => value + " !!!");
     }
   };
+
   clear = (): void => {
-    this.list.add({
-      type: ListMutationType.CLEAR,
-    });
-    this.data = [];
-    this.select(null);
+    this.container.clear();
+    this.selected = null;
   };
+
   swapRows = (): void => {
-    if (this.data.length > 998) {
-      this.list.add({
-        type: ListMutationType.SWAP,
-        index1: 1,
-        index2: 998,
-      });
+    if (this.container.length > 998) {
+      this.container.swap(1, 998);
     }
   };
 }

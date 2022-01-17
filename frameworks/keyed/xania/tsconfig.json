@@ -6,7 +6,7 @@
         "sourceMap": true,
         "module": "esnext",
         "moduleResolution": "node",
-        "target": "es5",
+        "target": "ES6",
         "jsx": "react",
         "jsxFactory": "jsx.factory",
         "baseUrl": "./src",
