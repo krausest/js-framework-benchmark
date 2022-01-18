@@ -1,5 +1,4 @@
-import * as jsx from "@xania/view";
-import { createContainer, property } from "@xania/view";
+import { jsx, createContainer, property, render } from "@xania/view";
 import { TableStore, DataRow } from "./table-store";
 
 interface JumbotronProps {
@@ -140,4 +139,4 @@ function Row(store: TableStore) {
 // }
 
 const main = document.getElementById("main");
-jsx.render(main, <Container />);
+render(main, <Container />);

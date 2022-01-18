@@ -8,7 +8,7 @@
         "moduleResolution": "node",
         "target": "ES6",
         "jsx": "react",
-        "jsxFactory": "jsx.factory",
+        "jsxFactory": "jsx",
         "baseUrl": "./src",
         "allowJs": true,
     }

@@ -22,7 +22,7 @@
         "url": "https://github.com/xania/view.git"
     },
     "dependencies": {
-        "@xania/view": "0.3.2",
+        "@xania/view": "0.3.3",
         "webpack": "^5.66.0"
     },
     "devDependencies": {
