@@ -1,5 +1,4 @@
-import * as jsx from "@xania/view";
-import { viewList, RowContext } from "@xania/view";
+import { jsx, createContainer, property, render } from "@xania/view";
 import { TableStore, DataRow } from "./table-store";
 
 interface JumbotronProps {
@@ -9,15 +8,6 @@ interface JumbotronProps {
 function Jumbotron(props: JumbotronProps) {
   const { store } = props;
 
-  function run(counter = 5) {
-    store.create10000Rows();
-    setTimeout(() => {
-      if (counter) {
-        store.clear();
-        setTimeout(() => run(counter - 1), 200);
-      }
-    }, 200);
-  }
   return (
     <div class="jumbotron">
       <div class="row">
@@ -94,14 +84,14 @@ function Jumbotron(props: JumbotronProps) {
 }
 
 function Container() {
-  const rows = viewList<DataRow>();
+  const rows = createContainer<DataRow>();
   const store = new TableStore(rows);
   return (
     <div id="main">
       <div class="container">
         <Jumbotron store={store} />
         <table class="table table-hover table-striped test-data">
-          <tbody>{rows.map((context) => Row(context, store))}</tbody>
+          <tbody>{rows.map(Row(store))}</tbody>
         </table>
         <span
           class="preloadicon glyphicon glyphicon-remove"
@@ -112,13 +102,13 @@ function Container() {
   );
 }
 
-function Row(context: RowContext<DataRow>, store: TableStore) {
+function Row(store: TableStore) {
   return (
-    <tr class={context.property("className")} data_id={context.property("id")}>
-      <td class="col-md-1">{context.property("id")}</td>
+    <tr class={property("className")}>
+      <td class="col-md-1">{property("id")}</td>
       <td class="col-md-4">
-        <a class="lbl" click={context.call(store.select)}>
-          {context.property("label")}
+        <a class="lbl" click={store.select}>
+          {property("label")}
         </a>
       </td>
       <td class="col-md-1">
@@ -149,4 +139,4 @@ function Row(context: RowContext<DataRow>, store: TableStore) {
 // }
 
 const main = document.getElementById("main");
-jsx.render(main, <Container />);
+render(main, <Container />);
