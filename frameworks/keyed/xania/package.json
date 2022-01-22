@@ -4,7 +4,8 @@
     "description": "Xania JS demo",
     "main": "index.js",
     "js-framework-benchmark": {
-        "frameworkVersionFromPackage": "@xania/view"
+        "frameworkVersionFromPackage": "@xania/view",
+        "issues": [772] 
     },
     "scripts": {
         "build-dev": "npx rimraf dist && webpack",
