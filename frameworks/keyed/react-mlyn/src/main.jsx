@@ -217,7 +217,7 @@ const Main = () => {
       <Jumbotron dispatch={dispatch} />
       <table className="table table-hover table-striped test-data">
         <tbody>
-          <For each={data} noBindBack>
+          <For each={data} noBindBack getKey={({ id }) => id}>
             {(item$) => {
               const selected$ = useMemoize(() => item$.id() === state$.selected());
               const selected = useSubjectValue(selected$);
