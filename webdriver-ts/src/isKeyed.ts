@@ -43,6 +43,7 @@ window.nonKeyedDetector_reset = function() {
     window.nonKeyedDetector_tradded = [];
     window.nonKeyedDetector_trremoved = [];
     window.nonKeyedDetector_removedStoredTr = [];
+    window.trToBeRemoved = null;
 }
 
 window.nonKeyedDetector_setUseShadowDom = function(useShadowDom ) {
@@ -71,7 +72,9 @@ window.nonKeyedDetector_instrument = function() {
         let trs = [];
         nodeList.forEach(n => {
             if (n.tagName==='TR') {
-                trs.push(n);
+                if (!trToBeRemoved || trToBeRemoved !== n) {
+                    trs.push(n);
+                }
                 trs = trs.concat(filterTRInNodeList(n.childNodes));
             }
         });
@@ -114,6 +117,14 @@ window.nonKeyedDetector_storeTr = function() {
         if (main) node = main.shadowRoot;
     }
     window.storedTr = node.querySelector('tr:nth-child(2)');
+}
+window.markTrAsToBeRemoved = function(indexOfTr) {
+  trToBeRemoved = document.querySelector('table'); // <table>
+  
+  if (trToBeRemoved) {
+      trToBeRemoved = trToBeRemoved.children[0]; // <tbody>
+      trToBeRemoved = trToBeRemoved.children[indexOfTr]; // <tr> list
+  }
 }
 window.nonKeyedDetector_reset();
 `;
@@ -292,6 +303,9 @@ async function runBench(frameworkNames: string[]) {
       await driver.executeScript("nonKeyedDetector_storeTr()");
       let text = await getTextByXPath(driver, `//tbody/tr[2]/td[2]/a`, false);
       await driver.executeScript("window.nonKeyedDetector_reset()");
+      if (!keyedRun) {
+        await driver.executeScript("window.markTrAsToBeRemoved(999)");
+      }
       await clickElementByXPath(driver, `//tbody/tr[2]/td[3]/a/span[1]`, false);
       await testTextNotContained(driver, `//tbody/tr[2]/td[2]/a`, text, config.TIMEOUT, false);
       res = await driver.executeScript("return nonKeyedDetector_result()");
