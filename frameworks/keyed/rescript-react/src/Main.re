@@ -118,7 +118,7 @@ let make = () => {
     />
     <table className="table table-hover table-striped test-data">
       <tbody>
-        {ReasonReact.array(
+        {React.array(
            Array.map(
              (item: Util.item) =>
                <Row

@@ -14,7 +14,7 @@ RUN apt-get install -y python3 m4 libtinfo5 libghc-zlib-dev rsync ghc haskell-st
 
 ENV NVM_DIR /usr/local/nvm
 RUN mkdir -p $NVM_DIR
-ENV NODE_VERSION 14.17.0
+ENV NODE_VERSION 16.13.2
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
 
 # install node and npm
@@ -38,6 +38,7 @@ RUN npm install
 # Volume before chown changes owwner
 VOLUME /src
 VOLUME /build
+COPY package.json /build
 WORKDIR /build
 
 # Install rust

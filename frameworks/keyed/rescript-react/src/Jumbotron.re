@@ -1,6 +1,6 @@
 [@react.component]
 let make = (~run, ~runLots, ~add, ~update, ~clear, ~swapRows) => {
-  let hdr = ReasonReact.string("Reason-React keyed");
+  let hdr = React.string("Rescript-React keyed");
 
   <div className="jumbotron">
     <div className="row">
