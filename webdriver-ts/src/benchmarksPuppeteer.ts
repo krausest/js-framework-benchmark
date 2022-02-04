@@ -3,7 +3,7 @@
 import { Browser, Page } from "puppeteer-core";
 import { BenchmarkInfo, BenchmarkType } from "./benchmarksGeneric";
 import { config, FrameworkData } from "./common";
-import { clickElementById, waitForElement, waitForElementNotLocatedByXPath, waitForTextContains } from "./puppeteerAccess";
+import { clickElementById, waitForElement, waitForElementX, waitForElementNotLocatedByXPath, waitForTextContains } from "./puppeteerAccess";
 
 const BENCHMARK_21 = "21_ready-memory";
 const BENCHMARK_22 = "22_run-memory";
@@ -74,7 +74,7 @@ const benchRunMemory = new (class extends BenchmarkPuppeteer {
   }
   async run(page: Page) {
     await clickElementById(page, "pierce/#run");
-    await waitForElement(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(2)>a");
+    await waitForElementX(page, "//*[position()=7]/*[1][text()='7']");
   }
 })();
 
@@ -95,7 +95,7 @@ const benchUpdate5Memory = new (class extends BenchmarkPuppeteer {
     await clickElementById(page, "pierce/#run");
     for (let i = 0; i < 5; i++) {
       await clickElementById(page, "pierce/#update");
-      await waitForTextContains(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(2)>a", " !!!".repeat(i));
+      await waitForTextContains(page, "//*[position()=11]/*[1][text()='11']/../*[2]", " !!!".repeat(i));
     }
   }
 })();
@@ -116,7 +116,7 @@ const benchReplace5Memory = new (class extends BenchmarkPuppeteer {
   async run(page: Page) {
     for (let i = 0; i < 5; i++) {
       await clickElementById(page, "pierce/#run");
-      await waitForTextContains(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed());
+      await waitForElementX(page, `//*[position()=1]/*[1][text()='${ 1 + 1000 * i }']`);
     }
   }
 })();
@@ -137,9 +137,9 @@ const benchCreateClear5Memory = new (class extends BenchmarkPuppeteer {
   async run(page: Page) {
     for (let i = 0; i < 5; i++) {
       await clickElementById(page, "pierce/#run");
-      await waitForTextContains(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed());
+      await waitForElementX(page, `//*[position()=1]/*[1][text()='${ 1 + 1000 * i }']`);
       await clickElementById(page, "pierce/#clear");
-      await waitForElementNotLocatedByXPath(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
+      await waitForElementNotLocatedByXPath(page, `//*[position()=1]/*[1][text()='${ 1 + 1000 * i }']`);
     }
   }
 })();

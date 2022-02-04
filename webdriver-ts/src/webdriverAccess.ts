@@ -57,36 +57,43 @@ async function shadowRoot(driver: WebDriver, selector: string): Promise<WebEleme
 // Fake findByXPath for simple XPath expressions to allow usage with shadow dom
 export async function findByXPath(driver: WebDriver, path: string, isInButtonArea: boolean): Promise<WebElement> {
   let root = await mainRoot(driver, isInButtonArea);
-  let paths = convertPath(path);
-  let n = root;
+  // let paths = convertPath(path);
+  // let n = root;
   try {
-    for (let p of paths) {
-      let elem;
-      if (useRowShadowRoot && p.tagName === "tr") {
-        try {
-          const shadowHost = await shadowRoot(driver, `benchmark-row:nth-of-type(${p.index})`);
-          elem = await shadowHost.findElement(By.tagName("tr"));
-          if (elem === null) {
-            return null;
-          }
-        } catch (err) {
-          return null;
-        }
-      } else {
-        let elems = await n.findElements(By.css(p.tagName + ":nth-of-type(" + p.index + ")"));
-        if (elems == null || elems.length == 0) {
-          return null;
-        }
-        elem = elems[0];
-      }
-
-      n = elem;
+    
+    let elems = await root.findElements(By.xpath(path));
+    if (elems == null || elems.length == 0) {
+      return null;
     }
+    return elems[0]
+    
+    // for (let p of paths) {
+    //   let elem;
+    //   if (useRowShadowRoot && p.tagName === "tr") {
+    //     try {
+    //       const shadowHost = await shadowRoot(driver, `benchmark-row:nth-of-type(${p.index})`);
+    //       elem = await shadowHost.findElement(By.tagName("tr"));
+    //       if (elem === null) {
+    //         return null;
+    //       }
+    //     } catch (err) {
+    //       return null;
+    //     }
+    //   } else {
+    //     let elems = await n.findElements(By.css(p.tagName + ":nth-of-type(" + p.index + ")"));
+    //     if (elems == null || elems.length == 0) {
+    //       return null;
+    //     }
+    //     elem = elems[0];
+    //   }
+
+    //   n = elem;
+    // }
   } catch (e) {
     //can happen for StaleElementReferenceError
     return null;
   }
-  return n;
+  // return n;
 }
 
 function elemNull(v: any) {
@@ -147,6 +154,23 @@ export function testClassContains(driver: WebDriver, xpath: string, text: string
         return v && v.indexOf(text) > -1;
       } catch (err) {
         console.log("ignoring error in testClassContains for xpath = " + xpath + " text = " + text, err.toString().split("\n")[0]);
+      }
+    },
+    timeout
+  );
+}
+
+export function testStyle(driver: WebDriver, xpath: string, prop: string, val: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
+  return waitForCondition(driver)(
+    `testClassContains ${xpath} ${prop} ${val}`,
+    async function (driver) {
+      try {
+        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        if (elem == null) return false;
+        let v = await elem.getCssValue(prop);
+        return v === val;
+      } catch (err) {
+        console.log("ignoring error in testStyle for xpath = " + xpath + " prop = " + prop + " val = " + val, err.toString().split("\n")[0]);
       }
     },
     timeout

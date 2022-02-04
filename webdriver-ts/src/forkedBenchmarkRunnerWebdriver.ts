@@ -229,16 +229,12 @@ async function computeResultsCPU(
       if (config.LOG_DEBUG) console.log("eventsAfterClick", eventsAfterClick);
 
       let paints = R.filter(type_eq("paint"))(eventsAfterClick);
-      if (paints.length == 0) {
-        console.log("at least one paint event is expected after the click event", eventsAfterClick);
-        throw "at least one paint event is expected after the click event";
-      }
 
       console.log("# of paint events ", paints.length);
       paints.forEach((p) => {
         console.log("duration to paint ", (p.end - clicks[0].ts) / 1000.0, p.end!=p.ts);
       });
-      let lastPaint = R.reduce((max, elem) => (max.end > elem.end ? max : elem), { end: 0 } as Timingresult, paints);
+      let lastPaint = R.reduce((max, elem) => (max.end > elem.end ? max : elem), { end: clicks[0].ts } as Timingresult, paints);
 
       let upperBoundForSoundnessCheck = (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000.0;
       let duration = (lastPaint.end - clicks[0].ts) / 1000.0;

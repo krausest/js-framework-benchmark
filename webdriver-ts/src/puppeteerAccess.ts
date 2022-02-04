@@ -17,19 +17,35 @@ async function waitForSelector(page: Page, selector: string) {
 
 export async function waitForElementNotLocatedByXPath(page: Page, selector: string) {
   for (let k = 0; k < 10 * 1000; k += 1000) {
-    let sel = await page.$(selector);
-    if (!sel) {
+    let sel = await page.$x(selector);
+    if (!sel || !sel[0]) {
       return;
     }
-    await sel.dispose();
+    await sel[0].dispose();
     await page.waitForTimeout(1000);
   }
   throw `waitForElementNotLocatedByXPath failed for ${selector};`;
 }
 
+export async function waitForElementLocatedByXPath(page: Page, selector: string) {
+  for (let k = 0; k < 10 * 1000; k += 1000) {
+    let sel = await page.$x(selector);
+    if (sel && sel[0]) {
+      return sel[0];
+    }
+    await page.waitForTimeout(1000);
+  }
+  throw `waitForElementLocatedByXPath failed for ${selector};`;
+}
+
 export async function waitForElement(page: Page, selector: string) {
   let sel = await waitForSelector(page, selector);
   await sel.dispose();
+}
+
+export async function waitForElementX(page: Page, selector: string) {
+  let sel = await waitForElementLocatedByXPath(page, selector);
+  await sel?.dispose();
 }
 
 export async function clickElementById(page: Page, id: string) {
@@ -49,7 +65,7 @@ export async function clickElementByXPath(page: Page, selector: string) {
 export async function waitForTextContains(page: Page, selector: string, expectedText: string): Promise<void> {
   let txt;
   for (let k = 0; k < 10 * 1000; k += 1000) {
-    let elem = await waitForSelector(page, selector);
+    let elem = await waitForElementLocatedByXPath(page, selector);
     txt = await elem.evaluate((e: any) => e.innerText);
     let result = txt.includes(expectedText);
     await elem.dispose();
