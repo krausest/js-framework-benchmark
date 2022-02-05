@@ -35,10 +35,8 @@ async function runPuppeteer24(url, name)
     for (let i = 0; i < 5; i++) {
         await page.click('#run');
         await page.waitForTimeout(100);
-        let element = await page.waitForXPath('//tbody/tr[1000]/td[1]');
-        let value = await page.evaluate(el => el.innerText, element)
-        let expected = (1000 * (i + 1)).toFixed();
-        if (expected != value) {
+        let element = await page.waitForXPath("//*[position()=7][text()='" + ( i * 1000 + 7 ) + "']");
+        if (!element?.length) {
             console.log("**** WRONG! Value ", value, "expected");
         }
     }
