@@ -1,99 +1,8 @@
-'use strict';
-
 import { markup, textNode } from '../node_modules/slingjs/sling.min.es5';
-var { Store } = require('./store');
-
-export class Row {
-    constructor(id, classList, label, onclick, ondelete) {
-        this.id = id;
-        this.classList = classList;
-        this.label = label;
-        this.onclick = onclick;
-        this.ondelete = ondelete;
-
-    
-    }
-
-    slOnInit() {
-        this.click = function () {
-            const id = this.id;
-            this.onclick(id);
-        };
-        this.delete = function () {
-            const id = this.id;
-            this.ondelete(id);
-        };
-    }
-
-    view() {
-        return markup('tr', {
-            attrs: {
-                'class': this.classList,
-                onclick: this.click.bind(this),
-                onremove: this.delete.bind(this)
-            },
-            children: [
-                markup('td', {
-                    attrs: {
-                        'class': 'col-md-1'
-                    },
-                    children: [
-                        textNode(this.id)
-                    ]
-                }),
-                markup('td', {
-                    attrs: {
-                        'class': 'col-md-4',
-                    },
-                    children: [
-                        markup('a', {
-                            attrs: {
-                                'href': '#',
-                                onclick: this.click.bind(this)
-                            }, 
-                            children: [
-                                textNode(this.label)
-                            ]
-                        })
-                    ]
-                }),
-                markup('td', {
-                    attrs: {
-                        'class': 'col-md-1',
-                    },
-                    children: [
-                        markup('a', {
-                            attrs: {
-                                'href': '#',
-                                onclick: this.delete.bind(this)
-                            },
-                            children: [
-                                markup('span', {
-                                    attrs: {
-                                        'class': 'glyphicon glyphicon-remove',
-                                        'aria-hidden': 'true'
-                                    }
-                                })
-                            ]
-                        })
-                    ]
-                }),
-                markup('td', {
-                    attrs: {
-                        'class': 'col-md-6'
-                    }
-                })
-            ]
-        });
-    }
-}
+var { Store } = require('./store.es6');
 
 export class ControllerComponent {
     constructor() {
-
-    }
-
-    slOnInit() {
         this.data = function () { return Store.data; };
         this.selected = function () { return Store.selected; };
         this.run = function () {
@@ -123,7 +32,7 @@ export class ControllerComponent {
     }
 
     view() {
-        var ret = markup('div', {
+        return markup('div', {
             attrs: {
                 'class': 'container',
                 'id': 'main'
@@ -278,9 +187,66 @@ export class ControllerComponent {
                     children: [
                         markup('tbody', {
                             children: [
-                                ...Array.from(this.data(), (d, i) => {
-                                    let sel = d.id === this.selected() ? 'danger' : '';
-                                    return new Row(d.id, sel, d.label, this.select, this.delete)
+                                ...Array.from(this.data(), (d) => {
+                                    return markup('tr', {
+                                        attrs: {
+                                            ...d.id === this.selected() && { class: 'danger' },
+                                            onclick: this.select.bind(this, d.id),
+                                            onremove: this.delete.bind(this, d.id)
+                                        },
+                                        children: [
+                                            markup('td', {
+                                                attrs: {
+                                                    'class': 'col-md-1'
+                                                },
+                                                children: [
+                                                    textNode(d.id)
+                                                ]
+                                            }),
+                                            markup('td', {
+                                                attrs: {
+                                                    'class': 'col-md-4',
+                                                },
+                                                children: [
+                                                    markup('a', {
+                                                        attrs: {
+                                                            'href': '#',
+                                                            onclick: this.select.bind(this, d.id)
+                                                        }, 
+                                                        children: [
+                                                            textNode(d.label)
+                                                        ]
+                                                    })
+                                                ]
+                                            }),
+                                            markup('td', {
+                                                attrs: {
+                                                    'class': 'col-md-1',
+                                                },
+                                                children: [
+                                                    markup('a', {
+                                                        attrs: {
+                                                            'href': '#',
+                                                            onclick: this.delete.bind(this, d.id)
+                                                        },
+                                                        children: [
+                                                            markup('span', {
+                                                                attrs: {
+                                                                    'class': 'glyphicon glyphicon-remove',
+                                                                    'aria-hidden': 'true'
+                                                                }
+                                                            })
+                                                        ]
+                                                    })
+                                                ]
+                                            }),
+                                            markup('td', {
+                                                attrs: {
+                                                    'class': 'col-md-6'
+                                                }
+                                            })
+                                        ]
+                                    });
                                 })
                             ]
                         })
@@ -294,8 +260,6 @@ export class ControllerComponent {
                 })
             ]
         });
-
-        return ret;
     }
 }
 

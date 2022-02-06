@@ -1,48 +1,54 @@
-'use strict';
-var path = require('path')
+const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 
-var cache = {};
-var loaders = [
-	{
-		test: /\.jsx?$/,
-		loader: 'babel-loader',
-		exclude: /node_modules/,
-		query: {
-          presets: ['es2015', 'react']
-        }
-	},
-	{
-		test: /\.es6\.js$/,
-		loader: 'babel-loader'
-	},
-	{
-		test: /\.css$/,
-		loader: 'style-loader!css-loader'
-	}
-];
-var extensions = [
-	'.js', '.jsx', '.es6.js'
-];
+var config = {
+    context: __dirname + '/src',
+    entry: {
+        app: './main.es6.js',
+    },
+    output: {
+        path: __dirname + '/dist',
+        filename: 'main.js',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: ['babel-loader']
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    'css-loader'
+                ]
+            }
+        ]
+    },
+    optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin({
+            terserOptions: {
+                ecma: undefined,
+                warnings: false,
+                parse: {},
+                compress: {},
+                mangle: true,
+                module: false,
+                output: null,
+                toplevel: true,
+                nameCache: null,
+                ie8: false,
+                keep_classnames: undefined,
+                keep_fnames: false,
+                safari10: false
+            },
+            extractComments: true,
+        })],
+    },
+    plugins: [
+    ]
+};
 
-module.exports = [{
-	cache: cache,
-	module: {
-		loaders: loaders
-	},
-	entry: {
-		main: './src/main',
-	},
-	output: {
-		path: path.resolve(__dirname,'dist'),
-		filename: '[name].js',
-		sourceMapFilename: "[file].map",
-	},
-	resolve: {
-		modules: [
-			__dirname,
-			path.resolve(__dirname, "src"),
-			"node_modules"
-		],
-		extensions: extensions
-	}
-}];
+module.exports = config;
