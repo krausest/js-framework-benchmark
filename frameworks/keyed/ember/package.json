@@ -29,12 +29,6 @@
     "start": "ember serve",
     "test": "npm-run-all lint test:*"
   },
-  "overrides": {
-    "@embroider/compat": "1.1.0",
-    "@embroider/core": "1.1.0",
-    "@embroider/macros": "1.1.0",
-    "@embroider/webpack": "1.1.0"
-  },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
     "@ember/test-helpers": "^2.6.0",
