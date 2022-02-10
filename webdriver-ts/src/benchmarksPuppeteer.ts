@@ -82,7 +82,7 @@ const benchUpdate5Memory = new (class extends BenchmarkPuppeteer {
   constructor() {
     super({
       id: BENCHMARK_23,
-      label: "update eatch 10th row for 1k rows (5 cycles)",
+      label: "update every 10th row for 1k rows (5 cycles)",
       description: "Memory usage after clicking update every 10th row 5 times",
       type: BenchmarkType.MEM,
       allowBatching: false,
