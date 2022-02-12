@@ -78,10 +78,10 @@ const rowBlock = createBlock(`
       <tr block-attribute-2="class">
         <td class="col-md-1"><block-text-0/></td>
         <td class="col-md-4">
-            <a block-handler-3="click"><block-text-1/></a>
+            <a block-handler-3="click.synthetic"><block-text-1/></a>
         </td>
         <td class="col-md-1">
-            <a block-handler-4="click">
+            <a block-handler-4="click.synthetic">
               <span class='glyphicon glyphicon-remove' aria-hidden="true" />
             </a>
         </td>

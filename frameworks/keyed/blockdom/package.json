@@ -26,6 +26,6 @@
     "rollup-plugin-terser": "7.0.2"
   },
   "dependencies": {
-    "blockdom": "0.9.12"
+    "blockdom": "^0.9.26"
   }
 }
