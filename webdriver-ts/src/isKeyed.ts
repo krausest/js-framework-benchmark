@@ -18,7 +18,8 @@ import {
   setButtonsInShadowRoot,
 } from "./webdriverAccess";
 import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common";
-import { WebDriver, By, WebElement } from "selenium-webdriver";
+import { WebDriver, By, WebElement, logging } from "selenium-webdriver";
+
 import * as R from "ramda";
 import { valid } from "semver";
 
@@ -38,7 +39,7 @@ console.log("args.framework", args.framework, !args.framework);
 // necessary to launch without specifiying a path
 var chromedriver: any = require("chromedriver");
 
-let init = `
+let init = (shadowRootName: string) => `
 window.nonKeyedDetector_reset = function() {
     window.nonKeyedDetector_tradded = [];
     window.nonKeyedDetector_trremoved = [];
@@ -104,16 +105,20 @@ window.nonKeyedDetector_instrument = function() {
     return true;
 }
 window.nonKeyedDetector_result = function() {
-    return {tradded: nonKeyedDetector_tradded.length, trremoved: nonKeyedDetector_trremoved.length, removedStoredTr: nonKeyedDetector_removedStoredTr.length, newNodes: countDiff(window.nonKeyedDetector_tradded, window.nonKeyedDetector_trremoved),
-    traddedDebug: JSON.stringify(nonKeyedDetector_tradded.map(d => d.innerHTML))};
+    return {tradded: nonKeyedDetector_tradded.length, trremoved: nonKeyedDetector_trremoved.length, removedStoredTr: nonKeyedDetector_trremoved.indexOf(window.storedTr)>-1, newNodes: countDiff(window.nonKeyedDetector_tradded, window.nonKeyedDetector_trremoved),
+//      storedTr_debug: window.storedTr.innerText, trremoved_debug: nonKeyedDetector_trremoved.map(t => t.innerText).join(","),
+//      traddedDebug: JSON.stringify(nonKeyedDetector_tradded.map(d => d.innerHTML))
+    };
 }
 window.nonKeyedDetector_storeTr = function() {
     let node = document;
     if (window.nonKeyedDetector_shadowRoot) {
-        let main = document.querySelector("main-element");
+        let main = document.querySelector('${shadowRootName}');
         if (main) node = main.shadowRoot;
     }
-    window.storedTr = node.querySelector('tr:nth-child(2)');
+    // Workaround: alpine adds a template with a tr inside the tbody. tr:nth-child(1) seems to be the tr from the template and returns null here.
+    let index = node.querySelector('tr:nth-child(1)') ? 2 : 3;
+    window.storedTr = node.querySelector('tr:nth-child('+index+')');
 }
 window.nonKeyedDetector_reset();
 `;
@@ -132,9 +137,9 @@ function isKeyedRun(result: any, shouldBeKeyed: boolean): boolean {
   return r;
 }
 function isKeyedRemove(result: any, shouldBeKeyed: boolean): boolean {
-  let r = result.removedStoredTr > 0;
+  let r = result.removedStoredTr;
   if (r && !shouldBeKeyed) {
-    console.log(`Non-keyed test for remove failed. Expected that the dom node for the 2nd row would NOT be removed, but it was.`);
+    console.log(`Note: Non-keyed test for remove is acutally keyed. Expected that the dom node for the 2nd row would NOT be removed, but it was.`);
   } else if (!r && shouldBeKeyed) {
     console.log(`Keyed test for remove failed. Expected that the dom node for the 2nd row would be removed, but it wasn't`);
   }
@@ -268,7 +273,7 @@ async function runBench(frameworkNames: string[]) {
         allCorrect = false;
       }
 
-      await driver.executeScript(init);
+      await driver.executeScript(init(framework.shadowRootName));
       if (framework.useShadowRoot) {
         await driver.executeScript(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`);
       } else {
