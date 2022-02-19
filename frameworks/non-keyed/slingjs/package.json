@@ -1,7 +1,7 @@
 {
-  "name": "js-framework-benchmark-slingjs-13.3.0",
-  "version": "13.3.0",
-  "description": "Benchmark for Sling.js 13.3.0 framework",
+  "name": "js-framework-benchmark-slingjs-14.0.0",
+  "version": "14.0.0",
+  "description": "Benchmark for Sling.js 14.0.0 framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "slingjs"
   },
@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@babel/plugin-transform-spread": "^7.16.7",
-    "slingjs": "13.3.0"
+    "slingjs": "14.0.0"
   }
 }
