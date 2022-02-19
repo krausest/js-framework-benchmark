@@ -1,4 +1,4 @@
-import { markup, textNode } from '../node_modules/slingjs/sling.min.es5';
+import { markup, textNode, detectChanges, renderElement, wrapWithChangeDetector } from '../node_modules/slingjs/sling.min.es5';
 var { Store } = require('./store.es6');
 
 export class ControllerComponent {
@@ -7,28 +7,125 @@ export class ControllerComponent {
         this.selected = function () { return Store.selected; };
         this.run = function () {
             Store.run();
+            detectChanges();
         };
         this.add = function () {
             Store.add();
+            detectChanges();
         };
         this.update = function () {
             Store.update();
+            detectChanges();
         };
         this.select = function (id) {
             Store.select(id);
+            detectChanges();
         };
         this.delete = function (id) {
             Store.remove(id);
+            detectChanges();
         };
         this.runLots = function () {
             Store.runLots();
+            detectChanges();
         };
         this.clear = function () {
             Store.clear();
+            detectChanges();
         };
         this.swapRows = function () {
             Store.swapRows();
+            detectChanges();
         };
+    }
+
+    updateTableRow(context, d) {
+        if (this.$label.childNodes[0].data !== d.label) {
+            this.$label.removeChild(this.$label.childNodes[0]);
+            this.$label.append(d.label);
+        }
+        
+        this.children[2].children[0].onclick = wrapWithChangeDetector(context.delete.bind(this, d.id));
+
+        const idStr = String(d.id);
+
+        if (this.$id.childNodes[0].data !== idStr) {
+            this.$id.removeChild(this.$id.childNodes[0]);
+            this.$id.append(d.id);
+        }
+
+        const className = (d.id === context.selected()) ? 'danger' : '';
+
+        if (this.className !== className) {
+            this.className = className;
+        }
+    }
+
+    makeTableRow(d) {
+        const rootNode = renderElement(markup('tr', {
+            attrs: {
+                ...d.id === this.selected() && { class: 'danger' },
+                onclick: this.select.bind(this, d.id),
+                onremove: this.delete.bind(this, d.id)
+            },
+            children: [
+                markup('td', {
+                    attrs: {
+                        'class': 'col-md-1'
+                    },
+                    children: [
+                        textNode(d.id)
+                    ]
+                }),
+                markup('td', {
+                    attrs: {
+                        'class': 'col-md-4',
+                    },
+                    children: [
+                        markup('a', {
+                            attrs: {
+                                'href': '#',
+                                onclick: this.select.bind(this, d.id)
+                            }, 
+                            children: [
+                                textNode(d.label)
+                            ]
+                        })
+                    ]
+                }),
+                markup('td', {
+                    attrs: {
+                        'class': 'col-md-1',
+                    },
+                    children: [
+                        markup('a', {
+                            attrs: {
+                                'href': '#',
+                                onclick: this.delete.bind(this, d.id)
+                            },
+                            children: [
+                                markup('span', {
+                                    attrs: {
+                                        'class': 'glyphicon glyphicon-remove',
+                                        'aria-hidden': 'true'
+                                    }
+                                })
+                            ]
+                        })
+                    ]
+                }),
+                markup('td', {
+                    attrs: {
+                        'class': 'col-md-6'
+                    }
+                })
+            ]
+        }));
+
+        rootNode.$label = rootNode.children[1].children[0];
+        rootNode.$id = rootNode.children[0];
+
+        return rootNode;
     }
 
     view() {
@@ -55,7 +152,7 @@ export class ControllerComponent {
                                     children: [
                                         markup('h1', {
                                             children: [
-                                                textNode('Sling.js 13.3.0')
+                                                textNode('Sling.js 14.0.0')
                                             ]
                                         })
                                     ]
@@ -186,69 +283,9 @@ export class ControllerComponent {
                     },
                     children: [
                         markup('tbody', {
-                            children: [
-                                ...Array.from(this.data(), (d) => {
-                                    return markup('tr', {
-                                        attrs: {
-                                            ...d.id === this.selected() && { class: 'danger' },
-                                            onclick: this.select.bind(this, d.id),
-                                            onremove: this.delete.bind(this, d.id)
-                                        },
-                                        children: [
-                                            markup('td', {
-                                                attrs: {
-                                                    'class': 'col-md-1'
-                                                },
-                                                children: [
-                                                    textNode(d.id)
-                                                ]
-                                            }),
-                                            markup('td', {
-                                                attrs: {
-                                                    'class': 'col-md-4',
-                                                },
-                                                children: [
-                                                    markup('a', {
-                                                        attrs: {
-                                                            'href': '#',
-                                                            onclick: this.select.bind(this, d.id)
-                                                        }, 
-                                                        children: [
-                                                            textNode(d.label)
-                                                        ]
-                                                    })
-                                                ]
-                                            }),
-                                            markup('td', {
-                                                attrs: {
-                                                    'class': 'col-md-1',
-                                                },
-                                                children: [
-                                                    markup('a', {
-                                                        attrs: {
-                                                            'href': '#',
-                                                            onclick: this.delete.bind(this, d.id)
-                                                        },
-                                                        children: [
-                                                            markup('span', {
-                                                                attrs: {
-                                                                    'class': 'glyphicon glyphicon-remove',
-                                                                    'aria-hidden': 'true'
-                                                                }
-                                                            })
-                                                        ]
-                                                    })
-                                                ]
-                                            }),
-                                            markup('td', {
-                                                attrs: {
-                                                    'class': 'col-md-6'
-                                                }
-                                            })
-                                        ]
-                                    });
-                                })
-                            ]
+                            attrs: {
+                                'slfor': 'bodyfor:data:makeTableRow:updateTableRow'
+                            }
                         })
                     ]
                 }),
