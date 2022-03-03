@@ -1,4 +1,4 @@
-import { markup, textNode, detectChanges, renderElement, wrapWithChangeDetector } from '../node_modules/slingjs/sling.min.es5';
+import { markup, textNode, detectChanges, wrapWithChangeDetector, renderElementWithoutClass } from '../node_modules/slingjs/sling.min.es5';
 var { Store } = require('./store.es6');
 
 export class ControllerComponent {
@@ -62,65 +62,51 @@ export class ControllerComponent {
     }
 
     makeTableRow(d) {
-        const rootNode = renderElement(markup('tr', {
-            attrs: {
+        const rootNode = renderElementWithoutClass('tr', {
                 ...d.id === this.selected() && { class: 'danger' },
                 onclick: this.select.bind(this, d.id),
-                onremove: this.delete.bind(this, d.id)
-            },
-            children: [
-                markup('td', {
-                    attrs: {
+            }, [
+                renderElementWithoutClass('td', {
                         'class': 'col-md-1'
-                    },
-                    children: [
-                        textNode(d.id)
+                    }, [
+                        d.id
                     ]
-                }),
-                markup('td', {
-                    attrs: {
+                ),
+                renderElementWithoutClass('td', {
                         'class': 'col-md-4',
-                    },
-                    children: [
-                        markup('a', {
-                            attrs: {
-                                'href': '#',
-                                onclick: this.select.bind(this, d.id)
-                            }, 
-                            children: [
-                                textNode(d.label)
+                    }, [
+                        renderElementWithoutClass('a', {
+                                'href': '#'
+                            }, [
+                                d.label
                             ]
-                        })
+                        )
                     ]
-                }),
-                markup('td', {
-                    attrs: {
+                ),
+                renderElementWithoutClass('td', {
                         'class': 'col-md-1',
-                    },
-                    children: [
-                        markup('a', {
-                            attrs: {
+                    }, [
+                        renderElementWithoutClass('a', {
                                 'href': '#',
                                 onclick: this.delete.bind(this, d.id)
-                            },
-                            children: [
-                                markup('span', {
-                                    attrs: {
+                            }, [
+                                renderElementWithoutClass('span', {
                                         'class': 'glyphicon glyphicon-remove',
                                         'aria-hidden': 'true'
-                                    }
-                                })
+                                    }, [
+                                    ]
+                                )
                             ]
-                        })
+                        )
                     ]
-                }),
-                markup('td', {
-                    attrs: {
+                ),
+                renderElementWithoutClass('td', {
                         'class': 'col-md-6'
-                    }
-                })
+                    }, [
+                    ]
+                )
             ]
-        }));
+        );
 
         rootNode.$label = rootNode.children[1].children[0];
         rootNode.$id = rootNode.children[0];
@@ -137,7 +123,8 @@ export class ControllerComponent {
             children: [
                 markup('div', {
                     attrs: {
-                        'class': 'jumbotron'
+                        'class': 'jumbotron',
+                        'sldirective': 'useexisting'
                     },
                     children: [
                         markup('div', {
@@ -152,7 +139,7 @@ export class ControllerComponent {
                                     children: [
                                         markup('h1', {
                                             children: [
-                                                textNode('Sling.js 14.0.0')
+                                                textNode('Sling.js 14.3.0')
                                             ]
                                         })
                                     ]
