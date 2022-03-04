@@ -19,7 +19,7 @@ const rand = ( max: number ): number => {
 };
 
 const uuid = (() => {
-  let counter = 0;
+  let counter = 1;
   return (): string => {
     return String ( counter++ );
   };
