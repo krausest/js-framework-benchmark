@@ -145,7 +145,7 @@ const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: Observab
   </tr>
 );
 
-const RowTemplate = template ( RowDynamic );
+const RowTemplate = template ( RowDynamic, { recycle: true } );
 
 const App = (): JSX.Element => {
 
