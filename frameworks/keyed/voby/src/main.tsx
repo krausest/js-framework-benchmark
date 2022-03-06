@@ -175,8 +175,8 @@ const App = (): JSX.Element => {
           <For values={$data}>
             {( $datum: IDatum ) => {
               const {id, label, className} = $datum ();
-              const onSelect = () => select ( id );
-              const onRemove = () => remove ( id );
+              const onSelect = select.bind ( undefined, id );
+              const onRemove = remove.bind ( undefined, id );
               const props = {id, label, className, onSelect, onRemove};
               return RowTemplate ( props );
               // return RowDynamic ( props );
