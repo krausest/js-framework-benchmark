@@ -133,7 +133,7 @@ const Button = ({ id, text, onClick }: { id: string, text: string, onClick: (( e
 );
 
 const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: ObservableMaybe<string>, label: ObservableMaybe<string>, className: ObservableMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
-  <tr class={className}>
+  <tr className={className}>
     <td class="col-md-1">{id}</td>
     <td class="col-md-4">
       <a onClick={onSelect}>{label}</a>
