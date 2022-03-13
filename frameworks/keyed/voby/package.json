@@ -3,7 +3,8 @@
   "version": "0.5.0",
   "main": "dist/main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "voby"
+    "frameworkVersionFromPackage": "voby",
+    "issues": [800]
   },
   "scripts": {
     "build-prod": "rm -rf dist && mkdir dist && esbuild --bundle --minify --target=es2015 ./src/main.tsx > ./dist/main.js"
