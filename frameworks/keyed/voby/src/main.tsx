@@ -8,7 +8,7 @@ window.React = {createElement, Fragment};
 
 /* TYPES */
 
-type IDatum = Observable<{ id: string, label: Observable<string>, selected: Observable<boolean>, className: Observable<string> }>;
+type IDatum = { id: string, label: Observable<string>, selected: Observable<boolean>, className: Observable<string> };
 
 type IData = IDatum[];
 
@@ -39,7 +39,7 @@ const buildData = (() => {
       const label = $(`${adjective} ${color} ${noun}`);
       const selected = $(false);
       const className = $('');
-      const datum = $( { id, label, selected, className } );
+      const datum: IDatum = { id, label, selected, className };
       data[i] = datum;
     };
     return data;
@@ -53,7 +53,7 @@ const Model = (() => {
   /* STATE */
 
   let $data = $<IDatum[]>( [] );
-  let $selected: IDatum | null = null;
+  let selected: IDatum | null = null;
 
   /* API */
 
@@ -71,26 +71,25 @@ const Model = (() => {
   };
 
   const add = (): void => {
-    $data ( [...$data (), ...buildData ( 1000 )] );
+    $data ( $data ().concat ( buildData ( 1000 ) ) );
   };
 
   const update = (): void => {
     const data = $data ();
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
-      const $datum = data[i];
-      const datum = $datum ();
-      datum.label ( datum.label () + ' !!!' );
+      const {label} = data[i];
+      label ( label () + ' !!!' );
     }
   };
 
   const swapRows = (): void => {
     const data = $data ();
     if ( data.length <= 998 ) return;
-    const pos1$ = data[1];
-    const pos998$ = data[998];
+    const datum1 = data[1];
+    const datum998 = data[998];
     const data2 = data.slice ();
-    data2[1] = pos998$;
-    data2[998] = pos1$;
+    data2[1] = datum998;
+    data2[998] = datum1;
     $data ( data2 );
   };
 
@@ -100,25 +99,26 @@ const Model = (() => {
 
   const remove = ( id: string ): void => {
     const data = $data ();
-    const index = data.findIndex ( datum => datum.sample ().id === id );
-    $data ( [...data.slice ( 0, index ), ...data.slice ( index + 1 )] );
+    const index = data.findIndex ( datum => datum.id === id );
+    if ( index === -1 ) return;
+    $data ( data.slice ( 0, index ).concat ( data.slice ( index + 1 ) ) );
   };
 
   const select = ( id: string ): void => {
-    if ( $selected ) {
-      const datum = $selected ();
-      datum.selected ( false );
-      datum.className ( '' );
+    if ( selected ) {
+      selected.selected ( false );
+      selected.className ( '' );
+      selected = null;
     }
     const data = $data ();
-    const $datum = data.find ( datum => datum.sample ().id === id )!;
-    const datum = $datum ();
+    const datum = data.find ( datum => datum.id === id );
+    if ( !datum ) return;
     datum.selected ( true );
     datum.className ( 'danger' );
-    $selected = $datum;
+    selected = datum;
   };
 
-  return { $data, $selected, run, runLots, runWith, add, update, swapRows, clear, remove, select };
+  return { $data, selected, run, runLots, runWith, add, update, swapRows, clear, remove, select };
 
 })();
 
@@ -131,7 +131,7 @@ const Button = ({ id, text, onClick }: { id: string, text: string, onClick: (( e
 );
 
 const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: ObservableMaybe<string>, label: ObservableMaybe<string>, className: ObservableMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
-  <tr class={className}>
+  <tr className={className}>
     <td class="col-md-1">{id}</td>
     <td class="col-md-4">
       <a onClick={onSelect}>{label}</a>
@@ -145,7 +145,7 @@ const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: Observab
   </tr>
 );
 
-const RowTemplate = template ( RowDynamic );
+const RowTemplate = template ( RowDynamic, { recycle: true } );
 
 const App = (): JSX.Element => {
 
@@ -173,10 +173,10 @@ const App = (): JSX.Element => {
       <table class="table table-hover table-striped test-data">
         <tbody>
           <For values={$data}>
-            {( $datum: IDatum ) => {
-              const {id, label, className} = $datum ();
-              const onSelect = () => select ( id );
-              const onRemove = () => remove ( id );
+            {( datum: IDatum ) => {
+              const {id, label, className} = datum;
+              const onSelect = select.bind ( undefined, id );
+              const onRemove = remove.bind ( undefined, id );
               const props = {id, label, className, onSelect, onRemove};
               return RowTemplate ( props );
               // return RowDynamic ( props );
