@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
-import {$, createElement, render, template, For, Fragment} from 'voby';
+import {$, createElement, render, template, useSelector, For, Fragment} from 'voby';
 
 window.React = {createElement, Fragment};
 
@@ -134,6 +134,7 @@ const RowTemplate = template ( RowDynamic, { recycle: true } );
 const App = (): JSX.Element => {
 
   const {$data, $selected, run, runLots, add, update, clear, swapRows, select, remove} = Model;
+  const isSelected = useSelector ( $selected );
 
   return (
     <div class="container">
@@ -159,7 +160,7 @@ const App = (): JSX.Element => {
           <For values={$data}>
             {( datum: IDatum ) => {
               const {id, label} = datum;
-              const className = () => ( $selected () === id ) ? 'danger' : '';
+              const className = () => isSelected ( id ) ? 'danger' : '';
               const onSelect = select.bind ( undefined, id );
               const onRemove = remove.bind ( undefined, id );
               const props = {id, label, className, onSelect, onRemove};
