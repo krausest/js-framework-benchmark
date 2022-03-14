@@ -1,14 +1,14 @@
 
 /* IMPORT */
 
-import {Observable, ObservableMaybe} from 'voby';
-import {$, createElement, render, template, For, Fragment} from 'voby';
+import {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
+import {$, createElement, render, template, useSelector, For, Fragment} from 'voby';
 
 window.React = {createElement, Fragment};
 
 /* TYPES */
 
-type IDatum = { id: string, label: Observable<string>, selected: Observable<boolean>, className: Observable<string> };
+type IDatum = { id: number, label: Observable<string> };
 
 type IData = IDatum[];
 
@@ -18,28 +18,20 @@ const rand = ( max: number ): number => {
   return Math.round ( Math.random () * 1000 ) % max;
 };
 
-const uuid = (() => {
-  let counter = 1;
-  return (): string => {
-    return String ( counter++ );
-  };
-})();
-
 const buildData = (() => {
   const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
   const colors = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
   const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
+  let uuid = 1;
   return ( length: number ): IData => {
     const data: IData = new Array ( length );
     for ( let i = 0; i < length; i++ ) {
-      const id = uuid ();
+      const id = uuid++;
       const adjective = adjectives[rand ( adjectives.length )];
       const color = colors[rand ( colors.length )];
       const noun = nouns[rand ( nouns.length )];
       const label = $(`${adjective} ${color} ${noun}`);
-      const selected = $(false);
-      const className = $('');
-      const datum: IDatum = { id, label, selected, className };
+      const datum = { id, label };
       data[i] = datum;
     };
     return data;
@@ -52,8 +44,8 @@ const Model = (() => {
 
   /* STATE */
 
-  let $data = $<IDatum[]>( [] );
-  let selected: IDatum | null = null;
+  const $data = $<IDatum[]>( [] );
+  const $selected = $( -1 );
 
   /* API */
 
@@ -71,14 +63,16 @@ const Model = (() => {
   };
 
   const add = (): void => {
-    $data ( $data ().concat ( buildData ( 1000 ) ) );
+    const data = $data ();
+    data.push.apply ( data, buildData ( 1000 ) );
+    $data.emit ();
   };
 
   const update = (): void => {
     const data = $data ();
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
       const {label} = data[i];
-      label ( label () + ' !!!' );
+      label.update ( label => label + ' !!!' );
     }
   };
 
@@ -87,50 +81,40 @@ const Model = (() => {
     if ( data.length <= 998 ) return;
     const datum1 = data[1];
     const datum998 = data[998];
-    const data2 = data.slice ();
-    data2[1] = datum998;
-    data2[998] = datum1;
-    $data ( data2 );
+    data[1] = datum998;
+    data[998] = datum1;
+    $data.emit ();
   };
 
   const clear = (): void => {
     $data ( [] );
   };
 
-  const remove = ( id: string ): void => {
+  const remove = ( id: number ): void => {
     const data = $data ();
     const index = data.findIndex ( datum => datum.id === id );
     if ( index === -1 ) return;
-    $data ( data.slice ( 0, index ).concat ( data.slice ( index + 1 ) ) );
+    data.splice ( index, 1 );
+    $data.emit ();
   };
 
-  const select = ( id: string ): void => {
-    if ( selected ) {
-      selected.selected ( false );
-      selected.className ( '' );
-      selected = null;
-    }
-    const data = $data ();
-    const datum = data.find ( datum => datum.id === id );
-    if ( !datum ) return;
-    datum.selected ( true );
-    datum.className ( 'danger' );
-    selected = datum;
+  const select = ( id: number ): void => {
+    $selected ( id );
   };
 
-  return { $data, selected, run, runLots, runWith, add, update, swapRows, clear, remove, select };
+  return { $data, $selected, run, runLots, runWith, add, update, swapRows, clear, remove, select };
 
 })();
 
 /* MAIN */
 
-const Button = ({ id, text, onClick }: { id: string, text: string, onClick: (( event: MouseEvent ) => any) }): JSX.Element => (
+const Button = ({ id, text, onClick }: { id: string | number, text: string, onClick: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
   <div class="col-sm-6 smallpad">
     <button id={id} class="btn btn-primary btn-block" type="button" onClick={onClick}>{text}</button>
   </div>
 );
 
-const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: ObservableMaybe<string>, label: ObservableMaybe<string>, className: ObservableMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
   <tr className={className}>
     <td class="col-md-1">{id}</td>
     <td class="col-md-4">
@@ -149,7 +133,8 @@ const RowTemplate = template ( RowDynamic, { recycle: true } );
 
 const App = (): JSX.Element => {
 
-  const {$data, run, runLots, add, update, clear, swapRows, select, remove} = Model;
+  const {$data, $selected, run, runLots, add, update, clear, swapRows, select, remove} = Model;
+  const isSelected = useSelector ( $selected );
 
   return (
     <div class="container">
@@ -174,7 +159,8 @@ const App = (): JSX.Element => {
         <tbody>
           <For values={$data}>
             {( datum: IDatum ) => {
-              const {id, label, className} = datum;
+              const {id, label} = datum;
+              const className = () => isSelected ( id ) ? 'danger' : '';
               const onSelect = select.bind ( undefined, id );
               const onRemove = remove.bind ( undefined, id );
               const props = {id, label, className, onSelect, onRemove};
