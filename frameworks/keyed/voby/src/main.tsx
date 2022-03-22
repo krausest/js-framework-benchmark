@@ -129,7 +129,7 @@ const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: Function
   </tr>
 );
 
-const RowTemplate = template ( RowDynamic, { recycle: true } );
+const RowTemplate = template ( RowDynamic, { recycle: false } );
 
 const App = (): JSX.Element => {
 
