@@ -121,6 +121,8 @@ table.results th {
     font-weight: normal;
     font-size: 11px;
     text-align: center;
+    word-break: normal;
+    hyphens: auto;    
 }
 table.results th.benchname {
 width: 100px;
