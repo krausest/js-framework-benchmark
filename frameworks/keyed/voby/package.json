@@ -19,6 +19,6 @@
     "voby": "0.13.0"
   },
   "devDependencies": {
-    "esbuild": "0.14.23"
+    "esbuild": "0.14.28"
   }
 }
