@@ -6,7 +6,7 @@
     "frameworkVersionFromPackage": "voby"
   },
   "scripts": {
-    "build-prod": "rm -rf dist && mkdir dist && esbuild --bundle --minify --target=es2015 ./src/main.tsx > ./dist/main.js"
+    "build-prod": "rm -rf dist && mkdir dist && esbuild --bundle --minify --target=es2018 ./src/main.tsx > ./dist/main.js"
   },
   "author": "Fabio Spampinato",
   "license": "MIT",
