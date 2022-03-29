@@ -86,7 +86,16 @@ const Model = (() => {
     $data.emit ();
   };
 
+  const dispose = (): void => {
+    const data = $data ();
+    for ( let i = 0, l = data.length; i < l; i++ ) {
+      data[i].label.dispose ();
+    }
+    isSelected.dispose ();
+  };
+
   const clear = (): void => {
+    dispose ();
     $data ( [] );
   };
 
@@ -94,6 +103,8 @@ const Model = (() => {
     const data = $data ();
     const index = data.findIndex ( datum => datum.id === id );
     if ( index === -1 ) return;
+    const datum = data[index];
+    datum.label.dispose ();
     data.splice ( index, 1 );
     $data.emit ();
   };
@@ -102,7 +113,9 @@ const Model = (() => {
     $selected ( id );
   };
 
-  return { $data, $selected, run, runLots, runWith, add, update, swapRows, clear, remove, select };
+  const isSelected = useSelector ( $selected );
+
+  return { $data, $selected, run, runLots, runWith, add, update, swapRows, dispose, clear, remove, select, isSelected };
 
 })();
 
@@ -114,7 +127,7 @@ const Button = ({ id, text, onClick }: { id: string | number, text: string, onCl
   </div>
 );
 
-const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+const Row = template (({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
   <tr className={className}>
     <td class="col-md-1">{id}</td>
     <td class="col-md-4">
@@ -127,14 +140,11 @@ const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: Function
     </td>
     <td class="col-md-6"></td>
   </tr>
-);
-
-const RowTemplate = template ( RowDynamic, { recycle: false } );
+));
 
 const App = (): JSX.Element => {
 
-  const {$data, $selected, run, runLots, add, update, clear, swapRows, select, remove} = Model;
-  const isSelected = useSelector ( $selected );
+  const {$data, run, runLots, add, update, swapRows, clear, remove, select, isSelected} = Model;
 
   return (
     <div class="container">
@@ -164,8 +174,7 @@ const App = (): JSX.Element => {
               const onSelect = select.bind ( undefined, id );
               const onRemove = remove.bind ( undefined, id );
               const props = {id, label, className, onSelect, onRemove};
-              return RowTemplate ( props );
-              // return RowDynamic ( props );
+              return Row ( props );
             }}
           </For>
         </tbody>
