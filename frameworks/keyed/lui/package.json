@@ -1,9 +1,9 @@
 {
   "name": "js-framework-benchmark-lui",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Benchmark for lui",
   "js-framework-benchmark": {
-    "frameworkVersion": "1.1.1"
+    "frameworkVersion": "1.2.3"
   },
   "scripts": {
     "build-dev": "echo 0",
