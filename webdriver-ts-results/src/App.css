@@ -123,6 +123,7 @@ table.results th {
     text-align: center;
     word-break: normal;
     hyphens: auto;    
+    -webkit-hyphens: auto;
 }
 table.results th.benchname {
 width: 100px;
