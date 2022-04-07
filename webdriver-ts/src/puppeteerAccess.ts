@@ -2,61 +2,81 @@ import * as puppeteer from "puppeteer-core";
 import { Page } from "puppeteer-core";
 import { BenchmarkDriverOptions, config } from "./common";
 
-//
-async function waitForSelector(page: Page, selector: string) {
-  // await page.waitForSelector(id); doesn't work right for pierce/#add and polyer
-  for (let k = 0; k < 10 * 1000; k += 1000) {
-    let sel = await page.$(selector);
-    if (sel) {
-      return sel;
-    }
-    await page.waitForTimeout(1000);
-  }
-  throw `waitForElementNotLocatedByXPath failed for ${selector};`;
-}
 
-export async function waitForElementNotLocatedByXPath(page: Page, selector: string) {
-  for (let k = 0; k < 10 * 1000; k += 1000) {
+
+export async function checkElementNotExists(page: Page, selector: string) {
+  let start = Date.now();
+  for (let k = 0; k < 10;k++) {
     let sel = await page.$(selector);
     if (!sel) {
       return;
     }
+    console.log("checkElementNotExists element found");
     await sel.dispose();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(k < 3 ? 10 : 1000);
   }
-  throw `waitForElementNotLocatedByXPath failed for ${selector};`;
+  console.log("checkElementNotExists waited "+(Date.now()-start)+" but no luck");
+  throw `checkElementNotExists failed for ${selector};`;
 }
 
-export async function waitForElement(page: Page, selector: string) {
-  let sel = await waitForSelector(page, selector);
-  await sel.dispose();
+export async function checkElementExists(page: Page, selector: string) {
+  let start = Date.now();
+  for (let k = 0; k < 10;k++) {
+    let sel = await page.$(selector);
+    if (sel) {
+      await sel.dispose();
+      return sel;
+    }
+    console.log("checkElementExists element not found");
+    await page.waitForTimeout(k < 3 ? 10 : 1000);
+  }
+  console.log("checkElementExists waited "+(Date.now()-start)+" but no luck");
+  throw `checkElementExists failed for ${selector};`;
 }
 
-export async function clickElementById(page: Page, id: string) {
-  let elem = await page.$(id);
-  if (!elem) throw `clickElementById ${id} failed. Element was not found.`;
-  await elem.click();
-  await elem.dispose();
-}
-
-export async function clickElementByXPath(page: Page, selector: string) {
+export async function clickElement(page: Page, selector: string) {
   let elem = await page.$(selector);
   if (!elem.asElement()) throw `clickElementByXPath ${selector} failed. Element was not found.`;
   await elem.asElement().click();
   await elem.dispose();
 }
 
-export async function waitForTextContains(page: Page, selector: string, expectedText: string): Promise<void> {
+export async function checkElementContainsText(page: Page, selector: string, expectedText: string): Promise<void> {
+  let start = Date.now();
   let txt;
-  for (let k = 0; k < 10 * 1000; k += 1000) {
-    let elem = await waitForSelector(page, selector);
-    txt = await elem.evaluate((e: any) => e.innerText);
-    let result = txt.includes(expectedText);
-    await elem.dispose();
-    if (result) return;
-    await page.waitForTimeout(1000);
+  for (let k = 0; k < 10;k++) {
+    let elem = await page.$(selector);
+    if (elem) {
+      txt = await elem.evaluate((e: any) => e?.innerText);
+      if (txt===undefined) console.log("WARNING: checkElementContainsText was undefined");
+      if (txt) {
+        let result = txt.includes(expectedText);
+        await elem.dispose();
+        if (result) return;
+      }
+    }
+    await page.waitForTimeout(k < 3 ? 10 : 1000);
   }
-  throw `waitForTextContains ${selector} failed. expected ${expectedText}, but was ${txt}`;
+  console.log("checkElementExists waited "+(Date.now()-start)+" but no luck");
+  throw `checkElementContainsText ${selector} failed. expected ${expectedText}, but was ${txt}`;
+}
+
+export async function checkElementHasClass(page: Page, selector: string, className: string): Promise<void> {
+  let clazzes;
+  for (let k = 0; k < 10;k++) {
+    let elem = await page.$(selector);
+    if (elem) {
+      let clazzes = await elem.evaluate((e: any) => e?.classList);
+      if (clazzes===undefined) console.log("WARNING: checkElementHasClass was undefined");
+      if (clazzes) {
+        let result = Object.values(clazzes).includes(className);
+        await elem.dispose();
+        if (result) return;
+      }
+    }
+    await page.waitForTimeout(k < 3 ? 10 : 1000);
+  }
+  throw `checkElementHasClass ${selector} failed. expected ${className}, but was ${clazzes}`;
 }
 
 function browserPath(benchmarkOptions: BenchmarkDriverOptions) {

@@ -1,11 +1,12 @@
 import { fork } from "child_process";
 import * as fs from "fs";
 import * as yargs from "yargs";
-import { BenchmarkInfo, BenchmarkType } from "./benchmarksGeneric";
-import { BenchmarkPuppeteer, benchmarksPuppeteer } from "./benchmarksPuppeteer";
-import { benchmarksWebdriver, BenchmarkWebdriver, LighthouseData } from "./benchmarksWebdriver";
+import { BenchmarkInfo, BenchmarkType } from "./benchmarksCommon";
+import { BenchmarkPuppeteer } from "./benchmarksPuppeteer";
+import { BenchmarkWebdriver, LighthouseData } from "./benchmarksWebdriver";
 import { BenchmarkOptions, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common";
 import { writeResults } from "./writeResults";
+import {benchmarks} from "./benchmarkConfiguration";
 
 function forkAndCallBenchmark(
   framework: FrameworkData,
@@ -13,9 +14,14 @@ function forkAndCallBenchmark(
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning> {
   return new Promise((resolve, reject) => {
-    const forked = fork(
-      benchmark.type == BenchmarkType.MEM ? "dist/forkedBenchmarkRunnerPuppeteer.js" : "dist/forkedBenchmarkRunnerWebdriver.js"
-    );
+    let forkedRunner = null;
+    if (benchmarks.some(b => b.benchmarkInfo.id == benchmark.id && b instanceof BenchmarkPuppeteer)) {
+      forkedRunner = "dist/forkedBenchmarkRunnerPuppeteer.js";
+    } else {
+      forkedRunner = "dist/forkedBenchmarkRunnerWebdriver.js";
+    }
+    console.log("forking ",forkedRunner);
+    const forked = fork(forkedRunner);
     if (config.LOG_DETAILS) console.log("FORKING:  forked child process");
     forked.send({
       config,
@@ -87,7 +93,7 @@ async function runBenchmakLoop(
       }
     }
     if (benchmark.type == BenchmarkType.CPU) {
-      // console.log("CPU results before: ", results);
+      console.log("CPU results before: ", results);
       (results as number[]).sort((a: number, b: number) => a - b);
       results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
       // console.log("CPU results after: ", results)
@@ -109,13 +115,9 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
   let errors: String[] = [];
   let warnings: String[] = [];
 
-  let b1: Array<BenchmarkWebdriver | BenchmarkPuppeteer> = benchmarksWebdriver.filter((b) =>
+  let runBenchmarks: Array<BenchmarkWebdriver | BenchmarkPuppeteer> = benchmarks.filter((b) =>
     benchmarkNames.some((name) => b.id.toLowerCase().indexOf(name) > -1)
   );
-  let b2: Array<BenchmarkWebdriver | BenchmarkPuppeteer> = benchmarksPuppeteer.filter((b) =>
-    benchmarkNames.some((name) => b.id.toLowerCase().indexOf(name) > -1)
-  );
-  let runBenchmarks: Array<BenchmarkWebdriver | BenchmarkPuppeteer> = b1.concat(b2);
 
   let restart: string = undefined;
   let index = runFrameworks.findIndex((f) => f.fullNameWithKeyedAndVersion === restart);
@@ -131,6 +133,8 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
     "Benchmarks that will be run",
     runBenchmarks.map((b) => b.id)
   );
+
+    console.log("HEADLESS*** ", args.headless);
 
   let benchmarkOptions: BenchmarkOptions = {
     port: config.PORT.toFixed(),
@@ -188,7 +192,7 @@ let args: any = yargs(process.argv)
     "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
   )
   .help("help")
-  .boolean("headless")
+  .boolean("headless").default("headless", false)
   .boolean("smoketest")
   .array("framework")
   .array("benchmark")
@@ -218,6 +222,7 @@ async function main() {
   }
     
   if (!fs.existsSync(config.RESULTS_DIRECTORY)) fs.mkdirSync(config.RESULTS_DIRECTORY);
+  if (!fs.existsSync(config.TRACES_DIRECTORY)) fs.mkdirSync(config.TRACES_DIRECTORY);
 
   if (args.help) {
     yargs.showHelp();

@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { BenchmarkType, fileName } from "./benchmarksGeneric";
+import { BenchmarkType, fileName } from "./benchmarksCommon";
 import { BenchmarkPuppeteer } from "./benchmarksPuppeteer";
 import { BenchmarkWebdriver } from "./benchmarksWebdriver";
 import { config as defaultConfig, FrameworkData, JSONResult } from "./common";

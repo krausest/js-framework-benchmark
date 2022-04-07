@@ -47,7 +47,7 @@ export let config = {
   NUM_ITERATIONS_FOR_BENCHMARK_CPU: 10,
   NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT: 2, // drop the # of slowest results
   NUM_ITERATIONS_FOR_BENCHMARK_MEM: 1,
-  NUM_ITERATIONS_FOR_BENCHMARK_STARTUP: 4,
+  NUM_ITERATIONS_FOR_BENCHMARK_STARTUP: 3,
   WARMUP_COUNT: 5,
   TIMEOUT: 60 * 1000,
   LOG_PROGRESS: true,
@@ -60,6 +60,7 @@ export let config = {
   FORK_CHROMEDRIVER: true,
   WRITE_RESULTS: true,
   RESULTS_DIRECTORY: "results",
+  TRACES_DIRECTORY: "traces",
   ALLOW_BATCHING: true,
 };
 export type TConfig = typeof config;

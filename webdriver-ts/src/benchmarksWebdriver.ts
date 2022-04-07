@@ -1,4 +1,4 @@
-import { BenchmarkInfo, BenchmarkType } from "./benchmarksGeneric";
+import { BenchmarkInfo, BenchmarkType } from "./benchmarksCommon";
 import {
   testTextContains,
   testTextNotContained,
@@ -12,58 +12,9 @@ import {
 } from "./webdriverAccess";
 import { Builder, WebDriver, promise, logging } from "selenium-webdriver";
 import { config, FrameworkData } from "./common";
+import * as benchmarksCommon from "./benchmarksCommon";
+import {slowDownFactor, slowDownNote, DurationMeasurementMode} from "./benchmarksCommon";
 
-const BENCHMARK_01 = "01_run1k";
-const BENCHMARK_02 = "02_replace1k";
-const BENCHMARK_03 = "03_update10th1k_x16";
-const BENCHMARK_04 = "04_select1k";
-const BENCHMARK_05 = "05_swap1k";
-const BENCHMARK_06 = "06_remove-one-1k";
-const BENCHMARK_07 = "07_create10k";
-const BENCHMARK_08 = "08_create1k-after1k_x2";
-const BENCHMARK_09 = "09_clear1k_x8";
-const BENCHMARK_31 = "31_startup-ci";
-
-type TBenchmarkID =
-  | typeof BENCHMARK_01
-  | typeof BENCHMARK_02
-  | typeof BENCHMARK_03
-  | typeof BENCHMARK_04
-  | typeof BENCHMARK_05
-  | typeof BENCHMARK_06
-  | typeof BENCHMARK_07
-  | typeof BENCHMARK_08
-  | typeof BENCHMARK_09
-  | typeof BENCHMARK_31;
-
-type ISlowDowns = {
-  [key in TBenchmarkID]?: number;
-};
-
-const slowDownsOSX: ISlowDowns = {
-  [BENCHMARK_03]: 2,
-  [BENCHMARK_04]: 4,
-  [BENCHMARK_05]: 2,
-  [BENCHMARK_09]: 2,
-};
-
-const slowDownsLinux: ISlowDowns = {
-  [BENCHMARK_03]: 16,
-  [BENCHMARK_04]: 16,
-  [BENCHMARK_05]: 4,
-  [BENCHMARK_08]: 2,
-  [BENCHMARK_09]: 8,
-};
-
-const slowDowns: ISlowDowns = process.platform == "darwin" ? slowDownsOSX : slowDownsLinux;
-
-function slowDownNote(benchmark: TBenchmarkID): string {
-  return slowDowns[benchmark] ? " " + slowDowns[benchmark] + "x CPU slowdown." : "";
-}
-
-function slowDownFactor(benchmark: TBenchmarkID): number | undefined {
-  return slowDowns[benchmark] ? slowDowns[benchmark] : undefined;
-}
 
 const SHORT_TIMEOUT = 20 * 1000;
 
@@ -74,6 +25,7 @@ export abstract class BenchmarkWebdriver {
   description: string;
   throttleCPU?: number;
   allowBatching: boolean;
+  durationMeasurementMode: DurationMeasurementMode;
 
   constructor(public benchmarkInfo: BenchmarkInfo) {
     this.id = benchmarkInfo.id;
@@ -82,6 +34,7 @@ export abstract class BenchmarkWebdriver {
     this.description = benchmarkInfo.description;
     this.throttleCPU = benchmarkInfo.throttleCPU;
     this.allowBatching = benchmarkInfo.allowBatching;
+    this.durationMeasurementMode = benchmarkInfo.durationMeasurementMode;
   }
   abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
   abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
@@ -109,15 +62,16 @@ export interface StartupBenchmarkResult extends BenchmarkInfo {
   property: keyof LighthouseData;
 }
 
-const benchRun = new (class extends BenchmarkWebdriver {
+export const benchRun = new (class extends BenchmarkWebdriver {
   constructor() {
     super({
-      id: BENCHMARK_01,
+      id: benchmarksCommon.BENCHMARK_01,
       label: "create rows",
-      description: "creating 1,000 rows" + slowDownNote(BENCHMARK_01),
+      description: "creating 1,000 rows" + slowDownNote(benchmarksCommon.BENCHMARK_01),
       type: BenchmarkType.CPU,
-      throttleCPU: slowDownFactor(BENCHMARK_01),
+      throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_01),
       allowBatching: true,
+      durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
     });
   }
   async init(driver: WebDriver) {
@@ -129,15 +83,16 @@ const benchRun = new (class extends BenchmarkWebdriver {
   }
 })();
 
-const benchReplaceAll = new (class extends BenchmarkWebdriver {
+export const benchReplaceAll = new (class extends BenchmarkWebdriver {
   constructor() {
     super({
-      id: BENCHMARK_02,
+      id: benchmarksCommon.BENCHMARK_02,
       label: "replace all rows",
-      description: "updating all 1,000 rows (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(BENCHMARK_02),
+      description: "updating all 1,000 rows (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(benchmarksCommon.BENCHMARK_02),
       type: BenchmarkType.CPU,
-      throttleCPU: slowDownFactor(BENCHMARK_02),
+      throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_02),
       allowBatching: true,
+      durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
     });
   }
   async init(driver: WebDriver) {
@@ -153,15 +108,16 @@ const benchReplaceAll = new (class extends BenchmarkWebdriver {
   }
 })();
 
-const benchUpdate = new (class extends BenchmarkWebdriver {
+export const benchUpdate = new (class extends BenchmarkWebdriver {
   constructor() {
     super({
-      id: BENCHMARK_03,
+      id: benchmarksCommon.BENCHMARK_03,
       label: "partial update",
-      description: "updating every 10th row for 1,000 rows (3 warmup runs)." + slowDownNote(BENCHMARK_03),
+      description: "updating every 10th row for 1,000 rows (3 warmup runs)." + slowDownNote(benchmarksCommon.BENCHMARK_03),
       type: BenchmarkType.CPU,
-      throttleCPU: slowDownFactor(BENCHMARK_03),
+      throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_03),
       allowBatching: true,
+      durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
     });
   }
   async init(driver: WebDriver) {
@@ -179,15 +135,16 @@ const benchUpdate = new (class extends BenchmarkWebdriver {
   }
 })();
 
-const benchSelect = new (class extends BenchmarkWebdriver {
+export const benchSelect = new (class extends BenchmarkWebdriver {
   constructor() {
     super({
-      id: BENCHMARK_04,
+      id: benchmarksCommon.BENCHMARK_04,
       label: "select row",
-      description: "highlighting a selected row. (no warmup runs)." + slowDownNote(BENCHMARK_04),
+      description: "highlighting a selected row. (no warmup runs)." + slowDownNote(benchmarksCommon.BENCHMARK_04),
       type: BenchmarkType.CPU,
-      throttleCPU: slowDownFactor(BENCHMARK_04),
+      throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_04),
       allowBatching: true,
+      durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
     });
   }
   async init(driver: WebDriver) {
@@ -201,15 +158,16 @@ const benchSelect = new (class extends BenchmarkWebdriver {
   }
 })();
 
-const benchSwapRows = new (class extends BenchmarkWebdriver {
+export const benchSwapRows = new (class extends BenchmarkWebdriver {
   constructor() {
     super({
-      id: BENCHMARK_05,
+      id: benchmarksCommon.BENCHMARK_05,
       label: "swap rows",
-      description: "swap 2 rows for table with 1,000 rows. (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(BENCHMARK_05),
+      description: "swap 2 rows for table with 1,000 rows. (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(benchmarksCommon.BENCHMARK_05),
       type: BenchmarkType.CPU,
-      throttleCPU: slowDownFactor(BENCHMARK_05),
+      throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_05),
       allowBatching: true,
+      durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
     });
   }
   async init(driver: WebDriver) {
@@ -229,15 +187,16 @@ const benchSwapRows = new (class extends BenchmarkWebdriver {
   }
 })();
 
-const benchRemove = new (class extends BenchmarkWebdriver {
+export const benchRemove = new (class extends BenchmarkWebdriver {
   constructor() {
     super({
-      id: BENCHMARK_06,
+      id: benchmarksCommon.BENCHMARK_06,
       label: "remove row",
-      description: "removing one row. (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(BENCHMARK_06),
+      description: "removing one row. (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(benchmarksCommon.BENCHMARK_06),
       type: BenchmarkType.CPU,
-      throttleCPU: slowDownFactor(BENCHMARK_06),
+      throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_06),
       allowBatching: true,
+      durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
     });
   }
   async init(driver: WebDriver) {
@@ -269,15 +228,16 @@ const benchRemove = new (class extends BenchmarkWebdriver {
   }
 })();
 
-const benchRunBig = new (class extends BenchmarkWebdriver {
+export const benchRunBig = new (class extends BenchmarkWebdriver {
   constructor() {
     super({
-      id: BENCHMARK_07,
-      label: "create many rows" + slowDownNote(BENCHMARK_07),
+      id: benchmarksCommon.BENCHMARK_07,
+      label: "create many rows" + slowDownNote(benchmarksCommon.BENCHMARK_07),
       description: "creating 10,000 rows",
       type: BenchmarkType.CPU,
-      throttleCPU: slowDownFactor(BENCHMARK_07),
+      throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_07),
       allowBatching: true,
+      durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
     });
   }
   async init(driver: WebDriver) {
@@ -289,15 +249,16 @@ const benchRunBig = new (class extends BenchmarkWebdriver {
   }
 })();
 
-const benchAppendToManyRows = new (class extends BenchmarkWebdriver {
+export const benchAppendToManyRows = new (class extends BenchmarkWebdriver {
   constructor() {
     super({
-      id: BENCHMARK_08,
+      id: benchmarksCommon.BENCHMARK_08,
       label: "append rows to table",
-      description: "appending 1,000 to a table of 1,000 rows." + slowDownNote(BENCHMARK_08),
+      description: "appending 1,000 to a table of 1,000 rows." + slowDownNote(benchmarksCommon.BENCHMARK_08),
       type: BenchmarkType.CPU,
-      throttleCPU: slowDownFactor(BENCHMARK_08),
+      throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_08),
       allowBatching: true,
+      durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
     });
   }
   async init(driver: WebDriver) {
@@ -311,15 +272,16 @@ const benchAppendToManyRows = new (class extends BenchmarkWebdriver {
   }
 })();
 
-const benchClear = new (class extends BenchmarkWebdriver {
+export const benchClear = new (class extends BenchmarkWebdriver {
   constructor() {
     super({
-      id: BENCHMARK_09,
+      id: benchmarksCommon.BENCHMARK_09,
       label: "clear rows",
-      description: "clearing a table with 1,000 rows." + slowDownNote(BENCHMARK_09),
+      description: "clearing a table with 1,000 rows." + slowDownNote(benchmarksCommon.BENCHMARK_09),
       type: BenchmarkType.CPU,
-      throttleCPU: slowDownFactor(BENCHMARK_09),
+      throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_09),
       allowBatching: true,
+      durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
     });
   }
   async init(driver: WebDriver) {
@@ -333,40 +295,44 @@ const benchClear = new (class extends BenchmarkWebdriver {
   }
 })();
 
-const benchStartupConsistentlyInteractive: StartupBenchmarkResult = {
-  id: BENCHMARK_31,
+export const benchStartupConsistentlyInteractive: StartupBenchmarkResult = {
+  id: benchmarksCommon.BENCHMARK_31,
   label: "consistently interactive",
   description: "a pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)",
   type: BenchmarkType.STARTUP,
   property: "TimeToConsistentlyInteractive",
   allowBatching: false,
+  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
 };
 
-const benchStartupBootup: StartupBenchmarkResult = {
+export const benchStartupBootup: StartupBenchmarkResult = {
   id: "32_startup-bt",
   label: "script bootup time",
   description: "the total ms required to parse/compile/evaluate all the page's scripts",
   type: BenchmarkType.STARTUP,
   property: "ScriptBootUpTtime",
   allowBatching: false,
+  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
 };
 
-const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
+export const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
   id: "33_startup-mainthreadcost",
   label: "main thread work cost",
   description: "total amount of time spent doing work on the main thread. includes style/layout/etc.",
   type: BenchmarkType.STARTUP,
   property: "MainThreadWorkCost",
   allowBatching: false,
+  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
 };
 
-const benchStartupTotalBytes: StartupBenchmarkResult = {
+export const benchStartupTotalBytes: StartupBenchmarkResult = {
   id: "34_startup-totalbytes",
   label: "total kilobyte weight",
   description: "network transfer cost (post-compression) of all the resources loaded into the page.",
   type: BenchmarkType.STARTUP,
   property: "TotalKiloByteWeight",
   allowBatching: false,
+  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
 };
 
 class BenchStartup extends BenchmarkWebdriver {
@@ -377,6 +343,7 @@ class BenchStartup extends BenchmarkWebdriver {
       description: "Time for loading, parsing and starting up",
       type: BenchmarkType.STARTUP,
       allowBatching: false,
+      durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
     });
   }
   async init(driver: WebDriver) {
@@ -395,17 +362,4 @@ class BenchStartup extends BenchmarkWebdriver {
     return [benchStartupConsistentlyInteractive, benchStartupBootup, benchStartupTotalBytes];
   }
 }
-const benchStartup = new BenchStartup();
-
-export let benchmarksWebdriver: Array<BenchmarkWebdriver> = [
-  benchRun,
-  benchReplaceAll,
-  benchUpdate,
-  benchSelect,
-  benchSwapRows,
-  benchRemove,
-  benchRunBig,
-  benchAppendToManyRows,
-  benchClear,
-  benchStartup,
-];
+export const benchStartup = new BenchStartup();

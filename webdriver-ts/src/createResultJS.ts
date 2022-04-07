@@ -2,9 +2,10 @@ import * as _ from "lodash";
 import * as fs from "fs";
 import { JSONResult, config, FrameworkData, initializeFrameworks } from "./common";
 import * as yargs from "yargs";
-import { BenchmarkInfo, BenchmarkType, fileName } from "./benchmarksGeneric";
-import { benchmarksPuppeteer } from "./benchmarksPuppeteer";
-import { benchmarksWebdriver } from "./benchmarksWebdriver";
+import { BenchmarkInfo, BenchmarkType, fileName } from "./benchmarksCommon";
+import { BenchmarkPuppeteer } from "./benchmarksPuppeteer";
+import { BenchmarkWebdriver } from "./benchmarksWebdriver";
+import {benchmarks} from "./benchmarkConfiguration";
 
 async function main() {
   let frameworks = await initializeFrameworks();
@@ -17,13 +18,7 @@ async function main() {
 
   let jsonResult: { framework: string; benchmark: string; values: number[] }[] = [];
 
-  benchmarksPuppeteer.forEach((benchmark, bIdx) => {
-    let r = benchmark.resultKinds ? benchmark.resultKinds() : [benchmark];
-    r.forEach((benchmarkInfo) => {
-      allBenchmarks.push(benchmarkInfo);
-    });
-  });
-  benchmarksWebdriver.forEach((benchmark, bIdx) => {
+  benchmarks.forEach((benchmark, bIdx) => {
     let r = benchmark.resultKinds ? benchmark.resultKinds() : [benchmark];
     r.forEach((benchmarkInfo) => {
       allBenchmarks.push(benchmarkInfo);

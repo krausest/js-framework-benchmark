@@ -1,13 +1,14 @@
 import { WebDriver, logging } from "selenium-webdriver";
-import { BenchmarkWebdriver, benchmarksWebdriver, LighthouseData } from "./benchmarksWebdriver";
+import { BenchmarkWebdriver, LighthouseData } from "./benchmarksWebdriver";
 import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess";
+import {benchmarks} from "./benchmarkConfiguration";
 
 const lighthouse = require("lighthouse");
 const chromeLauncher = require("chrome-launcher");
 
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
 import * as R from "ramda";
-import { BenchmarkType } from "./benchmarksGeneric";
+import { BenchmarkType, DurationMeasurementMode } from "./benchmarksCommon";
 
 let config: TConfig = defaultConfig;
 
@@ -66,6 +67,24 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         end: +e.params.ts,
       });
       if (config.LOG_TIMELINE) console.log("NAVIGATION START ", JSON.stringify(e));
+    } else if (e.params.name === "CompositeLayers" && e.params.ph=="X") {
+      if (config.LOG_TIMELINE) console.log("COMPOSITELAYERS ", JSON.stringify(e));
+      filteredEvents.push({
+        type: "compositelayers",
+        ts: +e.params.ts,
+        dur: +e.params.dur,
+        end: +e.params.ts + e.params.dur,
+        evt: JSON.stringify(e),
+      });
+    } else if (e.params.name === "Layout" && e.params.ph=="X") {
+      if (config.LOG_TIMELINE) console.log("LAYOUT ", JSON.stringify(e));
+        filteredEvents.push({
+        type: "layout",
+          ts: +e.params.ts,
+        dur: +e.params.dur,
+        end: +e.params.ts + e.params.dur,
+          evt: JSON.stringify(e),
+        });
     } else if (e.params.name === "Paint" && e.params.ph=="X") {
       if (config.LOG_TIMELINE) console.log("PAINT ", JSON.stringify(e));
       filteredEvents.push({
@@ -75,36 +94,6 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         end: +e.params.ts + e.params.dur,
         evt: JSON.stringify(e),
       });
-    } else if (e.params.name === "Paint" && e.params.ph=="I") {
-        if (config.LOG_TIMELINE) console.log("PAINT ", JSON.stringify(e));
-        filteredEvents.push({
-          type: "paint",
-          ts: +e.params.ts,
-          dur: 0,
-          end: +e.params.ts,
-          evt: JSON.stringify(e),
-        });
-      // } else if (e.params.name==='Rasterize') {
-      //     console.log("RASTERIZE ",JSON.stringify(e));
-      //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur, evt: JSON.stringify(e)});
-      // } else if (e.params.name==='CompositeLayers') {
-      //     console.log("COMPOSITE ",JSON.stringify(e));
-      //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts, evt: JSON.stringify(e)});
-      // } else if (e.params.name==='Layout') {
-      //     console.log("LAYOUT ",JSON.stringify(e));
-      //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: e.params.ts, evt: JSON.stringify(e)});
-      // } else if (e.params.name==='UpdateLayerTree') {
-      //     console.log("UPDATELAYER ",JSON.stringify(e));
-      //     filteredEvents.push({type:'paint', ts: +e.params.ts, dur: +e.params.dur, end: +e.params.ts+e.params.dur, evt: JSON.stringify(e)});
-    } else if (e.params.name === "MajorGC" && e.params.args.usedHeapSizeAfter) {
-      filteredEvents.push({
-        type: "gc",
-        ts: +e.params.ts,
-        dur: +e.params.dur,
-        end: +e.params.ts,
-        mem: Number(e.params.args.usedHeapSizeAfter) / 1024 / 1024,
-      });
-      if (config.LOG_TIMELINE) console.log("GC ", JSON.stringify(e));
     }
   });
   return { filteredEvents, protocolEvents };
@@ -228,22 +217,39 @@ async function computeResultsCPU(
 
       if (config.LOG_DEBUG) console.log("eventsAfterClick", eventsAfterClick);
 
-      let paints = R.filter(type_eq("paint"))(eventsAfterClick);
-      if (paints.length == 0) {
-        console.log("at least one paint event is expected after the click event", eventsAfterClick);
-        throw "at least one paint event is expected after the click event";
+    let lastLayoutEvent: Timingresult;
+    if (benchmark.durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT) {
+      let layouts = R.filter(type_eq('layout'))(eventsAfterClick)
+      layouts = R.filter((e: Timingresult) => e.ts > clicks[0].end)(layouts);
+      if (layouts.length > 1) {
+        console.log("INFO: more than one layout event found");
+        layouts.forEach(l => {
+          console.log("layout event",l.end-clicks[0].ts);
+        })
+        } else if (layouts.length == 0) {
+        console.log("ERROR: exactly one layout event is expected", eventsAfterClick);
+        throw "exactly one layouts event is expected";
+      }
+      lastLayoutEvent = layouts[layouts.length-1];
+    } else {
+      lastLayoutEvent = clicks[0];
+    }
+    let paintsP = R.filter(type_eq('paint'))(eventsAfterClick);
+    paintsP = R.filter((e: Timingresult) => e.ts > lastLayoutEvent.end)(paintsP);
+    if (paintsP.length == 0) {
+        console.log("ERROR: No paint event found");
+        throw "No paint event found";
+    }
+    if (paintsP.length > 1) {
+      console.log("more than one paint event found");
+      paintsP.forEach(l => {
+        console.log("paints event",(l.end-clicks[0].ts)/1000.0);
+      })
       }
 
-      console.log("# of paint events ", paints.length);
-      paints.forEach((p) => {
-        console.log("duration to paint ", (p.end - clicks[0].ts) / 1000.0, p.end!=p.ts);
-      });
-      let lastPaint = R.reduce((max, elem) => (max.end > elem.end ? max : elem), { end: 0 } as Timingresult, paints);
-
+    let duration = (paintsP[benchmark.durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT ? 0 : paintsP.length-1].end - clicks[0].ts)/1000.0;
       let upperBoundForSoundnessCheck = (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000.0;
-      let duration = (lastPaint.end - clicks[0].ts) / 1000.0;
 
-      console.log("*** duration", duration, "upper bound ", upperBoundForSoundnessCheck);
       if (duration < 0) {
         console.log("soundness check failed. reported duration is less 0", asString(eventsDuringBenchmark));
         throw "soundness check failed. reported duration is less 0";
@@ -398,8 +404,8 @@ export async function executeBenchmark(
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning> {
-  let runBenchmarks = benchmarksWebdriver.filter((b) => benchmarkId === b.id);
-  if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique`;
+  let runBenchmarks: Array<BenchmarkWebdriver> = benchmarks.filter(b => benchmarkId === b.id && b instanceof BenchmarkWebdriver) as Array<BenchmarkWebdriver>;
+  if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
   let benchmark = runBenchmarks[0];
 

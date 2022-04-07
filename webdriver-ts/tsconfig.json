@@ -12,7 +12,8 @@
     },
     "files": [
         "./src/common.ts",
-        "src/benchmarksGeneric.ts",
+        "src/benchmarksCommon.ts",
+        "src/benchmarkConfiguration.ts",
         "src/benchmarksPuppeteer.ts",
         "src/benchmarksWebdriver.ts",
         "./src/webdriverAccess.ts",
