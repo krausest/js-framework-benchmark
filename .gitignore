@@ -41,6 +41,7 @@ angular*/src/app.ngsummary.json
 tests/results/completed/
 target/
 webdriver-ts/results/
+webdriver-ts/traces/
 webdriver-ts/results*/
 webdriver-ts/old_results/
 webdriver-ts-results/table_*.html
