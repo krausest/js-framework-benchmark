@@ -3,19 +3,22 @@ import * as fs from "fs";
 import * as yargs from "yargs";
 import { BenchmarkInfo, BenchmarkType } from "./benchmarksCommon";
 import { BenchmarkPuppeteer } from "./benchmarksPuppeteer";
-import { BenchmarkWebdriver, LighthouseData } from "./benchmarksWebdriver";
-import { BenchmarkOptions, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common";
+import { BenchmarkWebdriver } from "./benchmarksWebdriver";
+import { BenchmarkDriverOptions, BenchmarkOptions, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common";
 import { writeResults } from "./writeResults";
 import {benchmarks} from "./benchmarkConfiguration";
+import { BenchmarkLighthouse, StartupBenchmarkResult } from "./benchmarksLighthouse";
 
 function forkAndCallBenchmark(
   framework: FrameworkData,
-  benchmark: BenchmarkInfo,
+  benchmark: BenchmarkWebdriver|BenchmarkLighthouse|BenchmarkPuppeteer,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning> {
   return new Promise((resolve, reject) => {
     let forkedRunner = null;
-    if (benchmarks.some(b => b.benchmarkInfo.id == benchmark.id && b instanceof BenchmarkPuppeteer)) {
+    if (benchmark instanceof BenchmarkLighthouse) {
+      forkedRunner = "dist/forkedBenchmarkRunnerLighthouse.js";
+    } else if (benchmark instanceof BenchmarkPuppeteer) {
       forkedRunner = "dist/forkedBenchmarkRunnerPuppeteer.js";
     } else {
       forkedRunner = "dist/forkedBenchmarkRunnerWebdriver.js";
@@ -46,6 +49,54 @@ function forkAndCallBenchmark(
   });
 }
 
+async function runBenchmakLoopStartup(
+  framework: FrameworkData,
+  benchmark: BenchmarkLighthouse,
+  benchmarkOptions: BenchmarkOptions
+): Promise<{ errors: String[]; warnings: String[] }> {
+  if (config.FORK_CHROMEDRIVER) {
+    let warnings: String[] = [];
+    let errors: String[] = [];
+
+    let results: Array<StartupBenchmarkResult> = [];
+    let count = benchmarkOptions.numIterationsForStartupBenchmark;
+    benchmarkOptions.batchSize = 1;
+
+    let retries = 0;
+    let done = 0;
+
+    while (done < count) {
+      console.log("FORKING: ", benchmark.id, " BatchSize ", benchmarkOptions.batchSize);
+      let res = await forkAndCallBenchmark(framework, benchmark, benchmarkOptions);
+      if (Array.isArray(res.result)) {
+        results = results.concat(res.result as StartupBenchmarkResult[]);
+      } else results.push(res.result);
+      warnings = warnings.concat(res.warnings);
+      if (res.error) {
+        if (res.error.indexOf("Server terminated early with status 1") > -1) {
+          console.log("******* STRANGE selenium error found - retry #", retries + 1);
+          retries++;
+          if (retries == 3) break;
+        } else {
+          errors.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed: ` + res.error);
+          break;
+        }
+      }
+      done++;
+    }
+    console.log("******* result ", results);
+    await writeResults(config, {
+      framework: framework,
+      benchmark: benchmark,
+      results: results,
+      type: BenchmarkType.STARTUP
+    });
+    return { errors, warnings };
+    // } else {
+    //     return executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
+  }
+}
+
 async function runBenchmakLoop(
   framework: FrameworkData,
   benchmark: BenchmarkWebdriver | BenchmarkPuppeteer,
@@ -55,7 +106,7 @@ async function runBenchmakLoop(
     let warnings: String[] = [];
     let errors: String[] = [];
 
-    let results: Array<number | LighthouseData> = [];
+    let results: Array<number> = [];
     let count = 0;
 
     if (benchmark.type == BenchmarkType.CPU) {
@@ -63,9 +114,6 @@ async function runBenchmakLoop(
       benchmarkOptions.batchSize = config.ALLOW_BATCHING && benchmark.allowBatching ? count : 1;
     } else if (benchmark.type == BenchmarkType.MEM) {
       count = benchmarkOptions.numIterationsForMemBenchmarks;
-      benchmarkOptions.batchSize = 1;
-    } else {
-      count = benchmarkOptions.numIterationsForStartupBenchmark;
       benchmarkOptions.batchSize = 1;
     }
 
@@ -75,11 +123,9 @@ async function runBenchmakLoop(
       benchmarkOptions.batchSize = Math.min(benchmarkOptions.batchSize, count - results.length);
       console.log("FORKING: ", benchmark.id, " BatchSize ", benchmarkOptions.batchSize);
       let res = await forkAndCallBenchmark(framework, benchmark, benchmarkOptions);
-      if (res.result) {
-        if (Array.isArray(res.result)) {
-          results = results.concat(res.result);
-        } else results.push(res.result);
-      }
+      if (Array.isArray(res.result)) {
+        results = results.concat(res.result as number[]);
+      } else results.push(res.result);
       warnings = warnings.concat(res.warnings);
       if (res.error) {
         if (res.error.indexOf("Server terminated early with status 1") > -1) {
@@ -104,6 +150,7 @@ async function runBenchmakLoop(
       framework: framework,
       benchmark: benchmark,
       results: results,
+      type: benchmark.type as typeof BenchmarkType.CPU|BenchmarkType.MEM
     });
     return { errors, warnings };
     // } else {
@@ -115,7 +162,7 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
   let errors: String[] = [];
   let warnings: String[] = [];
 
-  let runBenchmarks: Array<BenchmarkWebdriver | BenchmarkPuppeteer> = benchmarks.filter((b) =>
+  let runBenchmarks: Array<BenchmarkWebdriver | BenchmarkPuppeteer | BenchmarkLighthouse> = benchmarks.filter((b) =>
     benchmarkNames.some((name) => b.id.toLowerCase().indexOf(name) > -1)
   );
 
@@ -151,7 +198,9 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
   for (let i = 0; i < runFrameworks.length; i++) {
     for (let j = 0; j < runBenchmarks.length; j++) {
       try {
-        let result = await runBenchmakLoop(runFrameworks[i], runBenchmarks[j], benchmarkOptions);
+        let result = (runBenchmarks[j].type == BenchmarkType.STARTUP) ?
+            await runBenchmakLoopStartup(runFrameworks[i], runBenchmarks[j] as BenchmarkLighthouse, benchmarkOptions)
+          : await runBenchmakLoop(runFrameworks[i], runBenchmarks[j] as BenchmarkPuppeteer|BenchmarkWebdriver, benchmarkOptions);
         errors = errors.concat(result.errors);
         warnings = warnings.concat(result.warnings);
       } catch (e) {

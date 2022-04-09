@@ -6,6 +6,7 @@ import { BenchmarkInfo, BenchmarkType, fileName } from "./benchmarksCommon";
 import { BenchmarkPuppeteer } from "./benchmarksPuppeteer";
 import { BenchmarkWebdriver } from "./benchmarksWebdriver";
 import {benchmarks} from "./benchmarkConfiguration";
+import { BenchmarkLighthouse } from "./benchmarksLighthouse";
 
 async function main() {
   let frameworks = await initializeFrameworks();
@@ -15,14 +16,15 @@ async function main() {
   let resultJS = "import {RawResult} from './Common';\n\nexport const results: RawResult[]=[";
 
   let allBenchmarks: BenchmarkInfo[] = [];
-
   let jsonResult: { framework: string; benchmark: string; values: number[] }[] = [];
-
+  
   benchmarks.forEach((benchmark, bIdx) => {
-    let r = benchmark.resultKinds ? benchmark.resultKinds() : [benchmark];
-    r.forEach((benchmarkInfo) => {
-      allBenchmarks.push(benchmarkInfo);
-    });
+    if (benchmark.type == BenchmarkType.STARTUP) {
+      let sb = benchmark as BenchmarkLighthouse;
+      allBenchmarks = allBenchmarks.concat( sb.subbenchmarks );
+    } else {
+      allBenchmarks.push(benchmark.benchmarkInfo);
+    }
   });
 
   frameworks.forEach((framework, fIdx) => {

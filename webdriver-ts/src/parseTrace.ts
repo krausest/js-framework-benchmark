@@ -58,6 +58,7 @@ async function readAll() {
                 framework: framework,
                 benchmark: benchmark,
                 results: results,
+                type: BenchmarkType.CPU
               });
         }
     }

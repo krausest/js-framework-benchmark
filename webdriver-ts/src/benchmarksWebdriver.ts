@@ -41,25 +41,6 @@ export abstract class BenchmarkWebdriver {
   after(driver: WebDriver, framework: FrameworkData): Promise<any> {
     return null;
   }
-  // Good fit for a single result creating Benchmark
-  resultKinds(): Array<BenchmarkInfo> {
-    return [this.benchmarkInfo];
-  }
-  extractResult(results: any[], resultKind: BenchmarkInfo): number[] {
-    return results;
-  }
-}
-
-export interface LighthouseData {
-  TimeToConsistentlyInteractive: number;
-  ScriptBootUpTtime: number;
-  MainThreadWorkCost: number;
-  TotalKiloByteWeight: number;
-  [propName: string]: number;
-}
-
-export interface StartupBenchmarkResult extends BenchmarkInfo {
-  property: keyof LighthouseData;
 }
 
 export const benchRun = new (class extends BenchmarkWebdriver {
@@ -294,72 +275,3 @@ export const benchClear = new (class extends BenchmarkWebdriver {
     await testElementNotLocatedByXPath(driver, "//tbody/tr[1]", config.TIMEOUT, false);
   }
 })();
-
-export const benchStartupConsistentlyInteractive: StartupBenchmarkResult = {
-  id: benchmarksCommon.BENCHMARK_31,
-  label: "consistently interactive",
-  description: "a pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)",
-  type: BenchmarkType.STARTUP,
-  property: "TimeToConsistentlyInteractive",
-  allowBatching: false,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
-};
-
-export const benchStartupBootup: StartupBenchmarkResult = {
-  id: "32_startup-bt",
-  label: "script bootup time",
-  description: "the total ms required to parse/compile/evaluate all the page's scripts",
-  type: BenchmarkType.STARTUP,
-  property: "ScriptBootUpTtime",
-  allowBatching: false,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
-};
-
-export const benchStartupMainThreadWorkCost: StartupBenchmarkResult = {
-  id: "33_startup-mainthreadcost",
-  label: "main thread work cost",
-  description: "total amount of time spent doing work on the main thread. includes style/layout/etc.",
-  type: BenchmarkType.STARTUP,
-  property: "MainThreadWorkCost",
-  allowBatching: false,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
-};
-
-export const benchStartupTotalBytes: StartupBenchmarkResult = {
-  id: "34_startup-totalbytes",
-  label: "total kilobyte weight",
-  description: "network transfer cost (post-compression) of all the resources loaded into the page.",
-  type: BenchmarkType.STARTUP,
-  property: "TotalKiloByteWeight",
-  allowBatching: false,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
-};
-
-class BenchStartup extends BenchmarkWebdriver {
-  constructor() {
-    super({
-      id: "30_startup",
-      label: "startup time",
-      description: "Time for loading, parsing and starting up",
-      type: BenchmarkType.STARTUP,
-      allowBatching: false,
-      durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
-    });
-  }
-  async init(driver: WebDriver) {
-    // not used with lighthouse
-  }
-  async run(driver: WebDriver, framework: FrameworkData) {
-    // not used with lighthouse
-  }
-  extractResult(results: LighthouseData[], resultKind: BenchmarkInfo): number[] {
-    return results.reduce((a, v) => {
-      a.push(v[(resultKind as StartupBenchmarkResult).property]);
-      return a;
-    }, new Array<number>());
-  }
-  resultKinds() {
-    return [benchStartupConsistentlyInteractive, benchStartupBootup, benchStartupTotalBytes];
-  }
-}
-export const benchStartup = new BenchStartup();

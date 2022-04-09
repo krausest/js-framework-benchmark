@@ -1,16 +1,17 @@
 import * as benchmarksPuppeteer from "./benchmarksPuppeteer";
 import * as benchmarksWebdriver from "./benchmarksWebdriver";
+import * as benchmarksLighthouse from "./benchmarksLighthouse";
 
-export const benchmarks: Array<benchmarksPuppeteer.BenchmarkPuppeteer|benchmarksWebdriver.BenchmarkWebdriver> = [
-    benchmarksWebdriver.benchRun,
-    benchmarksWebdriver.benchReplaceAll,
-    benchmarksWebdriver.benchUpdate,
-    benchmarksWebdriver.benchSelect,
-    benchmarksWebdriver.benchSwapRows,
-    benchmarksWebdriver.benchRemove,
-    benchmarksWebdriver.benchRunBig,
-    benchmarksWebdriver.benchAppendToManyRows,
-    benchmarksWebdriver.benchClear,
+export const benchmarks: Array<benchmarksPuppeteer.BenchmarkPuppeteer|benchmarksWebdriver.BenchmarkWebdriver|benchmarksLighthouse.BenchmarkLighthouse> = [
+    benchmarksPuppeteer.benchRun,
+    benchmarksPuppeteer.benchReplaceAll,
+    benchmarksPuppeteer.benchUpdate,
+    benchmarksPuppeteer.benchSelect,
+    benchmarksPuppeteer.benchSwapRows,
+    benchmarksPuppeteer.benchRemove,
+    benchmarksPuppeteer.benchRunBig,
+    benchmarksPuppeteer.benchAppendToManyRows,
+    benchmarksPuppeteer.benchClear,
   
     benchmarksPuppeteer.benchReadyMemory,
     benchmarksPuppeteer.benchRunMemory,
@@ -18,5 +19,5 @@ export const benchmarks: Array<benchmarksPuppeteer.BenchmarkPuppeteer|benchmarks
     benchmarksPuppeteer.benchReplace5Memory,
     benchmarksPuppeteer.benchCreateClear5Memory,
 
-    benchmarksWebdriver.benchStartup,
+    benchmarksLighthouse.benchLighthouse,
 ];

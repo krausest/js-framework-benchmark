@@ -1,23 +1,47 @@
 import * as fs from "fs";
-import { BenchmarkType, fileName } from "./benchmarksCommon";
+import { result } from "lodash";
+import { BenchmarkInfo, BenchmarkType, fileName } from "./benchmarksCommon";
+import { BenchmarkLighthouse, StartupBenchmarkResult } from "./benchmarksLighthouse";
 import { BenchmarkPuppeteer } from "./benchmarksPuppeteer";
 import { BenchmarkWebdriver } from "./benchmarksWebdriver";
 import { config as defaultConfig, FrameworkData, JSONResult } from "./common";
 const jStat = require("jstat").jStat;
 
-export interface Result<T> {
+export type ResultLightHouse = {
   framework: FrameworkData;
-  results: T[];
-  benchmark: BenchmarkPuppeteer | BenchmarkWebdriver;
+  benchmark: BenchmarkLighthouse;
+  results: StartupBenchmarkResult[];
+  type: BenchmarkType.STARTUP; 
 }
 
-export function writeResults<T>(config: typeof defaultConfig, res: Result<T>) {
-  if (!config.WRITE_RESULTS) return;
-  let benchmark = res.benchmark;
-  let framework = res.framework.name;
-  let keyed = res.framework.keyed;
-  let type = null;
+export type ResultCPUOrMem = {
+  framework: FrameworkData;
+  benchmark: BenchmarkWebdriver | BenchmarkPuppeteer;
+  results: number[];
+  type: BenchmarkType.MEM | BenchmarkType.CPU; 
+}
 
+export function writeResults(config: typeof defaultConfig, res: ResultLightHouse|ResultCPUOrMem) {
+  if (!config.WRITE_RESULTS) return;
+
+  if (res.type==BenchmarkType.STARTUP) {
+    for (let subbench of res.benchmark.subbenchmarks) {
+      let results = res.results.filter(r => r.id == subbench.id).map(r => r.result);
+      createResultFile(config, results, res.framework, subbench);
+    }
+  } else {
+    createResultFile(config, (res.results as any) as number[], res.framework, res.benchmark.benchmarkInfo);
+  }
+}
+
+function createResultFile(config: typeof defaultConfig, data: number[], framework: FrameworkData, benchmark: BenchmarkInfo) {
+  let s = jStat(data);
+  console.log(
+    `result ${fileName(framework, benchmark)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev(
+      true
+    )}`
+  );
+  let type = "";
   switch (benchmark.type) {
     case BenchmarkType.CPU:
       type = "cpu";
@@ -29,28 +53,18 @@ export function writeResults<T>(config: typeof defaultConfig, res: Result<T>) {
       type = "startup";
       break;
   }
-
-  for (let resultKind of benchmark.resultKinds()) {
-    let data = benchmark.extractResult(res.results, resultKind);
-    let s = jStat(data);
-    console.log(
-      `result ${fileName(res.framework, resultKind)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev(
-        true
-      )}`
-    );
-    let result: JSONResult = {
-      framework: res.framework.fullNameWithKeyedAndVersion,
-      keyed: keyed,
-      benchmark: resultKind.id,
-      type: type,
-      min: s.min(),
-      max: s.max(),
-      mean: s.mean(),
-      median: s.median(),
-      geometricMean: s.geomean(),
-      standardDeviation: s.stdev(true),
-      values: data,
-    };
-    fs.writeFileSync(`${config.RESULTS_DIRECTORY}/${fileName(res.framework, resultKind)}`, JSON.stringify(result), { encoding: "utf8" });
-  }
+  let result: JSONResult = {
+    framework: framework.fullNameWithKeyedAndVersion,
+    keyed: framework.keyed,
+    benchmark: benchmark.id,
+    type: type,
+    min: s.min(),
+    max: s.max(),
+    mean: s.mean(),
+    median: s.median(),
+    geometricMean: s.geomean(),
+    standardDeviation: s.stdev(true),
+    values: data,
+  };
+  fs.writeFileSync(`${config.RESULTS_DIRECTORY}/${fileName(framework, benchmark)}`, JSON.stringify(result), { encoding: "utf8" });
 }

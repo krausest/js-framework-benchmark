@@ -42,7 +42,7 @@ export const BENCHMARK_23 = "23_update5-memory";
 export const BENCHMARK_24 = "24_run5-memory";
 export const BENCHMARK_25 = "25_run-clear-memory";
 
-export const BENCHMARK_31 = "31_startup-ci";
+export const BENCHMARK_30 = "30_startup";
 
 export type TBenchmarkID =
   | typeof BENCHMARK_01
@@ -54,7 +54,7 @@ export type TBenchmarkID =
   | typeof BENCHMARK_07
   | typeof BENCHMARK_08
   | typeof BENCHMARK_09
-  | typeof BENCHMARK_31;
+  | typeof BENCHMARK_30;
 
 type ISlowDowns = {
   [key in TBenchmarkID]?: number;

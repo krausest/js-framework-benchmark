@@ -31,13 +31,6 @@ export abstract class BenchmarkPuppeteer {
   after(page: Page, framework: FrameworkData): Promise<any> {
     return null;
   }
-  // Good fit for a single result creating Benchmark
-  resultKinds(): Array<BenchmarkInfo> {
-    return [this.benchmarkInfo];
-  }
-  extractResult(results: any[], resultKind: BenchmarkInfo): number[] {
-    return results;
-  }
 }
 
 export let benchRun = new class extends BenchmarkPuppeteer {
@@ -71,7 +64,7 @@ export const benchReplaceAll = new class extends BenchmarkPuppeteer {
         type: BenchmarkType.CPU,
         throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_02),
         allowBatching: true,
-        durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
+        durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
       });
   }
   async init(page: Page) {
@@ -97,7 +90,7 @@ export const benchUpdate = new class extends BenchmarkPuppeteer {
         type: BenchmarkType.CPU,
         throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_03),
         allowBatching: true,
-        durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
+        durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
       });
   }
   async init(page: Page) {
@@ -238,7 +231,7 @@ export const benchRunBig = new class extends BenchmarkPuppeteer {
         type: BenchmarkType.CPU,
         throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_08),
         allowBatching: true,
-        durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
+        durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
       });
   }
   async init(page: Page) {
@@ -261,7 +254,7 @@ export const benchClear = new class extends BenchmarkPuppeteer {
         type: BenchmarkType.CPU,
         throttleCPU: slowDownFactor(benchmarksCommon.BENCHMARK_09),
         allowBatching: true,
-        durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
+        durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
       });
   }
   async init(page: Page) {

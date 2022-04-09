@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import axios from "axios";
-import { LighthouseData } from "./benchmarksWebdriver";
+import { StartupBenchmarkResult } from "./benchmarksLighthouse";
 
 export interface JSONResult {
   framework: string;
@@ -22,7 +22,7 @@ export type TBenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
 export interface ErrorAndWarning {
   error: String;
   warnings: String[];
-  result?: number[] | LighthouseData;
+  result?: number[] | StartupBenchmarkResult[];
 }
 
 export interface BenchmarkDriverOptions {

@@ -1,14 +1,11 @@
 import { startBrowser } from "./puppeteerAccess";
 
-const lighthouse = require("lighthouse");
-
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
 import { Browser, Page } from "puppeteer-core";
 import { BenchmarkType, DurationMeasurementMode } from "./benchmarksCommon";
 import { BenchmarkPuppeteer, fileNameTrace } from "./benchmarksPuppeteer";
 import {benchmarks} from "./benchmarkConfiguration";
 import { readFile } from 'fs/promises';
-import * as path from 'path';
 import * as R from 'ramda';
 
 let config: TConfig = defaultConfig;
@@ -72,13 +69,15 @@ export async function computeResultsCPU(fileName: string, durationMeasurementMod
 
   // console.log("eventsDuringBenchmark ", asString(eventsDuringBenchmark));
 
+  console.log("computeResultsCPU ",durationMeasurementMode)
+
   let clicks = R.filter(type_eq('click'))(eventsDuringBenchmark)
   if (clicks.length !== 1) {
       console.log("exactly one click event is expected", eventsDuringBenchmark);
       throw "exactly one click event is expected";
   }
 
-  let lastLayoutEvent: Timingresult;
+  let onlyUsePaintEventsAfter: Timingresult;
   let layouts = R.filter(type_eq('layout'))(eventsDuringBenchmark)
   layouts = R.filter((e: Timingresult) => e.ts > clicks[0].end)(layouts);
   if (durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT) {
@@ -91,13 +90,13 @@ export async function computeResultsCPU(fileName: string, durationMeasurementMod
       console.log("ERROR: exactly one layout event is expected", eventsDuringBenchmark);
       throw "exactly one layouts event is expected";
     }
-    lastLayoutEvent = layouts[layouts.length-1];
+    onlyUsePaintEventsAfter = layouts[layouts.length-1];
   } else {
-    lastLayoutEvent = clicks[0];
+    onlyUsePaintEventsAfter = clicks[0];
   }
 
   let paints = R.filter(type_eq('paint'))(eventsDuringBenchmark);
-  paints = R.filter((e: Timingresult) => e.ts > lastLayoutEvent.end)(paints);
+  paints = R.filter((e: Timingresult) => e.ts > onlyUsePaintEventsAfter.end)(paints);
   if (paints.length == 0) {
     console.log("ERROR: No paint event found");
     throw "No paint event found";
@@ -209,21 +208,20 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: BenchmarkPup
 
             let categories = [
                 "devtools.timeline",
-                "blink.user_timing",
                 'disabled-by-default-devtools.timeline',
             ];
             // let categories = [
-            //     '-*',
-            //     'devtools.timeline',
-            //     'v8.execute',
-            //     'disabled-by-default-devtools.timeline',
+            //   'devtools.timeline',
+            //   'disabled-by-default-devtools.timeline',
+            //   '-*',
+            //   'v8.execute',
             //     'disabled-by-default-devtools.timeline.frame',
             //     'toplevel',
             //     'blink.console',
             //     'blink.user_timing',
             //     'latencyInfo',
-            //     'disabled-by-default-devtools.timeline.stack',
             //     'disabled-by-default-v8.cpu_profiler',                
+            //     'disabled-by-default-devtools.timeline.stack',
             // ];
 
             if (benchmark.throttleCPU) {
@@ -238,6 +236,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: BenchmarkPup
             console.log("runBenchmark");
             // let m1 = await page.metrics();
             await runBenchmark(page, benchmark, framework);
+
             await wait(10);
             await page.tracing.stop();
             // let m2 = await page.metrics();

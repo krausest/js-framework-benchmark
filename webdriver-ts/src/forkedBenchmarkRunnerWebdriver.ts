@@ -1,10 +1,7 @@
 import { WebDriver, logging } from "selenium-webdriver";
-import { BenchmarkWebdriver, LighthouseData } from "./benchmarksWebdriver";
+import { BenchmarkWebdriver } from "./benchmarksWebdriver";
 import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess";
 import {benchmarks} from "./benchmarkConfiguration";
-
-const lighthouse = require("lighthouse");
-const chromeLauncher = require("chrome-launcher");
 
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
 import * as R from "ramda";
@@ -121,65 +118,6 @@ function type_neq(requiredType: string) {
 
 function asString(res: Timingresult[]): string {
   return res.reduce((old, cur) => old + "\n" + JSON.stringify(cur), "");
-}
-
-function extractRawValue(results: any, id: string) {
-  let audits = results.audits;
-  if (!audits) return null;
-  let audit_with_id = audits[id];
-  if (typeof audit_with_id === "undefined") return null;
-  if (typeof audit_with_id.numericValue === "undefined") return null;
-  return audit_with_id.numericValue;
-}
-
-async function runLighthouse(framework: FrameworkData, benchmarkOptions: BenchmarkOptions): Promise<LighthouseData> {
-  const opts: any = {
-    chromeFlags: [
-      "--headless",
-      "--no-sandbox",
-      "--no-first-run",
-      "--enable-automation",
-      "--disable-infobars",
-      "--disable-background-networking",
-      "--disable-background-timer-throttling",
-      "--disable-cache",
-      "--disable-translate",
-      "--disable-sync",
-      "--disable-extensions",
-      "--disable-default-apps",
-      "--window-size=1200,800",
-      "--remote-debugging-port=" + benchmarkOptions.remoteDebuggingPort.toFixed(),
-    ],
-    onlyCategories: ["performance"],
-    port: benchmarkOptions.remoteDebuggingPort.toFixed(),
-    logLevel: "info",
-  };
-
-  try {
-    if (benchmarkOptions.chromeBinaryPath) opts.chromePath = benchmarkOptions.chromeBinaryPath;
-    let chrome = await chromeLauncher.launch(opts);
-    let results = null;
-    try {
-      results = await lighthouse(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`, opts, null);
-      await chrome.kill();
-    } catch (error) {
-      console.log("error running lighthouse", error);
-      await chrome.kill();
-      throw error;
-    }
-    //console.log("lh result", results);
-
-    let LighthouseData: LighthouseData = {
-      TimeToConsistentlyInteractive: extractRawValue(results.lhr, "interactive"),
-      ScriptBootUpTtime: extractRawValue(results.lhr, "bootup-time"),
-      MainThreadWorkCost: extractRawValue(results.lhr, "mainthread-work-breakdown"),
-      TotalKiloByteWeight: extractRawValue(results.lhr, "total-byte-weight") / 1024.0,
-    };
-    return LighthouseData;
-  } catch (error) {
-    console.log("error running lighthouse", error);
-    throw error;
-  }
 }
 
 async function computeResultsCPU(
@@ -382,23 +320,6 @@ async function runCPUBenchmark(
   }
 }
 
-async function runStartupBenchmark(
-  framework: FrameworkData,
-  benchmark: BenchmarkWebdriver,
-  benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
-  console.log("benchmarking startup", framework, benchmark.id);
-
-  let error: String = undefined;
-  try {
-    let result = await runLighthouse(framework, benchmarkOptions);
-    return { error, warnings: [], result };
-  } catch (e) {
-    error = convertError(e);
-    return { error, warnings: [] };
-  }
-}
-
 export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
@@ -410,9 +331,7 @@ export async function executeBenchmark(
   let benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning;
-  if (benchmark.type == BenchmarkType.STARTUP) {
-    errorAndWarnings = await runStartupBenchmark(framework, benchmark, benchmarkOptions);
-  } else if (benchmark.type == BenchmarkType.CPU) {
+  if (benchmark.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }
 
