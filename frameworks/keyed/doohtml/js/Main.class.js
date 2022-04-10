@@ -75,7 +75,6 @@ Doo.define(
 				if (idx !== undefined) {
 					this.data.rows.splice(idx,1)
 				}
-
 			}
 		}  
 
