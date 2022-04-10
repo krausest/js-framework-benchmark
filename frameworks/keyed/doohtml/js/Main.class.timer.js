@@ -74,12 +74,9 @@ Doo.define(
 			if (row) {
 				this.tbody.removeChild(row)
 				let idx = this.getIndex(row)
-				console.log('coolio', idx,this.data.rows.length, this.data.rows[idx].label)
 				if (idx !== undefined) {
 					this.data.rows.splice(idx,1)
 				}
-				console.log('foolio', this.data.rows.length)
-
 			}
 		}  
 		run(e) {
@@ -106,10 +103,21 @@ Doo.define(
 			this.data.rows = this.buildData(10000)	
 			this.renderTable()
 			//e.target.blur()
-			Timer.start('add')
-			Timer.stop('add')
 			Timer.stop('tot')
 		}
+
+		async renderTable(dataSet=this.data[this.defaultDataSet]) {
+			let len = dataSet.length
+			let elem = document.createElement('tbody')
+			elem.innerHTML = this.renderNode(this.place[0], dataSet, 0 , len) 
+			let tableRows = elem.querySelectorAll('tr')
+	
+			for (let i=0;i<len;i++) {
+				this.place[0].appendChild(tableRows.item(i))
+			}	
+			return
+		}	
+	
 
 		update(e) {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
@@ -136,11 +144,14 @@ Doo.define(
 
 		clear(e) {
 			Timer.start('clear')
+
 			this.data.rows = []
+//		    this.data.rows = this.buildData(1)
 			this.tbody.textContent = ''
+			this.renderTable()
 			Timer.stop('clear')
 		}
-
+/*
 		swapRows(e) {
 			if (this.data.rows.length>10) {
 				let node1 = this.tbody.childNodes[1]
@@ -154,6 +165,24 @@ Doo.define(
 				this.tbody.insertBefore(node1, this.tbody.childNodes[999])
 			}
 		}
+*/
+		swapRows(e) {
+			if (this.data.rows.length > 998) {
+
+				let tmp = this.data.rows[998];
+				this.rows.data[998] = this.rows.data[1];
+				this.rows.data[1] = tmp;
+
+				let a = this.tbody.firstChild.nextSibling,
+					b = a.nextSibling,
+					c = this.tbody.childNodes[998],
+					d = c.nextSibling;
+
+				this.tbody.insertBefore(c, b);
+				this.tbody.insertBefore(a, d);
+			}	
+		}
+
 
 		addEventListeners() {
 			document.getElementById("main").addEventListener('click', e => {

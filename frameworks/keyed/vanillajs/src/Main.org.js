@@ -4,41 +4,6 @@ function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
 
-class Timer {
-    static time = new Object()
-
-
-    static start(name) {
-	
-		if (!Timer.time[name]) {
-			Timer.time[name] = [ new Date().getTime()]    
-		}    
-	};
-	static stop(name) {
-		if (Timer.time[name]) {
-			Timer.time[name].push(new Date().getTime())
-            if (name==='clear') {
-                document.title = 'c:' + (Timer.time[name][1] - Timer.time[name][0])  + ' |' + document.title
-                Timer.time[name] = undefined
-            }
-
-            if (name==='build') {
-                document.title = 'b:' + (Timer.time[name][1] - Timer.time[name][0])  + ' ' + document.title
-                Timer.time[name] = undefined
-            }
-            if (name==='tot') {
-                document.title = '**|t:' + (Timer.time[name][1] - Timer.time[name][0])  + ' ' + document.title
-                Timer.time[name] = undefined
-            }
-            if (name==='add') {
-                document.title = 'a:' + (Timer.time[name][1] - Timer.time[name][0])  + ' ' + document.title
-                Timer.time[name] = undefined
-            } 
-		}
-	};
-}
-
-
 const rowTemplate = document.createElement("tr");
 rowTemplate.innerHTML = "<td class='col-md-1'></td><td class='col-md-4'><a class='lbl'></a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td>";
 
@@ -50,17 +15,13 @@ class Store {
         this.id = 1;
     }
     buildData(count = 1000) {
-        Timer.start('build')
- 
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
         var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
         var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
         var data = [];
         for (var i = 0; i < count; i++)
             data.push({id: this.id++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] });
-            Timer.stop('build')
- 
-            return data;
+        return data;
     }
     updateData(mod = 10) {
         for (let i=0;i<this.data.length;i+=10) {
@@ -147,7 +108,7 @@ class Main {
             else if (e.target.matches('#run')) {
                 e.preventDefault();
                 //console.log("run");
-                this.run(e);
+                this.run();
             }
             else if (e.target.matches('#update')) {
                 e.preventDefault();
@@ -167,12 +128,12 @@ class Main {
             else if (e.target.matches('#runlots')) {
                 e.preventDefault();
                 //console.log("runLots");
-                this.runLots(e);
+                this.runLots();
             }
             else if (e.target.matches('#clear')) {
                 e.preventDefault();
                 //console.log("clear");
-                this.clear(e);
+                this.clear();
             }
             else if (e.target.matches('#swaprows')) {
                 e.preventDefault();
@@ -202,8 +163,7 @@ class Main {
         }
         return undefined;
     }
-    run(e) {
-        Timer.start('tot')
+    run() {
         this.removeAllRows();
         this.store.clear();
         this.rows = [];
@@ -211,7 +171,6 @@ class Main {
         this.store.run();
         this.appendRows();
         this.unselect();
-        Timer.stop('tot')
     }
     add() {
         this.store.add();
@@ -254,7 +213,6 @@ class Main {
         this.recreateSelection();
     }
     removeAllRows() {
-        Timer.start('clear')
         // ~258 msecs
         // for(let i=this.rows.length-1;i>=0;i--) {
         //     tbody.removeChild(this.rows[i]);
@@ -268,7 +226,6 @@ class Main {
         // tbody.parentNode.replaceChild(cNode ,tbody);
         // ~212 msecs
         this.tbody.textContent = "";
-        Timer.stop('clear')
 
         // ~236 msecs
         // var rangeObj = new Range();
@@ -278,9 +235,7 @@ class Main {
         // var last;
         // while (last = tbody.lastChild) tbody.removeChild(last);
     }
-    runLots(e) {
-        Timer.start('tot')
-
+    runLots() {
         this.removeAllRows();
         this.store.clear();
         this.rows = [];
@@ -288,9 +243,6 @@ class Main {
         this.store.runLots();
         this.appendRows();
         this.unselect();
-     //   e.target.blur()
-        Timer.stop('tot')
-
     }
     clear() {
         this.store.clear();
@@ -304,7 +256,6 @@ class Main {
     }
     swapRows() {
         if (this.data.length>10) {
-            Timer.start('tot')
             this.store.swapRows();
             this.data[1] = this.store.data[1];
             this.data[998] = this.store.data[998];
@@ -315,8 +266,6 @@ class Main {
             let tmp = this.rows[998];
             this.rows[998] = this.rows[1];
             this.rows[1] = tmp;
-            Timer.stop('tot')
-
         }
 
 
@@ -345,7 +294,6 @@ class Main {
         // this.tbody.appendChild(docfrag);
 
         // ... than adding directly
-        Timer.start('add')
         var rows = this.rows, s_data = this.store.data, data = this.data, tbody = this.tbody;
         for(let i=rows.length;i<s_data.length; i++) {
             let tr = this.createRow(s_data[i]);
@@ -353,8 +301,6 @@ class Main {
             data[i] = s_data[i];
             tbody.appendChild(tr);
         }
-        Timer.stop('add')
-
     }
     createRow(data) {
         const tr = rowTemplate.cloneNode(true),

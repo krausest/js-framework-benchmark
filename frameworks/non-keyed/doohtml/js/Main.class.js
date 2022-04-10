@@ -1,14 +1,12 @@
-'use strict';
+'use strict'
 
-const _random = max => Math.random() * max | 0;
+const _random = max => Math.random() * max | 0
 
-const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"]
+const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"]
+const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"]
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
-
-import Timer from './doo.timer.js'
 
 Doo.define(
   	class Main extends Doo {
@@ -35,21 +33,21 @@ Doo.define(
 		async dooAfterRender() {
 			this.tbody = this.shadow.querySelector('#tbody')
 			this.shadow.querySelector(this.scrollTarget).addEventListener('click', e => {
-				e.preventDefault();
+				e.preventDefault()
 				if (e.target.parentElement.matches('.remove')) {
-					this.delete(e.target.parentElement);
+					this.delete(e.target.parentElement)
 				} else if (e.target.tagName === 'A') {
-					this.select(e.target);
+					this.select(e.target)
 				}
-			});
+			})
 		}
 	
 		getParentRow(elem) {
         	while (elem) {
         		if (elem.tagName === "TR") {return elem}
-        		elem = elem.parentNode;
+        		elem = elem.parentNode
         	}
-        	return undefined;
+        	return undefined
         }
 
 		buildData(count = 1000) {
@@ -75,28 +73,12 @@ Doo.define(
 			}
 			this.renderTable()
 		}
-
-		run(e) {
-			Timer.start('tot')
-			this.data.rows = this.buildData()
-			if (this.tbody.childNodes.length > this.data.rows.length) {
-				this.tbody.textContent = ''
-			}
-			this.renderTable()
-	//		e.target.blur()
-			Timer.stop('tot')
-		}
-
-		add(e) {
-			Timer.start('tot')
-			let startRow = this.data.rows.length
+		add() {
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.renderTable(this.data.rows, startRow)
-			Timer.stop('tot')
-
+			this.renderTable(this.data.rows, this.data.rows.length)
 		}    
 
-		runLots(e) {
+		runLots() {
 			this.data.rows = this.buildData(10000)
 			if (this.tbody.childNodes.length > this.data.rows.length) {
 				this.tbody.textContent = ''
@@ -104,18 +86,7 @@ Doo.define(
 			this.renderTable()
 		}
 
-		runLots(e) {
-			Timer.start('tot')
-			this.data.rows = this.buildData(10000)
-			if (this.tbody.childNodes.length > this.data.rows.length) {
-				this.tbody.textContent = ''
-			}
-			this.renderTable()
-	//		e.target.blur()
-			Timer.stop('tot')
-		}
-
-		update(e) {
+		update() {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
 				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
 			}
@@ -139,37 +110,38 @@ Doo.define(
 		}
 
 		swapRows() {
-			if (this.data.rows.length>10) {
-				let node1 = this.tbody.childNodes[1]
-				let node2 = this.tbody.childNodes[998]
-
-				let row1 = this.data.rows[1];
+			if (this.data.rows.length > 998) {
+				let node1 = this.tbody.firstChild.nextSibling, 
+					node2 = node1.nextSibling,
+					node998 = this.tbody.childNodes[998],
+					node999 = node998.nextSibling,
+					row1 = this.data.rows[1]
+				
 				this.data.rows[1] = this.data.rows[998];
 				this.data.rows[998] = row1
 				
-				this.tbody.insertBefore(node2, node1)
-				this.tbody.insertBefore(node1, this.tbody.childNodes[999])
-
+				this.tbody.insertBefore(node998, node2)
+				this.tbody.insertBefore(node1, node999)
 			}
 		}
 
 		addEventListeners() {
 			document.getElementById("main").addEventListener('click', e => {
-				e.preventDefault();
+				e.preventDefault()
 				if (e.target.matches('#runlots')) {
-					this.runLots(e);
+					this.runLots()
 				} else if (e.target.matches('#run')) {
-					this.run(e);
+					this.run()
 				} else if (e.target.matches('#add')) {
-					this.add(e);
+					this.add()
 				} else if (e.target.matches('#update')) {
-					this.update(e);
+					this.update()
 				} else if (e.target.matches('#clear')) {
-					this.clear();
+					this.clear()
 				} else if (e.target.matches('#swaprows')) {
-					this.swapRows(e);
+					this.swapRows()
 				}
 			})    
-    	}   
+    	}
 	}
 )

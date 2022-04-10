@@ -8,6 +8,8 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 
+import Timer from './doo.timer.js'
+
 Doo.define(
   	class Main extends Doo {
 		constructor() {
@@ -79,16 +81,35 @@ Doo.define(
 		}  
 
 		run() {
+
 			this.clear()
 			this.data.rows = this.buildData()
 			this.renderTable()
 
 		}
 
+		run(e) {
+			Timer.start('tot')
+			this.clear()
+			this.data.rows = this.buildData()
+			this.renderTable()
+	//		e.target.blur()
+			Timer.stop('tot')
+		}
+
+
 		add() {
 			this.data.rows = this.data.rows.concat(this.buildData())
 			this.renderTable(this.data.rows)
 		}    
+	// 	add() {
+	// //		let startRow = this.data.rows.length
+	// 		this.data.rows = this.data.rows.concat(this.buildData())
+	// 		this.renderTable(this.data.rows, this.data.rows.length)
+
+	// 	}    
+
+
 
 		runLots() {
 
@@ -96,6 +117,37 @@ Doo.define(
 			this.data.rows = this.buildData(10000)
 			this.renderTable()
 		}
+		runLots(e) {
+			Timer.start('tot')
+			this.clear()
+			this.data.rows = this.buildData(10000)	
+			this.renderTable()
+			e.target.blur()
+			Timer.stop('tot')
+		}
+		renderTable(dataSet=this.data[this.defaultDataSet], start=0) {
+			let len = dataSet.length - start,
+			    elem = document.createElement('tbody')
+			elem.innerHTML = this.renderNode(this.place[0], dataSet, start , len) 
+			let tableRows = elem.querySelectorAll('tr'),
+			newElem
+			for (let i=0;i<len;i++) {
+				newElem = this.place[0].appendChild(tableRows.item(i))
+				newElem.key = dataSet[i].id
+			}	
+			// newElem = this.place[0].appendChild(tableRows.item(len-1))
+			// newElem.key = dataSet[len-1].id
+
+			// for (let i=len-2;i>=0;i--) {
+			// 	newElem = this.place[0].insertBefore(tableRows.item(i), this.place[0].firstChild)
+			// 	newElem.key = dataSet[i].id
+			// }	
+
+
+		}
+	
+
+
 
 		update() {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
@@ -126,17 +178,18 @@ Doo.define(
 		}
 
 		swapRows() {
-			if (this.data.rows.length>10) {
-				let node1 = this.tbody.childNodes[1]
-				let node2 = this.tbody.childNodes[998]
-
-				let row1 = this.data.rows[1];
+			if (this.data.rows.length > 998) {
+				let node1 = this.tbody.firstChild.nextSibling, 
+					node2 = node1.nextSibling,
+					node998 = this.tbody.childNodes[998],
+					node999 = node998.nextSibling,
+					row1 = this.data.rows[1]
+				
 				this.data.rows[1] = this.data.rows[998];
 				this.data.rows[998] = row1
 				
-				this.tbody.insertBefore(node2, node1)
-				this.tbody.insertBefore(node1, this.tbody.childNodes[999])
-
+				this.tbody.insertBefore(node998, node2)
+				this.tbody.insertBefore(node1, node999)
 			}
 		}
 
@@ -144,9 +197,9 @@ Doo.define(
 			document.getElementById("main").addEventListener('click', e => {
 				e.preventDefault()
 				if (e.target.matches('#runlots')) {
-					this.runLots()
+					this.runLots(e)
 				} else if (e.target.matches('#run')) {
-					this.run()
+					this.run(e)
 				} else if (e.target.matches('#add')) {
 					this.add()
 				} else if (e.target.matches('#update')) {
