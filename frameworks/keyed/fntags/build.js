@@ -1,18 +1,27 @@
 const fs = require( 'fs-extra' )
 const terser = require( 'terser' )
 
-if( fs.existsSync( 'dist' ) ) fs.removeSync( 'dist' )
-fs.mkdirSync( 'dist' )
+async function build() {
 
-const minify = ( file ) => {
-    let content = fs.readFileSync( file, 'utf8' )
-    if( process.argv[ 2 ] === 'dev' ) {
-        return content
-    } else {
-        const code = terser.minify( content ).code
-        if( !code ) throw new Error( `failed to minify ${file}` ).stack
-        return code
+    if( await fs.exists( 'dist' ) ) await fs.remove( 'dist' )
+    await fs.mkdir( 'dist' )
+
+    const minify = async ( file ) => {
+        let content = await fs.readFile( file, 'utf8' )
+        if( process.argv[2] === 'dev' ) {
+            return content
+        } else {
+            let minifyOutput = await terser.minify( content, {module: true, ecma: 2015} );
+            if( minifyOutput.error ) {
+                const err = new Error( `failed to minify ${file}` )
+                err.stack += `\nCaused By: ${minifyOutput.error.stack}`
+                throw err
+            }
+            return minifyOutput.code
+        }
     }
+    await fs.writeFile( 'dist/fntags.min.js', await minify( 'node_modules/@srfnstack/fntags/src/fntags.mjs' ) )
+    await fs.writeFile( 'dist/Main.js', await minify( 'src/Main.js' ) )
 }
-fs.writeFileSync('dist/fntags.min.js', minify('node_modules/fntags/src/fntags.js'))
-fs.writeFileSync( 'dist/Main.js', minify( 'src/Main.js' ) )
+
+build().catch(e => {throw e})

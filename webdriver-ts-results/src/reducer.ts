@@ -1,5 +1,9 @@
 import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, categories } from "./Common"
-import {benchmarks, frameworks, results as rawResults} from './results';
+import {benchmarks as benchmark_orig, frameworks, results as rawResults} from './results';
+
+// Temporarily disable script bootup time
+//const benchmarks = benchmark_orig;
+const benchmarks = benchmark_orig.filter(b => b.id!=='32_startup-bt');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const jStat: any = require('jStat').jStat;

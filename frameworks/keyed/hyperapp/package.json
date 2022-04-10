@@ -7,7 +7,7 @@
     "frameworkVersionFromPackage": "hyperapp"
   },
   "dependencies": {
-    "hyperapp": "2.0.12"
+    "hyperapp": "2.0.20"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^7.1.3",

@@ -14,19 +14,24 @@ interface HelperBucket<
 }
 
 class HelperWithServicesManager implements HelperManager<HelperBucket> {
-  capabilities = helperCapabilities('glimmerjs-2.0.0');
+  capabilities = helperCapabilities('3.23', { hasValue: true });
+  fn: any;
 
   createHelper(fn: helperFunc, args: any): HelperBucket {
-    return { fn, args };
+    if (this.fn === undefined) {
+      this.fn = fn;
+    }
+    return args.positional;
   }
 
-  getValue(instance: HelperBucket): unknown {
-    const { args } = instance;
-    return instance.fn(args.positional);
+  getValue(args): unknown {
+    return this.fn(args);
   }
 }
 
-const HelperWithServicesManagerFactory = (): HelperWithServicesManager => new HelperWithServicesManager();
+const Factory = new HelperWithServicesManager();
+
+const HelperWithServicesManagerFactory = (): HelperWithServicesManager => Factory;
 
 export function helper<T extends Function>(fn: T): T {
   setHelperManager(HelperWithServicesManagerFactory, fn);

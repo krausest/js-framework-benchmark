@@ -24,26 +24,26 @@ interface Category {
 }
 
 export const categories: Category[] = [
-  {id:1, text:"Manual DOM manipulations", issues: [772]},
-  {id:2, text:"View state on the model", issues: [800]},
-  {id:3, text:"Explicit requestAnimationFrame calls", issues: [796]},
-  {id:4, text:"Manual event delegation", issues: [801]},
-  {id:5, text:"Errors in the implementation", issues: [634, 694]},
+  {id:1, text:"[Note]: Manual DOM manipulations", issues: [772]},
+  {id:2, text:"[Note]:View state on the model", issues: [800]},
+  {id:3, text:"[Note]: Explicit requestAnimationFrame calls", issues: [796]},
+  {id:4, text:"[Note]: Manual event delegation", issues: [801]},
+  {id:5, text:"[Issue]: Errors in the implementation", issues: [634, 694]},
 ]
 
 export const knownIssues = [
-    {issue: 634, severity: Severity.Error, text:"The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
-    {issue: 694, severity: Severity.Error, text:"Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694"},
-    {issue: 772, severity: Severity.Categorization, text:"Implementation uses manual DOM manipulations", link: "https://github.com/krausest/js-framework-benchmark/issues/772"},
-    {issue: 796, severity: Severity.Categorization, text:"Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
-    {issue: 800, severity: Severity.Categorization, text:"View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
-    {issue: 801, severity: Severity.Categorization, text:"Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
+    {issue: 634, severity: Severity.Error, text:"[Issue]: The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
+    {issue: 694, severity: Severity.Error, text:"[Issue]: Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694"},
+    {issue: 772, severity: Severity.Categorization, text:"[Note]: Implementation uses manual DOM manipulations", link: "https://github.com/krausest/js-framework-benchmark/issues/772"},
+    {issue: 796, severity: Severity.Categorization, text:"[Note]: Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
+    {issue: 800, severity: Severity.Categorization, text:"[Note]: View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
+    {issue: 801, severity: Severity.Categorization, text:"[Note]: Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
   ];
 
 export function findIssue(issueNumber: number) {
     return knownIssues.find(i => i.issue === issueNumber)
 }
-export enum BenchmarkType { CPU, MEM, STARTUP }
+export enum BenchmarkType { CPU, MEM, DUMMY, STARTUP }
 
 export interface Benchmark {
     id: string;

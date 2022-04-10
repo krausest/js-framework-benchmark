@@ -10,8 +10,10 @@ import {
 export default class MyTable extends Component {
   @tracked
   id = 1;
+
   @tracked
   data = [];
+
   @tracked
   _selected = undefined;
 

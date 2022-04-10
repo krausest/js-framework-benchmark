@@ -51,11 +51,20 @@ Doo.define(
         }
 
 		buildData(count = 1000) {
-			const data = [];
+			const data = []
 			for (let i = 0; i < count; i++) {
 				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
 			}
 			return data	
+		}
+	
+		getIndex(row) {
+			let idx =  this.data.rows.findIndex((item, i) => {
+				if (item.id === row.key) {
+					return i
+				}
+			}) 
+			return idx
 		}
 
 		getIndex(row) {
@@ -70,6 +79,7 @@ Doo.define(
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
+				let idx = this.getIndex(row)
 				this.tbody.removeChild(row)
 				let idx = this.getIndex(row)
 				if (idx !== undefined) {
