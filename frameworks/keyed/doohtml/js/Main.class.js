@@ -119,6 +119,16 @@ Doo.define(
 			}    
 		}
 
+		toggleSelect(row) {
+			let row = this.getParentRow(elem)
+			if (row) {
+				row.classList.toggle('danger')
+				if (row.classList.contains('danger')) {
+					this.selectedRow = row
+				}	
+			}    
+		}		
+
 		clear() {
 			this.data.rows = []
 			this.tbody.textContent = ''
