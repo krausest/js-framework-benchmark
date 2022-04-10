@@ -57,6 +57,7 @@ Doo.define(
 			}
 			return data	
 		}
+
 		getIndex(row) {
 			let idx =  this.data.rows.findIndex((item, i) => {
 				if (item.id === row.key) {
@@ -79,37 +80,16 @@ Doo.define(
 		}  
 
 		run() {
-
 			this.clear()
 			this.data.rows = this.buildData()
 			this.renderTable()
-
 		}
 
-		add() {
-			this.data.rows = this.data.rows.concat(this.buildData())
-			this.renderTable(this.data.rows, this.data.rows.length)
-		}    
 	 	add() {
 			let startRow = this.data.rows.length
 	 		this.data.rows = this.data.rows.concat(this.buildData())
 	 		this.renderTable(this.data.rows, startRow)
-
 		}    
-
-		renderTable(dataSet=this.data[this.defaultDataSet], start=0) {
-		//	debugger
-			let len = dataSet.length - start
-			let elem = document.createElement('tbody')
-			elem.innerHTML = this.renderNode(this.place[0], dataSet, start , len) 
-			let tableRows = elem.querySelectorAll('tr')
-			let newElem
-			for (let i=0;i<len;i++) {
-				newElem = this.place[0].appendChild(tableRows.item(i))
-				newElem.key = dataSet[i].id
-			}	
-		}
-
 
 		runLots() {
 			this.clear()
