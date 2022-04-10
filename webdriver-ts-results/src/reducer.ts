@@ -2,8 +2,8 @@ import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, Framewo
 import {benchmarks as benchmark_orig, frameworks, results as rawResults} from './results';
 
 // Temporarily disable script bootup time
-const benchmarks = benchmark_orig;
-// const benchmarks = benchmark_orig.filter(b => b.id!=='32_startup-bt');
+//const benchmarks = benchmark_orig;
+const benchmarks = benchmark_orig.filter(b => b.id!=='32_startup-bt');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const jStat: any = require('jStat').jStat;

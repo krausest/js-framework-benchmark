@@ -2,9 +2,9 @@ import * as _ from "lodash";
 import * as fs from "fs";
 import { JSONResult, config, FrameworkData, initializeFrameworks } from "./common";
 import * as yargs from "yargs";
-import { BenchmarkInfo, BenchmarkType, fileName } from "./benchmarksCommon";
-import { BenchmarkPuppeteer } from "./benchmarksPuppeteer";
-import { BenchmarkWebdriver } from "./benchmarksWebdriver";
+import { BenchmarkInfo, BenchmarkType, fileName, TBenchmark } from "./benchmarksCommon";
+import { TBenchmarkPuppeteer } from "./benchmarksPuppeteer";
+import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver";
 import {benchmarks} from "./benchmarkConfiguration";
 import { BenchmarkLighthouse } from "./benchmarksLighthouse";
 
@@ -15,13 +15,13 @@ async function main() {
 
   let resultJS = "import {RawResult} from './Common';\n\nexport const results: RawResult[]=[";
 
-  let allBenchmarks: BenchmarkInfo[] = [];
+  let allBenchmarks: Array<BenchmarkInfo> = [];
   let jsonResult: { framework: string; benchmark: string; values: number[] }[] = [];
   
   benchmarks.forEach((benchmark, bIdx) => {
-    if (benchmark.type == BenchmarkType.STARTUP) {
+    if (benchmark.type == BenchmarkType.STARTUP_MAIN) {
       let sb = benchmark as BenchmarkLighthouse;
-      allBenchmarks = allBenchmarks.concat( sb.subbenchmarks );
+      allBenchmarks = allBenchmarks.concat( sb.subbenchmarks);
     } else {
       allBenchmarks.push(benchmark.benchmarkInfo);
     }
@@ -29,6 +29,7 @@ async function main() {
 
   frameworks.forEach((framework, fIdx) => {
     allBenchmarks.forEach((benchmarkInfo) => {
+
       let name = `${fileName(framework, benchmarkInfo)}`;
       let file = "./results/" + name;
       if (fs.existsSync(file)) {

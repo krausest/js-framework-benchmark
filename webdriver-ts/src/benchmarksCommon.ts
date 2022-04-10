@@ -3,6 +3,7 @@ import { FrameworkData } from "./common";
 export enum BenchmarkType {
   CPU,
   MEM,
+  STARTUP_MAIN,
   STARTUP,
 }
 
@@ -13,12 +14,37 @@ export enum DurationMeasurementMode {
 
 export interface BenchmarkInfo {
   id: string;
-  type: BenchmarkType;
   label: string;
   description: string;
+  type: BenchmarkType;
+}
+
+export interface CPUBenchmark extends BenchmarkInfo {
   throttleCPU?: number;
   allowBatching: boolean;
   durationMeasurementMode: DurationMeasurementMode;
+  type: BenchmarkType.CPU;
+}
+
+export interface MemBenchmark extends BenchmarkInfo {
+  type: BenchmarkType.MEM;
+}
+
+export interface StartupMainBenchmark extends BenchmarkInfo {
+  type: BenchmarkType.STARTUP_MAIN;
+}
+
+export interface StartupBenchmark extends BenchmarkInfo {
+  type: BenchmarkType.STARTUP;
+  property: string;
+  fn: (x:number) => number;
+}
+
+export type TBenchmark = CPUBenchmark | MemBenchmark | StartupMainBenchmark // |StartupBenchmark;
+
+export interface BenchmarkImpl {
+  benchmarkInfo: TBenchmark;
+  type: BenchmarkType;
 }
 
 export function fileName(framework: FrameworkData, benchmark: BenchmarkInfo) {

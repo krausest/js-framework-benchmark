@@ -3,7 +3,7 @@
 // import * as benchmarksCommon from "./benchmarksCommon";
 // import {DurationMeasurementMode} from "./benchmarksCommon";
 
-import { BenchmarkInfo, BenchmarkType, BENCHMARK_30, DurationMeasurementMode } from "./benchmarksCommon";
+import { BenchmarkImpl, BenchmarkType, BENCHMARK_30, DurationMeasurementMode, StartupBenchmark, StartupMainBenchmark } from "./benchmarksCommon";
 
 
 // export interface LighthouseData {
@@ -18,16 +18,10 @@ import { BenchmarkInfo, BenchmarkType, BENCHMARK_30, DurationMeasurementMode } f
 //   property: keyof LighthouseData;
 // }
 
-
-export interface StartupBenchmark extends BenchmarkInfo {
-  property: string;
-  fn: (x:number) => number;
-}
-
-export interface StartupBenchmarkResult extends StartupBenchmark {
+export interface StartupBenchmarkResult extends BenchmarkImpl {
+  benchmark: StartupBenchmark;
   result: number;
 }
-
 
 let id = (x:number) => x;
 let toKb = (x:number) => x/1024;
@@ -39,8 +33,6 @@ export const benchStartupConsistentlyInteractive: StartupBenchmark = {
   property: "interactive",
   fn: id,
   type: BenchmarkType.STARTUP,
-  allowBatching: false,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
 };
 
 export const benchStartupBootup: StartupBenchmark = {
@@ -50,8 +42,6 @@ export const benchStartupBootup: StartupBenchmark = {
   property: "bootup-time",
   fn: id,
   type: BenchmarkType.STARTUP,
-  allowBatching: false,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
 };
 
 export const benchStartupMainThreadWorkCost: StartupBenchmark = {
@@ -61,8 +51,6 @@ export const benchStartupMainThreadWorkCost: StartupBenchmark = {
   property: "mainthread-work-breakdown",
   fn: id,
   type: BenchmarkType.STARTUP,
-  allowBatching: false,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
 };
 
 export const benchStartupTotalBytes: StartupBenchmark = {
@@ -72,38 +60,20 @@ export const benchStartupTotalBytes: StartupBenchmark = {
   property: "total-byte-weight",
   fn: toKb,
   type: BenchmarkType.STARTUP,
-  allowBatching: false,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
 };
 
-export let startupBenchmarks = [benchStartupConsistentlyInteractive, benchStartupBootup, benchStartupMainThreadWorkCost, benchStartupTotalBytes];
+export class BenchmarkLighthouse implements BenchmarkImpl {
+  type = BenchmarkType.STARTUP_MAIN;
 
-export class BenchmarkLighthouse {
-  id: string;
-  type: BenchmarkType;
-  label: string;
-  description: string;
-  throttleCPU?: number;
-  allowBatching: boolean;
-  durationMeasurementMode: DurationMeasurementMode;
-  subbenchmarks = startupBenchmarks;
+  subbenchmarks = [benchStartupConsistentlyInteractive, benchStartupBootup, benchStartupMainThreadWorkCost, benchStartupTotalBytes];
 
-  constructor(public benchmarkInfo: BenchmarkInfo) {
-    this.id = benchmarkInfo.id;
-    this.type = benchmarkInfo.type;
-    this.label = benchmarkInfo.label;
-    this.description = benchmarkInfo.description;
-    this.throttleCPU = benchmarkInfo.throttleCPU;
-    this.allowBatching = benchmarkInfo.allowBatching;
-    this.durationMeasurementMode = benchmarkInfo.durationMeasurementMode;
+  constructor(public benchmarkInfo: StartupMainBenchmark) {
   }
 }
 
 export const benchLighthouse = new BenchmarkLighthouse({
   id: BENCHMARK_30,
-  label: "Startup Metric",
-  description: "Startup Metrics as reported from Lighthouse",
-  type: BenchmarkType.STARTUP,
-  allowBatching: false,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT,
+  type: BenchmarkType.STARTUP_MAIN,
+  label: '',
+  description: '',
 });

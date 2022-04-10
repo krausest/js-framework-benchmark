@@ -1,4 +1,4 @@
-import { BenchmarkInfo, BenchmarkType } from "./benchmarksCommon";
+import { BenchmarkType } from "./benchmarksCommon";
 import {
   testTextContains,
   testTextNotContained,
@@ -18,23 +18,9 @@ import {slowDownFactor, slowDownNote, DurationMeasurementMode} from "./benchmark
 
 const SHORT_TIMEOUT = 20 * 1000;
 
-export abstract class BenchmarkWebdriver {
-  id: string;
-  type: BenchmarkType;
-  label: string;
-  description: string;
-  throttleCPU?: number;
-  allowBatching: boolean;
-  durationMeasurementMode: DurationMeasurementMode;
-
-  constructor(public benchmarkInfo: BenchmarkInfo) {
-    this.id = benchmarkInfo.id;
-    this.type = benchmarkInfo.type;
-    this.label = benchmarkInfo.label;
-    this.description = benchmarkInfo.description;
-    this.throttleCPU = benchmarkInfo.throttleCPU;
-    this.allowBatching = benchmarkInfo.allowBatching;
-    this.durationMeasurementMode = benchmarkInfo.durationMeasurementMode;
+export abstract class CPUBenchmarkWebdriver {
+  type = BenchmarkType.CPU;
+  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmark) {
   }
   abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
   abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
@@ -43,7 +29,7 @@ export abstract class BenchmarkWebdriver {
   }
 }
 
-export const benchRun = new (class extends BenchmarkWebdriver {
+export const benchRun = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_01,
@@ -64,7 +50,7 @@ export const benchRun = new (class extends BenchmarkWebdriver {
   }
 })();
 
-export const benchReplaceAll = new (class extends BenchmarkWebdriver {
+export const benchReplaceAll = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_02,
@@ -89,7 +75,7 @@ export const benchReplaceAll = new (class extends BenchmarkWebdriver {
   }
 })();
 
-export const benchUpdate = new (class extends BenchmarkWebdriver {
+export const benchUpdate = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_03,
@@ -116,7 +102,7 @@ export const benchUpdate = new (class extends BenchmarkWebdriver {
   }
 })();
 
-export const benchSelect = new (class extends BenchmarkWebdriver {
+export const benchSelect = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_04,
@@ -139,7 +125,7 @@ export const benchSelect = new (class extends BenchmarkWebdriver {
   }
 })();
 
-export const benchSwapRows = new (class extends BenchmarkWebdriver {
+export const benchSwapRows = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_05,
@@ -168,7 +154,7 @@ export const benchSwapRows = new (class extends BenchmarkWebdriver {
   }
 })();
 
-export const benchRemove = new (class extends BenchmarkWebdriver {
+export const benchRemove = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_06,
@@ -209,7 +195,7 @@ export const benchRemove = new (class extends BenchmarkWebdriver {
   }
 })();
 
-export const benchRunBig = new (class extends BenchmarkWebdriver {
+export const benchRunBig = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_07,
@@ -230,7 +216,7 @@ export const benchRunBig = new (class extends BenchmarkWebdriver {
   }
 })();
 
-export const benchAppendToManyRows = new (class extends BenchmarkWebdriver {
+export const benchAppendToManyRows = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_08,
@@ -253,7 +239,7 @@ export const benchAppendToManyRows = new (class extends BenchmarkWebdriver {
   }
 })();
 
-export const benchClear = new (class extends BenchmarkWebdriver {
+export const benchClear = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_09,

@@ -2,7 +2,9 @@ import * as benchmarksPuppeteer from "./benchmarksPuppeteer";
 import * as benchmarksWebdriver from "./benchmarksWebdriver";
 import * as benchmarksLighthouse from "./benchmarksLighthouse";
 
-export const benchmarks: Array<benchmarksPuppeteer.BenchmarkPuppeteer|benchmarksWebdriver.BenchmarkWebdriver|benchmarksLighthouse.BenchmarkLighthouse> = [
+export type TBenchmark = benchmarksWebdriver.CPUBenchmarkWebdriver | benchmarksPuppeteer.TBenchmarkPuppeteer | benchmarksLighthouse.BenchmarkLighthouse;
+
+export const benchmarks: Array<TBenchmark> = [
     benchmarksPuppeteer.benchRun,
     benchmarksPuppeteer.benchReplaceAll,
     benchmarksPuppeteer.benchUpdate,

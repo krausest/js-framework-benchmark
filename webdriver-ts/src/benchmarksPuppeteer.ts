@@ -1,30 +1,16 @@
 // import { testTextContains, testTextContainsJS, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath } from './webdriverAccess'
 
 import { Browser, Page, Puppeteer } from "puppeteer-core";
-import { BenchmarkInfo, BenchmarkType } from "./benchmarksCommon";
+import { TBenchmark, BenchmarkType } from "./benchmarksCommon";
 import { config, FrameworkData } from "./common";
 import { clickElement, checkElementHasClass, checkElementExists, checkElementNotExists, checkElementContainsText } from "./puppeteerAccess";
 import * as benchmarksCommon from "./benchmarksCommon";
 import {slowDownFactor, slowDownNote, DurationMeasurementMode} from "./benchmarksCommon";
 
 
-export abstract class BenchmarkPuppeteer {
-  id: string;
-  type: BenchmarkType;
-  label: string;
-  description: string;
-  throttleCPU?: number;
-  allowBatching: boolean;
-  durationMeasurementMode: DurationMeasurementMode;
-
-  constructor(public benchmarkInfo: BenchmarkInfo) {
-    this.id = benchmarkInfo.id;
-    this.type = benchmarkInfo.type;
-    this.label = benchmarkInfo.label;
-    this.description = benchmarkInfo.description;
-    this.throttleCPU = benchmarkInfo.throttleCPU;
-    this.allowBatching = benchmarkInfo.allowBatching;
-    this.durationMeasurementMode = benchmarkInfo.durationMeasurementMode;
+export abstract class CPUBenchmarkPuppeteer implements benchmarksCommon.BenchmarkImpl {
+  type = BenchmarkType.CPU;
+  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmark) {
   }
   abstract init(page: Page, framework: FrameworkData): Promise<any>;
   abstract run(page: Page, framework: FrameworkData): Promise<any>;
@@ -33,7 +19,20 @@ export abstract class BenchmarkPuppeteer {
   }
 }
 
-export let benchRun = new class extends BenchmarkPuppeteer {
+export abstract class MemBenchmarkPuppeteer implements benchmarksCommon.BenchmarkImpl {
+  type = BenchmarkType.MEM;
+  constructor(public benchmarkInfo: benchmarksCommon.MemBenchmark) {
+  }
+  abstract init(page: Page, framework: FrameworkData): Promise<any>;
+  abstract run(page: Page, framework: FrameworkData): Promise<any>;
+  after(page: Page, framework: FrameworkData): Promise<any> {
+    return null;
+  }
+}
+
+export type TBenchmarkPuppeteer = CPUBenchmarkPuppeteer | MemBenchmarkPuppeteer;
+
+export let benchRun = new class extends CPUBenchmarkPuppeteer {
   constructor() {
       super({
         id: benchmarksCommon.BENCHMARK_01,
@@ -54,7 +53,7 @@ export let benchRun = new class extends BenchmarkPuppeteer {
   }
 }
 
-export const benchReplaceAll = new class extends BenchmarkPuppeteer {
+export const benchReplaceAll = new class extends CPUBenchmarkPuppeteer {
   constructor() {
       super({
         id: benchmarksCommon.BENCHMARK_02,
@@ -80,7 +79,7 @@ export const benchReplaceAll = new class extends BenchmarkPuppeteer {
   }
 }
 
-export const benchUpdate = new class extends BenchmarkPuppeteer {
+export const benchUpdate = new class extends CPUBenchmarkPuppeteer {
   constructor() {
       super({
         id: benchmarksCommon.BENCHMARK_03,
@@ -108,7 +107,7 @@ export const benchUpdate = new class extends BenchmarkPuppeteer {
   }
 }
 
-export const benchSelect = new class extends BenchmarkPuppeteer {
+export const benchSelect = new class extends CPUBenchmarkPuppeteer {
   constructor() {
       super({
         id: benchmarksCommon.BENCHMARK_04,
@@ -132,7 +131,7 @@ export const benchSelect = new class extends BenchmarkPuppeteer {
   }
 }
 
-export const benchSwapRows = new class extends BenchmarkPuppeteer {
+export const benchSwapRows = new class extends CPUBenchmarkPuppeteer {
   constructor() {
       super({
         id: benchmarksCommon.BENCHMARK_05,
@@ -163,7 +162,7 @@ export const benchSwapRows = new class extends BenchmarkPuppeteer {
   }
 }
 
-export const benchRemove = new class extends BenchmarkPuppeteer {
+export const benchRemove = new class extends CPUBenchmarkPuppeteer {
   constructor() {
       super({
         id: benchmarksCommon.BENCHMARK_06,
@@ -199,7 +198,7 @@ export const benchRemove = new class extends BenchmarkPuppeteer {
     await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(4)>td:nth-of-type(1)`, "10");
   }
 }
-export const benchRunBig = new class extends BenchmarkPuppeteer {
+export const benchRunBig = new class extends CPUBenchmarkPuppeteer {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_07,
@@ -221,7 +220,7 @@ export const benchRunBig = new class extends BenchmarkPuppeteer {
   }
   
 
-  export const benchAppendToManyRows = new class extends BenchmarkPuppeteer {
+  export const benchAppendToManyRows = new class extends CPUBenchmarkPuppeteer {
   constructor() {
       super({
         id: benchmarksCommon.BENCHMARK_08,
@@ -245,7 +244,7 @@ export const benchRunBig = new class extends BenchmarkPuppeteer {
   }
 }
 
-export const benchClear = new class extends BenchmarkPuppeteer {
+export const benchClear = new class extends CPUBenchmarkPuppeteer {
   constructor() {
       super({
         id: benchmarksCommon.BENCHMARK_09,
@@ -268,15 +267,13 @@ export const benchClear = new class extends BenchmarkPuppeteer {
   }
 }
 
-export const benchReadyMemory = new (class extends BenchmarkPuppeteer {
+export const benchReadyMemory = new (class extends MemBenchmarkPuppeteer {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_21,
       label: "ready memory",
       description: "Memory usage after page load.",
       type: BenchmarkType.MEM,
-      allowBatching: false,
-      durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
     });
   }
   async init(page: Page) {
@@ -286,15 +283,13 @@ export const benchReadyMemory = new (class extends BenchmarkPuppeteer {
   async after(page: Page, framework: FrameworkData) {}
 })();
 
-export const benchRunMemory = new (class extends BenchmarkPuppeteer {
+export const benchRunMemory = new (class extends MemBenchmarkPuppeteer {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_22,
       label: "run memory",
       description: "Memory usage after adding 1000 rows.",
       type: BenchmarkType.MEM,
-      allowBatching: false,
-      durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
     });
   }
   async init(page: Page) {
@@ -306,15 +301,13 @@ export const benchRunMemory = new (class extends BenchmarkPuppeteer {
   }
 })();
 
-export const benchUpdate5Memory = new (class extends BenchmarkPuppeteer {
+export const benchUpdate5Memory = new (class extends MemBenchmarkPuppeteer {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_23,
       label: "update every 10th row for 1k rows (5 cycles)",
       description: "Memory usage after clicking update every 10th row 5 times",
       type: BenchmarkType.MEM,
-      allowBatching: false,
-      durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
     });
   }
   async init(page: Page) {
@@ -329,15 +322,13 @@ export const benchUpdate5Memory = new (class extends BenchmarkPuppeteer {
   }
 })();
 
-export const benchReplace5Memory = new (class extends BenchmarkPuppeteer {
+export const benchReplace5Memory = new (class extends MemBenchmarkPuppeteer {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_24,
       label: "replace 1k rows (5 cycles)",
       description: "Memory usage after clicking create 1000 rows 5 times",
       type: BenchmarkType.MEM,
-      allowBatching: false,
-      durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
     });
   }
   async init(page: Page) {
@@ -351,15 +342,13 @@ export const benchReplace5Memory = new (class extends BenchmarkPuppeteer {
   }
 })();
 
-export const benchCreateClear5Memory = new (class extends BenchmarkPuppeteer {
+export const benchCreateClear5Memory = new (class extends MemBenchmarkPuppeteer {
   constructor() {
     super({
       id: benchmarksCommon.BENCHMARK_25,
       label: "creating/clearing 1k rows (5 cycles)",
       description: "Memory usage after creating and clearing 1000 rows 5 times",
       type: BenchmarkType.MEM,
-      allowBatching: false,
-      durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
     });
   }
   async init(page: Page) {
@@ -376,6 +365,6 @@ export const benchCreateClear5Memory = new (class extends BenchmarkPuppeteer {
 })();
 
 
-export function fileNameTrace(framework: FrameworkData, benchmark: BenchmarkInfo, run: number) {
+export function fileNameTrace(framework: FrameworkData, benchmark: TBenchmark, run: number) {
   return `${config.TRACES_DIRECTORY}/${framework.fullNameWithKeyedAndVersion}_${benchmark.id}_${run}.json`;
 }

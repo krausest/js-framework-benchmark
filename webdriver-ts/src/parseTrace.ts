@@ -2,11 +2,10 @@ import * as fs from 'fs';
 import { readFile } from 'fs/promises';
 import * as path from 'path';
 import * as R from 'ramda';
-import { BenchmarkInfo, BenchmarkType, DurationMeasurementMode } from './benchmarksCommon';
-import { BenchmarkPuppeteer, fileNameTrace } from './benchmarksPuppeteer';
-import { BenchmarkWebdriver } from './benchmarksWebdriver';
+import { BenchmarkType, DurationMeasurementMode } from './benchmarksCommon';
+import { CPUBenchmarkPuppeteer, fileNameTrace } from './benchmarksPuppeteer';
 import { config, initializeFrameworks } from './common';
-import { extractRelevantEvents, computeResultsCPU } from './forkedBenchmarkRunnerPuppeteer';
+import { computeResultsCPU } from './forkedBenchmarkRunnerPuppeteer';
 import {benchmarks} from "./benchmarkConfiguration";
 import { writeResults } from "./writeResults";
 
@@ -31,11 +30,9 @@ async function main() {
 }
 
 async function readAll() {
-    let allBenchmarks: BenchmarkInfo[] = [];
-
     let jsonResult: { framework: string; benchmark: string; values: number[] }[] = [];
 
-    let puppeteerCPUBenchmarks: Array<BenchmarkPuppeteer> = benchmarks.filter(b => b.type == BenchmarkType.CPU && b instanceof BenchmarkPuppeteer) as Array<BenchmarkPuppeteer>;
+    let puppeteerCPUBenchmarks: Array<CPUBenchmarkPuppeteer> = benchmarks.filter(b => b instanceof CPUBenchmarkPuppeteer) as Array<CPUBenchmarkPuppeteer>;
     
     let frameworks = await initializeFrameworks();
     for (let framework of frameworks) {
@@ -47,7 +44,7 @@ async function readAll() {
                     console.log("ignoring ", trace, "since it doesn't exist.");
                 } else {
                     console.log("checking ", trace);
-                    let result = await computeResultsCPU(trace, benchmark.durationMeasurementMode); 
+                    let result = await computeResultsCPU(trace, benchmark.benchmarkInfo.durationMeasurementMode); 
                     results.push(result);
                     console.log(result);
                 }
@@ -56,7 +53,7 @@ async function readAll() {
             results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);      
             await writeResults(config, {
                 framework: framework,
-                benchmark: benchmark,
+                benchmark: benchmark.benchmarkInfo,
                 results: results,
                 type: BenchmarkType.CPU
               });

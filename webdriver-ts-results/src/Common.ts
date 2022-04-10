@@ -43,7 +43,7 @@ export const knownIssues = [
 export function findIssue(issueNumber: number) {
     return knownIssues.find(i => i.issue === issueNumber)
 }
-export enum BenchmarkType { CPU, MEM, STARTUP }
+export enum BenchmarkType { CPU, MEM, DUMMY, STARTUP }
 
 export interface Benchmark {
     id: string;

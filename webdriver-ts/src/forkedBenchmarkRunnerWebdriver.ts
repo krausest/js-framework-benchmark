@@ -1,5 +1,5 @@
 import { WebDriver, logging } from "selenium-webdriver";
-import { BenchmarkWebdriver } from "./benchmarksWebdriver";
+import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver";
 import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess";
 import {benchmarks} from "./benchmarkConfiguration";
 
@@ -124,7 +124,7 @@ async function computeResultsCPU(
   driver: WebDriver,
   benchmarkOptions: BenchmarkOptions,
   framework: FrameworkData,
-  benchmark: BenchmarkWebdriver,
+  benchmark: CPUBenchmarkWebdriver,
   warnings: String[],
   expcectedResultCount: number
 ): Promise<number[]> {
@@ -156,7 +156,7 @@ async function computeResultsCPU(
       if (config.LOG_DEBUG) console.log("eventsAfterClick", eventsAfterClick);
 
     let lastLayoutEvent: Timingresult;
-    if (benchmark.durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT) {
+    if (benchmark.benchmarkInfo.durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT) {
       let layouts = R.filter(type_eq('layout'))(eventsAfterClick)
       layouts = R.filter((e: Timingresult) => e.ts > clicks[0].end)(layouts);
       if (layouts.length > 1) {
@@ -185,7 +185,7 @@ async function computeResultsCPU(
       })
       }
 
-    let duration = (paintsP[benchmark.durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT ? 0 : paintsP.length-1].end - clicks[0].ts)/1000.0;
+    let duration = (paintsP[benchmark.benchmarkInfo.durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT ? 0 : paintsP.length-1].end - clicks[0].ts)/1000.0;
       let upperBoundForSoundnessCheck = (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000.0;
 
       if (duration < 0) {
@@ -208,21 +208,21 @@ async function computeResultsCPU(
   return results;
 }
 
-async function runBenchmark(driver: WebDriver, benchmark: BenchmarkWebdriver, framework: FrameworkData): Promise<any> {
+async function runBenchmark(driver: WebDriver, benchmark: CPUBenchmarkWebdriver, framework: FrameworkData): Promise<any> {
   await benchmark.run(driver, framework);
-  if (config.LOG_PROGRESS) console.log("after run ", benchmark.id, benchmark.type, framework.name);
+  if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
-async function afterBenchmark(driver: WebDriver, benchmark: BenchmarkWebdriver, framework: FrameworkData): Promise<any> {
+async function afterBenchmark(driver: WebDriver, benchmark: CPUBenchmarkWebdriver, framework: FrameworkData): Promise<any> {
   if (benchmark.after) {
     await benchmark.after(driver, framework);
-    if (config.LOG_PROGRESS) console.log("after benchmark ", benchmark.id, benchmark.type, framework.name);
+    if (config.LOG_PROGRESS) console.log("after benchmark ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
   }
 }
 
-async function initBenchmark(driver: WebDriver, benchmark: BenchmarkWebdriver, framework: FrameworkData): Promise<any> {
+async function initBenchmark(driver: WebDriver, benchmark: CPUBenchmarkWebdriver, framework: FrameworkData): Promise<any> {
   await benchmark.init(driver, framework);
-  if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.id, benchmark.type, framework.name);
+  if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
 // async function registerError(driver: WebDriver, framework: FrameworkData, benchmark: Benchmark, error: string): Promise<BenchmarkError> {
@@ -259,13 +259,13 @@ function convertError(error: any): string {
 
 async function runCPUBenchmark(
   framework: FrameworkData,
-  benchmark: BenchmarkWebdriver,
+  benchmark: CPUBenchmarkWebdriver,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning> {
   let error: String = undefined;
   let warnings: String[] = [];
 
-  console.log("benchmarking ", framework, benchmark.id);
+  console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
   let driver: WebDriver = null;
   try {
     driver = buildDriver(benchmarkOptions);
@@ -287,13 +287,13 @@ async function runCPUBenchmark(
       await driver.executeScript("console.timeStamp('initBenchmark')");
 
       await initBenchmark(driver, benchmark, framework);
-      if (benchmark.throttleCPU) {
-        console.log("CPU slowdown", benchmark.throttleCPU);
-        await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: benchmark.throttleCPU });
+      if (benchmark.benchmarkInfo.throttleCPU) {
+        console.log("CPU slowdown", benchmark.benchmarkInfo.throttleCPU);
+        await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: benchmark.benchmarkInfo.throttleCPU });
       }
       await driver.executeScript("console.timeStamp('runBenchmark')");
       await runBenchmark(driver, benchmark, framework);
-      if (benchmark.throttleCPU) {
+      if (benchmark.benchmarkInfo.throttleCPU) {
         console.log("resetting CPU slowdown");
         await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
       }
@@ -325,13 +325,13 @@ export async function executeBenchmark(
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning> {
-  let runBenchmarks: Array<BenchmarkWebdriver> = benchmarks.filter(b => benchmarkId === b.id && b instanceof BenchmarkWebdriver) as Array<BenchmarkWebdriver>;
+  let runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriver) as Array<CPUBenchmarkWebdriver>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
   let benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning;
-  if (benchmark.type == BenchmarkType.CPU) {
+  if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }
 
