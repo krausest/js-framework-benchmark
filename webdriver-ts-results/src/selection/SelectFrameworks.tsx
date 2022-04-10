@@ -16,7 +16,7 @@ export const SelectBarFrameworks = ({frameworks, isSelected, select}: Props) => 
   return (
       <>
         {frameworks.map(item =>
-            <div key={item.name} className="col-3">
+            <div key={item.name}>
                 <input className="form-check-input" id={'inp-'+item.name+'-'+item.type}
                     type="checkbox"
                     onChange={(evt) => select(item, evt.target.checked)}
@@ -42,11 +42,11 @@ const SelectFrameworks = () => {
   const areAllNoneKeyedSelected = useSelector<State, boolean>(state => areAllFrameworksSelected(state, FrameworkType.NON_KEYED));
 
   return <DropDown label="Which frameworks?" width='1024px'>
-            <DropDownContents isNoneSelected={isNoneKeyedSelected} areAllSelected={areAllKeyedSelected}  selectNone={() => dispatch(selectAllFrameworks(FrameworkType.KEYED, false))} selectAll={() => dispatch(selectAllFrameworks(FrameworkType.KEYED, true))}>
+            <DropDownContents grid isNoneSelected={isNoneKeyedSelected} areAllSelected={areAllKeyedSelected}  selectNone={() => dispatch(selectAllFrameworks(FrameworkType.KEYED, false))} selectAll={() => dispatch(selectAllFrameworks(FrameworkType.KEYED, true))}>
                 <h3>Keyed frameworks:</h3>
                 <SelectBarFrameworks isSelected={(framework) => selectedFrameworks.has(framework)} select={(framework, add) => dispatch(selectFramework(framework, add))} frameworks={frameworksKeyed} />
             </DropDownContents>
-            <DropDownContents isNoneSelected={isNoneNonKeyedSelected} areAllSelected={areAllNoneKeyedSelected} selectNone={() => dispatch(selectAllFrameworks(FrameworkType.NON_KEYED, false))} selectAll={() => dispatch(selectAllFrameworks(FrameworkType.NON_KEYED, true))}>
+            <DropDownContents grid isNoneSelected={isNoneNonKeyedSelected} areAllSelected={areAllNoneKeyedSelected} selectNone={() => dispatch(selectAllFrameworks(FrameworkType.NON_KEYED, false))} selectAll={() => dispatch(selectAllFrameworks(FrameworkType.NON_KEYED, true))}>
                 <h3>Non-keyed frameworks:</h3>
                 <SelectBarFrameworks isSelected={(framework) => selectedFrameworks.has(framework)} select={(framework, add) => dispatch(selectFramework(framework, add))} frameworks={frameworksNonKeyed} />
             </DropDownContents>

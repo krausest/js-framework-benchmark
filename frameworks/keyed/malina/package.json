@@ -1,0 +1,29 @@
+{
+  "name": "js-framework-benchmark-malina",
+  "version": "1.0.0",
+  "description": "Example for Malina.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "malinajs"
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c"
+  },
+  "keywords": [
+    "malinajs"
+  ],
+  "author": "Oleg Nechaev",
+  "license": "MIT",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "11.2.1",
+    "derver": "0.5.3",
+    "malinajs": "0.7.0-alpha",
+    "rollup": "2.45.2",
+    "rollup-plugin-terser": "7.0.2"
+  }
+}

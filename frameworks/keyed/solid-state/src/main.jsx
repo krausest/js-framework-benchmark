@@ -1,5 +1,6 @@
-import { createState, createSelector } from 'solid-js';
-import { render } from 'solid-js/dom';
+import { createSelector } from 'solid-js';
+import { render } from 'solid-js/web';
+import { createStore } from 'solid-js/store'
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],
@@ -25,13 +26,13 @@ const Button = ({ id, text, fn }) =>
   </div>
 
 const App = () => {
-  const [state, setState] = createState({ data: [], selected: null }),
-    run = () => setState({ data: buildData(1000), selected: null }),
-    runLots = () => setState({ data: buildData(10000), selected: null }),
+  const [state, setState] = createStore({ data: [], selected: null }),
+    run = () => setState({ data: buildData(1000) }),
+    runLots = () => setState({ data: buildData(10000) }),
     add = () => setState('data', d => [...d, ...buildData(1000)]),
     update = () => setState('data', { by: 10 }, 'label', l => l + ' !!!'),
     swapRows = () => setState('data', d => d.length > 998 ? { 1: d[998], 998: d[1] } : d),
-    clear = () => setState({ data: [], selected: null }),
+    clear = () => setState({ data: [] }),
     select = id => setState('selected', id),
     remove = id => setState('data', d => {
       const idx = d.findIndex(d => d.id === id);
@@ -63,7 +64,7 @@ const App = () => {
       }}</For>
     </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
-  </div>
+  </div>;
 }
 
 render(App, document.getElementById("main"));

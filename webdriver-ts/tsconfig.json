@@ -12,15 +12,17 @@
     },
     "files": [
         "./src/common.ts",
-        "./src/benchmarks.ts",
+        "src/benchmarksGeneric.ts",
+        "src/benchmarksPuppeteer.ts",
+        "src/benchmarksWebdriver.ts",
         "./src/webdriverAccess.ts",
         "./src/benchmarkRunner.ts",
-        "./src/forkedBenchmarkRunner.ts",
+        "src/forkedBenchmarkRunnerWebdriver.ts",
+        "src/forkedBenchmarkRunnerPuppeteer.ts",
         "./src/createResultJS.ts",
         "./src/createIndex.ts",
         "./src/updateFrameworks.ts",
         "./src/isKeyed.ts",
-        "./src/rebuild.ts",
         "./src/writeResults.ts"
     ],
     "exclude": [

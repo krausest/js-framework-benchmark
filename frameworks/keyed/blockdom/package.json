@@ -1,0 +1,31 @@
+{
+  "name": "js-framework-benchmark-blockdom",
+  "version": "0.1.0",
+  "description": "blockdom demo",
+  "main": "dist/app.min.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "blockdom"
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c"
+  },
+  "keywords": [
+    "virtual dom"
+  ],
+  "author": "Géry Debongnie",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "13.0.4",
+    "rollup": "2.56.2",
+    "rollup-plugin-terser": "7.0.2"
+  },
+  "dependencies": {
+    "blockdom": "^0.9.26"
+  }
+}

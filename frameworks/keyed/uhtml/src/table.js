@@ -1,34 +1,24 @@
 import {html} from 'uhtml';
 
-const click = ({currentTarget, target}) => {
-  const a = target.closest('a');
-  const {action} = a.dataset;
-  currentTarget.props[action](+a.closest('tr').id);
-};
-
 export default (state) => {
-  const {data, selected} = state;
-  return html`
-    <table onclick=${click} .props=${state}
-      class="table table-hover table-striped test-data">
+  const {data, selected, selectRow, removeRow} = state;
+  return html.for(state)`
+    <table class="table table-hover table-striped test-data" .state=${state}>
       <tbody>${
-      data.map(item => {
-        const {id, label} = item;
-        return html.for(data, id)`
+      data.map(({id, label, html}) => html`
         <tr id=${id} class=${id === selected ? 'danger' : ''}>
           <td class="col-md-1">${id}</td>
           <td class="col-md-4">
-            <a data-action="select">${label}</a>
+            <a @click=${selectRow}>${label}</a>
           </td>
           <td class="col-md-1">
-            <a data-action="remove">
-              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <a @click=${removeRow}>
+              <span class="glyphicon glyphicon-remove" aria-hidden="true" />
             </a>
           </td>
           <td class="col-md-6" />
-        </tr>`;
-      })
-      }</tbody>
+        </tr>`
+      )}</tbody>
     </table>
   `;
 };

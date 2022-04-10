@@ -33,6 +33,6 @@
   "dependencies": {
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-tagged-state": "0.1.40"
+    "react-tagged-state": "1.4.3"
   }
 }
