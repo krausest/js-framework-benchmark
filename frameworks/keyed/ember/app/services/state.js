@@ -3,6 +3,7 @@ import Service from '@ember/service';
 export default class StateService extends Service {
   helpers = new Map();
   prevId = null;
+
   updateHelper(id, isSelected) {
     const instance = this.helpers.get(id)
     if (instance) {

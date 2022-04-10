@@ -1,16 +1,18 @@
 import Component from '@glimmer/component';
 import { action, on } from '@glimmer/modifier';
 import { tracked } from '@glimmer/tracking';
-import { createTemplate, setComponentTemplate } from '@glimmer/core';
+import { precompileTemplate, setComponentTemplate } from '@glimmer/core';
 import { fn } from '@glimmer/helper';
 import { run, runLots, add, update, swapRows, deleteRow } from './utils/benchmark-helpers';
 
 import TableRow from './TableRow';
 import BsButton from './BsButton';
+
+// if we use eq for class attribute manipulation glimmer failing
 import { helper } from './utils/helper';
 
-const eq = helper(([a,b]) => {
-  return a === b;
+const eq = helper(function (positional) {
+  return positional[0] === positional[1];
 })
 
 export default class MyTable extends Component {
@@ -62,13 +64,12 @@ export default class MyTable extends Component {
 }
 
 setComponentTemplate(
-  createTemplate(
-    { on, fn, eq, TableRow, BsButton },
+  precompileTemplate(
     `
 <div class="jumbotron">
   <div class="row">
     <div class="col-md-6">
-      <h1>Glimmer v2.0.0-beta.10</h1>
+      <h1>Glimmer v2.0.0-beta.12</h1>
     </div>
     <div class="col-md-6">
       <div class="row">
@@ -111,5 +112,6 @@ setComponentTemplate(
     {{#each this.data key="id" as |item|}}<TableRow class={{if (eq this.selected item.id) 'danger'}} @item={{item}} @onSelect={{fn this.select item.id}} @onRemove={{fn this.remove item.id}} />{{/each}}
   </tbody>
 </table>
-<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>`), MyTable
+<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>`,
+  { scope: () =>  ({ on, fn, eq, TableRow, BsButton }), strictMode: true }), MyTable
 );

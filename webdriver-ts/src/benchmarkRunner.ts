@@ -1,248 +1,294 @@
-import { BenchmarkType, Benchmark, benchmarks, fileName, LighthouseData } from './benchmarks'
-import * as fs from 'fs';
-import * as yargs from 'yargs';
-import * as path from 'path'
-import { JSONResult, config, FrameworkData, initializeFrameworks, ErrorAndWarning, BenchmarkOptions } from './common'
-import * as R from 'ramda';
-import { fork } from 'child_process';
-import { executeBenchmark } from './forkedBenchmarkRunner';
-import mapObjIndexed from 'ramda/es/mapObjIndexed';
-import {writeResults} from './writeResults';
-import { resolve } from 'dns';
+import { fork } from "child_process";
+import * as fs from "fs";
+import * as yargs from "yargs";
+import { BenchmarkInfo, BenchmarkType } from "./benchmarksCommon";
+import { CPUBenchmarkPuppeteer, MemBenchmarkPuppeteer, TBenchmarkPuppeteer } from "./benchmarksPuppeteer";
+import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver";
+import { BenchmarkDriverOptions, BenchmarkOptions, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common";
+import { writeResults } from "./writeResults";
+import {benchmarks} from "./benchmarkConfiguration";
+import { BenchmarkLighthouse, StartupBenchmarkResult } from "./benchmarksLighthouse";
 
-function forkAndCallBenchmark(frameworks: FrameworkData[], frameworkName: string, keyed: boolean, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning> {
-    return new Promise((resolve, reject) => {
-        const forked = fork('dist/forkedBenchmarkRunner.js');
-                if (config.LOG_DETAILS) console.log("FORKING:  forked child process");
-                forked.send({ config, frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions });
-                forked.on('message', async (msg: ErrorAndWarning) => {
-                    if (config.LOG_DETAILS) console.log("FORKING: main process got message from child", msg);
-                    resolve(msg);
-                });
-                forked.on('close', (msg) => {
-                    if (config.LOG_DETAILS) console.log("FORKING: child closed", msg);
-                });
-                forked.on('error', (msg) => {
-                    if (config.LOG_DETAILS) console.log("FORKING: child error", msg);
-                    reject(msg);
-                });
-                forked.on('exit', (code, signal) => {
-                    if (config.LOG_DEBUG) console.log("child exit", code, signal);
-                });
-            });
+function forkAndCallBenchmark(
+  framework: FrameworkData,
+  benchmark: CPUBenchmarkWebdriver|TBenchmarkPuppeteer|BenchmarkLighthouse,
+  benchmarkOptions: BenchmarkOptions
+): Promise<ErrorAndWarning> {
+  return new Promise((resolve, reject) => {
+    let forkedRunner = null;
+    if (benchmark instanceof BenchmarkLighthouse) {
+      forkedRunner = "dist/forkedBenchmarkRunnerLighthouse.js";
+    } else if (benchmark instanceof CPUBenchmarkPuppeteer || benchmark instanceof MemBenchmarkPuppeteer) {
+      forkedRunner = "dist/forkedBenchmarkRunnerPuppeteer.js";
+    } else {
+      forkedRunner = "dist/forkedBenchmarkRunnerWebdriver.js";
+    }
+    console.log("forking ",forkedRunner);
+    const forked = fork(forkedRunner);
+    if (config.LOG_DETAILS) console.log("FORKING:  forked child process");
+    forked.send({
+      config,
+      framework,
+      benchmarkId: benchmark.benchmarkInfo.id,
+      benchmarkOptions,
+    });
+    forked.on("message", async (msg: ErrorAndWarning) => {
+      if (config.LOG_DETAILS) console.log("FORKING: main process got message from child", msg);
+      resolve(msg);
+    });
+    forked.on("close", (msg) => {
+      if (config.LOG_DETAILS) console.log("FORKING: child closed", msg);
+    });
+    forked.on("error", (msg) => {
+      if (config.LOG_DETAILS) console.log("FORKING: child error", msg);
+      reject(msg);
+    });
+    forked.on("exit", (code, signal) => {
+      if (config.LOG_DEBUG) console.log("child exit", code, signal);
+    });
+  });
 }
 
-async function runBenchmakLoop(frameworks: FrameworkData[], frameworkName: string, keyed: boolean, benchmarkName: string, benchmarkOptions: BenchmarkOptions): Promise<{errors:String[], warnings:String[]}> {
-    if (config.FORK_CHROMEDRIVER) {
-        let runFrameworks = frameworks.filter(f => f.keyed === keyed).filter(f => frameworkName === f.name);
-        let runBenchmarks = benchmarks.filter(b => benchmarkName === b.id);
-        if (runFrameworks.length!=1) throw `Framework name ${frameworkName} is not unique`;
-        if (runBenchmarks.length!=1) throw `Benchmark name ${benchmarkName} is not unique`;
+async function runBenchmakLoopStartup(
+  framework: FrameworkData,
+  benchmark: BenchmarkLighthouse,
+  benchmarkOptions: BenchmarkOptions
+): Promise<{ errors: String[]; warnings: String[] }> {
+  let warnings: String[] = [];
+  let errors: String[] = [];
 
-        let framework = runFrameworks[0];
-        let benchmark = runBenchmarks[0];
+  let results: Array<StartupBenchmarkResult> = [];
+  let count = benchmarkOptions.numIterationsForStartupBenchmark;
+  benchmarkOptions.batchSize = 1;
 
-        let warnings : String[] = [];
-        let errors : String[] = [];
+  let retries = 0;
+  let done = 0;
 
-        let results: Array<number|LighthouseData> = [];
-        let count = 0;
+  console.log("runBenchmakLoopStartup", framework, benchmark);
 
-        if (benchmark.type == BenchmarkType.CPU) {
-            count = benchmarkOptions.numIterationsForCPUBenchmarks;
-            benchmarkOptions.batchSize = config.ALLOW_BATCHING && benchmark.allowBatching ? count : 1;
-        } else if (benchmark.type == BenchmarkType.MEM) {
-            count = benchmarkOptions.numIterationsForMemBenchmarks;
-            benchmarkOptions.batchSize = 1;
-        } else {
-            count = benchmarkOptions.numIterationsForStartupBenchmark
-            benchmarkOptions.batchSize = 1;
-        }
 
-        let retries = 0;
-
-        while (results.length < count) {
-            benchmarkOptions.batchSize = Math.min(benchmarkOptions.batchSize, count-results.length);
-            console.log("FORKING: ", benchmark.id, " BatchSize ", benchmarkOptions.batchSize);
-            let res = await forkAndCallBenchmark(frameworks, frameworkName, keyed, benchmarkName, benchmarkOptions);
-            if (res.result) {
-                if (Array.isArray(res.result)) { results = results.concat(res.result)}
-                else results.push(res.result);
-            }
-            warnings = warnings.concat(res.warnings);
-            if (res.error) {
-                if (res.error.indexOf("Server terminated early with status 1")>-1) {
-                    console.log("******* STRANGE selenium error found - retry #",(retries+1));
-                    retries++;
-                    if (retries==3) break;
-                } else {
-                    errors.push(`Executing ${framework.uri} and benchmark ${benchmark.id} failed: `+res.error);
-                    break;
-                }
-            }
-        }
-        if (benchmark.type == BenchmarkType.CPU) {
-            // console.log("CPU results before: ", results);
-            (results as number[]).sort((a:number,b:number) => a-b)
-            results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU)
-            // console.log("CPU results after: ", results)
-        }
-    
-        console.log("******* result ", results);
-        await writeResults(config, { framework: framework, benchmark: benchmark, results: results });
-        return ({errors, warnings})
-    // } else {
-    //     return executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
+  while (done < count) {
+    console.log("FORKING: ", benchmark.benchmarkInfo.id, " BatchSize ", benchmarkOptions.batchSize);
+    let res = await forkAndCallBenchmark(framework, benchmark, benchmarkOptions);
+    if (Array.isArray(res.result)) {
+      results = results.concat(res.result as StartupBenchmarkResult[]);
+    } else results.push(res.result);
+    warnings = warnings.concat(res.warnings);
+    if (res.error) {
+      if (res.error.indexOf("Server terminated early with status 1") > -1) {
+        console.log("******* STRANGE selenium error found - retry #", retries + 1);
+        retries++;
+        if (retries == 3) break;
+      } else {
+        errors.push(`Executing ${framework.uri} and benchmark ${benchmark.benchmarkInfo.id} failed: ` + res.error);
+        break;
+      }
     }
+    done++;
+  }
+  console.log("******* result ", results);
+  await writeResults(config, {
+    framework: framework,
+    benchmark: benchmark,
+    results: results,
+    type: BenchmarkType.STARTUP
+  });
+  return { errors, warnings };
+  // } else {
+  //     return executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
+}
+
+async function runBenchmakLoop(
+  framework: FrameworkData,
+  benchmark: CPUBenchmarkWebdriver | TBenchmarkPuppeteer,
+  benchmarkOptions: BenchmarkOptions
+): Promise<{ errors: String[]; warnings: String[] }> {
+  let warnings: String[] = [];
+  let errors: String[] = [];
+
+  let results: Array<number> = [];
+  let count = 0;
+
+  if (benchmark.type == BenchmarkType.CPU) {
+    count = benchmarkOptions.numIterationsForCPUBenchmarks;
+    // FIXME
+    benchmarkOptions.batchSize = config.ALLOW_BATCHING && (benchmark.benchmarkInfo as any).allowBatching ? count : 1;
+  } else if (benchmark.type == BenchmarkType.MEM) {
+    count = benchmarkOptions.numIterationsForMemBenchmarks;
+    benchmarkOptions.batchSize = 1;
+  }
+
+  let retries = 0;
+
+  console.log("runBenchmakLoop", framework, benchmark);
+
+  while (results.length < count) {
+    benchmarkOptions.batchSize = Math.min(benchmarkOptions.batchSize, count - results.length);
+    console.log("FORKING: ", benchmark.benchmarkInfo.id, " BatchSize ", benchmarkOptions.batchSize);
+    let res = await forkAndCallBenchmark(framework, benchmark, benchmarkOptions);
+    if (Array.isArray(res.result)) {
+      results = results.concat(res.result as number[]);
+    } else results.push(res.result);
+    warnings = warnings.concat(res.warnings);
+    if (res.error) {
+      if (res.error.indexOf("Server terminated early with status 1") > -1) {
+        console.log("******* STRANGE selenium error found - retry #", retries + 1);
+        retries++;
+        if (retries == 3) break;
+      } else {
+        errors.push(`Executing ${framework.uri} and benchmark ${benchmark.benchmarkInfo.id} failed: ` + res.error);
+        break;
+      }
+    }
+  }
+  if (benchmark.type == BenchmarkType.CPU) {
+    console.log("CPU results before: ", results);
+    (results as number[]).sort((a: number, b: number) => a - b);
+    results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
+    // console.log("CPU results after: ", results)
+  }
+
+  console.log("******* result ", results);
+  await writeResults(config, {
+    framework: framework,
+    benchmark: benchmark.benchmarkInfo,
+    results: results,
+    type: benchmark.type as typeof BenchmarkType.CPU|BenchmarkType.MEM
+  });
+  return { errors, warnings };
+  // } else {
+  //     return executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
 }
 
 async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]) {
-    let errors: String[] = [];
-    let warnings: String[] = [];
+  let errors: String[] = [];
+  let warnings: String[] = [];
 
-    let runBenchmarks = benchmarks.filter(b => benchmarkNames.some(name => b.id.toLowerCase().indexOf(name) > -1));
+  let runBenchmarks: Array<CPUBenchmarkWebdriver | TBenchmarkPuppeteer | BenchmarkLighthouse> = benchmarks.filter((b) =>
+    benchmarkNames.some((name) => b.benchmarkInfo.id.toLowerCase().indexOf(name) > -1)
+  );
 
-    let restart: string = undefined;
-    let index = runFrameworks.findIndex(f => f.fullNameWithKeyedAndVersion===restart);
-    if (index>-1) {
-        runFrameworks = runFrameworks.slice(index);
+  let restart: string = undefined;
+  let index = runFrameworks.findIndex((f) => f.fullNameWithKeyedAndVersion === restart);
+  if (index > -1) {
+    runFrameworks = runFrameworks.slice(index);
+  }
+
+  console.log(
+    "Frameworks that will be benchmarked",
+    runFrameworks.map((f) => f.fullNameWithKeyedAndVersion)
+  );
+  console.log(
+    "Benchmarks that will be run",
+    runBenchmarks.map((b) => b.benchmarkInfo.id)
+  );
+
+    console.log("HEADLESS*** ", args.headless);
+
+  let benchmarkOptions: BenchmarkOptions = {
+    port: config.PORT.toFixed(),
+    remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
+    chromePort: config.CHROME_PORT,
+    headless: args.headless,
+    chromeBinaryPath: args.chromeBinary,
+    numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+    numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
+    numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
+    batchSize: 1,
+  };
+
+  for (let i = 0; i < runFrameworks.length; i++) {
+    for (let j = 0; j < runBenchmarks.length; j++) {
+      try {
+        console.log("****** runBenchmarks[j].type", runBenchmarks[j].type, runBenchmarks[j].type == BenchmarkType.STARTUP_MAIN)
+        let result = (runBenchmarks[j].type == BenchmarkType.STARTUP_MAIN) ?
+            await runBenchmakLoopStartup(runFrameworks[i], runBenchmarks[j] as BenchmarkLighthouse, benchmarkOptions)
+          : await runBenchmakLoop(runFrameworks[i], runBenchmarks[j] as TBenchmarkPuppeteer|CPUBenchmarkWebdriver, benchmarkOptions);
+        errors = errors.concat(result.errors);
+        warnings = warnings.concat(result.warnings);
+      } catch (e) {
+        console.log("UNHANDELED ERROR", e);
+        errors.push(e);
+      }
     }
+  }
 
-    console.log("Frameworks that will be benchmarked", runFrameworks.map(f => f.fullNameWithKeyedAndVersion));
-    console.log("Benchmarks that will be run", runBenchmarks.map(b => b.id));
+  if (warnings.length > 0) {
+    console.log("================================");
+    console.log("The following warnings were logged:");
+    console.log("================================");
 
-    let benchmarkOptions: BenchmarkOptions = {
-        port: config.PORT.toFixed(),
-        remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
-        chromePort: config.CHROME_PORT,
-        headless: args.headless,
-        chromeBinaryPath: args.chromeBinary,
-        numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
-        numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
-        numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
-        batchSize: 1
-    }
+    warnings.forEach((e) => {
+      console.log(e);
+    });
+  }
 
-    for (let i = 0; i < runFrameworks.length; i++) {
-        for (let j = 0; j < runBenchmarks.length; j++) {
-            try {
-                let result = await runBenchmakLoop(runFrameworks, runFrameworks[i].name, runFrameworks[i].keyed, runBenchmarks[j].id, benchmarkOptions);
-                errors = errors.concat(result.errors);
-                warnings = warnings.concat(result.warnings);
-            } catch (e) {
-                console.log("UNHANDELED ERROR", e);
-                errors.push(e);
-            }
-        }
-    }
+  if (errors.length > 0) {
+    console.log("================================");
+    console.log("The following benchmarks failed:");
+    console.log("================================");
 
-    if (warnings.length > 0) {
-        console.log("================================");
-        console.log("The following warnings were logged:");
-        console.log("================================");
-
-        warnings.forEach(e => {
-            console.log(e);
-        });
-    }
-
-    if (errors.length > 0) {
-        console.log("================================");
-        console.log("The following benchmarks failed:");
-        console.log("================================");
-
-        errors.forEach(e => {
-            console.log(e);
-        });
-        throw "Benchmarking failed with errors";
-    }
+    errors.forEach((e) => {
+      console.log(e);
+    });
+    throw "Benchmarking failed with errors";
+  }
 }
 
 // FIXME: Clean up args.
 // What works: npm run bench keyed/react, npm run bench -- keyed/react, npm run bench -- keyed/react --count 1 --benchmark 01_
 // What doesn't work (keyed/react becomes an element of argument benchmark): npm run bench -- --count 1 --benchmark 01_ keyed/react
 
-let args = yargs(process.argv)
-    .usage("$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--count n] [--exitOnError] \n or: $0 [directory1] [directory2] .. [directory3] \n or: $0 installed")
-    .help('help')
-    .boolean('onlyKeyed')
-    .boolean('onlyNonKeyed')
-    .default('check', 'false')
-    .default('fork', 'true')
-    .boolean('noResults')
-    .default('exitOnError', 'false')
-    .default('count', Number.MAX_SAFE_INTEGER)
-    .default('port', config.PORT)
-    .string('chromeBinary')
-    .string('chromeDriver')
-    .boolean('headless')
-    .boolean('installed')
-    .array("framework").array("benchmark")
-    .argv;
+let args: any = yargs(process.argv)
+  .usage(
+    "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
+  )
+  .help("help")
+  .boolean("headless").default("headless", false)
+  .boolean("smoketest")
+  .array("framework")
+  .array("benchmark")
+  .string("chromeBinary").argv;
 
-console.log("args", args);
-
-let allArgs = args._.length<=2 ? [] : args._.slice(2,args._.length);
-
-let runBenchmarksFromDirectoryNamesArgs = !args.framework;
+let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
+let frameworkArgument = !args.framework ? allArgs : args.framework;
+console.log("args", args, "allArgs", allArgs);
 
 async function main() {
+  let runBenchmarks = (args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""]).map((v: string) => v.toString());
+  let runFrameworks: FrameworkData[];
 
-    let runBenchmarks = (args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""]).map(v => v.toString());
-    let runFrameworks: FrameworkData[];
-    if(args.onlyKeyed){
-        console.log("MODE: Only keyed");
-        let matchesDirectoryArg = (directoryName: string) => directoryName.startsWith("keyed/");
-        runFrameworks = await initializeFrameworks(matchesDirectoryArg);
-    } else if(args.onlyNonKeyed){
-        console.log("MODE: Only non keyed");
-        let matchesDirectoryArg = (directoryName: string) => directoryName.startsWith("non-keyed/");
-        runFrameworks = await initializeFrameworks(matchesDirectoryArg);
-    } else if(args.installed){
-        console.log("MODE: Installed frameworks.");
-        const hasPackageLock = (directoryName: string)=>
-            !!fs.existsSync(path.join(path.resolve('..','frameworks'), directoryName, 'package-lock.json'))
-        runFrameworks = await initializeFrameworks(hasPackageLock)
-    } else if (runBenchmarksFromDirectoryNamesArgs) {
-        console.log("MODE: Directory names. Using arguments as the directory names to be re-run: ", allArgs);
-        let matchesDirectoryArg = (directoryName: string) => allArgs.length==0 || allArgs.some(arg => arg==directoryName)
-        runFrameworks = await initializeFrameworks(matchesDirectoryArg);
-    } else {
-        console.log("MODE: Classic command line options");
-        let frameworkNames = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(v => v.toString());
-        let frameworks = await initializeFrameworks();
-        runFrameworks = frameworks.filter(f => frameworkNames.some(name => f.fullNameWithKeyedAndVersion.indexOf(name) > -1));
-    }
-    let count = Number(args.count);
-    config.PORT = Number(args.port);
-    if (count < Number.MAX_SAFE_INTEGER) config.NUM_ITERATIONS_FOR_BENCHMARK_CPU = count;
-    config.NUM_ITERATIONS_FOR_BENCHMARK_MEM = Math.min(count, config.NUM_ITERATIONS_FOR_BENCHMARK_MEM);
-    config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP = Math.min(count, config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP);
-    config.FORK_CHROMEDRIVER = args.fork === 'true';
-    config.WRITE_RESULTS = !args.noResults;
+  let matchesDirectoryArg = (directoryName: string) =>
+    frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
+  runFrameworks = await initializeFrameworks(matchesDirectoryArg);
 
-    console.log(args, "no-results", args.noResults, config.WRITE_RESULTS);
+  console.log("ARGS.smotest", args.smoketest)
+  if (args.smoketest) {
+    config.WRITE_RESULTS = false;
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU = 1;
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT = 0;
+    config.NUM_ITERATIONS_FOR_BENCHMARK_MEM = 1;
+    config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP = 1;
+    config.EXIT_ON_ERROR = true;
+    console.log('Using smoketest config ', JSON.stringify(config));
+  }
+    
+  if (!fs.existsSync(config.RESULTS_DIRECTORY)) fs.mkdirSync(config.RESULTS_DIRECTORY);
+  if (!fs.existsSync(config.TRACES_DIRECTORY)) fs.mkdirSync(config.TRACES_DIRECTORY);
 
-    let exitOnError = args.exitOnError === 'true'
-
-    config.EXIT_ON_ERROR = exitOnError;
-
-    console.log("fork chromedriver process?", config.FORK_CHROMEDRIVER);
-
-    if (!fs.existsSync(config.RESULTS_DIRECTORY))
-    fs.mkdirSync(config.RESULTS_DIRECTORY);
-
-    if (args.help) {
-        yargs.showHelp();
-    } else {
-        return runBench(runFrameworks, runBenchmarks);
-    }
+  if (args.help) {
+    yargs.showHelp();
+  } else {
+    return runBench(runFrameworks, runBenchmarks);
+  }
 }
 
-main().then(_ => {
+main()
+  .then((_) => {
     console.log("successful run");
     process.exit(0);
-}).catch(error => {
+  })
+  .catch((error) => {
     console.log("run was not completely sucessful", error);
     process.exit(1);
-})
+  });

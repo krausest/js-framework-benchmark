@@ -1,4 +1,4 @@
-import "alpinejs";
+import Alpine from 'alpinejs'
 
 let idCounter = 1;
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"],
@@ -56,3 +56,5 @@ window.app = function() {
     }
   }
 }
+
+Alpine.start();

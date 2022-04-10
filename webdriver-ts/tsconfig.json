@@ -10,19 +10,6 @@
         "allowJs": false,
         "typeRoots": ["node_modules/@types"]
     },
-    "files": [
-        "./src/common.ts",
-        "./src/benchmarks.ts",
-        "./src/webdriverAccess.ts",
-        "./src/benchmarkRunner.ts",
-        "./src/forkedBenchmarkRunner.ts",
-        "./src/createResultJS.ts",
-        "./src/createIndex.ts",
-        "./src/updateFrameworks.ts",
-        "./src/isKeyed.ts",
-        "./src/rebuild.ts",
-        "./src/writeResults.ts"
-    ],
     "exclude": [
         "node_modules"
     ]

@@ -3,19 +3,21 @@
   "version": "1.0.0",
   "description": "Blazor WebAssembly demo",
   "js-framework-benchmark": {
-    "frameworkVersion": "5.0.100-rc.2.20479.15",
-    "customURL": "/dist/wwwroot/"
+    "frameworkVersion": "6.0.1",
+    "customURL": "/bundeled-dist/wwwroot/"
   },
   "scripts": {
-    "postinstall": "run-script-os",
-    "postinstall:win32": "dotnet-install.cmd",
-    "postinstall:nix": "./dotnet-install.sh",
+    "install": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to clone reflex-dom\\'s benchmark and build system use: && echo npm run install-force",
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "install-force": "run-script-os",
+    "install-force:win32": "dotnet-install.cmd",
+    "install-force:nix": "./dotnet-install.sh",
     "build-dev": "run-script-os",
     "build-dev:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet.exe build ./src/ -c Debug",
     "build-dev:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet build ./src/ -c Debug",
-    "build-prod": "run-script-os",
-    "build-prod:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet.exe publish ./src/ -c Release -o ./dist",
-    "build-prod:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet publish ./src/ -c Release -o ./dist"
+    "build-prod-force": "rimraf bundeled-dist && run-script-os",
+    "build-prod-force:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet.exe publish ./src/ -c Release -o ./bundeled-dist",
+    "build-prod-force:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet publish ./src/ -c Release -o ./bundeled-dist"
   },
   "keywords": [
     "blazor",
@@ -28,8 +30,10 @@
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
+    "rimraf": "^3.0.2",
     "cross-env": "^7.0.2",
     "run-script-os": "1.1.1"
   }

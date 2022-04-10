@@ -4,6 +4,9 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2019,
     sourceType: 'module',
+    ecmaFeatures: {
+      legacyDecorators: true
+    }
   },
   extends: [
     'eslint:recommended',

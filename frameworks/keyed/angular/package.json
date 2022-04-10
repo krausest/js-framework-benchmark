@@ -16,22 +16,22 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "11.0.2",
-    "@angular/compiler": "11.0.2",
-    "@angular/core": "11.0.2",
-    "@angular/platform-browser": "11.0.2",
-    "rxjs": "6.5.5",
-    "tslib": "^2.0.3",
-    "zone.js": "0.10.3"
+    "@angular/common": "13.0.0",
+    "@angular/compiler": "13.0.0",
+    "@angular/core": "13.0.0",
+    "@angular/platform-browser": "13.0.0",
+    "rxjs": "7.4.0",
+    "tslib": "^2.3.1",
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.1100.2",
-    "@angular/cli": "11.0.2",
-    "@angular/compiler-cli": "11.0.2",
-    "@angular/language-service": "11.0.2",
-    "@types/node": "13.13.0",
-    "ts-node": "8.8.2",
+    "@angular-devkit/build-angular": "13.0.1",
+    "@angular/cli": "13.0.1",
+    "@angular/compiler-cli": "13.0.0",
+    "@angular/language-service": "13.0.0",
+    "@types/node": "16.11.6",
+    "ts-node": "10.4.0",
     "tslint": "~6.1.0",
-    "typescript": "4.0.5"
+    "typescript": "4.4.4"
   }
 }

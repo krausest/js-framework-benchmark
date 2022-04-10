@@ -94,11 +94,7 @@ input + label {
 }
 
 .grid {
-    display: flex;
-    flex-wrap: wrap;
-}
-.col-3 {
-    width: 33%;
+    column-count: 3;
 }
 
 .hspan {
@@ -125,6 +121,9 @@ table.results th {
     font-weight: normal;
     font-size: 11px;
     text-align: center;
+    word-break: normal;
+    hyphens: auto;    
+    -webkit-hyphens: auto;
 }
 table.results th.benchname {
 width: 100px;
