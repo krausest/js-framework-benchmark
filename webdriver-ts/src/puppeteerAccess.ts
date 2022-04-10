@@ -27,7 +27,7 @@ export async function checkElementExists(page: Page, selector: string) {
       await sel.dispose();
       return sel;
     }
-    console.log("checkElementExists element not found");
+    console.log(`checkElementExists element ${selector} not found`);
     await page.waitForTimeout(k < 3 ? 10 : 1000);
   }
   console.log("checkElementExists waited "+(Date.now()-start)+" but no luck");
@@ -101,7 +101,32 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
   const browser = await puppeteer.launch({
     headless: benchmarkOptions.headless,
     executablePath: browserPath(benchmarkOptions),
-    ignoreDefaultArgs: ["--enable-automation"],
+    ignoreDefaultArgs: ["--enable-automation",  // 92/115
+    "--disable-background-networking",
+    "--enable-features=NetworkService,NetworkServiceInProcess",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    // "--disable-breakpad",
+    // "--disable-client-side-phishing-detection",
+    // "--disable-component-extensions-with-background-pages",
+    // "--disable-default-apps",
+    // "--disable-dev-shm-usage",
+    // // "--disable-extensions",
+    // // "--disable-features=Translate",
+    // "--disable-hang-monitor",
+    // "--disable-ipc-flooding-protection",
+    // "--disable-popup-blocking",
+    // "--disable-prompt-on-repost",
+    // "--disable-renderer-backgrounding",
+    // // "--disable-sync",
+    // "--force-color-profile=srgb",
+    // "--metrics-recording-only",
+    // // "--no-first-run",
+    // // "--password-store=basic",
+    // // "--use-mock-keychain",
+    // "--enable-blink-features=IdleDetection",
+    // // "--export-tagged-pdf"
+  ],
     args: [`--window-size=${window_width},${window_height}`],
     dumpio: false,
     defaultViewport: {
