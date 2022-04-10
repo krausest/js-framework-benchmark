@@ -111,15 +111,6 @@ Doo.define(
 		}
 
 		toggleSelect(row) {
-			if (row) {
-				row.classList.toggle('danger')
-				if (row.classList.contains('danger')) {
-					this.selectedRow = row
-				}	
-			}    
-		}
-
-		toggleSelect(row) {
 			let row = this.getParentRow(elem)
 			if (row) {
 				row.classList.toggle('danger')
