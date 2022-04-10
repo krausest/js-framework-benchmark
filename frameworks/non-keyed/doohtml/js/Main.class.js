@@ -74,8 +74,9 @@ Doo.define(
 			this.renderTable()
 		}
 		add() {
+			let startRow = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.renderTable(this.data.rows, this.data.rows.length)
+			this.renderTable(this.data.rows, startRow)
 		}    
 
 		runLots() {

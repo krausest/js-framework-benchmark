@@ -8,8 +8,6 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 
-import Timer from './doo.timer.js'
-
 Doo.define(
   	class Main extends Doo {
 		constructor() {
@@ -92,13 +90,25 @@ Doo.define(
 			this.data.rows = this.data.rows.concat(this.buildData())
 			this.renderTable(this.data.rows, this.data.rows.length)
 		}    
-	// 	add() {
-	// //		let startRow = this.data.rows.length
-	// 		this.data.rows = this.data.rows.concat(this.buildData())
-	// 		this.renderTable(this.data.rows, this.data.rows.length)
+	 	add() {
+			let startRow = this.data.rows.length
+	 		this.data.rows = this.data.rows.concat(this.buildData())
+	 		this.renderTable(this.data.rows, startRow)
 
-	// 	}    
+		}    
 
+		renderTable(dataSet=this.data[this.defaultDataSet], start=0) {
+		//	debugger
+			let len = dataSet.length - start
+			let elem = document.createElement('tbody')
+			elem.innerHTML = this.renderNode(this.place[0], dataSet, start , len) 
+			let tableRows = elem.querySelectorAll('tr')
+			let newElem
+			for (let i=0;i<len;i++) {
+				newElem = this.place[0].appendChild(tableRows.item(i))
+				newElem.key = dataSet[i].id
+			}	
+		}
 
 
 		runLots() {
