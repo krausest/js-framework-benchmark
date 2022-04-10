@@ -88,19 +88,9 @@ Doo.define(
 
 		}
 
-		run(e) {
-			Timer.start('tot')
-			this.clear()
-			this.data.rows = this.buildData()
-			this.renderTable()
-	//		e.target.blur()
-			Timer.stop('tot')
-		}
-
-
 		add() {
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.renderTable(this.data.rows)
+			this.renderTable(this.data.rows, this.data.rows.length)
 		}    
 	// 	add() {
 	// //		let startRow = this.data.rows.length
@@ -112,42 +102,10 @@ Doo.define(
 
 
 		runLots() {
-
 			this.clear()
 			this.data.rows = this.buildData(10000)
 			this.renderTable()
 		}
-		runLots(e) {
-			Timer.start('tot')
-			this.clear()
-			this.data.rows = this.buildData(10000)	
-			this.renderTable()
-			e.target.blur()
-			Timer.stop('tot')
-		}
-		renderTable(dataSet=this.data[this.defaultDataSet], start=0) {
-			let len = dataSet.length - start,
-			    elem = document.createElement('tbody')
-			elem.innerHTML = this.renderNode(this.place[0], dataSet, start , len) 
-			let tableRows = elem.querySelectorAll('tr'),
-			newElem
-			for (let i=0;i<len;i++) {
-				newElem = this.place[0].appendChild(tableRows.item(i))
-				newElem.key = dataSet[i].id
-			}	
-			// newElem = this.place[0].appendChild(tableRows.item(len-1))
-			// newElem.key = dataSet[len-1].id
-
-			// for (let i=len-2;i>=0;i--) {
-			// 	newElem = this.place[0].insertBefore(tableRows.item(i), this.place[0].firstChild)
-			// 	newElem.key = dataSet[i].id
-			// }	
-
-
-		}
-	
-
-
 
 		update() {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
@@ -197,9 +155,9 @@ Doo.define(
 			document.getElementById("main").addEventListener('click', e => {
 				e.preventDefault()
 				if (e.target.matches('#runlots')) {
-					this.runLots(e)
+					this.runLots()
 				} else if (e.target.matches('#run')) {
-					this.run(e)
+					this.run()
 				} else if (e.target.matches('#add')) {
 					this.add()
 				} else if (e.target.matches('#update')) {
