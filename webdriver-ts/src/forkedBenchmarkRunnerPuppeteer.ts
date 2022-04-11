@@ -21,7 +21,8 @@ interface Timingresult {
 
 export function extractRelevantEvents(entries: any[]) {
   let filteredEvents: Timingresult[] = [];
-  let click = 0;
+  let click_start = 0;
+  let click_end = 0;
 
   entries.forEach(x => {
       let e = x;
@@ -29,18 +30,25 @@ export function extractRelevantEvents(entries: any[]) {
       if (e.name==='EventDispatch') {
           if (e.args.data.type==="click") {
             if (config.LOG_DETAILS) console.log("CLICK ",+e.ts);
-              click = e.ts;
+              click_start = +e.ts;
+              click_end = +e.ts+e.dur;
               filteredEvents.push({type:'click', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur});
           }
       } else if (e.name==='CompositeLayers' && e.ph==="X") {
-        if (config.LOG_DETAILS) console.log("CompositeLayers",+e.ts+e.dur, +e.ts+e.dur-click);
+        if (config.LOG_DETAILS) console.log("CompositeLayers",+e.ts+e.dur, +e.ts+e.dur-click_start);
           filteredEvents.push({type:'compositelayers', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
       } else if (e.name==='Layout' && e.ph==="X") {
-        if (config.LOG_DETAILS) console.log("Layout",+e.ts+e.dur, +e.ts+e.dur-click);
+        if (config.LOG_DETAILS) console.log("Layout",+e.ts+e.dur, +e.ts+e.dur-click_start);
           filteredEvents.push({type:'layout', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
       } else if (e.name==='Paint' && e.ph==="X") {
-        if (config.LOG_DETAILS) console.log("PAINT",+e.ts+e.dur, +e.ts+e.dur-click);
+        if (config.LOG_DETAILS) console.log("PAINT",+e.ts+e.dur, +e.ts+e.dur-click_start);
           filteredEvents.push({type:'paint', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
+      } else if (e.name==='FireAnimationFrame' && e.ph==="X") {
+        if (config.LOG_DETAILS) console.log("FireAnimationFrame",+e.ts+e.dur, +e.ts-click_start);
+          filteredEvents.push({type:'fireAnimationFrame', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
+      } else if (e.name==='RequestAnimationFrame') {
+        if (config.LOG_DETAILS) console.log("RequestAnimationFrame",+e.ts, +e.ts-click_start, +e.ts-click_end);
+          filteredEvents.push({type:'requestAnimationFrame', ts: +e.ts, dur: 0, end: +e.ts, evt: JSON.stringify(e)});
       }
   });
   return filteredEvents;
@@ -67,7 +75,7 @@ export async function computeResultsCPU(fileName: string, durationMeasurementMod
   const perfLogEvents = (await fetchEventsFromPerformanceLog(fileName));
   let eventsDuringBenchmark = R.sortBy((e: Timingresult) => e.end)(perfLogEvents);
 
-  // console.log("eventsDuringBenchmark ", asString(eventsDuringBenchmark));
+  // console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
 
   console.log("computeResultsCPU ",durationMeasurementMode)
 
@@ -76,15 +84,15 @@ export async function computeResultsCPU(fileName: string, durationMeasurementMod
       console.log("exactly one click event is expected", eventsDuringBenchmark);
       throw "exactly one click event is expected";
   }
+  let click = clicks[0];
 
   let onlyUsePaintEventsAfter: Timingresult;
-  let layouts = R.filter(type_eq('layout'))(eventsDuringBenchmark)
-  layouts = R.filter((e: Timingresult) => e.ts > clicks[0].end)(layouts);
+  let layouts = R.filter((e: Timingresult) => e.ts > click.end)(R.filter(type_eq('layout'))(eventsDuringBenchmark))
   if (durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT) {
     if (layouts.length > 1) {
       console.log("INFO: more than one layout event found");
       layouts.forEach(l => {
-        console.log("layout event",l.end-clicks[0].ts);
+        console.log("layout event",l.end-click.ts);
       })
     } else if (layouts.length == 0) {
       console.log("ERROR: exactly one layout event is expected", eventsDuringBenchmark);
@@ -92,11 +100,10 @@ export async function computeResultsCPU(fileName: string, durationMeasurementMod
     }
     onlyUsePaintEventsAfter = layouts[layouts.length-1];
   } else {
-    onlyUsePaintEventsAfter = clicks[0];
+    onlyUsePaintEventsAfter = click;
   }
 
-  let paints = R.filter(type_eq('paint'))(eventsDuringBenchmark);
-  paints = R.filter((e: Timingresult) => e.ts > onlyUsePaintEventsAfter.end)(paints);
+  let paints = R.filter((e: Timingresult) => e.ts > onlyUsePaintEventsAfter.end)(R.filter(type_eq('paint'))(eventsDuringBenchmark));
   if (paints.length == 0) {
     console.log("ERROR: No paint event found");
     throw "No paint event found";
@@ -104,11 +111,38 @@ export async function computeResultsCPU(fileName: string, durationMeasurementMod
   if (paints.length > 1) {
     console.log("more than one paint event found");
     paints.forEach(l => {
-      console.log("paints event",(l.end-clicks[0].ts)/1000.0);
+      console.log("paints event",(l.end-click.ts)/1000.0);
     })
   }
-  let duration = (paints[durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT ? 0 : paints.length-1].end - clicks[0].ts)/1000.0;
+  let paint = paints[durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT ? 0 : paints.length-1];
+  let duration = (paint.end - clicks[0].ts)/1000.0;
   console.log("duration", duration);
+
+  let rafs_withinClick = R.filter((e: Timingresult) => e.ts >= click.ts && e.ts <= click.end)(R.filter(type_eq('requestAnimationFrame'))(eventsDuringBenchmark));
+  if (rafs_withinClick.length =1) {
+      let fafs =  R.filter((e: Timingresult) => e.ts >= click.ts && e.ts < paint.ts)(R.filter(type_eq('fireAnimationFrame'))(eventsDuringBenchmark));
+      if (layouts.length>0) {
+        fafs = R.filter((e: Timingresult) => e.end < layouts[0].ts)(fafs);
+      }
+      if (paints.length>0) {
+        fafs = R.filter((e: Timingresult) => e.end < paints[0].ts)(fafs);
+      }
+      if (fafs.length !=1) {
+        console.log(`*#* there were ${fafs.length} fafs`);
+      }
+      if (fafs.length > 0 && rafs_withinClick.length > 0) {
+        let waitDelay = (fafs[0].ts - click.end) / 1000.0;
+        duration = duration - waitDelay;
+        if (waitDelay > 16) {
+          console.log(`*#* WARNING: duration of raf delay is longer than expected: ${waitDelay}`);
+        }
+        console.log(`*#* there was one faf and one raf with a idle duration of ${waitDelay}. New duration ${duration}`);
+      } else if (fafs.length!=0 && rafs_withinClick.length == 1) {
+        console.log(`*#* ERROR: unexpected raf faf pattern: ${fafs.length} fafs and ${rafs_withinClick.length} rafs`);
+      }
+  }
+
+
   return duration;
 }
 

@@ -21,12 +21,12 @@ async function main() {
 
 
     // console.log(await computeResultsCPU(`traces/vanillajs-keyed_04_select1k_0.json`, false))
-    for (let i = 0; i < 12; i++) {
+    // for (let i = 1; i < 2; i++) {
         // let trace = `traces/angular-v13.0.0-keyed_01_run1k_${i}.json`;
-        let trace = `traces/angular-v13.0.0-keyed_01_run1k_${i}.json`;
+        let trace = `traces/elm-v0.19.1-3-keyed_06_remove-one-1k_2.json`;
         console.log("trace", trace)
-        console.log(await computeResultsCPU(trace, DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT));
-    }
+        console.log(await computeResultsCPU(trace, DurationMeasurementMode.LAST_PAINT));
+    // }
 }
 
 async function readAll() {

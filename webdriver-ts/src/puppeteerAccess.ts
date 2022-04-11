@@ -105,7 +105,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
     "--disable-background-networking",
     "--enable-features=NetworkService,NetworkServiceInProcess",
     "--disable-background-timer-throttling",
-    "--disable-backgrounding-occluded-windows",
+    // "--disable-backgrounding-occluded-windows",
     // "--disable-breakpad",
     // "--disable-client-side-phishing-detection",
     // "--disable-component-extensions-with-background-pages",
