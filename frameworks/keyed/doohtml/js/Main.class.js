@@ -81,7 +81,6 @@ Doo.define(
 			if (row) {
 				let idx = this.getIndex(row)
 				this.tbody.removeChild(row)
-				let idx = this.getIndex(row)
 				if (idx !== undefined) {
 					this.data.rows.splice(idx,1)
 				}
@@ -120,7 +119,7 @@ Doo.define(
 			this.toggleSelect(this.getParentRow(elem))
 		}
 
-		toggleSelect(row) {
+		toggleSelect(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
 				row.classList.toggle('danger')
