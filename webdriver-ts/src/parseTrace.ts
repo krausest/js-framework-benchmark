@@ -8,25 +8,37 @@ import { config, initializeFrameworks } from './common';
 import { computeResultsCPU } from './forkedBenchmarkRunnerPuppeteer';
 import {benchmarks} from "./benchmarkConfiguration";
 import { writeResults } from "./writeResults";
-
-/*
-                        0       1       2       3   4       5       6       7       8       9       10      11
-CPU results before:  11.404, 22.339, 7.968, 6.486, 20.566, 12.011, 8.693, 22.172, 20.764, 8.445, 10.791, 7.754
-*/
-
-// config.LOG_DETAILS = true;
+// let TimelineModelBrowser = require("./timeline-model-browser.js");
+let Tracelib = require('tracelib').default;
+// import Tracelib from 'tracelib';
+//var DevtoolsTimelineModel = require('devtools-timeline-model');
 
 async function main() {
 
 
 
-    // console.log(await computeResultsCPU(`traces/vanillajs-keyed_04_select1k_0.json`, false))
     // for (let i = 1; i < 2; i++) {
         // let trace = `traces/angular-v13.0.0-keyed_01_run1k_${i}.json`;
-        let trace = `traces/elm-v0.19.1-3-keyed_06_remove-one-1k_2.json`;
-        console.log("trace", trace)
-        console.log(await computeResultsCPU(trace, DurationMeasurementMode.LAST_PAINT));
+        let trace = 'traces/react-tracked-v17.0.1 + 1.6.0-keyed_07_create10k_10.json';
+    console.log(await computeResultsCPU(trace, DurationMeasurementMode.LAST_PAINT))
+    // let contents = await readFile(trace, {encoding: "utf8"});
+    //     let traceObj  = JSON.parse(contents)        
+    //     let entries = traceObj['traceEvents'];
+
+    //     const tasks = new Tracelib(entries)
+    //     const summary = tasks.getSummary()
+    //     console.log(summary.painting+summary.rendering+summary.scripting)
+
+
+        // const model = new TimelineModelBrowser(traceStr);
+        // console.log(model);
+
+        // let r = TraceProcessor.processTrace(traceObj);
+        // console.log("r", r)
+        // console.log(await computeResultsCPU(trace, DurationMeasurementMode.LAST_PAINT));
     // }
+
+
 }
 
 async function readAll() {
@@ -43,7 +55,7 @@ async function readAll() {
                 if (!fs.existsSync(trace)) {
                     console.log("ignoring ", trace, "since it doesn't exist.");
                 } else {
-                    console.log("checking ", trace);
+                    console.log("checking ", trace, benchmark.benchmarkInfo.durationMeasurementMode);
                     let result = await computeResultsCPU(trace, benchmark.benchmarkInfo.durationMeasurementMode); 
                     results.push(result);
                     console.log(result);

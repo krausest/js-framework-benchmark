@@ -35,17 +35,20 @@ export function extractRelevantEvents(entries: any[]) {
               filteredEvents.push({type:'click', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur});
           }
       } else if (e.name==='CompositeLayers' && e.ph==="X") {
-        if (config.LOG_DETAILS) console.log("CompositeLayers",+e.ts+e.dur, +e.ts+e.dur-click_start);
+        if (config.LOG_DETAILS) console.log("CompositeLayers",+e.ts, +e.ts+e.dur-click_start);
           filteredEvents.push({type:'compositelayers', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
       } else if (e.name==='Layout' && e.ph==="X") {
-        if (config.LOG_DETAILS) console.log("Layout",+e.ts+e.dur, +e.ts+e.dur-click_start);
+        if (config.LOG_DETAILS) console.log("Layout",+e.ts, +e.ts+e.dur-click_start);
           filteredEvents.push({type:'layout', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
       } else if (e.name==='Paint' && e.ph==="X") {
-        if (config.LOG_DETAILS) console.log("PAINT",+e.ts+e.dur, +e.ts+e.dur-click_start);
+        if (config.LOG_DETAILS) console.log("PAINT",+e.ts, +e.ts+e.dur-click_start);
           filteredEvents.push({type:'paint', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
       } else if (e.name==='FireAnimationFrame' && e.ph==="X") {
-        if (config.LOG_DETAILS) console.log("FireAnimationFrame",+e.ts+e.dur, +e.ts-click_start);
+        if (config.LOG_DETAILS) console.log("FireAnimationFrame",+e.ts, +e.ts-click_start);
           filteredEvents.push({type:'fireAnimationFrame', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
+      } else if (e.name==='UpdateLayoutTree' && e.ph==="X") {
+        if (config.LOG_DETAILS) console.log("UpdateLayoutTree",+e.ts, +e.ts-click_start);
+          filteredEvents.push({type:'updateLayoutTree', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
       } else if (e.name==='RequestAnimationFrame') {
         if (config.LOG_DETAILS) console.log("RequestAnimationFrame",+e.ts, +e.ts-click_start, +e.ts-click_end);
           filteredEvents.push({type:'requestAnimationFrame', ts: +e.ts, dur: 0, end: +e.ts, evt: JSON.stringify(e)});
@@ -71,6 +74,70 @@ function type_eq(requiredType: string) {
   return (e: Timingresult) => e.type=== requiredType;
 }
 
+// export async function computeResultsCPUNew(fileName: string, durationMeasurementMode: DurationMeasurementMode): Promise<number> {
+//   let contents = await readFile(fileName, {encoding: "utf8"});
+//   let traceObj  = JSON.parse(contents)        
+//   let entries = traceObj['traceEvents'];
+
+//   let clickEvents = entries.filter((e:any) => {
+//     return (e.name==='EventDispatch') && (e.args.data.type==="click") ;
+//   });
+//   console.log("# clickEvents", clickEvents.length);
+//   let click_ts = +clickEvents[0].ts;
+
+//   // let eventsBeforeClick = entries.filter((e:any) => {
+//   //   return (e.ts< click_ts &&
+//   //   !( (e.name=='CompositeLayers') 
+//   //     || (e.name==='RunTask') 
+//   //     || (e.name==='Layout') 
+//   //     || (e.name==='Paint') 
+//   //     || (e.name==='FireAnimationFrame') 
+//   //     || (e.name==='UpdateLayoutTree') 
+//   //     || (e.name==='RequestAnimationFrame') 
+//   //     || (e.name==='HitTest') 
+//   //     || (e.name==='ScheduleStyleRecalculation') 
+//   //     || (e.name==='EventDispatch') 
+//   //     || (e.name==='UpdateLayerTree') 
+//   //     || (e.name==='UpdateLayer') 
+//   //     || (e.name==='SetLayerTreeId') 
+//   //     || (e.name==='IntersectionObserverController::computeIntersections') 
+//   //     || (e.name==='FunctionCall') 
+//   //     || (e.name==='RasterTask') 
+//   //     || (e.name==='EventTiming') 
+//   //   ))
+//   //   });
+//   //   console.log("before", click_ts);
+//   //   console.log(eventsBeforeClick);
+
+//   let eventsAfterClick = entries.filter((e:any) => {
+//     return !(e.ts< click_ts &&
+//       ( (e.name=='CompositeLayers') 
+//       || (e.name==='RunTask') 
+//       || (e.name==='Layout') 
+//       || (e.name==='Paint') 
+//       || (e.name==='FireAnimationFrame') 
+//       || (e.name==='UpdateLayoutTree') 
+//       || (e.name==='RequestAnimationFrame') 
+//       || (e.name==='HitTest') 
+//       || (e.name==='ScheduleStyleRecalculation') 
+//       || (e.name==='EventDispatch') 
+//       || (e.name==='UpdateLayerTree') 
+//       || (e.name==='UpdateLayer') 
+//       || (e.name==='SetLayerTreeId') 
+//       || (e.name==='IntersectionObserverController::computeIntersections') 
+//       || (e.name==='FunctionCall') 
+//       || (e.name==='RasterTask') 
+//       || (e.name==='EventTiming') 
+//     ))
+//     });
+//   console.log("#events total", entries.length, "#events after click", eventsAfterClick.length);
+
+
+//   const tasks = new Tracelib(eventsAfterClick)
+//   const summary = tasks.getSummary()
+//   console.log("painting", summary.painting, "rendering", summary.rendering, "scripting", summary.scripting)
+//   return summary.painting +summary.rendering + summary.scripting;
+// }
 export async function computeResultsCPU(fileName: string, durationMeasurementMode: DurationMeasurementMode): Promise<number> {
   const perfLogEvents = (await fetchEventsFromPerformanceLog(fileName));
   let eventsDuringBenchmark = R.sortBy((e: Timingresult) => e.end)(perfLogEvents);
@@ -105,43 +172,53 @@ export async function computeResultsCPU(fileName: string, durationMeasurementMod
 
   let paints = R.filter((e: Timingresult) => e.ts > onlyUsePaintEventsAfter.end)(R.filter(type_eq('paint'))(eventsDuringBenchmark));
   if (paints.length == 0) {
-    console.log("ERROR: No paint event found");
+    console.log("ERROR: No paint event found ",fileName);
     throw "No paint event found";
   } 
+  let paint = paints[durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT ? 0 : paints.length-1];
+  let duration = (paint.end - clicks[0].ts)/1000.0;
   if (paints.length > 1) {
-    console.log("more than one paint event found");
+    console.log("more than one paint event found ",fileName);
     paints.forEach(l => {
       console.log("paints event",(l.end-click.ts)/1000.0);
     })
+    if (durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT) {
+        console.log("IGNORING more than one paint due to FIRST_PAINT_AFTER_LAYOUT", fileName, duration);
+    }
   }
-  let paint = paints[durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT ? 0 : paints.length-1];
-  let duration = (paint.end - clicks[0].ts)/1000.0;
   console.log("duration", duration);
 
-  let rafs_withinClick = R.filter((e: Timingresult) => e.ts >= click.ts && e.ts <= click.end)(R.filter(type_eq('requestAnimationFrame'))(eventsDuringBenchmark));
-  if (rafs_withinClick.length =1) {
-      let fafs =  R.filter((e: Timingresult) => e.ts >= click.ts && e.ts < paint.ts)(R.filter(type_eq('fireAnimationFrame'))(eventsDuringBenchmark));
-      if (layouts.length>0) {
-        fafs = R.filter((e: Timingresult) => e.end < layouts[0].ts)(fafs);
-      }
-      if (paints.length>0) {
-        fafs = R.filter((e: Timingresult) => e.end < paints[0].ts)(fafs);
-      }
-      if (fafs.length !=1) {
-        console.log(`*#* there were ${fafs.length} fafs`);
-      }
-      if (fafs.length > 0 && rafs_withinClick.length > 0) {
-        let waitDelay = (fafs[0].ts - click.end) / 1000.0;
-        duration = duration - waitDelay;
-        if (waitDelay > 16) {
-          console.log(`*#* WARNING: duration of raf delay is longer than expected: ${waitDelay}`);
-        }
-        console.log(`*#* there was one faf and one raf with a idle duration of ${waitDelay}. New duration ${duration}`);
-      } else if (fafs.length!=0 && rafs_withinClick.length == 1) {
-        console.log(`*#* ERROR: unexpected raf faf pattern: ${fafs.length} fafs and ${rafs_withinClick.length} rafs`);
-      }
-  }
+  // let updateLayoutTree = R.filter((e: Timingresult) => e.ts > click.end)(R.filter(type_eq('updateLayoutTree'))(eventsDuringBenchmark));
+  // console.log("updateLayoutTree", updateLayoutTree.length, updateLayoutTree[0].end);
 
+  let rafs_withinClick = R.filter((e: Timingresult) => e.ts >= click.ts && e.ts <= click.end)(R.filter(type_eq('requestAnimationFrame'))(eventsDuringBenchmark));
+  let fafs =  R.filter((e: Timingresult) => e.ts >= click.ts && e.ts < paint.ts)(R.filter(type_eq('fireAnimationFrame'))(eventsDuringBenchmark));
+
+  if (rafs_withinClick.length>0 && fafs.length>0) {
+    let waitDelay = (fafs[0].ts - click.end) / 1000.0;
+    if (rafs_withinClick.length==1 && fafs.length==1) {
+      if (waitDelay > 16) {
+        let ignored = false;
+        for (let e of layouts) {
+          if (e.ts<fafs[0].ts) {
+            console.log("IGNORING 1 raf, 1 faf, but layout before raf", waitDelay, fileName);
+            ignored = true;
+            break;
+          } 
+        }
+        if (!ignored) {
+          duration = duration - waitDelay;
+          console.log("FOUND delay for 1 raf, 1 faf, but layout before raf", waitDelay, fileName);
+        }
+      } else {
+        console.log("IGNORING delay < 16 msecs 1 raf, 1 faf ", waitDelay, fileName);
+      }
+     } else if (fafs.length==1) {
+       throw "Unexpected situation. Did not happen in the past. One fire animation frame, but non consistent request animation frames in "+fileName;
+    } else {
+      console.log(`IGNORING Bad case ${rafs_withinClick.length} raf, ${fafs.length} faf ${fileName}`);
+    }    
+  }
 
   return duration;
 }
@@ -241,11 +318,13 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             }
 
             let categories = [
+                "blink.user_timing",
                 "devtools.timeline",
                 'disabled-by-default-devtools.timeline',
             ];
             // let categories = [
-            //   'devtools.timeline',
+            // "loading",
+            // 'devtools.timeline',
             //   'disabled-by-default-devtools.timeline',
             //   '-*',
             //   'v8.execute',
