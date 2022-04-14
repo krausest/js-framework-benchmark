@@ -207,7 +207,7 @@ export async function computeResultsCPU(fileName: string, durationMeasurementMod
           } 
         }
         if (!ignored) {
-          duration = duration - waitDelay;
+          duration = duration - (waitDelay - 16);
           console.log("FOUND delay for 1 raf, 1 faf, but layout before raf", waitDelay, fileName);
         }
       } else {
