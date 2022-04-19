@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as yargs from "yargs";
 import { BenchmarkInfo, BenchmarkType } from "./benchmarksCommon";
 import { CPUBenchmarkPuppeteer, MemBenchmarkPuppeteer, TBenchmarkPuppeteer } from "./benchmarksPuppeteer";
+import { CPUBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright";
 import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver";
 import { BenchmarkDriverOptions, BenchmarkOptions, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common";
 import { writeResults } from "./writeResults";
@@ -18,6 +19,8 @@ function forkAndCallBenchmark(
     let forkedRunner = null;
     if (benchmark instanceof BenchmarkLighthouse) {
       forkedRunner = "dist/forkedBenchmarkRunnerLighthouse.js";
+    } else if (benchmark instanceof CPUBenchmarkPlaywright /*|| benchmark instanceof MemBenchmarkPuppeteer*/) {
+      forkedRunner = "dist/forkedBenchmarkRunnerPlaywright.js";
     } else if (benchmark instanceof CPUBenchmarkPuppeteer || benchmark instanceof MemBenchmarkPuppeteer) {
       forkedRunner = "dist/forkedBenchmarkRunnerPuppeteer.js";
     } else {
@@ -164,7 +167,7 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
   let errors: String[] = [];
   let warnings: String[] = [];
 
-  let runBenchmarks: Array<CPUBenchmarkWebdriver | TBenchmarkPuppeteer | BenchmarkLighthouse> = benchmarks.filter((b) =>
+  let runBenchmarks: Array<CPUBenchmarkWebdriver | TBenchmarkPuppeteer | BenchmarkLighthouse | CPUBenchmarkPlaywright> = benchmarks.filter((b) =>
     benchmarkNames.some((name) => b.benchmarkInfo.id.toLowerCase().indexOf(name) > -1)
   );
 

@@ -17,26 +17,10 @@ async function main() {
 
 
 
-    // for (let i = 1; i < 2; i++) {
-        // let trace = `traces/angular-v13.0.0-keyed_01_run1k_${i}.json`;
-        let trace = 'traces/react-tracked-v17.0.1 + 1.6.0-keyed_07_create10k_10.json';
-    console.log(await computeResultsCPU(trace, DurationMeasurementMode.LAST_PAINT))
-    // let contents = await readFile(trace, {encoding: "utf8"});
-    //     let traceObj  = JSON.parse(contents)        
-    //     let entries = traceObj['traceEvents'];
-
-    //     const tasks = new Tracelib(entries)
-    //     const summary = tasks.getSummary()
-    //     console.log(summary.painting+summary.rendering+summary.scripting)
-
-
-        // const model = new TimelineModelBrowser(traceStr);
-        // console.log(model);
-
-        // let r = TraceProcessor.processTrace(traceObj);
-        // console.log("r", r)
-        // console.log(await computeResultsCPU(trace, DurationMeasurementMode.LAST_PAINT));
-    // }
+    for (let i = 0; i < 12; i++) {
+        let trace = `traces/xania-v0.3.3-keyed_01_run1k_${i}.json`;
+        console.log(trace, await computeResultsCPU(trace, DurationMeasurementMode.LAST_PAINT))
+    }
 
 
 }
@@ -73,4 +57,4 @@ async function readAll() {
     }
 }
 
-readAll().then(() => { }); 
+main().then(() => { }); 
