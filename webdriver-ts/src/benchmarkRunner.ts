@@ -9,6 +9,7 @@ import { BenchmarkDriverOptions, BenchmarkOptions, config, ErrorAndWarning, Fram
 import { writeResults } from "./writeResults";
 import {benchmarks} from "./benchmarkConfiguration";
 import { BenchmarkLighthouse, StartupBenchmarkResult } from "./benchmarksLighthouse";
+import { CPUBenchmarkWebdriverCDP } from "./benchmarksWebdriverCDP";
 
 function forkAndCallBenchmark(
   framework: FrameworkData,
@@ -19,6 +20,8 @@ function forkAndCallBenchmark(
     let forkedRunner = null;
     if (benchmark instanceof BenchmarkLighthouse) {
       forkedRunner = "dist/forkedBenchmarkRunnerLighthouse.js";
+    } else if (benchmark instanceof CPUBenchmarkWebdriverCDP) {
+      forkedRunner = "dist/forkedBenchmarkRunnerWebdriverCDP.js";
     } else if (benchmark instanceof CPUBenchmarkPlaywright /*|| benchmark instanceof MemBenchmarkPuppeteer*/) {
       forkedRunner = "dist/forkedBenchmarkRunnerPlaywright.js";
     } else if (benchmark instanceof CPUBenchmarkPuppeteer || benchmark instanceof MemBenchmarkPuppeteer) {

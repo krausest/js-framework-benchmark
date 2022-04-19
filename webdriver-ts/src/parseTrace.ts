@@ -5,7 +5,7 @@ import * as R from 'ramda';
 import { BenchmarkType, DurationMeasurementMode } from './benchmarksCommon';
 import { CPUBenchmarkPuppeteer, fileNameTrace } from './benchmarksPuppeteer';
 import { config, initializeFrameworks } from './common';
-import { computeResultsCPU } from './forkedBenchmarkRunnerPuppeteer';
+import { computeResultsCPU } from './timeline';
 import {benchmarks} from "./benchmarkConfiguration";
 import { writeResults } from "./writeResults";
 // let TimelineModelBrowser = require("./timeline-model-browser.js");
@@ -19,7 +19,7 @@ async function main() {
 
     for (let i = 0; i < 12; i++) {
         let trace = `traces/xania-v0.3.3-keyed_01_run1k_${i}.json`;
-        console.log(trace, await computeResultsCPU(trace, DurationMeasurementMode.LAST_PAINT))
+        console.log(trace, await computeResultsCPU(config, trace, DurationMeasurementMode.LAST_PAINT))
     }
 
 
@@ -40,7 +40,7 @@ async function readAll() {
                     console.log("ignoring ", trace, "since it doesn't exist.");
                 } else {
                     console.log("checking ", trace, benchmark.benchmarkInfo.durationMeasurementMode);
-                    let result = await computeResultsCPU(trace, benchmark.benchmarkInfo.durationMeasurementMode); 
+                    let result = await computeResultsCPU(config, trace, benchmark.benchmarkInfo.durationMeasurementMode); 
                     results.push(result);
                     console.log(result);
                 }

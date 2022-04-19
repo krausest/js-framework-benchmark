@@ -1,10 +1,11 @@
 import * as benchmarksPuppeteer from "./benchmarksPuppeteer";
 import * as benchmarksPlaywright from "./benchmarksPlaywright";
 import * as benchmarksWebdriver from "./benchmarksWebdriver";
+import * as benchmarksWebdriverCDP from "./benchmarksWebdriverCDP";
 import * as benchmarksLighthouse from "./benchmarksLighthouse";
 
 export type TBenchmark = benchmarksWebdriver.CPUBenchmarkWebdriver | benchmarksPuppeteer.TBenchmarkPuppeteer 
-                            | benchmarksLighthouse.BenchmarkLighthouse | benchmarksPlaywright.CPUBenchmarkPlaywright;
+                            | benchmarksLighthouse.BenchmarkLighthouse | benchmarksPlaywright.CPUBenchmarkPlaywright | benchmarksWebdriverCDP.CPUBenchmarkWebdriverCDP;
 
 export const benchmarks: Array<TBenchmark> = [
     benchmarksPuppeteer.benchRun,
