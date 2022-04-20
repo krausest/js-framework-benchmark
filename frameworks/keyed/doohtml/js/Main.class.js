@@ -67,6 +67,15 @@ Doo.define(
 			return idx
 		}
 
+		getIndex(row) {
+			let idx =  this.data.rows.findIndex((item, i) => {
+				if (item.id === row.key) {
+					return i
+				}
+			}) 
+			return idx
+		}
+
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
@@ -75,25 +84,24 @@ Doo.define(
 				if (idx !== undefined) {
 					this.data.rows.splice(idx,1)
 				}
-
 			}
 		}  
 
 		run() {
+			this.clear()
 			this.data.rows = this.buildData()
-			this.tbody.textContent = ''
 			this.renderTable()
 		}
 
-		add() {
+	 	add() {
 			let startRow = this.data.rows.length
-			this.data.rows = this.data.rows.concat(this.buildData())
-			this.renderTable(this.data.rows, startRow)
+	 		this.data.rows = this.data.rows.concat(this.buildData())
+	 		this.renderTable(this.data.rows, startRow)
 		}    
 
 		runLots() {
+			this.clear()
 			this.data.rows = this.buildData(10000)
-			this.tbody.textContent = ''
 			this.renderTable()
 		}
 
@@ -108,13 +116,18 @@ Doo.define(
 				this.selectedRow.classList.remove('danger')
 				this.selectedRow = undefined
 			}
-			let row = this.getParentRow(elem)
+			this.toggleSelect(this.getParentRow(elem))
+		}
 
+		toggleSelect(elem) {
+			let row = this.getParentRow(elem)
 			if (row) {
 				row.classList.toggle('danger')
-				this.selectedRow = row
+				if (row.classList.contains('danger')) {
+					this.selectedRow = row
+				}	
 			}    
-		}
+		}		
 
 		clear() {
 			this.data.rows = []
@@ -122,17 +135,18 @@ Doo.define(
 		}
 
 		swapRows() {
-			if (this.data.rows.length>10) {
-				let node1 = this.tbody.childNodes[1]
-				let node2 = this.tbody.childNodes[998]
-
-				let row1 = this.data.rows[1]
-				this.data.rows[1] = this.data.rows[998]
+			if (this.data.rows.length > 998) {
+				let node1 = this.tbody.firstChild.nextSibling, 
+					node2 = node1.nextSibling,
+					node998 = this.tbody.childNodes[998],
+					node999 = node998.nextSibling,
+					row1 = this.data.rows[1]
+				
+				this.data.rows[1] = this.data.rows[998];
 				this.data.rows[998] = row1
 				
-				this.tbody.insertBefore(node2, node1)
-				this.tbody.insertBefore(node1, this.tbody.childNodes[999])
-
+				this.tbody.insertBefore(node998, node2)
+				this.tbody.insertBefore(node1, node999)
 			}
 		}
 
