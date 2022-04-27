@@ -1,13 +1,13 @@
 import { fork } from "child_process";
 import * as fs from "fs";
 import * as yargs from "yargs";
-import { BenchmarkInfo, BenchmarkType } from "./benchmarksCommon";
+import { BenchmarkInfo, BenchmarkType, TBenchmark } from "./benchmarksCommon";
 import { CPUBenchmarkPuppeteer, MemBenchmarkPuppeteer, TBenchmarkPuppeteer } from "./benchmarksPuppeteer";
-import { CPUBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright";
+import { CPUBenchmarkPlaywright, MemBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright";
 import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver";
 import { BenchmarkDriverOptions, BenchmarkOptions, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common";
 import { writeResults } from "./writeResults";
-import {benchmarks} from "./benchmarkConfiguration";
+import {benchmarks, TBenchmarkImplementation} from "./benchmarkConfiguration";
 import { BenchmarkLighthouse, StartupBenchmarkResult } from "./benchmarksLighthouse";
 import { CPUBenchmarkWebdriverCDP } from "./benchmarksWebdriverCDP";
 
@@ -22,7 +22,7 @@ function forkAndCallBenchmark(
       forkedRunner = "dist/forkedBenchmarkRunnerLighthouse.js";
     } else if (benchmark instanceof CPUBenchmarkWebdriverCDP) {
       forkedRunner = "dist/forkedBenchmarkRunnerWebdriverCDP.js";
-    } else if (benchmark instanceof CPUBenchmarkPlaywright /*|| benchmark instanceof MemBenchmarkPuppeteer*/) {
+    } else if (benchmark instanceof CPUBenchmarkPlaywright || benchmark instanceof MemBenchmarkPlaywright) {
       forkedRunner = "dist/forkedBenchmarkRunnerPlaywright.js";
     } else if (benchmark instanceof CPUBenchmarkPuppeteer || benchmark instanceof MemBenchmarkPuppeteer) {
       forkedRunner = "dist/forkedBenchmarkRunnerPuppeteer.js";
@@ -170,7 +170,7 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkNames: string[]
   let errors: String[] = [];
   let warnings: String[] = [];
 
-  let runBenchmarks: Array<CPUBenchmarkWebdriver | TBenchmarkPuppeteer | BenchmarkLighthouse | CPUBenchmarkPlaywright> = benchmarks.filter((b) =>
+  let runBenchmarks: Array<TBenchmarkImplementation> = benchmarks.filter((b) =>
     benchmarkNames.some((name) => b.benchmarkInfo.id.toLowerCase().indexOf(name) > -1)
   );
 

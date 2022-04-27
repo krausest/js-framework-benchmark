@@ -4,10 +4,12 @@ import * as benchmarksWebdriver from "./benchmarksWebdriver";
 import * as benchmarksWebdriverCDP from "./benchmarksWebdriverCDP";
 import * as benchmarksLighthouse from "./benchmarksLighthouse";
 
-export type TBenchmark = benchmarksWebdriver.CPUBenchmarkWebdriver | benchmarksPuppeteer.TBenchmarkPuppeteer 
-                            | benchmarksLighthouse.BenchmarkLighthouse | benchmarksPlaywright.CPUBenchmarkPlaywright | benchmarksWebdriverCDP.CPUBenchmarkWebdriverCDP;
+export type TBenchmarkImplementation = benchmarksWebdriver.CPUBenchmarkWebdriver | benchmarksPuppeteer.TBenchmarkPuppeteer 
+                            | benchmarksLighthouse.BenchmarkLighthouse 
+                            | benchmarksPlaywright.CPUBenchmarkPlaywright | benchmarksPlaywright.MemBenchmarkPlaywright 
+                            | benchmarksWebdriverCDP.CPUBenchmarkWebdriverCDP;
 
-export const benchmarks: Array<TBenchmark> = [
+export const benchmarks: Array<TBenchmarkImplementation> = [
     benchmarksPuppeteer.benchRun,
     benchmarksPuppeteer.benchReplaceAll,
     benchmarksPuppeteer.benchUpdate,
