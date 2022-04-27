@@ -43,6 +43,7 @@ target/
 webdriver-ts/results/
 webdriver-ts/traces/
 webdriver-ts/results*/
+webdriver-ts/traces*/
 webdriver-ts/old_results/
 webdriver-ts-results/table_*.html
 webdriver-ts/table_*.html

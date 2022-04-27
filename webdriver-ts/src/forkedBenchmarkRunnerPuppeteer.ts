@@ -88,7 +88,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             });
         // }
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
-            await page.goto(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "domcontentloaded"});
+            await page.goto(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
 
             // await (driver as any).sendDevToolsCommand('Network.enable');
             // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {

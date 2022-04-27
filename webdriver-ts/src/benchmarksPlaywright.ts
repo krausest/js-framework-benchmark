@@ -267,102 +267,102 @@ export const benchClear = new class extends CPUBenchmarkPlaywright {
   }
 }
 
-// export const benchReadyMemory = new (class extends MemBenchmarkPlaywright {
-//   constructor() {
-//     super({
-//       id: benchmarksCommon.BENCHMARK_21,
-//       label: "ready memory",
-//       description: "Memory usage after page load.",
-//       type: BenchmarkType.MEM,
-//     });
-//   }
-//   async init(browser: Browser, page: Page) {
-//     await checkElementExists(page, "pierce/#run");
-//   }
-//   async run(browser: Browser, page: Page) {}
-//   async after(page: Page, framework: FrameworkData) {}
-// })();
+export const benchReadyMemory = new (class extends MemBenchmarkPlaywright {
+  constructor() {
+    super({
+      id: benchmarksCommon.BENCHMARK_21,
+      label: "ready memory",
+      description: "Memory usage after page load.",
+      type: BenchmarkType.MEM,
+    });
+  }
+  async init(browser: Browser, page: Page) {
+    await checkElementExists(page, "#run");
+  }
+  async run(browser: Browser, page: Page) {}
+  async after(page: Page, framework: FrameworkData) {}
+})();
 
-// export const benchRunMemory = new (class extends MemBenchmarkPlaywright {
-//   constructor() {
-//     super({
-//       id: benchmarksCommon.BENCHMARK_22,
-//       label: "run memory",
-//       description: "Memory usage after adding 1000 rows.",
-//       type: BenchmarkType.MEM,
-//     });
-//   }
-//   async init(browser: Browser, page: Page) {
-//     await checkElementExists(page, "pierce/#run");
-//   }
-//   async run(browser: Browser, page: Page) {
-//     await clickElement(page, "pierce/#run");
-//     await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(2)>a");
-//   }
-// })();
+export const benchRunMemory = new (class extends MemBenchmarkPlaywright {
+  constructor() {
+    super({
+      id: benchmarksCommon.BENCHMARK_22,
+      label: "run memory",
+      description: "Memory usage after adding 1000 rows.",
+      type: BenchmarkType.MEM,
+    });
+  }
+  async init(browser: Browser, page: Page) {
+    await checkElementExists(page, "#run");
+  }
+  async run(browser: Browser, page: Page) {
+    await clickElement(page, "#run");
+    await checkElementExists(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(2)>a");
+  }
+})();
 
-// export const benchUpdate5Memory = new (class extends MemBenchmarkPlaywright {
-//   constructor() {
-//     super({
-//       id: benchmarksCommon.BENCHMARK_23,
-//       label: "update every 10th row for 1k rows (5 cycles)",
-//       description: "Memory usage after clicking update every 10th row 5 times",
-//       type: BenchmarkType.MEM,
-//     });
-//   }
-//   async init(browser: Browser, page: Page) {
-//     await checkElementExists(page, "pierce/#run");
-//   }
-//   async run(browser: Browser, page: Page) {
-//     await clickElement(page, "pierce/#run");
-//     for (let i = 0; i < 5; i++) {
-//       await clickElement(page, "pierce/#update");
-//       await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(2)>a", " !!!".repeat(i));
-//     }
-//   }
-// })();
+export const benchUpdate5Memory = new (class extends MemBenchmarkPlaywright {
+  constructor() {
+    super({
+      id: benchmarksCommon.BENCHMARK_23,
+      label: "update every 10th row for 1k rows (5 cycles)",
+      description: "Memory usage after clicking update every 10th row 5 times",
+      type: BenchmarkType.MEM,
+    });
+  }
+  async init(browser: Browser, page: Page) {
+    await checkElementExists(page, "#run");
+  }
+  async run(browser: Browser, page: Page) {
+    await clickElement(page, "#run");
+    for (let i = 0; i < 5; i++) {
+      await clickElement(page, "#update");
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(2)>a", " !!!".repeat(i));
+    }
+  }
+})();
 
-// export const benchReplace5Memory = new (class extends MemBenchmarkPlaywright {
-//   constructor() {
-//     super({
-//       id: benchmarksCommon.BENCHMARK_24,
-//       label: "replace 1k rows (5 cycles)",
-//       description: "Memory usage after clicking create 1000 rows 5 times",
-//       type: BenchmarkType.MEM,
-//     });
-//   }
-//   async init(browser: Browser, page: Page) {
-//     await checkElementExists(page, "pierce/#run");
-//   }
-//   async run(browser: Browser, page: Page) {
-//     for (let i = 0; i < 5; i++) {
-//       await clickElement(page, "pierce/#run");
-//       await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed());
-//     }
-//   }
-// })();
+export const benchReplace5Memory = new (class extends MemBenchmarkPlaywright {
+  constructor() {
+    super({
+      id: benchmarksCommon.BENCHMARK_24,
+      label: "replace 1k rows (5 cycles)",
+      description: "Memory usage after clicking create 1000 rows 5 times",
+      type: BenchmarkType.MEM,
+    });
+  }
+  async init(browser: Browser, page: Page) {
+    await checkElementExists(page, "#run");
+  }
+  async run(browser: Browser, page: Page) {
+    for (let i = 0; i < 5; i++) {
+      await clickElement(page, "#run");
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed());
+    }
+  }
+})();
 
-// export const benchCreateClear5Memory = new (class extends MemBenchmarkPlaywright {
-//   constructor() {
-//     super({
-//       id: benchmarksCommon.BENCHMARK_25,
-//       label: "creating/clearing 1k rows (5 cycles)",
-//       description: "Memory usage after creating and clearing 1000 rows 5 times",
-//       type: BenchmarkType.MEM,
-//     });
-//   }
-//   async init(browser: Browser, page: Page) {
-//     await checkElementExists(page, "pierce/#run");
-//   }
-//   async run(browser: Browser, page: Page) {
-//     for (let i = 0; i < 5; i++) {
-//       await clickElement(page, "pierce/#run");
-//       await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed());
-//       await clickElement(page, "pierce/#clear");
-//       await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
-//     }
-//   }
-// })();
+export const benchCreateClear5Memory = new (class extends MemBenchmarkPlaywright {
+  constructor() {
+    super({
+      id: benchmarksCommon.BENCHMARK_25,
+      label: "creating/clearing 1k rows (5 cycles)",
+      description: "Memory usage after creating and clearing 1000 rows 5 times",
+      type: BenchmarkType.MEM,
+    });
+  }
+  async init(browser: Browser, page: Page) {
+    await checkElementExists(page, "#run");
+  }
+  async run(browser: Browser, page: Page) {
+    for (let i = 0; i < 5; i++) {
+      await clickElement(page, "#run");
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed());
+      await clickElement(page, "#clear");
+      await checkElementNotExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
+    }
+  }
+})();
 
 
 export function fileNameTrace(framework: FrameworkData, benchmark: TBenchmark, run: number) {
