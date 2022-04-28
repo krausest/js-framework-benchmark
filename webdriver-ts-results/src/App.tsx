@@ -15,7 +15,7 @@ const App = () => {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 64 GB RAM, Fedora 36 (Linux 5.17.1, mitigations=off, Wayland), Chrome 100.0.4896.127 (64-bit))</p>
+        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 64 GB RAM, Fedora 36 (Linux 5.17.3, mitigations=off, Wayland), Chrome  101.0.4951.41 (64-bit))</p>
          <SelectionBar/>
          <ResultTable type={FrameworkType.KEYED}/>
          <ResultTable type={FrameworkType.NON_KEYED}/>

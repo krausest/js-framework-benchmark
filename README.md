@@ -1,3 +1,4 @@
+
 # js-framework-benchmark
 
 This is a simple benchmark for several javascript frameworks. The benchmarks creates a large table with randomized entries and measures the time for various operations including rendering duration.
@@ -43,22 +44,87 @@ The current snapshot that may not have the same quality (i.e.
 results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
 [![Results](images/results.png?raw=true "Results")](https://krausest.github.io/js-framework-benchmark/current.html)
 
-## 1. Using the benchmark tool
+# 1 NEW + experimental: Run pre-built binaries for all frameworks
 
 There are currently ~60 framework entries in this repository. Installing (and maintaining) those can be challenging, but here are simplified instructions how to get started.
 
-### 1.1 Prerequisites
+## 1.1 Prerequisites
 
-Have _node.js (>=10.0)_ installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node v10.16.3.
+Have _node.js (>=v16.14.2)_ installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node vv16.14.2.
+Please make sure that the following command work before trying to build:
+
+```
+> npm
+npm -version
+8.5.0
+> node --version
+v16.14.2
+```
+
+## 1.2 Downloading the pre-built binaries and starting the server
+Builiding all frameworks can be challenging. There's a new way that allows to skip that and just run the benchmark without builiding all implementationss.
+
+
+Start with checking out a tagged release like that. Pick the release that you want (e.g. chrome 100):
+```
+git clone https://github.com/krausest/js-framework-benchmark.git
+cd js-framework-benchmark
+git checkout chrome100 -b release
+npm ci && npm run install-local
+```
+Download the build.zip for that release from https://github.com/krausest/js-framework-benchmark/releases
+and put the build.zip into the js-framework-benchmark directory and unzip the prebuilt files:
+```
+unzip build.zip
+```
+You're now ready to start the http-server. Let the server run in the background
+```
+npm start
+```
+## 1.3 Running the benchmarks and handling errors
+
+In a new console window you can now run the benchmarks:
+```
+npm run bench
+```
+
+This will take some time (currently about 12 hours on my machine). Finally create the results table:
+```
+npm run results
+```
+
+Open js-framework-benchmark/webdriver-ts-results/table.html in a browser and take a look at the results. You can open the result table with the link [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html)
+
+
+Here's what you should do when the benchmark run was not sucessful. Let's assume the benchmark printed the following to the console:
+```
+================================
+The following benchmarks failed:
+================================
+Executing frameworks/non-keyed/ef-js and benchmark 04_select1k failed: No paint event found
+run was not completely sucessful Benchmarking failed with errors
+```
+You'll now have to run the benchmark again for those that failed like that:
+```
+npm run bench -- --framework non-keyed/ef-js --benchmark 04_
+```
+The you can then continue with creating the results table `npm run results`.
+Another workaround is to delete the folders of frameworks you can't run or you are not interested in.
+
+# 2 Building the frameworks and running the benchmark 
+
+## 2.1 Prerequisites
+
+Have _node.js (>=v16.14.2)_ installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node vv16.14.2.
 For some frameworks you'll also need _java_ (>=8, e.g. openjdk-8-jre on ubuntu).
 Please make sure that the following command work before trying to build:
 
 ```
 > npm
 npm -version
-5.0.0
+8.5.0
 > node --version
-v8.0.0
+v16.14.2
 > echo %JAVA_HOME% / echo $JAVA_HOME
 > java -version
 java version "1.8.0_131" ...
@@ -66,7 +132,7 @@ java version "1.8.0_131" ...
 javac 1.8.0_131
 ```
 
-### 1.2 Start installing
+## 2.2 Start installing
 
 As stated above building and running the benchmarks for all frameworks can be challenging, thus we start step by step...
 
@@ -114,7 +180,7 @@ There should be no build errors and we can open the framework in the browser:
 
 Some frameworks like binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a customURL property under js-framework-benchmark in the [package.json](https://github.com/krausest/js-framework-benchmark/blob/master/frameworks/keyed/ember/package.json#L10) that represents the url.
 
-### 1.4 Running benchmarks for a single framework
+## 2.3 Running benchmarks for a single framework
 
 The benchmark uses an automated benchmark driver using chromedriver to measure the duration for each operation using chrome's timeline. Here are the steps to run is for a single framework:
 
@@ -163,7 +229,7 @@ npm run isKeyed keyed/vanillajs
 
 If it finds anything it'll report an ERROR.
 
-### 1.5 Building the result table
+### 2.4 Building the result table
 
 Install libraries:
 
@@ -185,7 +251,7 @@ Now a result table should have been created which can be opened on [http://local
 There's nothing in table except for the column vanillajs-keyed at the right end of the first table.
 ![First Run Results](images/staticResults.png?raw=true "First Run Results")
 
-### 1.6 [Optional] Updating the index.html file
+## 2.4 [Optional] Updating the index.html file
 
 This simply rebuilds the file used to display the table, not the results.
 
@@ -193,7 +259,7 @@ This simply rebuilds the file used to display the table, not the results.
 npm run index
 ```
 
-### 1.7 [Optional] Building and running the benchmarks for all frameworks
+## 2.5 [Optional] Building and running the benchmarks for all frameworks
 
 This is not for the faint at heart. You can build all frameworks simply by issuing:
 
@@ -214,7 +280,7 @@ in the root directory.
 
 After that you can check all results in [http://localhost:8080/webdriver-ts/table.html](http://localhost:8080/webdriver-ts/table.html).
 
-### 1.8 Tips and tricks
+# 3 Tips and tricks
 
 - You can run multiple implementations by passing their directory names (cd to webdriver-ts):
   `npm run bench keyed/angular keyed/react`.
@@ -226,9 +292,9 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
 - If you can't get one framework to compile or run, just move it out of the frameworks directory and re-run
 - One can check whether an implementation is keyed or non-keyed via `npm run isKeyed` in the webdriver-ts directory. You can limit which frameworks to check in the same way as the webdriver test runner like e.g. `npm run isKeyed keyed/svelte`. The program will report an error if a benchmark implementation is incorrectly classified.
 
-## 2. Contributing a new implementation
+## 4. Contributing a new implementation
 
-### 2.1 Building the app
+## 4.1 Building the app
 
 For contributions it is basically sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional. Let's simulate that by copying vanillajs.
 
@@ -250,7 +316,7 @@ In most cases you'll need `npm install` and `npm run build-prod` and then check 
 
 (Of course in reality you'd rather throw out the javascript source files and use your framework there instead of only changing the html file.)
 
-### 2.2 Adding your new implementation to the results table.
+## 4.2 Adding your new implementation to the results table.
 
 (Notice: Updating common.ts is no longer necessary, super-vanillajs is visible in the result table)
 
@@ -286,7 +352,7 @@ The other important, but optional properties for js-framework-benchmark are show
 
 You can set an optional different URL if needed or specify that your DOM uses a shadow root.
 
-### 2.3 Submitting your framework
+## 4.3 Submitting your implementation
 
 Contributions are very welcome. Please use the following rules:
 
@@ -323,7 +389,7 @@ This work is derived from a benchmark that Richard Ayotte published on https://g
 
 Thanks to Baptiste Augrain for making the benchmarks more sophisticated and adding frameworks.
 
-## History
+# History
 
 Frameworks without significant activity on github or npm for more than a year will be removed (_automatic commits like dependabot and minor updates, like docs editions, are ignored_).
 
@@ -331,7 +397,7 @@ Will be removed in future:
 
 - [ ] crui Last significant commit Jul 28, 2019
 
-### 2020-7-9
+## 2020-7-9
 
 - [x] etch Last commit Sep 12, 2018
 - [x] hyperoop Last significant commit Dec 23, 2018
@@ -345,10 +411,11 @@ Will be removed in future:
 - [x] gruu Last commit Jun 23, 2019
 - [x] lite-html Last commit Sep 7, 2018
 
-### 2019-9-16
+## 2019-9-16
 
 - [x] angular-light Last commit Nov 30, 2017
 - [x] nx. Last commit Feb 2017
 - [x] maik-h Last commit Dec 15, 2017
 - [x] rivets Last commit Oct 22, 2016
 - [x] tsers. Last commit Jun 19, 2016
+

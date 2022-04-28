@@ -35,8 +35,9 @@ for (let keyedType of ['keyed', 'non-keyed']) {
 			zip.addLocalFolder(fd+"/node_modules/babel-polyfill/dist/", zipPathName+"/node_modules/babel-polyfill/dist/");
 			zip.addLocalFile(fd+"/src/bundle.js", zipPathName+"/src")
 		}
-		if (fs.existsSync(fd+"/public/"))
+		if (fs.existsSync(fd+"/public/") && ["ember","glimmer"].indexOf(name)==-1) {
 			zip.addLocalFolder(fd+"/public/", zipPathName+"/public/");
+		}
 		if (fs.existsSync(fd+"/target/web/stage"))
 			zip.addLocalFolder(fd+"/target/web/stage", zipPathName+"/target/web/stage");
 		if (fs.existsSync(fd+"/output"))
