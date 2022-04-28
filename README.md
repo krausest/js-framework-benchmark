@@ -44,7 +44,7 @@ The current snapshot that may not have the same quality (i.e.
 results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
 [![Results](images/results.png?raw=true "Results")](https://krausest.github.io/js-framework-benchmark/current.html)
 
-# 1 NEW + experimental: Run pre-built binaries for all frameworks
+# 1 NEW: Run pre-built binaries for all frameworks
 
 There are currently ~60 framework entries in this repository. Installing (and maintaining) those can be challenging, but here are simplified instructions how to get started.
 
@@ -111,7 +111,7 @@ npm run bench -- --framework non-keyed/ef-js --benchmark 04_
 The you can then continue with creating the results table `npm run results`.
 Another workaround is to delete the folders of frameworks you can't run or you are not interested in.
 
-# 2 Building the frameworks and running the benchmark 
+# 2 The old and hard way: Building the frameworks and running the benchmark 
 
 ## 2.1 Prerequisites
 
@@ -155,7 +155,7 @@ Try to open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
 Now open a new terminal window and keep the web server running in background.
 
-### 1.3 Building and viewing a single framework
+## 2.3 Building and viewing a single framework
 
 We now try to build the first framework. Go to the vanillajs reference implementation
 
@@ -180,7 +180,7 @@ There should be no build errors and we can open the framework in the browser:
 
 Some frameworks like binding.scala or ember can't be opened that way, because they need a 'dist' or 'target/web/stage' or something in the URL. You can find out the correct URL in the [index.html](http://localhost:8080/index.html) you've opened before or take a look whether there's a customURL property under js-framework-benchmark in the [package.json](https://github.com/krausest/js-framework-benchmark/blob/master/frameworks/keyed/ember/package.json#L10) that represents the url.
 
-## 2.3 Running benchmarks for a single framework
+## 2.4 Running benchmarks for a single framework
 
 The benchmark uses an automated benchmark driver using chromedriver to measure the duration for each operation using chrome's timeline. Here are the steps to run is for a single framework:
 
@@ -229,7 +229,7 @@ npm run isKeyed keyed/vanillajs
 
 If it finds anything it'll report an ERROR.
 
-### 2.4 Building the result table
+## 2.5 Building the result table
 
 Install libraries:
 
@@ -251,7 +251,7 @@ Now a result table should have been created which can be opened on [http://local
 There's nothing in table except for the column vanillajs-keyed at the right end of the first table.
 ![First Run Results](images/staticResults.png?raw=true "First Run Results")
 
-## 2.4 [Optional] Updating the index.html file
+## 2.6 [Optional] Updating the index.html file
 
 This simply rebuilds the file used to display the table, not the results.
 
@@ -259,7 +259,7 @@ This simply rebuilds the file used to display the table, not the results.
 npm run index
 ```
 
-## 2.5 [Optional] Building and running the benchmarks for all frameworks
+## 2.7 [Optional] Building and running the benchmarks for all frameworks
 
 This is not for the faint at heart. You can build all frameworks simply by issuing:
 
