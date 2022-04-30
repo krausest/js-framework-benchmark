@@ -11,16 +11,18 @@
     "results": "ts-node src/createResultJS.ts && cd .. && cd webdriver-ts-results && npm run build-prod",
     "index": "ts-node src/createIndex.ts",
     "isKeyed": "cross-env LANG=\"en_US.UTF-8\" ts-node src/isKeyed.ts",
-    "parse": "ts-node src/parseTrace.ts"
+    "parse": "ts-node src/parseTrace.ts",
+    "run-si": "ts-node src/singleInstanceBenchmarkRunnerPlaywright.ts"
   },
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
     "@types/lodash": "4.14.181",
     "@types/node": "17.0.23",
-    "@types/ramda": "0.28.5",
+    "@types/ramda": "^0.28.11",
     "@types/selenium-webdriver": "4.0.18",
     "@types/semver": "7.3.9",
+    "@types/underscore": "^1.11.4",
     "@types/yargs": "17.0.10",
     "dockerode": "^3.3.1",
     "rimraf": "^3.0.2",
@@ -39,9 +41,10 @@
     "npm-check-updates": "12.5.4",
     "playwright": "^1.21.0",
     "puppeteer-core": "^13.5.1",
-    "ramda": "0.28.0",
+    "ramda": "^0.28.0",
     "selenium-webdriver": "4.1.1",
     "semver": "7.3.5",
+    "underscore": "^1.13.3",
     "yargs": "17.4.0"
   }
 }

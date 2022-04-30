@@ -14,9 +14,6 @@ let config: TConfig = defaultConfig;
 async function runBenchmark(browser: Browser, page: Page, benchmark: TBenchmarkPlaywright, framework: FrameworkData): Promise<any> {
   await benchmark.run(browser, page, framework);
   if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
-  // if (benchmark.type === BenchmarkType.MEM) {
-  //   await forceGC(page);
-  // }
 }
 
 async function afterBenchmark(browser: Browser, page: Page, benchmark: TBenchmarkPlaywright, framework: FrameworkData): Promise<any> {
@@ -93,25 +90,25 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             console.log("initBenchmark Playwright");
             await initBenchmark(browser, page, benchmark, framework);
 
-            let categories = [
-                "blink.user_timing",
-                "devtools.timeline",
-                'disabled-by-default-devtools.timeline',
-            ];
             // let categories = [
-            // "loading",
-            // 'devtools.timeline',
-            //   'disabled-by-default-devtools.timeline',
-            //   '-*',
-            //   'v8.execute',
-            //     'disabled-by-default-devtools.timeline.frame',
-            //     'toplevel',
-            //     'blink.console',
-            //     'blink.user_timing',
-            //     'latencyInfo',
-            //     'disabled-by-default-v8.cpu_profiler',                
-            //     'disabled-by-default-devtools.timeline.stack',
+            //     "blink.user_timing",
+            //     "devtools.timeline",
+            //     'disabled-by-default-devtools.timeline',
             // ];
+            let categories = [
+            "loading",
+            'devtools.timeline',
+              'disabled-by-default-devtools.timeline',
+              '-*',
+              'v8.execute',
+                'disabled-by-default-devtools.timeline.frame',
+                'toplevel',
+                'blink.console',
+                'blink.user_timing',
+                'latencyInfo',
+                'disabled-by-default-v8.cpu_profiler',                
+                'disabled-by-default-devtools.timeline.stack',
+            ];
 
             let client = await page.context().newCDPSession(page);
             if (benchmark.benchmarkInfo.throttleCPU) {
@@ -133,6 +130,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             await afterBenchmark(browser, page, benchmark, framework);
             if (benchmark.benchmarkInfo.throttleCPU) {
               await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+            await client.send('HeapProfiler.collectGarbage',{});
           }
           client.detach();
   
@@ -207,7 +205,7 @@ async function runMemBenchmark(
       await runBenchmark(browser, page, benchmark, framework);
       await wait(40);
       await client.send('HeapProfiler.collectGarbage');
-      let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value;
+      let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
 
       await afterBenchmark(browser, page, benchmark, framework);
       console.log("afterBenchmark ");

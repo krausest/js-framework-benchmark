@@ -28,12 +28,11 @@ export const categories: Category[] = [
   {id:2, text:"[Note]:View state on the model", issues: [800]},
   {id:3, text:"[Note]: Explicit requestAnimationFrame calls", issues: [796]},
   {id:4, text:"[Note]: Manual event delegation", issues: [801]},
-  {id:5, text:"[Issue]: Errors in the implementation", issues: [634, 694]},
+  {id:5, text:"[Issue]: Errors in the implementation", issues: [634]},
 ]
 
 export const knownIssues = [
     {issue: 634, severity: Severity.Error, text:"[Issue]: The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
-    {issue: 694, severity: Severity.Error, text:"[Issue]: Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694"},
     {issue: 772, severity: Severity.Categorization, text:"[Note]: Implementation uses manual DOM manipulations", link: "https://github.com/krausest/js-framework-benchmark/issues/772"},
     {issue: 796, severity: Severity.Categorization, text:"[Note]: Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
     {issue: 800, severity: Severity.Categorization, text:"[Note]: View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},

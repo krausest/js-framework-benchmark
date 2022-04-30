@@ -10,21 +10,21 @@ export type TBenchmarkImplementation = benchmarksWebdriver.CPUBenchmarkWebdriver
                             | benchmarksWebdriverCDP.CPUBenchmarkWebdriverCDP;
 
 export const benchmarks: Array<TBenchmarkImplementation> = [
-    benchmarksPuppeteer.benchRun,
-    benchmarksPuppeteer.benchReplaceAll,
-    benchmarksPuppeteer.benchUpdate,
-    benchmarksPuppeteer.benchSelect,
-    benchmarksPuppeteer.benchSwapRows,
-    benchmarksPuppeteer.benchRemove,
-    benchmarksPuppeteer.benchRunBig,
-    benchmarksPuppeteer.benchAppendToManyRows,
-    benchmarksPuppeteer.benchClear,
+    benchmarksPlaywright.benchRun,
+    benchmarksPlaywright.benchReplaceAll,
+    benchmarksPlaywright.benchUpdate,
+    benchmarksPlaywright.benchSelect,
+    benchmarksPlaywright.benchSwapRows,
+    benchmarksPlaywright.benchRemove,
+    benchmarksPlaywright.benchRunBig,
+    benchmarksPlaywright.benchAppendToManyRows,
+    benchmarksPlaywright.benchClear,
   
-    benchmarksPuppeteer.benchReadyMemory,
-    benchmarksPuppeteer.benchRunMemory,
-    benchmarksPuppeteer.benchUpdate5Memory,
-    benchmarksPuppeteer.benchReplace5Memory,
-    benchmarksPuppeteer.benchCreateClear5Memory,
+    benchmarksPlaywright.benchReadyMemory,
+    benchmarksPlaywright.benchRunMemory,
+    benchmarksPlaywright.benchUpdate5Memory,
+    benchmarksPlaywright.benchReplace5Memory,
+    benchmarksPlaywright.benchCreateClear5Memory,
 
     benchmarksLighthouse.benchLighthouse,
 ];

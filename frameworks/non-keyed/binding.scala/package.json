@@ -5,9 +5,7 @@
   "js-framework-benchmark": {
     "frameworkVersion": "10.0.1",
     "customURL": "/target/web/stage",
-    "issues": [
-      694
-    ]
+    "issues": []
   },
   "scripts": {
     "install": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to build use: && echo npm run install-force",

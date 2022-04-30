@@ -4,7 +4,7 @@
   "description": "Benchmark for Datum v0.8",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "Datum",
-    "issues": [694]
+    "issues": []
   },
   "scripts": {
     "build-dev": "webpack -w -d -c webpack.config.js",
