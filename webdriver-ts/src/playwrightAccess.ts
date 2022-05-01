@@ -97,7 +97,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
   const height = 800;
 
   const browser = await chromium.launch({
-    headless: false,
+    headless: benchmarkOptions.headless,
     // executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     executablePath: browserPath(benchmarkOptions),
   });
