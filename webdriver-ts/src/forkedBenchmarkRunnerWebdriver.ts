@@ -1,7 +1,6 @@
 import { WebDriver, logging } from "selenium-webdriver";
-import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver";
+import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriver";
 import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess";
-import {benchmarks} from "./benchmarkConfiguration";
 
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
 import * as R from "ramda";
@@ -274,7 +273,7 @@ async function runCPUBenchmark(
       setUseRowShadowRoot(framework.useRowShadowRoot);
       setShadowRootName(framework.shadowRootName);
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
-      await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      await driver.get(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {

@@ -261,7 +261,7 @@ async function runBench(frameworkNames: string[]) {
       setShadowRootName(framework.shadowRootName);
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
 
-      await driver.get(`http://localhost:${config.PORT}/${framework.uri}/index.html`);
+      await driver.get(`http://${config.HOST}:${config.PORT}/${framework.uri}/index.html`);
       await testElementLocatedById(driver, "add", config.TIMEOUT, true);
       await clickElementById(driver, "run", true);
       await testTextContains(driver, "//tbody/tr[1000]/td[1]", "1000", config.TIMEOUT, false);
@@ -335,9 +335,15 @@ async function runBench(frameworkNames: string[]) {
 
 config.PORT = Number(args.port);
 
+if (process.env.HOST) {
+  config.HOST = process.env.HOST;
+  console.log(`INFO: Using host ${config.HOST} instead of localhost`);
+}
+
 let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map((v: string) => v.toString());
 
 let benchmarkOptions: BenchmarkOptions = {
+  HOST: config.HOST,
   port: config.PORT.toFixed(),
   remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
   chromePort: config.CHROME_PORT,

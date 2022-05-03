@@ -1,13 +1,10 @@
-import { startBrowser } from "./playwrightAccess";
-
-import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
 import { Browser, Page } from "playwright-core";
-import { BenchmarkType, DurationMeasurementMode } from "./benchmarksCommon";
-import { CPUBenchmarkPlaywright, fileNameTrace, MemBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright";
-import {benchmarks} from "./benchmarkConfiguration";
-import { readFile } from 'fs/promises';
-import * as R from 'ramda';
+import { BenchmarkType } from "./benchmarksCommon";
+import { benchmarks, CPUBenchmarkPlaywright, fileNameTrace, MemBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright";
+import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common";
+import { startBrowser } from "./playwrightAccess";
 import { computeResultsCPU } from "./timeline";
+
 
 let config: TConfig = defaultConfig;
 
@@ -85,7 +82,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             });
         // }
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
-            await page.goto(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
+            await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
 
             console.log("initBenchmark Playwright");
             await initBenchmark(browser, page, benchmark, framework);
@@ -124,7 +121,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             // let m1 = await page.metrics();
             await runBenchmark(browser, page, benchmark, framework);
 
-            // await wait(10);
+            await wait(40);
             await browser.stopTracing();
             // let m2 = await page.metrics();
             await afterBenchmark(browser, page, benchmark, framework);
@@ -187,7 +184,7 @@ async function runMemBenchmark(
         });
       }
 
-      await page.goto(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {

@@ -1,12 +1,17 @@
-import * as _ from "lodash";
 import * as fs from "fs";
-import { JSONResult, config, FrameworkData, initializeFrameworks } from "./common";
 import * as yargs from "yargs";
-import { BenchmarkInfo, BenchmarkType, fileName, TBenchmark } from "./benchmarksCommon";
-import { TBenchmarkPuppeteer } from "./benchmarksPuppeteer";
-import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver";
-import {benchmarks} from "./benchmarkConfiguration";
-import { BenchmarkLighthouse } from "./benchmarksLighthouse";
+import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName } from "./benchmarksCommon";
+import { subbenchmarks } from "./benchmarksLighthouse";
+import { config, initializeFrameworks, JSONResult } from "./common";
+
+let args: any = yargs(process.argv)
+  .string("url").default("url", config.HOST).argv;
+
+  console.log("config.URL", config.HOST);
+config.HOST = args.url;
+console.log("config.URL", config.HOST);
+
+
 
 async function main() {
   let frameworks = await initializeFrameworks();
@@ -18,12 +23,11 @@ async function main() {
   let allBenchmarks: Array<BenchmarkInfo> = [];
   let jsonResult: { framework: string; benchmark: string; values: number[] }[] = [];
   
-  benchmarks.forEach((benchmark, bIdx) => {
-    if (benchmark.type == BenchmarkType.STARTUP_MAIN) {
-      let sb = benchmark as BenchmarkLighthouse;
-      allBenchmarks = allBenchmarks.concat( sb.subbenchmarks);
+  Object.values(benchmarkInfos).forEach((benchmarkInfo, bIdx) => {
+    if (benchmarkInfo.type == BenchmarkType.STARTUP_MAIN) {
+      allBenchmarks = allBenchmarks.concat( subbenchmarks);
     } else {
-      allBenchmarks.push(benchmark.benchmarkInfo);
+      allBenchmarks.push(benchmarkInfo);
     }
   });
 

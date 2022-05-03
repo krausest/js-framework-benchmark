@@ -1,12 +1,11 @@
-import { WebDriver, logging } from "selenium-webdriver";
-import { CPUBenchmarkWebdriverCDP, fileNameTrace } from "./benchmarksWebdriverCDP";
-import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverCDPAccess";
-import {benchmarks} from "./benchmarkConfiguration";
-
-import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
-import { BenchmarkType, DurationMeasurementMode } from "./benchmarksCommon";
 import * as fs from "fs/promises";
+import { WebDriver } from "selenium-webdriver";
+import { BenchmarkType } from "./benchmarksCommon";
+import { benchmarks, CPUBenchmarkWebdriverCDP, fileNameTrace } from "./benchmarksWebdriverCDP";
+import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common";
 import { computeResultsCPU } from "./timeline";
+import { buildDriver, setButtonsInShadowRoot, setShadowRootName, setUseRowShadowRoot, setUseShadowRoot } from "./webdriverCDPAccess";
+
 
 let config: TConfig = defaultConfig;
 
@@ -81,7 +80,7 @@ async function runCPUBenchmark(
       setUseRowShadowRoot(framework.useRowShadowRoot);
       setShadowRootName(framework.shadowRootName);
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
-      await driver.get(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      await driver.get(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {

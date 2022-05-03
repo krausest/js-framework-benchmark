@@ -1,11 +1,9 @@
-import {benchmarks} from "./benchmarkConfiguration";
-
 const lighthouse = require("lighthouse");
 const chromeLauncher = require("chrome-launcher");
 
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
-import { BenchmarkLighthouse, StartupBenchmarkResult } from "./benchmarksLighthouse";
-import { StartupBenchmark } from "./benchmarksCommon";
+import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./benchmarksLighthouse";
+import { StartupBenchmarkInfo } from "./benchmarksCommon";
 
 let config: TConfig = defaultConfig;
 
@@ -18,7 +16,7 @@ function extractRawValue(results: any, id: string) {
   return audit_with_id.numericValue;
 }
 
-async function runLighthouse(framework: FrameworkData, startupBenchmarks: StartupBenchmark[], benchmarkOptions: BenchmarkOptions): Promise<StartupBenchmarkResult[]> {
+async function runLighthouse(framework: FrameworkData, startupBenchmarks: StartupBenchmarkInfo[], benchmarkOptions: BenchmarkOptions): Promise<StartupBenchmarkResult[]> {
   const opts: any = {
     chromeFlags: [
       "--headless",
@@ -46,7 +44,7 @@ async function runLighthouse(framework: FrameworkData, startupBenchmarks: Startu
     let chrome = await chromeLauncher.launch(opts);
     let results: any = null;
     try {
-      results = await lighthouse(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`, opts, null);
+      results = await lighthouse(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, opts, null);
       await chrome.kill();
     } catch (error) {
       console.log("error running lighthouse", error);

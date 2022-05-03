@@ -33,12 +33,20 @@ export interface BenchmarkDriverOptions {
 }
 
 export interface BenchmarkOptions extends BenchmarkDriverOptions {
+  HOST: string;
   port: string;
   batchSize: number;
   numIterationsForCPUBenchmarks: number;
   numIterationsForMemBenchmarks: number;
   numIterationsForStartupBenchmark: number;
 }
+
+export enum BENCHMARK_RUNNER { 
+  PUPPETEER = "puppeteer", 
+  PLAYWRIGHT = "playwright", 
+  WEBDRIVER_CDP = "webdrivercdp", 
+  WEBDRIVER = "webdriver" 
+}; 
 
 export let config = {
   PORT: 8080,
@@ -61,6 +69,8 @@ export let config = {
   RESULTS_DIRECTORY: "results",
   TRACES_DIRECTORY: "traces",
   ALLOW_BATCHING: true,
+  HOST: 'localhost',
+  BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER
 };
 export type TConfig = typeof config;
 
@@ -302,9 +312,9 @@ export class PackageVersionInformationResult {
 export async function determineInstalledVersions(framework: FrameworkVersionInformationDynamic): Promise<PackageVersionInformationResult> {
   let versions = new PackageVersionInformationResult(framework);
   try {
-    console.log(`http://localhost:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`);
+    console.log(`http://${config.HOST}:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`);
     let packageLock: any = (
-      await axios.get(`http://localhost:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`)
+      await axios.get(`http://${config.HOST}:${config.PORT}/frameworks/${framework.keyedType}/${framework.directory}/package-lock.json`)
     ).data;
     for (let packageName of framework.packageNames) {
       if (packageLock.dependencies[packageName]) {

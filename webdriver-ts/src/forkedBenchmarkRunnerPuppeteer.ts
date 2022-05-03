@@ -1,13 +1,10 @@
-import { startBrowser } from "./puppeteerAccess";
-
-import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
 import { Browser, Page } from "puppeteer-core";
-import { BenchmarkType, DurationMeasurementMode } from "./benchmarksCommon";
-import { CPUBenchmarkPuppeteer, MemBenchmarkPuppeteer, fileNameTrace, TBenchmarkPuppeteer } from "./benchmarksPuppeteer";
-import {benchmarks} from "./benchmarkConfiguration";
-import { readFile } from 'fs/promises';
-import * as R from 'ramda';
+import { BenchmarkType } from "./benchmarksCommon";
+import { CPUBenchmarkPuppeteer, fileNameTrace, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer";
+import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common";
+import { startBrowser } from "./puppeteerAccess";
 import { computeResultsCPU } from "./timeline";
+
 
 let config: TConfig = defaultConfig;
 
@@ -88,7 +85,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             });
         // }
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
-            await page.goto(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
+            await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
 
             // await (driver as any).sendDevToolsCommand('Network.enable');
             // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -206,7 +203,7 @@ async function runMemBenchmark(
         });
       }
 
-      await page.goto(`http://localhost:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
