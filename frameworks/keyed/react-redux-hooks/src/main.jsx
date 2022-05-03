@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from 'react-dom/client';
 import { createStore } from "redux";
 import { Provider, useDispatch, useSelector } from "react-redux";
 
@@ -118,7 +118,4 @@ const Main = () => {
   );
 };
 
-ReactDOM.render(
-  <Provider store={store}><Main /></Provider>,
-  document.getElementById("main")
-);
+ReactDOM.createRoot(document.getElementById("main")).render(<Provider store={store}><Main /></Provider>);
