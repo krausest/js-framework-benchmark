@@ -1,10 +1,11 @@
 
 /* IMPORT */
 
-import {FunctionMaybe, Observable, ObservableMaybe} from 'voby/src';
-import {$, createElement, render, template, useSelector, For, Fragment} from 'voby/src';
+import {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
+import {$, render, template, useSelector, For} from 'voby';
+import {createElement, Fragment} from 'voby';
 
-window.React = {createElement, Fragment};
+const React = {createElement, Fragment};
 
 /* TYPES */
 
@@ -40,7 +41,7 @@ const buildData = (() => {
 
 /* MODEL */
 
-const ModelClean = (() => {
+const Model = (() => {
 
   /* STATE */
 
@@ -62,13 +63,13 @@ const ModelClean = (() => {
   };
 
   const add = (): void => {
-    $data.update ( data => [...data, ...buildData ( 1000 )] );
+    $data ( data => [...data, ...buildData ( 1000 )] );
   };
 
   const update = (): void => {
     const data = $data ();
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
-      data[i].label.update ( label => label + ' !!!' );
+      data[i].label ( label => label + ' !!!' );
     }
   };
 
@@ -87,7 +88,7 @@ const ModelClean = (() => {
   };
 
   const remove = ( id: number ): void  => {
-    $data.update ( data => {
+    $data ( data => {
       const idx = data.findIndex ( datum => datum.id === id );
       return [...data.slice ( 0, idx ), ...data.slice ( idx + 1 )];
     });
@@ -128,7 +129,7 @@ const Row = template (({ id, label, className, onSelect, onRemove }: { id: Funct
 
 const App = (): JSX.Element => {
 
-  const {$data, run, runLots, add, update, swapRows, clear, remove, select, isSelected} = ModelClean;
+  const {$data, run, runLots, add, update, swapRows, clear, remove, select, isSelected} = Model;
 
   return (
     <div class="container">
