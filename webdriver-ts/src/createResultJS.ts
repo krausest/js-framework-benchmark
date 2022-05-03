@@ -23,7 +23,7 @@ async function main() {
   let allBenchmarks: Array<BenchmarkInfo> = [];
   let jsonResult: { framework: string; benchmark: string; values: number[] }[] = [];
   
-  Object.values(benchmarkInfos).forEach((benchmarkInfo, bIdx) => {
+  benchmarkInfos.forEach((benchmarkInfo, bIdx) => {
     if (benchmarkInfo.type == BenchmarkType.STARTUP_MAIN) {
       allBenchmarks = allBenchmarks.concat( subbenchmarks);
     } else {

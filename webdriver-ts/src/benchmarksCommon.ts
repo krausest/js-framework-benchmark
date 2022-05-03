@@ -255,4 +255,4 @@ for (let bi of startupBenchmarkInfosArray) {
   startupBenchmarkInfos[bi.id] = bi;
 }
 
-export const benchmarkInfos = {...cpuBenchmarkInfos, ...memBenchmarkInfos, ...startupBenchmarkInfos};
+export const benchmarkInfos = [...cpuBenchmarkInfosArray, ...memBenchmarkInfosArray, ...startupBenchmarkInfosArray];

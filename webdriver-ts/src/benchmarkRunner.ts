@@ -276,7 +276,7 @@ if (process.env.HOST) {
 
 async function main() {
   let runBenchmarksArgs: string[] =  (args.benchmark && args.benchmark.length > 0) ? args.benchmark : [""];
-  let runBenchmarks: Array<BenchmarkInfo> = Object.values(benchmarkInfos).filter((b) =>
+  let runBenchmarks: Array<BenchmarkInfo> = benchmarkInfos.filter((b) =>
     runBenchmarksArgs.some((name) => b.id.toLowerCase().indexOf(name) > -1)
   );
   
