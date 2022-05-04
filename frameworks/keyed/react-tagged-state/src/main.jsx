@@ -1,5 +1,5 @@
 import {memo, useCallback} from "react";
-import {render} from "react-dom";
+import {createRoot} from 'react-dom/client';
 import {createSignal, useSelector, useSignal} from "react-tagged-state";
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
@@ -116,7 +116,4 @@ const Main = () => (
     </div>
 );
 
-render(
-    <Main/>,
-    document.getElementById("main")
-);
+createRoot(document.getElementById("main")).render(<Main/>);
