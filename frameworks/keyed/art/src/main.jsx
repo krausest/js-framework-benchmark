@@ -119,11 +119,11 @@ class Main extends art.Component {
 
       switch (action.type) {
         case 'RUN':
-          return this.setData({ data: buildData(1000), selected: 0 });
+          return this.setDataNow({ data: buildData(1000), selected: 0 });
         case 'RUN_LOTS':
-          return this.setData({ data: buildData(10000), selected: 0 });
+          return this.setDataNow({ data: buildData(10000), selected: 0 });
         case 'ADD':
-          return this.setData({ data: data.concat(buildData(1000))});
+          return this.setDataNow({ data: data.concat(buildData(1000))});
         case 'UPDATE': {
           const newData = data.slice(0);
 
@@ -133,13 +133,13 @@ class Main extends art.Component {
             newData[i] = { id: r.id, label: r.label + " !!!" };
           }
 
-          return this.setData({ data: newData });
+          return this.setDataNow({ data: newData });
         }
         case 'CLEAR':
-          return this.setData({ data: [], selected: 0 });
+          return this.setDataNow({ data: [], selected: 0 });
         case 'SWAP_ROWS': {
           if (data.length > 998) {
-            return this.setData({ data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]] });
+            return this.setDataNow({ data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]] });
           }
 
           return;
@@ -147,10 +147,10 @@ class Main extends art.Component {
         case 'REMOVE': {
           const idx = data.findIndex((d) => d.id === action.id);
 
-          return this.setData({ data: [...data.slice(0, idx), ...data.slice(idx + 1)] });
+          return this.setDataNow({ data: [...data.slice(0, idx), ...data.slice(idx + 1)] });
         }
         case 'SELECT':
-          return this.setData({ selected: action.id });
+          return this.setDataNow({ selected: action.id });
       }
     };
   }
