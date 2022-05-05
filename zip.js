@@ -17,10 +17,14 @@ for (let keyedType of ['keyed', 'non-keyed']) {
     let dir = path.resolve('frameworks', keyedType);
     let directories = fs.readdirSync(dir);
 
+	
     for (let name of directories) {
-        let fd = path.resolve(dir, name);
+		let fd = path.resolve(dir, name);
         console.log('zipping ', fd);
 		let zipPathName = "frameworks/"+"/"+keyedType+"/"+name;
+		
+		zip.addLocalFile(fd+"/package-lock.json", zipPathName);
+		
 		if (fs.existsSync(fd+"/dist"))
 			zip.addLocalFolder(fd+"/dist", zipPathName+"/dist");
 		if (fs.existsSync(fd+"/scripts/"))
