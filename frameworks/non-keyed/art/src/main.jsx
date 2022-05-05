@@ -88,15 +88,15 @@ class Main extends art.Component {
   };
 
   run = () => {
-    this.setDataNow({ data: buildData(1000), selected: 0 });
+    this.setData({ data: buildData(1000), selected: 0 });
   }
 
   runLots = () => {
-    this.setDataNow({ data: buildData(10000), selected: 0 });
+    this.setData({ data: buildData(10000), selected: 0 });
   }
 
   add = () => {
-    this.setDataNow({ data: this.data.data.concat(buildData(1000)) });
+    this.setData({ data: this.data.data.concat(buildData(1000)) });
   }
 
   update = () => {
@@ -109,7 +109,7 @@ class Main extends art.Component {
   }
 
   select = (item) => {
-    this.setDataNow({ selected: item.id });
+    this.setData({ selected: item.id });
   }
 
   remove = (item) => {
@@ -119,7 +119,7 @@ class Main extends art.Component {
   }
 
   clear = () => {
-    this.setDataNow({ data: [], selected: 0 });
+    this.setData({ data: [], selected: 0 });
   }
 
   swapRows = () => {
