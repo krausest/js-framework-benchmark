@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-non-keyed-art",
+  "name": "js-framework-benchmark-keyed-art",
   "version": "0.1.0",
   "description": "Art demo",
   "main": "index.js",
