@@ -251,7 +251,7 @@ let args: any = yargs(process.argv)
   .help("help")
   .boolean("headless").default("headless", false)
   .boolean("smoketest")
-  .string("runner").default("runner","puppeteer")
+  .string("runner").default("runner",config.BENCHMARK_RUNNER)
   .array("framework")
   .array("benchmark")
   .string("chromeBinary").argv;

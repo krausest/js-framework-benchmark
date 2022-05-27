@@ -70,7 +70,7 @@ export let config = {
   TRACES_DIRECTORY: "traces",
   ALLOW_BATCHING: true,
   HOST: 'localhost',
-  BENCHMARK_RUNNER: BENCHMARK_RUNNER.PLAYWRIGHT
+  BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER
 };
 export type TConfig = typeof config;
 
