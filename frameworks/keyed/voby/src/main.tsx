@@ -1,11 +1,9 @@
 
 /* IMPORT */
 
-import {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
-import {$, render, template, useSelector, For} from 'voby';
 import {createElement, Fragment} from 'voby';
-
-const React = {createElement, Fragment};
+import {$, render, template, useSelector, For} from 'voby';
+import type {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
 
 /* TYPES */
 
