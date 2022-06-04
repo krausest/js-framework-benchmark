@@ -153,7 +153,7 @@ const App = (): JSX.Element => {
           <For values={$data}>
             {( datum: IDatum ) => {
               const {id, label} = datum;
-              const selected = isSelected ( id, { observable: true } );
+              const selected = isSelected ( id );
               const className = { danger: selected };
               const onSelect = select.bind ( undefined, id );
               const onRemove = remove.bind ( undefined, id );
