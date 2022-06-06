@@ -1,0 +1,18 @@
+{
+  "name": "js-framework-benchmark-non-keyed-dioxus",
+  "version": "1.0.0",
+  "description": "Benchmark for Dioxus",
+  "license": "ISC",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.2.4"
+  },
+  "scripts": {
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "build-prod-force": "rustup target add wasm32-unknown-unknown && cargo install trunk && trunk build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {}
+}
