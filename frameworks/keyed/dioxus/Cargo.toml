@@ -11,3 +11,7 @@ getrandom = { version = "0.2.6", features = ["js"] }
 rand = { version = "0.8.5", features = ["small_rng"] }
 
 wasm-bindgen = { version = "*", features = ["enable-interning"] }
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
