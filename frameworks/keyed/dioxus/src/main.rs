@@ -4,6 +4,16 @@ use dioxus::prelude::*;
 use rand::prelude::*;
 
 fn main() {
+    // for performance reasons, we want to cache these strings on the edge of js/rust boundary
+    for &name in ADJECTIVES
+        .iter()
+        .chain(NOUNS.iter())
+        .chain(COLOURS.iter())
+        .chain(OTHER.iter())
+    {
+        wasm_bindgen::intern(name);
+    }    
+    
     dioxus::web::launch(app);
 }
 
