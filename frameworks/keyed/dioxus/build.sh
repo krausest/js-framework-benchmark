@@ -7,7 +7,7 @@ sed -i.bak "s/dioxus_benchmark-.+\.wasm/dioxus_benchmark_bg.wasm/g" index.html
 rm index.html.bak
 
 HASH=$(uuidgen)
-trunk build
+trunk build --release
 
 echo "$HASH"
 
