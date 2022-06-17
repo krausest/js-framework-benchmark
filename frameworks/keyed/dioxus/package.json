@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-non-keyed-dioxus",
+  "name": "js-framework-benchmark-keyed-dioxus",
   "version": "1.0.0",
   "description": "Benchmark for Dioxus",
   "license": "ISC",

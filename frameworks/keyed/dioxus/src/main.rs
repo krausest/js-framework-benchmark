@@ -9,7 +9,6 @@ fn main() {
         .iter()
         .chain(NOUNS.iter())
         .chain(COLOURS.iter())
-        .chain(OTHER.iter())
     {
         wasm_bindgen::intern(name);
     }    
