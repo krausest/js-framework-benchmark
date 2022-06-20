@@ -35,6 +35,8 @@ dist
 *.iml
 TODO.txt
 */dist/
+**/crui/.awcache
+**/angular*/.angular
 angular*/app/app.js
 angular*/app/app.js.map
 angular*/src/app.ngsummary.json

@@ -12,8 +12,8 @@
     "@dojo/framework": "8.0.0-alpha.1"
   },
   "devDependencies": {
-    "@dojo/cli": "^7.0.0",
-    "@dojo/cli-build-app": "^7.0.0",
+    "@dojo/cli": "7.0.0",
+    "@dojo/cli-build-app": "7.0.0",
     "typescript": "3.5.2"
   },
   "prettier": {
