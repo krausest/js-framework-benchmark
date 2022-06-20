@@ -5,21 +5,11 @@ use rand::prelude::*;
 
 fn main() {
     // for performance reasons, we want to cache these strings on the edge of js/rust boundary
-    for &name in ADJECTIVES
-        .iter()
-        .chain(NOUNS.iter())
-        .chain(COLOURS.iter())
-    {
+    for &name in ADJECTIVES.iter().chain(NOUNS.iter()).chain(COLOURS.iter()) {
         wasm_bindgen::intern(name);
-    }    
-    
-    dioxus::web::launch(app);
-}
+    }
 
-fn app1(cx: Scope) -> Element {
-    cx.render(rsx!{
-        div { "hello, wasm!" }
-    })
+    dioxus::web::launch(app);
 }
 
 #[derive(Clone, PartialEq)]
@@ -62,7 +52,8 @@ impl LabelsContainer {
     }
 
     fn append(&mut self, num: usize) {
-        self.labels.extend(Label::new_list(1_000, self.last_key + 1));
+        self.labels
+            .extend(Label::new_list(1_000, self.last_key + 1));
         self.last_key += num;
     }
 
@@ -77,16 +68,14 @@ impl LabelsContainer {
         }
     }
 
-    #[feature(int_roundings)]
     fn remove(&mut self, index: usize) {
         self.labels.remove(index as usize);
     }
-
 }
 
 fn app(cx: Scope) -> Element {
     let labels_container = use_ref(&cx, || LabelsContainer::new(0, 0));
-    let selected: &UseState<Option<usize>> = use_state(&cx, || None);
+    let selected = use_state(&cx, || None as Option<usize>);
 
     cx.render(rsx! {
         div { class: "container",
@@ -117,27 +106,51 @@ fn app(cx: Scope) -> Element {
                     }
                 }
             }
+
             table { class: "table table-hover table-striped test-data",
                 tbody { id: "tbody",
-                    labels_container.read().labels.iter().enumerate().map(|(index, item)| {
-                        let key = item.key;
-                        let is_in_danger = if (*selected).map(|s| s == item.key).unwrap_or(false) {"danger"} else {""};
-                        rsx!(tr { key: "{key}", class: "{is_in_danger}",
-                            td { class:"col-md-1", "{key}" }
-                            td { class:"col-md-4", onclick: move |_| selected.set(Some(key)),
-                                a { class: "lbl", [item.labels.join(" ").as_str()] }
-                            }
-                            td { class: "col-md-1",
-                                a { class: "remove", onclick: move |_| { labels_container.write().remove(index); },
-                                    span { class: "glyphicon glyphicon-remove remove", aria_hidden: "true" }
-                                }
-                            }
-                            td { class: "col-md-6" }
-                        })
+                    labels_container.read().labels.iter().enumerate().map(|(idx, _)| rsx! {
+                        Row {
+                            labels: labels_container.clone(),
+                            selected: selected.clone(),
+                            key: "{idx}",
+                            index: idx
+                        }
                     })
                 }
-             }
+            }
+
             span { class: "preloadicon glyphicon glyphicon-remove", aria_hidden: "true" }
+        }
+    })
+}
+
+#[inline_props]
+fn Row(
+    cx: Scope,
+    labels: UseRef<LabelsContainer>,
+    selected: UseState<Option<usize>>,
+    index: usize,
+) -> Element {
+    let item = &labels.read().labels[*index];
+    let is_in_danger = if **selected == Some(*index) {
+        "danger"
+    } else {
+        ""
+    };
+
+    cx.render(rsx! {
+        tr { class: "{is_in_danger}",
+            td { class:"col-md-1", "{index}" }
+            td { class:"col-md-4", onclick: move |_| selected.set(Some(*index)),
+                a { class: "lbl", [item.labels.join(" ").as_str()] }
+            }
+            td { class: "col-md-1",
+                a { class: "remove", onclick: move |_| { labels.write().remove(*index); },
+                    span { class: "glyphicon glyphicon-remove remove", aria_hidden: "true" }
+                }
+            }
+            td { class: "col-md-6" }
         }
     })
 }
@@ -158,7 +171,6 @@ fn ActionButton<'a>(cx: Scope<'a, ActionButtonProps<'a>>) -> Element {
                 r#type: "button",
                 id: "{cx.props.id}",
                 onclick: move |_| cx.props.onclick.call(()),
-
                 "{cx.props.name}"
             }
         }
