@@ -19,7 +19,7 @@
 		"removeComments": false,
 		"sourceMap": true,
 		"strictNullChecks": true,
-		"target": "es5"
+		"target": "es6"
 	},
 	"include": [
 		"./src/**/*.ts"
