@@ -102,9 +102,9 @@ export const buildData = (id, count = 1000): ItemsSnapshot => {
   return { data, id };
 };
 
-export const add = (id, data): TodoItem[] => {
+export const add = (id, data): ItemsSnapshot => {
   const newData = buildData(id, 1000);
-  return [...data, ...newData.data];
+  return {data: [ ...data, ...newData.data], id: newData.id};
 };
 
 export const run = (id): ItemsSnapshot => {
