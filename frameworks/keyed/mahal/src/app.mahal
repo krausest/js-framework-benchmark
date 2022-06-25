@@ -1,0 +1,132 @@
+---
+name: app.mahal
+description: This component is the main parent component which is used to initiate the app.
+dateCreated:
+---
+
+<html>
+<div className="container">
+	<div class="jumbotron">
+		<div class="row">
+			<div class="col-md-6">
+				<h1>Mahal (keyed)</h1>
+			</div>
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-sm-6 smallpad">
+						<button type="button" class="btn btn-primary btn-block" id="run" @click="run">Create 1,000
+							rows
+						</button>
+					</div>
+					<div class="col-sm-6 smallpad">
+						<button type="button" class="btn btn-primary btn-block" id="runlots" @click="runLots">Create
+							10,000
+							rows</button>
+					</div>
+					<div class="col-sm-6 smallpad">
+						<button type="button" class="btn btn-primary btn-block" id="add" @click="add">Append 1,000
+							rows</button>
+					</div>
+					<div class="col-sm-6 smallpad">
+						<button type="button" class="btn btn-primary btn-block" id="update"
+							@click="updateEvery10thRow">Update
+							every
+							10th row</button>
+					</div>
+					<div class="col-sm-6 smallpad">
+						<button type="button" class="btn btn-primary btn-block" id="clear" @click="clear">Clear</button>
+					</div>
+					<div class="col-sm-6 smallpad">
+						<button type="button" class="btn btn-primary btn-block" id="swaprows" @click="swapRows">Swap
+							Rows</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<table class="table table-hover table-striped test-data">
+		<tbody>
+			<tr :for(row in data) :key="row.id" :class({'danger':selected===row.id })>
+				<td class="col-md-1">{{row.id}}</td>
+				<td class="col-md-4">
+					<a @click="select(row)">{{row.label}}</a>
+				</td>
+				<td class="col-md-1">
+					<a @click="remove(row)">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</a>
+				</td>
+				<td class="col-md-6"></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+</html>
+
+<script>
+import { Component, Children, nextTick } from "mahal";
+import { buildData } from "@/utils/build_data";
+
+@Children({})
+export default class extends Component {
+    rowId = 1;
+    data = [];
+    selected = 0;
+
+    // onInit() {
+    //     window["comp"] = this;
+    // }
+
+    add() {
+        this.setState("data.push", ...buildData(1000));
+    }
+
+    run() {
+        this.setState("data", buildData(1000));
+        this.setState("selected", 0);
+    }
+
+    runLots() {
+        this.setState("data", buildData(10000));
+        this.setState("selected", 0);
+    }
+
+    updateEvery10thRow() {
+        const data = this.data;
+        for (let i = 0, len = data.length; i < len; i += 10) {
+            const item = data[i];
+            this.setState(`data.${i}`, {
+                id: item.id,
+                label: item.label + " !!!",
+            });
+        }
+    }
+
+    select(item) {
+        this.setState("selected", item.id);
+    }
+
+    remove(item) {
+        const data = this.data;
+        const index = data.findIndex((q) => q.id === item.id);
+        this.setState("data.splice", index, 1);
+    }
+
+    clear() {
+        this.setState("data", []);
+        this.setState("selected", 0);
+    }
+
+    swapRows() {
+        const data = this.data;
+        if (data.length > 998) {
+            let temp = data[1];
+            this.setState("data.1", data[998]);
+            this.setState("data.998", temp);
+        }
+    }
+}
+</script>
+
+<style>
+</style>
