@@ -158,27 +158,15 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
         return {error, warnings};
     } finally {
         try {
-            if (page) {
-                await page.close();
-            }
-        } catch (err) {
-            console.log("ERROR closing page", err);
-        }
-        try {
             if (browser) {
-                await browser.disconnect();
-            }
-        } catch (err) {
-            console.log("ERROR disconnecting browser", err);
-        }
-        try {
-            if (browser) {
+                console.log("*** browser close")
                 await browser.close();
+                console.log("*** browser closed")
             }
         } catch (err) {
             console.log("ERROR cleaning up driver", err);
         }
-
+        console.log("*** browser has been shutting down");
     }
 }
 

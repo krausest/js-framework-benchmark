@@ -35,10 +35,11 @@ export async function checkElementExists(page: Page, selector: string) {
 }
 
 export async function clickElement(page: Page, selector: string) {
-  let elem = await page.locator(selector);
+  let elem = await page.$(selector);
+    // let elem = await page.locator(selector);
   if (!elem) throw `clickElementByXPath ${selector} failed. Element was not found.`;
   await elem.click();
-  // await elem.dispose();
+  await elem.dispose();
 }
 
 export async function checkElementContainsText(page: Page, selector: string, expectedText: string): Promise<void> {

@@ -85,20 +85,14 @@ type ISlowDowns = {
 };
 
 const slowDownsOSX: ISlowDowns = {
-  [BENCHMARK_03]: 8,
-  [BENCHMARK_04]: 8,
-  [BENCHMARK_05]: 4,
-  [BENCHMARK_08]: 2,
-  [BENCHMARK_09]: 4,
-};
-
-const slowDownsLinux: ISlowDowns = {
   [BENCHMARK_03]: 16,
   [BENCHMARK_04]: 16,
   [BENCHMARK_05]: 4,
   [BENCHMARK_08]: 2,
   [BENCHMARK_09]: 8,
 };
+
+const slowDownsLinux: ISlowDowns = slowDownsOSX;
 
 const slowDowns: ISlowDowns = process.platform == "darwin" ? slowDownsOSX : slowDownsLinux;
 

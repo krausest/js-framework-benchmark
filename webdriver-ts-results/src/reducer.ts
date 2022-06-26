@@ -180,8 +180,7 @@ export const reducer = (state = initialState, action: Action): State => {
         }
         case 'SELECT_ALL_BENCHMARKS': {
             const newSelectedBenchmark = new Set(state.selectedBenchmarks);
-            // action.data.benchmarkType
-            for (const b of state.benchmarkLists[BenchmarkType.CPU]) {
+            for (const b of state.benchmarkLists[action.data.benchmarkType]) {
                 if (action.data.add) newSelectedBenchmark.add(b)
                 else newSelectedBenchmark.delete(b)
             }

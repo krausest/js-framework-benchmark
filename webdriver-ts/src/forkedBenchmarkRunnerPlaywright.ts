@@ -86,26 +86,29 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
 
             console.log("initBenchmark Playwright");
             await initBenchmark(browser, page, benchmark, framework);
-
-            // let categories = [
-            //     "blink.user_timing",
-            //     "devtools.timeline",
-            //     'disabled-by-default-devtools.timeline',
-            // ];
+            // minimal categories
+            // result svelte-v3.46.2-keyed_01_run1k.json min 67.237 max 71.611 mean 69.4036 median 69.20949999999999 stddev 1.3601652023845432
+            // default categories:
+            // result svelte-v3.46.2-keyed_01_run1k.json min 61.334 max 65.92 mean 63.84379999999999 median 63.756 stddev 1.5925086987377977
             let categories = [
-            "loading",
-            'devtools.timeline',
-              'disabled-by-default-devtools.timeline',
-              '-*',
-              'v8.execute',
-                'disabled-by-default-devtools.timeline.frame',
-                'toplevel',
-                'blink.console',
-                'blink.user_timing',
-                'latencyInfo',
-                'disabled-by-default-v8.cpu_profiler',                
-                'disabled-by-default-devtools.timeline.stack',
+                "blink.user_timing",
+                "devtools.timeline",
+                'disabled-by-default-devtools.timeline',
             ];
+            // let categories = [
+            // "loading",
+            // 'devtools.timeline',
+            //   'disabled-by-default-devtools.timeline',
+            //   '-*',
+            //   'v8.execute',
+            //     'disabled-by-default-devtools.timeline.frame',
+            //     'toplevel',
+            //     'blink.console',
+            //     'blink.user_timing',
+            //     'latencyInfo',
+            //     'disabled-by-default-v8.cpu_profiler',                
+            //     'disabled-by-default-devtools.timeline.stack',
+            // ];
 
             let client = await page.context().newCDPSession(page);
             if (benchmark.benchmarkInfo.throttleCPU) {

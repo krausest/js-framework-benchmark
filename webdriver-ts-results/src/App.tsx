@@ -15,8 +15,8 @@ const App = () => {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 64 GB RAM, Fedora 36 (Linux 5.17.3, mitigations=off, Wayland), Chrome  101.0.4951.41 (64-bit))
-            using the playwright benchmark driver with full tracing.
+        <p>The benchmark was run on a MaBook Air M1 (16 GB RAM, OSX 12.4), Chrome 103.0.5060.53 (arm64))
+            using the puppeteer benchmark driver with full tracing.
         </p>
          <SelectionBar/>
          <ResultTable type={FrameworkType.KEYED}/>
