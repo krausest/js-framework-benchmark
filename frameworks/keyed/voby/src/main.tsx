@@ -1,11 +1,9 @@
 
 /* IMPORT */
 
-import {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
-import {$, render, template, useSelector, For} from 'voby';
 import {createElement, Fragment} from 'voby';
-
-const React = {createElement, Fragment};
+import {$, render, template, useSelector, For} from 'voby';
+import type {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
 
 /* TYPES */
 
@@ -112,8 +110,8 @@ const Button = ({ id, text, onClick }: { id: string | number, text: string, onCl
   </div>
 );
 
-const Row = template (({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
-  <tr className={className}>
+const Row = template (({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<Record<string, FunctionMaybe<boolean>>>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+  <tr class={className}>
     <td class="col-md-1">{id}</td>
     <td class="col-md-4">
       <a onClick={onSelect}>{label}</a>
@@ -155,7 +153,8 @@ const App = (): JSX.Element => {
           <For values={$data}>
             {( datum: IDatum ) => {
               const {id, label} = datum;
-              const className = () => isSelected ( id ) ? 'danger' : '';
+              const selected = isSelected ( id );
+              const className = { danger: selected };
               const onSelect = select.bind ( undefined, id );
               const onRemove = remove.bind ( undefined, id );
               const props = {id, label, className, onSelect, onRemove};

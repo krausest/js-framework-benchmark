@@ -19,7 +19,7 @@ export default factory(function Buttons({ properties, middleware: { diffProperty
 	return v('div', { classes: [ 'jumbotron' ] }, [
 		v('div', { classes: [ 'row' ] }, [
 			v('div', { classes: [ 'col-md-6' ] }, [
-				v('h1', ['Dojo v7'])
+				v('h1', ['Dojo'])
 			]),
 			v('div', { classes: [ 'col-md-6' ] }, buttonConfigs.map(({ id, label, onClick }) => {
 				return w(Button, { key: id, id, label, onClick });

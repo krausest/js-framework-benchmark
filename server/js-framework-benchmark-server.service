@@ -1,0 +1,8 @@
+[Service]
+Type=simple
+ExecStart=/home/stefan/js-framework-benchmark/server/runserver.sh
+User=stefan
+Group=stefan
+
+[Install]
+WantedBy=multi-user.target

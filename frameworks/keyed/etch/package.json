@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Etch keyed demo",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "etch"
+    "frameworkVersionFromPackage": "etch",
+    "issues": [634]
   },
   "scripts": {
     "build-dev": "webpack -w -d",

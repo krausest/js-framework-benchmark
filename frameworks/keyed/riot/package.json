@@ -10,12 +10,12 @@
     "build-prod": "webpack -p"
   },
   "devDependencies": {
-    "@riotjs/compiler": "6.0.3",
+    "@riotjs/compiler": "6.1.3",
     "@riotjs/webpack-loader": "6.0.0",
     "webpack": "4.42.1",
     "webpack-cli": "3.3.11"
   },
   "dependencies": {
-    "riot": "6.1.1"
+    "riot": "6.1.2"
   }
 }
