@@ -233,6 +233,8 @@ async function runBench(frameworkNames: string[]) {
 
   let allCorrect = true;
 
+  console.log("*** headless", benchmarkOptions.headless)
+
   for (let i = 0; i < runFrameworks.length; i++) {
     let browser = await startBrowser(benchmarkOptions);
     let page = await browser.newPage();
@@ -326,7 +328,7 @@ let benchmarkOptions: BenchmarkOptions = {
   port: config.PORT.toFixed(),
   remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
   chromePort: config.CHROME_PORT,
-  headless: false, //args.headless,
+  headless: args.headless,
   chromeBinaryPath: args.chromeBinary,
   numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU,
   numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
