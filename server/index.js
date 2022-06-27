@@ -6,6 +6,13 @@ const fsp = require('fs/promises');
 const app = express()
 const port = 8080
 
+let frameworkDirectory  = path.join(__dirname, "..", "frameworks");
+
+if (process.argv.length===3) {
+  console.log("Changing working directory to "+process.argv[2]);
+  frameworkDirectory = process.argv[2];
+}
+
 async function loadFrameworkInfo(keyedDir, directoryName) {
     let result = {
         type: keyedDir,
@@ -22,7 +29,7 @@ async function loadFrameworkInfo(keyedDir, directoryName) {
         result.buttonsInShadowRoot = useShadowRoot ? (packageJSON["js-framework-benchmark"]["buttonsInShadowRoot"] ?? true) : undefined;
     }
 
-    const frameworkPath = path.resolve("..", "frameworks", keyedDir, directoryName);
+    const frameworkPath = path.resolve(frameworkDirectory, keyedDir, directoryName);
     const packageJSONPath = path.resolve(frameworkPath, "package.json");  
     const packageLockJSONPath = path.resolve(frameworkPath, "package-lock.json");  
     if (fs.existsSync(packageJSONPath)) {
@@ -62,7 +69,7 @@ async function loadFrameworkVersionInformation(filterForFramework) {
     // frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
 
     let resultsProm = [];
-    let frameworksPath = path.resolve("..", "frameworks");
+    let frameworksPath = path.resolve(frameworkDirectory);
     for (keyedType of ["keyed", "non-keyed"]) {
       let directories = fs.readdirSync(path.resolve(frameworksPath, keyedType));
       for (let directory of directories) {
@@ -76,8 +83,8 @@ async function loadFrameworkVersionInformation(filterForFramework) {
     return Promise.all(resultsProm);
   }
 
-app.use('/frameworks', express.static(path.join(__dirname, '..', 'frameworks')))
-app.use('/css', express.static(path.join(__dirname, '..', 'css')))
+app.use('/frameworks', express.static(frameworkDirectory))
+app.use('/css', express.static(path.join(frameworkDirectory, '..', 'css')))
 
 app.get('/ls', async (req, res) => {
     let t0 = Date.now();
