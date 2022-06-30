@@ -109,11 +109,11 @@ fn app(cx: Scope) -> Element {
 
             table { class: "table table-hover table-striped test-data",
                 tbody { id: "tbody",
-                    labels_container.read().labels.iter().enumerate().map(|(idx, _)| rsx! {
+                    labels_container.read().labels.iter().enumerate().map(|(idx, item)| rsx! {
                         Row {
                             labels: labels_container.clone(),
                             selected: selected.clone(),
-                            key: "{idx}",
+                            key: "{item.key}",
                             index: idx
                         }
                     })
@@ -133,7 +133,8 @@ fn Row(
     index: usize,
 ) -> Element {
     let item = &labels.read().labels[*index];
-    let is_in_danger = if **selected == Some(*index) {
+    let key = item.key.clone();
+    let is_in_danger = if **selected == Some(key) {
         "danger"
     } else {
         ""
@@ -141,9 +142,9 @@ fn Row(
 
     cx.render(rsx! {
         tr { class: "{is_in_danger}",
-            td { class:"col-md-1", "{index}" }
-            td { class:"col-md-4", onclick: move |_| selected.set(Some(*index)),
-                a { class: "lbl", [item.labels.join(" ").as_str()] }
+            td { class:"col-md-1", "{key}" }
+            td { class:"col-md-4", onclick: move |_| selected.set(Some(key)),
+                a { class: "lbl", [ item.labels.join(" ").as_str() ] }
             }
             td { class: "col-md-1",
                 a { class: "remove", onclick: move |_| { labels.write().remove(*index); },
