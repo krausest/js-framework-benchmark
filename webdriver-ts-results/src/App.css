@@ -123,7 +123,7 @@ table.results th {
     -webkit-hyphens: auto;
 }
 table.results th.benchname {
-width: 100px;
+width: 120px;
 }
 table.results td {
 padding: 3px;
