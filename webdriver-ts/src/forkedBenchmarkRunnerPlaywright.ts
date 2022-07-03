@@ -1,4 +1,4 @@
-import { Browser, Page } from "playwright-core";
+import { Browser, Page, CDPSession } from "playwright-core";
 import { BenchmarkType } from "./benchmarksCommon";
 import { benchmarks, CPUBenchmarkPlaywright, fileNameTrace, MemBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common";
@@ -53,15 +53,12 @@ function convertError(error: any): string {
   }
 }
 
-// async function forceGC(page: Page) {
-//   const prototypeHandle = await page.evaluateHandle(() => Object.prototype);
-//   const objectsHandle = await page.queryObjects(prototypeHandle);
-//   const numberOfObjects = await page.evaluate((instances) => instances.length, objectsHandle);
-
-//   await Promise.all([prototypeHandle.dispose(), objectsHandle.dispose()]);
-
-//   return numberOfObjects;
-// }
+async function forceGC(page: Page, client: CDPSession) {
+  for (let i=0;i<7;i++) {
+      // await client.send('HeapProfiler.collectGarbage');
+      await page.evaluate('window.gc()');
+  }
+}
 
 async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPlaywright, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning>
 {
@@ -111,6 +108,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             // ];
 
             let client = await page.context().newCDPSession(page);
+            await forceGC(page, client);
             if (benchmark.benchmarkInfo.throttleCPU) {
               console.log("CPU slowdown", benchmark.benchmarkInfo.throttleCPU);
               await client.send('Emulation.setCPUThrottlingRate', { rate: benchmark.benchmarkInfo.throttleCPU });
@@ -129,8 +127,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             // let m2 = await page.metrics();
             await afterBenchmark(browser, page, benchmark, framework);
             if (benchmark.benchmarkInfo.throttleCPU) {
-              await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });
-            await client.send('HeapProfiler.collectGarbage',{});
+              await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });            
           }
           client.detach();
   
@@ -179,8 +176,8 @@ async function runMemBenchmark(
   let browser: Browser = null;
   try {
     browser = await startBrowser(benchmarkOptions);
+    const page = await browser.newPage();
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
-      const page = await browser.newPage();
       if (config.LOG_DETAILS) {
         page.on("console", (msg) => {
           for (let i = 0; i < msg.args().length; ++i) console.log(`BROWSER: ${msg.args()[i]}`);
@@ -203,9 +200,11 @@ async function runMemBenchmark(
 
       console.log("runBenchmark");
       await runBenchmark(browser, page, benchmark, framework);
+      await forceGC(page, client);
       await wait(40);
-      await client.send('HeapProfiler.collectGarbage');
-      let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
+      // let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
+
+      let result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
 
       await afterBenchmark(browser, page, benchmark, framework);
       console.log("afterBenchmark ");
@@ -213,8 +212,8 @@ async function runMemBenchmark(
       results.push(result);
       console.log(`memory result for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
       if (result < 0) throw new Error(`memory result ${result} < 0`);
-      await page.close();
     }
+    await page.close();
     await browser.close();
     return { error, warnings, result: results };
   } catch (e) {

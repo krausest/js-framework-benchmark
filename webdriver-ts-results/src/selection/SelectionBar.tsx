@@ -3,6 +3,7 @@ import SelectBenchmarks from './SelectBenchmarks';
 import SelectFrameworks from './SelectFrameworks';
 import SelectionMode from './SelectionMode';
 import SelectionFilterIssues from './SelectionFilterIssues';
+import CopyPasteSelection from './CopyPasteSelection';
 
 export const SelectionBar = () => 
 {
@@ -17,6 +18,8 @@ export const SelectionBar = () =>
                 <SelectionMode />
                 <div className="hspan" />
                 <SelectionFilterIssues />
+                <div className="hspan" />
+                <CopyPasteSelection />
             </div>
         </div>
     );

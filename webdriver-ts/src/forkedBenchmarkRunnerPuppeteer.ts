@@ -1,4 +1,4 @@
-import { Browser, Page } from "puppeteer-core";
+import { Browser, CDPSession, Page } from "puppeteer-core";
 import { BenchmarkType } from "./benchmarksCommon";
 import { CPUBenchmarkPuppeteer, fileNameTrace, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common";
@@ -11,9 +11,6 @@ let config: TConfig = defaultConfig;
 async function runBenchmark(page: Page, benchmark: TBenchmarkPuppeteer, framework: FrameworkData): Promise<any> {
   await benchmark.run(page, framework);
   if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
-  if (benchmark.type === BenchmarkType.MEM) {
-    await forceGC(page);
-  }
 }
 
 async function afterBenchmark(page: Page, benchmark: TBenchmarkPuppeteer, framework: FrameworkData): Promise<any> {
@@ -26,9 +23,6 @@ async function afterBenchmark(page: Page, benchmark: TBenchmarkPuppeteer, framew
 async function initBenchmark(page: Page, benchmark: TBenchmarkPuppeteer, framework: FrameworkData): Promise<any> {
   await benchmark.init(page, framework);
   if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
-  if (benchmark.type === BenchmarkType.MEM) {
-    await forceGC(page);
-  }
 }
 
 const wait = (delay = 1000) => new Promise((res) => setTimeout(res, delay));
@@ -56,14 +50,11 @@ function convertError(error: any): string {
   }
 }
 
-async function forceGC(page: Page) {
-  const prototypeHandle = await page.evaluateHandle(() => Object.prototype);
-  const objectsHandle = await page.queryObjects(prototypeHandle);
-  const numberOfObjects = await page.evaluate((instances) => instances.length, objectsHandle);
-
-  await Promise.all([prototypeHandle.dispose(), objectsHandle.dispose()]);
-
-  return numberOfObjects;
+async function forceGC(page: Page, client: CDPSession) {
+  for (let i=0;i<7;i++) {
+      // await client.send('HeapProfiler.collectGarbage');
+      await page.evaluate("window.gc()");
+  }
 }
 
 async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPuppeteer, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning>
@@ -122,6 +113,8 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             //     'disabled-by-default-devtools.timeline.stack',
             // ];
 
+            const client = await page.target().createCDPSession();
+
             if (benchmark.benchmarkInfo.throttleCPU) {
               console.log("CPU slowdown", benchmark.benchmarkInfo.throttleCPU);
               await page.emulateCPUThrottling(benchmark.benchmarkInfo.throttleCPU);
@@ -131,6 +124,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
                 screenshots: false,
                 categories:categories
             });
+           await forceGC(page, client);
             console.log("runBenchmark");
             // let m1 = await page.metrics();
             await runBenchmark(page, benchmark, framework);
@@ -183,8 +177,8 @@ async function runMemBenchmark(
   let browser: Browser = null;
   try {
     browser = await startBrowser(benchmarkOptions);
+    const page = await browser.newPage();
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
-      const page = await browser.newPage();
       if (config.LOG_DETAILS) {
         page.on("console", (msg) => {
           for (let i = 0; i < msg.args().length; ++i) console.log(`BROWSER: ${msg.args()[i]}`);
@@ -202,21 +196,31 @@ async function runMemBenchmark(
       // });
       console.log("initBenchmark");
       await initBenchmark(page, benchmark, framework);
+      const client = await page.target().createCDPSession();
 
       console.log("runBenchmark");
       await runBenchmark(page, benchmark, framework);
       await wait(40);
-      await forceGC(page);
+      await forceGC(page, client);
       let metrics = await page.metrics();
 
       await afterBenchmark(page, benchmark, framework);
       console.log("afterBenchmark");
       let result = metrics.JSHeapUsedSize / 1024.0 / 1024.0;
+
       results.push(result);
       console.log(`memory result for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
+
+      // await client.send('Performance.enable');
+      // let cdpMetrics = await client.send('Performance.getMetrics');
+      // let response = cdpMetrics.metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value
+      // console.log("Performance.getMetrics", response, response/1024/1024);
+
+      // await wait(10 * 1000 * 1000 * 60);
+
       if (result < 0) throw new Error(`memory result ${result} < 0`);
-      await page.close();
     }
+    await page.close();
     await browser.close();
     return { error, warnings, result: results };
   } catch (e) {

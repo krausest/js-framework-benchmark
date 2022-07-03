@@ -127,7 +127,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
     // "--enable-blink-features=IdleDetection",
     // // "--export-tagged-pdf"
   ],
-    args: [`--window-size=${window_width},${window_height}`],
+    args: [`--window-size=${window_width},${window_height}`,'--js-flags=--expose-gc' ],
     dumpio: false,
     defaultViewport: {
       width,

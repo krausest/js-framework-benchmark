@@ -272,10 +272,10 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
     `--window-size=${width},${height}`,
   ];
 
-  if (process.platform == "darwin" && process.arch == "arm64") {
-    console.log("INFO: Disabling site isolation as a workaround for Mac M1");
-    args.push("--disable-features=IsolateOrigins,site-per-process");
-  }
+  // if (process.platform == "darwin" && process.arch == "arm64") {
+  //   console.log("INFO: Disabling site isolation as a workaround for Mac M1");
+  //   args.push("--disable-features=IsolateOrigins,site-per-process");
+  // }
 
   if (benchmarkOptions.headless) {
     args.push("--headless");

@@ -1,4 +1,4 @@
-import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, categories } from "./Common"
+import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, categories, Severity } from "./Common"
 import {benchmarks as benchmark_orig, frameworks, results as rawResults} from './results';
 
 // Temporarily disable script bootup time
@@ -18,7 +18,7 @@ const removeKeyedSuffix = (value: string) => {
     else if (value.endsWith('-keyed')) return value.substring(0,value.length-6)
     return value;
 }
-const mappedFrameworks = frameworks.map(f => ({name: f.name, displayname: removeKeyedSuffix(f.name), issues: f.issues ?? [], type:f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED}));
+const mappedFrameworks = frameworks.map(f => ({name: f.name, dir: f.dir, displayname: removeKeyedSuffix(f.name), issues: f.issues ?? [], type:f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED}));
 
 const allBenchmarks = benchmarks.reduce((set, b) => set.add(b), new Set<Benchmark>() );
 const allFrameworks = mappedFrameworks.reduce((set, f) => set.add(f), new Set<Framework>() );
@@ -84,7 +84,7 @@ const preInitialState: State = {
         [FrameworkType.KEYED]: undefined,
         [FrameworkType.NON_KEYED]: undefined
     },
-    categories: new Set([1,2,3,4])
+    categories: new Set(categories.filter(c => c.severity != Severity.Error).map(c => c.id))
 }
 
 function updateResultTable({frameworks, benchmarks, selectedFrameworksDropDown: selectedFrameworks, selectedBenchmarks, sortKey, displayMode, compareWith, categories}: State) {
@@ -147,14 +147,55 @@ interface SortAction { type: 'SORT'; data: {sortKey: string}}
 export const sort = (sortKey: string): SortAction => {
   return {type: 'SORT', data: {sortKey}}
 }
+
+interface SetStateFromClipboardAction { type: 'SET_STATE_FROM_CLIPBOARD'; data: any}
+export const setStateFromClipboard = (state: any): SetStateFromClipboardAction => {
+  return {type: 'SET_STATE_FROM_CLIPBOARD', data: {state}}
+}
+
 type Action = SelectFrameworkAction | SelectAllFrameworksAction | SelectBenchmarkAction | SelectAllBenchmarksAction 
   | SelectDisplayModeAction | CompareAction |StopCompareAction | SortAction
-  | SelectCategoryAction | SelectAllCategoriesAction;
+  | SelectCategoryAction | SelectAllCategoriesAction | SetStateFromClipboardAction;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const reducer = (state = initialState, action: Action): State => {
     console.log("reducer", action)
     switch (action.type) {
+        case 'SET_STATE_FROM_CLIPBOARD': {
+          let t = {...state};
+          debugger;
+          if (action.data.state?.benchmarks) {
+            const newSelectedBenchmarks = new Set<Benchmark>();
+            for (const b of action.data.state.benchmarks) {
+              for (const sb of benchmarks) {
+                if (b === sb.id) newSelectedBenchmarks.add(sb);
+              }
+            }
+            t = {...t, selectedBenchmarks: newSelectedBenchmarks};
+          }
+          if (action.data.state?.frameworks) {
+            const newSelectedFramework = new Set<Framework>();
+            for (const f of action.data.state.frameworks) {
+              for (const sf of mappedFrameworks) {
+                if (f === sf.dir) newSelectedFramework.add(sf);
+              }
+            }
+            t = {...t, selectedFrameworksDropDown: newSelectedFramework};
+          }
+          if (action.data.state?.displayMode) {
+            t = {...t, displayMode: action.data.state.displayMode};
+          }
+          if (action.data.state?.categories) {
+            const newSelectedCategories = new Set<number>();
+            for (const f of action.data.state?.categories) {
+              for (const sc of categories) {
+                if (f === sc.id) newSelectedCategories.add(sc.id);
+              }
+            }
+            t = {...t, categories: newSelectedCategories};
+          }
+          return {...t, resultTables: updateResultTable(t)}
+        }
         case 'SELECT_FRAMEWORK': {
             const newSelectedFramework = new Set(state.selectedFrameworksDropDown);
             if (action.data.add) newSelectedFramework.add(action.data.framework);
