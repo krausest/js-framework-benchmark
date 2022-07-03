@@ -5,7 +5,7 @@ dateCreated:
 ---
 
 <html>
-<div className="container">
+<div class="container">
 	<div class="jumbotron">
 		<div class="row">
 			<div class="col-md-6">
