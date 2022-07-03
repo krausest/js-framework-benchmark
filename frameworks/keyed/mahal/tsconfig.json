@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "baseUrl": "",
+        "declaration": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "mapRoot": "./",
+        "module": "es6",
+        "outDir": "bin/ts",
+        "sourceMap": true,
+        "target": "es6",
+        "moduleResolution": "node",
+        "paths": {
+            "~/*": [
+                "./*"
+            ],
+            "@/*": [
+                "./src/*"
+            ],
+            "@components/*": [
+                "./src/components/*"
+            ],
+            "@config/*": [
+                "./config/*"
+            ]
+        }
+    }
+}

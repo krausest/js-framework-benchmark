@@ -1,0 +1,46 @@
+{
+  "name": "mahal-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack serve --open --config config/webpack/dev.config.js",
+    "copy:html": "node build_helper/copy_html.js",
+    "build-prod": "npm run deploy && npm run copy:html",
+    "deploy": "cross-env NODE_ENV=production webpack --config config/webpack/prod.config.js",
+    "build": "cross-env NODE_ENV=development webpack --config config/webpack/dev.config.js"
+  },
+  "author": "",
+  "license": "",
+  "private": "true",
+  "dependencies": {
+    "mahal": "^1.3.2"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^10.2.4",
+    "cpy-cli": "^4.1.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "^6.5.1",
+    "css-minimizer-webpack-plugin": "^3.4.1",
+    "html-webpack-plugin": "^5.2.0",
+    "mahal-webpack-loader": "^1.3.2",
+    "mini-css-extract-plugin": "^2.5.3",
+    "sass": "^1.49.0",
+    "sass-loader": "^12.4.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "webpack": "^5.67.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.3",
+    "webpack-merge": "^5.8.0"
+  },
+  "project": {
+    "framework": "mahal",
+    "language": "ts"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "mahal"
+  }
+}
