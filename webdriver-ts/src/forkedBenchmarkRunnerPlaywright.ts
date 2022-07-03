@@ -204,11 +204,16 @@ async function runMemBenchmark(
       await wait(40);
       // let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
 
-      let result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
+      let result = 0;
+      if (benchmarkOptions.headless) {
+        console.log("performance.measureUserAgentSpecificMemory doesn't work for headless.");
+        result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
+      } else {
+        result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
+      }
 
       await afterBenchmark(browser, page, benchmark, framework);
       console.log("afterBenchmark ");
-      // let result = metrics.metrics.JSHeapUsedSize / 1024.0 / 1024.0;
       results.push(result);
       console.log(`memory result for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
       if (result < 0) throw new Error(`memory result ${result} < 0`);
