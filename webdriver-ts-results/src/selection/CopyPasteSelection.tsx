@@ -18,7 +18,9 @@ const CopyPasteSelection = () =>
             displayMode: state.displayMode,
             categories: categories.filter(c => state.categories.has(c.id)).map(c => c.id)
         };
-        navigator.clipboard.writeText(JSON.stringify(serializedState));
+        const json = JSON.stringify(serializedState);
+        navigator.clipboard.writeText(json);
+        window.location.hash = btoa(json);
     };
     const paste = async () => {
         try {
@@ -26,6 +28,7 @@ const CopyPasteSelection = () =>
             dispatch(setStateFromClipboard(jsonState));
         } catch (e) {
             alert("Sorry - couldn't parse pasted selection");
+            console.log("pasting state failed", e);
         }
     };
     return <>
