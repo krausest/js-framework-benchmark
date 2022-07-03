@@ -1,0 +1,17 @@
+[package]
+name = "dioxus_benchmark"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dioxus = { version = "0.2.4", features = ["web"] }
+getrandom = { version = "0.2.6", features = ["js"] }
+rand = { version = "0.8.5", features = ["small_rng"] }
+
+wasm-bindgen = { version = "*", features = ["enable-interning"] }
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
