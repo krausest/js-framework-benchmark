@@ -83,6 +83,15 @@ async function loadFrameworkVersionInformation(filterForFramework) {
     return Promise.all(resultsProm);
   }
 
+function addSiteIsolationForIndex(request, response, next) {
+  if (request.path.endsWith("/index.html")) {
+    response.setHeader("Cross-Origin-Embedder-Policy","require-corp");
+    response.setHeader("Cross-Origin-Opener-Policy","same-origin");
+  }
+  next();
+}
+app.use(addSiteIsolationForIndex);
+
 app.use('/frameworks', express.static(frameworkDirectory))
 app.use('/css', express.static(path.join(frameworkDirectory, '..', 'css')))
 
@@ -93,6 +102,7 @@ app.get('/ls', async (req, res) => {
     let t1 = Date.now();
     console.log("/ls duration ", (t1-t0));
 })
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
