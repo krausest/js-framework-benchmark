@@ -14,7 +14,7 @@
   "license": "",
   "private": "true",
   "dependencies": {
-    "mahal": "^1.3.0"
+    "mahal": "^1.3.2"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
@@ -24,7 +24,7 @@
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.4.1",
     "html-webpack-plugin": "^5.2.0",
-    "mahal-webpack-loader": "^1.3.0",
+    "mahal-webpack-loader": "^1.3.2",
     "mini-css-extract-plugin": "^2.5.3",
     "sass": "^1.49.0",
     "sass-loader": "^12.4.0",

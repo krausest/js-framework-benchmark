@@ -117,12 +117,13 @@ export default class extends Component {
         this.setState("selected", 0);
     }
 
-    swapRows() {
-        const data = this.data;
+	swapRows() {
+        const data = this.data.slice();
         if (data.length > 998) {
             let temp = data[1];
-            this.setState("data.1", data[998]);
-            this.setState("data.998", temp);
+            data[1] = data[998];
+            data[998] = temp;
+            this.setState("data", data);
         }
     }
 }
