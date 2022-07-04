@@ -21,8 +21,8 @@ export interface JSONResult {
 export type TBenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
 
 export interface ErrorAndWarning {
-  error: String;
-  warnings: String[];
+  error: string;
+  warnings: string[];
   result?: number[] | StartupBenchmarkResult[];
 }
 
@@ -47,7 +47,7 @@ export enum BENCHMARK_RUNNER {
   PLAYWRIGHT = "playwright", 
   WEBDRIVER_CDP = "webdrivercdp", 
   WEBDRIVER = "webdriver" 
-}; 
+}
 
 export let config = {
   PORT: 8080,

@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsbench": "cross-env LANG=\"en_US.UTF-8\" ts-node src/benchmarkRunner.ts",
+    "lint": "eslint . --ext .ts",
+    "tsbench": "cross-env LANG=\"en_US.UTF-8\" ts-node --files src/benchmarkRunner.ts",
     "bench": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
     "compile": "tsc",
-    "results": "ts-node src/createResultJS.ts && cd .. && cd webdriver-ts-results && npm run build-prod",
-    "index": "ts-node src/createIndex.ts",
-    "isKeyed": "cross-env LANG=\"en_US.UTF-8\" ts-node src/isKeyed.ts",
-    "parse": "ts-node src/parseTrace.ts",
-    "run-si": "ts-node src/singleInstanceBenchmarkRunnerPlaywright.ts"
+    "results": "ts-node --files src/createResultJS.ts && cd .. && cd webdriver-ts-results && npm run build-prod",
+    "index": "ts-node --files src/createIndex.ts",
+    "isKeyed": "cross-env LANG=\"en_US.UTF-8\" ts-node  --files  src/isKeyed.ts",
+    "parse": "ts-node --files src/parseTrace.ts"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -24,7 +24,10 @@
     "@types/semver": "7.3.10",
     "@types/underscore": "^1.11.4",
     "@types/yargs": "17.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.30.4",
+    "@typescript-eslint/parser": "^5.30.4",
     "dockerode": "^3.3.2",
+    "eslint": "^8.19.0",
     "rimraf": "^3.0.2",
     "ts-node": "10.8.1",
     "typescript": "4.7.4"

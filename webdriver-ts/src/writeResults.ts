@@ -5,7 +5,7 @@ import { BenchmarkLighthouse, StartupBenchmarkResult, subbenchmarks } from "./be
 import { TBenchmarkPuppeteer } from "./benchmarksPuppeteer";
 import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver";
 import { config as defaultConfig, FrameworkData, JSONResult } from "./common";
-const jStat = require("jstat").jStat;
+import {jStat} from 'jstat';
 
 export type ResultLightHouse = {
   framework: FrameworkData;

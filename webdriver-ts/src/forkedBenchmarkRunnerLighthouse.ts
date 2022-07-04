@@ -1,5 +1,5 @@
-const lighthouse = require("lighthouse");
-const chromeLauncher = require("chrome-launcher");
+import * as lighthouse from "lighthouse";
+import *  as chromeLauncher from "chrome-launcher";
 
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
 import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./benchmarksLighthouse";
@@ -44,7 +44,7 @@ async function runLighthouse(framework: FrameworkData, startupBenchmarks: Startu
     let chrome = await chromeLauncher.launch(opts);
     let results: any = null;
     try {
-      results = await lighthouse(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, opts, null);
+      results = await (lighthouse as any)(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, opts, null);
       await chrome.kill();
     } catch (error) {
       console.log("error running lighthouse", error);
@@ -92,7 +92,7 @@ async function runStartupBenchmark(
 ): Promise<ErrorAndWarning> {
   console.log("benchmarking startup", framework, benchmark.benchmarkInfo.id);
 
-  let error: String = undefined;
+  let error: string = undefined;
   try {
     let result = await runLighthouse(framework, benchmark.subbenchmarks, benchmarkOptions);
     return { error, warnings: [], result };

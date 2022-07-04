@@ -18,9 +18,6 @@ export abstract class CPUBenchmarkWebdriverCDP {
   }
   abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
   abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
-  after(driver: WebDriver, framework: FrameworkData): Promise<any> {
-    return null;
-  }
 }
 
 export const benchRun = new (class extends CPUBenchmarkWebdriverCDP {

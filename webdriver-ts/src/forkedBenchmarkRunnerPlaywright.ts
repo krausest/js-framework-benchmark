@@ -13,13 +13,6 @@ async function runBenchmark(browser: Browser, page: Page, benchmark: TBenchmarkP
   if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
 }
 
-async function afterBenchmark(browser: Browser, page: Page, benchmark: TBenchmarkPlaywright, framework: FrameworkData): Promise<any> {
-  if (benchmark.after) {
-    await benchmark.after(page, framework);
-    if (config.LOG_PROGRESS) console.log("after benchmark ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
-  }
-}
-
 async function initBenchmark(browser: Browser, page: Page, benchmark: TBenchmarkPlaywright, framework: FrameworkData): Promise<any> {
   await benchmark.init(browser, page, framework);
   if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
@@ -62,8 +55,8 @@ async function forceGC(page: Page, client: CDPSession) {
 
 async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPlaywright, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning>
 {
-    let error: String = undefined;
-    let warnings: String[] = [];
+    let error: string = undefined;
+    let warnings: string[] = [];
     let results: number[] = [];
 
     console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
@@ -78,6 +71,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
                 console.log(`BROWSER: ${msg.args()[i]}`);
             });
         // }
+        let client = await page.context().newCDPSession(page);
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
             await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
 
@@ -107,7 +101,6 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             //     'disabled-by-default-devtools.timeline.stack',
             // ];
 
-            let client = await page.context().newCDPSession(page);
             await forceGC(page, client);
             if (benchmark.benchmarkInfo.throttleCPU) {
               console.log("CPU slowdown", benchmark.benchmarkInfo.throttleCPU);
@@ -119,20 +112,13 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
                 categories:categories
             });
             console.log("runBenchmark Playwright");
-            // let m1 = await page.metrics();
             await runBenchmark(browser, page, benchmark, framework);
 
             await wait(40);
             await browser.stopTracing();
-            // let m2 = await page.metrics();
-            await afterBenchmark(browser, page, benchmark, framework);
             if (benchmark.benchmarkInfo.throttleCPU) {
               await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });            
-          }
-          client.detach();
-  
-            // console.log("afterBenchmark", m1, m2);
-            // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
+          }  
             let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i), benchmark.benchmarkInfo.durationMeasurementMode);
             results.push(result);
             console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
@@ -168,8 +154,8 @@ async function runMemBenchmark(
   benchmark: MemBenchmarkPlaywright,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning> {
-  let error: String = undefined;
-  let warnings: String[] = [];
+  let error: string = undefined;
+  let warnings: string[] = [];
   let results: number[] = [];
 
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
@@ -211,8 +197,6 @@ async function runMemBenchmark(
       } else {
         result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
       }
-
-      await afterBenchmark(browser, page, benchmark, framework);
       console.log("afterBenchmark ");
       results.push(result);
       console.log(`memory result for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);

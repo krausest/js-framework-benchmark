@@ -13,13 +13,6 @@ async function runBenchmark(page: Page, benchmark: TBenchmarkPuppeteer, framewor
   if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
 }
 
-async function afterBenchmark(page: Page, benchmark: TBenchmarkPuppeteer, framework: FrameworkData): Promise<any> {
-  if (benchmark.after) {
-    await benchmark.after(page, framework);
-    if (config.LOG_PROGRESS) console.log("after benchmark ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
-  }
-}
-
 async function initBenchmark(page: Page, benchmark: TBenchmarkPuppeteer, framework: FrameworkData): Promise<any> {
   await benchmark.init(page, framework);
   if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
@@ -59,8 +52,8 @@ async function forceGC(page: Page, client: CDPSession) {
 
 async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPuppeteer, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning>
 {
-    let error: String = undefined;
-    let warnings: String[] = [];
+    let error: string = undefined;
+    let warnings: string[] = [];
     let results: number[] = [];
 
     console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
@@ -132,7 +125,6 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             await wait(10);
             await page.tracing.stop();
             // let m2 = await page.metrics();
-            await afterBenchmark(page, benchmark, framework);
             if (benchmark.benchmarkInfo.throttleCPU) {
               await page.emulateCPUThrottling(1);
           }
@@ -169,8 +161,8 @@ async function runMemBenchmark(
   benchmark: MemBenchmarkPuppeteer,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning> {
-  let error: String = undefined;
-  let warnings: String[] = [];
+  let error: string = undefined;
+  let warnings: string[] = [];
   let results: number[] = [];
 
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
@@ -211,7 +203,6 @@ async function runMemBenchmark(
         result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
       }
 
-      await afterBenchmark(page, benchmark, framework);
       console.log("afterBenchmark");
 
       results.push(result);

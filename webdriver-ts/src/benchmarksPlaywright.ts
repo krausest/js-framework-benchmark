@@ -13,9 +13,6 @@ export abstract class CPUBenchmarkPlaywright implements benchmarksCommon.Benchma
   }
   abstract init(browser: Browser, page: Page, framework: FrameworkData): Promise<any>;
   abstract run(browser: Browser, page: Page, framework: FrameworkData): Promise<any>;
-  after(page: Page, framework: FrameworkData): Promise<any> {
-    return null;
-  }
 }
 
 export abstract class MemBenchmarkPlaywright implements benchmarksCommon.BenchmarkImpl {
@@ -24,9 +21,6 @@ export abstract class MemBenchmarkPlaywright implements benchmarksCommon.Benchma
   }
   abstract init(browser: Browser, page: Page, framework: FrameworkData): Promise<any>;
   abstract run(browser: Browser, page: Page, framework: FrameworkData): Promise<any>;
-  after(page: Page, framework: FrameworkData): Promise<any> {
-    return null;
-  }
 }
 
 export type TBenchmarkPlaywright = CPUBenchmarkPlaywright | MemBenchmarkPlaywright;
@@ -218,8 +212,7 @@ export const benchReadyMemory = new (class extends MemBenchmarkPlaywright {
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
   }
-  async run(browser: Browser, page: Page) {}
-  async after(page: Page, framework: FrameworkData) {}
+  async run(browser: Browser, page: Page) {return await Promise.resolve(null);}
 })();
 
 export const benchRunMemory = new (class extends MemBenchmarkPlaywright {

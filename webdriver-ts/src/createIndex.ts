@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import { JSONResult, config, initializeFrameworks } from "./common";
+import * as dot from "dot";
 
 async function main() {
   let frameworks = await initializeFrameworks();
@@ -8,7 +9,7 @@ async function main() {
     a.fullNameWithKeyedAndVersion.localeCompare(b.fullNameWithKeyedAndVersion)
   );
 
-  const dots = require("dot").process({
+  const dots = dot.process({
     path: "./",
   });
 
@@ -23,4 +24,4 @@ async function main() {
   );
 }
 
-main();
+main().catch(err => {console.log("Error in createIndex", err)});

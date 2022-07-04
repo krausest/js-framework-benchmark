@@ -13,9 +13,6 @@ export abstract class CPUBenchmarkPuppeteer implements benchmarksCommon.Benchmar
   }
   abstract init(page: Page, framework: FrameworkData): Promise<any>;
   abstract run(page: Page, framework: FrameworkData): Promise<any>;
-  after(page: Page, framework: FrameworkData): Promise<any> {
-    return null;
-  }
 }
 
 export abstract class MemBenchmarkPuppeteer implements benchmarksCommon.BenchmarkImpl {
@@ -24,9 +21,6 @@ export abstract class MemBenchmarkPuppeteer implements benchmarksCommon.Benchmar
   }
   abstract init(page: Page, framework: FrameworkData): Promise<any>;
   abstract run(page: Page, framework: FrameworkData): Promise<any>;
-  after(page: Page, framework: FrameworkData): Promise<any> {
-    return null;
-  }
 }
 
 export type TBenchmarkPuppeteer = CPUBenchmarkPuppeteer | MemBenchmarkPuppeteer;
@@ -217,8 +211,7 @@ export const benchReadyMemory = new (class extends MemBenchmarkPuppeteer {
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
   }
-  async run(page: Page) {}
-  async after(page: Page, framework: FrameworkData) {}
+  async run(page: Page) {return await Promise.resolve(null);}
 })();
 
 export const benchRunMemory = new (class extends MemBenchmarkPuppeteer {

@@ -1,7 +1,6 @@
 import * as yargs from "yargs";
 import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./playwrightAccess";
 import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common";
-import { WebDriver, By, WebElement, logging } from "selenium-webdriver";
 
 import * as R from "ramda";
 import { valid } from "semver";
@@ -19,9 +18,6 @@ let args: any = yargs(process.argv)
 let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
 
 console.log("args.framework", args.framework, !args.framework);
-
-// necessary to launch without specifiying a path
-var chromedriver: any = require("chromedriver");
 
 let init = (shadowRootName: string) => `
 window.nonKeyedDetector_reset = function() {
@@ -229,7 +225,7 @@ async function runBench(frameworkNames: string[]) {
   runFrameworks = await initializeFrameworks(matchesDirectoryArg);
   console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
 
-  let frameworkMap = new Map<String, FrameworkData>();
+  let frameworkMap = new Map<string, FrameworkData>();
 
   let allCorrect = true;
 
@@ -339,8 +335,8 @@ async function main() {
   if (args.help) {
     yargs.showHelp();
   } else {
-    runBench(runFrameworks);
+    await runBench(runFrameworks);
   }
 }
 
-main();
+main().catch(err => {console.log("Error in isKeyed", err)});
