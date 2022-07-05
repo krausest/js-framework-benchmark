@@ -48,7 +48,7 @@ const SelectBenchmarkCategory = ({ benchmarkType, label}:
     </DropDownContents>);
 }
 
-const SelectBenchmarks = () => {
+const SelectBenchmarks = (): JSX.Element => {
   console.log("SelectBenchmarks");
 
     return <DropDown label="Which benchmarks?" width='300px'>

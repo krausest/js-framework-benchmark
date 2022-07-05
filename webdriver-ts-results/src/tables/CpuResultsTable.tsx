@@ -4,7 +4,7 @@ import GeomMeanRow from './GeomMeanRow'
 import CompareRow from './CompareRow'
 import ValueResultRow from './ValueResultRow'
 
-const CpuResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData; currentSortKey: string; sortBy: (name: string) => void}) => {
+const CpuResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData; currentSortKey: string; sortBy: (name: string) => void}): JSX.Element|null => {
   const resultsCPU = data.getResult(BenchmarkType.CPU);
     return resultsCPU.results.length===0 ? null :
           (<div>

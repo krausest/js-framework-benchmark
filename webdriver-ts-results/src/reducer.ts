@@ -6,7 +6,7 @@ import { benchmarks as benchmark_orig, frameworks, results as rawResults } from 
 const benchmarks = benchmark_orig.filter(b => b.id !== '32_startup-bt');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const jStat: any = require('jStat').jStat;
+const jStat = require('jstat').jStat;
 
 const results: Result[] = (rawResults as RawResult[]).map(res => Object.assign(({ framework: res.f, benchmark: res.b, values: res.v }),
   {
@@ -53,11 +53,11 @@ export interface State {
   categories: Set<number>;
 }
 
-export const areAllBenchmarksSelected = (state: State, type: BenchmarkType) => state.benchmarkLists[type].every(b => state.selectedBenchmarks.has(b))
-export const isNoneBenchmarkSelected = (state: State, type: BenchmarkType) => state.benchmarkLists[type].every(b => !state.selectedBenchmarks.has(b))
+export const areAllBenchmarksSelected = (state: State, type: BenchmarkType): boolean => state.benchmarkLists[type].every(b => state.selectedBenchmarks.has(b))
+export const isNoneBenchmarkSelected = (state: State, type: BenchmarkType): boolean => state.benchmarkLists[type].every(b => !state.selectedBenchmarks.has(b))
 
-export const areAllFrameworksSelected = (state: State, type: FrameworkType) => state.frameworkLists[type].every(f => state.selectedFrameworksDropDown.has(f))
-export const isNoneFrameworkSelected = (state: State, type: FrameworkType) => state.frameworkLists[type].every(f => !state.selectedFrameworksDropDown.has(f))
+export const areAllFrameworksSelected = (state: State, type: FrameworkType): boolean => state.frameworkLists[type].every(f => state.selectedFrameworksDropDown.has(f))
+export const isNoneFrameworkSelected = (state: State, type: FrameworkType): boolean => state.frameworkLists[type].every(f => !state.selectedFrameworksDropDown.has(f))
 
 
 let preInitialState: State = {
@@ -96,6 +96,7 @@ function updateResultTable({ frameworks, benchmarks, selectedFrameworksDropDown:
   }
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 function extractState(state: any): Partial<State> {
   let t = {};
   if (state.benchmarks!==undefined) {
@@ -207,6 +208,7 @@ export const sort = (sortKey: string): SortAction => {
 }
 
 interface SetStateFromClipboardAction { type: 'SET_STATE_FROM_CLIPBOARD'; data: any }
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const setStateFromClipboard = (state: any): SetStateFromClipboardAction => {
   return { type: 'SET_STATE_FROM_CLIPBOARD', data: { state } }
 }
@@ -215,7 +217,6 @@ type Action = SelectFrameworkAction | SelectAllFrameworksAction | SelectBenchmar
   | SelectDisplayModeAction | CompareAction | StopCompareAction | SortAction
   | SelectCategoryAction | SelectAllCategoriesAction | SetStateFromClipboardAction;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const reducer = (state = initialState, action: Action): State => {
   console.log("reducer", action)
   switch (action.type) {

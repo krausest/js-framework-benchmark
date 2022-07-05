@@ -5,7 +5,7 @@ import SelectionMode from './SelectionMode';
 import SelectionFilterIssues from './SelectionFilterIssues';
 import CopyPasteSelection from './CopyPasteSelection';
 
-export const SelectionBar = () => 
+export const SelectionBar = (): JSX.Element => 
 {
     console.log("SelectionBar")
     return (

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const jStat: any = require('jStat').jStat;
+const jStat = require('jstat').jStat;
 
 export enum StatisticResult {Slower, Undecided, Faster}
 export enum DisplayMode { DisplayMean, DisplayMedian, BoxPlot }
@@ -33,7 +33,14 @@ export const categories: Category[] = [
   {id:5, text:"[Issue]: Errors in the implementation", issues: [634], severity: Severity.Error},
 ]
 
-export const knownIssues = [
+interface IIssue {
+    issue: number, 
+    severity: Severity, 
+    text: string, 
+    link: string
+}
+
+export const knownIssues: IIssue[] = [
     {issue: 634, severity: Severity.Error, text:"[Issue]: The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
     {issue: 772, severity: Severity.Note, text:"[Note]: Implementation uses manual DOM manipulations", link: "https://github.com/krausest/js-framework-benchmark/issues/772"},
     {issue: 796, severity: Severity.Note, text:"[Note]: Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
@@ -41,7 +48,7 @@ export const knownIssues = [
     {issue: 801, severity: Severity.Note, text:"[Note]: Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
   ];
 
-export function findIssue(issueNumber: number) {
+export function findIssue(issueNumber: number): IIssue|undefined {
     return knownIssues.find(i => i.issue === issueNumber)
 }
 export enum BenchmarkType { CPU, MEM, DUMMY, STARTUP }
@@ -245,7 +252,7 @@ export class ResultTableData {
     public getResult(type: BenchmarkType): ResultData {
         return this.resultsMap.get(type)!
     }
-    sortBy(sortKey: string) {
+    sortBy(sortKey: string): void {
         const zipped = this.frameworks.map((f,frameworkIndex) => {
             let sortValue;
             if (sortKey === SORT_BY_NAME) sortValue = f.name;
@@ -288,7 +295,7 @@ export class ResultTableData {
         return copy;
     }
 
-    computeGeometricMean(framework: Framework, benchmarksCPU: Array<Benchmark>, resultsCPUForFramework: Array<TableResultValueEntry|null>) {
+    computeGeometricMean(framework: Framework, benchmarksCPU: Array<Benchmark>, resultsCPUForFramework: Array<TableResultValueEntry|null>): TableResultGeommeanEntry {
         let count = 0.0;
         const gMean = resultsCPUForFramework.reduce((gMean, r) => {
             if (r !== null)  {
@@ -301,7 +308,7 @@ export class ResultTableData {
         return this.compareWith ? new TableResultGeommeanEntry(framework.name, framework, value, '#fff', '#000') :
              new TableResultGeommeanEntry(framework.name, framework, value, computeColor(value), '#000');
     }
-    computeComparison(framework: Framework, benchmarksCPU: Array<Benchmark>, resultsCPUForFramework: Array<TableResultValueEntry|null>) {
+    computeComparison(framework: Framework, benchmarksCPU: Array<Benchmark>, resultsCPUForFramework: Array<TableResultValueEntry|null>): TableResultComparisonEntry {
         if (this.compareWith) {
             let statisticResult: StatisticResult|undefined = undefined;
             resultsCPUForFramework.forEach((r) => {
@@ -376,13 +383,5 @@ export class ResultTableData {
                 return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), statisticalCol[0], statisticalCol[1], statisticalCol[2], statisticalResult);
             } 
         });
-    }
-    filterResults = function(bench: Benchmark, frameworks: Array<Framework>, results: Array<Result>) {
-        return frameworks.reduce((array, framework) => {
-            const res = results.filter(r => r.benchmark === bench.id && r.framework === framework.name);
-            if (res.length===1) array.push(res[0]);
-            else array.push(null);
-            return array;
-        }, new Array<Result|null>());
     }
 }

@@ -11,7 +11,7 @@ interface Props {
   type: FrameworkType;
 }
 
-const ResultTable = ({type}: Props) => {
+const ResultTable = ({type}: Props): JSX.Element|null => {
   const texts = {
     [FrameworkType.KEYED]: 
       {label: 'Keyed results', 

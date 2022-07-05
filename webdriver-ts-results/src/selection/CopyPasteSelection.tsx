@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { categories} from '../Common';
-import { selectAllCategories, selectCategory, setStateFromClipboard, State } from '../reducer';
-import DropDown from './DropDown';
-import { DropDownContents } from './DropDownContents';
+import { categories } from '../Common';
+import { setStateFromClipboard, State } from '../reducer';
 
-const CopyPasteSelection = () => 
+const CopyPasteSelection = (): JSX.Element => 
 {
     console.log("CopyPasteSelection");
     const dispatch = useDispatch();    
