@@ -98,8 +98,11 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
   let window_width = width,
     window_height = height;
 
+  let args = [`--window-size=${window_width},${window_height}`,'--js-flags=--expose-gc' ];
+  if (benchmarkOptions.headless) args.push('--headless=chrome');
+
   const browser = await puppeteer.launch({
-    headless: benchmarkOptions.headless,
+    headless: false,
     executablePath: browserPath(benchmarkOptions),
     ignoreDefaultArgs: ["--enable-automation",  // 92/115
     "--disable-background-networking",
@@ -127,7 +130,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
     // "--enable-blink-features=IdleDetection",
     // // "--export-tagged-pdf"
   ],
-    args: [`--window-size=${window_width},${window_height}`,'--js-flags=--expose-gc' ],
+    args,
     dumpio: false,
     defaultViewport: {
       width,

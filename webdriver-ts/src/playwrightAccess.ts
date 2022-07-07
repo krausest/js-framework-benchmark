@@ -94,12 +94,11 @@ function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
 }
 
 export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Promise<Browser> {
-  const width = 1280;
-  const height = 800;
-
+  let args = ['--window-size=1000,800', '--js-flags=--expose-gc'];
+  if (benchmarkOptions.headless) args.push('--headless=chrome');
   const browser = await chromium.launch({
-    args: [`--window-size=${width},${height}`, '--js-flags=--expose-gc' ],
-    headless: benchmarkOptions.headless,
+    args,
+    headless: false,
     // executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     executablePath: browserPath(benchmarkOptions),
   });

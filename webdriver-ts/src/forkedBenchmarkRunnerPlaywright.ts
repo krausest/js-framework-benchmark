@@ -190,13 +190,7 @@ async function runMemBenchmark(
       await wait(40);
       // let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
 
-      let result = 0;
-      if (benchmarkOptions.headless) {
-        console.log("performance.measureUserAgentSpecificMemory doesn't work for headless.");
-        result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
-      } else {
-        result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
-      }
+      let result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
       console.log("afterBenchmark ");
       results.push(result);
       console.log(`memory result for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);

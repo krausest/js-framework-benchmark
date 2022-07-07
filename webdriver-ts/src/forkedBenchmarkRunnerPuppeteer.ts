@@ -194,15 +194,7 @@ async function runMemBenchmark(
       await runBenchmark(page, benchmark, framework);
       await forceGC(page, client);
       await wait(40);
-      let result = 0;
-      if (benchmarkOptions.headless) {
-        console.log("performance.measureUserAgentSpecificMemory doesn't work for headless.");
-        let metrics = await page.metrics();
-        let result = metrics.JSHeapUsedSize / 1024.0 / 1024.0;
-    } else {
-        result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
-      }
-
+      let result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
       console.log("afterBenchmark");
 
       results.push(result);
