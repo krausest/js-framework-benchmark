@@ -22,7 +22,8 @@ const CopyPasteSelection = (): JSX.Element =>
     };
     const paste = async () => {
         try {
-            const jsonState = JSON.parse(await navigator.clipboard.readText());    
+            const text = await navigator.clipboard.readText();
+            const jsonState = JSON.parse(text);
             dispatch(setStateFromClipboard(jsonState));
         } catch (e) {
             alert("Sorry - couldn't parse pasted selection");

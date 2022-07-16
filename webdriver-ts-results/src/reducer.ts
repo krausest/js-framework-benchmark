@@ -210,7 +210,7 @@ export const sort = (sortKey: string): SortAction => {
 interface SetStateFromClipboardAction { type: 'SET_STATE_FROM_CLIPBOARD'; data: any }
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const setStateFromClipboard = (state: any): SetStateFromClipboardAction => {
-  return { type: 'SET_STATE_FROM_CLIPBOARD', data: { state } }
+  return { type: 'SET_STATE_FROM_CLIPBOARD', data: state }
 }
 
 type Action = SelectFrameworkAction | SelectAllFrameworksAction | SelectBenchmarkAction | SelectAllBenchmarksAction
@@ -221,7 +221,7 @@ export const reducer = (state = initialState, action: Action): State => {
   console.log("reducer", action)
   switch (action.type) {
     case 'SET_STATE_FROM_CLIPBOARD': {
-      if (action.data.state) {
+      if (action.data) {
         const t = { ...state, ...extractState(action.data) };
         return { ...t, resultTables: updateResultTable(t) }
       } else {
