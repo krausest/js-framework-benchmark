@@ -41,7 +41,7 @@ Older results of this benchmark are outlined on my blog ([round 1](http://www.st
 ## Snapshot of the results
 
 The current snapshot that may not have the same quality (i.e.
-results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html)
+results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here]((https://krausest.github.io/js-framework-benchmark/current.html)
 [![Results](images/results.png?raw=true "Results")](https://krausest.github.io/js-framework-benchmark/current.html)
 
 # 1 NEW: Run pre-built binaries for all frameworks

@@ -210,6 +210,7 @@ export const sort = (sortKey: string): SortAction => {
 interface SetStateFromClipboardAction { type: 'SET_STATE_FROM_CLIPBOARD'; data: any }
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const setStateFromClipboard = (state: any): SetStateFromClipboardAction => {
+  console.log("setStateFromClipboard");
   return { type: 'SET_STATE_FROM_CLIPBOARD', data: state }
 }
 
