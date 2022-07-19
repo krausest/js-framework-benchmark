@@ -1,4 +1,4 @@
-import { h, render, useReducer, useCallback } from "fre"
+import { h, render, useReducer, useCallback, memo } from "../node_modules/fre/dist/fre.esm.js"
 
 function random(max) {
   return Math.round(Math.random() * 1000) % max
@@ -78,7 +78,7 @@ function listReducer(state, action) {
   const { data, selected } = state
   switch (action.type) {
     case "RUN":
-      return { data: buildData(1000), selected: 0 }
+      return { data: buildData(10), selected: 0 }
     case "RUN_LOTS":
       return { data: buildData(10000), selected: 0 }
     case "ADD":
@@ -93,14 +93,14 @@ function listReducer(state, action) {
     case "CLEAR":
       return { data: [], selected: 0 }
     case "SWAP_ROWS":
-      return data.length > 998
+      return data.length > 8
         ? {
           data: [
             data[0],
-            data[998],
-            ...data.slice(2, 998),
+            data[8],
+            ...data.slice(2, 8),
             data[1],
-            data[999],
+            data[9],
           ],
         }
         : state
@@ -113,7 +113,7 @@ function listReducer(state, action) {
   return state
 }
 
-const Row = ({ selected, item, dispatch }) => {
+const Row = memo(({ selected, item, dispatch, id }) => {
   return (
     <tr className={selected ? "danger" : ""}>
       <td className="col-md-1">{item.id}</td>
@@ -129,7 +129,7 @@ const Row = ({ selected, item, dispatch }) => {
       <td className="col-md-6" />
     </tr>
   )
-}
+})
 
 const Button = ({ id, cb, title }) => (
   <div className="col-sm-6 smallpad">
@@ -145,7 +145,7 @@ const Button = ({ id, cb, title }) => (
 )
 
 
-const Jumbotron = ({ dispatch }) => (
+const Jumbotron = memo(({ dispatch }) => (
   <div className="jumbotron">
     <div className="row">
       <div className="col-md-6">
@@ -187,7 +187,7 @@ const Jumbotron = ({ dispatch }) => (
       </div>
     </div>
   </div>
-)
+))
 
 const Main = () => {
   const [state, setState] = useReducer(listReducer, { data: [], selected: 0 })
@@ -215,4 +215,4 @@ const Main = () => {
   )
 }
 
-render(<Main />, document.getElementById("main"), { sync: true })
+render(<Main />, document.getElementById("main"))
