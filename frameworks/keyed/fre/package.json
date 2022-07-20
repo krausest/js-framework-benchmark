@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-fre",
-  "version": "2.5.4",
+  "version": "2.5.5",
   "description": "fre demo",
   "main": "index.js",
   "js-framework-benchmark": {
@@ -31,6 +31,6 @@
     "webpack-cli": "4.8.0"
   },
   "dependencies": {
-    "fre": "2.5.4"
+    "fre": "2.5.5"
   }
 }
