@@ -1,4 +1,4 @@
-import { h, render, useReducer, useCallback, memo } from "../node_modules/fre/dist/fre.esm.js"
+import { h, render, useReducer, useCallback, memo } from "fre"
 
 function random(max) {
   return Math.round(Math.random() * 1000) % max
@@ -78,7 +78,7 @@ function listReducer(state, action) {
   const { data, selected } = state
   switch (action.type) {
     case "RUN":
-      return { data: buildData(10), selected: 0 }
+      return { data: buildData(1000), selected: 0 }
     case "RUN_LOTS":
       return { data: buildData(10000), selected: 0 }
     case "ADD":
