@@ -1,4 +1,4 @@
-import { h, render, useReducer, useCallback } from "fre"
+import { h, render, useReducer, useCallback, memo } from "fre"
 
 function random(max) {
   return Math.round(Math.random() * 1000) % max
@@ -93,17 +93,7 @@ function listReducer(state, action) {
     case "CLEAR":
       return { data: [], selected: 0 }
     case "SWAP_ROWS":
-      return data.length > 998
-        ? {
-          data: [
-            data[0],
-            data[998],
-            ...data.slice(2, 998),
-            data[1],
-            data[999],
-          ],
-        }
-        : state
+      return data.length > 998 ? { data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]], selected } : state
     case "REMOVE":
       const idx = data.findIndex((d) => d.id === action.id)
       return { data: [...data.slice(0, idx), ...data.slice(idx + 1)], selected }
@@ -113,7 +103,7 @@ function listReducer(state, action) {
   return state
 }
 
-const Row = ({ selected, item, dispatch }) => {
+const Row = memo(({ selected, item, dispatch, id }) => {
   return (
     <tr className={selected ? "danger" : ""}>
       <td className="col-md-1">{item.id}</td>
@@ -129,7 +119,7 @@ const Row = ({ selected, item, dispatch }) => {
       <td className="col-md-6" />
     </tr>
   )
-}
+})
 
 const Button = ({ id, cb, title }) => (
   <div className="col-sm-6 smallpad">
@@ -145,7 +135,7 @@ const Button = ({ id, cb, title }) => (
 )
 
 
-const Jumbotron = ({ dispatch }) => (
+const Jumbotron = memo(({ dispatch }) => (
   <div className="jumbotron">
     <div className="row">
       <div className="col-md-6">
@@ -187,7 +177,7 @@ const Jumbotron = ({ dispatch }) => (
       </div>
     </div>
   </div>
-)
+))
 
 const Main = () => {
   const [state, setState] = useReducer(listReducer, { data: [], selected: 0 })
@@ -215,4 +205,4 @@ const Main = () => {
   )
 }
 
-render(<Main />, document.getElementById("main"), { sync: true })
+render(<Main />, document.getElementById("main"))
