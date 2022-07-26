@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Framework, TableResultComparisonEntry } from '../Common';
 import { compare, stopCompare } from '../reducer';
 
-const CompareRow = ({comparison, compareWith}: {comparison: Array<TableResultComparisonEntry|null>; compareWith: Framework|undefined}) => {
+const CompareRow = ({comparison, compareWith}: {comparison: Array<TableResultComparisonEntry|null>; compareWith: Framework|undefined}): JSX.Element => {
     const dispatch = useDispatch()
 
     if (!compareWith) {

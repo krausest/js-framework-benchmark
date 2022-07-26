@@ -34,7 +34,7 @@ function convertPath(path: string): Array<PathPart> {
   for (let part of parts) {
     let components = part.split(/\[|]/).filter((v) => !!v);
     let tagName = components[0];
-    let index: number = 0;
+    let index = 0;
     if (components.length == 2) {
       index = Number(components[1]);
       if (!index) {
@@ -103,7 +103,7 @@ function waitForCondition(driver: WebDriver) {
 // driver.findElement(By.xpath("//tbody/tr[1]/td[1]")).getText().then(...) can throw a stale element error:
 // thus we're using a safer way here:
 export async function testTextContains(driver: WebDriver, xpath: string, text: string, timeout = config.TIMEOUT, isInButtonArea: boolean) {
-  return waitForCondition(driver)(
+  return await waitForCondition(driver)(
     `testTextContains ${xpath} ${text}`,
     async function (driver) {
       try {
@@ -241,7 +241,7 @@ export async function getTextByXPath(driver: WebDriver, xpath: string, isInButto
 export async function mainRoot(driver: WebDriver, isInButtonArea: boolean): Promise<WebElement> {
   if (useShadowRoot) {
     if (!buttonsInShadowRoot && isInButtonArea) {
-      return driver.findElement(By.tagName("body"));
+      return await driver.findElement(By.tagName("body"));
     } else {
       return shadowRoot(driver, shadowRootName);
     }
@@ -296,7 +296,7 @@ export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver
 
   // port probing fails sometimes on windows, the following driver construction avoids probing:
   let service = new chrome.ServiceBuilder().setPort(benchmarkOptions.chromePort).build();
-  var driver = chrome.Driver.createSession(caps, service);
+  let driver = chrome.Driver.createSession(caps, service);
 
   return driver;
 }

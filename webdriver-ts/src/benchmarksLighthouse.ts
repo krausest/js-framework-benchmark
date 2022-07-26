@@ -1,5 +1,5 @@
-import { BenchmarkImpl, BenchmarkType, BENCHMARK_30, DurationMeasurementMode, StartupBenchmarkInfo, StartupMainBenchmarkInfo } from "./benchmarksCommon";
 import * as benchmarksCommon from "./benchmarksCommon";
+import { BenchmarkImpl, BenchmarkType, StartupBenchmarkInfo } from "./benchmarksCommon";
 
 export interface StartupBenchmarkResult extends BenchmarkImpl {
   benchmark: StartupBenchmarkInfo;
@@ -51,10 +51,6 @@ export class BenchmarkLighthouse implements BenchmarkImpl {
   type = BenchmarkType.STARTUP_MAIN;
   benchmarkInfo = benchmarksCommon.startupBenchmarkInfos[benchmarksCommon.BENCHMARK_30];
   subbenchmarks = subbenchmarks;
-
-  constructor() {
-    
-  }
 }
 
 export const benchLighthouse = new BenchmarkLighthouse();

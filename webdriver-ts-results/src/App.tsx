@@ -4,7 +4,7 @@ import { FrameworkType, knownIssues } from './Common';
 import ResultTable from './ResultTable';
 import { SelectionBar } from './selection/SelectionBar';
 
-const App = () => {
+const App = (): JSX.Element => {
   // eslint-disable-next-line no-constant-condition
   const disclaimer = (false) ? (<div>
         <h2>Results for js web frameworks benchmark - official run</h2>
@@ -15,8 +15,8 @@ const App = () => {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 64 GB RAM, Fedora 36 (Linux 5.17.3, mitigations=off, Wayland), Chrome  102.0.5005.61 (64-bit))
-            using the puppeteer benchmark driver.
+        <p>The benchmark was run on a MaBook Air M1 (16 GB RAM, OSX 12.4), Chrome 103.0.5060.53 (arm64))
+            using the playwright benchmark driver with reduced tracing.
         </p>
          <SelectionBar/>
          <ResultTable type={FrameworkType.KEYED}/>

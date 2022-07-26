@@ -50,10 +50,10 @@ struct ButtonProps {
 }
 
 #[component(Button<G>)]
-fn button(props: ButtonProps) -> Template<G> {
+fn button(props: ButtonProps) -> View<G> {
     let ButtonProps { id, text, callback } = props;
 
-    template! {
+    view! {
         div(class="col-sm-6 smallpad") {
             button(id=id, class="btn btn-primary btn-block", type="button", on:click=move |_| callback()) {
                 (text)
@@ -100,7 +100,7 @@ fn build_data(count: usize) -> Vec<RowData> {
 }
 
 #[component(App<G>)]
-fn app() -> Template<G> {
+fn app() -> View<G> {
     let data = Signal::new(Vec::<RowData>::new());
     let selected = Signal::new(None::<usize>);
 
@@ -143,7 +143,7 @@ fn app() -> Template<G> {
         data.set(d);
     });
 
-    template! {
+    view! {
         div(class="container") {
             div(class="jumbotron") {
                 div(class="row") {
@@ -167,7 +167,7 @@ fn app() -> Template<G> {
                         template: move |row| {
                             let row_id = row.id;
                             let is_selected = create_selector(cloned!((selected) => move || *selected.get() == Some(row_id)));
-                            cloned!((selected, remove) => template! {
+                            cloned!((selected, remove) => view! {
                                 tr(class=if *is_selected.get() { "danger" } else { "" }) {
                                     td(class="col-md-1") { (row_id) }
                                     td(class="col-md-4") {
@@ -194,5 +194,5 @@ fn app() -> Template<G> {
 pub fn start() {
     let document = window().unwrap().document().unwrap();
     let mount_el = document.query_selector("#main").unwrap().unwrap();
-    sycamore::render_to(|| template! { App() }, &mount_el);
+    sycamore::render_to(|| view! { App() }, &mount_el);
 }

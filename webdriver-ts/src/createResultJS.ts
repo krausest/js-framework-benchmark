@@ -83,13 +83,12 @@ async function main() {
     "export const frameworks = " +
     JSON.stringify(
       frameworks.map((f) =>
-        f.issues && f.issues.length > 0
-          ? {
+          ({
               name: f.fullNameWithKeyedAndVersion,
+              dir: (f.keyed ? "keyed/" : "non-keyed/" ) + f.name,
               keyed: f.keyed,
-              issues: f.issues,
-            }
-          : { name: f.fullNameWithKeyedAndVersion, keyed: f.keyed }
+              issues: f.issues && f.issues.length > 0 ? f.issues : undefined,
+          })
       )
     ) +
     ";\n";

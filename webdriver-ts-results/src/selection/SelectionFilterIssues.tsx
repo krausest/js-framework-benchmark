@@ -5,7 +5,7 @@ import { selectAllCategories, selectCategory, State } from '../reducer';
 import DropDown from './DropDown';
 import { DropDownContents } from './DropDownContents';
 
-const SelectionFilterIssues = () => 
+const SelectionFilterIssues = (): JSX.Element => 
 {
     console.log("SelectionFilterIssues")
     const dispatch = useDispatch();    

@@ -3,7 +3,7 @@ import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_MEM, BenchmarkType} from
 import ValueResultRow from './ValueResultRow'
 import GeomMeanRow from './GeomMeanRow'
 
-const MemResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData; currentSortKey: string; sortBy: (name: string) => void}) => {
+const MemResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData; currentSortKey: string; sortBy: (name: string) => void}): JSX.Element|null => {
   const resultsMEM = data.getResult(BenchmarkType.MEM);
   return (resultsMEM.results.length===0 ? null :
         (<div>

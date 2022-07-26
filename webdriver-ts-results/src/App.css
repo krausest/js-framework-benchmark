@@ -31,9 +31,6 @@ select {
 .header-row {
     margin: 20px 0;
 }
-.dropdown-container {
-    display: inline-block;
-}
 .dropdown-container > .shutter, .dropdown-container > .dropdown-menu {
     display: none;
 }
@@ -126,7 +123,7 @@ table.results th {
     -webkit-hyphens: auto;
 }
 table.results th.benchname {
-width: 100px;
+width: 120px;
 }
 table.results td {
 padding: 3px;
@@ -199,6 +196,25 @@ dd {
     outline-style: none;
     cursor: pointer;
 }
+
+.iconbutton {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 2px 2px;
+    outline: none;
+    box-shadow: 0px 0px 2px 2px rgb(0 0 0 / 0%);    
+    width: 26px;
+}
+.iconbutton:active {
+    border: 1px solid #888;
+}
+.header-row {
+    display: flex;
+}
+.header-row > * {
+    align-self:center;
+}
+
 
 
 button:disabled.textButton {

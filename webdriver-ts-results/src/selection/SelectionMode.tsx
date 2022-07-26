@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DisplayMode } from '../Common';
 import { selectDisplayMode, State } from '../reducer';
 
-const SelectionMode = () => 
+const SelectionMode = (): JSX.Element => 
 {
     console.log("SelectionMode")
     const dispatch = useDispatch();    

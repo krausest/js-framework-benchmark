@@ -9,7 +9,7 @@ import { BenchmarkType, DurationMeasurementMode } from "./benchmarksCommon";
 let config: TConfig = defaultConfig;
 
 // necessary to launch without specifiying a path
-var chromedriver: any = require("chromedriver");
+require("chromedriver");
 
 interface Timingresult {
   type: string;
@@ -124,7 +124,7 @@ async function computeResultsCPU(
   benchmarkOptions: BenchmarkOptions,
   framework: FrameworkData,
   benchmark: CPUBenchmarkWebdriver,
-  warnings: String[],
+  warnings: string[],
   expcectedResultCount: number
 ): Promise<number[]> {
   let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
@@ -212,13 +212,6 @@ async function runBenchmark(driver: WebDriver, benchmark: CPUBenchmarkWebdriver,
   if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
-async function afterBenchmark(driver: WebDriver, benchmark: CPUBenchmarkWebdriver, framework: FrameworkData): Promise<any> {
-  if (benchmark.after) {
-    await benchmark.after(driver, framework);
-    if (config.LOG_PROGRESS) console.log("after benchmark ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
-  }
-}
-
 async function initBenchmark(driver: WebDriver, benchmark: CPUBenchmarkWebdriver, framework: FrameworkData): Promise<any> {
   await benchmark.init(driver, framework);
   if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
@@ -261,8 +254,8 @@ async function runCPUBenchmark(
   benchmark: CPUBenchmarkWebdriver,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning> {
-  let error: String = undefined;
-  let warnings: String[] = [];
+  let error: string = undefined;
+  let warnings: string[] = [];
 
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
   let driver: WebDriver = null;
@@ -297,8 +290,6 @@ async function runCPUBenchmark(
         await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
       }
       await driver.executeScript("console.timeStamp('finishedBenchmark')");
-      await afterBenchmark(driver, benchmark, framework);
-      await driver.executeScript("console.timeStamp('afterBenchmark')");
     }
     let result = await computeResultsCPU(driver, benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
     await driver.close();

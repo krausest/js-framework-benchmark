@@ -36,7 +36,9 @@ export default class MyTable extends Component {
   }
 
   @action add() {
-    this.data = add(this.id, this.data)
+    const result = add(this.id, this.data);
+    this.id = result.id;
+    this.data = result.data;
   }
 
   @action update() {

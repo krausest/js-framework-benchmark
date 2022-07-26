@@ -33,7 +33,7 @@ function forkAndCallBenchmark(
       benchmarkId: benchmarkInfo.id,
       benchmarkOptions,
     });
-    forked.on("message", async (msg: ErrorAndWarning) => {
+    forked.on("message", (msg: ErrorAndWarning) => {
       if (config.LOG_DETAILS) console.log("FORKING: main process got message from child", msg);
       resolve(msg);
     });
@@ -54,9 +54,9 @@ async function runBenchmakLoopStartup(
   framework: FrameworkData,
   benchmarkInfo: StartupBenchmarkInfo,
   benchmarkOptions: BenchmarkOptions
-): Promise<{ errors: String[]; warnings: String[] }> {
-  let warnings: String[] = [];
-  let errors: String[] = [];
+): Promise<{ errors: string[]; warnings: string[] }> {
+  let warnings: string[] = [];
+  let errors: string[] = [];
 
   let results: Array<StartupBenchmarkResult> = [];
   let count = benchmarkOptions.numIterationsForStartupBenchmark;
@@ -103,9 +103,9 @@ async function runBenchmakLoop(
   framework: FrameworkData,
   benchmarkInfo: CPUBenchmarkInfo|MemBenchmarkInfo,
   benchmarkOptions: BenchmarkOptions
-): Promise<{ errors: String[]; warnings: String[] }> {
-  let warnings: String[] = [];
-  let errors: String[] = [];
+): Promise<{ errors: string[]; warnings: string[] }> {
+  let warnings: string[] = [];
+  let errors: string[] = [];
 
   let results: Array<number> = [];
   let count = 0;
@@ -162,8 +162,8 @@ async function runBenchmakLoop(
 }
 
 async function runBench(runFrameworks: FrameworkData[], benchmarkInfos: BenchmarkInfo[]) {
-  let errors: String[] = [];
-  let warnings: String[] = [];
+  let errors: string[] = [];
+  let warnings: string[] = [];
 
   let restart: string = undefined;
   let index = runFrameworks.findIndex((f) => f.fullNameWithKeyedAndVersion === restart);

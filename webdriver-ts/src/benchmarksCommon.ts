@@ -63,8 +63,9 @@ export const BENCHMARK_09 = "09_clear1k_x8";
 export const BENCHMARK_21 = "21_ready-memory";
 export const BENCHMARK_22 = "22_run-memory";
 export const BENCHMARK_23 = "23_update5-memory";
-export const BENCHMARK_24 = "24_run5-memory";
+// export const BENCHMARK_24 = "24_run5-memory";
 export const BENCHMARK_25 = "25_run-clear-memory";
+export const BENCHMARK_26 = "26_run-10k-memory";
 
 export const BENCHMARK_30 = "30_startup";
 
@@ -85,20 +86,14 @@ type ISlowDowns = {
 };
 
 const slowDownsOSX: ISlowDowns = {
-  [BENCHMARK_03]: 8,
-  [BENCHMARK_04]: 8,
-  [BENCHMARK_05]: 4,
-  [BENCHMARK_08]: 2,
-  [BENCHMARK_09]: 4,
-};
-
-const slowDownsLinux: ISlowDowns = {
   [BENCHMARK_03]: 16,
   [BENCHMARK_04]: 16,
   [BENCHMARK_05]: 4,
   [BENCHMARK_08]: 2,
-  [BENCHMARK_09]: 8,
+  [BENCHMARK_09]: 8
 };
+
+const slowDownsLinux: ISlowDowns = slowDownsOSX;
 
 const slowDowns: ISlowDowns = process.platform == "darwin" ? slowDownsOSX : slowDownsLinux;
 
@@ -113,7 +108,8 @@ export function slowDownFactor(benchmark: TBenchmarkID): number | undefined {
 export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {id: BENCHMARK_01,
   label: "create rows",
-  description: "creating 1,000 rows" + slowDownNote(BENCHMARK_01),
+  description: "creating 1,000 rows (" + config.WARMUP_COUNT +
+  " warmup runs)." + slowDownNote(BENCHMARK_01),
   type: BenchmarkType.CPU,
   throttleCPU: slowDownFactor(BENCHMARK_01),
   allowBatching: true,
@@ -142,7 +138,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
 {
   id: BENCHMARK_04,
   label: "select row",
-  description: "highlighting a selected row. (no warmup runs)." +
+  description: "highlighting a selected row. (" +
+  config.WARMUP_COUNT +" warmup runs)." +
               slowDownNote(BENCHMARK_04),
   type: BenchmarkType.CPU,
   throttleCPU: slowDownFactor(BENCHMARK_04),
@@ -173,7 +170,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
 {
   id: BENCHMARK_07,
     label: "create many rows" + slowDownNote(BENCHMARK_07),
-    description: "creating 10,000 rows" + slowDownNote(BENCHMARK_07),
+    description: "creating 10,000 rows. (" +config.WARMUP_COUNT +" warmup runs with 1k rows)." + slowDownNote(BENCHMARK_07),
     type: BenchmarkType.CPU,
     throttleCPU: slowDownFactor(BENCHMARK_07),
     allowBatching: true,
@@ -191,7 +188,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
 {
   id: BENCHMARK_09,
   label: "clear rows",
-  description: "clearing a table with 1,000 rows." + slowDownNote(BENCHMARK_09),
+  description: "clearing a table with 1,000 rows." + slowDownNote(BENCHMARK_09)+ " (" +config.WARMUP_COUNT +" warmup runs).",
   type: BenchmarkType.CPU,
   throttleCPU: slowDownFactor(BENCHMARK_09),
   allowBatching: true,
@@ -209,7 +206,7 @@ export const memBenchmarkInfosArray: Array<MemBenchmarkInfo> = [
 {
   id: BENCHMARK_22,
   label: "run memory",
-  description: "Memory usage after adding 1000 rows.",
+  description: "Memory usage after adding 1,000 rows.",
   type: BenchmarkType.MEM,
 },
 {
@@ -218,16 +215,22 @@ export const memBenchmarkInfosArray: Array<MemBenchmarkInfo> = [
   description: "Memory usage after clicking update every 10th row 5 times",
   type: BenchmarkType.MEM,
 },
-{
-  id: BENCHMARK_24,
-  label: "replace 1k rows (5 cycles)",
-  description: "Memory usage after clicking create 1000 rows 5 times",
-  type: BenchmarkType.MEM,
-},
+// {
+//   id: BENCHMARK_24,
+//   label: "replace 1k rows (5 cycles)",
+//   description: "Memory usage after clicking create 1000 rows 5 times",
+//   type: BenchmarkType.MEM,
+// },
 {
   id: BENCHMARK_25,
   label: "creating/clearing 1k rows (5 cycles)",
   description: "Memory usage after creating and clearing 1000 rows 5 times",
+  type: BenchmarkType.MEM,
+},
+{
+  id: BENCHMARK_26,
+  label: "run memory 10k",
+  description: "Memory usage after adding 10,000 rows.",
   type: BenchmarkType.MEM,
 }];
 

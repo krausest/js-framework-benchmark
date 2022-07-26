@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Subject } from "rxjs";
 import { scan } from "rxjs/operators";
-import { bind } from "@react-rxjs/core";
+import { state, useStateObservable } from "@react-rxjs/core";
 
 const A = [
   "pretty",
@@ -86,7 +86,7 @@ const onSwap = () => rowEvents$.next({ type: "swap" });
 const onRemove = (payload) => rowEvents$.next({ type: "remove", payload });
 
 const init = [];
-const [useItems] = bind(
+const items$ = state(
   rowEvents$.pipe(
     scan((data, action) => {
       switch (action.type) {
@@ -126,7 +126,7 @@ const selected$ = new Subject();
 const onSelect = (id) => {
   selected$.next(id);
 };
-const [useSelectedId] = bind(selected$, 0);
+const selectedId$ = state(selected$, 0);
 
 const GlyphIcon = (
   <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -148,8 +148,8 @@ const Row = React.memo(({ item, isSelected }) => {
 });
 
 const RowList = () => {
-  const rows = useItems();
-  const selecteId = useSelectedId();
+  const rows = useStateObservable(items$);
+  const selecteId = useStateObservable(selectedId$);
   return rows.map((item) => (
     <Row key={item.id} item={item} isSelected={selecteId === item.id} />
   ));

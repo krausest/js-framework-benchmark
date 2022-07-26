@@ -6,13 +6,13 @@ interface Props {
   width: string;
 }
 
-const DropDown = ({label, children, width}: Props) => {
+const DropDown = ({label, children, width}: Props): JSX.Element => {
     const [open, setOpen] = useState(false);
     const toggle = useCallback((event: React.SyntheticEvent<HTMLElement>) => {
         event.stopPropagation();
         setOpen(!open)
       }, [open])
-    const click = (event: React.SyntheticEvent<HTMLElement>) => {
+    const click = () => {
       // There's a pretty strange corner case: Click on which frameworks and deselect all keyed
       // frameworks. Then select one keyed framework. This will cause scrolling such that the
       // which frameworks drop down will be scrolled out of the visible area.

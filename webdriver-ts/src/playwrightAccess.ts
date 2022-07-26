@@ -35,10 +35,11 @@ export async function checkElementExists(page: Page, selector: string) {
 }
 
 export async function clickElement(page: Page, selector: string) {
-  let elem = await page.locator(selector);
+  let elem = await page.$(selector);
+    // let elem = await page.locator(selector);
   if (!elem) throw `clickElementByXPath ${selector} failed. Element was not found.`;
   await elem.click();
-  // await elem.dispose();
+  await elem.dispose();
 }
 
 export async function checkElementContainsText(page: Page, selector: string, expectedText: string): Promise<void> {
@@ -93,11 +94,11 @@ function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
 }
 
 export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Promise<Browser> {
-  const width = 1280;
-  const height = 800;
-
+  let args = ['--window-size=1000,800', '--js-flags=--expose-gc'];
+  if (benchmarkOptions.headless) args.push('--headless=chrome');
   const browser = await chromium.launch({
-    headless: benchmarkOptions.headless,
+    args,
+    headless: false,
     // executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     executablePath: browserPath(benchmarkOptions),
   });

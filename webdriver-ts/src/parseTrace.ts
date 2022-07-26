@@ -5,8 +5,6 @@ import { config, initializeFrameworks } from './common';
 import { computeResultsCPU } from './timeline';
 import { writeResults } from "./writeResults";
 // let TimelineModelBrowser = require("./timeline-model-browser.js");
-let Tracelib = require('tracelib').default;
-// import Tracelib from 'tracelib';
 //var DevtoolsTimelineModel = require('devtools-timeline-model');
 
 async function main() {
@@ -53,4 +51,4 @@ async function readAll() {
     }
 }
 
-main().then(() => { }); 
+main().catch(err => {console.log("Error in isKeyed", err)}); 
