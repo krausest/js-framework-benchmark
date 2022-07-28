@@ -31,6 +31,9 @@ async function main() {
     }
   });
 
+  // Filter out invalid frameworks folders (like .DS_Store on mac)
+  frameworks = frameworks.filter( f => !!f.fullNameWithKeyedAndVersion )
+
   frameworks.forEach((framework, fIdx) => {
     allBenchmarks.forEach((benchmarkInfo) => {
 

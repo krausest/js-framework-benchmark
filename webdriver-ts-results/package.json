@@ -23,7 +23,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint './src/**/*.{ts,tsx}'",
-    "build-prod": "rimraf dist && cross-env NODE_ENV=\"production\" webpack --env prod -c webpack.config.js && rimraf table.html && rimraf \"BoxPlotTable*.js\" && cpx dist/table.html . && cpx \"dist/BoxPlotTable*.js\" ."
+    "build-prod": "rimraf dist && cross-env NODE_ENV=\"production\" NODE_OPTIONS=--openssl-legacy-provider webpack --env prod -c webpack.config.js && rimraf table.html && rimraf \"BoxPlotTable*.js\" && cpx dist/table.html . && cpx \"dist/BoxPlotTable*.js\" ."
   },
   "eslintConfig": {
     "extends": "react-app"
