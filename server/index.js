@@ -7,6 +7,7 @@ const app = express()
 const port = 8080
 
 let frameworkDirectory  = path.join(__dirname, "..", "frameworks");
+let webDriverResultDirectory  = path.join(__dirname, "..", "webdriver-ts-results");
 
 if (process.argv.length===3) {
   console.log("Changing working directory to "+process.argv[2]);
@@ -93,6 +94,7 @@ function addSiteIsolationForIndex(request, response, next) {
 app.use(addSiteIsolationForIndex);
 
 app.use('/frameworks', express.static(frameworkDirectory))
+app.use('/webdriver-ts-results', express.static(webDriverResultDirectory))
 app.use('/css', express.static(path.join(frameworkDirectory, '..', 'css')))
 
 app.get('/ls', async (req, res) => {
