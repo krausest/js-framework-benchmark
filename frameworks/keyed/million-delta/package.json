@@ -2,14 +2,19 @@
     "private": true,
     "type": "module",
     "scripts": {
-      "dev": "vite",
-      "build": "vite build",
-      "preview": "vite preview"
+        "dev": "vite",
+        "build-dev": "npm run dev",
+        "build": "vite build",
+        "build-prod": "npm run build",
+        "preview": "vite preview"
     },
     "dependencies": {
-      "million": "1.12.0"
+        "million": "1.12.0"
     },
     "devDependencies": {
-      "vite": "3.0.2"
+        "vite": "3.0.2"
+    },
+    "js-framework-benchmark": {
+        "frameworkVersionFromPackage": "million"
     }
-  }
+}
