@@ -46,7 +46,7 @@ export default function App() {
   }
 
   const updateEvery10 = () => {
-    for (let i = 0; i < Math.floor(list.length / 10); i += 10) {
+    for (let i = 0; i < list.length; i += 10) {
       const item = list[i]
       list[i] = { id: item.id, label: item.label + " !!!" }
     }
