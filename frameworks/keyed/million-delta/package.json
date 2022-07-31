@@ -4,7 +4,7 @@
     "scripts": {
         "dev": "vite",
         "build-dev": "npm run dev",
-        "build": "vite build",
+        "build": "vite build  --base '/frameworks/keyed/million-delta/dist/'",
         "build-prod": "npm run build",
         "preview": "vite preview"
     },
@@ -15,6 +15,7 @@
         "vite": "3.0.2"
     },
     "js-framework-benchmark": {
-        "frameworkVersionFromPackage": "million"
+        "frameworkVersionFromPackage": "million",    
+        "customURL": "/dist"
     }
 }
