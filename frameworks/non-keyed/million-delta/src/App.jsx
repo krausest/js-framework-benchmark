@@ -53,8 +53,12 @@ export default function App() {
   }
 
   const swapRows = () => {
-    list.splice(1, 1, list.splice(998, 1, list[1])[0])
+    if (list.length >= 999) {
+      list.splice(1, 1, list.splice(998, 1, list[1])[0])
+    }
   }
+
+  const remove = (id) => list.splice(list.findIndex((z) => z.id === id), 1)
 
   return (
     <div className="container">
@@ -87,20 +91,26 @@ export default function App() {
       <table className="table table-hover table-striped test-data">
         <tbody delta={delta}>
           {list.map((item) => (
-            <tr className={selected === item.id ? "danger" : ""}>
-              <td class="col-md-1">{item.id}</td>
-              <td class="col-md-4">
-                <a onClick={() => setSelected(item.id)}>{item.label}</a>
-              </td>
-              <td class="col-md-1">
-                <a onClick={() => list.splice(list.findIndex((z) => z.id === item.id), 1)}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-              </td>
-              <td class="col-md-6" />
-            </tr>
+            <Row item={item} selected={selected} remove={remove} setSelected={setSelected} />
           ))}
         </tbody>
       </table>
       <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
     </div>
   );
+}
+
+function Row({ item, selected, remove, setSelected }) {
+  return (
+    <tr className={selected === item.id ? "danger" : ""}>
+      <td class="col-md-1">{item.id}</td>
+      <td class="col-md-4">
+        <a onClick={() => setSelected(item.id)}>{item.label}</a>
+      </td>
+      <td class="col-md-1">
+        <a onClick={() => remove(item.id)}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+      </td>
+      <td class="col-md-6" />
+    </tr>
+  )
 }
