@@ -1,4 +1,4 @@
-import { useState } from 'million/react';
+import { render } from 'million';
 
 const random = (max) => Math.round(Math.random() * 1000) % max;
 
@@ -68,71 +68,70 @@ const generate = () => {
   };
 };
 
-export default function App() {
-  const [list, setList] = useState([]);
-  const [selected, setSelected] = useState(0);
+const list = [];
+let selected = 0;
 
-  const clear = () => {
-    setSelected(0);
-    setList([]);
-  };
+const clear = () => {
+  selected = 0;
+  list.splice(0, list.length);
+  rerender();
+};
 
-  const createArray = (count) => {
-    const l = [];
-    for (let i = 0; i < count; i++) {
-      l.push(generate());
-    }
-    return l;
-  };
+const append = (count) => {
+  for (let i = 0; i < count; i++) {
+    list.push(generate());
+  }
+  rerender();
+};
 
-  const append = (count) => {
-    setList((prev) => prev.concat(createArray(count)));
-  };
+const create1k = () => {
+  clear();
+  append(1000);
+  rerender();
+};
 
-  const create1k = () => {
-    setList(createArray(1000));
-  };
+const create10k = () => {
+  clear();
+  append(10000);
+  rerender();
+};
 
-  const create10k = () => {
-    setList(createArray(10000));
-  };
+const append1k = () => {
+  append(1000);
+  rerender();
+};
 
-  const append1k = () => {
-    append(1000);
-  };
+const updateEvery10 = () => {
+  for (let i = 0; i < list.length; i += 10) {
+    const item = list[i];
+    list[i] = { id: item.id, label: item.label + ' !!!' };
+  }
+  rerender();
+};
 
-  const updateEvery10 = () => {
-    setList((prev) => {
-      const newList = [...prev];
-      for (let i = 0; i < prev.length; i += 10) {
-        const item = newList[i];
-        newList[i] = { id: item.id, label: item.label + ' !!!' };
-      }
-      return newList;
-    });
-  };
+const swapRows = () => {
+  if (list.length >= 999) {
+    list.splice(1, 1, list.splice(998, 1, list[1])[0]);
+  }
+  rerender();
+};
 
-  const swapRows = () => {
-    if (list.length >= 1000) {
-      setList((prev) => [
-        prev[0],
-        prev[998],
-        ...prev.slice(2, 998),
-        prev[1],
-        prev[999],
-        ...(list.length > 1000 ? prev.slice(999) : []),
-      ]);
-    }
-  };
+const remove = (id) => {
+  list.splice(
+    list.findIndex((z) => z.id === id),
+    1
+  );
+  rerender();
+};
 
-  const remove = (id) => setList(list.filter((i) => i.id !== id));
-
-  return (
+function rerender() {
+  render(
+    document.getElementById('main'),
     <div className="container">
       <div className="jumbotron">
         <div className="row">
           <div class="col-md-6">
-            <h1>Million React keyed</h1>
+            <h1>Million keyed</h1>
           </div>
           <div class="col-md-6">
             <div class="row">
@@ -141,7 +140,9 @@ export default function App() {
                   type="button"
                   class="btn btn-primary btn-block"
                   id="run"
-                  onClick={create1k}
+                  onClick={() => {
+                    create1k();
+                  }}
                 >
                   Create 1,000 rows
                 </button>
@@ -151,7 +152,9 @@ export default function App() {
                   type="button"
                   class="btn btn-primary btn-block"
                   id="runlots"
-                  onClick={create10k}
+                  onClick={() => {
+                    create10k();
+                  }}
                 >
                   Create 10,000 rows
                 </button>
@@ -161,7 +164,9 @@ export default function App() {
                   type="button"
                   class="btn btn-primary btn-block"
                   id="add"
-                  onClick={append1k}
+                  onClick={() => {
+                    append1k();
+                  }}
                 >
                   Append 1,000 rows
                 </button>
@@ -171,7 +176,9 @@ export default function App() {
                   type="button"
                   class="btn btn-primary btn-block"
                   id="update"
-                  onClick={updateEvery10}
+                  onClick={() => {
+                    updateEvery10();
+                  }}
                 >
                   Update every 10th row
                 </button>
@@ -181,7 +188,9 @@ export default function App() {
                   type="button"
                   class="btn btn-primary btn-block"
                   id="clear"
-                  onClick={clear}
+                  onClick={() => {
+                    clear();
+                  }}
                 >
                   Clear
                 </button>
@@ -191,7 +200,9 @@ export default function App() {
                   type="button"
                   class="btn btn-primary btn-block"
                   id="swaprows"
-                  onClick={swapRows}
+                  onClick={() => {
+                    swapRows();
+                  }}
                 >
                   Swap Rows
                 </button>
@@ -205,10 +216,9 @@ export default function App() {
           {list.map((item) => (
             <Row
               key={item.id}
-              remove={remove}
-              selected={selected}
-              setSelected={setSelected}
               item={item}
+              selected={selected}
+              remove={remove}
             />
           ))}
         </tbody>
@@ -221,15 +231,26 @@ export default function App() {
   );
 }
 
-function Row({ item, remove, selected, setSelected }) {
+function Row({ item, selected, remove }) {
   return (
     <tr className={selected === item.id ? 'danger' : ''}>
       <td class="col-md-1">{item.id}</td>
       <td class="col-md-4">
-        <a onClick={() => setSelected(item.id)}>{item.label}</a>
+        <a
+          onClick={() => {
+            selected = item.id;
+            rerender();
+          }}
+        >
+          {item.label}
+        </a>
       </td>
       <td class="col-md-1">
-        <a onClick={() => remove(item.id)}>
+        <a
+          onClick={() => {
+            remove(item.id);
+          }}
+        >
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>
       </td>
@@ -237,3 +258,5 @@ function Row({ item, remove, selected, setSelected }) {
     </tr>
   );
 }
+
+rerender();

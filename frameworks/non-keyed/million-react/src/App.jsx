@@ -1,4 +1,4 @@
-import { useState } from 'million/react';
+import { useList, useState } from 'million/react';
 
 const random = (max) => Math.round(Math.random() * 1000) % max;
 
@@ -69,32 +69,28 @@ const generate = () => {
 };
 
 export default function App() {
-  const [list, setList] = useState([]);
+  const [list, delta] = useList([]);
   const [selected, setSelected] = useState(0);
 
   const clear = () => {
     setSelected(0);
-    setList([]);
-  };
-
-  const createArray = (count) => {
-    const l = [];
-    for (let i = 0; i < count; i++) {
-      l.push(generate());
-    }
-    return l;
+    list.splice(0, list.length);
   };
 
   const append = (count) => {
-    setList((prev) => prev.concat(createArray(count)));
+    for (let i = 0; i < count; i++) {
+      list.push(generate());
+    }
   };
 
   const create1k = () => {
-    setList(createArray(1000));
+    clear();
+    append(1000);
   };
 
   const create10k = () => {
-    setList(createArray(10000));
+    clear();
+    append(10000);
   };
 
   const append1k = () => {
@@ -102,37 +98,30 @@ export default function App() {
   };
 
   const updateEvery10 = () => {
-    setList((prev) => {
-      const newList = [...prev];
-      for (let i = 0; i < prev.length; i += 10) {
-        const item = newList[i];
-        newList[i] = { id: item.id, label: item.label + ' !!!' };
-      }
-      return newList;
-    });
-  };
-
-  const swapRows = () => {
-    if (list.length >= 1000) {
-      setList((prev) => [
-        prev[0],
-        prev[998],
-        ...prev.slice(2, 998),
-        prev[1],
-        prev[999],
-        ...(list.length > 1000 ? prev.slice(999) : []),
-      ]);
+    for (let i = 0; i < list.length; i += 10) {
+      const item = list[i];
+      list[i] = { id: item.id, label: item.label + ' !!!' };
     }
   };
 
-  const remove = (id) => setList(list.filter((i) => i.id !== id));
+  const swapRows = () => {
+    if (list.length >= 999) {
+      list.splice(1, 1, list.splice(998, 1, list[1])[0]);
+    }
+  };
+
+  const remove = (id) =>
+    list.splice(
+      list.findIndex((z) => z.id === id),
+      1
+    );
 
   return (
     <div className="container">
       <div className="jumbotron">
         <div className="row">
           <div class="col-md-6">
-            <h1>Million React keyed</h1>
+            <h1>Million React</h1>
           </div>
           <div class="col-md-6">
             <div class="row">
@@ -201,7 +190,7 @@ export default function App() {
         </div>
       </div>
       <table className="table table-hover table-striped test-data">
-        <tbody>
+        <tbody delta={delta}>
           {list.map((item) => (
             <Row
               key={item.id}
@@ -221,7 +210,7 @@ export default function App() {
   );
 }
 
-function Row({ item, remove, selected, setSelected }) {
+function Row({ item, selected, remove, setSelected }) {
   return (
     <tr className={selected === item.id ? 'danger' : ''}>
       <td class="col-md-1">{item.id}</td>
