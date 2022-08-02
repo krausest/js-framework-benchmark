@@ -2,8 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  // mode: 'production',
-  mode: 'development',
+  mode: 'production',
+  // mode: 'development',
 	entry: {
 		main: path.join(__dirname, 'src', 'main.jsx'),
 	},
