@@ -6,8 +6,8 @@
   },
   "source": "src/main.html",
   "scripts": {
-    "build-dev": "NODE_OPTIONS=--openssl-legacy-provider webpack -w -d",
-    "build-prod": "NODE_OPTIONS=--openssl-legacy-provider webpack"
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack"
   },
   "author": "Alexis Bouhet",
   "license": "Apache-2.0",
