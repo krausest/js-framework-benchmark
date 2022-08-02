@@ -80,7 +80,7 @@ export class TableData {
 
   select = (id) => this.selected = id;
   remove = (idToRemove) => {
-    let index = this.data.findIndex(datum => datum.id = idToRemove);
+    let index = this.data.findIndex(datum => datum.id === idToRemove);
 
     this.data.splice(index, 1);
   };
