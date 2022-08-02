@@ -35,7 +35,7 @@ export class TableData {
     * Reactive version of a native Array.
     * (could be handled via decorator)
     */
-  #data = Cell([])
+  #data = Cell(reactive.array())
   get data() {
     return this.#data.current;
   }
