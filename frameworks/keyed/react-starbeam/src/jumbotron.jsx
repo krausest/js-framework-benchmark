@@ -1,3 +1,5 @@
+import React from 'react';
+
 function Button({ id, title, onClick }) {
   return (
     <div className="col-sm-6 smallpad">
@@ -15,7 +17,7 @@ export function Jumbotron({ table }) {
     <div className="jumbotron">
       <div className="row">
         <div className="col-md-6">
-          <h1>React keyed</h1>
+          <h1>React with starbeam keyed</h1>
         </div>
         <div className="col-md-6">
           <div className="row">

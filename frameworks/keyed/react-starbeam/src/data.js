@@ -28,18 +28,19 @@ export class TableData {
     return this.#selected.current;
   }
   set selected(value) {
-    this.#selected.update(value);
+    this.#selected.set(value);
   }
 
   /**
     * Reactive version of a native Array.
+    * (could be handled via decorator)
     */
-  #data = reactive.array();
+  #data = Cell([])
   get data() {
-    return this.#data;
+    return this.#data.current;
   }
   set data(newArray) {
-    this.#data = reactive.array(newArray);
+    this.#data.set(reactive.array(newArray));
   }
   /*******************************
    * End Reactive versions of data
@@ -66,9 +67,9 @@ export class TableData {
     }
   };
 
-  clear = () => this.data.clear();
+  clear = () => this.data = [];
   swapRows = () => {
-    if (data.length > 998) {
+    if (this.data.length > 998) {
       let second = this.data[1];
       let nearEnd = this.data[998];
 
@@ -108,6 +109,7 @@ const nouns = [
   "burger", "pizza", "mouse", "keyboard"
 ];
 
+let rowId = 1;
 function buildData(count = DATA_SIZE) {
   const data = new Array(count);
 
