@@ -87,26 +87,22 @@ function* Main(this: Context) {
                         </div>
                     </div>
                 </div>
-                <Table />
+                <table className="table table-hover table-striped test-data">
+                    <tbody>
+                        <Rows />
+                    </tbody>
+                </table>
                 <span className="preloadicon glyphicon glyphicon-remove" ariaHidden="true" />
             </div>
         )
     }
 }
 
-function* Table(this: Context) {
+function* Rows(this: Context) {
     const store = this.find(Store)
 
     while (true) {
-        yield (
-            <table className="table table-hover table-striped test-data">
-                <tbody>
-                    {store.rows.map((row) => (
-                        <Row data={row} key={row.id} />
-                    ))}
-                </tbody>
-            </table>
-        )
+        yield store.rows.map((row) => <Row data={row} key={row.id} />)
     }
 }
 
