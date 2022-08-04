@@ -130,15 +130,15 @@ function rerender() {
     <div className="container">
       <div className="jumbotron">
         <div className="row">
-          <div class="col-md-6">
+          <div className="col-md-6">
             <h1>Million</h1>
           </div>
-          <div class="col-md-6">
-            <div class="row">
-              <div class="col-sm-6 smallpad">
+          <div className="col-md-6">
+            <div className="row">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="run"
                   onClick={() => {
                     create1k();
@@ -147,10 +147,10 @@ function rerender() {
                   Create 1,000 rows
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="runlots"
                   onClick={() => {
                     create10k();
@@ -159,10 +159,10 @@ function rerender() {
                   Create 10,000 rows
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="add"
                   onClick={() => {
                     append1k();
@@ -171,10 +171,10 @@ function rerender() {
                   Append 1,000 rows
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="update"
                   onClick={() => {
                     updateEvery10();
@@ -183,10 +183,10 @@ function rerender() {
                   Update every 10th row
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="clear"
                   onClick={() => {
                     clear();
@@ -195,10 +195,10 @@ function rerender() {
                   Clear
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="swaprows"
                   onClick={() => {
                     swapRows();
@@ -214,23 +214,23 @@ function rerender() {
       <table className="table table-hover table-striped test-data">
         <tbody>
           {list.map((item) => (
-            <Row item={item} selected={selected} remove={remove} />
+            <Row item={item} remove={remove} />
           ))}
         </tbody>
       </table>
       <span
-        class="preloadicon glyphicon glyphicon-remove"
+        className="preloadicon glyphicon glyphicon-remove"
         aria-hidden="true"
       ></span>
     </div>
   );
 }
 
-function Row({ item, selected, remove }) {
+function Row({ item, remove }) {
   return (
     <tr className={selected === item.id ? 'danger' : ''}>
-      <td class="col-md-1">{item.id}</td>
-      <td class="col-md-4">
+      <td className="col-md-1">{item.id}</td>
+      <td className="col-md-4">
         <a
           onClick={() => {
             selected = item.id;
@@ -240,16 +240,16 @@ function Row({ item, selected, remove }) {
           {item.label}
         </a>
       </td>
-      <td class="col-md-1">
+      <td className="col-md-1">
         <a
           onClick={() => {
             remove(item.id);
           }}
         >
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>
       </td>
-      <td class="col-md-6" />
+      <td className="col-md-6" />
     </tr>
   );
 }
