@@ -16,7 +16,7 @@
         "build-prod": "webpack --mode production"
     },
     "dependencies": {
-        "whatsup": "2.3.3"
+        "whatsup": "2.3.6"
     },
     "devDependencies": {
         "@babel/cli": "7.18.6",
