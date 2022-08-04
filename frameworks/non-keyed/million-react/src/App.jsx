@@ -120,65 +120,65 @@ export default function App() {
     <div className="container">
       <div className="jumbotron">
         <div className="row">
-          <div class="col-md-6">
+          <div className="col-md-6">
             <h1>Million React</h1>
           </div>
-          <div class="col-md-6">
-            <div class="row">
-              <div class="col-sm-6 smallpad">
+          <div className="col-md-6">
+            <div className="row">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="run"
                   onClick={create1k}
                 >
                   Create 1,000 rows
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="runlots"
                   onClick={create10k}
                 >
                   Create 10,000 rows
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="add"
                   onClick={append1k}
                 >
                   Append 1,000 rows
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="update"
                   onClick={updateEvery10}
                 >
                   Update every 10th row
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="clear"
                   onClick={clear}
                 >
                   Clear
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div className="col-sm-6 smallpad">
                 <button
                   type="button"
-                  class="btn btn-primary btn-block"
+                  className="btn btn-primary btn-block"
                   id="swaprows"
                   onClick={swapRows}
                 >
@@ -203,7 +203,7 @@ export default function App() {
         </tbody>
       </table>
       <span
-        class="preloadicon glyphicon glyphicon-remove"
+        className="preloadicon glyphicon glyphicon-remove"
         aria-hidden="true"
       ></span>
     </div>
@@ -213,16 +213,16 @@ export default function App() {
 function Row({ item, selected, remove, setSelected }) {
   return (
     <tr className={selected === item.id ? 'danger' : ''}>
-      <td class="col-md-1">{item.id}</td>
-      <td class="col-md-4">
+      <td className="col-md-1">{item.id}</td>
+      <td className="col-md-4">
         <a onClick={() => setSelected(item.id)}>{item.label}</a>
       </td>
-      <td class="col-md-1">
+      <td className="col-md-1">
         <a onClick={() => remove(item.id)}>
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>
       </td>
-      <td class="col-md-6" />
+      <td className="col-md-6" />
     </tr>
   );
 }
