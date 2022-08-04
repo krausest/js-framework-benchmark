@@ -69,7 +69,12 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             });
         // }
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
-            await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
+            try {
+              await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
+            } catch (ex) {
+              console.log("**** loading benchmark failed, retrying");
+              await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
+            }
 
             // await (driver as any).sendDevToolsCommand('Network.enable');
             // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -113,11 +118,11 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
               await page.emulateCPUThrottling(benchmark.benchmarkInfo.throttleCPU);
           }
   
-            await page.tracing.start({path: fileNameTrace(framework, benchmark.benchmarkInfo, i), 
-                screenshots: false,
-                categories:categories
-            });
-           await forceGC(page, client);
+          await page.tracing.start({path: fileNameTrace(framework, benchmark.benchmarkInfo, i), 
+            screenshots: false,
+            categories:categories
+          });
+          await forceGC(page, client);
             console.log("runBenchmark");
             // let m1 = await page.metrics();
             await runBenchmark(page, benchmark, framework);

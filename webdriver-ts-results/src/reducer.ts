@@ -3,7 +3,8 @@ import { benchmarks as benchmark_orig, frameworks, results as rawResults } from 
 
 // Temporarily disable script bootup time
 //const benchmarks = benchmark_orig;
-const benchmarks = benchmark_orig.filter(b => b.id !== '32_startup-bt');
+const benchmarks = benchmark_orig.filter(b => b.id !== '32_startup-bt'
+        && b.id !== '33_startup-mainthreadcost');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const jStat = require('jstat').jStat;
