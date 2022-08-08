@@ -1,0 +1,52 @@
+{
+  "name": "js-framework-benchmark-lit-starbeam",
+  "version": "1.0.0",
+  "description": "Starbeam demo using Lit",
+  "main": "index.js",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "lit:@Starbeam/core",
+    "useShadowRoot": true
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "keywords": [
+    "lit-html",
+    "starbeam"
+  ],
+  "author": "NullVoxPopuli",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
+  "dependencies": {
+    "lit": "^2.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.10",
+    "@babel/plugin-proposal-decorators": "^7.18.10",
+    "@babel/plugin-transform-runtime": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-typescript": "^7.18.6",
+    "@babel/runtime": "^7.18.9",
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@starbeam/core": "^0.6.0",
+    "@starbeam/js": "^0.6.0",
+    "@starbeam/peer": "^1.0.8",
+    "@starbeam/react": "^0.5.8",
+    "rollup": "2.77.2",
+    "rollup-plugin-minify-html-literals": "^1.2.6",
+    "rollup-plugin-terser": "7.0.2",
+    "rollup-plugin-ts": "^3.0.2",
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4"
+  }
+}
