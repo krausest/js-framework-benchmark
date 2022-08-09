@@ -33,8 +33,8 @@
     "webpack-dev-server": "^4.9.3"
   },
   "dependencies": {
-    "@starbeam/core": "^0.5.8",
-    "@starbeam/js": "^0.5.8",
+    "@starbeam/core": "^0.6.0",
+    "@starbeam/js": "^0.6.0",
     "@starbeam/peer": "^1.0.8",
     "@starbeam/react": "^0.5.8",
     "react": "^18.2.0",
