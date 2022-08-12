@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "lit:@Starbeam/core",
+    "frameworkVersionFromPackage": "lit:@starbeam/core",
     "useShadowRoot": true
   },
   "scripts": {
