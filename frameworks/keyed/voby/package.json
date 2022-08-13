@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-voby",
-  "version": "0.27.7",
+  "version": "0.37.0",
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "voby"
@@ -16,9 +16,9 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "voby": "0.27.7"
+    "voby": "0.37.0"
   },
   "devDependencies": {
-    "esbuild": "0.14.39"
+    "esbuild": "0.15.1"
   }
 }
