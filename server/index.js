@@ -65,6 +65,14 @@ async function loadFrameworkInfo(keyedDir, directoryName) {
     return result;
   }
 
+function isFrameworkDir(keyedDir, directoryName) {
+  const frameworkPath = path.resolve(frameworkDirectory, keyedDir, directoryName);
+  const packageJSONPath = path.resolve(frameworkPath, "package.json");  
+  const packageLockJSONPath = path.resolve(frameworkPath, "package-lock.json");  
+  const exists = fs.existsSync(packageJSONPath) && fs.existsSync(packageLockJSONPath);
+  return exists;
+}
+
 async function loadFrameworkVersionInformation(filterForFramework) {
     // let matchesDirectoryArg = (directoryName) =>
     // frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
@@ -76,8 +84,10 @@ async function loadFrameworkVersionInformation(filterForFramework) {
       for (let directory of directories) {
         let pathInFrameworksDir = keyedType + "/" + directory;
         if (!filterForFramework || filterForFramework===pathInFrameworksDir) {
-          let fi = loadFrameworkInfo(keyedType, directory);
-          resultsProm.push(fi);
+          if (isFrameworkDir(keyedType, directory)) {
+            let fi = loadFrameworkInfo(keyedType, directory);
+            resultsProm.push(fi);
+          }
         }
       }
     }
