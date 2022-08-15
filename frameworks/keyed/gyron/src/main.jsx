@@ -113,8 +113,14 @@ function swap() {
     const d998 = _rows[998];
     _rows[1] = d998;
     _rows[998] = d1;
-    rows.value = _rows.slice();
   }
+}
+
+function remove(id) {
+  rows.value.splice(
+    rows.value.findIndex((d) => d.id === id),
+    1
+  );
 }
 
 const Button = FC(({ text, id, onClick }) => {
@@ -144,19 +150,16 @@ const ButtonGroup = FC(() => {
 });
 
 const Table = FC(() => {
-  function remove(id) {
-    rows.value.splice(
-      rows.value.findIndex((d) => d.id === id),
-      1
-    );
-  }
-
   return (
     <table class="table table-hover table-striped test-data">
       <tbody>
         {rows.value.map(({ id, label }) => {
           return (
-            <tr key={id} class={id === selected.value ? "danger" : null}>
+            <tr
+              key={id}
+              class={id === selected.value ? "danger" : null}
+              memo={[id === selected.value, label]}
+            >
               <td class="col-md-1">{id}</td>
               <td class="col-md-4">
                 <a onClick={() => select(id)}>{label}</a>
@@ -185,7 +188,10 @@ const Main = FC(() => {
         <ButtonGroup />
       </div>
       <Table />
-      <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+      <span
+        class="preloadicon glyphicon glyphicon-remove"
+        aria-hidden="true"
+      ></span>
     </div>
   );
 });
