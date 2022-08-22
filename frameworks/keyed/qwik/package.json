@@ -11,7 +11,7 @@
     "build-prod": "rollup -c --environment production"
   },
   "devDependencies": {
-    "@builder.io/qwik": "0.0.100",
+    "@builder.io/qwik": "0.0.101",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.6",

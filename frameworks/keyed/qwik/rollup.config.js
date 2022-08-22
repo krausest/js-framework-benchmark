@@ -10,7 +10,7 @@ export default async function () {
     ],
     preserveEntrySignatures: true,
     plugins: [
-      nodeResolve({ extensions: [".tsx", ".ts", ".jsx", ".js"] }),
+      nodeResolve({ extensions: [".tsx", ".ts", ".jsx", ".js"], exportConditions: ["min"] }),
       qwikRollup({
         srcDir: resolve('./src'),
         entryStrategy: {type: 'single' }
