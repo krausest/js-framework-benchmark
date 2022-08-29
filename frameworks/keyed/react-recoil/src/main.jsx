@@ -25,9 +25,8 @@ const buildData = (count) => {
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: nextId++,
-      label: `${A[random(A.length)]} ${C[random(C.length)]} ${
-        N[random(N.length)]
-      }`,
+      label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]
+        }`,
     };
   }
 
@@ -138,15 +137,15 @@ const Jumbotron = memo(
       setAppState(({ data, selected }) =>
         data.length > 998
           ? {
-              data: [
-                data[0],
-                data[998],
-                ...data.slice(2, 998),
-                data[1],
-                data[999],
-              ],
-              selected,
-            }
+            data: [
+              data[0],
+              data[998],
+              ...data.slice(2, 998),
+              data[1],
+              data[999],
+            ],
+            selected,
+          }
           : state
       );
     }, [setAppState]);
@@ -203,9 +202,9 @@ const Main = () => {
   );
 };
 
-render(
+const root = createRoot(document.getElementById('main'));
+root.render(
   <RecoilRoot>
     <Main />
-  </RecoilRoot>,
-  document.getElementById("main")
-);
+  </RecoilRoot>
+); 
