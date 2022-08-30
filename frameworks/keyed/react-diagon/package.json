@@ -35,8 +35,8 @@
     "typescript": "4.7.4"
   },
   "dependencies": {
-    "diagon": "0.10.0",
-    "diagon-react": "0.10.0",
+    "diagon": "0.13.0",
+    "diagon-react": "0.13.0",
     "react": "~18.2.0",
     "react-dom": "~18.2.0"
   }

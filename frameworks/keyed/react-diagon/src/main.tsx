@@ -5,7 +5,7 @@ import { FC, memo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 const recorder = createReactRecorder();
-const { useProjectedSnapshot, useSnapshot } = recorder;
+const { useProjectedSnap, useSnap } = recorder;
 
 interface Item {
 	id: number,
@@ -140,8 +140,8 @@ interface RowProps {
 const selectedSelector = (state: State) => state.selected;
 
 const Row: FC<RowProps> = memo(({ item }) => {
-	const isSelected = useProjectedSnapshot(state, selectedSelector, state => areSame(state.selected, item), [item.id]);
-	const label = useSnapshot(item, item => item.label);
+	const isSelected = useProjectedSnap(state, selectedSelector, state => areSame(state.selected, item), [item.id]);
+	const label = useSnap(item, item => item.label);
 
 	if ((item.id % 1000) === 0)
 		console.log(item.id);
@@ -214,7 +214,7 @@ const Jumbotron: FC = memo(() => {
 });
 
 const Main = () => {
-	const [items] = useSnapshot(ensureProxy(state), state => [elements(state.items)]);
+	const [items] = useSnap(ensureProxy(state), state => [elements(state.items)]);
 	return (
 		<div className="container">
 			<Jumbotron />
