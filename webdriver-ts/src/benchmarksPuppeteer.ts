@@ -249,6 +249,7 @@ export const benchUpdate5Memory = new (class extends MemBenchmarkPuppeteer {
   }
   async run(page: Page) {
     await clickElement(page, "pierce/#run");
+    await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(2)>a");
     for (let i = 0; i < 5; i++) {
       await clickElement(page, "pierce/#update");
       await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(2)>a", " !!!".repeat(i));

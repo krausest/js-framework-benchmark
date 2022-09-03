@@ -127,7 +127,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             // let m1 = await page.metrics();
             await runBenchmark(page, benchmark, framework);
 
-            await wait(10);
+            await wait(40);
             await page.tracing.stop();
             // let m2 = await page.metrics();
             if (benchmark.benchmarkInfo.throttleCPU) {
@@ -181,8 +181,8 @@ async function runMemBenchmark(
           for (let i = 0; i < msg.args().length; ++i) console.log(`BROWSER: ${msg.args()[i]}`);
         });
       }
-
-      await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      
+      await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {

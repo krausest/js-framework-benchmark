@@ -343,13 +343,19 @@ export class ResultTableData {
                 return result.mean;
             }
         }
-        const min = benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, selectFn(result)), Number.POSITIVE_INFINITY);
+        let min = Math.max(benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, selectFn(result)), Number.POSITIVE_INFINITY));
+        // if (benchmark.type === BenchmarkType.CPU) {
+        //     min = Math.max(1000/60, min);
+        // }
         return this.frameworks.map(f => {
             const result = this.results(benchmark, f);
             if (result === null) return null;
 
             const value = selectFn(result);
-            const factor = value/min;
+            let factor = value/min;
+            // if (benchmark.type === BenchmarkType.CPU) {
+            //     factor = Math.max(1, factor);
+            // }    
             const conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
             const conficenceIntervalStr = benchmark.type === BenchmarkType.MEM ? null : conficenceInterval.toFixed(1);
             const formattedValue = formatEn.format(value);
