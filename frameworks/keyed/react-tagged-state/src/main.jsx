@@ -30,8 +30,12 @@ const data = createSignal([]);
 
 let selected = createSignal(0);
 
+const GlyphIcon = (
+    <span className="glyphicon glyphicon-remove" aria-hidden="true"/>
+);
+
 const Row = memo(({item}) => {
-    const isSelected = useSelector(() => item.id === selected());
+    const isSelected = useSelector(() => item.id === selected(), {pure: true});
     const handleSelect = useCallback(() => {
         selected(item.id);
     }, [item.id]);
@@ -46,7 +50,7 @@ const Row = memo(({item}) => {
                 <a onClick={handleSelect}>{item.label}</a>
             </td>
             <td className="col-md-1">
-                <a onClick={handleRemove}><span className="glyphicon glyphicon-remove" aria-hidden="true"/></a>
+                <a onClick={handleRemove}>{GlyphIcon}</a>
             </td>
             <td className="col-md-6"/>
         </tr>
