@@ -5,5 +5,8 @@ const baseConfig = require('./base.config');
 module.exports = merge(baseConfig, {
     devServer: {
         historyApiFallback: true,
+        static: {
+            directory: path.join(__dirname, '../../assets'),
+        },
     },
 });

@@ -14,17 +14,16 @@
   "license": "",
   "private": "true",
   "dependencies": {
-    "mahal": "^1.4.0"
+    "mahal": "^1.4.3"
   },
   "devDependencies": {
+    "@mahaljs/webpack-loader": "^1.4.3",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^10.2.4",
-    "cpy-cli": "^4.1.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.4.1",
     "html-webpack-plugin": "^5.2.0",
-    "mahal-webpack-loader": "^1.4.0",
     "mini-css-extract-plugin": "^2.5.3",
     "sass": "^1.49.0",
     "sass-loader": "^12.4.0",
