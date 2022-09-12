@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@riotjs/compiler": "^6.3.2",
-    "@riotjs/webpack-loader": "5.0.0",
+    "@riotjs/webpack-loader": "6.0.0",
     "webpack": "4.42.1",
     "webpack-cli": "3.3.11"
   },
