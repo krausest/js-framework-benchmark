@@ -1,4 +1,4 @@
-import { memo, useReducer } from 'react';
+import { memo, useCallback, useReducer, useTransition } from 'react';
 import { createRoot } from 'react-dom/client';
 
 const random = (max) => Math.round(Math.random() * 1000) % max;
@@ -107,14 +107,16 @@ const Jumbotron = memo(({ dispatch }) => (
 
 const Main = () => {
   const [{ data, selected }, dispatch] = useReducer(listReducer, initialState);
+  const [, startTransition] = useTransition();
+  const transitionedDispatch = useCallback((...args) => startTransition(() => dispatch(...args)), []);
 
   return (<div className="container">
-    <Jumbotron dispatch={dispatch} />
+    <Jumbotron dispatch={transitionedDispatch} />
     <table className="table table-hover table-striped test-data">
       <tbody>
-        {data.map(item => (
-          <Row key={item.id} item={item} selected={selected === item.id} dispatch={dispatch} />
-        ))}
+      {data.map(item => (
+        <Row key={item.id} item={item} selected={selected === item.id} dispatch={transitionedDispatch} />
+      ))}
       </tbody>
     </table>
     <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
