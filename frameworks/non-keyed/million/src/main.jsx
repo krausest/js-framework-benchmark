@@ -140,9 +140,7 @@ function rerender() {
                   type="button"
                   className="btn btn-primary btn-block"
                   id="run"
-                  onClick={() => {
-                    create1k();
-                  }}
+                  onClick={create1k}
                 >
                   Create 1,000 rows
                 </button>
@@ -152,9 +150,7 @@ function rerender() {
                   type="button"
                   className="btn btn-primary btn-block"
                   id="runlots"
-                  onClick={() => {
-                    create10k();
-                  }}
+                  onClick={create10k}
                 >
                   Create 10,000 rows
                 </button>
@@ -164,9 +160,7 @@ function rerender() {
                   type="button"
                   className="btn btn-primary btn-block"
                   id="add"
-                  onClick={() => {
-                    append1k();
-                  }}
+                  onClick={append1k}
                 >
                   Append 1,000 rows
                 </button>
@@ -176,9 +170,7 @@ function rerender() {
                   type="button"
                   className="btn btn-primary btn-block"
                   id="update"
-                  onClick={() => {
-                    updateEvery10();
-                  }}
+                  onClick={updateEvery10}
                 >
                   Update every 10th row
                 </button>
@@ -188,9 +180,7 @@ function rerender() {
                   type="button"
                   className="btn btn-primary btn-block"
                   id="clear"
-                  onClick={() => {
-                    clear();
-                  }}
+                  onClick={clear}
                 >
                   Clear
                 </button>
@@ -200,9 +190,7 @@ function rerender() {
                   type="button"
                   className="btn btn-primary btn-block"
                   id="swaprows"
-                  onClick={() => {
-                    swapRows();
-                  }}
+                  onClick={swapRows}
                 >
                   Swap Rows
                 </button>
