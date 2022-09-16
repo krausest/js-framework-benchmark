@@ -106,7 +106,9 @@ app.use(addSiteIsolationForIndex);
 app.use('/frameworks', express.static(frameworkDirectory))
 app.use('/webdriver-ts-results', express.static(webDriverResultDirectory))
 app.use('/css', express.static(path.join(frameworkDirectory, '..', 'css')))
-
+app.get('/index.html', async (req, res, next) => {
+  res.sendFile(path.join(__dirname,'..', 'index.html'));
+})
 app.get('/ls', async (req, res) => {
     let t0 = Date.now();
     let frameworks = await loadFrameworkVersionInformation();
