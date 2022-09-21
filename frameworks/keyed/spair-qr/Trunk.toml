@@ -1,0 +1,9 @@
+[build]
+# The index HTML file to drive the bundling process.
+target = "trunk_index.html"
+# The output dir for all final assets.
+dist = "bundled-dist"
+# The public URL from which assets are to be served.
+public_url = "/frameworks/keyed/spair-qr/bundled-dist/"
+# Whether to include hash values in the output file names.
+filehash = true
