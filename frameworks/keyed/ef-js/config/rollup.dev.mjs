@@ -1,9 +1,9 @@
 // Import plugins
 import copy from 'rollup-plugin-copy-glob'
 // Import base config
-import base from './rollup.base'
+import base from './rollup.base.mjs'
 // Import browsersync config
-import bsConfig from './bs-config'
+import bsConfig from './bs-config.mjs'
 // Import dev plugins
 import browsersync from 'rollup-plugin-browsersync'
 
@@ -17,14 +17,12 @@ const config = {
 	output: {
 		name,
 		format,
-		file: `${devPath}/${bundle}.js`,
+		file: format !== 'esm' && `${devPath}/${bundle}.js`,
+		dir: format === 'esm' && devPath,
 		sourcemap: true,
 		globals
 	},
-	plugins: [
-		copy(...copyOptions, {verbose: true, watch: true}),
-		...plugins
-	],
+	plugins: [copy(...copyOptions, { verbose: true, watch: true }), ...plugins],
 	watch: {
 		include: ['src/**/*.*']
 	}

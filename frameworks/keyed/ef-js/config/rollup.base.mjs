@@ -1,4 +1,4 @@
-import del from 'del'
+import { deleteSync } from 'del'
 import path from 'path'
 import chalk from 'chalk'
 
@@ -12,34 +12,29 @@ import json from '@rollup/plugin-json'
 import eft from 'rollup-plugin-eft'
 import postcss from 'rollup-plugin-postcss'
 import inject from '@rollup/plugin-inject'
-import {eslint} from 'rollup-plugin-eslint'
-import {terser} from 'rollup-plugin-terser'
+import { eslint } from 'rollup-plugin-eslint'
+import { terser } from 'rollup-plugin-terser'
 
 // Postcss plugins
-import simplevars from 'postcss-simple-vars'
-import nested from 'postcss-nested'
+// import simplevars from 'postcss-simple-vars'
+// import nested from 'postcss-nested'
 import postcssPresetEnv from 'postcss-preset-env'
 
 // ef configuration
-import efConfig from './ef.config.js'
-const {
-	efCoreModule,
-	input,
-	name,
-	format,
-	bundle,
-	devPath,
-	proPath,
-	copyOptions,
-	external,
-	globals
-} = efConfig
+import efConfig from './ef.config.mjs'
+const { efCoreModule, input, name, format, bundle: _bundle, devPath: _devPath, proPath: _proPath, copyOptions, external, globals } = efConfig
 
 console.log('Target:', chalk.bold.green(process.env.NODE_ENV || 'development'))
 
+const production = process.env.NODE_ENV === 'production'
+
 // Clear previous builds files
-if (process.env.NODE_ENV === 'production') del.sync([`${proPath}/**`])
-else del.sync([`${devPath}dev/**`])
+if (production) deleteSync([`${_proPath}/**`])
+else deleteSync([`${_devPath}/**`])
+
+const bundle = path.normalize(_bundle)
+const devPath = path.normalize(_devPath)
+const proPath = path.normalize(_proPath)
 
 export default {
 	input,
@@ -48,14 +43,16 @@ export default {
 	copyOptions,
 	external,
 	globals,
-	bundle: path.normalize(bundle),
-	devPath: path.normalize(devPath),
-	proPath: path.normalize(proPath),
+	bundle,
+	devPath,
+	proPath,
 	plugins: [
 		progress({
 			clearLine: false
 		}),
-		eslint(),
+		eslint({
+			exclude: 'src/static/**.*'
+		}),
 		resolve({
 			browser: true,
 			extensions: ['.mjs', '.js', '.jsx', '.json', '.node']
@@ -67,15 +64,16 @@ export default {
 			minimize: process.env.NODE_ENV === 'production',
 			sourceMap: process.env.NODE_ENV !== 'production',
 			plugins: [
-				simplevars(),
-				nested(),
+				// simplevars(),
+				// nested(),
 				postcssPresetEnv({ warnForDuplicates: false })
 			]
 		}),
 		buble({
 			transforms: {
 				modules: false,
-				dangerousForOf: true
+				dangerousForOf: true,
+				asyncAwait: false
 			},
 			objectAssign: 'Object.assign',
 			jsx: `${efCoreModule}.createElement`,
@@ -95,6 +93,6 @@ export default {
 				'process.env.NODE_ENV': `'${process.env.NODE_ENV}'`
 			}
 		}),
-		(process.env.NODE_ENV === 'production' && terser())
+		process.env.NODE_ENV === 'production' && terser()
 	]
 }
