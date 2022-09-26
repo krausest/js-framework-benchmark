@@ -11,11 +11,11 @@ const create = ((ID, $) => count => [...Array(count)].map(() =>
     Row(++ID, `${$(adjectives)} ${$(colours)} ${$(nouns)}`)
 ))(0, $ => $[Math.round(Math.random() * 1000) % $.length]);
 
-const select = row => selection(row.ID);
+const select = function () { selection(this.row.ID); };
 
-const remove = row => {
+const remove = function () {
     const data = new Set(rows());
-    data.delete(row) && rows([...data]);
+    data.delete(this.row) && rows([...data]);
 };
 
 const Row = (ID, label) => {
@@ -24,9 +24,9 @@ const Row = (ID, label) => {
     row.content = [
         {is: 'td', class: 'col-md-1', content: ID},
         {is: 'td', class: 'col-md-4', content:
-            {is: 'a', data: {action: select, row}, content: row.label}},
+            {is: 'a', action: select, row, content: row.label}},
         {is: 'td', class: 'col-md-1', content:
-            {is: 'a', data: {action: remove, row}, content: Icon()}},
+            {is: 'a', action: remove, row, content: Icon()}},
         {is: 'td', class: 'col-md-6'}
     ];
     return row;
@@ -66,7 +66,7 @@ insert({id: 'main', content:
         },
         {is: 'table', class: 'table table-hover table-striped test-data',
             content: {is: 'tbody', id: 'tbody', content: rows},
-            listen: {click: (e, {data}) => data?.action?.(data.row)}},
+            listen: {click: (event, context) => context?.action?.()}},
         Icon('preloadicon')
     ]}
 }, document.body);
