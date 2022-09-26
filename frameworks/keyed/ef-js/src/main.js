@@ -82,7 +82,7 @@ app = new App({
 			exec()
 		},
 		clear({state}) {
-			state.rows = []
+			state.rows.clear()
 		},
 		swapRows({state: {rows}}) {
 			if (rows.length > 998) {
