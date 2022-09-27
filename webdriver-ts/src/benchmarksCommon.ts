@@ -89,6 +89,7 @@ const slowDownsOSX: ISlowDowns = {
   [BENCHMARK_03]: 16,
   [BENCHMARK_04]: 16,
   [BENCHMARK_05]: 4,
+  [BENCHMARK_06]: 4,
   [BENCHMARK_08]: 2,
   [BENCHMARK_09]: 8
 };
