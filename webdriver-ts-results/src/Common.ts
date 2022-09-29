@@ -188,6 +188,7 @@ export class ResultTableData {
     // benchmarksMEM: Array<Benchmark>;
     // Columns
     frameworks: Array<Framework>;
+    frameworksForFactors: Array<Framework>;
     selectedFameworks: Set<Framework>;
     // Cell data
     // resultsCPU: Array<Array<TableResultValueEntry|null>>;   // [benchmark][framework]
@@ -221,9 +222,9 @@ export class ResultTableData {
           }
         })
         this.frameworks = this.allFrameworks.filter(framework => framework.type === type && this.selectedFameworks.has(framework));
+        this.frameworksForFactors = this.allFrameworks.filter(framework => framework.type === type 
+            && framework.issues.every(i => allowedIssues.has(i)));
         this.update(sortKey);
-
-
     }
     private update(sortKey: string) {
         console.time("update");
@@ -334,7 +335,8 @@ export class ResultTableData {
     }
 
     computeFactors(benchmark: Benchmark): Array<TableResultValueEntry|null> {
-        const benchmarkResults = this.frameworks.map(f => this.results(benchmark, f));
+        debugger;
+        const benchmarkResults = this.frameworksForFactors.map(f => this.results(benchmark, f));
         const selectFn = (result: Result|null) => {
             if (result===null) return 0;
             if (this.displayMode === DisplayMode.DisplayMedian) {
@@ -343,7 +345,7 @@ export class ResultTableData {
                 return result.mean;
             }
         }
-        let min = Math.max(benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, selectFn(result)), Number.POSITIVE_INFINITY));
+        const min = Math.max(benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, selectFn(result)), Number.POSITIVE_INFINITY));
         // if (benchmark.type === BenchmarkType.CPU) {
         //     min = Math.max(1000/60, min);
         // }
@@ -352,7 +354,7 @@ export class ResultTableData {
             if (result === null) return null;
 
             const value = selectFn(result);
-            let factor = value/min;
+            const factor = value/min;
             // if (benchmark.type === BenchmarkType.CPU) {
             //     factor = Math.max(1, factor);
             // }    
