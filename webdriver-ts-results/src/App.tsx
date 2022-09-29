@@ -6,7 +6,7 @@ import { SelectionBar } from './selection/SelectionBar';
 
 const App = (): JSX.Element => {
   // eslint-disable-next-line no-constant-condition
-  const disclaimer = (false) ? (<div>
+  const disclaimer = (true) ? (<div>
         <h2>Results for js web frameworks benchmark - official run</h2>
         <p>A description of the benchmark and the source code and can be found in the github <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.</p>
       </div>) :
@@ -15,7 +15,7 @@ const App = (): JSX.Element => {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a MaBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 12.6), Chrome 105.0.5195.102 (arm64))
+        <p>The benchmark was run on a MaBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 12.6), Chrome 106.0.5249.61 (arm64))
             using the puppeteer benchmark driver with reduced tracing.
         </p>
          <SelectionBar/>
