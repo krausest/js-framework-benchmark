@@ -28,11 +28,12 @@ function Row({ table, datum }) {
 
 function Rows({ table }) {
   return useReactive(() => {
-    return table.dataArray.map((datum) =>
-      <Row key={datum.id} datum={datum} table={table} />
-    )
-  })
+    return table.dataArray.map(datum => {
+      return <Row key={datum.id} datum={datum} table={table} />
+    });
+  });
 }
+
 
 function Main() {
   const table = useSetup(() => new TableData());

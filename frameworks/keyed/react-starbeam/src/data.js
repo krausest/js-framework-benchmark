@@ -7,11 +7,52 @@
   * - each row is a reactive.object, because the labels can update
   * - the selected index, a reactive value (cell)
   */
-import { Cell } from '@starbeam/core';
+import { Cell, FormulaFn } from '@starbeam/core';
 import { reactive } from '@starbeam/js';
 
 const DATA_SIZE = 1_000;
 const LOTS_OF_DATA_SIZE = 10_000;
+
+/**
+  * React doesn't support iterators
+  *  - Map
+  *  - Object
+  *  - Set
+  *
+  *  ... React only supports arrays for iteration....
+  *
+  * so this whole object is a back-door way around adding that
+  * support to React.
+  *
+  * And as a result... this may suffer from performance issues.
+  */
+class ReactCompatibleUserOrderedMap {
+  constructor(dataMapFn) {
+    this.dataMapFn = dataMapFn;
+  }
+
+  #data = FormulaFn(() => this.dataMapFn());
+  get data() {
+    return this.#data.current;
+  }
+
+  #map = FormulaFn(() => {
+    let data = this.data;
+
+    return (callback) => {
+      let results = new Array();
+
+      for (let datum of data.values()) {
+        results.push(callback(datum));
+      }
+
+      return results;
+    };
+  });
+  get map() {
+    return this.#map.current;
+  }
+}
 
 export class TableData {
   lastSelected = null;
@@ -45,13 +86,13 @@ export class TableData {
   }
   set data(newMap) {
     this.#data.set(newMap);
-    this.#dataArray.set(reactive.array(newMap.values()));
   }
 
-  #dataArray = Cell(reactive.array());
-  get dataArray() {
-    return this.#dataArray.current;
-  }
+  /**
+    * Because a Map can't have its order changed (but arrays can),
+    * we'll maintain order in this structure
+    */
+  dataArray = new ReactCompatibleUserOrderedMap(() => this.data);
 
   /*******************************
    * End Reactive versions of data
@@ -69,24 +110,31 @@ export class TableData {
   };
 
   add = () => {
-    this.data.push(...buildData(DATA_SIZE));
+    buildData(DATA_SIZE, this.data);
   };
 
   update = () => {
-    for (let i = 0; i < this.data.length; i+= 10) {
-      this.data[i].label += ' !!!';
+    // Unfortunately, we need to touch all keys, because
+    // this test/bench is optimized for Arrays
+    let ids = [...this.data.keys()];
+    for (let i = 0; i < ids.length; i+= 10) {
+      let id = ids[i];
+      let item = this.data.get(id);
+
+      item.label += ' !!!';
     }
   };
 
   clear = () => this.data = [];
   swapRows = () => {
-    if (this.data.size > 998) {
-      let second = this.dataArray[1];
-      let nearEnd = this.dataArray[998];
+    // This test is arbitrary, and I'm not sure if it's meant to test
+    // any arbitrary swap -- constraints are a little fuzzy.
+    // But! given any two ids, a swap can be done this way
+    let itemA = this.data.get(1);
+    let itemB = this.data.get(998);
 
-      this.data[1] = nearEnd;
-      this.data[998] = second;
-    }
+    this.data.set(1, itemB);
+    this.data.set(998, itemA);
   };
 
   select = (id) => this.selected = id;
@@ -119,8 +167,8 @@ const nouns = [
 ];
 
 let rowId = 1;
-function buildData(count = DATA_SIZE) {
-  const data = reactive.Map();
+function buildData(count = DATA_SIZE, map) {
+  const data = map ?? reactive.Map();
 
   for (let i = 0; i < count; i++) {
     let id = rowId++;
