@@ -14,7 +14,23 @@ const DATA_SIZE = 1_000;
 const LOTS_OF_DATA_SIZE = 10_000;
 
 export class TableData {
+  lastSelected = null;
+  get selected() {
+    return this.lastSelected;
+  }
+  set selected(id) {
+    if (this.lastSelected) {
+      this.data.get(this.lastSelected).isSelected = false;
+    }
+    if (id) {
+      this.data.get(id).isSelected = true;
+      this.lastSelected = id;
+    }
+  }
+
   /**
+    * Reactive version of a native Map.
+    *
     * If we used a decorator, we could intercept normal JS assignment
     * this.selected = 2; (for example, would "just work")
     * Without the decorator, we have to use Cell-specific APIs
@@ -23,25 +39,20 @@ export class TableData {
     * Thankfully, we can fake a decorator's behavior manually by
     * defining a getter and setter.
     */
-  #selected = Cell();
-  get selected() {
-    return this.#selected.current;
-  }
-  set selected(value) {
-    this.#selected.set(value);
-  }
-
-  /**
-    * Reactive version of a native Array.
-    * (could be handled via decorator)
-    */
-  #data = Cell(reactive.array())
+  #data = Cell(reactive.Map())
   get data() {
     return this.#data.current;
   }
-  set data(newArray) {
-    this.#data.set(reactive.array(newArray));
+  set data(newMap) {
+    this.#data.set(newMap);
+    this.#dataArray.set(reactive.array(newMap.values()));
   }
+
+  #dataArray = Cell(reactive.array());
+  get dataArray() {
+    return this.#dataArray.current;
+  }
+
   /*******************************
    * End Reactive versions of data
    * everything else in this class is as vanilla JS as you can get.
@@ -69,9 +80,9 @@ export class TableData {
 
   clear = () => this.data = [];
   swapRows = () => {
-    if (this.data.length > 998) {
-      let second = this.data[1];
-      let nearEnd = this.data[998];
+    if (this.data.size > 998) {
+      let second = this.dataArray[1];
+      let nearEnd = this.dataArray[998];
 
       this.data[1] = nearEnd;
       this.data[998] = second;
@@ -80,9 +91,7 @@ export class TableData {
 
   select = (id) => this.selected = id;
   remove = (idToRemove) => {
-    let index = this.data.findIndex(datum => datum.id === idToRemove);
-
-    this.data.splice(index, 1);
+    this.data.delete(idToRemove);
   };
 
 }
@@ -111,17 +120,21 @@ const nouns = [
 
 let rowId = 1;
 function buildData(count = DATA_SIZE) {
-  const data = new Array(count);
+  const data = reactive.Map();
 
   for (let i = 0; i < count; i++) {
-    data[i] = reactive.object({
-      id: rowId++,
-      label: adjectives[_random(adjectives.length)]
-        + " "
-        + colours[_random(colours.length)]
-        + " "
-        + nouns[_random(nouns.length)],
-    });
+    let id = rowId++;
+
+    data.set(id,
+      reactive.object({
+        id,
+        label: adjectives[_random(adjectives.length)]
+          + " "
+          + colours[_random(colours.length)]
+          + " "
+          + nouns[_random(nouns.length)],
+      })
+    )
   }
   return data;
 }

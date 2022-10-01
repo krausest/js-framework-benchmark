@@ -1,9 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 
+let mode = process.env.NODE_ENV === 'development' ? 'development' : 'production';
+
 module.exports = {
-  mode: 'production',
-  // mode: 'development',
+  mode,
 	entry: {
 		main: path.join(__dirname, 'src', 'main.jsx'),
 	},
