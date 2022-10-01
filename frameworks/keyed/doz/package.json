@@ -25,6 +25,6 @@
     "parcel-bundler": "^1.9.4"
   },
   "dependencies": {
-    "doz": "1.6.4"
+    "doz": "git+https://github.com/dozjs/doz.git#template-parser-2"
   }
 }
