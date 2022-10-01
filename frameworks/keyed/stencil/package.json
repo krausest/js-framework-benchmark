@@ -1,0 +1,21 @@
+{
+  "name": "stencil",
+  "version": "0.0.1",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@stencil/core"
+  },
+  "description": "Stencil Demo",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "scripts": {
+    "build-prod": "stencil build",
+    "build-dev": "stencil build --dev --watch"
+  },
+  "dependencies": {
+    "@stencil/core": "^2.6.0"
+  },
+  "license": "Apache-2.0"
+}

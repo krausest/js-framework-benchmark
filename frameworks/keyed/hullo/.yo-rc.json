@@ -1,0 +1,45 @@
+{
+  "js-framework-benchmark-hullo": {
+    "configuration": {
+      "config": {
+        "topScope": [
+          "const webpack = require('webpack')",
+          "const path = require('path')",
+          "\n",
+          "/*\n * SplitChunksPlugin is enabled by default and replaced\n * deprecated CommonsChunkPlugin. It automatically identifies modules which\n * should be splitted of chunk by heuristics using module duplication count and\n * module category (i. e. node_modules). And splits the chunks…\n *\n * It is safe to remove \"splitChunks\" from the generated configuration\n * and was added as an educational example.\n *\n * https://webpack.js.org/plugins/split-chunks-plugin/\n *\n */",
+          "/*\n * We've enabled UglifyJSPlugin for you! This minifies your app\n * in order to load faster and run less javascript.\n *\n * https://github.com/webpack-contrib/uglifyjs-webpack-plugin\n *\n */",
+          "const UglifyJSPlugin = require('uglifyjs-webpack-plugin');",
+          "\n"
+        ],
+        "webpackOptions": {
+          "module": {
+            "rules": []
+          },
+          "output": {
+            "chunkFilename": "'[name].[chunkhash].js'",
+            "filename": "'[name].[chunkhash].js'"
+          },
+          "mode": "'development'",
+          "plugins": [
+            "new UglifyJSPlugin()"
+          ],
+          "optimization": {
+            "splitChunks": {
+              "cacheGroups": {
+                "vendors": {
+                  "priority": -10,
+                  "test": "/[\\\\/]node_modules[\\\\/]/"
+                }
+              },
+              "chunks": "'async'",
+              "minChunks": 1,
+              "minSize": 30000,
+              "name": true
+            }
+          }
+        },
+        "configName": "dev"
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { view } from 'react-easy-state'
+import { view } from '@risingstack/react-easy-state'
 import appStore from './appStore'
 
 class Row extends Component {
@@ -28,7 +28,7 @@ class Row extends Component {
 				<td className="col-md-4">
 					<a onClick={this.onClick}>{row.label}</a>
 				</td>
-				<td className="col-md-1"><a onClick={this.onDelete}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+				<td className="col-md-1"><a className="remove" onClick={this.onDelete}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
 				<td className="col-md-6"></td>
 			</tr>
 		)

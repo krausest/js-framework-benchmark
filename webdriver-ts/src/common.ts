@@ -1,223 +1,154 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
+import axios from "axios";
+import { StartupBenchmarkResult } from "./benchmarksLighthouse";
+import { string } from "yargs";
 
 export interface JSONResult {
-    framework: string, keyed: boolean, benchmark: string, type: string, min: number,
-        max: number, mean: number, geometricMean: number,
-        standardDeviation: number, median: number, values: Array<number>
+  framework: string;
+  keyed: boolean;
+  benchmark: string;
+  type: string;
+  min: number;
+  max: number;
+  mean: number;
+  geometricMean: number;
+  standardDeviation: number;
+  median: number;
+  values: Array<number>;
 }
 
-export interface BenchmarkError {
-    imageFile : string;
-    exception : string
-}
+export type TBenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
 
-export interface ErrorsAndWarning {
-    errors: BenchmarkError[];
-    warnings: String[];
+export interface ErrorAndWarning {
+  error: string;
+  warnings: string[];
+  result?: number[] | StartupBenchmarkResult[];
 }
 
 export interface BenchmarkDriverOptions {
-    headless?: boolean;
-    chromeBinaryPath?: string;
+  headless?: boolean;
+  chromeBinaryPath?: string;
+  remoteDebuggingPort: number;
+  chromePort: number;
 }
 
 export interface BenchmarkOptions extends BenchmarkDriverOptions {
-    outputDirectory: string;
-    port: string;
-    numIterationsForAllBenchmarks: number;
-    numIterationsForStartupBenchmark: number;
+  HOST: string;
+  port: string;
+  batchSize: number;
+  numIterationsForCPUBenchmarks: number;
+  numIterationsForMemBenchmarks: number;
+  numIterationsForStartupBenchmark: number;
+}
+
+export enum BENCHMARK_RUNNER { 
+  PUPPETEER = "puppeteer", 
+  PLAYWRIGHT = "playwright", 
+  WEBDRIVER_CDP = "webdrivercdp", 
+  WEBDRIVER = "webdriver" 
 }
 
 export let config = {
-    PORT: 8080,
-    REPEAT_RUN: 10,
-    REPEAT_RUN_STARTUP: 4,
-    DROP_WORST_RUN: 0,
-    WARMUP_COUNT: 5,
-    TIMEOUT: 60 * 1000,
-    LOG_PROGRESS: true,
-    LOG_DETAILS: false,
-    LOG_DEBUG: false,
-    LOG_TIMELINE: false,
-    EXIT_ON_ERROR: false,
-    STARTUP_DURATION_FROM_EVENTLOG: true,
-    STARTUP_SLEEP_DURATION: 1000,
-    FORK_CHROMEDRIVER: true
-}
+  PORT: 8080,
+  REMOTE_DEBUGGING_PORT: 9999,
+  CHROME_PORT: 9998,
+  NUM_ITERATIONS_FOR_BENCHMARK_CPU: 10,
+  NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT: 2, // drop the # of slowest results
+  NUM_ITERATIONS_FOR_BENCHMARK_MEM: 1,
+  NUM_ITERATIONS_FOR_BENCHMARK_STARTUP: 3,
+  WARMUP_COUNT: 5,
+  TIMEOUT: 60 * 1000,
+  LOG_PROGRESS: true,
+  LOG_DETAILS: false,
+  LOG_DEBUG: false,
+  LOG_TIMELINE: false,
+  EXIT_ON_ERROR: null as boolean, // set from command line
+  STARTUP_DURATION_FROM_EVENTLOG: true,
+  STARTUP_SLEEP_DURATION: 1000,
+  WRITE_RESULTS: true,
+  RESULTS_DIRECTORY: "results",
+  TRACES_DIRECTORY: "traces",
+  ALLOW_BATCHING: true,
+  HOST: 'localhost',
+  BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER
+};
+export type TConfig = typeof config;
 
 export interface FrameworkData {
-    name: string;
-    fullNameWithKeyedAndVersion: string;
-    uri: string;
-    keyed: boolean;
-    useShadowRoot: boolean;
+  name: string;
+  fullNameWithKeyedAndVersion: string;
+  uri: string;
+  keyed: boolean;
+  useShadowRoot: boolean;
+  useRowShadowRoot: boolean;
+  shadowRootName: string | undefined;
+  buttonsInShadowRoot: boolean;
+  issues: number[];
 }
 
 interface Options {
-    uri: string;
-    useShadowRoot? : boolean;
+  uri: string;
+  useShadowRoot?: boolean;
 }
 
-type KeyedType = 'keyed' | 'non-keyed';
+type KeyedType = "keyed" | "non-keyed";
 
 function computeHash(keyedType: KeyedType, directory: string) {
-    return keyedType+'/'+directory;
+  return keyedType + "/" + directory;
 }
 
-export interface FrameworkId {
-    keyedType: KeyedType;
-    directory: string;
+export interface FrameworkInformation {
+  type: KeyedType;
+  directory: string;
+  issues: string[];
+  customURL?: string;
+  useShadowRoot?: boolean;
+  useRowShadowRoot?: boolean;
+  shadowRootName?: string;
+  buttonsInShadowRoot?: boolean;
+  versions?: {[key: string]: string};
+  frameworkVersionString: string;
 }
 
-
-abstract class FrameworkVersionInformationValid implements FrameworkId {
-    public url: string;
-    constructor(public keyedType: KeyedType, public directory: string, customURL: string|undefined, public useShadowRoot: boolean) {
-        this.keyedType = keyedType;
-        this.directory = directory;
-        this.url = 'frameworks/'+keyedType+'/'+directory + (customURL ? customURL : '');
-    }
+export interface IMatchPredicate {
+  (frameworkDirectory: string): boolean;
 }
 
-export class FrameworkVersionInformationDynamic extends FrameworkVersionInformationValid  {
-    constructor(keyedType: KeyedType, directory: string, public packageNames: string[],
-        customURL: string|undefined, useShadowRoot: boolean = false) {
-            super(keyedType, directory, customURL, useShadowRoot);
-        }
-    }
+const matchAll: IMatchPredicate = (frameworkDirectory: string) => true;
 
-export class FrameworkVersionInformationStatic extends FrameworkVersionInformationValid  {
-    constructor(keyedType: KeyedType, directory: string, public frameworkVersion: string, customURL: string|undefined, useShadowRoot: boolean = false) {
-        super(keyedType, directory, customURL, useShadowRoot);
-    }
-    getFrameworkData(): FrameworkData {
-        return {name: this.directory,
-            fullNameWithKeyedAndVersion: this.directory+(this.frameworkVersion ? '-v'+this.frameworkVersion : '')+'-'+this.keyedType,
-            uri: this.url,
-            keyed: this.keyedType === 'keyed',
-            useShadowRoot: this.useShadowRoot
-        }
-    }
-}
+export async function initializeFrameworks(matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkData[]> {
+  let lsResult ;
+  try {
+    lsResult = (
+    await axios.get(`http://${config.HOST}:${config.PORT}/ls`)
+  ).data;
+  } catch (err) {
+    console.log(`ERROR loading frameworks from http://${config.HOST}:${config.PORT}/ls. Is the server running?`);
+    throw new Error(`ERROR loading frameworks from http://${config.HOST}:${config.PORT}/ls. Is the server running?`);
+  }
 
-export class FrameworkVersionInformationError implements FrameworkId  {
-    constructor(public keyedType: KeyedType, public directory: string, public error: string) {}
-}
-
-export type FrameworkVersionInformation = FrameworkVersionInformationDynamic | FrameworkVersionInformationStatic | FrameworkVersionInformationError;
-
-export class PackageVersionInformationValid {
-    constructor(public packageName: string, public version: string) {}
-}
-
-export class PackageVersionInformationErrorUnknownPackage  {
-    constructor(public packageName: string) {}
-}
-
-export class PackageVersionInformationErrorNoPackageJSONLock  {
-    constructor() {}
-}
-
-export type PackageVersionInformation = PackageVersionInformationValid | PackageVersionInformationErrorUnknownPackage | PackageVersionInformationErrorNoPackageJSONLock;
-
-
-export function loadFrameworkVersionInformation(): FrameworkVersionInformation[] {
-    let result = new Array<FrameworkVersionInformation>();
-    let frameworksPath = path.resolve('..','frameworks');
-    ['keyed','non-keyed'].forEach((keyedType: KeyedType) => {
-        let directories = fs.readdirSync(path.resolve(frameworksPath, keyedType));
-
-        for (let directory of directories) {
-            let packageJSONPath = path.resolve(frameworksPath, keyedType, directory, 'package.json');
-            if (fs.existsSync(packageJSONPath)) {
-                let packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, 'utf8'));
-                if (packageJSON['js-framework-benchmark']) {
-                    if (packageJSON['js-framework-benchmark']['frameworkVersionFromPackage']) {
-                        result.push(new FrameworkVersionInformationDynamic(keyedType, directory,
-                            packageJSON['js-framework-benchmark']['frameworkVersionFromPackage'].split(':'),
-                            packageJSON['js-framework-benchmark']['customURL'],
-                            packageJSON['js-framework-benchmark']['useShadowRoot']
-                        ));
-                    } else if (typeof packageJSON['js-framework-benchmark']['frameworkVersion'] === 'string') {
-                        result.push(new FrameworkVersionInformationStatic(keyedType, directory,
-                            packageJSON['js-framework-benchmark']['frameworkVersion'],
-                            packageJSON['js-framework-benchmark']['customURL'],
-                            packageJSON['js-framework-benchmark']['useShadowRoot']
-                        ));
-                    } else {
-                        result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'frameworkVersionFromPackage\' or \'frameworkVersion\' in the \'js-framework-benchmark\'.property'));
-                    }
-                } else {
-                    result.push(new FrameworkVersionInformationError(keyedType, directory, 'package.json must contain a \'js-framework-benchmark\' property'));
-                }
-            } else {
-                result.push(new FrameworkVersionInformationError(keyedType, directory, 'No package.json found'));
-            }
-        }
-    });
-    return result;
-}
-
-export class PackageVersionInformationResult {
-    public versions: Array<PackageVersionInformation> = [];
-    constructor(public framework: FrameworkVersionInformationDynamic) {}
-    public add(packageVersionInformation: PackageVersionInformation) {
-        this.versions.push(packageVersionInformation);
-    }
-    public getVersionName(): string {
-        if (this.versions.filter(pi => pi instanceof PackageVersionInformationErrorNoPackageJSONLock).length>0) {
-            return "invalid (no package-lock)";
-        }
-        return this.versions.map(version => (version instanceof PackageVersionInformationValid) ? version.version : 'invalid').join(' + ');
-    }
-    getFrameworkData(): FrameworkData {
-        return {name: this.framework.directory,
-            fullNameWithKeyedAndVersion: this.framework.directory+'-v'+this.getVersionName()+'-'+this.framework.keyedType,
-            uri: this.framework.url,
-            keyed: this.framework.keyedType === 'keyed',
-            useShadowRoot: this.framework.useShadowRoot
-        }
-    }
-}
-
-export function determineInstalledVersions(framework: FrameworkVersionInformationDynamic): PackageVersionInformationResult {
-    let frameworksPath = path.resolve('..','frameworks');
-    let packageLockJSONPath = path.resolve(frameworksPath, framework.keyedType, framework.directory, 'package-lock.json');
-    let versions = new PackageVersionInformationResult(framework);
-    if (fs.existsSync(packageLockJSONPath)) {
-        let packageLock = JSON.parse(fs.readFileSync(packageLockJSONPath, 'utf8'));
-        for (let packageName of framework.packageNames) {
-            if (packageLock.dependencies[packageName]) {
-                versions.add(new PackageVersionInformationValid(packageName, packageLock.dependencies[packageName].version));
-            } else {
-                versions.add(new PackageVersionInformationErrorUnknownPackage(packageName));
-            }
-        }
-    } else {
-        versions.add(new PackageVersionInformationErrorNoPackageJSONLock());
-    }
-    return versions;
-}
-
-export function initializeFrameworks(): FrameworkData[] {
-    let frameworkVersionInformations = loadFrameworkVersionInformation();
-
-    let frameworks = frameworkVersionInformations.map(frameworkVersionInformation => {
-        if (frameworkVersionInformation instanceof FrameworkVersionInformationDynamic) {
-            return determineInstalledVersions(frameworkVersionInformation).getFrameworkData();
-        } else if (frameworkVersionInformation instanceof FrameworkVersionInformationStatic) {
-            return frameworkVersionInformation.getFrameworkData();
-        } else {
-            console.log(`WARNING: Ignoring package ${frameworkVersionInformation.keyedType}/${frameworkVersionInformation.directory}: ${frameworkVersionInformation.error}`)
-            return null;
-        }
-    });
-
-    frameworks = frameworks.filter(f => f!==null);
-    if (config.LOG_DETAILS) {
-        console.log("All available frameworks: ");
-        console.log(frameworks.map(fd => fd.fullNameWithKeyedAndVersion));
-    }
-    return frameworks;
+  let frameworks: FrameworkData[] = [];
+  for (let ls of lsResult) {
+    let frameworkVersionInformation: FrameworkInformation = ls;
+    let fullName = frameworkVersionInformation.type + "/" + frameworkVersionInformation.directory;
+    if (matchPredicate(fullName)) {
+      frameworks.push({
+          name: frameworkVersionInformation.directory,
+          fullNameWithKeyedAndVersion: frameworkVersionInformation.frameworkVersionString,
+          uri: "frameworks/" + fullName + (frameworkVersionInformation.customURL ? frameworkVersionInformation.customURL : ""),
+          keyed: frameworkVersionInformation.type === "keyed",
+          useShadowRoot: !!frameworkVersionInformation.useShadowRoot,
+          useRowShadowRoot: !!frameworkVersionInformation.useRowShadowRoot,
+          shadowRootName: frameworkVersionInformation.shadowRootName,
+          buttonsInShadowRoot: !!frameworkVersionInformation.buttonsInShadowRoot,
+          issues: (frameworkVersionInformation.issues ?? []).map(i => Number(i))
+        });
+      }
+  }
+  if (config.LOG_DETAILS) {
+    console.log("All available frameworks: ");
+    console.log(frameworks.map((fd) => fd.fullNameWithKeyedAndVersion));
+  }
+  return frameworks;
 }

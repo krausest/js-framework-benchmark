@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "lib": ["es2015", "es2017", "esnext.asynciterable", "dom"],
+    "experimentalDecorators": true
+  },
+  "include": [
+    "src/*"
+  ],
+  "exclude": []
+}

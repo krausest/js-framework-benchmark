@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "name": "js-framework-benchmark-mikado-proxy",
+  "homepage": "https://github.com/nextapps-de/mikado/",
+  "author": "Nextapps GmbH",
+  "license": "Apache-2.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "mikado",
+    "issues": []
+  },
+  "preferGlobal": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "scripts": {
+    "compile": "npx mikado-compile src/template -f -t es6 && echo Compile Complete. && exit 0",
+    "build": "npm run compile && node task/build RELEASE=custom DEBUG=false USE_POLYFILL=false SUPPORT_CACHE=false SUPPORT_EVENTS=true SUPPORT_STORAGE=true SUPPORT_HELPERS=false SUPPORT_ASYNC=false SUPPORT_TRANSPORT=false SUPPORT_TEMPLATE_EXTENSION=false SUPPORT_REACTIVE=true SUPPORT_CACHE_HELPERS=false SUPPORT_KEYED=true SUPPORT_POOLS=false SUPPORT_CALLBACKS=false SUPPORT_COMPILE=false && exit 0",
+    "build-prod": "npm run build"
+  },
+  "dependencies": {
+    "mikado": "^0.7.64"
+  },
+  "devDependencies": {
+    "google-closure-compiler": "^20201006.0.0"
+  }
+}

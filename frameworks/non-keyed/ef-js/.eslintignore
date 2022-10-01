@@ -1,0 +1,7 @@
+build/*.js
+config/*.js
+test/*.js
+**/*.json
+**/*.ef
+**/*.eft
+**/*.css

@@ -1,0 +1,4 @@
+dotnet/
+obj/
+bin/
+.vs/

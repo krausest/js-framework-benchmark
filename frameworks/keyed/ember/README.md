@@ -36,9 +36,8 @@ Make use of the many generators for code, try `ember help generate` for more det
 
 ### Linting
 
-* `npm run lint:hbs`
-* `npm run lint:js`
-* `npm run lint:js -- --fix`
+* `npm run lint`
+* `npm run lint:fix`
 
 ### Building
 

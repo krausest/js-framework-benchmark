@@ -1,29 +1,21 @@
 'use strict';
 var path = require('path')
-var cache = {};
-var loaders = [
-	{
-		test: /\.jsx$/,
-		loader: 'babel-loader'
-	},
-	{
-		test: /\.es6\.js$/,
-		loader: 'babel-loader'
-	},
-	{
-		test: /\.css$/,
-		loader: 'style-loader!css-loader'
-	}
-];
-var extensions = [
-	'.js', '.jsx', '.es6.js', '.msx'
-];
 
 module.exports = [{
-	cache: cache,
 	module: {
-		rules: loaders
-	},
+		rules: [{
+			test: /\.jsx?$/,
+			exclude: /node_modules/,
+			use: [
+				{
+					loader: 'babel-loader',
+					options: {
+						presets: ['@babel/preset-env', '@babel/preset-react'],
+						plugins: ['vidom-jsx'],
+					}
+				}
+			]
+		}]	},
 	entry: {
 		main: './src/main',
 	},
@@ -33,7 +25,7 @@ module.exports = [{
 		sourceMapFilename: "[file].map",
 	},
 	resolve: {
-		extensions: extensions,
+		extensions: ['.js', '.jsx'],
 		modules: [
 			__dirname,
 			path.resolve(__dirname, "src"),

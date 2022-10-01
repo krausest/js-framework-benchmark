@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    // Compilation Configuration
+    "target": "ES2020",
+    "inlineSources": true,
+    "inlineSourceMap": true,
+    "declaration": true,
+    "outDir": "dist",
+    "baseUrl": "packages",
+    "rootDir": "packages",
+
+    // Environment Configuration
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+
+    // Enhance Strictness
+    "noUnusedLocals": true,
+    "noImplicitThis": true,
+    // Enabling these breaks @glimmer/application, fix and reenable this
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": false,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+    "allowUnreachableCode": false,
+    "noImplicitReturns": false,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+
+    "newLine": "LF",
+
+    "paths": {
+      "*": ["*/src", "*"]
+    }
+  },
+  "include": [
+
+  ],
+  "exclude": ["node_modules"]
+}

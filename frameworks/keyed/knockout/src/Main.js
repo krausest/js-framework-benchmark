@@ -1,19 +1,5 @@
 
-const ko = require('knockout');
-
-var startTime;
-var lastMeasure;
-
-var startMeasure = function (name) {
-    startTime = performance.now();
-    lastMeasure = name;
-};
-var stopMeasure = function () {
-    window.setTimeout(function () {
-        var stop = performance.now();
-        console.log(lastMeasure + " took " + (stop - startTime));
-    }, 0);
-};
+import ko from 'knockout';
 
 var HomeViewModel = function () {
     var self = this;
@@ -41,43 +27,32 @@ var HomeViewModel = function () {
     self.data = ko.observableArray();
 
     self.run = function () {
-        startMeasure("run");
         self.data(buildData(1000));
         self.selected(null);
-        stopMeasure();
     };
 
     self.runLots = function () {
-        startMeasure("runLots");
         self.data(buildData(10000));
         self.selected(null);
-        stopMeasure();
     };
 
     self.add = function () {
-        startMeasure("add");
         self.data.push.apply(self.data, buildData(1000));
-        stopMeasure();
     };
 
     self.update = function () {
-        startMeasure("update");
         var tmp = self.data();
         for (let i = 0; i < tmp.length; i += 10) {
             tmp[i].label(tmp[i].label() + ' !!!');
         }
-        stopMeasure();
     };
 
     self.clear = function () {
-        startMeasure("clear");
         self.data.removeAll();
         self.selected(null);
-        stopMeasure();
     };
 
     self.swapRows = function () {
-        startMeasure("swapRows");
         var tmp = self.data();
         if (tmp.length > 998) {
             var a = tmp[1];
@@ -85,21 +60,16 @@ var HomeViewModel = function () {
             tmp[998] = a;
             self.data(tmp);
         }
-        stopMeasure();
     };
 
     self.select = function (id) {
-        startMeasure("select");
         self.selected(id);
-        stopMeasure();
     };
 
     self.del = function (item) {
-        startMeasure("delete");
         var tmp = self.data();
         const idx = tmp.findIndex(d => d.id === item.id);
         self.data.splice(idx, 1);
-        stopMeasure();
     };
 };
 

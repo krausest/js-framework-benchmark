@@ -1,17 +1,27 @@
-import * as fs from 'fs';
-import {JSONResult, config, initializeFrameworks} from './common'
-import {BenchmarkType, Benchmark, benchmarks} from './benchmarks'
+import * as fs from "fs";
+import { JSONResult, config, initializeFrameworks } from "./common";
+import * as dot from "dot";
 
-let frameworks = initializeFrameworks();
+async function main() {
+  let frameworks = await initializeFrameworks();
 
-frameworks.sort( (a,b) => a.fullNameWithKeyedAndVersion.localeCompare(b.fullNameWithKeyedAndVersion));
+  frameworks.sort((a, b) =>
+    a.fullNameWithKeyedAndVersion.localeCompare(b.fullNameWithKeyedAndVersion)
+  );
 
-const dots = require('dot').process({
-	path: './'
-});
+  const dots = dot.process({
+    path: "./",
+  });
 
-fs.writeFileSync('../index.html', dots.index({
-	frameworks
-}), {
-	encoding: 'utf8'
-})
+  fs.writeFileSync(
+    "../index.html",
+    dots.index({
+      frameworks,
+    }),
+    {
+      encoding: "utf8",
+    }
+  );
+}
+
+main().catch(err => {console.log("Error in createIndex", err)});

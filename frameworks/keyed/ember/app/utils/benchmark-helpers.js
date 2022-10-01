@@ -1,18 +1,23 @@
+import { tracked } from '@glimmer/tracking';
+
+class TodoItem {
+    @tracked label;
+    @tracked id
+    constructor({label, id}) {
+        this.label = label;
+        this.id = id;
+    }
+}
+
 const _random = (max) => {
     return Math.round(Math.random() * 1000) % max;
 }
 
 const updateData = (data, mod = 10) => {
-    const newData = [...data];
-
-    for (let i = 0; i < newData.length; i += 10) {
-        newData[i] = Object.assign(
-          {},
-          newData[i],
-          { label: newData[i].label + ' !!!' }
-        );
+    for (let i = 0; i < data.length; i += mod) {
+        data[i].label =  data[i].label + ' !!!' ;
     }
-    return newData
+    return data;
 }
 
 export const buildData = (id, count = 1000) => {
@@ -34,22 +39,21 @@ export const buildData = (id, count = 1000) => {
     var data = [];
 
     for (var i = 0; i < count; i++)
-        data.push({
+        data.push(new TodoItem({
           id: id++,
           label: adjectives[_random(adjectives.length)]
             + " "
             + colours[_random(colours.length)]
             + " "
             + nouns[_random(nouns.length)]
-        });
+        }));
 
-    return { data, id };
+    return {data, id};
 }
 
 export const add = (id, data) => {
     const newData = buildData(id, 1000);
-
-    return { data: [...data, ...newData.data], id: newData.id };
+    return {data: [ ...data, ...newData.data], id: newData.id};
 }
 
 export const run = (id) => {
@@ -76,7 +80,7 @@ export const swapRows = (data) => {
 
 export const deleteRow = (data, id) => {
     return data.filter(d => {
-        return d.id != id
+        return d.id !== id
     });
 }
 

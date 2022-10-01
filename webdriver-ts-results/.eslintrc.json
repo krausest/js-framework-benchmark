@@ -1,0 +1,25 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": ["react", "@typescript-eslint", "react-hooks"],
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "react-hooks/rules-of-hooks": "error", 
+    "react-hooks/exhaustive-deps": "warn",
+    "no-debugger": "warn"
+  }
+}

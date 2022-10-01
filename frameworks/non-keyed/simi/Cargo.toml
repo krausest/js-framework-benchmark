@@ -1,0 +1,16 @@
+[package]
+name = "js-framework-benchmark-simi"
+version = "0.1.0"
+authors = ["Limira"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2.29"
+rand = { version="0.6.1", features=["wasm-bindgen"] }
+simi = { git = "https://gitlab.com/limira-rs/simi.git", rev = "3b7e8e0cf06a20e9ae6f1cc1fd6f598f867e6695" }
+
+[profile.release]
+lto = true

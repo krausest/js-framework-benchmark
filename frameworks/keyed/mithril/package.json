@@ -1,7 +1,7 @@
 {
-  "name": "js-framework-benchmark-mithrill-1.0.0-alpha",
-  "version": "1.0.0",
-  "description": "Benchmark for Mithrill 1.0.0 framework",
+  "name": "js-framework-benchmark-mithrill-2.0.4",
+  "version": "2.0.4",
+  "description": "Benchmark for Mithrill 2.0.4 framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mithril"
   },
@@ -18,6 +18,6 @@
     "webpack": "2.4.1"
   },
   "dependencies": {
-    "mithril": "1.1.1"
+    "mithril": "2.0.4"
   }
 }

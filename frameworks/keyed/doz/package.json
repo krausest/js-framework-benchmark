@@ -1,30 +1,34 @@
 {
   "name": "js-framework-benchmark-doz",
   "version": "1.0.0",
-  "description": "Doz benchmark",
+  "description": "Doz demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "doz"
+    "frameworkVersionFromPackage": "doz",
+    "issues": [800]
   },
   "scripts": {
-    "build-dev": "parcel watch src/index.js --no-cache",
-    "build-prod": "parcel build src/index.js --no-cache"
+    "build-dev": "webpack --watch --mode=development",
+    "build-prod": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
   },
   "keywords": [
-    "doz",
-    "benchmark"
+    "doz"
   ],
   "author": "Fabio Ricali",
   "license": "MIT",
-  "homepage": "https://github.com/krausest/js-framework-benchmark",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
+  "dependencies": {
+    "doz": "3.4.1"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.9.4"
-  },
-  "dependencies": {
-    "doz": "git+https://github.com/dozjs/doz.git#template-parser-2"
+    "webpack": "4.41.4",
+    "webpack-cli": "3.3.10"
   }
 }

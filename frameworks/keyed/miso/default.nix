@@ -1,18 +1,20 @@
-{ pkgs ? import ((import <nixpkgs> {}).fetchFromGitHub {
-    owner = "NixOS";
-    repo = "nixpkgs";
-    rev = "a0aeb23";
-    sha256 = "04dgg0f2839c1kvlhc45hcksmjzr8a22q1bgfnrx71935ilxl33d";
-  }){}
-}:
+with (import (builtins.fetchTarball {
+  url = "https://github.com/dmjio/miso/archive/0af726ceeee9dda2ad390619e643fccf637727d6.tar.gz";
+  sha256 = "1wpcc5y5py074nzd1qihgjlbfz1d8h262yqbc4k6wrmnjqiwwri6";
+}) {});
+with pkgs.haskell.packages;
 let
-  inherit (pkgs) runCommand closurecompiler;
-  result = import (pkgs.fetchFromGitHub {
-    owner = "dmjio";
-    repo = "miso";
-    rev = "5fcb57ad9fd423bd2d1b38f9e1a7121a0acf3e17";
-    sha256 = "0vn87hrcds8nmzj358pp9bm28pfml7j1fhancmgmwhl7i91fjdcv";
-  }) {};
-in pkgs.haskell.packages.ghcjs.callPackage ./miso-benchmark-keyed.nix {
-    miso = result.miso-ghcjs;
-  }
+  app = ghcjs.callCabal2nix "miso-benchmark-keyed" ./. {};
+in
+  pkgs.lib.overrideDerivation app (drv: {
+    postInstall = with pkgs; ''
+      mkdir -p $out/bin
+      echo "(window['gc'] = window['gc']);" >> $out/bin/miso-benchmark-keyed.jsexe/all.js
+      ${closurecompiler}/bin/closure-compiler --compilation_level ADVANCED_OPTIMIZATIONS \
+          --jscomp_off=checkVars \
+          --externs=$out/bin/miso-benchmark-keyed.jsexe/all.js.externs \
+          $out/bin/miso-benchmark-keyed.jsexe/all.js > temp.js
+          mv temp.js $out/bin/all.min.js
+          rm -r $out/bin/miso-benchmark-keyed.jsexe
+      '';
+  })

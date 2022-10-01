@@ -7,15 +7,18 @@ jobs:
       - checkout
 
       - run: |
-          curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          curl -L -o google-chrome.deb https://s3.amazonaws.com/circle-downloads/google-chrome-stable_current_amd64_47.0.2526.73-1.deb
           sudo dpkg -i google-chrome.deb
           sudo sed -i 's|HERE/chrome\"|HERE/chrome\" --disable-setuid-sandbox|g' /opt/google/chrome/google-chrome
           rm google-chrome.deb
-
-      - run: |
+          export TERM=xterm-256color
           source $NVM_DIR/nvm.sh
-          nvm install v8.9.1
-
+          nvm install v10.16.0
           npm install
+          npm run install-webdriver-ts
           npm start &
-          npm run build -- --skipIrrelevant --check
+          npm run build -- --check
+
+dependencies:
+  pre:
+    - curl -s https://raw.githubusercontent.com/chronogolf/circleci-google-chrome/master/use_chrome_stable_version.sh | bash

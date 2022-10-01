@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JS-Framkeworks Benchmark</title>
+    <title>JS-Frameworks Benchmark</title>
     <meta charset="UTF-8">
     <link href="css/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="css/main.css">
@@ -16,17 +16,9 @@
         </div>
         <div class="panel-body">
             <ul class="nav nav-pills nav-stacked">
-				{{~it.frameworks :framwork}}
-                <li><a href="/{{=framwork.uri}}"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> {{=framwork.fullNameWithKeyedAndVersion}}</a></li>
+				{{~it.frameworks :framework}}
+                <li><a href="/{{=framework.uri}}/index.html"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> {{=framework.fullNameWithKeyedAndVersion}}</a></li>
 				{{~}}
-            </ul>
-        </div>
-    </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <ul class="nav nav-pills nav-stacked">
-            	<li><a href="webdriver-ts/table.html"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Table Report</a></li>
-            	<li><a href="webdriver-ts-results/table.html"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Interactive Table Report</a></li>
             </ul>
         </div>
     </div>

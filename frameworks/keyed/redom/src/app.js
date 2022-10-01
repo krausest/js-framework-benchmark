@@ -2,26 +2,6 @@ import { el, list } from 'redom';
 
 const { performance, setTimeout } = window;
 
-let startTime;
-let lastMeasure;
-
-const startMeasure = (name) => {
-  startTime = performance.now();
-  lastMeasure = name;
-};
-
-const stopMeasure = () => {
-  const last = lastMeasure;
-
-  if (lastMeasure) {
-    setTimeout(() => {
-      lastMeasure = null;
-      const stop = performance.now();
-      console.log(last + ' took ' + (stop - startTime));
-    }, 0);
-  }
-};
-
 export class App {
   constructor ({ store }) {
     this.store = store;
@@ -74,52 +54,36 @@ export class App {
     );
   }
   add () {
-    startMeasure('add');
     this.store.add();
     this.render();
-    stopMeasure();
   }
   remove (id) {
-    startMeasure('remove');
     this.store.delete(id);
     this.render();
-    stopMeasure();
   }
   select (id) {
-    startMeasure('select');
     this.store.select(id);
     this.render();
-    stopMeasure();
   }
   run () {
-    startMeasure('run');
     this.store.run();
     this.render();
-    stopMeasure();
   }
   update () {
-    startMeasure('update');
     this.store.update();
     this.render();
-    stopMeasure();
   }
   runLots () {
-    startMeasure('runLots');
     this.store.runLots();
     this.render();
-    stopMeasure();
   }
   clear () {
-    startMeasure('clear');
     this.store.clear();
     this.render();
-    stopMeasure();
   }
   swapRows () {
-    startMeasure('swapRows');
     this.store.swapRows();
     this.render();
-    stopMeasure();
   }
   render () {
     this.table.update(this.store.data);
@@ -131,13 +95,14 @@ class Tr {
     this.data = {};
     this.app = app;
     this.store = store;
+    this.isSelected = false;
     this.el = el('tr',
       this.id = el('td.col-md-1'),
       el('td.col-md-4',
         this.label = el('a', { onclick: e => app.select(this.data.id) })
       ),
       el('td.col-md-1',
-        this.remove = el('a', { onclick: e => app.remove(this.data.id) },
+        el('a', { onclick: e => app.remove(this.data.id) },
           el('span.glyphicon.glyphicon-remove', { 'aria-hidden': true })
         )
       ),
@@ -156,10 +121,12 @@ class Tr {
       this.label.textContent = label;
     }
 
-    if (id === selected) {
+    if (id === selected && !this.isSelected) {
       this.el.classList.add('danger');
-    } else {
+      this.isSelected = true;
+    } else if (this.isSelected) {
       this.el.classList.remove('danger');
+      this.isSelected = false;
     }
 
     this.data = { id, label };

@@ -1,0 +1,7 @@
+node_modules
+target
+Cargo.lock
+bundled-dist/*
+!bundled-dist/js-framework-benchmark-non-keyed-seed.js
+!bundled-dist/js-framework-benchmark-non-keyed-seed_bg.wasm
+!bundled-dist/index.html

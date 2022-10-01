@@ -1,3 +1,3 @@
-# Inferno v4 Keyed
-This application provides example how to use JSX flags to optimize application level code for keyed algorithm.
+# Inferno Keyed
+This application provides example how to use Inferno JSX flags to optimize runtime at application level.
 Bundle is done using Rollup.

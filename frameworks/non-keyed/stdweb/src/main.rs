@@ -56,30 +56,6 @@ static NOUNS: &[&'static str] = &[
     "pizza", "mouse", "keyboard",
 ];
 
-struct Stopwatch {
-    name: String,
-    start: f64,
-}
-
-impl Stopwatch {
-    fn start(name: &str) -> Stopwatch {
-        console!(log, format!("start {}", name));
-        Stopwatch {
-            name: name.to_owned(),
-            start: Date::now(),
-        }
-    }
-}
-
-impl Drop for Stopwatch {
-    fn drop(&mut self) {
-        let stop = Date::now();
-        console!(
-            log,
-            format!("stop {}: {}ms", self.name, (stop - self.start) as i64)
-        );
-    }
-}
 
 struct Row {
     id: usize,
@@ -368,7 +344,7 @@ impl Main {
         //let _stopwatch = Stopwatch::start("update");
         let step = 10;
         for i in (0..(self.rows.len() / step)).map(|x| x * step) {
-            let mut row = &mut self.rows[i];
+            let row = &mut self.rows[i];
             row.label.push_str(" !!!");
             row.refresh_label();
         }

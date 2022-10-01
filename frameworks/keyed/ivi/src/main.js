@@ -1,129 +1,96 @@
-import { statelessComponent, render, map, element, onClick, stopDirtyChecking, setupScheduler, invalidateHandler } from "ivi";
+import { _, render, Events, onClick, withNextFrame, requestDirtyCheck, elementProto, component, useSelect, selector, TrackByKey, key } from "ivi";
 import { h1, div, span, table, tbody, tr, td, a, button } from "ivi-html";
-import { createStore } from "ivi-state";
 
-function random(max) {
-  return Math.round(Math.random() * 1000) % max;
-}
+// @localvoid
+// Implemented in almost exactly the same way as react-redux implementation:
+// - state is completely immutable
+// - each row is a stateful component
 
-const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
-  "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive",
-  "cheap", "expensive", "fancy"];
+const random = (max) => Math.round(Math.random() * 1000) % max;
+const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
 const C = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-const N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse",
-  "keyboard"];
+const N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
 let nextId = 1;
-
 function buildData(count) {
-  const data = new Array(count);
+  const data = Array(count);
   for (let i = 0; i < count; i++) {
-    data[i] = {
-      id: nextId++,
-      label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`,
-    };
+    data[i] = { id: nextId++, label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}` };
   }
   return data;
 }
 
-const STORE = createStore(
-  { data: [], selected: null },
-  function (state, action) {
-    const data = state.data;
-    const selected = state.selected;
-    switch (action.type) {
-      case "delete":
-        data.splice(data.findIndex((d) => d.id === action.id), 1);
-        return { data, selected };
-      case "run":
-        return { data: buildData(1000), selected: null };
-      case "add":
-        return { data: state.data.concat(buildData(1000)), selected };
-      case "update":
-        for (let i = 0; i < data.length; i += 10) {
-          const r = data[i];
-          data[i] = { id: r.id, label: r.label + " !!!" };
-        }
-        return { data, selected };
-      case "select":
-        return { data, selected: data.find((d) => d.id === action.id) };
-      case "runlots":
-        return { data: buildData(10000), selected: null };
-      case "clear":
-        return { data: [], selected: null };
-      case "swaprows":
-        if (data.length > 998) {
-          const a = data[1];
-          data[1] = data[998];
-          data[998] = a;
-        }
-        return { data, selected };
-    }
-    return state;
-  },
-  update,
-);
+const INITIAL_STATE = { data: [], selected: 0 };
+let state = INITIAL_STATE;
+const m = (fn) => function () {
+  state = fn.apply(_, [state, ...arguments]);
+  withNextFrame(requestDirtyCheck)();
+};
 
-const GlyphIcon = element(span("", { "aria-hidden": "true" }));
+const useSelected = selector((item) => state.selected === item.id);
+const run = m(({ selected }) => ({ data: buildData(1000), selected }));
+const runlots = m(({ selected }) => ({ data: buildData(10000), selected }));
+const add = m(({ data, selected }) => ({ data: data.concat(buildData(1000)), selected }));
+const update = m(({ data, selected }) => {
+  data = data.slice();
+  for (let i = 0; i < data.length; i += 10) {
+    const r = data[i];
+    data[i] = { id: r.id, label: r.label + " !!!" };
+  }
+  return { data, selected };
+});
+const swaprows = m(({ data, selected }) => {
+  data = data.slice();
+  const tmp = data[1];
+  data[1] = data[998];
+  data[998] = tmp;
+  return { data, selected };
+});
+const select = m(({ data }, item) => ({ data, selected: item.id }));
+const remove = m(({ data, selected }, item) => (data = data.slice(), data.splice(data.indexOf(item), 1), { data, selected }));
+const clear = m(() => INITIAL_STATE);
 
-const Row = statelessComponent(({ id, label, selected }) => (
-  stopDirtyChecking(
-    tr(selected ? "danger" : "").c(
-      td("col-md-1").c(id),
-      td("col-md-4").c(a().c(label)),
-      td("col-md-1").c(a().c(GlyphIcon("glyphicon glyphicon-remove delete"))),
+const removeIcon = elementProto(span("glyphicon glyphicon-remove", { "aria-hidden": "true" }));
+const RemoveButton = a(_, _, removeIcon());
+const Row = component((c) => {
+  let _item;
+  const isSelected = useSelected(c);
+  const s = onClick(() => { select(_item); });
+  const r = onClick(() => { remove(_item); });
+  return (item) => (_item = item,
+    tr(isSelected(item) ? "danger" : "", _, [
+      td("col-md-1", _, item.id),
+      td("col-md-4", _, Events(s, a(_, _, item.label))),
+      td("col-md-1", _, Events(r, RemoveButton)),
       td("col-md-6"),
-    ),
-  )
-));
-
-function Button(text, id) {
-  return div("col-sm-6 smallpad").c(
-    button("btn btn-primary btn-block", { type: "button", id })
-      .e(onClick(() => { STORE.dispatch({ type: id }); }))
-      .c(text),
+    ])
   );
-}
+});
 
-const Jumbotron = statelessComponent(() => (
-  div("jumbotron").c(
-    div("row").c(
-      div("col-md-6").c(h1().c("ivi")),
-      div("col-md-6").c(
-        div("row").c(
-          Button("Create 1,000 rows", "run"),
-          Button("Create 10,000 rows", "runlots"),
-          Button("Append 1,000 rows", "add"),
-          Button("Update every 10th row", "update"),
-          Button("Clear", "clear"),
-          Button("Swap Rows", "swaprows"),
-        ),
-      ),
-    ),
-  )
-));
+const RowList = component((c) => {
+  const getItems = useSelect(c, () => state.data);
+  return () => TrackByKey(getItems().map((item) => key(item.id, Row(item))));
+});
 
-setupScheduler(invalidateHandler);
-const CONTAINER = document.getElementById("main");
-function update() {
-  const { data, selected } = STORE.state;
+const Button = (text, id, cb) => div("col-sm-6 smallpad", _, Events(onClick(cb), button("btn btn-primary btn-block", { type: "button", id }, text)));
+// `withNextFrame()` runs rendering function inside of a sync frame update tick.
+withNextFrame(() => {
   render(
-    div("container").c(
-      Jumbotron(),
-      table("table table-hover table-striped test-data").c(
-        tbody()
-          .e(onClick((ev) => {
-            const target = ev.target;
-            STORE.dispatch({
-              type: target.matches(".delete") ? "delete" : "select",
-              id: +target.closest("tr").firstChild.textContent,
-            });
-          }))
-          .c(map(data, (item) => Row(item === selected ? { id: item.id, label: item.label, selected: item === selected } : item).k(item.id))),
-      ),
-      GlyphIcon("preloadicon glyphicon glyphicon-remove"),
-    ),
-    CONTAINER,
+    div("container", _, [
+      div("jumbotron", _, div("row", _, [
+        div("col-md-6", _, h1(_, _, "ivi")),
+        div("col-md-6", _, div("row", _, [
+          Button("Create 1,000 rows", "run", run),
+          Button("Create 10,000 rows", "runlots", runlots),
+          Button("Append 1,000 rows", "add", add),
+          Button("Update every 10th row", "update", update),
+          Button("Clear", "clear", clear),
+          Button("Swap Rows", "swaprows", swaprows),
+        ])),
+      ])),
+      table("table table-hover table-striped test-data", _, tbody(_, _, RowList())),
+      removeIcon("preloadicon glyphicon glyphicon-remove")
+    ]),
+    document.getElementById("main"),
   );
-}
-update();
+})();

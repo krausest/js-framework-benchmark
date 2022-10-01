@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-non-keyed-vanillajs-1",
+  "version": "1.1.1",
+  "description": "Vanilla.JS demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "",
+    "issues": [772]
+  },
+  "scripts": {
+    "build-dev": "echo 0",
+    "build-prod": "echo 0"
+  },
+  "keywords": [],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}

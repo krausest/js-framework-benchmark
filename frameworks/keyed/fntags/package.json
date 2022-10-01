@@ -1,0 +1,21 @@
+{
+  "name": "js-framework-benchmark-fntags",
+  "version": "0.0.1",
+  "description": "fntags demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@srfnstack/fntags"
+  },
+  "scripts": {
+    "build-dev": "npm i && node build.js dev",
+    "build-prod": "npm i && node build.js"
+  },
+  "author": "Robert Kempton",
+  "dependencies": {
+    "@srfnstack/fntags": "0.3.3"
+  },
+  "devDependencies": {
+    "fs-extra": "8.1.0",
+    "terser": "5.10.0"
+  }
+}

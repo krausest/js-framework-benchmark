@@ -4,7 +4,8 @@
   "description": "Lit-HTML demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "lit-html"
+    "frameworkVersionFromPackage": "lit-html",
+    "issues": [800, 801]
   },
   "scripts": {
     "build-dev": "rollup -c -w",
@@ -24,10 +25,11 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lit-html": "0.11.4"
+    "lit-html": "1.1.0"
   },
   "devDependencies": {
-    "rollup": "0.66.0",
-    "rollup-plugin-terser": "3.0.0"
+    "rollup": "1.12.3",
+    "rollup-plugin-minify-html-literals": "^1.2.2",
+    "rollup-plugin-terser": "5.0.0"
   }
 }

@@ -1,11 +1,22 @@
 {
-    "presets": [
-        ["env", {
-          "targets": {
-            "browsers": ["last 1 chrome versions"]
-          }
-        }],
-        "react"
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": ["last 1 chrome versions"]
+        }
+      }
     ],
-    "plugins": []
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "runtime": "automatic",
+        "importSource": "node_modules/preact"
+      }
+    ]
+  ]
 }

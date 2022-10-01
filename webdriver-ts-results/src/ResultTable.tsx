@@ -1,120 +1,53 @@
-import './App.css';
 import * as React from 'react';
-import {ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN} from './Common';
+import {ResultTableData, DisplayMode, BenchmarkType, FrameworkType} from './Common';
+import CpuResultsTable from './tables/CpuResultsTable'
+import MemResultsTable from './tables/MemResultsTable'
+import StartupResultsTable from './tables/StartupResultsTable'
+import { useDispatch, useSelector } from 'react-redux';
+import { sort, State } from './reducer';
+const BoxPlotTable = React.lazy(() => import(/* webpackChunkName: "BoxPlotTable" */ './tables/BoxPlotTable'));
 
-export interface Props {
-  separateKeyedAndNonKeyed: boolean;
-  data: Array<ResultTableData>;
-  sortBy: (name:string, tableIdx: number) => void;
-  currentSortKey: string;
+interface Props {
+  type: FrameworkType;
 }
 
-const CpuResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void}) => {
-  return data.resultsCPU.length==0 ? null :
-        (<div>
-          <h3>Duration in milliseconds ± standard deviation (Slowdown = Duration / Fastest)</h3>
-          <table className='results'>
-            <thead>
-              <tr>
-                <th className='benchname'><a href='#' className={currentSortKey==SORT_BY_NAME ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_NAME)}}>Name</a></th>
-                {data.frameworks.map(f => <th key={f.name}>{f.name}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {data.resultsCPU.map((resultsForBenchmark, benchIdx) =>
-                (<tr key={data.benchmarksCPU[benchIdx].id}>
-                    <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksCPU[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksCPU[benchIdx].id)}}>{data.benchmarksCPU[benchIdx].label}</a>
-                      <div className="rowCount">{data.benchmarksCPU[benchIdx].description}</div>
-                    </th>
-                    {resultsForBenchmark.map((result,idx) => result == null ? <td key={idx}></td> : result.render())}
-                </tr>
-              ))}
-              <tr>
-                <th><a href='#' className={currentSortKey==SORT_BY_GEOMMEAN ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_GEOMMEAN)}}>slowdown geometric mean</a></th>
-                {data.geomMeanCPU.map(result => result == null ? <td></td> : result.render())}
-              </tr>
-            </tbody>
-          </table>
-        </div>);
-};
+const ResultTable = ({type}: Props): JSX.Element|null => {
+  const texts = {
+    [FrameworkType.KEYED]: 
+      {label: 'Keyed results', 
+      description: 'Keyed implementations create an association between the domain data and a dom element by assigning a \'key\'. If data changes the dom element with that key will be updated. In consequence inserting or deleting an element in the data array causes a corresponding change to the dom.'}, 
+    [FrameworkType.NON_KEYED]:  
+      {label: 'Non keyed results', 
+        description: 'Non keyed implementations are allowed to reuse existing dom elements. In consequence inserting or deleting an element in the data array might append after or delete the last table row and update the contents of all elements after the inserting or deletion index. This can perform better, but can cause problems if dom state is modified externally.'}
+      };
+  const dispatch = useDispatch()
+  const data = useSelector<State, ResultTableData|undefined>((state) => state.resultTables[type]);
+  const currentSortKey = useSelector<State, string>((state) => state.sortKey);
+  const displayMode = useSelector<State, DisplayMode>((state) => state.displayMode);
+  const sortBy = (sortKey: string) => dispatch(sort(sortKey))
 
-const StartupResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void}) => {
-  return data.resultsStartup.length==0 ? null :
-        (<div>
-          <h3>Startup metrics (lighthouse with mobile simulation)</h3>
-          <table className='results'>
-            <thead>
-              <tr>
-                <th className='benchname'><a href='#' className={currentSortKey==SORT_BY_NAME ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_NAME)}}>Name</a></th>
-                {data.frameworks.map(f => <th key={f.name}>{f.name}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {data.resultsStartup.map((resultsForBenchmark, benchIdx) =>
-                (<tr key={data.benchmarksStartup[benchIdx].id}>
-                    <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksStartup[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksStartup[benchIdx].id)}}>{data.benchmarksStartup[benchIdx].label}</a>
-                      <div className="rowCount">{data.benchmarksStartup[benchIdx].description}</div>
-                    </th>
-                    {resultsForBenchmark.map(result => result == null ? <td></td> : result.render())}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>);
-};
+  if (data === undefined || data.frameworks.length===0 || (data.getResult(BenchmarkType.CPU).benchmarks.length===0 && data.getResult(BenchmarkType.STARTUP).benchmarks.length===0 && data.getResult(BenchmarkType.MEM).benchmarks.length===0)) return null;
 
-const MemResultsTable = ({data, currentSortKey, sortBy} : {data: ResultTableData, currentSortKey: string, sortBy: (name:string) => void}) => {
-  return data.resultsMEM.length==0 ? null :
-        (<div>
-          <h3>Memory allocation in MBs ± standard deviation</h3>
-          <table className='results'>
-            <thead>
-              <tr>
-                <th className='benchname'><a href='#' className={currentSortKey==SORT_BY_NAME ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_NAME)}}>Name</a></th>
-                {data.frameworks.map(f => <th key={f.name}>{f.name}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {data.resultsMEM.map((resultsForBenchmark, benchIdx) =>
-                (<tr key={data.benchmarksMEM[benchIdx].id}>
-                    <th className='benchname'><a href='#' className={currentSortKey==data.benchmarksMEM[benchIdx].id ? 'sortKey' : ''} onClick={(event) => {event.preventDefault(); sortBy(data.benchmarksMEM[benchIdx].id)}}>{data.benchmarksMEM[benchIdx].label}</a>
-                      <div className="rowCount">{data.benchmarksMEM[benchIdx].description}</div>
-                    </th>
-                    {resultsForBenchmark.map(result => result == null ? <td></td> : result.render())}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>);
-};
+    return (
+    <div className="mt-3">
+        <div key={texts[type].label}>
+          <h1>{texts[type].label}</h1>
+          <p>{texts[type].description}</p>
+            {
+        displayMode === DisplayMode.BoxPlot ?
+                (
+            <React.Suspense fallback={<div>Loading...</div>}>
+              <BoxPlotTable results={data.results} frameworks={data.frameworks} benchmarks={data.getResult(BenchmarkType.CPU).benchmarks} currentSortKey={currentSortKey} sortBy={sortBy}/>
+            </React.Suspense>
+                )
+        :
+            (<>
+            <CpuResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data}/>
+            <StartupResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data}/>
+            <MemResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data}/>
+            </>)}
+          </div>
+    </div>)
+  };
 
-interface Texts {
-  nonKeyed: boolean|undefined;
-  label: string;
-  description: string;
-}
-
-export class ResultTable extends React.Component<Props, {}> {
-  constructor(props: Props) {
-    super(props);
-  }
-  render() {
-      let texts : Array<Texts> = this.props.separateKeyedAndNonKeyed ?
-                [{nonKeyed: false, label: 'Keyed results', description: 'Keyed implementations create an association between the domain data and a dom element by assigning a \'key\'. If data changes the dom element with that key will be updated. In consequence inserting or deleting an element in the data array causes a corresponding change to the dom.'}, {nonKeyed: true, label: 'Non keyed results', description: 'Non keyed implementations are allowed to reuse existing dom elements. In consequence inserting or deleting an element in the data array might append after or delete the last table row and update the contents of all elements after the inserting or deletion index. This can perform better, but can cause problems if dom state is modified externally.'}]
-                : [{nonKeyed: undefined, label: 'Mixed keyed and non-keyed', description: 'This is an apple to oranges comparison. Use it to find out how much a non-keyed version can be faster (if that doesn\'t introduce any problems e.g. with transitions).'}];
-      return (
-        <div>
-          { this.props.data.map((data, idx) => {
-            return ( data.frameworks.length===0 || data.benchmarksCPU.length==0 && data.benchmarksStartup.length==0 && data.benchmarksMEM.length==0 ? null :
-              <div key={texts[idx].label}>
-                <h1>{texts[idx].label}</h1>
-                <p>{texts[idx].description}</p>
-                <CpuResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data}/>
-                <StartupResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data}/>
-                <MemResultsTable currentSortKey={this.props.currentSortKey} sortBy={(sortKey) => this.props.sortBy(sortKey, idx)} data={data}/>
-              </div>
-            )})}
-        </div>
-      );
-    }
-}
+export default ResultTable;

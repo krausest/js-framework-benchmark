@@ -1,29 +1,9 @@
 'use strict';
-/** @jsx preact.h */
 
 var preact = require('preact');
 var { render, h, Component } = preact;
 const {Row} = require('./Row');
 const {Store} = require('./Store');
-
-var startTime;
-var lastMeasure;
-var startMeasure = function(name) {
-    //console.timeStamp(name);
-    startTime = performance.now();
-    lastMeasure = name;
-}
-var stopMeasure = function() {
-    var last = lastMeasure;
-    if (lastMeasure) {
-        window.setTimeout(function () {
-            lastMeasure = null;
-            var stop = performance.now();
-            var duration = 0;
-            console.log(last+" took "+(stop-startTime));
-        }, 0);
-    }
-}
 
 export class Main extends Component{
     constructor(props) {
@@ -39,55 +19,38 @@ export class Main extends Component{
         this.swapRows = this.swapRows.bind(this);
         this.start = 0;
         this.length = 0;
-        
+
         window.app = this;
     }
-    printDuration() {
-        stopMeasure();
-    }
-    componentDidUpdate() {
-        this.printDuration();
-    }
-    componentDidMount() {
-        this.printDuration();
-    }
     run() {
-        startMeasure("run");
         this.state.store.run();
         this.setState({store: this.state.store});
     }
     add() {
-        startMeasure("add");
         this.state.store.add();
         this.setState({store: this.state.store});
     }
     update() {
-        startMeasure("update");
         this.state.store.update();
         this.setState({store: this.state.store});
     }
     select(id) {
-        startMeasure("select");
         this.state.store.select(id);
         this.setState({store: this.state.store});
     }
     delete(id) {
-        startMeasure("delete");
         this.state.store.delete(id);
         this.setState({store: this.state.store});
     }
     runLots() {
-        startMeasure("runLots");
         this.state.store.runLots();
         this.setState({store: this.state.store});
     }
     clear() {
-        startMeasure("clear");
         this.state.store.clear();
         this.setState({store: this.state.store});
     }
     swapRows() {
-        startMeasure("swapRows");
         this.state.store.swapRows();
         this.setState({store: this.state.store});
     }

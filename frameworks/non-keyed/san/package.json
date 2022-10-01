@@ -1,9 +1,10 @@
 {
-  "name": "js-framework-benchmark-san",
-  "version": "3.5.5",
+  "name": "js-framework-benchmark-non-keyed-san",
+  "version": "3.9.0",
   "description": "Benchmark for san framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "san"
+    "frameworkVersionFromPackage": "san",
+    "issues": [800]
   },
   "scripts": {
     "build-dev": "webpack -w -d",
@@ -26,9 +27,9 @@
     "babel-preset-stage-0": "6.24.1",
     "css-loader": "1.0.0",
     "webpack": "4.16.3",
-    "webpack-cli": "^3.1.0"
+    "webpack-cli": "3.1.0"
   },
   "dependencies": {
-    "san": "3.6.3"
+    "san": "^3.9.0"
   }
 }

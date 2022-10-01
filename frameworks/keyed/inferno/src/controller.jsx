@@ -1,34 +1,29 @@
-'use strict';
-
 import { Store } from './store.es6'
-import { linkEvent, Component, render, createTextVNode } from 'inferno'
+import { linkEvent, Component, render } from 'inferno'
 
-function Row({ d, id, styleClass, deleteFunc, selectFunc }) {
-  /*
-   * Only <td className="col-md-1"> and  <a onClick={linkEvent(id, selectFunc)}/>, nodes needs children shape flags
-   * Because they have dynamic children. We can pre-define children type by using $HasVNodeChildren
-   *
-   * other elements don't have children so $NoNormalize is not needed there
-   */
+function Row({ label, id, selected, deleteFunc, selectFunc }) {
   return (
-    <tr className={styleClass}>
-      <td className="col-md-1" $HasVNodeChildren>{createTextVNode(id + '')}</td>
-      <td className="col-md-4">
-        <a onClick={linkEvent(id, selectFunc)} $HasVNodeChildren>{createTextVNode(d.label)}</a>
-      </td>
-      <td className="col-md-1">
-        <a onClick={linkEvent(id, deleteFunc)}>
-          <span className="glyphicon glyphicon-remove" aria-hidden="true"/>
-        </a>
-      </td>
-      <td className="col-md-6"/>
-    </tr>
+      <tr className={selected ? 'danger' : null}>
+        <td className="col-md-1" $HasTextChildren>{id}</td>
+        <td className="col-md-4">
+          <a onClick={linkEvent(id, selectFunc)} $HasTextChildren>{label}</a>
+        </td>
+        <td className="col-md-1">
+          <a onClick={linkEvent(id, deleteFunc)}>
+            <span className="glyphicon glyphicon-remove" aria-hidden="true"/>
+          </a>
+        </td>
+        <td className="col-md-6"/>
+      </tr>
   )
 }
 
-function onComponentShouldUpdate(lastProps, nextProps) {
-  return nextProps.d !== lastProps.d || nextProps.styleClass !== lastProps.styleClass;
-}
+// Inferno functional components has hooks, when they are static they can be defined in defaultHooks property
+Row.defaultHooks = {
+  onComponentShouldUpdate(lastProps, nextProps) {
+    return nextProps.label !== lastProps.label || nextProps.selected !== lastProps.selected;
+  }
+};
 
 function createRows(store, deleteFunc, selectFunc) {
   const rows = [];
@@ -40,30 +35,74 @@ function createRows(store, deleteFunc, selectFunc) {
     const id = d.id;
 
     rows.push(
-      <Row
-        styleClass={id === selected ? 'danger' : null}
-        key={id}
-        d={d}
-        id={id}
-        selected={selected}
-        deleteFunc={deleteFunc}
-        selectFunc={selectFunc}
-        onComponentShouldUpdate={onComponentShouldUpdate}
-      />
+        <Row
+            selected={id === selected}
+            key={id}
+            label={d.label}
+            id={id}
+            deleteFunc={deleteFunc}
+            selectFunc={selectFunc}
+        />
     );
   }
 
-  /*
-   * We can optimize rendering rows by pre-defining children types.
-   * In this case all children are keyed: so we add flag $HasKeyedChildren and $NoNormalize
-   * when specific shape is used we need to make sure there are no holes in the array and are keys are unique
-   */
-  return <tbody $HasKeyedChildren>{rows}</tbody>;
+  return rows;
 }
 
+function Header({run, runLots, add, update, clear, swapRows}) {
+  return (
+      <div className="jumbotron">
+        <div className="row">
+          <div className="col-md-6">
+            <h1>Inferno</h1>
+          </div>
+          <div className="col-md-6">
+            <div className="row">
+              <div className="col-sm-6 smallpad">
+                <button type="button" className="btn btn-primary btn-block" id="run" onClick={run}>Create 1,000
+                  rows
+                </button>
+              </div>
+              <div className="col-sm-6 smallpad">
+                <button type="button" className="btn btn-primary btn-block" id="runlots" onClick={runLots}>Create
+                  10,000 rows
+                </button>
+              </div>
+              <div className="col-sm-6 smallpad">
+                <button type="button" className="btn btn-primary btn-block" id="add" onClick={add}>Append 1,000
+                  rows
+                </button>
+              </div>
+              <div className="col-sm-6 smallpad">
+                <button type="button" className="btn btn-primary btn-block" id="update" onClick={update}>Update
+                  every 10th row
+                </button>
+              </div>
+              <div className="col-sm-6 smallpad">
+                <button type="button" className="btn btn-primary btn-block" id="clear" onClick={clear}>Clear
+                </button>
+              </div>
+              <div className="col-sm-6 smallpad">
+                <button type="button" className="btn btn-primary btn-block" id="swaprows" onClick={swapRows}>Swap
+                  Rows
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  );
+}
+
+Header.defaultHooks = {
+  onComponentShouldUpdate() {
+    return false;
+  }
+};
+
 export class Controller extends Component {
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     this.state = { store: new Store() };
     this.select = this.select.bind(this);
     this.delete = this.delete.bind(this);
@@ -76,19 +115,19 @@ export class Controller extends Component {
     this.start = 0;
   }
 
-  run() {
+  run(event) {
     event.stopPropagation();
     this.state.store.run();
     this.setState({ store: this.state.store });
   }
 
-  add() {
+  add(event) {
     event.stopPropagation();
     this.state.store.add();
     this.setState({ store: this.state.store });
   }
 
-  update() {
+  update(event) {
     event.stopPropagation();
     this.state.store.update();
     this.setState({ store: this.state.store });
@@ -106,7 +145,7 @@ export class Controller extends Component {
     this.setState({ store: this.state.store });
   }
 
-  runLots() {
+  runLots(event) {
     event.stopPropagation();
     this.state.store.runLots();
     this.setState({ store: this.state.store });
@@ -118,63 +157,31 @@ export class Controller extends Component {
     this.setState({ store: this.state.store });
   }
 
-  swapRows() {
+  swapRows(event) {
     event.stopPropagation();
     this.state.store.swapRows();
     this.setState({ store: this.state.store });
   }
 
   render() {
-    /*
-     * Only <table> needs $HasVNodeChildren flag everything else is static
-     * tables children is tbody so another vNode, no other flags needed
-     */
-    return (<div className="container">
-      <div className="jumbotron">
-        <div className="row">
-          <div className="col-md-6">
-            <h1>Inferno - keyed</h1>
-          </div>
-          <div className="col-md-6">
-            <div className="row">
-              <div className="col-sm-6 smallpad">
-                <button type="button" className="btn btn-primary btn-block" id="run" onClick={this.run}>Create 1,000
-                  rows
-                </button>
-              </div>
-              <div className="col-sm-6 smallpad">
-                <button type="button" className="btn btn-primary btn-block" id="runlots" onClick={this.runLots}>Create
-                  10,000 rows
-                </button>
-              </div>
-              <div className="col-sm-6 smallpad">
-                <button type="button" className="btn btn-primary btn-block" id="add" onClick={this.add}>Append 1,000
-                  rows
-                </button>
-              </div>
-              <div className="col-sm-6 smallpad">
-                <button type="button" className="btn btn-primary btn-block" id="update" onClick={this.update}>Update
-                  every 10th row
-                </button>
-              </div>
-              <div className="col-sm-6 smallpad">
-                <button type="button" className="btn btn-primary btn-block" id="clear" onClick={this.clear}>Clear
-                </button>
-              </div>
-              <div className="col-sm-6 smallpad">
-                <button type="button" className="btn btn-primary btn-block" id="swaprows" onClick={this.swapRows}>Swap
-                  Rows
-                </button>
-              </div>
-            </div>
-          </div>
+    return (
+        <div className="container">
+          <Header
+              run={this.run}
+              runLots={this.runLots}
+              add={this.add}
+              update={this.update}
+              clear={this.clear}
+              swapRows={this.swapRows}
+          />
+          <table className="table table-hover table-striped test-data">
+            <tbody $HasKeyedChildren>
+              {createRows(this.state.store, this.delete, this.select)}
+            </tbody>
+          </table>
+          <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"/>
         </div>
-      </div>
-      <table className="table table-hover table-striped test-data" $HasVNodeChildren>
-        {createRows(this.state.store, this.delete, this.select)}
-      </table>
-      <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"/>
-    </div>);
+    );
   }
 }
 
