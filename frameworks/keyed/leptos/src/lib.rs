@@ -152,7 +152,7 @@ fn App(cx: Scope) -> Element {
                         let row_id = row.id;
                         let (label, set_label) = row.label;
                         view! {
-                            <tr prop:className={move || if selected() == Some(row_id) { Some("danger") } else { None }}>
+                            <tr class:danger={move || selected() == Some(row_id)}>
                                 <td class="col-md-1">{row_id.to_string()}</td>
                                 <td class="col-md-4"><a on:click=move |_| set_selected(move |n| *n = Some(row_id))>{move || label.get()}</a></td>
                                 <td class="col-md-1"><a on:click=move |_| remove(row_id)><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
