@@ -133,6 +133,8 @@ fn App(cx: Scope) -> Element {
         });
     };
 
+    let is_selected = create_selector(cx, selected);
+
     view! {
         <div class="container">
             <div class="jumbotron"><div class="row">
@@ -148,16 +150,19 @@ fn App(cx: Scope) -> Element {
             </div></div>
             <table class="table table-hover table-striped test-data">
                 <tbody>
-                    <For each={ data } key={|row| row.id}>{move |cx, row: &RowData| {
-                        let row_id = row.id;
-                        let (label, set_label) = row.label;
-                        view! {
-                            <tr class:danger={move || selected() == Some(row_id)}>
-                                <td class="col-md-1">{row_id.to_string()}</td>
-                                <td class="col-md-4"><a on:click=move |_| set_selected(move |n| *n = Some(row_id))>{move || label.get()}</a></td>
-                                <td class="col-md-1"><a on:click=move |_| remove(row_id)><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-                                <td class="col-md-6"/>
-                            </tr>
+                    <For each=data key=|row| row.id>{{
+                        let is_s = is_selected.clone();
+                        move |cx, row: &RowData| {
+                            let row_id = row.id;
+                            let (label, _) = row.label;
+                            view! {
+                                <tr class:danger={let is_s = is_s.clone(); move || is_s(Some(row_id))}>
+                                    <td class="col-md-1">{row_id.to_string()}</td>
+                                    <td class="col-md-4"><a on:click=move |_| set_selected(move |n| *n = Some(row_id))>{move || label.get()}</a></td>
+                                    <td class="col-md-1"><a on:click=move |_| remove(row_id)><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                                    <td class="col-md-6"/>
+                                </tr>
+                            }
                         }
                     }}</For>
                 </tbody>

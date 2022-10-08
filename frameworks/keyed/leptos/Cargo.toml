@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 [dependencies]
 getrandom = { version = "0.2.7", features = ["js"] }
 rand = { version = "0.8.5", features = ["small_rng"] }
-leptos = { version = "0.0.1", features = ["csr"]}
+leptos = { version = "0.0.3", features = ["csr"]}
 wasm-bindgen = "0.2.82"
 web-sys = { version = "0.3.59", features = ["Window", "Document"] }
 
