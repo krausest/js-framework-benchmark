@@ -335,7 +335,6 @@ export class ResultTableData {
     }
 
     computeFactors(benchmark: Benchmark): Array<TableResultValueEntry|null> {
-        debugger;
         const benchmarkResults = this.frameworksForFactors.map(f => this.results(benchmark, f));
         const selectFn = (result: Result|null) => {
             if (result===null) return 0;
