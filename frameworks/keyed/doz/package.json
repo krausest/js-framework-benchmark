@@ -4,7 +4,7 @@
   "description": "Doz demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "doz",
+    "frameworkVersion": "5-preview",
     "issues": [800]
   },
   "scripts": {
