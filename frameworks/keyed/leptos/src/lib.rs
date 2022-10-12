@@ -3,7 +3,6 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use leptos::*;
 use rand::prelude::*;
 use wasm_bindgen::prelude::*;
-use web_sys::window;
 
 static ADJECTIVES: &[&str] = &[
     "pretty",
@@ -46,8 +45,9 @@ static NOUNS: &[&str] = &[
 #[component]
 fn Button<'a>(cx: Scope, id: &'a str, text: &'a str) -> Element {
     view! {
+        cx,
         <div class="col-sm-6 smallpad">
-            <button id={id} class="btn btn-primary btn-block" type="button">{text}</button>
+            <button id=id class="btn btn-primary btn-block" type="button">{text}</button>
         </div>
     }
 }
@@ -95,38 +95,38 @@ fn App(cx: Scope) -> Element {
     let (selected, set_selected) = create_signal(cx, None::<usize>);
 
     let remove = move |id| {
-        set_data(move |data| data.retain(|row| row.id != id));
+        set_data.update(move |data| data.retain(|row| row.id != id));
     };
 
     let run = move |_| {
-        set_data(move |n| *n = build_data(cx, 1000));
-        set_selected(|n| *n = None);
+        set_data(build_data(cx, 1000));
+        set_selected(None);
     };
 
     let run_lots = move |_| {
-        set_data(move |n| *n = build_data(cx, 10000));
-        set_selected(|n| *n = None);
+        set_data(build_data(cx, 10000));
+        set_selected(None);
     };
 
     let add = move |_| {
-        set_data(move |data| data.append(&mut build_data(cx, 1000)));
+        set_data.update(move |data| data.append(&mut build_data(cx, 1000)));
     };
 
     let update = move |_| {
-        set_data(|data| {
-            for row in data.iter_mut().step_by(10) {
+        data.with(|data| {
+            for row in data.iter().step_by(10) {
                 row.label.1.update(|n| *n = format!("{} !!!", n));
             }
         });
     };
 
     let clear = move |_| {
-        set_data(|n| *n = Vec::new());
-        set_selected(|n| *n = None);
+        set_data(Vec::new());
+        set_selected(None);
     };
 
     let swap_rows = move |_| {
-        set_data(|data| {
+        set_data.update(|data| {
             if data.len() > 998 {
                 data.swap(1, 998);
             }
@@ -136,6 +136,7 @@ fn App(cx: Scope) -> Element {
     let is_selected = create_selector(cx, selected);
 
     view! {
+        cx,
         <div class="container">
             <div class="jumbotron"><div class="row">
             <div class="col-md-6"><h1>"Leptos"</h1></div>
@@ -151,14 +152,16 @@ fn App(cx: Scope) -> Element {
             <table class="table table-hover table-striped test-data">
                 <tbody>
                     <For each=data key=|row| row.id>{{
-                        let is_s = is_selected.clone();
+                        let is_selected = is_selected.clone();
                         move |cx, row: &RowData| {
                             let row_id = row.id;
                             let (label, _) = row.label;
+                            let is_selected = is_selected.clone();
                             view! {
-                                <tr class:danger={let is_s = is_s.clone(); move || is_s(Some(row_id))}>
+                                cx,
+                                <tr class:danger={move || is_selected(Some(row_id))}>
                                     <td class="col-md-1">{row_id.to_string()}</td>
-                                    <td class="col-md-4"><a on:click=move |_| set_selected(move |n| *n = Some(row_id))>{move || label.get()}</a></td>
+                                    <td class="col-md-4"><a on:click=move |_| set_selected(Some(row_id))>{move || label.get()}</a></td>
                                     <td class="col-md-1"><a on:click=move |_| remove(row_id)><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
                                     <td class="col-md-6"/>
                                 </tr>
@@ -176,6 +179,6 @@ fn App(cx: Scope) -> Element {
 pub fn start() {
     let mount_el = document().query_selector("#main").unwrap().unwrap();
     leptos::mount(mount_el.unchecked_into(), |cx| {
-        view! { <App/> }
+        view! { cx, <App/> }
     });
 }
