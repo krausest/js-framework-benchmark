@@ -4,7 +4,7 @@
   "description": "Doz demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "doz",
+    "frameworkVersion": "5-preview",
     "issues": [800]
   },
   "scripts": {
@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "doz": "3.4.1"
+    "doz": "dozjs/doz#v5"
   },
   "devDependencies": {
     "webpack": "4.41.4",
