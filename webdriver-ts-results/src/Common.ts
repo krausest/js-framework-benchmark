@@ -223,7 +223,10 @@ export class ResultTableData {
         })
         this.frameworks = this.allFrameworks.filter(framework => framework.type === type && this.selectedFameworks.has(framework));
         this.frameworksForFactors = this.allFrameworks.filter(framework => framework.type === type 
-            && framework.issues.every(i => allowedIssues.has(i)));
+            && (framework.issues.every(i => allowedIssues.has(i))
+            || (framework.name === 'vanillajs-keyed') || (framework.name === 'vanillajs-1-keyed')
+            || (framework.name === 'vanillajs-non-keyed') || (framework.name === 'vanillajs-1-non-keyed'))
+            );
         this.update(sortKey);
     }
     private update(sortKey: string) {
