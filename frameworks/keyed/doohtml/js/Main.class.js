@@ -140,40 +140,6 @@ Doo.define(
 			e.target.blur()
 			Timer.stop('tot')
 		}
-		
-		// renderTable(dataSet=this.data[this.defaultDataSet],target=this.place[0], start=0) {
-		// 	let len = dataSet.length - start //,elem = document.createElement(target.tagName)
-		// 	target.innerHTML = this.renderNode(target, dataSet, start , len)
-		// 	// tableRows = target.querySelectorAll('tr')
-		// 	// for ( i=0;i<len;i++) {
-		// 	// 	tableRows.item(i).key = dataSet[i].id
-		// 	// }	
-		// 	target.querySelectorAll('tr').forEach((item,i) => item.key = dataSet[i].id )
-
-		// }
-		
-		/*	
-		
-		renderTable(dataSet=this.data[this.defaultDataSet],target=this.place[0], start=0) {
-			let len = dataSet.length - start, tableRows, i 
-			let elem = document.createElement('template')
-			elem.innerHTML = this.renderNode(target, dataSet, start , len)
-			target.append(elem.content)
-			tableRows = target.querySelectorAll('tr')
-			for ( i=0;i<len;i++) {
-				tableRows.item(i).key = dataSet[i].id
-			}	
-		}	
-*/
-		// append(dataSet,target=this.place[0]) {
-		// 	let len = dataSet.length,
-		// 	    elem = document.createElement(target.tagName)
-		// 	elem.innerHTML = this.renderNode(target, dataSet, 0 , len) 
-		// 	let tableRows = elem.querySelectorAll('tr')
-		// 	for (let i=0;i<len;i++) {
-		// 	 	this.place[0].appendChild(tableRows.item(i)).key = dataSet[i].id
-		// 	}	
-		// }	
 
 		update() {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
