@@ -93,15 +93,29 @@ Doo.define(
 			this.clear()
 			this.data.rows = this.buildData()
 			this.renderTable()
-	//		e.target.blur()
+			e.target.blur()
 			Timer.stop('tot')
 		}
 
 
 		add() {
+			
+			let newRows = this.buildData()
+			this.data.rows = this.data.rows.concat(newRows)
+			this.append(newRows)
+		}
+		add(e) {
+			Timer.start('tot')
+			//this.clear()
+			let start = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.renderTable(this.data.rows)
+			this.append(this.data.rows.slice(start), this.tbody, start)
+			e.target.blur()
+			Timer.stop('tot')
+
 		}    
+		
+		
 	// 	add() {
 	// //		let startRow = this.data.rows.length
 	// 		this.data.rows = this.data.rows.concat(this.buildData())
@@ -115,39 +129,51 @@ Doo.define(
 
 			this.clear()
 			this.data.rows = this.buildData(10000)
-			this.renderTable()
+			this.renderTable(this.data.rows, this.tbody)
 		}
 		runLots(e) {
 			Timer.start('tot')
 			this.clear()
 			this.data.rows = this.buildData(10000)	
 			this.renderTable()
+
 			e.target.blur()
 			Timer.stop('tot')
 		}
-		renderTable(dataSet=this.data[this.defaultDataSet], start=0) {
-			let len = dataSet.length - start,
-			    elem = document.createElement('tbody')
-			elem.innerHTML = this.renderNode(this.place[0], dataSet, start , len) 
-			let tableRows = elem.querySelectorAll('tr'),
-			newElem
-			for (let i=0;i<len;i++) {
-				newElem = this.place[0].appendChild(tableRows.item(i))
-				newElem.key = dataSet[i].id
+		
+		// renderTable(dataSet=this.data[this.defaultDataSet],target=this.place[0], start=0) {
+		// 	let len = dataSet.length - start //,elem = document.createElement(target.tagName)
+		// 	target.innerHTML = this.renderNode(target, dataSet, start , len)
+		// 	// tableRows = target.querySelectorAll('tr')
+		// 	// for ( i=0;i<len;i++) {
+		// 	// 	tableRows.item(i).key = dataSet[i].id
+		// 	// }	
+		// 	target.querySelectorAll('tr').forEach((item,i) => item.key = dataSet[i].id )
+
+		// }
+		
+		/*	
+		
+		renderTable(dataSet=this.data[this.defaultDataSet],target=this.place[0], start=0) {
+			let len = dataSet.length - start, tableRows, i 
+			let elem = document.createElement('template')
+			elem.innerHTML = this.renderNode(target, dataSet, start , len)
+			target.append(elem.content)
+			tableRows = target.querySelectorAll('tr')
+			for ( i=0;i<len;i++) {
+				tableRows.item(i).key = dataSet[i].id
 			}	
-			// newElem = this.place[0].appendChild(tableRows.item(len-1))
-			// newElem.key = dataSet[len-1].id
-
-			// for (let i=len-2;i>=0;i--) {
-			// 	newElem = this.place[0].insertBefore(tableRows.item(i), this.place[0].firstChild)
-			// 	newElem.key = dataSet[i].id
-			// }	
-
-
-		}
-	
-
-
+		}	
+*/
+		// append(dataSet,target=this.place[0]) {
+		// 	let len = dataSet.length,
+		// 	    elem = document.createElement(target.tagName)
+		// 	elem.innerHTML = this.renderNode(target, dataSet, 0 , len) 
+		// 	let tableRows = elem.querySelectorAll('tr')
+		// 	for (let i=0;i<len;i++) {
+		// 	 	this.place[0].appendChild(tableRows.item(i)).key = dataSet[i].id
+		// 	}	
+		// }	
 
 		update() {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
@@ -201,7 +227,7 @@ Doo.define(
 				} else if (e.target.matches('#run')) {
 					this.run(e)
 				} else if (e.target.matches('#add')) {
-					this.add()
+					this.add(e)
 				} else if (e.target.matches('#update')) {
 					this.update()
 				} else if (e.target.matches('#clear')) {
