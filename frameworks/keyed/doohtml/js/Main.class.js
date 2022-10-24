@@ -93,10 +93,10 @@ Doo.define(
 			this.renderTable()
 		}
 
-	 	add() {
-			let startRow = this.data.rows.length
-	 		this.data.rows = this.data.rows.concat(this.buildData())
-	 		this.renderTable(this.data.rows, startRow)
+		add() {
+			let start = this.data.rows.length
+			this.data.rows = this.data.rows.concat(this.buildData())
+			this.append(this.data.rows.slice(start), this.tbody, start)
 		}    
 
 		runLots() {
