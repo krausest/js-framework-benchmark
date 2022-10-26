@@ -141,6 +141,18 @@ Doo.define(
 			Timer.stop('tot')
 		}
 
+		// renderTable(dataSet=this.data[this.defaultDataSet],target=this.place[0], start=0) {
+		// 	let elem = document.createElement('template')
+		// 	elem.innerHTML = this.renderNode(target, dataSet, start , dataSet.length - start)
+		// 	let tableRows = elem.content.querySelectorAll('tr'), len = dataSet.length 
+		// 	for (let i=0;i<len;i++) {
+		// 	 	 tableRows.item(i).key = dataSet[i].id
+		// //	 	 tableRows.item(i).querySelector('a').textContent = ''
+		// 	}	
+		// 	target.append(elem.content)
+		// }
+	
+
 		update() {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
 				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
