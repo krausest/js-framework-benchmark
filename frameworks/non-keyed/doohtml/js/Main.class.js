@@ -76,7 +76,7 @@ Doo.define(
 		add() {
 			let start = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
-			this.append(this.data.rows.slice(start), this.tbody, start)
+			this.append(this.data.rows, this.tbody, start)
 		}    
 
 		runLots() {
