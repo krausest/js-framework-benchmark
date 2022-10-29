@@ -8,6 +8,8 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 
+import Timer from './doo.timer.js'
+
 Doo.define(
   	class Main extends Doo {
 		constructor() {
@@ -66,24 +68,38 @@ Doo.define(
 			}
 		}  
 
-		run() {
+		run(e) {
+			Timer.start('tot')
 			this.data.rows = this.buildData()
 			if (this.tbody.childNodes.length > this.data.rows.length) {
 				this.tbody.textContent = ''
 			}
 			this.renderTable()
-		}
-		add() {
-			this.data.rows = this.data.rows.concat(this.buildData())
-			this.renderTable(this.data.rows, this.data.rows.length)
-		}    
+			e.target.blur()
+			Timer.stop('tot')
 
-		runLots() {
+		}
+		add(e) {
+			Timer.start('tot')
+			//this.clear()
+			let start = this.data.rows.length
+			this.data.rows = this.data.rows.concat(this.buildData())
+			this.append(this.data.rows, this.tbody, start)
+			e.target.blur()
+			Timer.stop('tot')
+
+		}   
+
+		runLots(e) {
+			Timer.start('tot')
 			this.data.rows = this.buildData(10000)
 			if (this.tbody.childNodes.length > this.data.rows.length) {
 				this.tbody.textContent = ''
 			}
 			this.renderTable()
+			e.target.blur()
+			Timer.stop('tot')
+
 		}
 
 		update() {
@@ -129,11 +145,11 @@ Doo.define(
 			document.getElementById("main").addEventListener('click', e => {
 				e.preventDefault()
 				if (e.target.matches('#runlots')) {
-					this.runLots()
+					this.runLots(e)
 				} else if (e.target.matches('#run')) {
-					this.run()
+					this.run(e)
 				} else if (e.target.matches('#add')) {
-					this.add()
+					this.add(e)
 				} else if (e.target.matches('#update')) {
 					this.update()
 				} else if (e.target.matches('#clear')) {
