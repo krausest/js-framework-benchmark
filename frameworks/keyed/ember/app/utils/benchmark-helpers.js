@@ -53,7 +53,7 @@ export const buildData = (id, count = 1000) => {
 
 export const add = (id, data) => {
     const newData = buildData(id, 1000);
-    return [ ...data, ...newData.data];
+    return {data: [ ...data, ...newData.data], id: newData.id};
 }
 
 export const run = (id) => {

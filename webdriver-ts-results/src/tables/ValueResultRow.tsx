@@ -9,7 +9,7 @@ interface Props {
     currentSortKey: string;
     sortBy: (name: string) => void;
 }
-const ValueResultRow = ({benchIdx, resultsForBenchmark, benchmarks, currentSortKey, sortBy}: Props ) => {
+const ValueResultRow = ({benchIdx, resultsForBenchmark, benchmarks, currentSortKey, sortBy}: Props ): JSX.Element => {
     const sort = (sortValue: string) => (event: React.SyntheticEvent) => {
         event.preventDefault();
         sortBy(sortValue)

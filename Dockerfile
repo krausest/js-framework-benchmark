@@ -14,7 +14,7 @@ RUN apt-get install -y python3 m4 libtinfo5 libghc-zlib-dev rsync ghc haskell-st
 
 ENV NVM_DIR /usr/local/nvm
 RUN mkdir -p $NVM_DIR
-ENV NODE_VERSION 16.13.2
+ENV NODE_VERSION 16.15.1
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
 
 # install node and npm
@@ -31,10 +31,6 @@ RUN mkdir /server
 RUN mkdir /build
 RUN mkdir /src
 
-COPY package.json /server
-WORKDIR /server
-RUN npm install
-
 # Volume before chown changes owwner
 VOLUME /src
 VOLUME /build
@@ -45,10 +41,20 @@ WORKDIR /build
 RUN dos2unix /root/install_rust.sh
 RUN bash /root/install_rust.sh
 
+# Create server
+
+COPY server /server
+WORKDIR /server
+RUN npm install
+
 # USER user
 
 RUN npm install
-COPY lws.config.js /server
 EXPOSE 8080
-CMD ["/server/node_modules/.bin/ws","-c","/server/lws.config.js","--static.maxage", "1"]
+WORKDIR /build
+CMD ["mkdir", "/build/frameworks"]
+CMD ["mkdir", "/build/frameworks/keyed"]
+CMD ["mkdir", "/build/frameworks/non-keyed"]
+CMD ["/server/runserver-docker.sh"]
+#CMD ["node","index.js"]
 

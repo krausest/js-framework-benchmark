@@ -86,7 +86,7 @@ function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
   } else if (process.platform == "linux") {
     return "google-chrome";
   } else if(/^win/i.test(process.platform)) {
-    return 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';    
+    return 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';    
   } else {
     throw new Error("Path to Google Chrome executable must be specified");
   }
@@ -98,14 +98,17 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
   let window_width = width,
     window_height = height;
 
+  let args = [`--window-size=${window_width},${window_height}`,'--js-flags=--expose-gc' ];
+  if (benchmarkOptions.headless) args.push('--headless=chrome');
+
   const browser = await puppeteer.launch({
-    headless: benchmarkOptions.headless,
+    headless: false,
     executablePath: browserPath(benchmarkOptions),
     ignoreDefaultArgs: ["--enable-automation",  // 92/115
     "--disable-background-networking",
     "--enable-features=NetworkService,NetworkServiceInProcess",
     "--disable-background-timer-throttling",
-    "--disable-backgrounding-occluded-windows",
+    // "--disable-backgrounding-occluded-windows",
     // "--disable-breakpad",
     // "--disable-client-side-phishing-detection",
     // "--disable-component-extensions-with-background-pages",
@@ -127,7 +130,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
     // "--enable-blink-features=IdleDetection",
     // // "--export-tagged-pdf"
   ],
-    args: [`--window-size=${window_width},${window_height}`],
+    args,
     dumpio: false,
     defaultViewport: {
       width,

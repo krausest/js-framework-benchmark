@@ -1,0 +1,33 @@
+{
+  "name": "js-framework-benchmark-reflex",
+  "version": "0.3.3",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@zouloux/reflex"
+  },
+  "source": "src/main.html",
+  "scripts": {
+    "build-dev": "webpack -w -d",
+    "build-prod": "webpack"
+  },
+  "author": "Alexis Bouhet",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@babel/plugin-transform-react-jsx": "7.16.7",
+    "@zouloux/reflex": "^0.8.4"
+  },
+  "devDependencies": {
+    "@babel/core": "7.16.7",
+    "@babel/plugin-proposal-class-properties": "7.16.7",
+    "@babel/preset-env": "7.16.8",
+    "@babel/preset-react": "7.16.7",
+    "babel-loader": "8.2.3",
+    "babel-minify-webpack-plugin": "0.3.1",
+    "webpack": "4.44.2",
+    "webpack-cli": "3.3.12"
+  }
+}

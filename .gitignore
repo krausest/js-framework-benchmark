@@ -35,6 +35,8 @@ dist
 *.iml
 TODO.txt
 */dist/
+**/crui/.awcache
+**/angular*/.angular
 angular*/app/app.js
 angular*/app/app.js.map
 angular*/src/app.ngsummary.json
@@ -43,6 +45,7 @@ target/
 webdriver-ts/results/
 webdriver-ts/traces/
 webdriver-ts/results*/
+webdriver-ts/traces*/
 webdriver-ts/old_results/
 webdriver-ts-results/table_*.html
 webdriver-ts/table_*.html

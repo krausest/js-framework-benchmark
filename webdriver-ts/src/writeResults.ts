@@ -1,22 +1,22 @@
 import * as fs from "fs";
 import { result } from "lodash";
-import { BenchmarkInfo, BenchmarkType, fileName, TBenchmark } from "./benchmarksCommon";
-import { BenchmarkLighthouse, StartupBenchmarkResult } from "./benchmarksLighthouse";
+import { BenchmarkInfo, BenchmarkType, fileName } from "./benchmarksCommon";
+import { BenchmarkLighthouse, StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse";
 import { TBenchmarkPuppeteer } from "./benchmarksPuppeteer";
 import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver";
 import { config as defaultConfig, FrameworkData, JSONResult } from "./common";
-const jStat = require("jstat").jStat;
+import {jStat} from 'jstat';
 
 export type ResultLightHouse = {
   framework: FrameworkData;
-  benchmark: BenchmarkLighthouse;
+  benchmark: BenchmarkInfo;
   results: StartupBenchmarkResult[];
   type: BenchmarkType.STARTUP; 
 }
 
 export type ResultCPUOrMem = {
   framework: FrameworkData;
-  benchmark: TBenchmark;
+  benchmark: BenchmarkInfo;
   results: number[];
   type: BenchmarkType.MEM | BenchmarkType.CPU; 
 }
@@ -25,7 +25,7 @@ export function writeResults(config: typeof defaultConfig, res: ResultLightHouse
   if (!config.WRITE_RESULTS) return;
 
   if (res.type==BenchmarkType.STARTUP) {
-    for (let subbench of res.benchmark.subbenchmarks) {
+    for (let subbench of subbenchmarks) {
       let results = res.results.filter(r => r.benchmark.id == subbench.id).map(r => r.result);
       createResultFile(config, results, res.framework, subbench);
     }

@@ -9,7 +9,7 @@ interface Props {
     statisticallySignificantFactor: string|number|undefined;
 }
 
-const ValueCell = ({formattedValue, statisticallySignificantFactor, textColor, bgColor, formattedFactor, deviation}: Props) => {
+const ValueCell = ({formattedValue, statisticallySignificantFactor, textColor, bgColor, formattedFactor, deviation}: Props): JSX.Element => {
     return (<td style={{backgroundColor:bgColor, color: textColor}}>
                 <span className="mean">{formattedValue}</span>
                 {deviation!=null && <span className="deviation">{deviation}</span>}

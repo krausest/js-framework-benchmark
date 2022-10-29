@@ -1,10 +1,9 @@
 
 /* IMPORT */
 
-import {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
-import {$, createElement, render, template, useSelector, For, Fragment} from 'voby';
-
-window.React = {createElement, Fragment};
+import {createElement, Fragment} from 'voby';
+import {$, render, template, useSelector, For} from 'voby';
+import type {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
 
 /* TYPES */
 
@@ -58,55 +57,39 @@ const Model = (() => {
   };
 
   const runWith = ( length: number ): void => {
-    clear ();
     $data ( buildData ( length ) );
   };
 
   const add = (): void => {
-    const data = $data ();
-    data.push.apply ( data, buildData ( 1000 ) );
-    $data.emit ();
+    $data ( data => [...data, ...buildData ( 1000 )] );
   };
 
   const update = (): void => {
     const data = $data ();
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
-      const {label} = data[i];
-      label.update ( label => label + ' !!!' );
+      data[i].label ( label => label + ' !!!' );
     }
   };
 
   const swapRows = (): void => {
-    const data = $data ();
+    const data = $data ().slice ();
     if ( data.length <= 998 ) return;
     const datum1 = data[1];
     const datum998 = data[998];
     data[1] = datum998;
     data[998] = datum1;
-    $data.emit ();
-  };
-
-  const dispose = (): void => {
-    const data = $data ();
-    for ( let i = 0, l = data.length; i < l; i++ ) {
-      data[i].label.dispose ();
-    }
-    isSelected.dispose ();
+    $data ( data );
   };
 
   const clear = (): void => {
-    dispose ();
     $data ( [] );
   };
 
-  const remove = ( id: number ): void => {
-    const data = $data ();
-    const index = data.findIndex ( datum => datum.id === id );
-    if ( index === -1 ) return;
-    const datum = data[index];
-    datum.label.dispose ();
-    data.splice ( index, 1 );
-    $data.emit ();
+  const remove = ( id: number ): void  => {
+    $data ( data => {
+      const idx = data.findIndex ( datum => datum.id === id );
+      return [...data.slice ( 0, idx ), ...data.slice ( idx + 1 )];
+    });
   };
 
   const select = ( id: number ): void => {
@@ -115,7 +98,7 @@ const Model = (() => {
 
   const isSelected = useSelector ( $selected );
 
-  return { $data, $selected, run, runLots, runWith, add, update, swapRows, dispose, clear, remove, select, isSelected };
+  return { $data, $selected, run, runLots, runWith, add, update, swapRows, clear, remove, select, isSelected };
 
 })();
 
@@ -127,8 +110,8 @@ const Button = ({ id, text, onClick }: { id: string | number, text: string, onCl
   </div>
 );
 
-const Row = template (({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
-  <tr className={className}>
+const Row = template (({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<Record<string, FunctionMaybe<boolean>>>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+  <tr class={className}>
     <td class="col-md-1">{id}</td>
     <td class="col-md-4">
       <a onClick={onSelect}>{label}</a>
@@ -170,7 +153,8 @@ const App = (): JSX.Element => {
           <For values={$data}>
             {( datum: IDatum ) => {
               const {id, label} = datum;
-              const className = () => isSelected ( id ) ? 'danger' : '';
+              const selected = isSelected ( id );
+              const className = { danger: selected };
               const onSelect = select.bind ( undefined, id );
               const onRemove = remove.bind ( undefined, id );
               const props = {id, label, className, onSelect, onRemove};

@@ -119,7 +119,7 @@ app = new App({
 		},
 		clear({state}) {
 			componentStore = componentStore.concat(state.rows)
-			state.rows = []
+			state.rows.clear()
 		},
 		swapRows({state: {rows}}) {
 			if (rows.length > 998) {

@@ -11,7 +11,7 @@ interface Props {
   select: (benchmark: Framework, add: boolean) => void;
 }
 
-export const SelectBarFrameworks = ({frameworks, isSelected, select}: Props) => {
+export const SelectBarFrameworks = ({frameworks, isSelected, select}: Props): JSX.Element => {
   console.log("SelectBarFrameworks")
   return (
       <>
@@ -30,7 +30,7 @@ export const SelectBarFrameworks = ({frameworks, isSelected, select}: Props) => 
       </>);
 };
 
-const SelectFrameworks = () => {
+const SelectFrameworks = (): JSX.Element => {
   console.log("SelectFrameworks");
   const dispatch = useDispatch();
   const selectedFrameworks = useSelector<State, Set<Framework>>((state) => state.selectedFrameworksDropDown);

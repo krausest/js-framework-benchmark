@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const jStat: any = require('jStat').jStat;
+const jStat = require('jstat').jStat;
 
 export enum StatisticResult {Slower, Undecided, Faster}
 export enum DisplayMode { DisplayMean, DisplayMedian, BoxPlot }
@@ -10,37 +10,45 @@ export enum FrameworkType { KEYED, NON_KEYED }
 
 export interface Framework {
     name: string;
+    dir: string;
     type: FrameworkType;
     issues: number[];
     displayname: string;
 }
 
-export enum Severity {Error, Categorization}
+export enum Severity {Note, Error}
 
 interface Category {
   id: number;
   text: string;
   issues: Array<number>;
+  severity: Severity;
 }
 
 export const categories: Category[] = [
-  {id:1, text:"[Note]: Manual DOM manipulations", issues: [772]},
-  {id:2, text:"[Note]:View state on the model", issues: [800]},
-  {id:3, text:"[Note]: Explicit requestAnimationFrame calls", issues: [796]},
-  {id:4, text:"[Note]: Manual event delegation", issues: [801]},
-  {id:5, text:"[Issue]: Errors in the implementation", issues: [634, 694]},
+  {id:1, text:"[Note]: Manual DOM manipulations", issues: [772], severity: Severity.Note},
+  {id:2, text:"[Note]:View state on the model", issues: [800], severity: Severity.Note},
+  {id:3, text:"[Note]: Explicit requestAnimationFrame calls", issues: [796], severity: Severity.Note},
+  {id:4, text:"[Note]: Manual event delegation", issues: [801], severity: Severity.Note},
+  {id:5, text:"[Issue]: Errors in the implementation", issues: [634], severity: Severity.Error},
 ]
 
-export const knownIssues = [
+interface IIssue {
+    issue: number, 
+    severity: Severity, 
+    text: string, 
+    link: string
+}
+
+export const knownIssues: IIssue[] = [
     {issue: 634, severity: Severity.Error, text:"[Issue]: The HTML structure for the implementation is not fully correct.", link: "https://github.com/krausest/js-framework-benchmark/issues/634"},
-    {issue: 694, severity: Severity.Error, text:"[Issue]: Keyed implementations must move the DOM nodes for swap rows ", link: "https://github.com/krausest/js-framework-benchmark/issues/694"},
-    {issue: 772, severity: Severity.Categorization, text:"[Note]: Implementation uses manual DOM manipulations", link: "https://github.com/krausest/js-framework-benchmark/issues/772"},
-    {issue: 796, severity: Severity.Categorization, text:"[Note]: Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
-    {issue: 800, severity: Severity.Categorization, text:"[Note]: View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
-    {issue: 801, severity: Severity.Categorization, text:"[Note]: Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
+    {issue: 772, severity: Severity.Note, text:"[Note]: Implementation uses manual DOM manipulations", link: "https://github.com/krausest/js-framework-benchmark/issues/772"},
+    {issue: 796, severity: Severity.Note, text:"[Note]: Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
+    {issue: 800, severity: Severity.Note, text:"[Note]: View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
+    {issue: 801, severity: Severity.Note, text:"[Note]: Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
   ];
 
-export function findIssue(issueNumber: number) {
+export function findIssue(issueNumber: number): IIssue|undefined {
     return knownIssues.find(i => i.issue === issueNumber)
 }
 export enum BenchmarkType { CPU, MEM, DUMMY, STARTUP }
@@ -180,6 +188,7 @@ export class ResultTableData {
     // benchmarksMEM: Array<Benchmark>;
     // Columns
     frameworks: Array<Framework>;
+    frameworksForFactors: Array<Framework>;
     selectedFameworks: Set<Framework>;
     // Cell data
     // resultsCPU: Array<Array<TableResultValueEntry|null>>;   // [benchmark][framework]
@@ -213,9 +222,12 @@ export class ResultTableData {
           }
         })
         this.frameworks = this.allFrameworks.filter(framework => framework.type === type && this.selectedFameworks.has(framework));
+        this.frameworksForFactors = this.allFrameworks.filter(framework => framework.type === type 
+            && (framework.issues.every(i => allowedIssues.has(i))
+            || (framework.name === 'vanillajs-keyed') || (framework.name === 'vanillajs-1-keyed')
+            || (framework.name === 'vanillajs-non-keyed') || (framework.name === 'vanillajs-1-non-keyed'))
+            );
         this.update(sortKey);
-
-
     }
     private update(sortKey: string) {
         console.time("update");
@@ -244,7 +256,7 @@ export class ResultTableData {
     public getResult(type: BenchmarkType): ResultData {
         return this.resultsMap.get(type)!
     }
-    sortBy(sortKey: string) {
+    sortBy(sortKey: string): void {
         const zipped = this.frameworks.map((f,frameworkIndex) => {
             let sortValue;
             if (sortKey === SORT_BY_NAME) sortValue = f.name;
@@ -287,7 +299,7 @@ export class ResultTableData {
         return copy;
     }
 
-    computeGeometricMean(framework: Framework, benchmarksCPU: Array<Benchmark>, resultsCPUForFramework: Array<TableResultValueEntry|null>) {
+    computeGeometricMean(framework: Framework, benchmarksCPU: Array<Benchmark>, resultsCPUForFramework: Array<TableResultValueEntry|null>): TableResultGeommeanEntry {
         let count = 0.0;
         const gMean = resultsCPUForFramework.reduce((gMean, r) => {
             if (r !== null)  {
@@ -300,7 +312,7 @@ export class ResultTableData {
         return this.compareWith ? new TableResultGeommeanEntry(framework.name, framework, value, '#fff', '#000') :
              new TableResultGeommeanEntry(framework.name, framework, value, computeColor(value), '#000');
     }
-    computeComparison(framework: Framework, benchmarksCPU: Array<Benchmark>, resultsCPUForFramework: Array<TableResultValueEntry|null>) {
+    computeComparison(framework: Framework, benchmarksCPU: Array<Benchmark>, resultsCPUForFramework: Array<TableResultValueEntry|null>): TableResultComparisonEntry {
         if (this.compareWith) {
             let statisticResult: StatisticResult|undefined = undefined;
             resultsCPUForFramework.forEach((r) => {
@@ -326,7 +338,7 @@ export class ResultTableData {
     }
 
     computeFactors(benchmark: Benchmark): Array<TableResultValueEntry|null> {
-        const benchmarkResults = this.frameworks.map(f => this.results(benchmark, f));
+        const benchmarkResults = this.frameworksForFactors.map(f => this.results(benchmark, f));
         const selectFn = (result: Result|null) => {
             if (result===null) return 0;
             if (this.displayMode === DisplayMode.DisplayMedian) {
@@ -335,13 +347,19 @@ export class ResultTableData {
                 return result.mean;
             }
         }
-        const min = benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, selectFn(result)), Number.POSITIVE_INFINITY);
+        const min = Math.max(benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, selectFn(result)), Number.POSITIVE_INFINITY));
+        // if (benchmark.type === BenchmarkType.CPU) {
+        //     min = Math.max(1000/60, min);
+        // }
         return this.frameworks.map(f => {
             const result = this.results(benchmark, f);
             if (result === null) return null;
 
             const value = selectFn(result);
             const factor = value/min;
+            // if (benchmark.type === BenchmarkType.CPU) {
+            //     factor = Math.max(1, factor);
+            // }    
             const conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
             const conficenceIntervalStr = benchmark.type === BenchmarkType.MEM ? null : conficenceInterval.toFixed(1);
             const formattedValue = formatEn.format(value);
@@ -375,13 +393,5 @@ export class ResultTableData {
                 return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), statisticalCol[0], statisticalCol[1], statisticalCol[2], statisticalResult);
             } 
         });
-    }
-    filterResults = function(bench: Benchmark, frameworks: Array<Framework>, results: Array<Result>) {
-        return frameworks.reduce((array, framework) => {
-            const res = results.filter(r => r.benchmark === bench.id && r.framework === framework.name);
-            if (res.length===1) array.push(res[0]);
-            else array.push(null);
-            return array;
-        }, new Array<Result|null>());
     }
 }

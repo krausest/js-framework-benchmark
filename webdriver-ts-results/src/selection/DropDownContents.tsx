@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-interface Props<T> {
+interface Props {
   children: Array<JSX.Element>;
   selectNone: (event: React.SyntheticEvent) => void;
   selectAll: (event: React.SyntheticEvent) => void;
@@ -9,7 +9,7 @@ interface Props<T> {
   grid?: boolean;
 }
 
-export function DropDownContents<T>(props: Props<T>) {
+export function DropDownContents(props: Props): JSX.Element {
   const {selectNone, selectAll, isNoneSelected, areAllSelected, children, grid = false} = props;
   return <div className="section">
             {children[0]}

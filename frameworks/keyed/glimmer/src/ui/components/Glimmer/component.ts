@@ -32,7 +32,9 @@ export default class Glimmer extends Component {
     if (isRendering(this)) {
       return;
     }
-    this.data = add(this.id, this.data).data;
+    const result = add(this.id, this.data);
+    this.data = result.data;
+    this.id = result.id;
   }
 
   public update() {

@@ -21,11 +21,12 @@
     "./*": "./dist/*"
   },
   "dependencies": {
-    "@ui5/webcomponents-base": "^1.2.3",
-    "@ui5/webcomponents-theming": "1.2.3"
+    "@ui5/webcomponents-base": "1.3.1",
+    "@ui5/webcomponents-theming": "1.3.1"
   },
   "devDependencies": {
-    "@ui5/webcomponents-tools": "1.2.3",
-    "chromedriver": "*"
+    "@ui5/webcomponents-tools": "1.3.1",
+    "chromedriver": "*",
+    "colors": "^1.4.0"
   }
 }
