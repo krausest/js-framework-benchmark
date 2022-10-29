@@ -1,8 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
-import axios from "axios";
+import * as axios from "axios";
 import { StartupBenchmarkResult } from "./benchmarksLighthouse";
 import { string } from "yargs";
+
 
 export interface JSONResult {
   framework: string;
@@ -121,9 +122,11 @@ export async function initializeFrameworks(matchPredicate: IMatchPredicate = mat
   let lsResult ;
   try {
     lsResult = (
-    await axios.get(`http://${config.HOST}:${config.PORT}/ls`)
+      // FIXME https://github.com/axios/axios/issues/5008
+    await (axios as any).get(`http://${config.HOST}:${config.PORT}/ls`)
   ).data;
   } catch (err) {
+    console.log(err);
     console.log(`ERROR loading frameworks from http://${config.HOST}:${config.PORT}/ls. Is the server running?`);
     throw new Error(`ERROR loading frameworks from http://${config.HOST}:${config.PORT}/ls. Is the server running?`);
   }
