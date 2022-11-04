@@ -2,6 +2,8 @@ import {Component} from 'san';
 import {connectSan} from './store';
 
 class AppComponent extends Component {
+    static trimWhitespace = 'all';
+    static autoFillStyleAndId = false;
     static template = `
     <div class="container">
         <div class="jumbotron">
