@@ -21,7 +21,7 @@
         "url": "https://github.com/krausest/js-framework-benchmark.git"
     },
     "dependencies": {
-        "udomsay": "0.1.7"
+        "udomsay": "0.3.4"
     },
     "devDependencies": {
         "@babel/cli": "^7.19.3",
