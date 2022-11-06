@@ -127,22 +127,6 @@ Doo.define(
 			this.data.rows = []
 			this.tbody.textContent = ''
 		}
-
-		swapRows() {
-			if (this.data.rows.length > 998) {
-				let node1 = this.tbody.firstChild.nextSibling, 
-					node2 = node1.nextSibling,
-					node998 = this.tbody.childNodes[998],
-					node999 = node998.nextSibling,
-					row1 = this.data.rows[1]
-				
-				this.data.rows[1] = this.data.rows[998];
-				this.data.rows[998] = row1
-				
-				this.tbody.insertBefore(node998, node2)
-				this.tbody.insertBefore(node1, node999)
-			}
-		}
 		isRowSelected(elem) {
 			return elem.classList.contains('danger')
 		}
