@@ -133,17 +133,6 @@ Doo.define(
 			Timer.stop('tot')
 		}
 
-		// renderTable(dataSet=this.data[this.defaultDataSet],target=this.place[0], start=0) {
-		// 	let elem = document.createElement('template')
-		// 	elem.innerHTML = this.renderNode(target, dataSet, start , dataSet.length - start)
-		// 	let tableRows = elem.content.querySelectorAll('tr'), len = dataSet.length 
-		// 	for (let i=0;i<len;i++) {
-		// 	 	 tableRows.item(i).key = dataSet[i].id
-		// //	 	 tableRows.item(i).querySelector('a').textContent = ''
-		// 	}	
-		// 	target.append(elem.content)
-		// }
-	
 
 		update() {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
@@ -173,7 +162,8 @@ Doo.define(
 			this.tbody.textContent = ''
 		}
 
-		swapRows() {
+		swapRows(e) {
+			Timer.start('tot')
 			if (this.data.rows.length > 998) {
 				let node1 = this.tbody.firstChild.nextSibling, 
 					node2 = node1.nextSibling,
@@ -187,6 +177,8 @@ Doo.define(
 				this.tbody.insertBefore(node998, node2)
 				this.tbody.insertBefore(node1, node999)
 			}
+			e.target.blur()
+			Timer.stop('tot')
 		}
 
 		addEventListeners() {
@@ -201,9 +193,9 @@ Doo.define(
 				} else if (e.target.matches('#update')) {
 					this.update()
 				} else if (e.target.matches('#clear')) {
-					this.clear()
+					this.clear(e)
 				} else if (e.target.matches('#swaprows')) {
-					this.swapRows()
+					this.swapRows(e)
 				}
 			})    
     	}

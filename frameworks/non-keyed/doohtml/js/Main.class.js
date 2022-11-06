@@ -64,7 +64,10 @@ Doo.define(
 			let row = this.getParentRow(elem)
 			if (row) {
 				this.tbody.removeChild(row)
-				this.data.rows[row.getAttribute('key')] = undefined
+				let idx = this.getIndex(row)
+				if (idx !== undefined) {
+					this.data.rows.splice(idx,1)
+				}
 			}
 		}  
 
@@ -139,6 +142,35 @@ Doo.define(
 				this.tbody.insertBefore(node998, node2)
 				this.tbody.insertBefore(node1, node999)
 			}
+		}
+		isRowSelected(elem) {
+			return elem.classList.contains('danger')
+		}
+		swapRows(e) {
+			Timer.start('tot')
+			const A=1,B=998
+			if (this.data.rows.length > B) {
+				
+				let a = this.tbody.childNodes[A], 
+					b = this.tbody.childNodes[B],
+					row1 = this.data.rows[1]
+				
+				this.data.rows[A] = this.data.rows[B];
+			 	this.data.rows[B] = row1
+			
+				const selected1 = this.isRowSelected(a)
+				const selected2 = this.isRowSelected(b)
+				this.updateRow(A, this.data.rows, this.tbody)
+				this.updateRow(B, this.data.rows, this.tbody)
+			
+ 				if (selected1) {
+					this.select(this.tbody.childNodes[B])
+				}
+				if (selected2) 	{
+					this.select(this.tbody.childNodes[A])
+				}
+			}
+			Timer.stop('tot')
 		}
 
 		addEventListeners() {
