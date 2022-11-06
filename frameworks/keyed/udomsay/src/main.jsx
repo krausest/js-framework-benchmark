@@ -97,7 +97,7 @@ const App = () => (
       {data.value.map(({id: rowId, label}, idx) => (
         <tr key={rowId}>
           <td class='col-md-1' textContent={rowId} />
-          <td class='col-md-4'><a onClick={({currentTarget: t}) => { selected.value = t.closest('tr') }} textContent={ label.value } /></td>
+          <td class='col-md-4'><a onClick={({currentTarget: t}) => { selected.value = t.closest('tr') }}>{ label }</a></td>
           <td class='col-md-1'><a onClick={() => { remove(idx) }}><span class='glyphicon glyphicon-remove' aria-hidden='true' /></a></td>
           <td class='col-md-6'/>
         </tr>
