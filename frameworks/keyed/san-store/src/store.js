@@ -8,7 +8,9 @@ const C = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown',
 const N = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza',
     'mouse', 'keyboard'];
 
-const random = max => Math.round(Math.random() * 1000) % max;
+function random(max) {
+    return Math.round(Math.random() * 1000) % max;
+}
 
 let nextId = 1;
 function buildData(count = 1000) {
@@ -16,7 +18,8 @@ function buildData(count = 1000) {
     for (let i = 0; i < count; i++) {
         data.push({
             id: nextId++,
-            label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`
+            label: A[random(A.length)] + " " + C[random(C.length)] + " " + N[random(N.length)],
+            selected: false
         });
     }
     return data;
@@ -24,16 +27,25 @@ function buildData(count = 1000) {
 
 const store = new Store({
     initData: {
-        rows: [],
-        selected: 0
+        rows: []
     },
 
     actions: {
-        setSelected(id) {
-            return builder().set('selected', id);
+        setSelected(id, {getState, dispatch}) {
+            const rows = getState('rows');
+            const newData = rows.slice(0);
+
+            rows.forEach((el, i) => {
+                if (el.selected) {
+                    newData[i] = {...rows[i], selected: false}
+                }
+                if (el.id === id) {
+                    newData[i] = {...rows[i], selected: true}
+                }
+            });
+            return builder().set('rows', newData);
         },
-        run(n, {dispatch}) {
-            dispatch('setSelected', 0);
+        run(n) {
             return builder().set('rows', buildData(n));
         },
         add(n, {getState}) {
@@ -41,26 +53,25 @@ const store = new Store({
             return builder().set('rows', rows.concat(buildData(n)));
         },
         update(n, {getState}) {
-            const newData = getState('rows').slice();
+            const newData = getState('rows').slice(0);
             for (let i = 0; i < newData.length; i += 10) {
                 const r = newData[i];
                 newData[i] = {id: r.id, label: r.label + ' !!!'};
             }
             return builder().set('rows', newData);
         },
-        clear(n, {dispatch}) {
-            dispatch('setSelected', 0);
+        clear(n) {
             return builder().set('rows', []);
         },
         remove(id, {getState}) {
-            const newData = getState('rows').slice();
+            const newData = getState('rows').slice(0);
             const idx = newData.findIndex(d => d.id === id);
 
             newData.splice(idx, 1);
             return builder().set('rows', newData);
         },
         swapRows(n, {getState}) {
-            const newData = getState('rows').slice();
+            const newData = getState('rows').slice(0);
             if (newData.length > 998) {
                 const tmp = newData[1];
                 newData[1] = newData[998];
