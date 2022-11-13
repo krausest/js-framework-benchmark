@@ -2,6 +2,8 @@ import {Component} from 'san';
 import {connectSan} from './store';
 
 class AppComponent extends Component {
+    static trimWhitespace = 'all';
+    static autoFillStyleAndId = false;
     static template = `
     <div class="container">
         <div class="jumbotron">
@@ -35,7 +37,7 @@ class AppComponent extends Component {
         </div>
         <table class="table table-hover table-striped test-data" on-click="handleClick($event)">
             <tbody>
-                <tr s-for="item in rows trackBy item.id" class="{{selected === item.id ? 'danger':''}}">
+                <tr s-for="item in rows trackBy item.id" class="{{item.selected ? 'danger':''}}">
                     <td class="col-md-1">{{item.id}}</td>
                     <td class="col-md-4">
                         <a data-action="select" data-id="{{item.id}}">{{item.label}}</a>
@@ -87,8 +89,7 @@ class AppComponent extends Component {
 
 export default connectSan(
     {
-        rows: 'rows',
-        selected: 'selected'
+        rows: 'rows'
     },
     {
         run: 'run',
