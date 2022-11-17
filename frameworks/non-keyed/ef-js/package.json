@@ -55,6 +55,6 @@
     "rollup-plugin-progress": "^1.1.2"
   },
   "dependencies": {
-    "ef-core": "^0.16.0"
+    "ef-core": "^0.16.2"
   }
 }
