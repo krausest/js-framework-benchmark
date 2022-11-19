@@ -14,7 +14,7 @@ struct RowData {
 struct App {
     last_id: u64,
     rows: spair::QrVec<RowData>,
-    selected_id: Option<u64>,
+    selected_id: spair::QrVal<Option<u64>>,
 }
 
 impl App {
@@ -50,7 +50,7 @@ impl App {
     }
 
     fn create(&mut self, count: usize) {
-        self.selected_id = None;
+        self.selected_id.set(None);
         self.append_rows(true, count);
     }
 
@@ -70,26 +70,22 @@ impl App {
 
     fn clear(&mut self) {
         self.rows.get_mut().clear();
-        self.selected_id = None;
+        self.selected_id.set(None);
     }
 
     fn set_selected_id(&mut self, id: u64) {
-        let mut rows = self.rows.get_mut();
-        let old_index = self.selected_id.and_then(|id| rows.iter().position(|rd| rd.id == id));
-        let new_index = rows.iter().position(|rd| rd.id == id);
-
-        self.selected_id = Some(id);
-        rows.request_render_at(old_index);
-        rows.request_render_at(new_index);
+        self.selected_id.set(Some(id));
     }
 }
 
 impl spair::Application for App {
     fn init(_: &spair::Comp<App>) -> Self {
+    	let rows: spair::QrVec<RowData> = Default::default();
+    	let selected_id = rows.create_optional_selected_id(|rd, id| rd.id == *id);
         Self {
             last_id: 0,
-            rows: Default::default(),
-            selected_id: None,
+            rows,
+            selected_id,
         }
     }
 }
@@ -199,7 +195,7 @@ impl spair::ElementRender<App> for RowData {
         let state = e.state();
         let comp = e.comp();
         let id = self.id;
-        let in_danger = state.selected_id == Some(self.id);
+        let in_danger = state.selected_id.get() == Some(self.id);
         e
             .class_if(in_danger, "danger")
             .td(|d| d.class("col-md-1").rupdate(self.id).done())
