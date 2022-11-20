@@ -90,6 +90,9 @@ app = new App({
 				const d1 = rows[1]
 				const d998 = rows[998]
 
+				d1.$umount()
+				d998.$umount()
+
 				rows.splice(1, 0, d998)
 				rows.splice(998, 0, d1)
 
