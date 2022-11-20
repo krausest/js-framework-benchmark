@@ -1,1 +1,0 @@
-export function microtask(f) { queueMicrotask(f); }

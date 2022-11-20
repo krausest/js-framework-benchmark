@@ -115,7 +115,7 @@ fn App(cx: Scope) -> Element {
     let update = move |_| {
         data.with(|data| {
             for row in data.iter().step_by(10) {
-                row.label.1.update(|n| *n = format!("{} !!!", n));
+                row.label.1.update(|n| n.push_str(" !!!"));
             }
         });
     };
