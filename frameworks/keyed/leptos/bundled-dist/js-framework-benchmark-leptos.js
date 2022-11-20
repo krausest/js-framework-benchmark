@@ -1,5 +1,5 @@
-import { append_nodes } from './snippets/leptos_dom-fad5c55a129c76e3/inline0.js';
-import { microtask } from './snippets/leptos_reactive-be0ca76d28d8fdea/inline0.js';
+import { append_nodes } from './snippets/leptos_dom-2063b41f41d5e755/inline0.js';
+import { microtask } from './snippets/leptos_reactive-8989d8d2ee07602e/inline0.js';
 
 let wasm;
 
@@ -207,11 +207,11 @@ function makeMutClosure(arg0, arg1, dtor, f) {
     return real;
 }
 function __wbg_adapter_32(arg0, arg1) {
-    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hb95d5aa756b0edcf(arg0, arg1);
+    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h3052c2e50dd93106(arg0, arg1);
 }
 
 function __wbg_adapter_35(arg0, arg1, arg2) {
-    wasm._dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h233ae46a0dcf39ad(arg0, arg1, addHeapObject(arg2));
+    wasm._dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h102638ed6546bb85(arg0, arg1, addHeapObject(arg2));
 }
 
 /**
@@ -311,7 +311,7 @@ function getImports() {
         const ret = getObject(arg0);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_microtask_d70b1cde9ddf9c6a = function(arg0) {
+    imports.wbg.__wbg_microtask_d3801e7e18518eef = function(arg0) {
         microtask(takeObject(arg0));
     };
     imports.wbg.__wbg_is_40a66842732708e7 = function(arg0, arg1) {
@@ -529,7 +529,7 @@ function getImports() {
         const ret = getObject(arg0).replaceChild(getObject(arg1), getObject(arg2));
         return addHeapObject(ret);
     }, arguments) };
-    imports.wbg.__wbg_appendnodes_cf4e56bf25d6b666 = function(arg0, arg1, arg2, arg3, arg4) {
+    imports.wbg.__wbg_appendnodes_4c45fdb21c50ec12 = function(arg0, arg1, arg2, arg3, arg4) {
         var v0 = getArrayJsValueFromWasm0(arg2, arg3).slice();
         wasm.__wbindgen_free(arg2, arg3 * 4);
         const ret = append_nodes(takeObject(arg1), v0, takeObject(arg4));
@@ -626,7 +626,7 @@ function getImports() {
         const ret = makeMutClosure(arg0, arg1, 5, __wbg_adapter_35);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper748 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper749 = function(arg0, arg1, arg2) {
         const ret = makeMutClosure(arg0, arg1, 5, __wbg_adapter_35);
         return addHeapObject(ret);
     };
