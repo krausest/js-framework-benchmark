@@ -23,6 +23,7 @@ async function loadFrameworkInfo(keyedDir, directoryName) {
     let copyProps = (result, packageJSON) => {
         result.issues = packageJSON["js-framework-benchmark"]["issues"];
         result.customURL = packageJSON["js-framework-benchmark"]["customURL"];
+        result.frameworkHomeURL = packageJSON["js-framework-benchmark"]["frameworkHomeURL"];
         let useShadowRoot = packageJSON["js-framework-benchmark"]["useShadowRoot"];
         result.useShadowRoot = useShadowRoot;
         result.useRowShadowRoot = packageJSON["js-framework-benchmark"]["useRowShadowRoot"];

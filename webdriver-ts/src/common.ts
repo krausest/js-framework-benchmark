@@ -86,6 +86,7 @@ export interface FrameworkData {
   shadowRootName: string | undefined;
   buttonsInShadowRoot: boolean;
   issues: number[];
+  frameworkHomeURL: string;
 }
 
 interface Options {
@@ -110,6 +111,7 @@ export interface FrameworkInformation {
   buttonsInShadowRoot?: boolean;
   versions?: {[key: string]: string};
   frameworkVersionString: string;
+  frameworkHomeURL: string;
 }
 
 export interface IMatchPredicate {
@@ -145,7 +147,8 @@ export async function initializeFrameworks(matchPredicate: IMatchPredicate = mat
           useRowShadowRoot: !!frameworkVersionInformation.useRowShadowRoot,
           shadowRootName: frameworkVersionInformation.shadowRootName,
           buttonsInShadowRoot: !!frameworkVersionInformation.buttonsInShadowRoot,
-          issues: (frameworkVersionInformation.issues ?? []).map(i => Number(i))
+          issues: (frameworkVersionInformation.issues ?? []).map(i => Number(i)),
+          frameworkHomeURL: frameworkVersionInformation.frameworkHomeURL ?? ""
         });
       }
   }

@@ -13,6 +13,7 @@ export interface Framework {
     dir: string;
     type: FrameworkType;
     issues: number[];
+    frameworkHomeURL: string;
     displayname: string;
 }
 
@@ -30,7 +31,8 @@ export const categories: Category[] = [
   {id:2, text:"[Note]:View state on the model", issues: [800], severity: Severity.Note},
   {id:3, text:"[Note]: Explicit requestAnimationFrame calls", issues: [796], severity: Severity.Note},
   {id:4, text:"[Note]: Manual event delegation", issues: [801], severity: Severity.Note},
-  {id:5, text:"[Issue]: Errors in the implementation", issues: [634], severity: Severity.Error},
+  {id:5, text:"[Note]: Implementation uses runtime code generation", issues: [1139], severity: Severity.Note},
+  {id:6, text:"[Issue]: Errors in the implementation", issues: [634], severity: Severity.Error},
 ]
 
 interface IIssue {
@@ -46,7 +48,8 @@ export const knownIssues: IIssue[] = [
     {issue: 796, severity: Severity.Note, text:"[Note]: Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
     {issue: 800, severity: Severity.Note, text:"[Note]: View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
     {issue: 801, severity: Severity.Note, text:"[Note]: Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
-  ];
+    {issue: 1139, severity: Severity.Note, text:"[Note]: Implementation uses runtime code generation", link: "https://github.com/krausest/js-framework-benchmark/issues/1139"},
+];
 
 export function findIssue(issueNumber: number): IIssue|undefined {
     return knownIssues.find(i => i.issue === issueNumber)

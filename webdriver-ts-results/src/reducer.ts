@@ -21,7 +21,7 @@ const removeKeyedSuffix = (value: string) => {
   else if (value.endsWith('-keyed')) return value.substring(0, value.length - 6)
   return value;
 }
-const mappedFrameworks = frameworks.map((f:any) => ({ name: f.name, dir: f.dir, displayname: removeKeyedSuffix(f.name), issues: f.issues ?? [], type: f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED }));
+const mappedFrameworks = frameworks.map((f:any) => ({ name: f.name, dir: f.dir, displayname: removeKeyedSuffix(f.name), issues: f.issues ?? [], type: f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED, frameworkHomeURL: f.frameworkHomeURL }));
 
 const allBenchmarks = benchmarks.reduce((set, b) => set.add(b), new Set<Benchmark>());
 const allFrameworks = mappedFrameworks.reduce((set, f) => set.add(f), new Set<Framework>());
