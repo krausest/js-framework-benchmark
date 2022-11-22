@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "scarletsframe",
-    "issues": [800]
+    "issues": [800, 1139]
   },
   "scripts": {
     "build-dev": "rollup -c -w",

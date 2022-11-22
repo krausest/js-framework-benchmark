@@ -4,7 +4,10 @@
   "description": "React lab",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": "17.0.3"
+    "frameworkVersion": "17.0.3",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --watch",

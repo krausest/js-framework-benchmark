@@ -4,7 +4,10 @@
   "description": "ResonateJS Demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": ""
+    "frameworkVersion": "",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack -w -d",

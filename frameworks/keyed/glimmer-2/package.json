@@ -27,7 +27,9 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@glimmer/core",
-    "issues": []
+    "issues": [
+      1139
+    ]
   },
   "dependencies": {
     "@glimmer/babel-preset": "^2.0.0-beta.13",

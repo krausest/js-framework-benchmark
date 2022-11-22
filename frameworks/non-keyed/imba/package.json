@@ -4,7 +4,10 @@
   "description": "Imba demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "imba"
+    "frameworkVersionFromPackage": "imba",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --watch",

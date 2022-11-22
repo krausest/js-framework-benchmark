@@ -5,7 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersion": "5-preview",
-    "issues": [800]
+    "issues": [800, 1139]
   },
   "scripts": {
     "build-dev": "webpack --watch --mode=development",

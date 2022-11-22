@@ -11,7 +11,7 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@sifrr/dom",
     "useShadowRoot": true,
-    "issues": [800, 801]
+    "issues": [800, 801, 1139]
   },
   "repository": {
     "type": "git",

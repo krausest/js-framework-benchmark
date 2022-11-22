@@ -2,7 +2,10 @@
   "name": "reagent",
   "private": true,
   "js-framework-benchmark": {
-    "frameworkVersion": "0.10"
+    "frameworkVersion": "0.10",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "LEIN_VERSION=2.9.3 lein cljsbuild auto",

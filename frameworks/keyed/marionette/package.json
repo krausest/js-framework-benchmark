@@ -6,7 +6,9 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "marionette",
-    "issues": []
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "rollup -c -w",

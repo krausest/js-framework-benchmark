@@ -4,7 +4,10 @@
   "description": "Starbeam demo using React",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:@starbeam/core"
+    "frameworkVersionFromPackage": "react:@starbeam/core",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "start": "npx live-server",

@@ -4,7 +4,10 @@
   "description": "React Zustand demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:zustand"
+    "frameworkVersionFromPackage": "react:zustand",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --watch",

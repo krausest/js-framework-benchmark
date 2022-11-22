@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Benchmark for gyron.js framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "gyron"
+    "frameworkVersionFromPackage": "gyron",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --mode development --watch",
