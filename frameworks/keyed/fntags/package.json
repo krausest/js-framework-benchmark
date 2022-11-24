@@ -4,7 +4,8 @@
   "description": "fntags demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@srfnstack/fntags"
+    "frameworkVersionFromPackage": "@srfnstack/fntags",
+    "frameworkHomeURL": "https://srfnstack.github.io/fntags/"
   },
   "scripts": {
     "build-dev": "npm i && node build.js dev",

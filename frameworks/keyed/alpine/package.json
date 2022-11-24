@@ -4,6 +4,7 @@
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "alpinejs",
+    "frameworkHomeURL": "https://alpinejs.dev/",
     "issues": [
       1139
     ]

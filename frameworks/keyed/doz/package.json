@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersion": "5-preview",
+    "frameworkHomeURL": "https://github.com/dozjs/doz",
     "issues": [800, 1139]
   },
   "scripts": {

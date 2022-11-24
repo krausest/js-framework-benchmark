@@ -5,6 +5,7 @@
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ef-core",
+    "frameworkHomeURL": "https://ef.js.org/#!home",
     "issues": []
   },
   "scripts": {

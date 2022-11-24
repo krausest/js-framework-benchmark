@@ -5,6 +5,7 @@
   "license": "ISC",
   "js-framework-benchmark": {
     "frameworkVersion": "0.2.4",
+    "frameworkHomeURL": "https://dioxuslabs.com/",
     "issues": [
       1139
     ]

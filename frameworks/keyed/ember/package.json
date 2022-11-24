@@ -12,6 +12,7 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ember-source",
+    "frameworkHomeURL": "https://emberjs.com/",
     "customURL": "/dist",
     "issues": [
       1139

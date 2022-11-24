@@ -4,7 +4,8 @@
   "description": "fre demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "fre"
+    "frameworkVersionFromPackage": "fre",
+    "frameworkHomeURL": "https://fre.js.org/"
   },
   "scripts": {
     "build-dev": "webpack --watch",

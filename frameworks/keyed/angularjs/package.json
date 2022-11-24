@@ -4,6 +4,7 @@
   "description": "Boilerplate for Angular.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "angular",
+    "frameworkHomeURL": "https://angularjs.org/",
     "issues": [
       1139
     ]

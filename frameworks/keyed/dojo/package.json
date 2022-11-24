@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@dojo/framework",
+    "frameworkHomeURL": "https://dojo.io/",
     "customURL": "/output/dist",
     "issues": [
       1139

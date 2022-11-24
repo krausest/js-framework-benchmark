@@ -4,7 +4,8 @@
   "description": "Benchmark for Crank.js",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@b9g/crank"
+    "frameworkVersionFromPackage": "@b9g/crank",
+    "frameworkHomeURL": "https://crank.js.org/"
   },
   "scripts": {
     "build-dev": "CRANK_ENV=development rollup -c",

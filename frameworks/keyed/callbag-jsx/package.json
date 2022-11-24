@@ -4,7 +4,8 @@
   "description": "Callbag JSX Benchmark (keyed)",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "callbag-jsx"
+    "frameworkVersionFromPackage": "callbag-jsx",
+    "frameworkHomeURL": "https://loreanvictor.github.io/callbag-jsx/"
   },
   "scripts": {
     "build-dev": "webpack --watch",

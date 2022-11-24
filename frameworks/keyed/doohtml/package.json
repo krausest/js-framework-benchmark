@@ -5,6 +5,7 @@
     "main": "Main.class.js",
     "js-framework-benchmark": {
       "frameworkVersion": "",
+      "frameworkHomeURL": "https://github.com/hman61/doodads/wiki",
       "useShadowRoot": true,
       "shadowRootName": "doo-main",
       "buttonsInShadowRoot": false,

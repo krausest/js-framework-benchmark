@@ -5,6 +5,7 @@
   "js-framework-benchmark": {
     "frameworkVersion": "6.0.1",
     "customURL": "/bundeled-dist/wwwroot/",
+    "frameworkHomeURL": "https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor",
     "issues": [
       1139
     ]

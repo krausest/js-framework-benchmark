@@ -4,7 +4,8 @@
   "description": "blockdom demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "blockdom"
+    "frameworkVersionFromPackage": "blockdom",
+    "frameworkHomeURL": "https://github.com/ged-odoo/blockdom"
   },
   "scripts": {
     "build-dev": "rollup -c -w",
