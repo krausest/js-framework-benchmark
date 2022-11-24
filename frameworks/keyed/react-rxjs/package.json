@@ -4,7 +4,10 @@
   "description": "React demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:@react-rxjs/core"
+    "frameworkVersionFromPackage": "react:@react-rxjs/core",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --watch",

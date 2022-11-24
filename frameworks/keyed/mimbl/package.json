@@ -3,7 +3,10 @@
   "version": "0.8.1",
   "description": "Benchmark for Mimbl framework (keyed)",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "mimbl"
+    "frameworkVersionFromPackage": "mimbl",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-prod": "webpack"

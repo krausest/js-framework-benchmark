@@ -3,7 +3,10 @@
   "version": "0.43.8",
   "main": "dist/main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "voby"
+    "frameworkVersionFromPackage": "voby",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-prod": "rm -rf dist && mkdir dist && esbuild --bundle --minify --target=es2018 --jsx-factory=createElement --jsx-fragment=Fragment --banner:js='\"use strict\";' ./src/main.tsx > ./dist/main.js"

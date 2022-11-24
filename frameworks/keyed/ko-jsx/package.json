@@ -3,7 +3,10 @@
   "version": "0.16.1",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "ko-jsx"
+    "frameworkVersionFromPackage": "ko-jsx",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "rollup -c",

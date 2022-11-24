@@ -4,7 +4,10 @@
   "description": "React Hooks demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react"
+    "frameworkVersionFromPackage": "react",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --watch",

@@ -6,7 +6,8 @@
   "js-framework-benchmark": {
     "frameworkVersion": "1.0.0",
     "issues": [
-      772
+      772,
+      1139
     ]
   },
   "scripts": {

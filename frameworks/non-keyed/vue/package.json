@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Benchmark for vue.js framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "vue"
+    "frameworkVersionFromPackage": "vue",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --mode development --watch",

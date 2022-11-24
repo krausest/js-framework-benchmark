@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@dojo/framework",
-    "customURL": "/output/dist"
+    "customURL": "/output/dist",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-prod": "./node_modules/.bin/dojo build"

@@ -4,7 +4,10 @@
   "description": "ScarletsFrame demo",
   "main": "src/index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "scarletsframe"
+    "frameworkVersionFromPackage": "scarletsframe",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "rollup -c -w",
