@@ -5,7 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "dyo",
-    "frameworkHomeURL": "https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor"
+    "frameworkHomeURL": "https://dyo.js.org/"
   },
   "scripts": {
     "build-dev": "webpack -w -d",
