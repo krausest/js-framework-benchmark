@@ -5,7 +5,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "san:san-composition",
     "issues": [
-      800
+      800,
+      1139
     ]
   },
   "scripts": {

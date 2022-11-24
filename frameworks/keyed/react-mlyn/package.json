@@ -4,7 +4,10 @@
   "description": "React mlyn demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react-mlyn"
+    "frameworkVersionFromPackage": "react-mlyn",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --watch",

@@ -3,7 +3,10 @@
   "version": "3.4.2",
   "main": "dist/main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "alpinejs"
+    "frameworkVersionFromPackage": "alpinejs",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "rollup -c -w",

@@ -5,7 +5,10 @@
     "author": "Denis Churbanov",
     "license": "MIT",
     "js-framework-benchmark": {
-        "frameworkVersionFromPackage": "whatsup"
+        "frameworkVersionFromPackage": "whatsup",
+        "issues": [
+          1139
+        ]
     },
     "repository": {
         "type": "git",

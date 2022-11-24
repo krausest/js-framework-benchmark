@@ -6,7 +6,9 @@
   "js-framework-benchmark": {
     "frameworkVersion": "0.4",
     "customURL": "/bundled-dist",
-    "issues": []
+    "issues": [
+      1139
+    ]
   },
   "contributors": [
     "Ryan Trinkle <ryan.trinkle@gmail.com>"

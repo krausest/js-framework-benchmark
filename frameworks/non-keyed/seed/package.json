@@ -4,7 +4,10 @@
   "description": "Benchmark for Seed",
   "license": "ISC",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.8.0"
+    "frameworkVersion": "0.8.0",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "rimraf bundled-dist && wasm-pack build --dev --target web --out-name js-framework-benchmark-non-keyed-seed --out-dir bundled-dist && cpr index.html bundled-dist/index.html && rimraf bundled-dist/.gitignore",

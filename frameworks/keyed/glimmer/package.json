@@ -10,7 +10,8 @@
     "frameworkVersionFromPackage": "@glimmer/application",
     "customURL": "/dist",
     "issues": [
-      800
+      800,
+      1139
     ]
   },
   "scripts": {
