@@ -5,6 +5,7 @@
   "license": "ISC",
   "js-framework-benchmark": {
     "frameworkVersion": "0.0.17",
+    "frameworkHomeURL": "https://github.com/gbj/leptos",
     "issues": [
       1139
     ]

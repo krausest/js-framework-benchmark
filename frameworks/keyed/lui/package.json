@@ -4,6 +4,7 @@
   "description": "Benchmark for lui",
   "js-framework-benchmark": {
     "frameworkVersion": "1.2.3",
+    "frameworkHomeURL": "https://github.com/L3P3/lui",
     "issues": [
       1139
     ]

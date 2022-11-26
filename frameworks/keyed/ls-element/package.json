@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@lsegurado/ls-element",
+    "frameworkHomeURL": "https://github.com/michijs/michijs",
     "useShadowRoot": false,
     "customURL": "/dist"
   },

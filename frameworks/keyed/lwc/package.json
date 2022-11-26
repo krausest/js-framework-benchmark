@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for LWC framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "lwc"
+    "frameworkVersionFromPackage": "lwc",
+    "frameworkHomeURL": "https://lwc.dev/"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

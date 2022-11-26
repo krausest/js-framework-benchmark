@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "lit",
+    "frameworkHomeURL": "https://lit.dev/",
     "useShadowRoot": true,
     "issues": [801]
   },
