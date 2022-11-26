@@ -27,6 +27,7 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@glimmer/core",
+    "frameworkHomeURL": "https://glimmerjs.com/",
     "issues": [
       1139
     ]

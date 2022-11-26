@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for ganic library",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "ganic"
+    "frameworkVersionFromPackage": "ganic",
+    "frameworkHomeURL": "https://ganicjs.com/"
   },
   "scripts": {
     "build-dev": "webpack --watch",

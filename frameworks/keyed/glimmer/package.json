@@ -8,6 +8,7 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@glimmer/application",
+    "frameworkHomeURL": "https://glimmerjs.com/",
     "customURL": "/dist",
     "issues": [
       800,

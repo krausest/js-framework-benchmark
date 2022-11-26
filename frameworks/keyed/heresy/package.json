@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "heresy",
+    "frameworkHomeURL": "https://github.com/WebReflection/heresy",
     "issues": [801]
   },
   "scripts": {

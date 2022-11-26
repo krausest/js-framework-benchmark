@@ -2,7 +2,8 @@
   "name": "helix",
   "private": true,
   "js-framework-benchmark": {
-    "frameworkVersion": "0.0.10"
+    "frameworkVersion": "0.0.10",
+    "frameworkHomeURL": "https://github.com/thheller/shadow-cljs#readme"
   },
   "scripts": {
     "watch": "shadow-cljs watch :app",

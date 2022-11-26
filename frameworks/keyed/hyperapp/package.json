@@ -4,7 +4,8 @@
   "description": "hyperapp js framework benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "hyperapp"
+    "frameworkVersionFromPackage": "hyperapp",
+    "frameworkHomeURL": "https://github.com/jorgebucaran/hyperapp"
   },
   "dependencies": {
     "hyperapp": "2.0.22"

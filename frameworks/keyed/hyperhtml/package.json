@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "hyperhtml",
+    "frameworkHomeURL": "https://github.com/WebReflection/hyperHTML",
     "issues": [801]
   },
   "scripts": {
