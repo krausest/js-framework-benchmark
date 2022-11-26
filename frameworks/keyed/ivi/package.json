@@ -9,7 +9,8 @@
   "repository": "https://github.com/krausest/js-framework-benchmark",
   "keywords": [],
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "ivi"
+    "frameworkVersionFromPackage": "ivi",
+    "frameworkHomeURL": "https://github.com/localvoid/ivi"
   },
   "scripts": {
     "build-dev": "rollup -c rollup.config.js",

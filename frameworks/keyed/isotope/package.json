@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for Isotope UI library",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@isotope/core"
+    "frameworkVersionFromPackage": "@isotope/core",
+    "frameworkHomeURL": "https://areknawo.com/isotope/"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

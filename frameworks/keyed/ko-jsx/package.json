@@ -4,6 +4,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ko-jsx",
+    "frameworkHomeURL": "https://github.com/ryansolid/ko-jsx",
     "issues": [
       1139
     ]

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "karyon",
+    "frameworkHomeURL": "https://karyon.dev/",
     "issues": [801]
   },
   "dependencies": {
