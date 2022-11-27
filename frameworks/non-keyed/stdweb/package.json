@@ -5,6 +5,7 @@
   "license": "ISC",
   "js-framework-benchmark": {
     "frameworkVersion": "0.4.17",
+    "frameworkHomeURL": "https://docs.rs/stdweb/latest/stdweb/",
     "issues": [772]
   },
   "scripts": {

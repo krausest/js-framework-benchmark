@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "slim-js"
+    "frameworkVersionFromPackage": "slim-js",
+    "frameworkHomeURL": "https://slimjs.com/#/welcome"
   },
   "scripts": {
     "build-prod": "exit 0",

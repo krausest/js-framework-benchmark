@@ -4,6 +4,7 @@
   "description": "Benchmark for Sling.js 14.3.0 framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "slingjs",
+    "frameworkHomeURL": "https://github.com/puckowski/Sling.js",
     "issues": [
       1139
     ]
