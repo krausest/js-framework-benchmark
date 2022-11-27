@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { ɵmarkDirty } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 
 interface Data {
     id: number;
@@ -17,6 +16,8 @@ export class AppComponent {
     id: number = 1;
     backup: Array<Data> = undefined;
     version: string;
+
+    constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
     buildData(count: number = 1000): Array<Data> {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
@@ -41,7 +42,7 @@ export class AppComponent {
     select(item: Data, event: Event) {
         event.preventDefault();
         this.selected = item.id;
-        ɵmarkDirty(this);
+        this.changeDetectorRef.detectChanges();
     }
 
     delete(item: Data, event: Event) {
@@ -52,34 +53,34 @@ export class AppComponent {
                 break;
             }
         }
-        ɵmarkDirty(this);
+        this.changeDetectorRef.detectChanges();
     }
 
     run() {
         this.data = this.buildData();
-        ɵmarkDirty(this);
+        this.changeDetectorRef.detectChanges();
     }
 
     add() {
         this.data = this.data.concat(this.buildData(1000));
-        ɵmarkDirty(this);
+        this.changeDetectorRef.detectChanges();
     }
 
     update() {
         for (let i = 0; i < this.data.length; i += 10) {
             this.data[i].label += ' !!!';
         }
-        ɵmarkDirty(this);
+        this.changeDetectorRef.detectChanges();
     }
     runLots() {
         this.data = this.buildData(10000);
         this.selected = undefined;
-        ɵmarkDirty(this);
+        this.changeDetectorRef.detectChanges();
     }
     clear() {
         this.data = [];
         this.selected = undefined;
-        ɵmarkDirty(this);
+        this.changeDetectorRef.detectChanges();
     }
     swapRows() {
         if (this.data.length > 998) {
@@ -87,6 +88,6 @@ export class AppComponent {
             this.data[1] = this.data[998];
             this.data[998] = a;
         }
-        ɵmarkDirty(this);
+        this.changeDetectorRef.detectChanges();
     }
 }
