@@ -4,7 +4,7 @@
   "description": "Benchmark for Yew",
   "license": "ISC",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.19.3",
+    "frameworkVersion": "0.20.0",
     "frameworkHomeURL": "https://yew.rs/",
     "issues": [
       1139
