@@ -4,7 +4,8 @@
   "description": "React Diagon demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:diagon"
+    "frameworkVersionFromPackage": "react:diagon",
+    "frameworkHomeURL": "https://www.diagon.dev/"
   },
   "scripts": {
     "build-dev": "webpack --watch",

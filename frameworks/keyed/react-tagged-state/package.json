@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:react-tagged-state",
+    "frameworkHomeURL": "https://github.com/oleggrishechkin/react-tagged-state",
     "issues": [
       1139
     ]

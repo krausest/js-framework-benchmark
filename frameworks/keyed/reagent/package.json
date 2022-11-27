@@ -3,6 +3,7 @@
   "private": true,
   "js-framework-benchmark": {
     "frameworkVersion": "0.10",
+    "frameworkHomeURL": "https://reagent-project.github.io/",
     "issues": [
       1139
     ]

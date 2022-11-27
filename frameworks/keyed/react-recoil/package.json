@@ -4,7 +4,8 @@
   "description": "React Recoil demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react",
+    "frameworkVersionFromPackage": "react:recoil",
+    "frameworkHomeURL": "https://recoiljs.org/",
     "issues": [
       1139
     ]

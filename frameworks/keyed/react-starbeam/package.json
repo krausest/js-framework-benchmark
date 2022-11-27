@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:@starbeam/core",
+    "frameworkHomeURL": "https://www.starbeamjs.com/",
     "issues": [
       1139
     ]

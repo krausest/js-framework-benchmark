@@ -4,7 +4,8 @@
   "description": "React demo",
   "main": "index.tsx",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:@grammarly/focal"
+    "frameworkVersionFromPackage": "react:@grammarly/focal",
+    "frameworkHomeURL": "https://github.com/grammarly/focal"
   },
   "scripts": {
     "build-dev": "webpack --watch --mode=development",

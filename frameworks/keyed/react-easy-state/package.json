@@ -5,6 +5,7 @@
   "main": "src/index.jsx",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:@risingstack/react-easy-state",
+    "frameworkHomeURL": "https://github.com/RisingStack/react-easy-state",
     "issues": [
       1139
     ]

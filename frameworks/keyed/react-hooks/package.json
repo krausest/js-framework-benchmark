@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react",
+    "frameworkHomeURL": "https://reactjs.org/",
     "issues": [
       1139
     ]

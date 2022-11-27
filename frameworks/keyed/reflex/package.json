@@ -2,7 +2,8 @@
   "name": "js-framework-benchmark-reflex",
   "version": "0.3.3",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@zouloux/reflex"
+    "frameworkVersionFromPackage": "@zouloux/reflex",
+    "frameworkHomeURL": "https://zouloux.github.io/reflex/"
   },
   "source": "src/main.html",
   "scripts": {

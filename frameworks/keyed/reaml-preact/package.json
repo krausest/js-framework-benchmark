@@ -2,7 +2,8 @@
   "name": "jfb-reaml-preact",
   "version": "0.0.0",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "reaml:preact"
+    "frameworkVersionFromPackage": "reaml:preact",
+    "frameworkHomeURL": "https://www.npmjs.com/package/reaml"
   },
   "scripts": {
     "copy": "cp ../reaml-react/.gitignore ../reaml-react/.ocamlformat ../reaml-react/bsconfig.json . && cp ../reaml-react/src/Main.ml ../reaml-react/src/Main.mli src",

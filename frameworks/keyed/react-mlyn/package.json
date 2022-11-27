@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react-mlyn",
+    "frameworkHomeURL": "https://github.com/vaukalak/mlyn",
     "issues": [
       1139
     ]
