@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for riot framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "riot"
+    "frameworkVersionFromPackage": "riot",
+    "frameworkHomeURL": "https://riot.js.org/"
   },
   "scripts": {
     "build-dev": "webpack -w -d",

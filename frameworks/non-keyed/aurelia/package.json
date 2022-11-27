@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for aurelia framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "aurelia-framework"
+    "frameworkVersionFromPackage": "aurelia-framework",
+    "frameworkHomeURL": "https://aurelia.io/"
   },
   "keywords": [
     "aurelia"

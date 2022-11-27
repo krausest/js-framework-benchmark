@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for inferno framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "inferno"
+    "frameworkVersionFromPackage": "inferno",
+    "frameworkHomeURL": "https://github.com/infernojs/inferno"
   },
   "scripts": {
     "build-dev": "rollup -c",

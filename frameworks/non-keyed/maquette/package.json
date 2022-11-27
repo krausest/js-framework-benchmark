@@ -4,6 +4,7 @@
   "description": "Benchmark for maquette framework (keyed)",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "maquette",
+    "frameworkHomeURL": "https://maquettejs.org/",
     "issues": []
   },
   "scripts": {

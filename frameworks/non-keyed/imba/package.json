@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "imba",
+    "frameworkHomeURL": "https://imba.io/",
     "issues": [
       1139
     ]

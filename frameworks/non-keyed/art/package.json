@@ -4,7 +4,8 @@
   "description": "Art demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "js-art"
+    "frameworkVersionFromPackage": "js-art",
+    "frameworkHomeURL": "https://github.com/sullay/Art-js"
   },
   "scripts": {
     "dev": "vite",

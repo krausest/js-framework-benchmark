@@ -5,6 +5,7 @@
   "author": "Alexandre Esteves <alexandre.fmp.esteves@gmail.com>",
   "js-framework-benchmark": {
     "frameworkVersion": "0.4",
+    "frameworkHomeURL": "https://reflex-frp.org/",
     "customURL": "/bundled-dist",
     "issues": [
       1139

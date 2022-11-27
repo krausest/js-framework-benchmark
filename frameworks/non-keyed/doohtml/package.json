@@ -5,6 +5,7 @@
     "main": "Main.class.js",
     "js-framework-benchmark": {
       "frameworkVersion": "",
+      "frameworkHomeURL": "https://doohtml.com",
       "useShadowRoot": true,
       "shadowRootName": "doo-main",
       "buttonsInShadowRoot": false,

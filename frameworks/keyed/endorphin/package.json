@@ -4,7 +4,7 @@
   "description": "Boilerplate for endorphin",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "endorphin",
-    "frameworkHomeURL": "https://github.com/endorphinjs/endorphin#readme"
+    "frameworkHomeURL": "https://github.com/endorphinjs/endorphin"
   },
   "main": "index.js",
   "scripts": {

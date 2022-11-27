@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "apprun",
+    "frameworkHomeURL": "https://apprun.js.org/",
     "issues": [
       772
     ]

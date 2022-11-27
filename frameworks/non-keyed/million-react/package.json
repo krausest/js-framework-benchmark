@@ -16,6 +16,7 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "million",
+    "frameworkHomeURL": "https://millionjs.org/",
     "customURL": "/dist"
   }
 }

@@ -4,7 +4,8 @@
   "description": "Hullo demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.8.2"
+    "frameworkVersion": "0.8.2",
+    "frameworkHomeURL": "https://hullo.dev/hullo-dom/intro"
   },
   "scripts": {
     "build-dev": "NODE_ENV=development webpack -w",

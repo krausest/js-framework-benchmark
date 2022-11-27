@@ -4,7 +4,8 @@
   "description": "React demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react"
+    "frameworkVersionFromPackage": "react",
+    "frameworkHomeURL": "https://www.reactjs.org"
   },
   "scripts": {
     "build-dev": "webpack --watch",

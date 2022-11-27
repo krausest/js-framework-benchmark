@@ -5,7 +5,8 @@
   "main": "index.js",
   "sideEffects": false,
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:@legendapp/state"
+    "frameworkVersionFromPackage": "react:@legendapp/state",
+    "frameworkHomeURL": "https://github.com/LegendApp/legend-state"
   },
   "scripts": {
     "build-dev": "webpack --watch",
