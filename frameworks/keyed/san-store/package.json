@@ -4,6 +4,7 @@
   "description": "Benchmark for san store",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "san:san-store",
+    "frameworkHomeURL": "https://baidu.github.io/san/",
     "issues": [
       800,
       1139

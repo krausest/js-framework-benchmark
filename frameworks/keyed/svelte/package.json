@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Boilerplate for Svelte",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "svelte"
+    "frameworkVersionFromPackage": "svelte",
+    "frameworkHomeURL": "https://svelte.dev/"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

@@ -4,7 +4,8 @@
   "description": "Valtio demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:valtio"
+    "frameworkVersionFromPackage": "react:valtio",
+    "frameworkHomeURL": "https://valtio.pmnd.rs/"
   },
   "scripts": {
     "build-dev": "webpack --watch",

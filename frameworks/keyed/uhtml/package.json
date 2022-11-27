@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "uhtml",
+    "frameworkHomeURL": "https://github.com/WebReflection/uhtml",
     "issues": [
       772
     ]

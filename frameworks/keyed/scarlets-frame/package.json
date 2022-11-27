@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "scarletsframe",
+    "frameworkHomeURL": "https://github.com/ScarletsFiction/ScarletsFrame",
     "issues": [
       1139
     ]

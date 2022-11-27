@@ -5,6 +5,7 @@
   "description": "Vanilla.JS WebComponent demo",
   "js-framework-benchmark": {
     "frameworkVersion": "",
+    "frameworkHomeURL": "",
     "issues": [772]
   },
   "scripts": {

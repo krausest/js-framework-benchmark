@@ -6,6 +6,7 @@
     "license": "MIT",
     "js-framework-benchmark": {
         "frameworkVersionFromPackage": "whatsup",
+        "frameworkHomeURL": "https://github.com/whatsup/whatsup",
         "issues": [
           1139
         ]

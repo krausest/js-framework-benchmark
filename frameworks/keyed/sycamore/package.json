@@ -5,6 +5,7 @@
   "license": "ISC",
   "js-framework-benchmark": {
     "frameworkVersion": "0.8.0",
+    "frameworkHomeURL": "https://sycamore-rs.netlify.app/",
     "issues": [
       1139
     ]

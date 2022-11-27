@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for vidom framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "vidom"
+    "frameworkVersionFromPackage": "vidom",
+    "frameworkHomeURL": "https://github.com/dfilatov/vidom"
   },
   "scripts": {
     "build-dev": "webpack -w -d",

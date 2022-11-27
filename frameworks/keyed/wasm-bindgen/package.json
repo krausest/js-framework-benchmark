@@ -5,6 +5,7 @@
   "license": "ISC",
   "js-framework-benchmark": {
     "frameworkVersion": "0.2.47",
+    "frameworkHomeURL": "https://rustwasm.github.io/docs/wasm-bindgen/",
     "issues": [772, 1139]
   },
   "scripts": {

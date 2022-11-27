@@ -5,6 +5,7 @@
     "type": "module",
     "js-framework-benchmark": {
         "frameworkVersionFromPackage": "udomsay",
+        "frameworkHomeURL": "https://github.com/WebReflection/udomsay",
         "issues": [
           772
         ]

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@stencil/core",
+    "frameworkHomeURL": "https://stenciljs.com/",
     "issues": [
       1139
     ]

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "dist/main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "solid-js"
+    "frameworkVersionFromPackage": "solid-js",
+    "frameworkHomeURL": "https://www.solidjs.com/"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

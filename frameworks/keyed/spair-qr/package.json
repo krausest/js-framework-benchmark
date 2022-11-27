@@ -5,6 +5,7 @@
   "license": "ISC",
   "js-framework-benchmark": {
     "frameworkVersion": "0.0.8",
+    "frameworkHomeURL": "https://docs.rs/spair/latest/spair/",
     "issues": [
       1139
     ]

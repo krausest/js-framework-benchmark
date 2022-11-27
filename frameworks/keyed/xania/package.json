@@ -5,6 +5,7 @@
     "main": "index.js",
     "js-framework-benchmark": {
         "frameworkVersionFromPackage": "@xania/view",
+        "frameworkHomeURL": "https://github.com/xania/view",
         "issues": [772] 
     },
     "scripts": {
