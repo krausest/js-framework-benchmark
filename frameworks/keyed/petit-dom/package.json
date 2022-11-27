@@ -4,7 +4,8 @@
   "description": "petit-dom js benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "petit-dom"
+    "frameworkVersionFromPackage": "petit-dom",
+    "frameworkHomeURL": "https://github.com/yelouafi/petit-dom"
   },
   "dependencies": {
     "petit-dom": "0.2.0"

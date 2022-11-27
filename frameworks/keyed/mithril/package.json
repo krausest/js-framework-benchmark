@@ -4,6 +4,7 @@
   "description": "Benchmark for Mithrill 2.0.4 framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mithril",
+    "frameworkHomeURL": "https://mithril.js.org/",
     "issues": [
       1139
     ]

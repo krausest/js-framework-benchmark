@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for react-lite framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "preact"
+    "frameworkVersionFromPackage": "preact",
+    "frameworkHomeURL": "https://preactjs.com/"
   },
   "scripts": {
     "build-dev": "webpack -w -d",

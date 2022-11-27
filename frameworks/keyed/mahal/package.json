@@ -40,6 +40,7 @@
     "language": "ts"
   },
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "mahal"
+    "frameworkVersionFromPackage": "mahal",
+    "frameworkHomeURL": "https://mahaljs.com/"
   }
 }

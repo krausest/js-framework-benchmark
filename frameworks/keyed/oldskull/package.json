@@ -15,7 +15,8 @@
     "webpack-cli": "4.7.0"
   },
   "js-framework-benchmark": {
-    "frameworkVersion": "0.1.2"
+    "frameworkVersionFromPackage": "oldskull",
+    "frameworkHomeURL": "https://github.com/alexeyoganezov/oldskull"
   },
   "dependencies": {
     "oldskull": "0.1.2"

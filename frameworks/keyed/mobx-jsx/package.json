@@ -3,7 +3,8 @@
   "version": "0.14.0",
   "main": "dist/main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "mobx-jsx"
+    "frameworkVersionFromPackage": "mobx-jsx",
+    "frameworkHomeURL": "https://github.com/ryansolid/mobx-jsx"
   },
   "scripts": {
     "build-dev": "rollup -c",

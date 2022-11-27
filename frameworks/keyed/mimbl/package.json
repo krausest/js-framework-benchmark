@@ -4,6 +4,7 @@
   "description": "Benchmark for Mimbl framework (keyed)",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mimbl",
+    "frameworkHomeURL": "https://mmichlin66.github.io/mimbl/about.html",
     "issues": [
       1139
     ]
