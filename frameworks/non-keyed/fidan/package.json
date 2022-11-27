@@ -11,6 +11,7 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@fidanjs/runtime",
+    "frameworkHomeURL": "https://github.com/ismail-codar/fidan",
     "issues": [772]
   },
   "repository": {
