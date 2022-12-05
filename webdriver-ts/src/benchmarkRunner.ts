@@ -21,6 +21,8 @@ function forkAndCallBenchmark(
       forkedRunner = "dist/forkedBenchmarkRunnerPlaywright.js";
     } else if (config.BENCHMARK_RUNNER == BENCHMARK_RUNNER.WEBDRIVER) {
       forkedRunner = "dist/forkedBenchmarkRunnerWebdriver.js";
+    } else if (config.BENCHMARK_RUNNER == BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME) {
+      forkedRunner = "dist/forkedBenchmarkRunnerWebdriverAfterframe.js";
     } else {
       forkedRunner = "dist/forkedBenchmarkRunnerPuppeteer.js";
     }
@@ -185,6 +187,7 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkInfos: Benchmar
   let benchmarkOptions: BenchmarkOptions = {
     port: config.PORT.toFixed(),
     HOST: config.HOST,
+    browser: config.BROWSER,
     remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
     chromePort: config.CHROME_PORT,
     headless: args.headless,
@@ -252,18 +255,22 @@ let args: any = yargs(process.argv)
   .boolean("headless").default("headless", false)
   .boolean("smoketest")
   .string("runner").default("runner",config.BENCHMARK_RUNNER)
+  .string("browser").default("browser",config.BROWSER)
   .array("framework")
   .array("benchmark")
   .string("chromeBinary").argv;
 
 let runner = args.runner;
-if ([BENCHMARK_RUNNER.WEBDRIVER_CDP,BENCHMARK_RUNNER.WEBDRIVER,BENCHMARK_RUNNER.PLAYWRIGHT,BENCHMARK_RUNNER.PUPPETEER].includes(runner)) {
+if ([BENCHMARK_RUNNER.WEBDRIVER_CDP,BENCHMARK_RUNNER.WEBDRIVER,BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME,
+  BENCHMARK_RUNNER.PLAYWRIGHT,
+  BENCHMARK_RUNNER.PUPPETEER].includes(runner)) {
   console.log(`INFO: Using ${runner} benchmark runner`)
   config.BENCHMARK_RUNNER = runner;
 } else {
   console.log("ERROR: argument driver has illegal value "+runner, [BENCHMARK_RUNNER.WEBDRIVER_CDP,BENCHMARK_RUNNER.WEBDRIVER,BENCHMARK_RUNNER.PLAYWRIGHT,BENCHMARK_RUNNER.PUPPETEER]);
   process.exit(1);
 }
+config.BROWSER = args.browser;
 
 let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
 let frameworkArgument = !args.framework ? allArgs : args.framework;

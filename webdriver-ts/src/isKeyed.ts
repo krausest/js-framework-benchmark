@@ -322,6 +322,7 @@ let runFrameworks = (args.framework && args.framework.length > 0 ? args.framewor
 let benchmarkOptions: BenchmarkOptions = {
   HOST: config.HOST,
   port: config.PORT.toFixed(),
+  browser: config.BROWSER,
   remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
   chromePort: config.CHROME_PORT,
   headless: args.headless,

@@ -38,6 +38,7 @@ export interface BenchmarkOptions extends BenchmarkDriverOptions {
   HOST: string;
   port: string;
   batchSize: number;
+  browser: string;
   numIterationsForCPUBenchmarks: number;
   numIterationsForMemBenchmarks: number;
   numIterationsForStartupBenchmark: number;
@@ -47,7 +48,8 @@ export enum BENCHMARK_RUNNER {
   PUPPETEER = "puppeteer", 
   PLAYWRIGHT = "playwright", 
   WEBDRIVER_CDP = "webdrivercdp", 
-  WEBDRIVER = "webdriver" 
+  WEBDRIVER = "webdriver",
+  WEBDRIVER_AFTERFRAME = "webdriver-afterframe" 
 }
 
 export let config = {
@@ -70,6 +72,7 @@ export let config = {
   WRITE_RESULTS: true,
   RESULTS_DIRECTORY: "results",
   TRACES_DIRECTORY: "traces",
+  BROWSER: "chrome",
   ALLOW_BATCHING: true,
   HOST: 'localhost',
   BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER
