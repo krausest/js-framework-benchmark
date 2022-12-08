@@ -1,4 +1,10 @@
-import { ViewContext, ViewContainer } from "@xania/view";
+import {
+  Context,
+  ListSource,
+  ListMutationType,
+  State,
+  useState,
+} from "@xania/view";
 
 export interface DataRow {
   id: number;
@@ -64,28 +70,14 @@ var nouns = [
 
 export class TableStore {
   private counter = 1;
-  constructor(private container: ViewContainer<DataRow>) {}
+  public source: ListSource<DataRow> = new ListSource<DataRow>();
 
-  selected?: Node;
-
-  select = (context: ViewContext) => {
-    const { selected, container } = this;
-    const node = context.node;
-    if (selected !== node) {
-      if (selected?.parentNode) {
-        container.updateAt(selected["rowIndex"], "className", () => null);
-      }
-      this.selected = node;
-      container.updateAt(node["rowIndex"], "className", () => "danger");
-    }
-  };
-
-  delete = (context: ViewContext) => {
-    this.container.removeAt(context.node["rowIndex"]);
-  };
+  readonly delete = (e: JSX.EventContext<DataRow>) =>
+    this.source.delete(e.data);
 
   private appendRows(count: number) {
-    let { counter, container } = this;
+    let { counter } = this;
+
     const data = new Array(count);
     for (let i = 0; i < count; i++) {
       data[i] = {
@@ -96,11 +88,9 @@ export class TableStore {
           colours[_random(colours.length)] +
           " " +
           nouns[_random(nouns.length)],
-        className: null,
       };
     }
-
-    container.push(data);
+    this.source.append(data);
     this.counter = counter;
   }
 
@@ -108,33 +98,33 @@ export class TableStore {
     this.clear();
     this.appendRows(1000);
   };
-
   create10000Rows = (): void => {
     this.clear();
     this.appendRows(10000);
   };
-
   append1000Rows = (): void => {
     this.appendRows(1000);
   };
 
   updateEvery10thRow = (): void => {
-    const { container } = this;
-    const length = container.length;
-
-    for (let i = 0; i < length; i += 10) {
-      container.updateAt(i, "label", (value) => value + " !!!");
-    }
+    this.source.update((data) => {
+      const updated = [];
+      for (let i = 0; i < data.length; i += 10) {
+        const item = data[i];
+        data[i].label += " !!!";
+        updated.push(item);
+      }
+      return updated;
+    });
   };
-
   clear = (): void => {
-    this.container.clear();
-    this.selected = null;
+    this.source.clear();
   };
-
   swapRows = (): void => {
-    if (this.container.length > 998) {
-      this.container.swap(1, 998);
+    const { source } = this;
+    if (source.length > 998) {
+      source.move(1, 998);
+      source.move(998, 1);
     }
   };
 }
