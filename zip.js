@@ -42,6 +42,9 @@ for (let keyedType of ['keyed', 'non-keyed']) {
 		if (fs.existsSync(fd+"/public/") && ["ember","glimmer"].indexOf(name)==-1) {
 			zip.addLocalFolder(fd+"/public/", zipPathName+"/public/");
 		}
+		if (["karyon"].indexOf(name)>-1) {
+			zip.addLocalFile(fd+"/app.bundle.js", zipPathName)
+		}
 		if (fs.existsSync(fd+"/target/web/stage"))
 			zip.addLocalFolder(fd+"/target/web/stage", zipPathName+"/target/web/stage");
 		if (name=="halogen" && fs.existsSync(fd+"/output")) {
