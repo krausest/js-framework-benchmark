@@ -4,7 +4,7 @@
   "description": "Xania JS demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.4.7",
+    "frameworkVersionFromPackage": "@xania/view",
     "customURL": "/dist",
     "frameworkHomeURL": "https://github.com/xania/view",
     "issues": []
