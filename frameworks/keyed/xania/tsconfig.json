@@ -1,15 +1,17 @@
 {
-    "include": ["src"],
-    "compilerOptions": {
-        "outDir": "dist/src",
-        "noImplicitAny": false,
-        "sourceMap": true,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "target": "ES6",
-        "jsx": "react",
-        "jsxFactory": "jsx",
-        "baseUrl": "./src",
-        "allowJs": true,
-    }
+  "include": ["src"],
+  "compilerOptions": {
+    "lib": ["dom", "ESNext"],
+    "outDir": "dist/src",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "ES6",
+    "jsx": "react",
+    "jsxFactory": "jsx.createElement",
+    "jsxFragmentFactory": "jsx.createFragment",
+    "allowJs": true,
+    "types": ["@xania/view/types/jsx"]
+  }
 }

@@ -1,5 +1,7 @@
-import { jsx, createContainer, property, render } from "@xania/view";
+import { List, useContext, jsxFactory, render } from "@xania/view";
 import { TableStore, DataRow } from "./table-store";
+
+const jsx = jsxFactory();
 
 interface JumbotronProps {
   store: TableStore;
@@ -83,60 +85,44 @@ function Jumbotron(props: JumbotronProps) {
   );
 }
 
-function Container() {
-  const rows = createContainer<DataRow>();
-  const store = new TableStore(rows);
+export function Container() {
+  const store = new TableStore();
+
+  const row = useContext<DataRow>();
+  const danger = row.defer("danger");
   return (
-    <div id="main">
-      <div class="container">
-        <Jumbotron store={store} />
-        <table class="table table-hover table-striped test-data">
-          <tbody>{rows.map(Row(store))}</tbody>
-        </table>
-        <span
-          class="preloadicon glyphicon glyphicon-remove"
-          aria-hidden="true"
-        ></span>
-      </div>
+    <div class="container">
+      <Jumbotron store={store} />
+      <table class="table table-hover table-striped test-data">
+        <tbody>
+          <List source={store.source}>
+            <tr class={danger}>
+              <td class="col-md-1">{row.readonly("id")}</td>
+              <td class="col-md-4">
+                <a class="lbl" click={(e) => danger.select(e.data)}>
+                  {row.get("label")}
+                </a>
+              </td>
+              <td class="col-md-1">
+                <a class="remove" click={store.delete}>
+                  <span
+                    class="remove glyphicon glyphicon-remove"
+                    aria-hidden="true"
+                  ></span>
+                </a>
+              </td>
+              <td class="col-md-6"></td>
+            </tr>
+          </List>
+        </tbody>
+      </table>
+      <span
+        class="preloadicon glyphicon glyphicon-remove"
+        aria-hidden="true"
+      ></span>
     </div>
   );
 }
 
-function Row(store: TableStore) {
-  return (
-    <tr class={property("className")}>
-      <td class="col-md-1">{property("id")}</td>
-      <td class="col-md-4">
-        <a class="lbl" click={store.select}>
-          {property("label")}
-        </a>
-      </td>
-      <td class="col-md-1">
-        <a class="remove" click={store.delete}>
-          <span
-            class="remove glyphicon glyphicon-remove"
-            aria-hidden="true"
-          ></span>
-        </a>
-      </td>
-      <td class="col-md-6"></td>
-    </tr>
-  );
-}
-
-// interface InputProps<T> {
-//   value: State<T>;
-// }
-
-// function Input<T>(props: InputProps<T>) {
-//   const tpl = jsx.factory;
-//   const { value } = props;
-//   return <input value={value} keyup={onKeyUp} />;
-
-//   function onKeyUp({ target }) {
-//     value.update(target.value);
-//   }
-// }
-
 const main = document.getElementById("main");
-render(main, <Container />);
+render(<Container />, main);
