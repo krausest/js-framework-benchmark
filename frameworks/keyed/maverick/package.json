@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-maverick",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "maverick-js",
+    "frameworkHomeURL": "https://github.com/maverick-js/maverick"
+  },
+  "scripts": {
+    "build-dev": "npm run copy:css && node build.js --dev & sirv --dev --port=3001",
+    "build-prod": "node build.js",
+    "copy:css": "cp -R ../../../css css"
+  },
+  "author": "Rahim Alwer",
+  "license": "MIT",
+  "dependencies": {
+    "maverick.js": "0.22.0"
+  },
+  "devDependencies": {
+    "@maverick-js/compiler": "0.22.0",
+    "esbuild": "0.16.8",
+    "sirv-cli": "2.0.2",
+    "typescript": "4.9.4"
+  }
+}
