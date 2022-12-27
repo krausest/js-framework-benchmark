@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "maverick-js",
+    "frameworkVersionFromPackage": "maverick.js",
     "frameworkHomeURL": "https://github.com/maverick-js/maverick"
   },
   "scripts": {
