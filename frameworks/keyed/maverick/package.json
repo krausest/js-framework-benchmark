@@ -14,10 +14,10 @@
   "author": "Rahim Alwer",
   "license": "MIT",
   "dependencies": {
-    "maverick.js": "0.22.0"
+    "maverick.js": "0.22.2"
   },
   "devDependencies": {
-    "@maverick-js/compiler": "0.22.0",
+    "@maverick-js/compiler": "0.22.2",
     "esbuild": "0.16.8",
     "sirv-cli": "2.0.2",
     "typescript": "4.9.4"
