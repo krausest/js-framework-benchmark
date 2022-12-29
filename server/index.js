@@ -1,10 +1,15 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const path = require('path')
 const fs = require('fs');
 const fsp = require('fs/promises');
 
 const app = express()
 const port = 8080
+
+const addCSP = false;
+
+app.use(express.json());
 
 let frameworkDirectory  = path.join(__dirname, "..", "frameworks");
 let webDriverResultDirectory  = path.join(__dirname, "..", "webdriver-ts-results");
@@ -104,7 +109,15 @@ function addSiteIsolationForIndex(request, response, next) {
 }
 app.use(addSiteIsolationForIndex);
 
-app.use('/frameworks', express.static(frameworkDirectory))
+app.use('/frameworks', express.static(frameworkDirectory, 
+  {
+    setHeaders: function(res, path) {
+      if (addCSP) {
+        res.setHeader('Content-Security-Policy', "default-src 'self'; report-uri /csp");
+      }
+    }
+  }
+))
 app.use('/webdriver-ts-results', express.static(webDriverResultDirectory))
 app.use('/css', express.static(path.join(frameworkDirectory, '..', 'css')))
 app.get('/index.html', async (req, res, next) => {
@@ -117,8 +130,23 @@ app.get('/ls', async (req, res) => {
     let t1 = Date.now();
     console.log("/ls duration ", (t1-t0));
 })
+app.use('/csp', bodyParser.json({ type: 'application/csp-report' }))
+
+violations = []
+
+app.post('/csp', async (req, res) => {
+  console.log("/CSP ", req.body);
+  let uri = req.body['csp-report']["document-uri"]
+  let frameworkRegEx = /((non-)?keyed\/.*?\/)/
+  violations.push(uri.match(frameworkRegEx)[0])
+  res.sendStatus(201);
+})
+
+app.get('/csp', async (req, res) => {
+  res.send(violations)
+})
 
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`)
+  console.log(`Server running on port ${port}`);
 })
