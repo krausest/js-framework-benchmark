@@ -1,0 +1,32 @@
+{
+  "name": "petit-dom-js-benchmark",
+  "version": "1.0.0",
+  "description": "petit-dom js benchmark",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "petit-dom",
+    "frameworkHomeURL": "https://github.com/yelouafi/petit-dom"
+  },
+  "dependencies": {
+    "petit-dom": "0.2.0"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.3",
+    "babel-plugin-transform-react-jsx": "6.24.1",
+    "babel-preset-es2015-rollup": "3.0.0",
+    "rollup": "0.63.4",
+    "rollup-plugin-babel": "3.0.7",
+    "rollup-plugin-node-resolve": "3.3.0",
+    "rollup-plugin-uglify": "4.0.0",
+    "rollup-watch": "4.3.1"
+  },
+  "scripts": {
+    "build-prod": "rollup -cf iife -i src/index.js -o dist/index.js",
+    "build-dev": "rollup -cf iife -m inline -i src/index.js -o dist/index.js"
+  },
+  "keywords": [
+    "petit-dom"
+  ],
+  "author": "Yassine Elouafi",
+  "license": "MIT"
+}
