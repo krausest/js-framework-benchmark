@@ -118,15 +118,14 @@ function App() {
         <tbody>
           <ForKeyed each={$data}>
             {(row) => {
-              const id = row.id;
               return (
-                <tr class={$selector(id)() ? "danger" : ""}>
-                  <td class="col-md-1" $prop:textContent={id} />
+                <tr class={$selector(row.id)() ? "danger" : ""}>
+                  <td class="col-md-1" $prop:textContent={row.id} />
                   <td class="col-md-4">
-                    <a $on:click={[select, id]} $prop:textContent={row.label()} />
+                    <a $on:click={[select, row.id]} $prop:textContent={row.label()} />
                   </td>
                   <td class="col-md-1">
-                    <a $on:click={[remove, id]}>
+                    <a $on:click={[remove, row.id]}>
                       <span class="glyphicon glyphicon-remove" aria-hidden="true" />
                     </a>
                   </td>

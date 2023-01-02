@@ -15,6 +15,7 @@ require("esbuild").build({
     maverick({
       include: ["src/**/*.tsx"],
       delegateEvents: true,
+      groupDOMEffects: true,
     }),
   ],
 });
