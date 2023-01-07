@@ -24,28 +24,29 @@
     "build": "ember build",
     "build-dev": "ember build --environment=production",
     "build-prod": "ember build --environment=production",
-    "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*:fix",
+    "lint:fix": "concurrently \"npm:lint:*:fix\" --names \"fix:\"",
     "lint:hbs": "ember-template-lint .",
     "lint:hbs:fix": "ember-template-lint . --fix",
     "lint:js": "eslint . --cache",
     "lint:js:fix": "eslint . --fix",
     "start": "ember serve",
-    "test": "npm-run-all lint test:*"
+    "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\""
   },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
-    "@ember/test-helpers": "^2.6.0",
+    "@ember/test-helpers": "^2.8.1",
     "@embroider/compat": "^2.0.2",
     "@embroider/core": "^2.0.2",
     "@embroider/webpack": "^2.0.2",
-    "@glimmer/component": "^1.0.4",
+    "@glimmer/component": "^1.1.2",
     "babel-eslint": "^10.1.0",
     "broccoli-asset-rev": "3.0.0",
-    "ember-auto-import": "^2.4.0",
+    "concurrently": "^7.6.0",
+    "ember-auto-import": "^2.5.0",
     "ember-cli": "~4.9.2",
     "ember-cli-babel": "^7.26.11",
     "ember-cli-dependency-checker": "3.3.1",
-    "ember-cli-htmlbars": "^6.0.1",
+    "ember-cli-htmlbars": "^6.1.1",
     "ember-cli-inject-live-reload": "2.1.0",
     "ember-cli-sri": "2.1.1",
     "ember-cli-terser": "4.0.2",
@@ -55,18 +56,18 @@
     "ember-resolver": "^9.0.1",
     "ember-source": "4.9.3",
     "eslint": "^8.31.0",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-ember": "^11.4.2",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-qunit": "^7.2.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-qunit": "^7.3.4",
     "loader.js": "4.7.0",
-    "prettier": "^2.5.1",
-    "qunit": "^2.17.2",
+    "prettier": "^2.8.1",
+    "qunit": "^2.19.3",
     "qunit-dom": "^2.0.0",
-    "webpack": "^5.68.0"
+    "webpack": "^5.75.0"
   },
   "engines": {
-    "node": "12.* || 14.* || >= 16"
+    "node": "14.* || 16.* || >= 18"
   },
   "ember": {
     "edition": "octane"
