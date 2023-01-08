@@ -1,0 +1,24 @@
+[package]
+authors = ["Markus Kohlhase"]
+edition = "2021"
+name = "js-framework-benchmark-mogwai"
+version = "1.0.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+getrandom = { version = "0.2.8", features = ["js"] }
+mogwai-dom = "0.1.0"
+rand = { version = "0.8.5", features = ["small_rng"] }
+wasm-bindgen = "0.2.83"
+wasm-bindgen-futures = "0.4.33"
+web-sys = { version = "0.3.60", features = ["Window", "Document"] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+panic = "abort"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ['-O4']
