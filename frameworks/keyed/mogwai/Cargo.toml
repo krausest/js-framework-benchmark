@@ -9,7 +9,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 getrandom = { version = "0.2.8", features = ["js"] }
-mogwai-dom = "0.1.0"
+mogwai-dom = "0.1.4"
 rand = { version = "0.8.5", features = ["small_rng"] }
 wasm-bindgen = "0.2.83"
 wasm-bindgen-futures = "0.4.33"
