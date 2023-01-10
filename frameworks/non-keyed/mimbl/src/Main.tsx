@@ -88,7 +88,7 @@ class Main extends mim.Component
     {
         return <tbody vnref={this.vnTBody}>
             {this.rows?.map( row =>
-                <tr class={row.selectedTrigger} key={row}>
+                <tr class={row.selectedTrigger}>
                     <td class="col-md-1">{row.id}</td>
                     <td class="col-md-4"><a click={[this.onSelectRowClicked, row]}>{row.labelTrigger}</a></td>
                     <td class="col-md-1">
