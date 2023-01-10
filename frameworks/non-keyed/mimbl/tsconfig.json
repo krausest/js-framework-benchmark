@@ -5,14 +5,16 @@
 		"sourceMap": true,
 		"noImplicitAny": false,
 		"strictNullChecks": false,
-		"module": "commonjs",
-		"target": "es6",
-		"lib": [ "es6", "dom" ],
+		"module": "esnext",
+        "moduleResolution": "node",
+		"target": "esnext",
+		"lib": [ "esnext", "dom" ],
 		"experimentalDecorators": true,
+		"preserveConstEnums": false,
+        "useDefineForClassFields": false,
 		"jsx": "react",
 		"jsxFactory": "mim.jsx",
-		"preserveConstEnums": false
-		//"traceResolution":  true,
+        "types": []
 	},
 
 	"include": [
