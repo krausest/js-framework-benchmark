@@ -54,7 +54,7 @@ function Button( props: ButtonProps, children: any): any
 
 class Main extends mim.Component
 {
-    @mim.trigger private rows: Row[] = [];
+    @mim.trigger(0) private rows: Row[] = null;
     private selectedRow: Row = undefined;
     @mim.ref private vnTBody: mim.IElmVN<HTMLElement>;
 
