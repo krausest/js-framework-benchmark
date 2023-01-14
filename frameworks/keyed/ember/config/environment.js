@@ -1,22 +1,19 @@
 'use strict';
 
 module.exports = function (environment) {
-  let ENV = {
+  const ENV = {
     modulePrefix: 'ember-temp',
     environment,
     rootURL: '/frameworks/keyed/ember/dist/',
     locationType: 'history',
     EmberENV: {
+      EXTEND_PROTOTYPES: false,
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
         // 'ember-glimmer-angle-bracket-invocation': true,
         // EMBER_GLIMMER_ANGLE_BRACKET_INVOCATION: true,
         // e.g. EMBER_NATIVE_DECORATOR_SUPPORT: true
-      },
-      EXTEND_PROTOTYPES: {
-        // Prevent Ember Data from overriding Date.parse.
-        Date: false,
       },
     },
 
