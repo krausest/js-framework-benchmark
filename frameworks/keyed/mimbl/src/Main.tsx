@@ -1,4 +1,5 @@
 import * as mim from "mimbl"
+import { TickSchedulingType } from "mimbl";
 
 
 
@@ -41,8 +42,8 @@ function rand( max: number)
 }
 
 
-
-function Button( props: mim.IHtmlButtonElementProps, children: any[]): any
+type ButtonProps = mim.JSX.IntrinsicElements["button"];
+function Button( props: ButtonProps, children: any): any
 {
     return <div class="col-sm-6 smallpad">
         <button type="button" class="btn btn-primary btn-block" {...props}>{children}</button>
@@ -54,7 +55,7 @@ function Button( props: mim.IHtmlButtonElementProps, children: any[]): any
 class Main extends mim.Component
 {
     @mim.trigger(0) private rows: Row[] = null;
-    public selectedRow: Row = undefined;
+    private selectedRow: Row = undefined;
     @mim.ref private vnTBody: mim.IElmVN<HTMLElement>;
 
     public render()
@@ -151,19 +152,20 @@ class Main extends mim.Component
 		}
     }
 
-    public onSelectRowClicked = (e: MouseEvent, rowToSelect: Row): void =>
+    public onSelectRowClicked(e: MouseEvent, rowToSelect: Row): void
     {
-        if (rowToSelect === this.selectedRow)
+        let currSelectedRow = this.selectedRow;
+        if (rowToSelect === currSelectedRow)
             return;
 
-        if (this.selectedRow)
-            this.selectedRow.selectedTrigger.set( null);
+        if (currSelectedRow)
+            currSelectedRow.selectedTrigger.set( null);
 
         this.selectedRow = rowToSelect;
         rowToSelect.selectedTrigger.set( "danger");
     }
 
-    public onDeleteRowClicked = (e: MouseEvent, rowToDelete: Row): void =>
+    public onDeleteRowClicked(e: MouseEvent, rowToDelete: Row): void
     {
         if (rowToDelete === this.selectedRow)
             this.selectedRow = undefined;
