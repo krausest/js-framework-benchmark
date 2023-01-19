@@ -6,7 +6,10 @@
   "js-framework-benchmark": {
     "frameworkVersion": "0.4.0",
     "frameworkHomeURL": "https://github.com/silkenweb/silkenweb",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript and WASM is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
