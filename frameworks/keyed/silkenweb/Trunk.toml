@@ -1,0 +1,6 @@
+[build]
+public_url = "/frameworks/keyed/silkenweb/dist/"
+
+[tools]
+wasm_bindgen = "0.2.83"
+wasm_opt = "version_111"

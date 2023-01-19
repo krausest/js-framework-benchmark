@@ -1,0 +1,19 @@
+[package]
+name = "js-framework-benchmark-silkenweb"
+version = "1.0.0"
+authors = ["Simon Bourne <simonbourne@gmail.com>"]
+edition = "2021"
+publish = false
+
+[dependencies]
+silkenweb = { version = "0.4.0", features = ["weak-refs"] }
+futures-signals = "0.3.31"
+js-sys = "0.3.60"
+wasm-bindgen = { version = "=0.2.83", features = ["enable-interning"] }
+rand = { version = "0.8.5", features = ["small_rng"] }
+getrandom = { version = "0.2.7", features = ["js"] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+panic = "abort"
