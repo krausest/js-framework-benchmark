@@ -1,5 +1,5 @@
 import {nodeResolve} from '@rollup/plugin-node-resolve';
-// import {terser} from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import babel from "@rollup/plugin-babel";
 
 export default {
@@ -12,12 +12,11 @@ export default {
         "esmodules": true
       },
       plugins: [
-        ["@ungap/babel-plugin-transform-hinted-jsx"]
+        ["@ungap/babel-plugin-transform-esx"]
       ]
     }),
     nodeResolve({extensions: [".js", ".jsx"]}),
-    // yay, terser breaks my code!
-    // terser({mangle: false, output: {comments: false}})
+    terser()
   ],
   output: {
     file: './dist/main.js',
