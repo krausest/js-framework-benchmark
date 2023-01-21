@@ -43,11 +43,14 @@ static NOUNS: &[&str] = &[
 ];
 
 #[component]
-fn Button<'a>(cx: Scope, id: &'a str, text: &'a str) -> Element {
+fn Button<F>(cx: Scope, id: &'static str, text: &'static str, on_click: F) -> impl IntoView
+where
+    F: Fn(web_sys::MouseEvent) + 'static,
+{
     view! {
         cx,
         <div class="col-sm-6 smallpad">
-            <button id=id class="btn btn-primary btn-block" type="button">{text}</button>
+            <button id=id class="btn btn-primary btn-block" type="button" on:click=on_click>{ text }</button>
         </div>
     }
 }
@@ -90,7 +93,7 @@ fn build_data(cx: Scope, count: usize) -> Vec<RowData> {
 }
 
 #[component]
-fn App(cx: Scope) -> Element {
+fn App(cx: Scope) -> impl IntoView {
     let (data, set_data) = create_signal(cx, Vec::<RowData>::new());
     let (selected, set_selected) = create_signal(cx, None::<usize>);
 
@@ -99,13 +102,13 @@ fn App(cx: Scope) -> Element {
     };
 
     let run = move |_| {
-        set_data(build_data(cx, 1000));
-        set_selected(None);
+        set_data.update(|d| *d = build_data(cx, 1_000));
+        set_selected.update(|s| *s = None);
     };
 
     let run_lots = move |_| {
-        set_data(build_data(cx, 10000));
-        set_selected(None);
+        set_data.update(|d| *d = build_data(cx, 10_000));
+        set_selected.update(|s| *s = None);
     };
 
     let add = move |_| {
@@ -121,8 +124,8 @@ fn App(cx: Scope) -> Element {
     };
 
     let clear = move |_| {
-        set_data(Vec::new());
-        set_selected(None);
+        set_data.update(|d| *d = Vec::new());
+        set_selected.update(|s| *s = None);
     };
 
     let swap_rows = move |_| {
@@ -133,7 +136,7 @@ fn App(cx: Scope) -> Element {
         });
     };
 
-    let is_selected = create_selector(cx, selected);
+    let is_selected = move |id| selected.get() == Some(id);
 
     view! {
         cx,
@@ -141,33 +144,33 @@ fn App(cx: Scope) -> Element {
             <div class="jumbotron"><div class="row">
             <div class="col-md-6"><h1>"Leptos"</h1></div>
             <div class="col-md-6"><div class="row">
-                <Button id="run" text="Create 1,000 rows" on:click=run/>
-                <Button id="runlots" text="Create 10,000 rows" on:click=run_lots />
-                <Button id="add" text="Append 1,000 rows" on:click=add />
-                <Button id="update" text="Update every 10th row" on:click=update />
-                <Button id="clear" text="Clear" on:click=clear />
-                <Button id="swaprows" text="Swap Rows" on:click=swap_rows />
+                <Button id="run" text="Create 1,000 rows" on_click=run/>
+                <Button id="runlots" text="Create 10,000 rows" on_click=run_lots />
+                <Button id="add" text="Append 1,000 rows" on_click=add />
+                <Button id="update" text="Update every 10th row" on_click=update />
+                <Button id="clear" text="Clear" on_click=clear />
+                <Button id="swaprows" text="Swap Rows" on_click=swap_rows />
             </div></div>
             </div></div>
             <table class="table table-hover table-striped test-data">
                 <tbody>
-                    <For each=data key=|row| row.id>{{
-                        let is_selected = is_selected.clone();
-                        move |cx, row: &RowData| {
+                    <For
+                        each = move || data.get()
+                        key = |row| row.id
+                        view = move |row| {
                             let row_id = row.id;
                             let (label, _) = row.label;
-                            let is_selected = is_selected.clone();
                             view! {
                                 cx,
-                                <tr class:danger={move || is_selected(Some(row_id))}>
+                                <tr class:danger={move || is_selected(row_id)}>
                                     <td class="col-md-1">{row_id.to_string()}</td>
-                                    <td class="col-md-4"><a on:click=move |_| set_selected(Some(row_id))>{move || label.get()}</a></td>
+                                    <td class="col-md-4"><a on:click=move |_| set_selected.update(|s|*s = Some(row_id))>{move || label.get()}</a></td>
                                     <td class="col-md-1"><a on:click=move |_| remove(row_id)><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
                                     <td class="col-md-6"/>
                                 </tr>
                             }
                         }
-                    }}</For>
+                    />
                 </tbody>
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
@@ -178,7 +181,7 @@ fn App(cx: Scope) -> Element {
 #[wasm_bindgen(start)]
 pub fn start() {
     let mount_el = document().query_selector("#main").unwrap().unwrap();
-    leptos::mount(mount_el.unchecked_into(), |cx| {
+    mount_to(mount_el.unchecked_into(), |cx| {
         view! { cx, <App/> }
     });
 }
