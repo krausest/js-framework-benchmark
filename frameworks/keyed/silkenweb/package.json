@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-silkenweb",
+  "version": "1.0.0",
+  "description": "Benchmark for silkenweb",
+  "license": "ISC",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.4.0",
+    "frameworkHomeURL": "https://github.com/silkenweb/silkenweb",
+    "customURL": "/bundled-dist",
+    "issues": [
+      1139
+    ]
+  },
+  "scripts": {
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript and WASM is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "build-prod-force": "trunk build --release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {}
+}
