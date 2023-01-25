@@ -10,7 +10,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "js-framework-benchmark": {
-    "frameworkVersion": "0.13.0"
+    "frameworkVersion": "0.15.0",
+    "frameworkHomeURL": "https://opensource.janestreet.com/incr_dom/"
   },
   "keywords": [
     "webpack",
