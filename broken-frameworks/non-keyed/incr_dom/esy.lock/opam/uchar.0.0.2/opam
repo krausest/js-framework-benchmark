@@ -6,7 +6,7 @@ doc: "https://ocaml.github.io/uchar/"
 dev-repo: "git+https://github.com/ocaml/uchar.git"
 bug-reports: "https://github.com/ocaml/uchar/issues"
 tags: [ "text" "character" "unicode" "compatibility" "org:ocaml.org" ]
-license: "typeof OCaml system"
+license: "LGPL-2.1-only WITH OCaml-LGPL-linking-exception"
 depends: [
   "ocaml" {>= "3.12.0"}
   "ocamlbuild" {build}

@@ -21,14 +21,13 @@
     "build-prod":
       "esy b dune build --root . -j 8 --verbose --profile release"
   },
-  "peerDependencies": { "ocaml": "4.9.0" },
+  "peerDependencies": { "ocaml": "4.13.1" },
   "dependencies": {
-    "@opam/incr_dom": "v0.13.0"
+    "@opam/incr_dom": "v0.15.1"
   },
   "devDependencies": {
     "http-server": "*",
-    "@esy-ocaml/reason": "3.5.2",
-    "@opam/merlin": "3.3.3",
-    "refmterr": "3.3.0"
+    "@opam/reason": "3.8.2",
+    "@opam/merlin": "4.7-413"
   }
 }

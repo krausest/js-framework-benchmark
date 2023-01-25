@@ -4,6 +4,7 @@
    (public_name JsFrameworkBenchmark)
    (preprocess (pps ppx_jane ))
    (libraries incr_dom js-framework-benchmark-components.lib)
+   (modes byte)
    (js_of_ocaml (flags
       --opt 3
    ))
