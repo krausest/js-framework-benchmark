@@ -43,7 +43,7 @@ function rand( max: number)
 
 
 type ButtonProps = mim.JSX.IntrinsicElements["button"];
-function Button( props: ButtonProps, children: any): any
+function Button( props: ButtonProps, children: any[]): any
 {
     return <div class="col-sm-6 smallpad">
         <button type="button" class="btn btn-primary btn-block" {...props}>{children}</button>
