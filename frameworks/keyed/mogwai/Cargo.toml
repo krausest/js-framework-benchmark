@@ -1,5 +1,5 @@
 [package]
-authors = ["Markus Kohlhase"]
+authors = ["Markus Kohlhase", "Schell Scivally"]
 edition = "2021"
 name = "js-framework-benchmark-mogwai"
 version = "1.0.0"
@@ -8,12 +8,13 @@ version = "1.0.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-getrandom = { version = "0.2.8", features = ["js"] }
-mogwai-dom = "0.1.4"
-rand = { version = "0.8.5", features = ["small_rng"] }
+console_error_panic_hook = { version = "0.1.6" }
+console_log = "^0.1"
+# the application itself is part of the mogwai repo, as mogwai uses it as its own benchmark...
+mogwai-js-framework-benchmark = { version = "^0.1", features = ["keyed"] }
+mogwai-dom = "0.2.2"
 wasm-bindgen = "0.2.83"
 wasm-bindgen-futures = "0.4.33"
-web-sys = { version = "0.3.60", features = ["Window", "Document"] }
 
 [profile.release]
 codegen-units = 1
