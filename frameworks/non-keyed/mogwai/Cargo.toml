@@ -1,0 +1,25 @@
+[package]
+authors = ["Markus Kohlhase", "Schell Scivally"]
+edition = "2021"
+name = "js-framework-benchmark-mogwai"
+version = "1.0.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+console_error_panic_hook = { version = "0.1.6" }
+console_log = "^0.1"
+# the application itself is part of the mogwai repo, as mogwai uses it as its own benchmark...
+mogwai-js-framework-benchmark = { version = "^0.1" }
+mogwai-dom = "0.2.2"
+wasm-bindgen = "0.2.83"
+wasm-bindgen-futures = "0.4.33"
+
+[profile.release]
+codegen-units = 1
+lto = true
+panic = "abort"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ['-O4']
