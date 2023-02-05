@@ -1,0 +1,17 @@
+(executable
+   (package js-framework-benchmark)
+   (name Entrypoint)
+   (public_name JsFrameworkBenchmark)
+   (preprocess (pps ppx_jane ))
+   (libraries incr_dom js-framework-benchmark-components.lib)
+   (modes byte)
+   (js_of_ocaml (flags
+      --opt 3
+   ))
+)
+
+(install
+   (section bin)
+   (package js-framework-benchmark)
+   (files Entrypoint.bc.js)
+   )
