@@ -1,11 +1,21 @@
-'use strict';
+﻿'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
-const { Webpack } = require('@embroider/webpack');
-module.exports = function(defaults) {
-  let app = new EmberApp(defaults, {
-    hinting: false
-    // Add options here
+const {Webpack} = require('@embroider/webpack');
+
+module.exports = function (defaults) {
+  const app = new EmberApp(defaults, {
+    hinting: false,
+    'ember-cli-terser': {
+      terser: {
+        compress: {
+          sequences: false,
+        },
+        output: {
+          semicolons: false,
+        },
+      },
+    },
   });
 
   // Use `app.import` to add additional libraries to the generated
@@ -22,14 +32,14 @@ module.exports = function(defaults) {
   // along with the exports of each module as its value.
 
   return require('@embroider/compat').compatBuild(app, Webpack, {
-      staticAddonTestSupportTrees: true,
-      staticAddonTrees: true,
-      staticHelpers: true,
-      staticComponents: true,
-      packagerOptions: {
-        webpackConfig: {
-          mode: 'production'
-        }
+    staticAddonTestSupportTrees: true,
+    staticAddonTrees: true,
+    staticHelpers: true,
+    staticComponents: true,
+    packagerOptions: {
+      webpackConfig: {
+        mode: 'production'
       }
+    }
   });
 };

@@ -1,10 +1,8 @@
-#![recursion_limit = "1024"]
-
 use rand::prelude::*;
 use std::cmp::min;
-use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::prelude::*;
+use web_sys::window;
 use yew::prelude::*;
-use yew::web_sys::window;
 
 static ADJECTIVES: &[&str] = &[
     "pretty",
@@ -52,23 +50,21 @@ struct RowData {
 
 impl RowData {
     fn new(id: usize, rng: &mut SmallRng) -> Self {
-        let mut label = String::new();
-        label.push_str(ADJECTIVES.choose(rng).unwrap());
-        label.push(' ');
-        label.push_str(COLOURS.choose(rng).unwrap());
-        label.push(' ');
-        label.push_str(NOUNS.choose(rng).unwrap());
+        let adjective = *ADJECTIVES.choose(rng).unwrap();
+        let colour = *COLOURS.choose(rng).unwrap();
+        let noun = *NOUNS.choose(rng).unwrap();
+
+        let label = [adjective, colour, noun].join(" ");
 
         Self { id, label }
     }
 }
 
-struct Model {
+struct App {
     rows: Vec<RowData>,
     next_id: usize,
     selected_id: Option<usize>,
     rng: SmallRng,
-    link: ComponentLink<Self>,
     on_select: Callback<usize>,
     on_remove: Callback<usize>,
 }
@@ -83,27 +79,22 @@ enum Msg {
     Select(usize),
 }
 
-impl Component for Model {
+impl Component for App {
     type Message = Msg;
     type Properties = ();
 
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Model {
+    fn create(ctx: &Context<Self>) -> Self {
+        App {
             rows: Vec::new(),
             next_id: 1,
             selected_id: None,
             rng: SmallRng::from_entropy(),
-            on_select: link.callback(|id| Msg::Select(id)),
-            on_remove: link.callback(|id| Msg::Remove(id)),
-            link,
+            on_select: ctx.link().callback(Msg::Select),
+            on_remove: ctx.link().callback(Msg::Remove),
         }
     }
 
-    fn change(&mut self, _: ()) -> ShouldRender {
-        false
-    }
-
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::Run(amount) => {
                 let rng = &mut self.rng;
@@ -149,24 +140,32 @@ impl Component for Model {
         true
     }
 
-    fn view(&self) -> Html {
+    fn view(&self, ctx: &Context<Self>) -> Html {
         let rows: Html = self
             .rows
             .iter()
             .map(|row| {
                 html! {
-                    <Row key=row.id
-                        data=row.clone()
-                        selected=self.selected_id == Some(row.id)
-                        on_select=self.on_select.clone()
-                        on_remove=self.on_remove.clone() />
+                    <Row
+                        key={row.id}
+                        data={row.clone()}
+                        selected={self.selected_id == Some(row.id)}
+                        on_select={self.on_select.clone()}
+                        on_remove={self.on_remove.clone()}
+                    />
                 }
             })
             .collect();
 
         html! {
             <div class="container">
-                <Jumbotron link=self.link.clone() />
+                <Jumbotron
+                    on_run={ctx.link().callback(Msg::Run)}
+                    on_add={ctx.link().callback(Msg::Add)}
+                    on_update={ctx.link().callback(Msg::Update)}
+                    on_clear={ctx.link().callback(|_| Msg::Clear)}
+                    on_swap={ctx.link().callback(|_| Msg::Swap)}
+                />
                 <table class="table table-hover table-striped test-data">
                     <tbody id="tbody">
                         { rows }
@@ -178,32 +177,26 @@ impl Component for Model {
     }
 }
 
-#[derive(Properties, Clone)]
-struct JumbotronProps {
-    link: ComponentLink<Model>,
+#[derive(Properties, Clone, PartialEq)]
+pub struct JumbotronProps {
+    pub on_run: Callback<usize>,
+    pub on_add: Callback<usize>,
+    pub on_update: Callback<usize>,
+    pub on_clear: Callback<()>,
+    pub on_swap: Callback<()>,
 }
 
-struct Jumbotron {
-    link: ComponentLink<Model>,
-}
+pub struct Jumbotron {}
 
 impl Component for Jumbotron {
     type Properties = JumbotronProps;
     type Message = ();
 
-    fn create(props: Self::Properties, _: ComponentLink<Self>) -> Self {
-        Self { link: props.link }
+    fn create(_ctx: &Context<Self>) -> Self {
+        Self {}
     }
 
-    fn change(&mut self, _: Self::Properties) -> ShouldRender {
-        false
-    }
-
-    fn update(&mut self, _: Self::Message) -> ShouldRender {
-        false
-    }
-
-    fn view(&self) -> Html {
+    fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <div class="jumbotron">
                 <div class="row">
@@ -213,22 +206,22 @@ impl Component for Jumbotron {
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-sm-6 smallpad">
-                                <button type="button" id="run" class="btn btn-primary btn-block" onclick=self.link.callback(|_| Msg::Run(1_000))>{ "Create 1,000 rows" }</button>
+                                <button type="button" id="run" class="btn btn-primary btn-block" onclick={ctx.props().on_run.reform(|_| 1_000)}>{ "Create 1,000 rows" }</button>
                             </div>
                             <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" onclick=self.link.callback(|_| Msg::Run(10_000)) id="runlots">{ "Create 10,000 rows" }</button>
+                                <button type="button" class="btn btn-primary btn-block" onclick={ctx.props().on_run.reform(|_| 10_000)} id="runlots">{ "Create 10,000 rows" }</button>
                             </div>
                             <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" onclick=self.link.callback(|_| Msg::Add(1_000)) id="add">{ "Append 1,000 rows" }</button>
+                                <button type="button" class="btn btn-primary btn-block" onclick={ctx.props().on_add.reform(|_| 1_000)} id="add">{ "Append 1,000 rows" }</button>
                             </div>
                             <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" onclick=self.link.callback(|_| Msg::Update(10)) id="update">{ "Update every 10th row" }</button>
+                                <button type="button" class="btn btn-primary btn-block" onclick={ctx.props().on_update.reform(|_| 10)} id="update">{ "Update every 10th row" }</button>
                             </div>
                             <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" onclick=self.link.callback(|_| Msg::Clear) id="clear">{ "Clear" }</button>
+                                <button type="button" class="btn btn-primary btn-block" onclick={ctx.props().on_clear.reform(|_| ())} id="clear">{ "Clear" }</button>
                             </div>
                             <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" onclick=self.link.callback(|_| Msg::Swap) id="swaprows">{ "Swap Rows" }</button>
+                                <button type="button" class="btn btn-primary btn-block" onclick={ctx.props().on_swap.reform(|_| ())} id="swaprows">{ "Swap Rows" }</button>
                             </div>
                         </div>
                     </div>
@@ -246,60 +239,39 @@ struct RowProps {
     data: RowData,
 }
 
-struct RowState {
+struct Row {
     on_select: Callback<MouseEvent>,
     on_remove: Callback<MouseEvent>,
 }
 
-struct Row {
-    state: RowState,
-    props: RowProps,
-}
-
-impl RowState {
-    fn from_props(props: &RowProps) -> Self {
-        let id = props.data.id;
-        Self {
-            on_select: props.on_select.reform(move |_| id),
-            on_remove: props.on_remove.reform(move |_| id),
-        }
-    }
-}
-
 impl Component for Row {
-    type Message = ();
     type Properties = RowProps;
+    type Message = ();
 
-    fn create(props: Self::Properties, _: ComponentLink<Self>) -> Self {
+    fn create(ctx: &Context<Self>) -> Self {
+        let id = ctx.props().data.id;
         Self {
-            state: RowState::from_props(&props),
-            props,
+            on_select: ctx.props().on_select.reform(move |_| id),
+            on_remove: ctx.props().on_remove.reform(move |_| id),
         }
     }
 
-    fn change(&mut self, props: RowProps) -> ShouldRender {
-        if self.props != props {
-            self.state = RowState::from_props(&props);
-            self.props = props;
-            true
-        } else {
-            false
-        }
+    fn changed(&mut self, ctx: &Context<Self>, _: &Self::Properties) -> bool {
+        let id = ctx.props().data.id;
+        self.on_select = ctx.props().on_select.reform(move |_| id);
+        self.on_remove = ctx.props().on_remove.reform(move |_| id);
+        true
     }
 
-    fn update(&mut self, _: ()) -> ShouldRender {
-        false
-    }
-
-    fn view(&self) -> Html {
+    fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-            <tr class=if self.props.selected { "danger" } else  { "" }>
-                <td class="col-md-1">{ self.props.data.id }</td>
-                <td class="col-md-4" onclick=self.state.on_select.clone()>
-                    <a class="lbl">{ self.props.data.label.clone() }</a>
+            <tr class={if ctx.props().selected { "danger" } else  { "" }}>
+                <td class="col-md-1">{ ctx.props().data.id }</td>
+                <td class="col-md-4" onclick={self.on_select.clone()}>
+                    <a class="lbl">{ ctx.props().data.label.clone() }</a>
                 </td>
                 <td class="col-md-1">
-                    <a class="remove" onclick=self.state.on_remove.clone()>
+                    <a class="remove" onclick={self.on_remove.clone()}>
                         <span class="glyphicon glyphicon-remove remove" aria-hidden="true"></span>
                     </a>
                 </td>
@@ -313,5 +285,5 @@ impl Component for Row {
 pub fn start() {
     let document = window().unwrap().document().unwrap();
     let mount_el = document.query_selector("#main").unwrap().unwrap();
-    App::<Model>::new().mount(mount_el);
+    yew::Renderer::<App>::with_root(mount_el).render();
 }

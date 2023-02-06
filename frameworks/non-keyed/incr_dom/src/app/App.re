@@ -1,4 +1,4 @@
-open! Core_kernel;
+open! Core;
 open Incr_dom;
 open JsFrameworkBenchmarkComponents;
 open JsFrameworkBenchmarkComponents.Elements;

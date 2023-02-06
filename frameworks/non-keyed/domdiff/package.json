@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "domdiff",
+    "frameworkHomeURL": "https://github.com/WebReflection/domdiff",
     "issues": [772]
   },
   "scripts": {

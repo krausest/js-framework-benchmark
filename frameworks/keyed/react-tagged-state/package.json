@@ -4,7 +4,11 @@
   "description": "React demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:react-tagged-state"
+    "frameworkVersionFromPackage": "react:react-tagged-state",
+    "frameworkHomeURL": "https://github.com/oleggrishechkin/react-tagged-state",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --watch",
@@ -31,8 +35,8 @@
     "webpack-cli": "3.3.4"
   },
   "dependencies": {
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
-    "react-tagged-state": "0.1.40"
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-tagged-state": "1.21.1"
   }
 }

@@ -1,0 +1,16 @@
+{
+  "name": "js-framework-benchmark-lui",
+  "version": "1.1.0",
+  "description": "Benchmark for lui",
+  "js-framework-benchmark": {
+    "frameworkVersion": "1.2.3",
+    "frameworkHomeURL": "https://github.com/L3P3/lui",
+    "issues": [
+      1139
+    ]
+  },
+  "scripts": {
+    "build-dev": "echo 0",
+    "build-prod": "echo 0"
+  }
+}

@@ -4,7 +4,8 @@
   "description": "React demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react"
+    "frameworkVersionFromPackage": "react",
+    "frameworkHomeURL": "https://www.reactjs.org"
   },
   "scripts": {
     "build-dev": "webpack --watch",
@@ -31,7 +32,7 @@
     "webpack-cli": "3.3.4"
   },
   "dependencies": {
-    "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   }
 }

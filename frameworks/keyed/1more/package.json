@@ -1,10 +1,11 @@
 {
   "name": "js-framework-benchmark-1more",
-  "version": "0.1.5",
+  "version": "0.1.18",
   "description": "1more demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "1more"
+    "frameworkVersionFromPackage": "1more",
+    "frameworkHomeURL": "https://github.com/Freak613/1more"
   },
   "scripts": {
     "build-dev": "rollup -c -w",
@@ -26,6 +27,6 @@
     "rollup-plugin-terser": "^1.0.1"
   },
   "dependencies": {
-    "1more": "0.1.5"
+    "1more": "0.1.18"
   }
 }

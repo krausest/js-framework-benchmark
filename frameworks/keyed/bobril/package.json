@@ -4,7 +4,8 @@
   "description": "Bobril demo",
   "main": "src/app.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "bobril"
+    "frameworkVersionFromPackage": "bobril",
+    "frameworkHomeURL": "https://bobril.com/"
   },
   "scripts": {
     "build-dev": "bb",

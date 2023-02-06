@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "description": "Benchmark for vue.js framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "vue"
+    "frameworkVersionFromPackage": "vue",
+    "frameworkHomeURL": "https://vue.js.org/",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
-    "build-dev": "webpack -w -d",
-    "build-prod": "webpack -p"
+    "build-dev": "webpack --mode development --watch",
+    "build-prod": "webpack --mode production"
   },
   "keywords": [
     "vue"
@@ -20,12 +24,12 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@vue/compiler-sfc": "3.0.6",
-    "vue-loader": "16.1.2",
-    "webpack": "4.41.4",
-    "webpack-cli": "3.3.10"
+    "@vue/compiler-sfc": "3.2.37",
+    "vue-loader": "16.8.2",
+    "webpack": "5.49.0",
+    "webpack-cli": "4.7.2"
   },
   "dependencies": {
-    "vue": "3.0.6"
+    "vue": "3.2.37"
   }
 }

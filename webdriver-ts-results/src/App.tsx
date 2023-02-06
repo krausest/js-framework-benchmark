@@ -4,7 +4,7 @@ import { FrameworkType, knownIssues } from './Common';
 import ResultTable from './ResultTable';
 import { SelectionBar } from './selection/SelectionBar';
 
-const App = () => {
+const App = (): JSX.Element => {
   // eslint-disable-next-line no-constant-condition
   const disclaimer = (false) ? (<div>
         <h2>Results for js web frameworks benchmark - official run</h2>
@@ -15,12 +15,14 @@ const App = () => {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a Razer Blade 15 Advanced (i7-8750H, 64 GB RAM, Fedora 34 (Linux 5.11.13, mitigations=off), Chrome 90.0.4430.72 (64-bit))</p>
+        <p>The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 12.6), Chrome 109.0.5414.87 (arm64))
+            using the puppeteer benchmark driver with reduced tracing.
+        </p>
          <SelectionBar/>
          <ResultTable type={FrameworkType.KEYED}/>
          <ResultTable type={FrameworkType.NON_KEYED}/>
 
-          <h3>Known Issues</h3>
+          <h3>Known issues and notes</h3>
           {knownIssues.map(issue =>
             <dl key={issue.issue.toFixed()} id={issue.issue.toFixed()}>
               <dt><a target="_blank" rel="noopener noreferrer" href={issue.link}>{issue.issue.toFixed()}</a></dt>

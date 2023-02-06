@@ -1,4 +1,4 @@
-open! Core_kernel;
+open! Core;
 open Option;
 open Incr_dom;
 
@@ -7,7 +7,7 @@ let (%>) = (f1: 'a => 'x, f2: 'x => 'b, x: 'a): 'b => f2(f1(x));
 
 let sanitise_classname = className =>
   if (String.contains(className, ' ')) {
-    Vdom.Attr.classes(Core_kernel.String.split(className, ~on=' '));
+    Vdom.Attr.classes(Core.String.split(className, ~on=' '));
   } else {
     Vdom.Attr.class_(className);
   };
@@ -25,7 +25,7 @@ let no_empty = item =>
 
 let genericElement =
     (
-      creator,
+      creator: (~key: Base.string=?, ~attr: Vdom.Attr.t=?, list(Vdom.Node.t)) => Vdom.Node.t,
       ~type_=?,
       ~id=?,
       ~className=?,
@@ -46,7 +46,7 @@ let genericElement =
 
   let filtered = List.filter_opt(attrs);
 
-  creator(filtered, children);
+  creator(~attr=Vdom.Attr.many_without_merge(filtered), children);
 };
 
 let body = genericElement(Vdom.Node.body);

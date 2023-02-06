@@ -1,5 +1,6 @@
 module Main where
 
+import Prim hiding (Row)
 import Prelude
 
 import Data.Array as Array
@@ -39,7 +40,7 @@ type Row =
   , label :: String
   }
 
-app :: forall q i o. H.Component HH.HTML q i o Aff
+app :: forall q i o. H.Component q i o Aff
 app = H.mkComponent
   { initialState
   , render
@@ -121,9 +122,9 @@ renderActionButton { id, label, action } =
     [ HH.button 
         [ HP.type_ HP.ButtonButton
         , class_ "btn btn-primary btn-block"
-        , HP.id_ id
+        , HP.id id
         , HP.attr (HH.AttrName "ref") "text"
-        , HE.onClick \_ -> Just action
+        , HE.onClick \_ -> action
         ]
         [ HH.text label ]
     ]
@@ -139,8 +140,8 @@ renderRow selectedId row =
       [ ]
     )
     [ HH.td colMd1 [ HH.text (show row.id) ]
-    , HH.td colMd4 [ HH.a [ HE.onClick \_ -> Just (Select row.id) ] [ HH.text row.label ] ]
-    , HH.td colMd1 [ HH.a [ HE.onClick \_ -> Just (Remove row.id) ] removeIcon ]
+    , HH.td colMd4 [ HH.a [ HE.onClick \_ -> Select row.id ] [ HH.text row.label ] ]
+    , HH.td colMd1 [ HH.a [ HE.onClick \_ -> Remove row.id ] removeIcon ]
     , spacer
     ]
 
@@ -181,7 +182,7 @@ jumbotron =
         [ class_ "row" ]
         [ HH.div
             [ class_ "col-md-6" ]
-            [ HH.h1_ [ HH.text "Halogen 5.0.0 (non-keyed)" ] ]
+            [ HH.h1_ [ HH.text "Halogen 6.1.3 (non-keyed)" ] ]
             , HH.div [ class_ "col-md-6" ] do
                 map (HH.lazy renderActionButton) buttons
             ]

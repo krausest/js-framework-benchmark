@@ -1,4 +1,5 @@
 import * as mim from "mimbl"
+import { TickSchedulingType } from "mimbl";
 
 
 
@@ -6,26 +7,43 @@ let adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "h
 let colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
 let nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
-function _random( max: number)
-{
-    return Math.round(Math.random() * 1000) % max;
+type Row = {
+	id: number;
+    label: string;
+    labelTrigger: mim.ITrigger<string>;
+    selectedTrigger: mim.ITrigger<string>;
 }
+
+
 
 let nextID = 1;
 
-function buildRows( main: Main, count: number): Row[]
+function buildRows( /*main: Main,*/ count: number): Row[]
 {
     let rows = new Array<Row>( count);
+    let label: string;
     for( let i = 0; i < count; i++)
-        rows[i] = new Row( main, nextID++,
-            `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`);
+    {
+        label = `${adjectives[rand(adjectives.length)]} ${colours[rand(colours.length)]} ${nouns[rand(nouns.length)]}`;
+        rows[i] = {
+            id: nextID++,
+            label,
+            labelTrigger: mim.createTrigger( label),
+            selectedTrigger: mim.createTrigger()
+        };
+    }
 
     return rows;
 }
 
+function rand( max: number)
+{
+    return Math.round(Math.random() * 1000) % max;
+}
 
 
-function Button( props: mim.IHtmlButtonElementProps, children: any[]): any
+type ButtonProps = mim.JSX.IntrinsicElements["button"];
+function Button( props: ButtonProps, children: any[]): any
 {
     return <div class="col-sm-6 smallpad">
         <button type="button" class="btn btn-primary btn-block" {...props}>{children}</button>
@@ -36,9 +54,9 @@ function Button( props: mim.IHtmlButtonElementProps, children: any[]): any
 
 class Main extends mim.Component
 {
-    private rows: Row[] = null;
-    public selectedRow: Row = undefined;
-    private vnTBody: mim.IElmVN<HTMLElement>;
+    @mim.trigger(0) private rows: Row[] = null;
+    private selectedRow: Row = undefined;
+    @mim.ref private vnTBody: mim.IElmVN<HTMLElement>;
 
     public render()
     {
@@ -61,26 +79,40 @@ class Main extends mim.Component
                 </div>
             </div>
             <table class="table table-hover table-striped test-data">
-                <tbody vnref={(r) => this.vnTBody = r} updateStrategy={{disableKeyedNodeRecycling: true}}>
-                    {this.rows}
-                </tbody>
+                {this.renderRows}
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>);
     }
 
+    private renderRows(): any
+    {
+        return <tbody vnref={this.vnTBody} updateStrategy={{disableKeyedNodeRecycling: true}}>
+            {this.rows?.map( row =>
+                <tr class={row.selectedTrigger} key={row}>
+                    <td class="col-md-1">{row.id}</td>
+                    <td class="col-md-4"><a click={[this.onSelectRowClicked, row]}>{row.labelTrigger}</a></td>
+                    <td class="col-md-1">
+                        <a click={[this.onDeleteRowClicked, row]}>
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"/>
+                        </a>
+                    </td>
+                    <td class="col-md-6"/>
+                </tr>
+            )}
+        </tbody>
+    }
+
     private onCreate1000()
     {
-        this.rows = buildRows( this, 1000);
+        this.rows = buildRows( 1000);
         this.selectedRow = undefined;
-        this.vnTBody.setChildren( this.rows);
     }
 
     private onAppend1000()
     {
-    	let newRows = buildRows( this, 1000);
+    	let newRows = buildRows( 1000);
         this.rows = this.rows ? this.rows.concat( newRows) : newRows;
-        this.vnTBody.growChildren( undefined, newRows);
     }
 
     private onUpdateEvery10th()
@@ -88,22 +120,25 @@ class Main extends mim.Component
         if (!this.rows)
             return;
 
+        let row: Row;
         for (let i = 0; i < this.rows.length; i += 10)
-            this.rows[i].updateLabel()
+        {
+            row = this.rows[i];
+            row.labelTrigger.set( row.label += " !!!")
+        }
     }
+
 
     private onCreate10000()
     {
-        this.rows = buildRows( this, 10000);
+        this.rows = buildRows( 10000);
         this.selectedRow = undefined;
-        this.vnTBody.setChildren( this.rows);
     }
 
     private onClear()
     {
         this.rows = null;
         this.selectedRow = undefined;
-        this.vnTBody.setChildren( null);
     }
 
     private onSwapRows()
@@ -117,82 +152,28 @@ class Main extends mim.Component
 		}
     }
 
-    public onSelectRowClicked( rowToSelect: Row)
+    public onSelectRowClicked(e: MouseEvent, rowToSelect: Row): void
     {
-        if (rowToSelect === this.selectedRow)
+        let currSelectedRow = this.selectedRow;
+        if (rowToSelect === currSelectedRow)
             return;
 
-        if (this.selectedRow)
-            this.selectedRow.trVN.setProps( {class: undefined});
+        if (currSelectedRow)
+            currSelectedRow.selectedTrigger.set( null);
 
         this.selectedRow = rowToSelect;
-        this.selectedRow.trVN.setProps( {class: "danger"});
+        rowToSelect.selectedTrigger.set( "danger");
     }
 
-    public onDeleteRowClicked( rowToDelete: Row)
+    public onDeleteRowClicked(e: MouseEvent, rowToDelete: Row): void
     {
         if (rowToDelete === this.selectedRow)
             this.selectedRow = undefined;
 
-        let id = rowToDelete.id;
-        let i = this.rows.findIndex( row => row.id == id);
+        let i = this.rows.indexOf( rowToDelete);
         this.rows.splice( i, 1);
-        this.vnTBody.spliceChildren( i, 1);
+        this.vnTBody.spliceChildren( i, 1, undefined, mim.TickSchedulingType.Sync);
     }
-}
-
-let glyphVN = <span class="glyphicon glyphicon-remove" aria-hidden="true"/>;
-let lastCellVN = <td class="col-md-6"/>;
-
-class Row extends mim.Component
-{
-	main: Main;
-	id: number;
-    // label: string;
-    labelVN: mim.ITextVN;
-    trVN: mim.IElmVN<HTMLTableRowElement>;
-
-	constructor( main: Main, id: number, label: string)
-	{
-		super();
-
-		this.main = main;
-		this.id = id;
-        // this.label = label;
-        this.labelVN = mim.createTextVN( label);
-	}
-
-    public willMount()
-    {
-        this.trVN = <tr>
-            <td class="col-md-1">{this.id}</td>
-            <td class="col-md-4"><a click={this.onSelectClicked}>{this.labelVN}</a></td>
-            <td class="col-md-1"><a click={this.onDeleteClicked}>{glyphVN}</a></td>
-            {lastCellVN}
-        </tr> as mim.IElmVN<HTMLTableRowElement>;
-    }
-
-    @mim.noWatcher
-    public render()
-	{
-        return this.trVN;
-	}
-
-	public updateLabel()
-	{
-        // this.labelVN.setText( this.label += " !!!");
-        this.labelVN.setText( this.labelVN.text + " !!!");
-	}
-
-	private onDeleteClicked()
-	{
-		this.main.onDeleteRowClicked( this);
-	}
-
-	private onSelectClicked()
-	{
-		this.main.onSelectRowClicked( this);
-	}
 }
 
 

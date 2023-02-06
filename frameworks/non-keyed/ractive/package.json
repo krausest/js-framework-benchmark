@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "Boilerplate for Ractive.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "ractive"
+    "frameworkVersionFromPackage": "ractive",
+    "frameworkHomeURL": "https://ractive.js.org/",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack -w -d",

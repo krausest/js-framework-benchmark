@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "lit",
+    "frameworkHomeURL": "https://lit.dev/",
     "useShadowRoot": true,
     "issues": [801]
   },
@@ -26,7 +27,7 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lit": "^2.0.0-rc.1"
+    "lit": "^2.1.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^11.2.1",

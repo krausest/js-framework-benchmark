@@ -10,8 +10,9 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@sifrr/dom",
+    "frameworkHomeURL": "https://sifrr.github.io/sifrr/#/",
     "useShadowRoot": true,
-    "issues": [800]
+    "issues": [800, 1139]
   },
   "repository": {
     "type": "git",

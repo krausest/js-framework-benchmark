@@ -6,8 +6,10 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "marionette",
+    "frameworkHomeURL": "https://marionettejs.com/",
     "issues": [
-      772
+      772,
+      1139
     ]
   },
   "scripts": {

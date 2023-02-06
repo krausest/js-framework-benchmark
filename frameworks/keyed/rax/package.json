@@ -4,7 +4,8 @@
   "description": "Rax demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "rax"
+    "frameworkVersionFromPackage": "rax",
+    "frameworkHomeURL": "https://github.com/alibaba/rax"
   },
   "scripts": {
     "build-dev": "webpack --watch",

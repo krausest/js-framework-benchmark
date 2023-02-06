@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Benchmark for aurelia framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "aurelia-framework"
+    "frameworkVersionFromPackage": "aurelia-framework",
+    "frameworkHomeURL": "https://aurelia.io/"
   },
   "keywords": [
     "aurelia"
@@ -27,7 +28,7 @@
     "aurelia-metadata": "1.0.4",
     "aurelia-pal": "1.8.0",
     "aurelia-pal-browser": "1.8.0",
-    "aurelia-path": "1.1.1",
+    "aurelia-path": "1.1.7",
     "aurelia-task-queue": "1.3.1",
     "aurelia-templating": "1.8.2",
     "aurelia-templating-binding": "1.4.3",

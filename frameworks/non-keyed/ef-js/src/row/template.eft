@@ -1,0 +1,13 @@
+>tr.{{danger}}
+	>td.col-md-1
+		.{{id}}
+	>td.col-md-4
+		>a
+			@click = select
+			.{{label}}
+	>td.col-md-1
+		>a
+			@click = remove
+			>span.glyphicon.glyphicon-remove
+				#aria-hidden = true
+	>td.col-md-6

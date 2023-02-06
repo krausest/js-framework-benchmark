@@ -79,16 +79,11 @@ Doo.define(
 			Timer.stop('tot')
 
 		}
-		add(e) {
-			Timer.start('tot')
-			//this.clear()
+		add() {
 			let start = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
 			this.append(this.data.rows, this.tbody, start)
-			e.target.blur()
-			Timer.stop('tot')
-
-		}   
+		}    
 
 		runLots(e) {
 			Timer.start('tot')
@@ -125,21 +120,34 @@ Doo.define(
 			this.tbody.textContent = ''
 		}
 
+		isRowSelected(elem) {
+			return elem.classList.contains('danger')
+		}
 		swapRows() {
-			if (this.data.rows.length > 998) {
-				let node1 = this.tbody.firstChild.nextSibling, 
-					node2 = node1.nextSibling,
-					node998 = this.tbody.childNodes[998],
-					node999 = node998.nextSibling,
+			const A=1,B=998
+			if (this.data.rows.length > B) {
+				
+				let a = this.tbody.childNodes[A], 
+					b = this.tbody.childNodes[B],
 					row1 = this.data.rows[1]
 				
-				this.data.rows[1] = this.data.rows[998];
-				this.data.rows[998] = row1
-				
-				this.tbody.insertBefore(node998, node2)
-				this.tbody.insertBefore(node1, node999)
+				this.data.rows[A] = this.data.rows[B];
+				this.data.rows[B] = row1
+			
+				const selected1 = this.isRowSelected(a)
+				const selected2 = this.isRowSelected(b)
+				this.updateRow(A, this.data.rows, this.tbody)
+				this.updateRow(B, this.data.rows, this.tbody)
+			
+ 				if (selected1) {
+					this.select(this.tbody.childNodes[B])
+				}
+				if (selected2) 	{
+					this.select(this.tbody.childNodes[A])
+				}
 			}
 		}
+
 
 		addEventListeners() {
 			document.getElementById("main").addEventListener('click', e => {

@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@fullweb/helpers",
+    "frameworkHomeURL": "https://github.com/fullwebdev/fullwebdev#readme",
     "issues": [772]
   },
   "scripts": {

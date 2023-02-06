@@ -3,17 +3,28 @@
   "version": "1.0.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@dojo/framework",
-    "customURL": "/output/dist"
+    "frameworkHomeURL": "https://dojo.io/",
+    "customURL": "/output/dist",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-prod": "./node_modules/.bin/dojo build"
   },
   "dependencies": {
-    "@dojo/framework": "^7.0.0"
+    "@dojo/framework": "8.0.0"
   },
   "devDependencies": {
-    "@dojo/cli": "^7.0.0",
-    "@dojo/cli-build-app": "^7.0.0",
-    "typescript": "3.5.2"
+    "@dojo/cli": "8.0.0",
+    "@dojo/cli-build-app": "8.0.0",
+    "typescript": "4.7.4"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 4,
+    "useTabs": true,
+    "printWidth": 120,
+    "arrowParens": "always"
   }
 }

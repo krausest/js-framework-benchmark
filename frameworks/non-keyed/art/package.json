@@ -1,0 +1,21 @@
+{
+  "name": "js-framework-benchmark-non-keyed-art",
+  "version": "0.1.0",
+  "description": "Art demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "js-art",
+    "frameworkHomeURL": "https://github.com/sullay/Art-js"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "vite build"
+  },
+  "author": "sullay",
+  "devDependencies": {
+    "vite": "2.7.2"
+  },
+  "dependencies": {
+    "js-art": "0.1.7"
+  }
+}

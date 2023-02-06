@@ -5,7 +5,8 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "lit-html",
-    "issues": [800]
+    "frameworkHomeURL": "https://lit.dev/docs/libraries/standalone-templates/",
+    "issues": [800, 801]
   },
   "scripts": {
     "build-dev": "rollup -c -w",

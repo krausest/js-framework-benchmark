@@ -4,7 +4,9 @@
   "description": "lighterhtml demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "lighterhtml"
+    "frameworkVersionFromPackage": "lighterhtml",
+    "frameworkHomeURL": "https://github.com/WebReflection/lighterhtml",
+    "issues": [801]
   },
   "scripts": {
     "build-dev": "rollup -c -w",

@@ -1,0 +1,44 @@
+{
+  "name": "js-framework-benchmark-rescript-react",
+  "version": "1.0.0",
+  "description": "ReasonReact benchmark",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@rescript/react",
+    "frameworkHomeURL": "https://rescript-lang.org/"
+  },
+  "scripts": {
+    "build-dev": "webpack --watch",
+    "prebuild-prod": "bsb -clean -make-world",
+    "build-prod": "webpack",
+    "clean": "bsb -clean-world"
+  },
+  "keywords": [
+    "react",
+    "webpack",
+    "ReasonML"
+  ],
+  "author": "Michael Boulton",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.17.0",
+    "@babel/plugin-proposal-class-properties": "7.16.7",
+    "@babel/preset-env": "7.16.11",
+    "@babel/preset-react": "7.16.7",
+    "babel-loader": "8.2.3",
+    "bs-platform": "9.0.2",
+    "terser-webpack-plugin": "5.3.1",
+    "webpack": "5.68.0",
+    "webpack-cli": "4.9.2"
+  },
+  "dependencies": {
+    "@rescript/react": "^0.10.3",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  }
+}

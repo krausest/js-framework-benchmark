@@ -1,18 +1,21 @@
 {
-  "name": "slim-js-v3.3.0",
+  "name": "slim-js-v5.0.8",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": "3.3.0"
+    "frameworkVersionFromPackage": "slim-js",
+    "frameworkHomeURL": "https://slimjs.com/#/welcome"
   },
   "scripts": {
     "build-prod": "exit 0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Avichay Eyal <eavichay@gmail.com>",
+  "license": "MIT",
   "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "slim-js": "5.0.8"
+  }
 }

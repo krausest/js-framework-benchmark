@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "s2 demo",
   "js-framework-benchmark": {
-    "frameworkVersion": "1.0.0"
+    "frameworkVersion": "1.0.0",
+    "frameworkHomeURL": "",
+    "issues": [800]
   },
   "scripts": {
     "build-dev": "echo 0",

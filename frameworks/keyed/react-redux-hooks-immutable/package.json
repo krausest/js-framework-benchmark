@@ -4,7 +4,11 @@
   "description": "React demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:react-redux"
+    "frameworkVersionFromPackage": "react:react-redux",
+    "frameworkHomeURL": "https://react-redux.js.org/",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --watch",

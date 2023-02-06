@@ -8,7 +8,7 @@ interface BoxPlotData {
     values: number[];
 }
 
-const BoxPlot = ({traces}: {traces: Array<BoxPlotData>}) => 
+const BoxPlot = ({traces}: {traces: Array<BoxPlotData>}): JSX.Element => 
 {
     const elemRef = useRef(null);
     useEffect(() => {
@@ -51,7 +51,7 @@ const RenderBoxPlotsRows = ({frameworks, benchmarks, results, currentSortKey, so
 // {data.frameworks.map(f => <th key={f.name}>{f.name}</th>)}
 
 const BoxPlotTable = ({frameworks, benchmarks, results, currentSortKey, sortBy}:
-    {frameworks: Array<Framework>; benchmarks: Array<Benchmark>; results: ResultLookup; currentSortKey: string; sortBy: (name: string) => void}) => {
+    {frameworks: Array<Framework>; benchmarks: Array<Benchmark>; results: ResultLookup; currentSortKey: string; sortBy: (name: string) => void}): JSX.Element|null => {
     return benchmarks.length===0 ? null :
         (<div>
           <h3>Duration in milliseconds</h3>

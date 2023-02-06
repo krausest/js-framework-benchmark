@@ -1,0 +1,37 @@
+{
+  "name": "js-framework-benchmark-xaniajs",
+  "version": "1.1.1",
+  "description": "Xania JS demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@xania/view",
+    "customURL": "/dist",
+    "frameworkHomeURL": "https://github.com/xania/view",
+    "issues": []
+  },
+  "scripts": {
+    "start": "npx vite -c=vite.config.dev.ts",
+    "build-prod": "npx vite build --emptyOutDir"
+  },
+  "keywords": [
+    "xania",
+    "webpack"
+  ],
+  "author": "Ibrahim ben Salah",
+  "license": "MIT",
+  "homepage": "https://github.com/xania",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xania/view.git"
+  },
+  "devDependencies": {
+    "ts-loader": "9.2.6",
+    "typescript": "4.9.3",
+    "vite": "3.2.4",
+    "vite-tsconfig-paths": "^3.6.0",
+    "prettier": "2.8.0"
+  },
+  "dependencies": {
+    "@xania/view": "0.4.8"
+  }
+}

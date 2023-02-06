@@ -51,12 +51,22 @@ Doo.define(
         }
 
 		buildData(count = 1000) {
-			const data = [];
+			const data = []
 			for (let i = 0; i < count; i++) {
 				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
 			}
 			return data	
 		}
+	
+		getIndex(row) {
+			let idx =  this.data.rows.findIndex((item, i) => {
+				if (item.id === row.key) {
+					return i
+				}
+			}) 
+			return idx
+		}
+
 		getIndex(row) {
 			let idx =  this.data.rows.findIndex((item, i) => {
 				if (item.id === row.key) {
@@ -69,32 +79,28 @@ Doo.define(
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
-				this.tbody.removeChild(row)
 				let idx = this.getIndex(row)
+				this.tbody.removeChild(row)
 				if (idx !== undefined) {
 					this.data.rows.splice(idx,1)
 				}
-
 			}
 		}  
 
 		run() {
-
 			this.clear()
 			this.data.rows = this.buildData()
 			this.renderTable()
-
 		}
 
 		add() {
-			
+			let start = this.data.rows.length
 			let newRows = this.buildData()
 			this.data.rows = this.data.rows.concat(newRows)
-			this.append(newRows)
+			this.append(this.data.rows, this.tbody, start, false)
 		}
 
 		runLots() {
-
 			this.clear()
 			this.data.rows = this.buildData(10000)
 			this.renderTable(this.data.rows, this.tbody)
@@ -114,14 +120,15 @@ Doo.define(
 			this.toggleSelect(this.getParentRow(elem))
 		}
 
-		toggleSelect(row) {
+		toggleSelect(elem) {
+			let row = this.getParentRow(elem)
 			if (row) {
 				row.classList.toggle('danger')
 				if (row.classList.contains('danger')) {
 					this.selectedRow = row
 				}	
 			}    
-		}
+		}		
 
 		clear() {
 			this.data.rows = []

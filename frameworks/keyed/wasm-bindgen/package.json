@@ -5,7 +5,8 @@
   "license": "ISC",
   "js-framework-benchmark": {
     "frameworkVersion": "0.2.47",
-    "issues": [772]
+    "frameworkHomeURL": "https://rustwasm.github.io/docs/wasm-bindgen/",
+    "issues": [772, 1139]
   },
   "scripts": {
     "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
@@ -16,9 +17,9 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@wasm-tool/wasm-pack-plugin": "^0.4.2",
-    "webpack": "^4.33.0",
-    "webpack-cli": "^3.3.3",
-    "rimraf": "^2.6.3"
+    "@wasm-tool/wasm-pack-plugin": "^1.5.0",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0",
+    "rimraf": "^3.0.2"
   }
 }

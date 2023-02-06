@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "lit-html",
+    "frameworkHomeURL": "https://lit.dev/docs/libraries/standalone-templates/",
     "issues": [800]
   },
   "scripts": {

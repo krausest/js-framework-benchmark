@@ -4,7 +4,11 @@
   "description": "Benchmark for DeLorean",
   "license": "ISC",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.1.0"
+    "frameworkVersion": "0.1.0",
+    "frameworkHomeURL": "https://github.com/delorean-rs/delorean",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",

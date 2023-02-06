@@ -31,15 +31,16 @@
 </div>
 <table class="table table-hover table-striped test-data">
   <tbody>
-    {#each data as row, num (row.id)}
-      <tr class={selected === row.id ? 'danger' : ''}>
-        <td class="col-md-1">{row.id}</td>
-        <td class="col-md-4">
-          <a on:click={() => select(row.id)}>{row.label}</a>
-        </td>
-        <td class="col-md-1"><a on:click={() => remove(row.id)}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-        <td class="col-md-6"></td>
-      </tr>
+    {#each data as row (row.id)}
+      <tr class={selected === row.id ? 'danger' : ''}
+        ><td class="col-md-1">{row.id}</td><td class="col-md-4"
+          ><a on:click={() => select(row.id)}>{row.label}</a></td
+        ><td class="col-md-1"
+          ><a on:click={() => remove(row.id)}
+            ><span class="glyphicon glyphicon-remove" aria-hidden="true" /></a
+          ></td
+        ><td class="col-md-6" /></tr
+      >
     {/each}
   </tbody>
 </table>

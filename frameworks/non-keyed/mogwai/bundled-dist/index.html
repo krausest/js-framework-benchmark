@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>mogwai</title>
+    <base href="bundled-dist/"></base>
+    <link href="/css/currentStyle.css" rel="stylesheet"/>
+    <link rel="modulepreload" href="./js-framework-benchmark-mogwai.js" />
+    <link rel="preload" href="./js-framework-benchmark-mogwai_bg.wasm" as="fetch" type="application/wasm" crossorigin />
+  </head>
+  <body>
+    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+    <script type="module">
+      import init from './js-framework-benchmark-mogwai.js';
+      init('./js-framework-benchmark-mogwai_bg.wasm');
+    </script>
+  </body>
+</html>

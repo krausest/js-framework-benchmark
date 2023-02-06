@@ -4,7 +4,8 @@
   "description": "Valtio demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:valtio"
+    "frameworkVersionFromPackage": "react:valtio",
+    "frameworkHomeURL": "https://valtio.pmnd.rs/"
   },
   "scripts": {
     "build-dev": "webpack --watch",
@@ -34,6 +35,6 @@
   "dependencies": {
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "valtio": "1.0.0"
+    "valtio": "1.6.1"
   }
 }

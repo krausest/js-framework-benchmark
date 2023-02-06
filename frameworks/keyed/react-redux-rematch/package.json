@@ -4,7 +4,11 @@
   "description": "React with Rematch and Redux demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:react-redux:@rematch/core"
+    "frameworkVersionFromPackage": "react:react-redux:@rematch/core",
+    "frameworkHomeURL": "https://rematchjs.org/",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack --watch",

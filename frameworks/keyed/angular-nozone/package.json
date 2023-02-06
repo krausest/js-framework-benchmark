@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@angular/core",
-    "customURL": "/dist/angular/"
+    "customURL": "/dist/angular/",
+    "frameworkHomeURL": "https://angular.io/"
   },
   "scripts": {
     "ng": "ng",
@@ -11,27 +12,26 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "build-prod": "ng build --prod=true --buildOptimizer=true --sourceMap=false",
-    "build-dev": "ng serve --prod=true"
+    "build-prod": "ng build --configuration production",
+    "build-dev": "ng serve"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "11.0.2",
-    "@angular/common": "11.0.2",
-    "@angular/compiler": "11.0.2",
-    "@angular/core": "11.0.2",
-    "@angular/platform-browser": "11.0.2",
-    "rxjs": "6.5.5",
-    "tslib": "^2.0.0"
+    "@angular/common": "15.0.1",
+    "@angular/compiler": "15.0.1",
+    "@angular/core": "15.0.1",
+    "@angular/platform-browser": "15.0.1",
+    "rxjs": "7.4.0",
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.1100.2",
-    "@angular/cli": "11.0.2",
-    "@angular/compiler-cli": "11.0.2",
-    "@angular/language-service": "11.0.2",
-    "@types/node": "13.13.0",
-    "ts-node": "8.8.2",
+    "@angular-devkit/build-angular": "15.0.1",
+    "@angular/cli": "15.0.1",
+    "@angular/compiler-cli": "15.0.1",
+    "@angular/language-service": "15.0.1",
+    "@types/node": "16.11.6",
+    "ts-node": "10.4.0",
     "tslint": "~6.1.0",
-    "typescript": "4.0.5"
+    "typescript": "4.8.4"
   }
 }

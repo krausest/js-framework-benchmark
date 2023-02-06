@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "choo"
+    "frameworkVersionFromPackage": "choo",
+    "frameworkHomeURL": "https://www.choo.io/"
   },
   "scripts": {
     "build-dev": "browserify src/index.js > dist/index.js",

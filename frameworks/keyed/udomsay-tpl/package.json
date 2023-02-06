@@ -1,0 +1,37 @@
+{
+    "name": "js-framework-benchmark-udomsay",
+    "version": "1.0.0",
+    "main": "dist/main.js",
+    "type": "module",
+    "js-framework-benchmark": {
+        "frameworkVersionFromPackage": "udomsay",
+        "frameworkHomeURL": "https://github.com/WebReflection/udomsay",
+        "issues": [
+            772,
+            1139
+        ]
+    },
+    "scripts": {
+        "build-dev": "rollup -c -w",
+        "build-prod": "rollup -c --environment production"
+    },
+    "author": "Andrea Giammarchi",
+    "license": "ISC",
+    "homepage": "https://github.com/krausest/js-framework-benchmark",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/krausest/js-framework-benchmark.git"
+    },
+    "dependencies": {
+        "@ungap/esx": "^0.3.1",
+        "udomsay": "0.4.9"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.20.7",
+        "@babel/core": "^7.20.12",
+        "@rollup/plugin-babel": "^6.0.3",
+        "@rollup/plugin-node-resolve": "^15.0.1",
+        "@rollup/plugin-terser": "^0.3.0",
+        "rollup": "^3.10.0"
+    }
+}

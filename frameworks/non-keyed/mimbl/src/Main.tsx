@@ -6,149 +6,73 @@ let adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "h
 let colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
 let nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
-function _random( max: number)
+type Row = {
+	id: number;
+    label: string;
+    labelTrigger: mim.ITrigger<string>;
+    selectedTrigger: mim.ITrigger<string>;
+}
+
+
+
+let nextID = 1;
+
+function buildRows( /*main: Main,*/ count: number): Row[]
+{
+    let rows = new Array<Row>( count);
+    let label: string;
+    for( let i = 0; i < count; i++)
+    {
+        label = `${adjectives[rand(adjectives.length)]} ${colours[rand(colours.length)]} ${nouns[rand(nouns.length)]}`;
+        rows[i] = {
+            id: nextID++,
+            label,
+            labelTrigger: mim.createTrigger( label),
+            selectedTrigger: mim.createTrigger()
+        };
+    }
+
+    return rows;
+}
+
+function rand( max: number)
 {
     return Math.round(Math.random() * 1000) % max;
 }
 
-let nextID = 1;
 
-function buildRows( main: Main, count: number): Row[]
+type ButtonProps = mim.JSX.IntrinsicElements["button"];
+function Button( props: ButtonProps, children: any[]): any
 {
-    let rows = new Array<Row>( count);
-    for( let i = 0; i < count; i++)
-        rows[i] = new Row( main, nextID++,
-            `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`);
-
-    return rows;
+    return <div class="col-sm-6 smallpad">
+        <button type="button" class="btn btn-primary btn-block" {...props}>{children}</button>
+    </div>
 }
 
 
 
 class Main extends mim.Component
 {
-    nextID = 1;
+    @mim.trigger(0) private rows: Row[] = null;
+    private selectedRow: Row = undefined;
+    @mim.ref private vnTBody: mim.IElmVN<HTMLElement>;
 
-    // Flat array of Row components
-    private rows: Row[] = null;
-
-    // Currently selected Row component
-    public selectedRow: Row = undefined;
-
-
-
-    onCreate1000()
-    {
-        this.rows = buildRows( this, 1000);
-        this.selectedRow = undefined;
-        this.updateMe( this.renderRows);
-    }
-
-    onAppend1000()
-    {
-    	let newRows = buildRows( this, 1000);
-        this.rows = this.rows ? this.rows.concat( newRows) : newRows;
-        this.updateMe( this.renderRows);
-    }
-
-    onUpdateEvery10th()
-    {
-        if (!this.rows)
-            return;
-
-        for (let i = 0; i < this.rows.length; i += 10)
-            this.rows[i].updateLabel()
-    }
-
-    onCreate10000()
-    {
-        this.rows = buildRows( this, 10000);
-        this.selectedRow = undefined;
-        this.updateMe( this.renderRows);
-    }
-
-    onClear()
-    {
-        this.rows = null;
-        this.selectedRow = undefined;
-        this.updateMe( this.renderRows);
-    }
-
-    onSwapRows()
-    {
-		if (this.rows && this.rows.length > 998)
-		{
-            let row1 = this.rows[1];
-            let row998 = this.rows[998];
-
-            let id = row1.id;
-            let label = row1.label;
-            row1.updateIDandLabel( row998.id, row998.label);
-            row998.updateIDandLabel( id, label);
-		}
-    }
-
-    onSelectRowClicked( rowToSelect: Row)
-    {
-        if (rowToSelect === this.selectedRow)
-            return;
-
-        if (this.selectedRow)
-            this.selectedRow.select( false);
-
-        this.selectedRow = rowToSelect;
-        rowToSelect.select( true);
-    }
-
-    onDeleteRowClicked( rowToDelete: Row)
-    {
-        if (rowToDelete === this.selectedRow)
-            this.selectedRow = undefined;
-
-        let id = rowToDelete.id;
-        let i = 0;
-        for( let row of this.rows)
-        {
-            if (row.id == id)
-            {
-                this.rows.splice( i, 1);
-                break;
-            }
-            else
-                i++;
-        }
-
-        this.updateMe( this.renderRows);
-    }
-
-    @mim.noWatcher render()
+    public render()
     {
         return (<div class="container">
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-md-6">
-                        <h1>Mimbl (non-keyed)</h1>
+                        <h1>Mimbl (keyed)</h1>
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" id="run" click={this.onCreate1000}>Create 1,000 rows</button>
-                            </div>
-                            <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" id="runlots" click={this.onCreate10000}>Create 10,000 rows</button>
-                            </div>
-                            <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" id="add" click={this.onAppend1000}>Append 1,000 rows</button>
-                            </div>
-                            <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" id="update" click={this.onUpdateEvery10th}>Update every 10th row</button>
-                            </div>
-                            <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" id="clear" click={this.onClear}>Clear</button>
-                            </div>
-                            <div class="col-sm-6 smallpad">
-                                <button type="button" class="btn btn-primary btn-block" id="swaprows" click={this.onSwapRows}>Swap Rows</button>
-                            </div>
+                            <Button id="run" click={this.onCreate1000}>Create 1,000 rows</Button>
+                            <Button id="runlots" click={this.onCreate10000}>Create 10,000 rows</Button>
+                            <Button id="add" click={this.onAppend1000}>Append 1,000 rows</Button>
+                            <Button id="update" click={this.onUpdateEvery10th}>Update every 10th row</Button>
+                            <Button id="clear" click={this.onClear}>Clear</Button>
+                            <Button id="swaprows" click={this.onSwapRows}>Swap Rows</Button>
                         </div>
                     </div>
                 </div>
@@ -160,88 +84,95 @@ class Main extends mim.Component
         </div>);
     }
 
-    @mim.noWatcher renderRows()
+    private renderRows(): any
+    {
+        return <tbody vnref={this.vnTBody}>
+            {this.rows?.map( row =>
+                <tr class={row.selectedTrigger}>
+                    <td class="col-md-1">{row.id}</td>
+                    <td class="col-md-4"><a click={[this.onSelectRowClicked, row]}>{row.labelTrigger}</a></td>
+                    <td class="col-md-1">
+                        <a click={[this.onDeleteRowClicked, row]}>
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"/>
+                        </a>
+                    </td>
+                    <td class="col-md-6"/>
+                </tr>
+            )}
+        </tbody>
+    }
+
+    private onCreate1000()
+    {
+        this.rows = buildRows( 1000);
+        this.selectedRow = undefined;
+    }
+
+    private onAppend1000()
+    {
+    	let newRows = buildRows( 1000);
+        this.rows = this.rows ? this.rows.concat( newRows) : newRows;
+    }
+
+    private onUpdateEvery10th()
     {
         if (!this.rows)
-            return null;
+            return;
 
-        return <tbody>{this.rows}</tbody>
+        let row: Row;
+        for (let i = 0; i < this.rows.length; i += 10)
+        {
+            row = this.rows[i];
+            row.labelTrigger.set( row.label += " !!!")
+        }
     }
-}
 
-let glyphVN = <span class="glyphicon glyphicon-remove" aria-hidden="true"/>;
-let lastCellVN = <td class="col-md-6"/>;
 
-class Row extends mim.Component
-{
-	main: Main;
-	id: number;
-    label: string;
-    idVN: mim.ITextVN;
-    labelVN: mim.ITextVN;
-    trVN: mim.IElmVN<HTMLTableRowElement>;
-
-	constructor( main: Main, id: number, label: string)
-	{
-		super();
-
-		this.main = main;
-		this.id = id;
-        this.label = label;
-        this.idVN = mim.createTextVN( "" + id);
-        this.labelVN = mim.createTextVN( label);
-	}
-
-    willMount()
+    private onCreate10000()
     {
-        this.trVN = <tr class={this.main.selectedRow === this ? "danger" : undefined}>
-            <td class="col-md-1">{this.idVN}</td>
-            <td class="col-md-4"><a click={this.onSelectClicked}>{this.labelVN}</a></td>
-            <td class="col-md-1"><a click={this.onDeleteClicked}>{glyphVN}</a></td>
-            {lastCellVN}
-        </tr>;
+        this.rows = buildRows( 10000);
+        this.selectedRow = undefined;
     }
 
-    didReplace( oldComp: Row): void
+    private onClear()
     {
-        this.idVN = oldComp.idVN;
-        this.labelVN = oldComp.labelVN;
-        this.trVN = oldComp.trVN;
+        this.rows = null;
+        this.selectedRow = undefined;
     }
 
-	updateIDandLabel( id: number, label: string)
-	{
-        this.id = id;
-        this.idVN.setText( "" + id);
-        this.label = label;
-        this.labelVN.setText( label);
-	}
+    private onSwapRows()
+    {
+		if (this.rows && this.rows.length > 998)
+		{
+            let t = this.rows[1];
+            this.rows[1] = this.rows[998];
+            this.rows[998] = t;
+            this.vnTBody.swapChildren( 1, 1, 998, 1);
+		}
+    }
 
-	updateLabel()
-	{
-        this.label += " !!!";
-        this.labelVN.setText( this.label);
-	}
+    public onSelectRowClicked(e: MouseEvent, rowToSelect: Row): void
+    {
+        let currSelectedRow = this.selectedRow;
+        if (rowToSelect === currSelectedRow)
+            return;
 
-	select( selected: boolean)
-	{
-        this.trVN.setProps( {class: selected ? "danger" : undefined});
-	}
+        if (currSelectedRow)
+            currSelectedRow.selectedTrigger.set( null);
 
-	onDeleteClicked()
-	{
-		this.main.onDeleteRowClicked( this);
-	}
+        this.selectedRow = rowToSelect;
+        rowToSelect.selectedTrigger.set( "danger");
+    }
 
-	onSelectClicked()
-	{
-		this.main.onSelectRowClicked( this);
-	}
+    public onDeleteRowClicked(e: MouseEvent, rowToDelete: Row): void
+    {
+        if (rowToDelete === this.selectedRow)
+            this.selectedRow = undefined;
 
-	@mim.noWatcher render()
-	{
-        return this.trVN;
-	}
+        let i = this.rows.indexOf( rowToDelete);
+        this.rows.splice( i, 1);
+        this.vnTBody.spliceChildren( i, 1, undefined, mim.TickSchedulingType.Sync);
+    }
 }
 
 

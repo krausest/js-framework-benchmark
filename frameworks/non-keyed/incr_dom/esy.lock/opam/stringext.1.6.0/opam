@@ -9,10 +9,9 @@ depends: [
   "dune" {>= "1.0"}
   "ounit" {with-test}
   "qtest" {with-test & >= "2.2"}
-  "base-bytes"
 ]
 build: [
-  ["dune" "subst"] {pinned}
+  ["dune" "subst"] {dev}
   ["dune" "build" "-p" name "-j" jobs]
   ["dune" "runtest" "-p" name "-j" jobs] {with-test}
 ]

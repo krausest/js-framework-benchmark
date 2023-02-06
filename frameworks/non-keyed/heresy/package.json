@@ -4,7 +4,8 @@
   "description": "heresy demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "heresy"
+    "frameworkVersionFromPackage": "heresy",
+    "frameworkHomeURL": "https://github.com/WebReflection/heresy"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

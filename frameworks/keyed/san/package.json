@@ -4,7 +4,8 @@
   "description": "Benchmark for san framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "san",
-    "issues": [800]
+    "frameworkHomeURL": "https://baidu.github.io/san/",
+    "issues": [800, 1139]
   },
   "scripts": {
     "build-dev": "webpack -w -d",

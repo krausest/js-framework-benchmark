@@ -3,7 +3,11 @@
   "version": "2.0.4",
   "description": "Benchmark for Mithrill 2.0.4 framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "mithril"
+    "frameworkVersionFromPackage": "mithril",
+    "frameworkHomeURL": "https://mithril.js.org/",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack -w -d",
