@@ -8,8 +8,6 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 
-import Timer from './doo.timer.js'
-
 Doo.define(
   	class Main extends Doo {
 		constructor() {
@@ -88,34 +86,12 @@ Doo.define(
 
 		}
 
-		run(e) {
-			Timer.start('tot')
-			this.clear()
-			this.data.rows = this.buildData()
-			this.renderTable()
-			e.target.blur()
-			Timer.stop('tot')
-		}
-
-
 		add() {
 			
 			let newRows = this.buildData()
 			this.data.rows = this.data.rows.concat(newRows)
 			this.append(newRows)
 		}
-		add(e) {
-			Timer.start('tot')
-			//this.clear()
-			let start = this.data.rows.length
-			this.data.rows = this.data.rows.concat(this.buildData())
-			this.append(this.data.rows, this.tbody, start)
-			e.target.blur()
-			Timer.stop('tot')
-
-		}   
-
-
 
 		runLots() {
 
@@ -123,16 +99,6 @@ Doo.define(
 			this.data.rows = this.buildData(10000)
 			this.renderTable(this.data.rows, this.tbody)
 		}
-		runLots(e) {
-			Timer.start('tot')
-			this.clear()
-			this.data.rows = this.buildData(10000)	
-			this.renderTable()
-
-			e.target.blur()
-			Timer.stop('tot')
-		}
-
 
 		update() {
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
@@ -162,8 +128,7 @@ Doo.define(
 			this.tbody.textContent = ''
 		}
 
-		swapRows(e) {
-			Timer.start('tot')
+		swapRows() {
 			if (this.data.rows.length > 998) {
 				let node1 = this.tbody.firstChild.nextSibling, 
 					node2 = node1.nextSibling,
@@ -178,24 +143,23 @@ Doo.define(
 				this.tbody.insertBefore(node1, node999)
 			}
 			e.target.blur()
-			Timer.stop('tot')
 		}
 
 		addEventListeners() {
 			document.getElementById("main").addEventListener('click', e => {
 				e.preventDefault()
 				if (e.target.matches('#runlots')) {
-					this.runLots(e)
+					this.runLots()
 				} else if (e.target.matches('#run')) {
-					this.run(e)
+					this.run()
 				} else if (e.target.matches('#add')) {
-					this.add(e)
+					this.add()
 				} else if (e.target.matches('#update')) {
 					this.update()
 				} else if (e.target.matches('#clear')) {
-					this.clear(e)
+					this.clear()
 				} else if (e.target.matches('#swaprows')) {
-					this.swapRows(e)
+					this.swapRows()
 				}
 			})    
     	}
