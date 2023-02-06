@@ -138,7 +138,7 @@ class Main {
             else if (e.target.matches('#swaprows')) {
                 e.preventDefault();
                 //console.log("swapRows");
-                this.swapRows(e);
+                this.swapRows();
             }
             else if (e.target.matches('.remove')) {
                 e.preventDefault();
@@ -254,7 +254,7 @@ class Main {
             this.unselect();
         // });
     }
-    swapRows(e) {
+    swapRows() {
         if (this.data.length>10) {
             this.store.swapRows();
             this.data[1] = this.store.data[1];
