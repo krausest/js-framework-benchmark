@@ -73,7 +73,6 @@ Doo.define(
 			}
 			this.renderTable()
 		}
-
 		add() {
 			let start = this.data.rows.length
 			this.data.rows = this.data.rows.concat(this.buildData())
