@@ -7,6 +7,12 @@
   <link href="/css/currentStyle.css" rel="stylesheet"/>
   <script type="module" src="./js/doo.html.min.js"></script>
   <script type="module" src="./js/Main.class.js" defer ></script>
+    <template id="table">
+        <table class="table table-hover table-striped test-data">
+            <tbody id="tbody"><tr bind="rows"><td class="col-md-1">{{id}}</td><td class="col-md-4"><a>{{label}}</a></td><td class="col-md-1"><a class="remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr></tbody>
+        </table>
+        <link href="/css/currentStyle.css" rel="stylesheet">
+    </template>
 </head>
 <body>
   <div id="main">
@@ -39,13 +45,12 @@
                   </div>
               </div>
           </div>
-      </div>
+        </div>
         <doo-main
             context="shadow"
-            link="/css/currentStyle.css"
-            bind="rows"
-            template="./templates/main.html"
-        ></doo-main>
+            bind="data"
+            template="#table"
+        ></doo-main>    
     </div>  
     <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
   </div>
