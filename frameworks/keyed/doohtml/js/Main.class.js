@@ -103,7 +103,7 @@ Doo.define(
 		runLots() {
 			this.clear()
 			this.data.rows = this.buildData(10000)
-			this.renderTable(this.data.rows, this.tbody)
+			this.renderTable()
 		}
 
 		update() {
@@ -149,7 +149,6 @@ Doo.define(
 				this.tbody.insertBefore(node998, node2)
 				this.tbody.insertBefore(node1, node999)
 			}
-			e.target.blur()
 		}
 
 		addEventListeners() {
