@@ -1,0 +1,7 @@
+{
+    "bbVersion": "2.7.0",
+    "title": "Bobril v20.3.5",
+    "buildOutputDir": ".",
+    "dependencies": "disable",
+    "head": "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+}
