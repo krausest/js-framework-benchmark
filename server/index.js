@@ -112,7 +112,8 @@ app.use(addSiteIsolationForIndex);
 app.use('/frameworks', express.static(frameworkDirectory, 
   {
     setHeaders: function(res, path) {
-      if (addCSP) {
+      if (addCSP && path.endsWith("index.html")) {
+        console.log("adding CSP to ", path);
         res.setHeader('Content-Security-Policy', "default-src 'self'; report-uri /csp");
       }
     }
