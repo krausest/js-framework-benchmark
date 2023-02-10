@@ -1,0 +1,36 @@
+{
+  "name": "js-framework-benchmark-michijs-map",
+  "version": "1.0.4",
+  "description": "michijs-map",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@michijs/michijs",
+    "frameworkHomeURL": "https://github.com/michijs/michijs",
+    "useShadowRoot": false,
+    "customURL": "/dist"
+  },
+  "scripts": {
+    "start": "michi-server --start",
+    "build": "michi-server --build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "keywords": [
+    "michijs"
+  ],
+  "author": "Lucas M. Segurado",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
+  "devDependencies": {
+    "@michijs/dev-server": "0.2.0",
+    "typescript": "4.9.5"
+  },
+  "dependencies": {
+    "@michijs/michijs": "1.0.4"
+  }
+}
