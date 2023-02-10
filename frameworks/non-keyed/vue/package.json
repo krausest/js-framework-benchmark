@@ -4,10 +4,7 @@
   "description": "Benchmark for vue.js framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "vue",
-    "frameworkHomeURL": "https://vue.js.org/",
-    "issues": [
-      1139
-    ]
+    "frameworkHomeURL": "https://vue.js.org/"
   },
   "scripts": {
     "build-dev": "webpack --mode development --watch",

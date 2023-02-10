@@ -27,10 +27,7 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@glimmer/core",
-    "frameworkHomeURL": "https://glimmerjs.com/",
-    "issues": [
-      1139
-    ]
+    "frameworkHomeURL": "https://glimmerjs.com/"
   },
   "dependencies": {
     "@glimmer/babel-preset": "^2.0.0-beta.13",

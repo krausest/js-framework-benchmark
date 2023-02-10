@@ -5,10 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:recoil",
-    "frameworkHomeURL": "https://recoiljs.org/",
-    "issues": [
-      1139
-    ]
+    "frameworkHomeURL": "https://recoiljs.org/"
   },
   "scripts": {
     "build-dev": "webpack --watch",

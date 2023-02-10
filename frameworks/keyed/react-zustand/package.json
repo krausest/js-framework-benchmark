@@ -5,10 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:zustand",
-    "frameworkHomeURL": "https://github.com/pmndrs/zustand",
-    "issues": [
-      1139
-    ]
+    "frameworkHomeURL": "https://github.com/pmndrs/zustand"
   },
   "scripts": {
     "build-dev": "webpack --watch",

@@ -8,6 +8,7 @@
     "lint": "eslint . --ext .ts",
     "tsbench": "cross-env LANG=\"en_US.UTF-8\" ts-node --files src/benchmarkRunner.ts",
     "bench": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
+    "checkCSP": "cross-env LANG=\"en_US.UTF-8\" node dist/isCSPCompliant.js",
     "compile": "tsc",
     "results": "ts-node --files src/createResultJS.ts && cd .. && cd webdriver-ts-results && npm run build-prod",
     "index": "ts-node --files src/createIndex.ts",

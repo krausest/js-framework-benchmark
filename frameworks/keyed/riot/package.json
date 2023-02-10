@@ -4,7 +4,10 @@
   "description": "Benchmark for riot framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "riot",
-    "frameworkHomeURL": "https://riot.js.org/"
+    "frameworkHomeURL": "https://riot.js.org/",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "webpack -w -d",

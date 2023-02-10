@@ -13,10 +13,7 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ember-source",
     "frameworkHomeURL": "https://emberjs.com/",
-    "customURL": "/dist",
-    "issues": [
-      1139
-    ]
+    "customURL": "/dist"
   },
   "scripts": {
     "ember": "node_modules/.bin/ember",

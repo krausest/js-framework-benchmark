@@ -5,10 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:react-tracked",
-    "frameworkHomeURL": "https://react-tracked.js.org/",
-    "issues": [
-      1139
-    ]
+    "frameworkHomeURL": "https://react-tracked.js.org/"
   },
   "scripts": {
     "build-dev": "webpack --watch",

@@ -5,10 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:@starbeam/core",
-    "frameworkHomeURL": "https://www.starbeamjs.com/",
-    "issues": [
-      1139
-    ]
+    "frameworkHomeURL": "https://www.starbeamjs.com/"
   },
   "scripts": {
     "start": "npx live-server",

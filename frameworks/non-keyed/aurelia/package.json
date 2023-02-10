@@ -4,7 +4,10 @@
   "description": "Benchmark for aurelia framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "aurelia-framework",
-    "frameworkHomeURL": "https://aurelia.io/"
+    "frameworkHomeURL": "https://aurelia.io/",
+    "issues": [
+      1139
+    ]
   },
   "keywords": [
     "aurelia"
