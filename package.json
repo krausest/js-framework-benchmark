@@ -9,6 +9,7 @@
     "compile": "node rebuild-all.js --ci",
     "start": "cd server && node index.js",
     "bench": "cd webdriver-ts && cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
+    "checkCSP": "cd webdriver-ts && cross-env LANG=\"en_US.UTF-8\" node dist/isCSPCompliant.js",
     "results": "cd webdriver-ts && npm run results",
     "bench-all": "cd webdriver-ts && npm run bench && npm run results",
     "compile-webdriver-ts": "cd webdriver-ts && npm run compile",
