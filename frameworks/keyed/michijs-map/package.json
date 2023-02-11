@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "michi-server --start",
-    "build-dev": "webpack --watch --env=DEVELOPMENT",
+    "build-dev": "michi-server --build --env=DEVELOPMENT",
     "build-prod": "michi-server --build"
   },
   "repository": {
