@@ -8,11 +8,12 @@ version = "1.0.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-getrandom = { version = "0.2.8", features = ["js"] }
+wasm-bindgen = { version = "0.2", features = ["enable-interning"] }
+console_error_panic_hook = "0.1"
+getrandom = { version = "0.2.7", features = ["js"] }
 rand = { version = "0.8.5", features = ["small_rng"] }
-leptos = { version = "0.1.1", features = ["stable"] }
-wasm-bindgen = "0.2.83"
-web-sys = { version = "0.3.60", features = ["Window", "Document"] }
+leptos = "0.2.0-alpha"
+web-sys = "0.3"
 
 [profile.release]
 codegen-units = 1
