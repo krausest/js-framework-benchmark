@@ -1,0 +1,26 @@
+{
+  "name": "js-framework-benchmark-non-keyed-petite-vue",
+  "version": "1.0.0",
+  "description": "Benchmark for petite-vue",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "petite-vue",
+    "frameworkHomeURL": "https://github.com/vuejs/petite-vue",
+    "issues": [
+      1139
+    ]
+  },
+  "keywords": [
+    "vue"
+  ],
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-terser": "^0.4.0",
+    "petite-vue": "^0.4.1",
+    "rollup": "^3.15.0"
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "type": "module"
+}
