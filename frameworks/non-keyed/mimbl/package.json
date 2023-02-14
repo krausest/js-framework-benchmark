@@ -4,7 +4,7 @@
   "description": "Benchmark for Mimbl framework (non-keyed)",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mimbl",
-    "frameworkHomeURL": "https://mimblweb.z13.web.core.windows.net/"
+    "frameworkHomeURL": "https://mimjs.com/"
   },
   "scripts": {
     "build-prod": "webpack"
@@ -15,7 +15,7 @@
   ],
   "author": "Michael Michlin",
   "license": "Apache-2.0",
-  "homepage": "https://mimblweb.z13.web.core.windows.net/",
+  "homepage": "https://mimjs.com/",
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"

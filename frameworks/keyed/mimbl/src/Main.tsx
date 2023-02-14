@@ -1,5 +1,4 @@
 import * as mim from "mimbl"
-import { TickSchedulingType } from "mimbl";
 
 
 
@@ -68,8 +67,8 @@ class Main extends mim.Component
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <Button id="run" click={this.onCreate1000}>Create 1,000 rows</Button>
-                            <Button id="runlots" click={this.onCreate10000}>Create 10,000 rows</Button>
+                            <Button id="run" click={[this.onCreate, 1000]}>Create 1,000 rows</Button>
+                            <Button id="runlots" click={[this.onCreate, 10000]}>Create 10,000 rows</Button>
                             <Button id="add" click={this.onAppend1000}>Append 1,000 rows</Button>
                             <Button id="update" click={this.onUpdateEvery10th}>Update every 10th row</Button>
                             <Button id="clear" click={this.onClear}>Clear</Button>
@@ -79,40 +78,51 @@ class Main extends mim.Component
                 </div>
             </div>
             <table class="table table-hover table-striped test-data">
-                {this.renderRows}
+                <tbody vnref={this.vnTBody} updateStrategy={{disableKeyedNodeRecycling: true}}>
+                    {this.renderTBody}
+                </tbody>
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>);
     }
 
-    private renderRows(): any
+    private renderTBody(): any
     {
-        return <tbody vnref={this.vnTBody} updateStrategy={{disableKeyedNodeRecycling: true}}>
-            {this.rows?.map( row =>
-                <tr class={row.selectedTrigger} key={row}>
-                    <td class="col-md-1">{row.id}</td>
-                    <td class="col-md-4"><a click={[this.onSelectRowClicked, row]}>{row.labelTrigger}</a></td>
-                    <td class="col-md-1">
-                        <a click={[this.onDeleteRowClicked, row]}>
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"/>
-                        </a>
-                    </td>
-                    <td class="col-md-6"/>
-                </tr>
-            )}
-        </tbody>
+        return this.renderRows(this.rows);
     }
 
-    private onCreate1000()
+    private renderRows(rows: Row[]): any
     {
-        this.rows = buildRows( 1000);
+        return rows?.map(row =>
+            <tr class={row.selectedTrigger} key={row}>
+                <td class="col-md-1">{row.id}</td>
+                <td class="col-md-4"><a click={[this.onSelectRowClicked, row]}>{row.labelTrigger}</a></td>
+                <td class="col-md-1">
+                    <a click={[this.onDeleteRowClicked, row]}>
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"/>
+                    </a>
+                </td>
+                <td class="col-md-6"/>
+            </tr>
+        )
+    }
+
+    private onCreate(e: MouseEvent, n: number)
+    {
+        this.rows = buildRows(n);
         this.selectedRow = undefined;
     }
 
     private onAppend1000()
     {
     	let newRows = buildRows( 1000);
-        this.rows = this.rows ? this.rows.concat( newRows) : newRows;
+        if (this.rows)
+        {
+            this.rows.push(...newRows);
+            this.vnTBody.growChildren(undefined, this.renderRows(newRows), mim.TickSchedulingType.Sync)
+        }
+        else
+            this.rows = newRows;
     }
 
     private onUpdateEvery10th()
@@ -128,13 +138,6 @@ class Main extends mim.Component
         }
     }
 
-
-    private onCreate10000()
-    {
-        this.rows = buildRows( 10000);
-        this.selectedRow = undefined;
-    }
-
     private onClear()
     {
         this.rows = null;
@@ -148,7 +151,7 @@ class Main extends mim.Component
             let t = this.rows[1];
             this.rows[1] = this.rows[998];
             this.rows[998] = t;
-            this.vnTBody.swapChildren( 1, 1, 998, 1);
+            this.vnTBody.swapChildren( 1, 1, 998, 1, mim.TickSchedulingType.Sync);
 		}
     }
 
