@@ -1,8 +1,8 @@
 import {
   createBlock,
-  $wire,
-  fragment,
-} from '/Users/aidenybai/Projects/aidenybai/million/packages/next/block';
+  createFragment,
+  // make sure you import your local version of million
+} from '/Users/aidenybai/Projects/aidenybai/million/packages/next/index';
 
 const adjectives = [
   'pretty',
@@ -64,11 +64,13 @@ const random = (max) => Math.round(Math.random() * 1000) % max;
 
 let nextId = 1;
 let list = [];
+let main;
 let selected = 0;
 
 const clear = () => {
   list = [];
-  update();
+  main.children = [];
+  main.remove();
 };
 
 const buildData = (count) => {
@@ -85,19 +87,19 @@ const buildData = (count) => {
 };
 
 const create1k = () => {
-  clear();
+  if (list.length) clear();
   list = buildData(1000);
   update();
 };
 
 const create10k = () => {
-  clear();
+  if (list.length) clear();
   list = buildData(10000);
   update();
 };
 
 const append1k = () => {
-  list.concat(buildData(1000));
+  list = list.concat(buildData(1000));
   update();
 };
 
@@ -218,29 +220,15 @@ const Main = createBlock(({ rows }) => (
   </div>
 ));
 
-const Row = createBlock(({ className, id, label }) => {
+const Row = createBlock(({ className, id, select, remove, label }) => {
   return (
     <tr class={className}>
       <td class="col-md-1">{id}</td>
       <td class="col-md-4">
-        <a
-          onClick={$wire(({ id }) => {
-            return () => {
-              select(id);
-            };
-          }, id)}
-        >
-          {label}
-        </a>
+        <a onClick={select}>{label}</a>
       </td>
       <td class="col-md-1">
-        <a
-          onClick={$wire(({ id }) => {
-            return () => {
-              remove(id);
-            };
-          }, id)}
-        >
+        <a onClick={remove}>
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>
       </td>
@@ -250,7 +238,7 @@ const Row = createBlock(({ className, id, label }) => {
 });
 
 function Rows({ oldCache, newCache }) {
-  return fragment(
+  return createFragment(
     list.map((item) => {
       const isSelected = selected === item.id;
       const cachedItem = oldCache[item.id];
@@ -265,11 +253,13 @@ function Rows({ oldCache, newCache }) {
           id={item.id}
           label={item.label}
           className={isSelected ? 'danger' : ''}
+          remove={() => remove(item.id)}
+          select={() => select(item.id)}
         />
       );
       row._data = [item.label, isSelected];
       row.key = String(item.id);
-      newCache[row.id] = row;
+      newCache[item.id] = row;
       return row;
     })
   );
@@ -281,7 +271,7 @@ function render(oldCache, newCache) {
 
 let oldCache = {};
 
-const main = render({}, oldCache);
+main = render({}, oldCache);
 (<Main rows={main} />).mount(document.getElementById('main'));
 
 function update() {
