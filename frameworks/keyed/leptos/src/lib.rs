@@ -153,7 +153,7 @@ fn App(cx: Scope) -> impl IntoView {
         <div class="container">
             <div class="jumbotron">
                 <div class="row">
-                    <div class="col-md-6"><h1>"Leptos-Next"</h1></div>
+                    <div class="col-md-6"><h1>"Leptos"</h1></div>
                     <div class="col-md-6">
                         <div class="row">
                             <Button id="run" text="Create 1,000 rows" on:click=run/>
@@ -175,8 +175,8 @@ fn App(cx: Scope) -> impl IntoView {
                             let row_id = row.id;
                             let (label, _) = row.label;
                             let is_selected = is_selected.clone();
-                            view! {
-                                cx,
+
+                            template! { cx,
                                 <tr class:danger={move || is_selected(Some(row_id))}>
                                     <td class="col-md-1">{row_id.to_string()}</td>
                                     <td class="col-md-4"><a on:click=move |_| set_selected(Some(row_id))>{move || label.get()}</a></td>
