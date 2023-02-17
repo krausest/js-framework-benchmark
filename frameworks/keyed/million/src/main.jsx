@@ -1,8 +1,7 @@
 import {
   createBlock,
-  createFragment,
-  // make sure you import your local version of million
-} from '/Users/aidenybai/Projects/aidenybai/million/packages/next/index';
+  fragment,
+} from '/Users/aidenybai/Projects/aidenybai/million/packages/block/index';
 
 const adjectives = [
   'pretty',
@@ -86,24 +85,28 @@ const buildData = (count) => {
   return data;
 };
 
-const create1k = () => {
+const create1k = (event) => {
+  event.stopPropagation();
   if (list.length) clear();
   list = buildData(1000);
   update();
 };
 
-const create10k = () => {
+const create10k = (event) => {
+  event.stopPropagation();
   if (list.length) clear();
   list = buildData(10000);
   update();
 };
 
-const append1k = () => {
+const append1k = (event) => {
+  event.stopPropagation();
   list = list.concat(buildData(1000));
   update();
 };
 
-const updateEvery10 = () => {
+const updateEvery10 = (event) => {
+  event.stopPropagation();
   let i = 0;
   while (i < list.length) {
     list[i].label = `${list[i].label} !!!`;
@@ -112,7 +115,8 @@ const updateEvery10 = () => {
   update();
 };
 
-const swapRows = () => {
+const swapRows = (event) => {
+  event.stopPropagation();
   if (list.length > 998) {
     const item = list[1];
     list[1] = list[998];
@@ -132,6 +136,13 @@ const remove = (id) => {
     1
   );
   update();
+};
+
+const shouldUpdate = (oldProps, newProps) => {
+  return (
+    oldProps.label !== newProps.label ||
+    oldProps.className !== newProps.className
+  );
 };
 
 const Main = createBlock(({ rows }) => (
@@ -188,7 +199,8 @@ const Main = createBlock(({ rows }) => (
                 type="button"
                 class="btn btn-primary btn-block"
                 id="clear"
-                onClick={() => {
+                onClick={(event) => {
+                  event.stopPropagation();
                   clear();
                   update();
                 }}
@@ -238,7 +250,7 @@ const Row = createBlock(({ className, id, select, remove, label }) => {
 });
 
 function Rows({ oldCache, newCache }) {
-  return createFragment(
+  return fragment(
     list.map((item) => {
       const isSelected = selected === item.id;
       const cachedItem = oldCache[item.id];
@@ -253,12 +265,19 @@ function Rows({ oldCache, newCache }) {
           id={item.id}
           label={item.label}
           className={isSelected ? 'danger' : ''}
-          remove={() => remove(item.id)}
-          select={() => select(item.id)}
+          remove={(event) => {
+            event.stopPropagation();
+            remove(item.id);
+          }}
+          select={(event) => {
+            event.stopPropagation();
+            select(item.id);
+          }}
         />
       );
       row._data = [item.label, isSelected];
       row.key = String(item.id);
+      row.shouldUpdate = shouldUpdate;
       newCache[item.id] = row;
       return row;
     })
