@@ -63,8 +63,8 @@ const random = (max) => Math.round(Math.random() * 1000) % max;
 
 let nextId = 1;
 let list = [];
-let main;
 let selected = 0;
+let main;
 
 const clear = () => {
   list = [];
@@ -85,44 +85,44 @@ const buildData = (count) => {
   return data;
 };
 
-const create1k = (event) => {
-  event.stopPropagation();
+const create1k = () => {
   if (list.length) clear();
   list = buildData(1000);
   update();
+  return false;
 };
 
-const create10k = (event) => {
-  event.stopPropagation();
+const create10k = () => {
   if (list.length) clear();
   list = buildData(10000);
   update();
+  return false;
 };
 
-const append1k = (event) => {
-  event.stopPropagation();
+const append1k = () => {
   list = list.concat(buildData(1000));
   update();
+  return false;
 };
 
-const updateEvery10 = (event) => {
-  event.stopPropagation();
+const updateEvery10 = () => {
   let i = 0;
   while (i < list.length) {
     list[i].label = `${list[i].label} !!!`;
     i += 10;
   }
   update();
+  return false;
 };
 
-const swapRows = (event) => {
-  event.stopPropagation();
+const swapRows = () => {
   if (list.length > 998) {
     const item = list[1];
     list[1] = list[998];
     list[998] = item;
   }
   update();
+  return false;
 };
 
 const select = (id) => {
@@ -132,17 +132,10 @@ const select = (id) => {
 
 const remove = (id) => {
   list.splice(
-    list.findIndex((z) => z.id === id),
+    list.findIndex((item) => item.id === id),
     1
   );
   update();
-};
-
-const shouldUpdate = (oldProps, newProps) => {
-  return (
-    oldProps.label !== newProps.label ||
-    oldProps.className !== newProps.className
-  );
 };
 
 const Main = createBlock(({ rows }) => (
@@ -199,10 +192,10 @@ const Main = createBlock(({ rows }) => (
                 type="button"
                 class="btn btn-primary btn-block"
                 id="clear"
-                onClick={(event) => {
-                  event.stopPropagation();
+                onClick={() => {
                   clear();
                   update();
+                  return false;
                 }}
               >
                 Clear
@@ -232,66 +225,82 @@ const Main = createBlock(({ rows }) => (
   </div>
 ));
 
-const Row = createBlock(({ className, id, select, remove, label }) => {
-  return (
-    <tr class={className}>
-      <td class="col-md-1">{id}</td>
-      <td class="col-md-4">
-        <a onClick={select}>{label}</a>
-      </td>
-      <td class="col-md-1">
-        <a onClick={remove}>
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-        </a>
-      </td>
-      <td class="col-md-6"></td>
-    </tr>
-  );
-});
+const Row = createBlock(({ className, id, select, remove, label }) => (
+  <tr class={className}>
+    <td class="col-md-1">{id}</td>
+    <td class="col-md-4">
+      <a onClick={select}>{label}</a>
+    </td>
+    <td class="col-md-1">
+      <a onClick={remove}>
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </a>
+    </td>
+    <td class="col-md-6"></td>
+  </tr>
+));
 
-function Rows({ oldCache, newCache }) {
+const shouldUpdate = (oldProps, newProps) => {
+  return oldProps.valueKey !== newProps.valueKey;
+};
+
+const cache = (map, key, listener) => {
+  if (has$.call(map, key)) {
+    return get$.call(selectCache, key);
+  } else {
+    set$.call(map, key, listener);
+    return listener;
+  }
+};
+
+const removeCache = new Map();
+const selectCache = new Map();
+
+const Map$ = Map.prototype;
+const has$ = Map$.has;
+const get$ = Map$.get;
+const set$ = Map$.set;
+
+function render(oldCache, newCache) {
   return fragment(
     list.map((item) => {
       const isSelected = selected === item.id;
-      const cachedItem = oldCache[item.id];
-      if (cachedItem) {
-        const [cachedLabel, cachedIsSelected] = cachedItem._data;
-        if (cachedLabel === item.label && cachedIsSelected === isSelected) {
-          return (newCache[item.id] = cachedItem);
-        }
+      const key = String(item.id);
+      const cachedItem = oldCache[key];
+      const valueKey = `${item.label}${isSelected}`;
+      if (cachedItem?.props.valueKey === valueKey) {
+        return (newCache[key] = cachedItem);
       }
-      const row = (
-        <Row
-          id={item.id}
-          label={item.label}
-          className={isSelected ? 'danger' : ''}
-          remove={(event) => {
-            event.stopPropagation();
+
+      const row = Row(
+        {
+          id: item.id,
+          label: item.label,
+          className: isSelected ? 'danger' : '',
+          remove: cache(removeCache, key, () => {
             remove(item.id);
-          }}
-          select={(event) => {
-            event.stopPropagation();
+            return false;
+          }),
+          select: cache(selectCache, key, () => {
             select(item.id);
-          }}
-        />
+            return false;
+          }),
+          valueKey,
+        },
+        key,
+        shouldUpdate
       );
-      row._data = [item.label, isSelected];
-      row.key = String(item.id);
-      row.shouldUpdate = shouldUpdate;
-      newCache[item.id] = row;
+      newCache[key] = row;
       return row;
     })
   );
 }
 
-function render(oldCache, newCache) {
-  return <Rows oldCache={oldCache} newCache={newCache} />;
-}
-
 let oldCache = {};
 
-main = render({}, oldCache);
-(<Main rows={main} />).mount(document.getElementById('main'));
+Main({ rows: (main = render({}, oldCache)) }).mount(
+  document.getElementById('main')
+);
 
 function update() {
   let newCache = {};
