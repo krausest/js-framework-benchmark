@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>petite-vue</title>
+	<link href="/css/currentStyle.css" rel="stylesheet">
+</head>
+<body>
+	<div id="main" v-scope>
+		<div class="container">
+			<div class="jumbotron">
+				<div class="row">
+					<div class="col-md-6">
+						<h1>petite-vue</h1>
+					</div>
+					<div class="col-md-6">
+						<div class="row">
+							<div class="col-sm-6 smallpad">
+								<button @click="run" type="button" class="btn btn-primary btn-block"
+									id="run">Create 1,000 rows</button>
+							</div>
+							<div class="col-sm-6 smallpad">
+								<button @click="runLots" type="button" class="btn btn-primary btn-block"
+									id="runlots">Create 10,000 rows</button>
+							</div>
+							<div class="col-sm-6 smallpad">
+								<button @click="add" type="button" class="btn btn-primary btn-block"
+									id="add">Append 1,000 rows</button>
+							</div>
+							<div class="col-sm-6 smallpad">
+								<button @click="update" type="button" class="btn btn-primary btn-block"
+									id="update">Update every 10th row</button>
+							</div>
+							<div class="col-sm-6 smallpad">
+								<button @click="clear" type="button" class="btn btn-primary btn-block"
+									id="clear">Clear</button>
+							</div>
+							<div class="col-sm-6 smallpad">
+								<button @click="swap" type="button" class="btn btn-primary btn-block"
+									id="swaprows">Swap Rows</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<table class="table table-hover table-striped test-data">
+				<tbody>
+					<tr v-for="item in rows" :class="{danger: item == selected ? 'danger' : ''}" :key="item.id">
+						<td class="col-md-1">{{item.id}}</td>
+						<td class="col-md-4">
+							<a role="select" @click="select(item)">{{item.label}}</a>
+						</td>
+						<td class="col-md-1">
+							<a>
+								<span role="delete" @click="remove(item)" class="glyphicon glyphicon-remove"
+									aria-hidden="true"></span>
+							</a>
+						</td>
+						<td class="col-md-6"></td>
+					</tr>
+				</tbody>
+		</div>
+		<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+	</div>
+	<script src="dist/main.js"></script>
+</body>
+</html>
