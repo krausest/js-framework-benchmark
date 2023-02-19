@@ -42,9 +42,18 @@
 
 
 {{#if this.data.length}}
-  <FastEach class="table table-hover table-striped test-data" @items={{this.data}} as |item|>
-    <TableRow class={{if (eq item) 'danger'}} @item={{item}} @onSelect={{fn this.select item}} @onRemove={{fn this.remove item}} />
-  </FastEach>
+  <table class="table table-hover table-striped test-data">
+    <tbody>
+      {{#each this.data key="id" as |item|}}
+        <tr class={{if (eq item) 'danger'}}>
+          <td class="col-md-1">{{item.id}}</td>
+          <td class="col-md-4"><a {{on 'click' (fn this.select item)}}>{{item.label}}</a></td>
+          <td class="col-md-1"><a {{on 'click' (fn this.remove item)}}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+          <td class="col-md-6"></td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 {{/if}}
 
 
