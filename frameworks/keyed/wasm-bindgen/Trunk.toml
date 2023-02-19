@@ -1,0 +1,3 @@
+[build]
+public_url = "/frameworks/keyed/wasm-bindgen/bundled-dist/"
+dist = "bundled-dist"
