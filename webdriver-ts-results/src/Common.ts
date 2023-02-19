@@ -28,7 +28,7 @@ interface Category {
 
 export const categories: Category[] = [
   {id:1, text:"[Note]: Manual DOM manipulations", issues: [772], severity: Severity.Note},
-  {id:2, text:"[Note]:View state on the model", issues: [800], severity: Severity.Note},
+  {id:2, text:"[Note]: View state on the model", issues: [800], severity: Severity.Note},
   {id:3, text:"[Note]: Explicit requestAnimationFrame calls", issues: [796], severity: Severity.Note},
   {id:4, text:"[Note]: Manual event delegation", issues: [801], severity: Severity.Note},
   {id:5, text:"[Note]: Implementation uses runtime code generation", issues: [1139], severity: Severity.Note},
