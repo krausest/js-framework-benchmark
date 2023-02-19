@@ -6,11 +6,12 @@
   "js-framework-benchmark": {
     "frameworkVersion": "0.2.47",
     "frameworkHomeURL": "https://rustwasm.github.io/docs/wasm-bindgen/",
+    "customURL": "/bundled-dist",
     "issues": [772, 1139]
   },
   "scripts": {
     "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
-    "build-prod-force": "rimraf bundled-dist pkg && webpack"
+    "build-prod-force": "trunk build --release"
   },
   "repository": {
     "type": "git",
