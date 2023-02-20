@@ -16,6 +16,7 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "million",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "frameworkHomeURL": "https://github.com/aidenybai/million"
   }
 }

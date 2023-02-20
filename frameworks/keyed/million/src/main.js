@@ -1,7 +1,9 @@
+import { withKey } from '../../../../../million/packages/block/block';
 import {
   Block,
   fragment,
   stringToDOM,
+  linkEvent,
 } from '/Users/aidenybai/Projects/aidenybai/million/packages/block/index';
 
 const adjectives = [
@@ -69,7 +71,6 @@ let main;
 
 const clear = () => {
   list = [];
-  main.children = [];
   main.remove();
 };
 
@@ -148,7 +149,7 @@ const Row = (() => {
       path: [0],
       edits: [
         {
-          type: 2,
+          type: 'child',
           hole: 'id',
           index: 0,
         },
@@ -159,13 +160,13 @@ const Row = (() => {
       path: [1, 0],
       edits: [
         {
-          type: 3,
+          type: 'event',
           listener: 'select',
           name: 'onClick',
           hole: 'select',
         },
         {
-          type: 2,
+          type: 'child',
           hole: 'label',
           index: 0,
         },
@@ -176,7 +177,7 @@ const Row = (() => {
       path: [2, 0],
       edits: [
         {
-          type: 3,
+          type: 'event',
           listener: 'remove',
           name: 'onClick',
           hole: 'remove',
@@ -188,7 +189,7 @@ const Row = (() => {
       path: [],
       edits: [
         {
-          type: 0,
+          type: 'attribute',
           hole: 'className',
           name: 'class',
         },
@@ -197,7 +198,10 @@ const Row = (() => {
     },
   ];
   const shouldUpdate = (oldProps, newProps) => {
-    return oldProps.$key !== newProps.$key;
+    return (
+      oldProps.label !== newProps.label ||
+      oldProps.className !== newProps.className
+    );
   };
   return (props, key) => {
     return new Block(root, edits, props, key, shouldUpdate);
@@ -208,30 +212,35 @@ function render(oldCache, newCache) {
   return fragment(
     list.map((item) => {
       const isSelected = selected === item.id;
-      const cachedItem = oldCache[item.id];
-      const $key = item.label + String(isSelected);
-      if (cachedItem?.props.$key === $key) {
-        return (newCache[item.id] = cachedItem);
-      }
+      const id = String(item.id);
+      // const cachedItem = oldCache[item.id];
+      // if (cachedItem) {
+      //   if (
+      //     cachedItem.memo[0] === item.label &&
+      //     cachedItem.memo[1] === isSelected
+      //   ) {
+      //     return (newCache[item.id] = cachedItem);
+      //   }
+      // }
 
       const row = Row(
         {
           id: item.id,
           label: item.label,
           className: isSelected ? 'danger' : '',
-          remove: () => {
+          remove: withKey(() => {
             remove(item.id);
             return false;
-          },
-          select: () => {
+          }, id),
+          select: withKey(() => {
             select(item.id);
             return false;
-          },
-          $key,
+          }, id),
         },
-        String(item.id)
+        id
       );
-      newCache[item.id] = row;
+      row.memo = [item.label, isSelected];
+      // newCache[item.id] = row;
       return row;
     })
   );
@@ -246,7 +255,7 @@ new Block(
       path: [0, 0, 1, 0, 0, 0],
       edits: [
         {
-          type: 3,
+          type: 'event',
           name: 'onClick',
           listener: create1k,
         },
@@ -257,7 +266,7 @@ new Block(
       path: [0, 0, 1, 0, 1, 0],
       edits: [
         {
-          type: 3,
+          type: 'event',
           name: 'onClick',
           listener: create10k,
         },
@@ -268,7 +277,7 @@ new Block(
       path: [0, 0, 1, 0, 2, 0],
       edits: [
         {
-          type: 3,
+          type: 'event',
           name: 'onClick',
           listener: append1k,
         },
@@ -279,7 +288,7 @@ new Block(
       path: [0, 0, 1, 0, 3, 0],
       edits: [
         {
-          type: 3,
+          type: 'event',
           name: 'onClick',
           listener: updateEvery10,
         },
@@ -290,7 +299,7 @@ new Block(
       path: [0, 0, 1, 0, 4, 0],
       edits: [
         {
-          type: 3,
+          type: 'event',
           name: 'onClick',
           listener: () => {
             clear();
@@ -305,7 +314,7 @@ new Block(
       path: [0, 0, 1, 0, 5, 0],
       edits: [
         {
-          type: 3,
+          type: 'event',
           name: 'onClick',
           listener: swapRows,
         },
@@ -316,7 +325,7 @@ new Block(
       path: [1, 0],
       edits: [
         {
-          type: 2,
+          type: 'child',
           hole: 'rows',
           index: 0,
         },
