@@ -7,7 +7,7 @@ const fsp = require('fs/promises');
 const app = express()
 const port = 8080
 
-const addCSP = false;
+let addCSP = false;
 
 app.use(express.json());
 
@@ -112,7 +112,8 @@ app.use(addSiteIsolationForIndex);
 app.use('/frameworks', express.static(frameworkDirectory, 
   {
     setHeaders: function(res, path) {
-      if (addCSP) {
+      if (addCSP && path.endsWith("index.html")) {
+        console.log("adding CSP to ", path);
         res.setHeader('Content-Security-Policy', "default-src 'self'; report-uri /csp");
       }
     }
@@ -132,17 +133,35 @@ app.get('/ls', async (req, res) => {
 })
 app.use('/csp', bodyParser.json({ type: 'application/csp-report' }))
 
-violations = []
+let violations = []
 
 app.post('/csp', async (req, res) => {
   console.log("/CSP ", req.body);
   let uri = req.body['csp-report']["document-uri"]
   let frameworkRegEx = /((non-)?keyed\/.*?\/)/
-  violations.push(uri.match(frameworkRegEx)[0])
+  let framework = uri.match(frameworkRegEx)[0];
+  if (violations.indexOf(framework)==-1) {
+    violations.push(framework)
+  }
   res.sendStatus(201);
 })
 
+app.get('/startCSP', async (req, res) => {
+  console.log("/startCSP");
+  violations = [];
+  addCSP = true;
+  res.send("OK")
+})
+
+app.get('/endCSP', async (req, res) => {
+  console.log("/endCSP");
+  violations = [];
+  addCSP = false;
+  res.send("OK")
+})
+
 app.get('/csp', async (req, res) => {
+  console.log("CSP violations recorded for", violations);
   res.send(violations)
 })
 

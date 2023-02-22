@@ -4,10 +4,7 @@
   "description": "Benchmark for gyron.js framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "gyron",
-    "frameworkHomeURL": "https://www.npmjs.com/package/gyron",
-    "issues": [
-      1139
-    ]
+    "frameworkHomeURL": "https://www.npmjs.com/package/gyron"
   },
   "scripts": {
     "build-dev": "webpack --mode development --watch",

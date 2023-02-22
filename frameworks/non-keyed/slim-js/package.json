@@ -5,7 +5,10 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "slim-js",
-    "frameworkHomeURL": "https://slimjs.com/#/welcome"
+    "frameworkHomeURL": "https://slimjs.com/#/welcome",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-prod": "exit 0",

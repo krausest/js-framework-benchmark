@@ -6,10 +6,7 @@
   "js-framework-benchmark": {
     "frameworkVersion": "0.4",
     "frameworkHomeURL": "https://reflex-frp.org/",
-    "customURL": "/bundled-dist",
-    "issues": [
-      1139
-    ]
+    "customURL": "/bundled-dist"
   },
   "contributors": [
     "Ryan Trinkle <ryan.trinkle@gmail.com>"

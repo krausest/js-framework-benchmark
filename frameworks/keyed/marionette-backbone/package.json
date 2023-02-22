@@ -8,8 +8,7 @@
     "frameworkVersionFromPackage": "marionette",
     "frameworkHomeURL": "https://marionettejs.com/",
     "issues": [
-      772,
-      1139
+      772
     ]
   },
   "scripts": {

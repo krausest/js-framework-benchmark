@@ -5,10 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:mobx",
-    "frameworkHomeURL": "https://mobx.js.org/",
-    "issues": [
-      1139
-    ]
+    "frameworkHomeURL": "https://mobx.js.org/"
   },
   "scripts": {
     "build-dev": "webpack -w -d",

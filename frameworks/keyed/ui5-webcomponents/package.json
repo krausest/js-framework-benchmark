@@ -7,7 +7,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@ui5/webcomponents-base",
     "frameworkHomeURL": "https://sap.github.io/ui5-webcomponents/",
-    "useShadowRoot": true
+    "useShadowRoot": true,
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "clean": "wc-dev clean",

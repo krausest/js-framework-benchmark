@@ -1,25 +1,25 @@
 {
-  "name": "js-framework-benchmark-ls-element",
-  "version": "2.0.9",
-  "description": "ls-element demo",
+  "name": "js-framework-benchmark-michijs",
+  "version": "1.0.4",
+  "description": "michijs",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@lsegurado/ls-element",
+    "frameworkVersionFromPackage": "@michijs/michijs",
     "frameworkHomeURL": "https://github.com/michijs/michijs",
     "useShadowRoot": false,
     "customURL": "/dist"
   },
   "scripts": {
-    "start": "webpack-dev-server --mode development",
-    "build-dev": "webpack --watch",
-    "build-prod": "webpack"
+    "start": "michi-server --start",
+    "build-dev": "michi-server --build --env=DEVELOPMENT",
+    "build-prod": "michi-server --build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/krausest/js-framework-benchmark.git"
   },
   "keywords": [
-    "ls-element"
+    "michijs"
   ],
   "author": "Lucas M. Segurado",
   "license": "Apache-2.0",
@@ -28,16 +28,10 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "devDependencies": {
-    "clean-webpack-plugin": "^3.0.0",
-    "html-webpack-plugin": "^4.3.0",
-    "terser-webpack-plugin": "^4.1.0",
-    "ts-loader": "^8.0.2",
-    "typescript": "^4.4.4",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "@michijs/dev-server": "0.2.0",
+    "typescript": "4.9.5"
   },
   "dependencies": {
-    "@lsegurado/ls-element": "2.0.9"
+    "@michijs/michijs": "1.0.4"
   }
 }
