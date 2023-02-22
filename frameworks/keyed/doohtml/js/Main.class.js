@@ -79,6 +79,7 @@ Doo.define(
 		}  
 
 		run() {
+			this.clear()
 			this.select(undefined)
 			this.data.rows = this.buildData()
 			this.renderTable()
@@ -91,6 +92,7 @@ Doo.define(
 		}    
 
 		runLots() {
+			this.clear()
 			this.select(undefined)
 			this.data.rows = this.buildData(10000)
 			this.renderTable()
