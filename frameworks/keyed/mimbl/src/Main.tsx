@@ -78,9 +78,7 @@ class Main extends mim.Component
                 </div>
             </div>
             <table class="table table-hover table-striped test-data">
-                <tbody vnref={this.vnTBody} updateStrategy={{disableKeyedNodeRecycling: true}}>
-                    {this.renderTBody}
-                </tbody>
+                {this.renderTBody}
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>);
@@ -88,7 +86,9 @@ class Main extends mim.Component
 
     private renderTBody(): any
     {
-        return this.renderRows(this.rows);
+        return <tbody vnref={this.vnTBody} updateStrategy={{disableKeyedNodeRecycling: true}}>
+            {this.renderRows(this.rows)}
+        </tbody>
     }
 
     private renderRows(rows: Row[]): any
@@ -127,11 +127,12 @@ class Main extends mim.Component
 
     private onUpdateEvery10th()
     {
-        if (!this.rows)
+        let len = this.rows?.length
+        if (!len)
             return;
 
         let row: Row;
-        for (let i = 0; i < this.rows.length; i += 10)
+        for (let i = 0; i < len; i += 10)
         {
             row = this.rows[i];
             row.labelTrigger.set( row.label += " !!!")
