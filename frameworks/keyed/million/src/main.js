@@ -1,9 +1,9 @@
-import { withKey } from '../../../../../million/packages/block/block';
 import {
   Block,
   fragment,
   stringToDOM,
-  linkEvent,
+  withKey,
+  createCache,
 } from '/Users/aidenybai/Projects/aidenybai/million/packages/block/index';
 
 const adjectives = [
@@ -213,15 +213,15 @@ function render(oldCache, newCache) {
     list.map((item) => {
       const isSelected = selected === item.id;
       const id = String(item.id);
-      // const cachedItem = oldCache[item.id];
-      // if (cachedItem) {
-      //   if (
-      //     cachedItem.memo[0] === item.label &&
-      //     cachedItem.memo[1] === isSelected
-      //   ) {
-      //     return (newCache[item.id] = cachedItem);
-      //   }
-      // }
+      const cachedItem = oldCache[item.id];
+      if (cachedItem) {
+        if (
+          cachedItem.memo[0] === item.label &&
+          cachedItem.memo[1] === isSelected
+        ) {
+          return (newCache[item.id] = cachedItem);
+        }
+      }
 
       const row = Row(
         {
@@ -237,10 +237,11 @@ function render(oldCache, newCache) {
             return false;
           }, id),
         },
-        id
+        id,
+        false
       );
       row.memo = [item.label, isSelected];
-      // newCache[item.id] = row;
+      newCache[item.id] = row;
       return row;
     })
   );
@@ -344,3 +345,10 @@ function update() {
   main.patch(render(oldCache, newCache));
   oldCache = newCache;
 }
+
+const cache = createCache();
+cache.set('foo', { foo: 'bar' });
+setInterval(() => {
+  cache.set('foo', { foo: String(Math.random()) });
+}, 1);
+console.log(cache.get('foo'));
