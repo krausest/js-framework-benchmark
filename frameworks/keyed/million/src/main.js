@@ -3,7 +3,6 @@ import {
   fragment,
   stringToDOM,
   withKey,
-  createCache,
 } from '/Users/aidenybai/Projects/aidenybai/million/packages/block/index';
 
 const adjectives = [
@@ -345,10 +344,3 @@ function update() {
   main.patch(render(oldCache, newCache));
   oldCache = newCache;
 }
-
-const cache = createCache();
-cache.set('foo', { foo: 'bar' });
-setInterval(() => {
-  cache.set('foo', { foo: String(Math.random()) });
-}, 1);
-console.log(cache.get('foo'));
