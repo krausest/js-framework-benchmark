@@ -129,30 +129,32 @@ const swapRows = () => {
 let prevBlock;
 
 const select = (id) => {
+  if (prevBlock) {
+    if (prevBlock.props.id === id) return;
+    const { id: prevId, label } = prevBlock.props;
+    const row = Row(
+      {
+        id: prevId,
+        label,
+        className: '',
+      },
+      String(id)
+    );
+    row.memo = [label, false];
+    prevBlock.patch(row);
+  }
   const block = main.children.find((block) => block.props.id === id);
+  const { label } = block.props;
   const row = Row(
     {
       id,
-      label: block.props.label,
+      label,
       className: 'danger',
     },
     String(id)
   );
-  row.memo = [block.props.label, true];
+  row.memo = [label, true];
   block.patch(row);
-
-  if (prevBlock) {
-    const row = Row(
-      {
-        id: prevBlock.props.id,
-        label: prevBlock.props.label,
-        className: '',
-      },
-      String(prevBlock.props.id)
-    );
-    row.memo = [prevBlock.props.label, false];
-    prevBlock.patch(row);
-  }
 
   prevBlock = block;
 };
