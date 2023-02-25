@@ -1,9 +1,7 @@
 import {
   Block,
   fragment,
-  FragmentBlock,
   stringToDOM,
-  withKey,
 } from '/Users/aidenybai/Projects/aidenybai/million/packages/block/index';
 
 const adjectives = [
@@ -128,21 +126,41 @@ const swapRows = () => {
   return false;
 };
 
-let prevSelected;
-const select = (id, el) => {
-  if (prevSelected) prevSelected.className = '';
-  selected = id;
-  el.className = 'danger';
-  prevSelected = el;
-  const row = main.children.findIndex((block) => block.props.id === id);
-  row.props.className = 'danger';
-  const prevRow = main.children.findIndex((block) => block.props.id === id);
-  prevRow.props.className = '';
+let prevBlock;
+
+const select = (id) => {
+  const block = main.children.find((block) => block.props.id === id);
+  const row = Row(
+    {
+      id: block.props.id,
+      label: block.props.label,
+      className: 'danger',
+    },
+    id
+  );
+  row.memo = [block.props.label, true];
+  block.patch(row);
+
+  if (prevBlock) {
+    const row = Row(
+      {
+        id: prevBlock.props.id,
+        label: prevBlock.props.label,
+        className: '',
+      },
+      prevBlock.props.id
+    );
+    row.memo = [prevBlock.props.label, false];
+    prevBlock.patch(row);
+  }
+
+  prevBlock = block;
 };
 
 const remove = (id) => {
   const index = list.findIndex((item) => item.id === id);
   list.splice(index, 1);
+  main.children[index].remove();
   main.children.splice(index, 1);
 };
 
@@ -217,8 +235,7 @@ function render(oldCache, newCache) {
           label: item.label,
           className: isSelected ? 'danger' : '',
         },
-        id,
-        false
+        id
       );
       row.memo = [item.label, isSelected];
       newCache[item.id] = row;
@@ -310,13 +327,11 @@ function render(oldCache, newCache) {
             name: 'onClick',
             listener: (event) => {
               const el = event.target;
-              const row = el.closest('tr');
-              const id = Number(row.firstChild.textContent);
+              const id = Number(el.closest('tr').firstChild.textContent);
               if (el.matches('.glyphicon-remove')) {
-                row.remove();
                 remove(id);
               } else {
-                select(id, row);
+                select(id);
               }
               return false;
             },
