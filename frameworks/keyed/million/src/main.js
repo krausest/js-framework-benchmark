@@ -132,11 +132,11 @@ const select = (id) => {
   const block = main.children.find((block) => block.props.id === id);
   const row = Row(
     {
-      id: block.props.id,
+      id,
       label: block.props.label,
       className: 'danger',
     },
-    id
+    String(id)
   );
   row.memo = [block.props.label, true];
   block.patch(row);
@@ -148,7 +148,7 @@ const select = (id) => {
         label: prevBlock.props.label,
         className: '',
       },
-      prevBlock.props.id
+      String(prevBlock.props.id)
     );
     row.memo = [prevBlock.props.label, false];
     prevBlock.patch(row);
