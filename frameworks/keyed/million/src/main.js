@@ -1,6 +1,7 @@
 import {
   Block,
   fragment,
+  FragmentBlock,
   stringToDOM,
   withKey,
 } from '/Users/aidenybai/Projects/aidenybai/million/packages/block/index';
@@ -65,6 +66,7 @@ const random = (max) => Math.round(Math.random() * 1000) % max;
 
 let nextId = 1;
 let list = [];
+let oldCache = {};
 let selected = 0;
 let main;
 
@@ -126,17 +128,22 @@ const swapRows = () => {
   return false;
 };
 
-const select = (id) => {
+let prevSelected;
+const select = (id, el) => {
+  if (prevSelected) prevSelected.className = '';
   selected = id;
-  update();
+  el.className = 'danger';
+  prevSelected = el;
+  const row = main.children.findIndex((block) => block.props.id === id);
+  row.props.className = 'danger';
+  const prevRow = main.children.findIndex((block) => block.props.id === id);
+  prevRow.props.className = '';
 };
 
 const remove = (id) => {
-  list.splice(
-    list.findIndex((item) => item.id === id),
-    1
-  );
-  update();
+  const index = list.findIndex((item) => item.id === id);
+  list.splice(index, 1);
+  main.children.splice(index, 1);
 };
 
 const Row = (() => {
@@ -159,27 +166,9 @@ const Row = (() => {
       path: [1, 0],
       edits: [
         {
-          type: 'event',
-          listener: 'select',
-          name: 'onClick',
-          hole: 'select',
-        },
-        {
           type: 'child',
           hole: 'label',
           index: 0,
-        },
-      ],
-      inits: [],
-    },
-    {
-      path: [2, 0],
-      edits: [
-        {
-          type: 'event',
-          listener: 'remove',
-          name: 'onClick',
-          hole: 'remove',
         },
       ],
       inits: [],
@@ -227,14 +216,6 @@ function render(oldCache, newCache) {
           id: item.id,
           label: item.label,
           className: isSelected ? 'danger' : '',
-          remove: withKey(() => {
-            remove(item.id);
-            return false;
-          }, id),
-          select: withKey(() => {
-            select(item.id);
-            return false;
-          }, id),
         },
         id,
         false
@@ -246,99 +227,115 @@ function render(oldCache, newCache) {
   );
 }
 
-new Block(
-  stringToDOM(
-    '<div class="container"><div class="jumbotron"><div class="row"><div class="col-md-6"><h1>Million</h1></div><div class="col-md-6"><div class="row"><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="run">Create 1,000 rows</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="runlots">Create 10,000 rows</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="add">Append 1,000 rows</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="update">Update every 10th row</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="clear">Clear</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="swaprows">Swap Rows</button></div></div></div></div></div><table class="table table-hover table-striped test-data"><tbody></tbody></table><span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span></div>'
-  ),
-  [
-    {
-      path: [0, 0, 1, 0, 0, 0],
-      edits: [
-        {
-          type: 'event',
-          name: 'onClick',
-          listener: create1k,
-        },
-      ],
-      inits: [],
-    },
-    {
-      path: [0, 0, 1, 0, 1, 0],
-      edits: [
-        {
-          type: 'event',
-          name: 'onClick',
-          listener: create10k,
-        },
-      ],
-      inits: [],
-    },
-    {
-      path: [0, 0, 1, 0, 2, 0],
-      edits: [
-        {
-          type: 'event',
-          name: 'onClick',
-          listener: append1k,
-        },
-      ],
-      inits: [],
-    },
-    {
-      path: [0, 0, 1, 0, 3, 0],
-      edits: [
-        {
-          type: 'event',
-          name: 'onClick',
-          listener: updateEvery10,
-        },
-      ],
-      inits: [],
-    },
-    {
-      path: [0, 0, 1, 0, 4, 0],
-      edits: [
-        {
-          type: 'event',
-          name: 'onClick',
-          listener: () => {
-            clear();
-            update();
-            return false;
+(() => {
+  new Block(
+    stringToDOM(
+      '<div class="container"><div class="jumbotron"><div class="row"><div class="col-md-6"><h1>Million</h1></div><div class="col-md-6"><div class="row"><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="run">Create 1,000 rows</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="runlots">Create 10,000 rows</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="add">Append 1,000 rows</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="update">Update every 10th row</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="clear">Clear</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="swaprows">Swap Rows</button></div></div></div></div></div><table class="table table-hover table-striped test-data"><tbody></tbody></table><span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span></div>'
+    ),
+    [
+      {
+        path: [0, 0, 1, 0, 0, 0],
+        edits: [
+          {
+            type: 'event',
+            name: 'onClick',
+            listener: create1k,
           },
-        },
-      ],
-      inits: [],
-    },
-    {
-      path: [0, 0, 1, 0, 5, 0],
-      edits: [
-        {
-          type: 'event',
-          name: 'onClick',
-          listener: swapRows,
-        },
-      ],
-      inits: [],
-    },
-    {
-      path: [1, 0],
-      edits: [
-        {
-          type: 'child',
-          hole: 'rows',
-          index: 0,
-        },
-      ],
-      inits: [],
-    },
-  ],
-  { rows: (main = fragment([])) },
-  undefined,
-  undefined
-).mount(document.getElementById('main'));
+        ],
+        inits: [],
+      },
+      {
+        path: [0, 0, 1, 0, 1, 0],
+        edits: [
+          {
+            type: 'event',
+            name: 'onClick',
+            listener: create10k,
+          },
+        ],
+        inits: [],
+      },
+      {
+        path: [0, 0, 1, 0, 2, 0],
+        edits: [
+          {
+            type: 'event',
+            name: 'onClick',
+            listener: append1k,
+          },
+        ],
+        inits: [],
+      },
+      {
+        path: [0, 0, 1, 0, 3, 0],
+        edits: [
+          {
+            type: 'event',
+            name: 'onClick',
+            listener: updateEvery10,
+          },
+        ],
+        inits: [],
+      },
+      {
+        path: [0, 0, 1, 0, 4, 0],
+        edits: [
+          {
+            type: 'event',
+            name: 'onClick',
+            listener: () => {
+              clear();
+              return false;
+            },
+          },
+        ],
+        inits: [],
+      },
+      {
+        path: [0, 0, 1, 0, 5, 0],
+        edits: [
+          {
+            type: 'event',
+            name: 'onClick',
+            listener: swapRows,
+          },
+        ],
+        inits: [],
+      },
+      {
+        path: [1, 0],
+        edits: [
+          {
+            type: 'event',
+            name: 'onClick',
+            listener: (event) => {
+              const el = event.target;
+              const row = el.closest('tr');
+              const id = Number(row.firstChild.textContent);
+              if (el.matches('.glyphicon-remove')) {
+                row.remove();
+                remove(id);
+              } else {
+                select(id, row);
+              }
+              return false;
+            },
+          },
+          {
+            type: 'child',
+            hole: 'rows',
+            index: 0,
+          },
+        ],
+        inits: [],
+      },
+    ],
+    { rows: (main = fragment([])) },
+    undefined,
+    undefined
+  ).mount(document.getElementById('main'));
+})();
 
-let oldCache = {};
 function update() {
   let newCache = {};
   main.patch(render(oldCache, newCache));
