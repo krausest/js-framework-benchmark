@@ -64,7 +64,6 @@ const random = (max) => Math.round(Math.random() * 1000) % max;
 
 let nextId = 1;
 let list = [];
-let oldCache = {};
 let selected = 0;
 let main;
 
@@ -132,29 +131,29 @@ const select = (id) => {
   if (prevBlock) {
     if (prevBlock.props.id === id) return;
     const { id: prevId, label } = prevBlock.props;
-    const row = Row(
-      {
-        id: prevId,
-        label,
-        className: '',
-      },
-      String(id)
+    prevBlock.patch(
+      Row(
+        {
+          id: prevId,
+          label,
+          className: '',
+        },
+        String(id)
+      )
     );
-    row.memo = [label, false];
-    prevBlock.patch(row);
   }
   const block = main.children.find((block) => block.props.id === id);
   const { label } = block.props;
-  const row = Row(
-    {
-      id,
-      label,
-      className: 'danger',
-    },
-    String(id)
+  block.patch(
+    Row(
+      {
+        id,
+        label,
+        className: 'danger',
+      },
+      String(id)
+    )
   );
-  row.memo = [label, true];
-  block.patch(row);
 
   prevBlock = block;
 };
@@ -215,36 +214,6 @@ const Row = (() => {
     return new Block(root, edits, props, key, shouldUpdate);
   };
 })();
-
-function render(oldCache, newCache) {
-  return fragment(
-    list.map((item) => {
-      const isSelected = selected === item.id;
-      const id = String(item.id);
-      const cachedItem = oldCache[item.id];
-      if (cachedItem) {
-        if (
-          cachedItem.memo[0] === item.label &&
-          cachedItem.memo[1] === isSelected
-        ) {
-          return (newCache[item.id] = cachedItem);
-        }
-      }
-
-      const row = Row(
-        {
-          id: item.id,
-          label: item.label,
-          className: isSelected ? 'danger' : '',
-        },
-        id
-      );
-      row.memo = [item.label, isSelected];
-      newCache[item.id] = row;
-      return row;
-    })
-  );
-}
 
 (() => {
   new Block(
@@ -354,7 +323,18 @@ function render(oldCache, newCache) {
 })();
 
 function update() {
-  let newCache = {};
-  main.patch(render(oldCache, newCache));
-  oldCache = newCache;
+  main.patch(
+    fragment(
+      list.map((item) =>
+        Row(
+          {
+            id: item.id,
+            label: item.label,
+            className: selected === item.id ? 'danger' : '',
+          },
+          String(item.id)
+        )
+      )
+    )
+  );
 }
