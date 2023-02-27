@@ -1,0 +1,30 @@
+{
+  "name": "js-framework-benchmark-react-signalis",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "react:@signalis/react",
+    "frameworkHomeURL": "https://github.com/cafreeman/signalis"
+  },
+  "scripts": {
+    "build-dev": "vite",
+    "build-prod": "vite build",
+    "preview": "vite preview"
+  },
+  "author": "Chris Freeman",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@signalis/react": "0.0.8",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "3.1.0",
+    "vite": "4.1.4"
+  }
+}
