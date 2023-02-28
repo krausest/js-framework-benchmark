@@ -7,9 +7,10 @@ import type {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
 
 /* TYPES */
 
-type IDatum = { id: number, label: Observable<string> };
-
-type IData = IDatum[];
+type IDatum = {
+  id: number,
+  label: Observable<string>
+};
 
 /* HELPERS */
 
@@ -22,8 +23,8 @@ const buildData = (() => {
   const colors = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
   const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
   let uuid = 1;
-  return ( length: number ): IData => {
-    const data: IData = new Array ( length );
+  return ( length: number ): IDatum[] => {
+    const data: IDatum[] = new Array ( length );
     for ( let i = 0; i < length; i++ ) {
       const id = uuid++;
       const adjective = adjectives[rand ( adjectives.length )];
@@ -39,134 +40,136 @@ const buildData = (() => {
 
 /* MODEL */
 
-const Model = (() => {
+const Model = new class {
 
   /* STATE */
 
-  const $data = $<IDatum[]>( [] );
-  const $selected = $( -1 );
+  data: Observable<IDatum[]> = $<IDatum[]>( [] );
+  selected: Observable<number> = $( -1 );
 
   /* API */
 
-  const run = (): void => {
-    runWith ( 1000 );
+  run0 = (): void => {
+    this.runWith ( 0 );
   };
 
-  const runLots = (): void => {
-    runWith ( 10000 );
+  run1000 = (): void => {
+    this.runWith ( 1000 );
   };
 
-  const runWith = ( length: number ): void => {
-    $data ( buildData ( length ) );
+  run10000 = (): void => {
+    this.runWith ( 10000 );
   };
 
-  const add = (): void => {
-    $data ( data => [...data, ...buildData ( 1000 )] );
+  runWith = ( length: number ): void => {
+    this.data ( buildData ( length ) );
   };
 
-  const update = (): void => {
-    const data = $data ();
+  add = (): void => {
+    this.data ( data => [...data, ...buildData ( 1000 )] );
+  };
+
+  update = (): void => {
+    const data = this.data ();
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
       data[i].label ( label => label + ' !!!' );
     }
   };
 
-  const swapRows = (): void => {
-    const data = $data ().slice ();
+  swapRows = (): void => {
+    const data = this.data ().slice ();
     if ( data.length <= 998 ) return;
     const datum1 = data[1];
     const datum998 = data[998];
     data[1] = datum998;
     data[998] = datum1;
-    $data ( data );
+    this.data ( data );
   };
 
-  const clear = (): void => {
-    $data ( [] );
-  };
-
-  const remove = ( id: number ): void  => {
-    $data ( data => {
+  remove = ( id: number ): void  => {
+    this.data ( data => {
       const idx = data.findIndex ( datum => datum.id === id );
       return [...data.slice ( 0, idx ), ...data.slice ( idx + 1 )];
     });
   };
 
-  const select = ( id: number ): void => {
-    $selected ( id );
+  select = ( id: number ): void => {
+    this.selected ( id );
   };
 
-  const isSelected = useSelector ( $selected );
+};
 
-  return { $data, $selected, run, runLots, runWith, add, update, swapRows, clear, remove, select, isSelected };
+/* COMPONENTS */
 
-})();
-
-/* MAIN */
-
-const Button = ({ id, text, onClick }: { id: string | number, text: string, onClick: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+const Button = ({ id, text, onClick }: { id: FunctionMaybe<string | number>, text: FunctionMaybe<string>, onClick: ObservableMaybe<(( event: MouseEvent ) => void)> }): JSX.Element => (
   <div class="col-sm-6 smallpad">
-    <button id={id} class="btn btn-primary btn-block" type="button" onClick={onClick}>{text}</button>
+    <button id={id} class="btn btn-primary btn-block" type="button" onClick={onClick}>
+      {text}
+    </button>
   </div>
 );
 
-const Row = template (({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<Record<string, FunctionMaybe<boolean>>>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+const Row = template (({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<Record<string, FunctionMaybe<boolean>>>, onSelect: ObservableMaybe<(( event: MouseEvent ) => void)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => void)> }): JSX.Element => (
   <tr class={className}>
-    <td class="col-md-1">{id}</td>
+    <td class="col-md-1">
+      {id}
+    </td>
     <td class="col-md-4">
-      <a onClick={onSelect}>{label}</a>
+      <a onClick={onSelect}>
+        {label}
+      </a>
     </td>
     <td class="col-md-1">
       <a onClick={onRemove}>
-        <span class="glyphicon glyphicon-remove" ariaHidden={true}></span>
+        <span class="glyphicon glyphicon-remove" ariaHidden={true} />
       </a>
     </td>
-    <td class="col-md-6"></td>
+    <td class="col-md-6" />
   </tr>
 ));
 
-const App = (): JSX.Element => {
+const Rows = ({ data, isSelected }: { data: FunctionMaybe<IDatum[]>, isSelected: ( id: number ) => FunctionMaybe<boolean> }): JSX.Element => (
+  <For values={data}>
+    {( datum: IDatum ) => {
+      const {id, label} = datum;
+      const selected = isSelected ( id );
+      const className = { danger: selected };
+      const onSelect = () => Model.select ( id );
+      const onRemove = () => Model.remove ( id );
+      const props = {id, label, className, onSelect, onRemove};
+      return Row ( props );
+    }}
+  </For>
+);
 
-  const {$data, run, runLots, add, update, swapRows, clear, remove, select, isSelected} = Model;
-
-  return (
-    <div class="container">
-      <div class="jumbotron">
-        <div class="row">
-          <div class="col-md-6">
-            <h1>Voby</h1>
-          </div>
-          <div class="col-md-6">
-            <div class="row">
-              <Button id="run" text="Create 1,000 rows" onClick={run} />
-              <Button id="runlots" text="Create 10,000 rows" onClick={runLots} />
-              <Button id="add" text="Append 1,000 rows" onClick={add} />
-              <Button id="update" text="Update every 10th row" onClick={update} />
-              <Button id="clear" text="Clear" onClick={clear} />
-              <Button id="swaprows" text="Swap Rows" onClick={swapRows} />
-            </div>
+const App = (): JSX.Element => (
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Voby</h1>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <Button id="run" text="Create 1,000 rows" onClick={Model.run1000} />
+            <Button id="runlots" text="Create 10,000 rows" onClick={Model.run10000} />
+            <Button id="add" text="Append 1,000 rows" onClick={Model.add} />
+            <Button id="update" text="Update every 10th row" onClick={Model.update} />
+            <Button id="clear" text="Clear" onClick={Model.run0} />
+            <Button id="swaprows" text="Swap Rows" onClick={Model.swapRows} />
           </div>
         </div>
       </div>
-      <table class="table table-hover table-striped test-data">
-        <tbody>
-          <For values={$data}>
-            {( datum: IDatum ) => {
-              const {id, label} = datum;
-              const selected = isSelected ( id );
-              const className = { danger: selected };
-              const onSelect = select.bind ( undefined, id );
-              const onRemove = remove.bind ( undefined, id );
-              const props = {id, label, className, onSelect, onRemove};
-              return Row ( props );
-            }}
-          </For>
-        </tbody>
-      </table>
-      <span class="preloadicon glyphicon glyphicon-remove" ariaHidden={true}></span>
     </div>
-  );
+    <table class="table table-hover table-striped test-data">
+      <tbody>
+        <Rows data={Model.data} isSelected={useSelector ( Model.selected )} />
+      </tbody>
+    </table>
+    <span class="preloadicon glyphicon glyphicon-remove" ariaHidden={true} />
+  </div>
+);
 
-};
+/* RENDER */
 
 render ( <App />, document.getElementById ( 'main' ) );
