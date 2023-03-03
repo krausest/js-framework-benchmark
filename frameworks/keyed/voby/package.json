@@ -4,7 +4,7 @@
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "voby",
-    "frameworkHomeURL": "https://voby.dev/",
+    "frameworkHomeURL": "https://github.com/vobyjs/voby",
     "issues": [
       1139
     ]
