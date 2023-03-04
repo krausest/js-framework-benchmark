@@ -47,15 +47,11 @@ async function loadFrameworkInfo(keyedDir, directoryName) {
             let packageLockJSON = JSON.parse(await fsp.readFile(packageLockJSONPath, "utf8"));
             result.versions = {};
             for (let packageName of packageNames) {
-              if (packageLockJSON?.packages?.['']?.dependencies?.[packageName]) {
-                result.versions[packageName] = packageLockJSON.packages?.['']?.dependencies?.[packageName];
-              } else if (packageLockJSON?.packages?.['']?.devDependencies?.[packageName]) {
-                result.versions[packageName] = packageLockJSON.packages?.['']?.devDependencies?.[packageName];
-              } else if (packageLockJSON?.dependencies?.[packageName]) {
+              if (packageLockJSON.dependencies[packageName]) {
                 result.versions[packageName] = packageLockJSON.dependencies[packageName].version;
               } else {
                 result.versions[packageName] = "ERROR: Not found in package-lock";
-              }
+              }              
             }        
             result.frameworkVersionString = directoryName + "-v" + packageNames.map(p => result.versions[p]).join(" + ") + "-"+keyedDir;
             copyProps(result, packageJSON);
