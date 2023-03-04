@@ -175,8 +175,8 @@ fn App(cx: Scope) -> impl IntoView {
                             let row_id = row.id;
                             let (label, _) = row.label;
                             let is_selected = is_selected.clone();
-
-                            template! { cx,
+                            template! {
+                                cx,
                                 <tr class:danger={move || is_selected(Some(row_id))}>
                                     <td class="col-md-1">{row_id.to_string()}</td>
                                     <td class="col-md-4"><a on:click=move |_| set_selected(Some(row_id))>{move || label.get()}</a></td>
