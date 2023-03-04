@@ -26,6 +26,6 @@
     "bobril-build": "*"
   },
   "dependencies": {
-    "bobril": "20.3.5"
+    "bobril": "20.4.1"
   }
 }
