@@ -55,7 +55,7 @@ const Header = b.createComponent<IHeaderData>({
     const d = ctx.data;
     me.className = "jumbotron";
     me.children = divWithClass("row", [
-      divWithClass("col-md-6", { tag: "h1", children: "Bobril v20.3.5" }),
+      divWithClass("col-md-6", { tag: "h1", children: "Bobril v20.4.1" }),
       divWithClass("col-md-6", [
         divWithClass(
           "col-sm-6 smallpad",
