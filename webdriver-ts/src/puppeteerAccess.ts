@@ -99,7 +99,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Pr
     window_height = height;
 
   let args = [`--window-size=${window_width},${window_height}`,'--js-flags=--expose-gc' ];
-  if (benchmarkOptions.headless) args.push('--headless=chrome');
+  if (benchmarkOptions.headless) args.push('--headless=new');
 
   const browser = await puppeteer.launch({
     headless: false,
