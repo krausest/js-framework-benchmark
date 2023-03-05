@@ -122,7 +122,7 @@ Doo.define(
 		}
 
 		clear() {
-			this.tbody.textContent = null
+			this.tbody.textContent = ''
 			this.data.rows = []
 		}
 
