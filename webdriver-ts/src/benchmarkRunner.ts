@@ -1,6 +1,6 @@
 import { fork } from "child_process";
 import * as fs from "fs";
-import * as yargs from "yargs";
+import yargs from 'yargs';
 import { BenchmarkInfo, benchmarkInfos, BenchmarkType, CPUBenchmarkInfo, MemBenchmarkInfo, StartupBenchmarkInfo } from "./benchmarksCommon";
 import { StartupBenchmarkResult } from "./benchmarksLighthouse";
 import { BenchmarkOptions, BENCHMARK_RUNNER, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common";

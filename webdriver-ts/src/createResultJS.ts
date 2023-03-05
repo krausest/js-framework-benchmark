@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import * as yargs from "yargs";
+import yargs from "yargs";
 import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName } from "./benchmarksCommon";
 import { subbenchmarks } from "./benchmarksLighthouse";
 import { config, initializeFrameworks, JSONResult } from "./common";

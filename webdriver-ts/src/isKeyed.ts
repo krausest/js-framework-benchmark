@@ -1,4 +1,4 @@
-import * as yargs from "yargs";
+import yargs from "yargs";
 import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./playwrightAccess";
 import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common";
 
