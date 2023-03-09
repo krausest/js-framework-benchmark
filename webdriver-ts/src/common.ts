@@ -1,8 +1,5 @@
-import * as fs from "fs";
-import * as path from "path";
-import * as axios from "axios";
-import { StartupBenchmarkResult } from "./benchmarksLighthouse";
-import { string } from "yargs";
+import axios from "axios";
+import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
 
 
 export interface JSONResult {

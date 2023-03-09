@@ -1,6 +1,6 @@
 import { Browser, Page } from "playwright-core";
 import { chromium } from "playwright";
-import { BenchmarkDriverOptions, config } from "./common";
+import { BenchmarkDriverOptions, config } from "./common.js";
 
 
 

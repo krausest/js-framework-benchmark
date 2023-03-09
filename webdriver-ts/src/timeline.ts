@@ -1,7 +1,7 @@
-import { DurationMeasurementMode } from "./benchmarksCommon";
+import { DurationMeasurementMode } from "./benchmarksCommon.js";
 import { readFile } from 'fs/promises';
 import * as R from 'ramda';
-import { TConfig } from "./common";
+import { TConfig } from "./common.js";
 
 interface Timingresult {
     type: string;

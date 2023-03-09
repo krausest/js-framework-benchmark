@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { JSONResult, config, initializeFrameworks } from "./common";
+import { JSONResult, config, initializeFrameworks } from "./common.js";
 import * as dot from "dot";
 
 async function main() {

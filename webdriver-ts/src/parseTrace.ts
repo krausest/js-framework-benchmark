@@ -1,9 +1,9 @@
 import * as fs from 'fs';
-import { BenchmarkInfo, BenchmarkType, cpuBenchmarkInfos, DurationMeasurementMode } from './benchmarksCommon';
-import { CPUBenchmarkPuppeteer, fileNameTrace } from './benchmarksPuppeteer';
-import { config, initializeFrameworks } from './common';
-import { computeResultsCPU } from './timeline';
-import { writeResults } from "./writeResults";
+import { BenchmarkInfo, BenchmarkType, cpuBenchmarkInfos, DurationMeasurementMode } from './benchmarksCommon.js';
+import { CPUBenchmarkPuppeteer, fileNameTrace } from './benchmarksPuppeteer.js';
+import { config, initializeFrameworks } from './common.js';
+import { computeResultsCPU } from './timeline.js';
+import { writeResults } from "./writeResults.js";
 // let TimelineModelBrowser = require("./timeline-model-browser.js");
 //var DevtoolsTimelineModel = require('devtools-timeline-model');
 

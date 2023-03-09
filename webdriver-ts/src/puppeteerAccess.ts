@@ -1,6 +1,6 @@
 import * as puppeteer from "puppeteer-core";
 import { Page } from "puppeteer-core";
-import { BenchmarkDriverOptions, config } from "./common";
+import { BenchmarkDriverOptions, config } from "./common.js";
 
 
 
