@@ -110,7 +110,6 @@ fn init() -> Rsx {
                             <td class="col-md-1">@row.id()</td>
                             <td class="col-md-4"><a @onclick(callback!(selected, row, {
                                 *selected.value_mut() = Some(*row.id());
-                                anansi_aux::log!("{}", selected.value().unwrap());
                             }))>@row.label()</a></td>
                             <td class="col-md-1"><a @onclick(callback!(data, row, {
                                 let value = data.value_mut();
@@ -128,5 +127,3 @@ fn init() -> Rsx {
         </div>
     });
 }
-
-
