@@ -1,7 +1,7 @@
 {
     "name": "js-framework-benchmark-doohtml",
-    "version": "0.90.6-beta",
-    "description": "DooHTML JS-Benchmark",
+    "version": "0.91.4-beta",
+    "description": "DooHTML-DOM (no shadow) JS-Benchmark",
     "main": "Main.class.js",
     "js-framework-benchmark": {
       "frameworkVersion": "",
