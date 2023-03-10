@@ -1,8 +1,4 @@
-import {
-  Block,
-  fragment,
-  stringToDOM,
-} from '/Users/aidenybai/Projects/aidenybai/million/packages/block/index';
+import { Block, fragment, stringToDOM } from 'million';
 
 const adjectives = [
   'pretty',
