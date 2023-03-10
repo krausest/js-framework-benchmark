@@ -4,7 +4,7 @@
   "description": "Benchmark for Leptos",
   "license": "ISC",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.1.0",
+    "frameworkVersion": "0.2.1",
     "frameworkHomeURL": "https://github.com/leptos-rs/leptos",
     "issues": [
       1139

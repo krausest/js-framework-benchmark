@@ -1,10 +1,10 @@
 import { fork } from "child_process";
 import * as fs from "fs";
-import * as yargs from "yargs";
-import { BenchmarkInfo, benchmarkInfos, BenchmarkType, CPUBenchmarkInfo, MemBenchmarkInfo, StartupBenchmarkInfo } from "./benchmarksCommon";
-import { StartupBenchmarkResult } from "./benchmarksLighthouse";
-import { BenchmarkOptions, BENCHMARK_RUNNER, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common";
-import { writeResults } from "./writeResults";
+import yargs from 'yargs';
+import { BenchmarkInfo, benchmarkInfos, BenchmarkType, CPUBenchmarkInfo, MemBenchmarkInfo, StartupBenchmarkInfo } from "./benchmarksCommon.js";
+import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
+import { BenchmarkOptions, BENCHMARK_RUNNER, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common.js";
+import { writeResults } from "./writeResults.js";
 
 function forkAndCallBenchmark(
   framework: FrameworkData,
@@ -308,7 +308,7 @@ async function main() {
   if (!fs.existsSync(config.TRACES_DIRECTORY)) fs.mkdirSync(config.TRACES_DIRECTORY);
 
   if (args.help) {
-    yargs.showHelp();
+    // yargs.showHelp();
   } else {
     return runBench(runFrameworks, runBenchmarks);
   }

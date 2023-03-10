@@ -1,6 +1,6 @@
 import { By, Capabilities, Condition, WebDriver, WebElement } from "selenium-webdriver";
-import * as chrome from "selenium-webdriver/chrome";
-import { BenchmarkDriverOptions, config } from "./common";
+import * as chrome from "selenium-webdriver/chrome.js";
+import { BenchmarkDriverOptions, config } from "./common.js";
 
 interface PathPart {
   tagName: string;

@@ -1,9 +1,9 @@
 import { Browser, CDPSession, Page } from "puppeteer-core";
-import { BenchmarkType } from "./benchmarksCommon";
-import { CPUBenchmarkPuppeteer, fileNameTrace, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer";
-import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common";
-import { startBrowser } from "./puppeteerAccess";
-import { computeResultsCPU } from "./timeline";
+import { BenchmarkType } from "./benchmarksCommon.js";
+import { CPUBenchmarkPuppeteer, fileNameTrace, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
+import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
+import { startBrowser } from "./puppeteerAccess.js";
+import { computeResultsCPU } from "./timeline.js";
 
 
 let config: TConfig = defaultConfig;

@@ -3,7 +3,7 @@ var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlug
 var InlineChunkHtmlPlugin = require('inline-chunk-html-plugin');
 
 var path = require('path')
-var cache = {};
+var cache = true;
 var loaders = [
 	{
 		test: /\.tsx$|\.ts$/,
@@ -15,7 +15,7 @@ var loaders = [
 	},
 	{
 		test: /\.css$/,
-		loader: 'style-loader!css-loader'
+    use: [{ loader: "style-loader" }, { loader: "css-loader" }],
 	}
 ];
 var extensions = [
@@ -23,19 +23,33 @@ var extensions = [
 ];
 
 module.exports = [{
-	cache: cache,
+	cache: true,
 	module: {
 		rules: loaders
 	},
 	entry: {
-		main: './src/index.tsx'
-    },
+		main: './src/index.tsx',
+  },
   output: {
+    publicPath: '',
     filename: '[name].[contenthash].js',
   },
   optimization: {
     splitChunks: {
-      chunks: 'initial',
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all',
+        },      
+        plotly: {
+          test: /[\\/]node_modules[\\/]plotly.*[\\/]/,
+          name: 'plotly',
+          chunks: 'all',
+          priority: 20
+        },      
+      }
     }
   },
 	resolve: {
@@ -54,9 +68,8 @@ module.exports = [{
         new HtmlWebpackPlugin({
             template: path.join(__dirname, 'public/index.html'),
             filename: 'table.html',
-            inject: 'body',
-            inlineSource: '.js$' // embed all javascript and css inline
+            inject: true,
 		}),
-    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/main/])
-      ]  
+    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/main|vendor|BoxPlotTable/])
+    ]  
 }];

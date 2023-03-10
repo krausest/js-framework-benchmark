@@ -4,6 +4,8 @@ import { Store } from "./store";
 // For who ever will read this: in Bobril you normally don't use bootstrap or class names directly, you use b.styleDef instead.
 b.asset("../../../../css/currentStyle.css");
 
+// This is now obsolete way how write code in Bobril but compatibility is preserved, current way is JSX, functional components, hooks, Bobx
+
 function divWithClass(name: string, children: b.IBobrilChildren) {
   return { tag: "div", className: name, children };
 }
@@ -36,7 +38,7 @@ const Button = b.createVirtualComponent<IButtonData>({
     ctx.data.action();
     b.invalidate();
     return true;
-  }
+  },
 });
 
 interface IHeaderData {}
@@ -53,7 +55,7 @@ const Header = b.createComponent<IHeaderData>({
     const d = ctx.data;
     me.className = "jumbotron";
     me.children = divWithClass("row", [
-      divWithClass("col-md-6", { tag: "h1", children: "Bobril v8.0.1" }),
+      divWithClass("col-md-6", { tag: "h1", children: "Bobril v20.4.1" }),
       divWithClass("col-md-6", [
         divWithClass(
           "col-sm-6 smallpad",
@@ -87,10 +89,10 @@ const Header = b.createComponent<IHeaderData>({
             { id: "swaprows", action: () => store.swapRows() },
             "Swap Rows"
           )
-        )
-      ])
+        ),
+      ]),
     ]);
-  }
+  },
 });
 
 const ClickSelect: b.IBobrilComponent = {
@@ -98,7 +100,7 @@ const ClickSelect: b.IBobrilComponent = {
     store.select(ctx.data);
     b.invalidate();
     return true;
-  }
+  },
 };
 
 const ClickRemove: b.IBobrilComponent = {
@@ -106,7 +108,7 @@ const ClickRemove: b.IBobrilComponent = {
     store.delete(ctx.data);
     b.invalidate();
     return true;
-  }
+  },
 };
 
 interface IRowData {
@@ -136,7 +138,7 @@ const Row = b.createVirtualComponent<IRowData>({
         tag: "a",
         data: id,
         component: ClickSelect,
-        children: d.item.label
+        children: d.item.label,
       }),
       tdWithClass("col-md-1", {
         tag: "a",
@@ -145,20 +147,19 @@ const Row = b.createVirtualComponent<IRowData>({
         children: {
           tag: "span",
           className: "glyphicon glyphicon-remove",
-          attrs: { "aria-hidden": "true" }
-        }
+          attrs: { "aria-hidden": "true" },
+        },
       }),
-      tdWithClass("col-md-6", "")
+      tdWithClass("col-md-6", ""),
     ];
-  }
+  },
 });
 
 b.init(() => {
   return {
     tag: "div",
     className: "container",
-    component: {
-    },
+    component: {},
     children: [
       Header(),
       {
@@ -166,20 +167,20 @@ b.init(() => {
         className: "table table-hover table-striped test-data",
         children: {
           tag: "tbody",
-          children: store.data.map(item =>
+          children: store.data.map((item) =>
             b.withKey(
               Row({ item, selected: item.id === store.selected }),
               <any>item.id
             )
-          )
-        }
+          ),
+        },
       },
       {
         tag: "span",
         className: "preloadicon glyphicon glyphicon-remove",
-        attrs: { "aria-hidden": "true" }
-      }
-    ]
+        attrs: { "aria-hidden": "true" },
+      },
+    ],
   };
 });
 

@@ -1,6 +1,6 @@
 import { Browser, Page } from "playwright-core";
 import { chromium } from "playwright";
-import { BenchmarkDriverOptions, config } from "./common";
+import { BenchmarkDriverOptions, config } from "./common.js";
 
 
 
@@ -95,7 +95,7 @@ function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
 
 export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Promise<Browser> {
   let args = ['--window-size=1000,800', '--js-flags=--expose-gc'];
-  if (benchmarkOptions.headless) args.push('--headless=chrome');
+  if (benchmarkOptions.headless) args.push('--headless=new');
   const browser = await chromium.launch({
     args,
     headless: false,

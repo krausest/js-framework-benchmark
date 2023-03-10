@@ -51,7 +51,7 @@ async function loadFrameworkInfo(keyedDir, directoryName) {
                 result.versions[packageName] = packageLockJSON.dependencies[packageName].version;
               } else {
                 result.versions[packageName] = "ERROR: Not found in package-lock";
-              }
+              }              
             }        
             result.frameworkVersionString = directoryName + "-v" + packageNames.map(p => result.versions[p]).join(" + ") + "-"+keyedDir;
             copyProps(result, packageJSON);
