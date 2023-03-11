@@ -6,7 +6,7 @@
     "build-prod": "rollup -c"
   },
   "dependencies": {
-    "million": "^2.0.0"
+    "million": "2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
