@@ -411,12 +411,18 @@ function getImports() {
         const ret = getObject(arg0).attributes;
         return addHeapObject(ret);
     };
+    imports.wbg.__wbg_removeAttribute_ad7a5bf2eed30373 = function() { return handleError(function (arg0, arg1, arg2) {
+        getObject(arg0).removeAttribute(getStringFromWasm0(arg1, arg2));
+    }, arguments) };
     imports.wbg.__wbg_setAttribute_79c9562d32d05e66 = function() { return handleError(function (arg0, arg1, arg2, arg3, arg4) {
         getObject(arg0).setAttribute(getStringFromWasm0(arg1, arg2), getStringFromWasm0(arg3, arg4));
     }, arguments) };
     imports.wbg.__wbg_after_278d91be9294f30f = function() { return handleError(function (arg0, arg1) {
         getObject(arg0).after(getObject(arg1));
     }, arguments) };
+    imports.wbg.__wbg_setdata_c26e68878a7d634c = function(arg0, arg1, arg2) {
+        getObject(arg0).data = getStringFromWasm0(arg1, arg2);
+    };
     imports.wbg.__wbg_after_99945dd558e3dc5e = function() { return handleError(function (arg0, arg1) {
         getObject(arg0).after(getObject(arg1));
     }, arguments) };

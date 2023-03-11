@@ -57,7 +57,6 @@ pub fn app_mount (_node_id : String) { anansi_aux :: APP_STATE . with (| a | { l
  let mut selected = _scope [0usize] . rf . borrow_mut () ;
  let selected = selected . downcast_mut :: < anansi_aux :: Signal < Option < usize > > > () . expect ("problem restoring variable") ;
  { * selected . value_mut () = Some (* row . id ()) ;
- anansi_aux :: log ! ("{}" , selected . value () . unwrap ()) ;
  } } app_set_render () ;
  } fn app_on_click_7 () { { let mut _scope = anansi_aux :: lexical_scope () ;
  let _row = { let mut var = _scope [1usize] . rf . borrow_mut () ;
@@ -125,10 +124,7 @@ pub fn app_mount (_node_id : String) { anansi_aux :: APP_STATE . with (| a | { l
  _children . push (element ! ("TABLE" , attributes ! [("class" . to_string () , "table table-hover table-striped test-data" . to_string ()) ,] , { let mut _children = vec ! [] ;
  _children . push (element ! ("TBODY" , attributes ! [] , { let mut _children = vec ! [] ;
  _children . push (anansi_aux :: Rsx :: new_keyed ({ let mut _keys = vec ! [] ;
- let mut _children = vec ! [] ;
- for row in data . value_mut () . iter_mut () { _keys . push (row . id () . to_string ()) ;
- _children . push ({ let mut _children = vec ! [] ;
- _children . push (element ! ("TR" , attributes ! [("class" . to_string () , if * selected . value () == Some (* row . id ()) { "danger" } else { "" } . to_string ()) ,] , { let mut _children = vec ! [] ;
+ for row in data . value_mut () . iter_mut () { _keys . push (element ! ("TR" , attributes ! [("key" . to_string () , anansi_aux :: html_escape (& format ! ("{}" , row . id ()))) , ("class" . to_string () , if * selected . value () == Some (* row . id ()) { "danger" } else { "" } . to_string ()) ,] , { let mut _children = vec ! [] ;
  _children . push (element ! ("TD" , attributes ! [("class" . to_string () , "col-md-1" . to_string ()) ,] , { let mut _children = vec ! [] ;
  _children . push (Rsx :: new_text (anansi_aux :: html_escape (& format ! ("{}" , row . id ())))) ;
  _children })) ;
@@ -145,9 +141,7 @@ pub fn app_mount (_node_id : String) { anansi_aux :: APP_STATE . with (| a | { l
  _children })) ;
  _children . push (element ! ("TD" , attributes ! [("class" . to_string () , "col-md-6" . to_string ()) ,] , { let mut _children = vec ! [] ;
  _children })) ;
- _children })) ;
- _children } . pop () . unwrap ()) ;
- } (_keys , _children) })) ;
+ _children })) } _keys })) ;
  _children })) ;
  _children })) ;
  _children . push (element ! ("SPAN" , attributes ! [("class" . to_string () , "preloadicon glyphicon glyphicon-remove" . to_string ()) , ("aria-hidden" . to_string () , "true" . to_string ()) ,] , { let mut _children = vec ! [] ;
@@ -206,7 +200,9 @@ pub fn app_mount (_node_id : String) { anansi_aux :: APP_STATE . with (| a | { l
                 <tbody>
                     ") ;
  for row in data . value_mut () . iter_mut () { _c . push_str ("
-                        <tr class=") ;
+                        <tr key=") ;
+ _c . push_str (& anansi_aux :: html_escape (& format ! ("{}" , row . id ()))) ;
+ _c . push_str (" class=") ;
  if * selected . value () == Some (* row . id ()) { _c . push_str ("
                             ") ;
  _c . push_str ("danger") ;

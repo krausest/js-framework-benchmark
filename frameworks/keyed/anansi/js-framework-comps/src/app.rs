@@ -101,8 +101,8 @@ fn init() -> Rsx {
             </div></div>
             <table class="table table-hover table-striped test-data">
                 <tbody>
-                    @keyed row, data.value_mut().iter_mut(), row.id() {
-                        <tr class=@if *selected.value() == Some(*row.id()) {
+                    @keyed row in data.value_mut().iter_mut() {
+                        <tr key=@row.id() class=@if *selected.value() == Some(*row.id()) {
                             @:"danger"
                         } else {
                             @:""
