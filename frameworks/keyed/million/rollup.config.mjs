@@ -1,12 +1,23 @@
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
-import * as million from 'million/compiler';
+import { babel } from '@rollup/plugin-babel';
 import { URL } from 'url';
 
 const plugins = [
   resolve({
     preferBuiltins: false,
-    extensions: '.js',
+    extensions: ['.js', '.jsx'],
+  }),
+  babel({
+    plugins: [
+      [
+        '@babel/plugin-transform-react-jsx',
+        {
+          runtime: 'classic',
+          pragma: 'h',
+        },
+      ],
+    ],
   }),
   terser({
     parse: {
@@ -27,11 +38,10 @@ const plugins = [
     toplevel: true,
     module: true,
   }),
-  million.rollup(),
 ];
 
 export default {
-  input: new URL('src/main.js', import.meta.url).pathname,
+  input: new URL('src/main.jsx', import.meta.url).pathname,
   output: {
     name: 'million',
     format: 'iife',
