@@ -1,22 +1,22 @@
 {
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build-dev": "vite build --watch --base '/frameworks/keyed/million/dist/'",
-    "build": "vite build --base '/frameworks/keyed/million/dist/'",
-    "build-prod": "npm run build",
-    "preview": "vite preview"
+    "build-dev": "rollup -cw",
+    "build-prod": "rollup -c"
   },
   "dependencies": {
     "million": "^2.0.0"
   },
   "devDependencies": {
-    "vite": "3.0.2"
+    "@babel/core": "^7.21.0",
+    "@babel/types": "^7.21.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-terser": "^0.4.0",
+    "unplugin": "^1.2.0"
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "million",
-    "customURL": "/dist",
     "frameworkHomeURL": "https://github.com/aidenybai/million",
     "issues": [
       801
