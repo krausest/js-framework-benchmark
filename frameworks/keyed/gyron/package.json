@@ -21,10 +21,10 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@gyron/babel-plugin-jsx": "0.0.16",
-    "babel-loader": "8.2.5",
-    "webpack": "5.49.0",
-    "webpack-cli": "4.7.2"
+    "@gyron/babel-plugin-jsx": "0.0.31",
+    "babel-loader": "9.1.2",
+    "webpack": "5.76.0",
+    "webpack-cli": "5.0.1"
   },
   "dependencies": {
     "gyron": "0.0.16"
