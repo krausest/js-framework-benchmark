@@ -13,6 +13,7 @@
     "results": "cd webdriver-ts && npm run results",
     "bench-all": "cd webdriver-ts && npm run bench && npm run results",
     "compile-webdriver-ts": "cd webdriver-ts && npm run compile",
+    "postinstall": "cd server && npm install",
     "install-webdriver-ts": "cd webdriver-ts && npm ci && npm run compile",
     "install-server": "cd server && npm ci",
     "install-webdriver-ts-results": "cd webdriver-ts-results && npm ci",

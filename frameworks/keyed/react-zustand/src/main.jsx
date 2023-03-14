@@ -1,7 +1,7 @@
 import { memo, useCallback } from "react"
 import { createRoot } from 'react-dom/client';
-import create from "zustand"
-import shallow from "zustand/shallow"
+import { create } from 'zustand';
+import { shallow } from 'zustand/shallow';
 
 const useStore = create((set) => ({
 	data: [],

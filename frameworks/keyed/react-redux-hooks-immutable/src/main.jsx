@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { createStore } from 'redux';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { List, Record } from 'immutable';
@@ -161,7 +161,7 @@ const Main = () => {
   );
 };
 
-ReactDOM.render(
+createRoot(document.getElementById("main")).render(
   <Provider store={store}>
     <Main />
   </Provider>,

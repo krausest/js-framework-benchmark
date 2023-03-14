@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import { createContainer, memo } from "react-tracked";
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
@@ -111,7 +111,5 @@ const Main = () => {
   );
 };
 
-ReactDOM.render(
-  <Provider><Main /></Provider>,
-  document.getElementById("main")
-);
+createRoot(document.getElementById("main")).render(<Provider><Main /></Provider>);
+

@@ -1,9 +1,7 @@
 "use strict";
-require("babel-plugin-syntax-jsx");
 var path = require("path");
 var webpack = require("webpack");
 var TerserPlugin = require("terser-webpack-plugin");
-var cache = {};
 var loaders = [
   {
     test: /\.jsx$/,
@@ -12,17 +10,13 @@ var loaders = [
   {
     test: /\.es6\.js$/,
     loader: "babel-loader",
-  },
-  {
-    test: /\.css$/,
-    loader: "style-loader!css-loader",
-  },
+  }
 ];
 var extensions = [".js", ".jsx", ".es6.js"];
 
 module.exports = [
   {
-    cache: cache,
+    cache: true,
     module: {
       rules: loaders,
     },

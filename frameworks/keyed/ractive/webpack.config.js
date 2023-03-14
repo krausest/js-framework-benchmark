@@ -1,7 +1,6 @@
 'use strict';
 var path = require('path')
 
-var cache = {};
 var loaders = [
   {
     test: /\.ractive\.html$/,
@@ -10,10 +9,6 @@ var loaders = [
   {
     test: /\.ractive\.html$/,
     loader: 'ractive-bin-loader'
-  },
-  {
-    test: /\.css$/,
-    loader: 'style-loader!css-loader'
   }
 ];
 var extensions = [
@@ -21,7 +16,7 @@ var extensions = [
 ];
 
 module.exports = [{
-  cache: cache,
+  cache: true,
   module: {
     rules: loaders
   },

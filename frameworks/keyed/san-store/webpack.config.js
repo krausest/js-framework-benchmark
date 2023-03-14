@@ -1,31 +1,25 @@
 'use strict';
 var path = require('path');
 var webpack = require('webpack');
-var cache = {};
-var loaders = [
-
-    {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-    },
-    {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader'
-    }
-
-];
-var extensions = [
-    '.js', '.jsx', '.es6.js', '.msx'
-];
 
 module.exports = [{
-    cache: cache,
+    cache: true,
     module: {
-        rules: loaders
+        rules: [{
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: [
+                {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env'],
+                    }
+                }
+            ]
+        }]
     },
     entry: {
-        main: './src/main'
+        main: './src/main.js'
     },
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -38,7 +32,6 @@ module.exports = [{
             path.resolve(__dirname, "src"),
             "node_modules"
         ],
-        extensions: extensions,
         alias: {
             'san': 'san/dist/san.spa.modern.js'
         }
