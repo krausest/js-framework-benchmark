@@ -182,7 +182,7 @@ jumbotron =
         [ class_ "row" ]
         [ HH.div
             [ class_ "col-md-6" ]
-            [ HH.h1_ [ HH.text "Halogen 6.1.3 (non-keyed)" ] ]
+            [ HH.h1_ [ HH.text "Halogen 7.0.0 (non-keyed)" ] ]
             , HH.div [ class_ "col-md-6" ] do
                 map (HH.lazy renderActionButton) buttons
             ]
