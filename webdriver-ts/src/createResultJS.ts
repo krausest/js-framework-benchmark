@@ -1,8 +1,8 @@
 import * as fs from "fs";
 import yargs from "yargs";
-import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName } from "./benchmarksCommon";
-import { subbenchmarks } from "./benchmarksLighthouse";
-import { config, initializeFrameworks, JSONResult } from "./common";
+import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName } from "./benchmarksCommon.js";
+import { subbenchmarks } from "./benchmarksLighthouse.js";
+import { config, initializeFrameworks, JSONResult } from "./common.js";
 
 let args: any = yargs(process.argv)
   .string("url").default("url", config.HOST).argv;

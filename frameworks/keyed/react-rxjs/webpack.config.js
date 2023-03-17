@@ -64,9 +64,7 @@ module.exports = {
 				},
 				// Use multi-process parallel running to improve the build speed
 				// Default number of concurrent runs: os.cpus().length - 1
-				parallel: true,
-				// Enable file caching
-				cache: true,
+				parallel: true
 			}),
 		]
 	},

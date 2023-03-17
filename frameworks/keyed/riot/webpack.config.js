@@ -1,9 +1,8 @@
 var path = require('path')
-var cache = {}
 
 
 module.exports = [{
-  cache: cache,
+  cache: true,
   module: {
     rules: [
       {

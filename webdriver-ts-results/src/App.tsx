@@ -15,7 +15,7 @@ const App = (): JSX.Element => {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 13.2), Chrome 110.0.5481.77 (arm64))
+        <p>The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 13.2.1), Chrome 111.0.5563.64 (arm64))
             using the puppeteer benchmark driver with reduced tracing.
         </p>
          <SelectionBar/>

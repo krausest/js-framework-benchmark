@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
@@ -11,10 +11,9 @@
     "bench": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
     "checkCSP": "cross-env LANG=\"en_US.UTF-8\" node dist/isCSPCompliant.js",
     "compile": "tsc",
-    "results": "ts-node --files src/createResultJS.ts && cd .. && cd webdriver-ts-results && npm run build-prod",
-    "index": "ts-node --files src/createIndex.ts",
-    "isKeyed": "cross-env LANG=\"en_US.UTF-8\" ts-node  --files  src/isKeyed.ts",
-    "parse": "ts-node --files src/parseTrace.ts"
+    "results": "node dist/createResultJS.js && cd .. && cd webdriver-ts-results && npm run build-prod",
+    "index": "node dist/createIndex.js",
+    "isKeyed": "cross-env LANG=\"en_US.UTF-8\" node dist/isKeyed.js"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -30,7 +29,6 @@
     "@typescript-eslint/parser": "5.54.0",
     "dockerode": "3.3.4",
     "eslint": "8.35.0",
-    "ts-node": "10.9.1",
     "typescript": "4.9.5"
   },
   "dependencies": {
@@ -41,7 +39,6 @@
     "jstat": "1.9.6",
     "lighthouse": "10.0.2",
     "lodash": "4.17.21",
-    "marky": "1.2.5",
     "npm-check-updates": "16.7.10",
     "playwright": "1.31.2",
     "playwright-firefox": "1.31.2",

@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import { init } from "@rematch/core";
 import { Provider, connect } from "react-redux";
 
@@ -239,7 +239,7 @@ const Main = connect(
   </div>
 ));
 
-ReactDOM.render(
+createRoot(document.getElementById("main")).render(
   <Provider store={store}>
     <Main />
   </Provider>,

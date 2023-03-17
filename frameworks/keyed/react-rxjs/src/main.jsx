@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import { Subject } from "rxjs";
 import { scan } from "rxjs/operators";
 import { state, useStateObservable } from "@react-rxjs/core";
@@ -207,4 +207,4 @@ const Main = () => (
   </div>
 );
 
-ReactDOM.render(<Main />, document.getElementById("main"));
+createRoot(document.getElementById("main")).render(<Main />);

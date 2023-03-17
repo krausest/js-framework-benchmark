@@ -1,10 +1,10 @@
 import * as fs from "fs/promises";
 import { WebDriver } from "selenium-webdriver";
-import { BenchmarkType } from "./benchmarksCommon";
-import { benchmarks, CPUBenchmarkWebdriverCDP, fileNameTrace } from "./benchmarksWebdriverCDP";
-import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common";
-import { computeResultsCPU } from "./timeline";
-import { buildDriver, setButtonsInShadowRoot, setShadowRootName, setUseRowShadowRoot, setUseShadowRoot } from "./webdriverCDPAccess";
+import { BenchmarkType } from "./benchmarksCommon.js";
+import { benchmarks, CPUBenchmarkWebdriverCDP, fileNameTrace } from "./benchmarksWebdriverCDP.js";
+import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
+import { computeResultsCPU } from "./timeline.js";
+import { buildDriver, setButtonsInShadowRoot, setShadowRootName, setUseRowShadowRoot, setUseShadowRoot } from "./webdriverCDPAccess.js";
 
 
 let config: TConfig = defaultConfig;

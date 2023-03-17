@@ -1,5 +1,5 @@
-import * as benchmarksCommon from "./benchmarksCommon";
-import { BenchmarkImpl, BenchmarkType, StartupBenchmarkInfo } from "./benchmarksCommon";
+import * as benchmarksCommon from "./benchmarksCommon.js";
+import { BenchmarkImpl, BenchmarkType, StartupBenchmarkInfo } from "./benchmarksCommon.js";
 
 export interface StartupBenchmarkResult extends BenchmarkImpl {
   benchmark: StartupBenchmarkInfo;

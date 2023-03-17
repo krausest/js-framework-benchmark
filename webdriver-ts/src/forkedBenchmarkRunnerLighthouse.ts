@@ -1,8 +1,9 @@
 import *  as chromeLauncher from "chrome-launcher";
 
-import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
-import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./benchmarksLighthouse";
-import { StartupBenchmarkInfo } from "./benchmarksCommon";
+import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
+import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./benchmarksLighthouse.js";
+import { StartupBenchmarkInfo } from "./benchmarksCommon.js";
+import lighthouse from "lighthouse";
 
 let config: TConfig = defaultConfig;
 
@@ -37,8 +38,6 @@ async function runLighthouse(framework: FrameworkData, startupBenchmarks: Startu
     port: benchmarkOptions.remoteDebuggingPort.toFixed(),
     logLevel: "info",
   };
-
-  const lighthouse = (await (eval('import("lighthouse")'))).default;
 
   try {
     if (benchmarkOptions.chromeBinaryPath) opts.chromePath = benchmarkOptions.chromeBinaryPath;

@@ -2,7 +2,7 @@ function _random(max) {
   return Math.round(Math.random() * 1000) % max;
 }
 
-exports.createRandomNRowsImpl = function(
+export const createRandomNRowsImpl = function(
   adjectives,
   colours,
   nouns,
