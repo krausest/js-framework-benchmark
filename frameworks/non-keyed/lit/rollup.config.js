@@ -10,6 +10,6 @@ export default {
     resolve(),
     minifyHTML(),
     typescript({ typescript: require('typescript'), clean: true }),
-    terser({ warnings: true, mangle: { module: true } }),
+    terser(),
   ],
 };

@@ -13,7 +13,7 @@ const plugins = [
 ];
 
 if (!development) {
-  plugins.push(terser({ output: { comments: false } }));
+  plugins.push(terser());
 }
 
 export default {
