@@ -1,0 +1,20 @@
+{
+  "name": "js-framework-benchmark-keyed-anansi",
+  "version": "1.0.0",
+  "description": "Benchmark for Anansi",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.14.0",
+    "frameworkHomeURL": "https://saru-tora.github.io/anansi/",
+    "issues": []
+  },
+  "scripts": {
+    "build-dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}
