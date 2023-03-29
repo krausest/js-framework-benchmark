@@ -4,7 +4,7 @@ import { terser } from "rollup-plugin-terser";
 const plugins = [resolve()];
 
 if (process.env.production) {
-  plugins.push(terser({ output: { comments: false } }));
+  plugins.push(terser());
 }
 
 export default {

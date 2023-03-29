@@ -31,18 +31,8 @@ module.exports = {
     ],
   },
 	optimization: {
-		minimizer: [
-			new TerserPlugin({
-        terserOptions: {
-          output: {
-            comments: false,
-          },
-        },
-        extractComments: false,
-				parallel: true,
-				// Enable file caching
-			}),
-		]
+		minimize: true,
+		minimizer: [new TerserPlugin()],
 	},
 	plugins: [
 		new webpack.DefinePlugin({
