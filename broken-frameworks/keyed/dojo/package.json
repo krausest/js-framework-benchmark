@@ -10,14 +10,18 @@
     ]
   },
   "scripts": {
-    "build-prod": "./node_modules/.bin/dojo build"
+    "build-prod": "patch-package && NODE_OPTIONS=--openssl-legacy-provider ./node_modules/.bin/dojo build",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@dojo/framework": "8.0.0"
   },
   "devDependencies": {
     "@dojo/cli": "8.0.0",
-    "@dojo/cli-build-app": "8.0.0",
+    "@dojo/cli-build-app": "8.0.1",
+    "patch-package": "6.5.1",
+    "postcss": "8.0.0",
+    "stylelint": "15.3.0",
     "typescript": "4.7.4"
   },
   "prettier": {

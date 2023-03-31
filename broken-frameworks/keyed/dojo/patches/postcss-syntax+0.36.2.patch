@@ -1,0 +1,23 @@
+diff --git a/node_modules/postcss-syntax/document.js b/node_modules/postcss-syntax/document.js
+index 64119ee..3e6eb18 100644
+--- a/node_modules/postcss-syntax/document.js
++++ b/node_modules/postcss-syntax/document.js
+@@ -1,5 +1,5 @@
+ "use strict";
+-const PostCssRoot = require("postcss/lib/root");
++const PostCssRoot = require("postcss").Root;
+ class Document extends PostCssRoot {
+ 	toString (stringifier) {
+ 		return super.toString(stringifier || {
+diff --git a/node_modules/postcss-syntax/parse-style.js b/node_modules/postcss-syntax/parse-style.js
+index b1bc0f0..5693e1c 100644
+--- a/node_modules/postcss-syntax/parse-style.js
++++ b/node_modules/postcss-syntax/parse-style.js
+@@ -1,6 +1,6 @@
+ "use strict";
+ const reNewLine = /(?:\r?\n|\r)/gm;
+-const Input = require("postcss/lib/input");
++const Input = require("postcss").Input;
+ const Document = require("./document");
+ const getSyntax = require("./get-syntax");
+ const patch = require("./patch-postcss");
