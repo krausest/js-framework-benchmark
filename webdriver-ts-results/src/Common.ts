@@ -13,6 +13,7 @@ export interface Framework {
     dir: string;
     type: FrameworkType;
     issues: number[];
+    frameworkHomeURL: string;
     displayname: string;
 }
 
@@ -27,10 +28,11 @@ interface Category {
 
 export const categories: Category[] = [
   {id:1, text:"[Note]: Manual DOM manipulations", issues: [772], severity: Severity.Note},
-  {id:2, text:"[Note]:View state on the model", issues: [800], severity: Severity.Note},
+  {id:2, text:"[Note]: View state on the model", issues: [800], severity: Severity.Note},
   {id:3, text:"[Note]: Explicit requestAnimationFrame calls", issues: [796], severity: Severity.Note},
   {id:4, text:"[Note]: Manual event delegation", issues: [801], severity: Severity.Note},
-  {id:5, text:"[Issue]: Errors in the implementation", issues: [634], severity: Severity.Error},
+  {id:5, text:"[Note]: Implementation uses runtime code generation", issues: [1139], severity: Severity.Note},
+  {id:6, text:"[Issue]: Errors in the implementation", issues: [634], severity: Severity.Error},
 ]
 
 interface IIssue {
@@ -46,7 +48,8 @@ export const knownIssues: IIssue[] = [
     {issue: 796, severity: Severity.Note, text:"[Note]: Implementation uses explicit requestAnimationFrame calls", link: "https://github.com/krausest/js-framework-benchmark/issues/796"},
     {issue: 800, severity: Severity.Note, text:"[Note]: View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
     {issue: 801, severity: Severity.Note, text:"[Note]: Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
-  ];
+    {issue: 1139, severity: Severity.Note, text:"[Note]: Implementation uses runtime code generation", link: "https://github.com/krausest/js-framework-benchmark/issues/1139"},
+];
 
 export function findIssue(issueNumber: number): IIssue|undefined {
     return knownIssues.find(i => i.issue === issueNumber)
@@ -188,6 +191,7 @@ export class ResultTableData {
     // benchmarksMEM: Array<Benchmark>;
     // Columns
     frameworks: Array<Framework>;
+    frameworksForFactors: Array<Framework>;
     selectedFameworks: Set<Framework>;
     // Cell data
     // resultsCPU: Array<Array<TableResultValueEntry|null>>;   // [benchmark][framework]
@@ -221,9 +225,12 @@ export class ResultTableData {
           }
         })
         this.frameworks = this.allFrameworks.filter(framework => framework.type === type && this.selectedFameworks.has(framework));
+        this.frameworksForFactors = this.allFrameworks.filter(framework => framework.type === type 
+            && (framework.issues.every(i => allowedIssues.has(i))
+            || (framework.name === 'vanillajs-keyed') || (framework.name === 'vanillajs-1-keyed')
+            || (framework.name === 'vanillajs-non-keyed') || (framework.name === 'vanillajs-1-non-keyed'))
+            );
         this.update(sortKey);
-
-
     }
     private update(sortKey: string) {
         console.time("update");
@@ -334,7 +341,7 @@ export class ResultTableData {
     }
 
     computeFactors(benchmark: Benchmark): Array<TableResultValueEntry|null> {
-        const benchmarkResults = this.frameworks.map(f => this.results(benchmark, f));
+        const benchmarkResults = this.frameworksForFactors.map(f => this.results(benchmark, f));
         const selectFn = (result: Result|null) => {
             if (result===null) return 0;
             if (this.displayMode === DisplayMode.DisplayMedian) {
@@ -343,13 +350,19 @@ export class ResultTableData {
                 return result.mean;
             }
         }
-        const min = benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, selectFn(result)), Number.POSITIVE_INFINITY);
+        const min = Math.max(benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, selectFn(result)), Number.POSITIVE_INFINITY));
+        // if (benchmark.type === BenchmarkType.CPU) {
+        //     min = Math.max(1000/60, min);
+        // }
         return this.frameworks.map(f => {
             const result = this.results(benchmark, f);
             if (result === null) return null;
 
             const value = selectFn(result);
             const factor = value/min;
+            // if (benchmark.type === BenchmarkType.CPU) {
+            //     factor = Math.max(1, factor);
+            // }    
             const conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
             const conficenceIntervalStr = benchmark.type === BenchmarkType.MEM ? null : conficenceInterval.toFixed(1);
             const formattedValue = formatEn.format(value);

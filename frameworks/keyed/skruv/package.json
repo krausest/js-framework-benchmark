@@ -4,7 +4,8 @@
   "description": "skruv v0.1.0 js benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "skruv"
+    "frameworkVersionFromPackage": "skruv",
+    "frameworkHomeURL": "https://github.com/skruv/skruv"
   },
   "scripts": {
     "build-prod": "exit 0"

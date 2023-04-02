@@ -4,6 +4,7 @@
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "sinuous",
+    "frameworkHomeURL": "https://sinuous.dev/",
     "issues": [800, 801]
   },
   "scripts": {

@@ -1,7 +1,7 @@
 import { memo, useCallback } from "react"
-import { render } from "react-dom"
-import create from "zustand"
-import shallow from "zustand/shallow"
+import { createRoot } from 'react-dom/client';
+import { create } from 'zustand';
+import { shallow } from 'zustand/shallow';
 
 const useStore = create((set) => ({
 	data: [],
@@ -107,9 +107,8 @@ const buildData = (count) => {
 	for (let i = 0; i < count; i++) {
 		data[i] = {
 			id: nextId++,
-			label: `${A[random(A.length)]} ${C[random(C.length)]} ${
-				N[random(N.length)]
-			}`,
+			label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]
+				}`,
 		}
 	}
 
@@ -231,4 +230,6 @@ const Main = () => {
 	)
 }
 
-render(<Main />, document.getElementById("main"))
+const container = document.getElementById('main');
+const root = createRoot(container);
+root.render(<Main />);

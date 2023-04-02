@@ -67,7 +67,6 @@ dateCreated:
 import { Component, Children, nextTick } from "mahal";
 import { buildData } from "@/utils/build_data";
 
-@Children({})
 export default class extends Component {
     rowId = 1;
     data = [];

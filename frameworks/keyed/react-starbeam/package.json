@@ -1,0 +1,45 @@
+{
+  "name": "js-framework-benchmark-react-starbeam",
+  "version": "1.0.0",
+  "description": "Starbeam demo using React",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "react:@starbeam/core",
+    "frameworkHomeURL": "https://www.starbeamjs.com/"
+  },
+  "scripts": {
+    "start": "npx live-server",
+    "build-dev": "webpack --watch",
+    "build-prod": "webpack"
+  },
+  "keywords": [
+    "react",
+    "starbeam",
+    "webpack"
+  ],
+  "author": "NullVoxPopuli",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.12.3",
+    "@babel/preset-env": "7.12.1",
+    "@babel/preset-react": "7.12.1",
+    "babel-loader": "8.1.0",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.0.0",
+    "webpack-dev-server": "^4.9.3"
+  },
+  "dependencies": {
+    "@starbeam/core": "^0.6.0",
+    "@starbeam/js": "^0.6.0",
+    "@starbeam/peer": "^1.1.0",
+    "@starbeam/react": "^0.6.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "webpack-cli": "^4.10.0"
+  }
+}

@@ -15,8 +15,8 @@ const App = (): JSX.Element => {
     return (
       <div>
         {disclaimer}
-        <p>The benchmark was run on a MaBook Air M1 (16 GB RAM, OSX 12.4), Chrome 103.0.5060.53 (arm64))
-            using the playwright benchmark driver with reduced tracing.
+        <p>The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 13.2.1), Chrome 111.0.5563.64 (arm64))
+            using the puppeteer benchmark driver with reduced tracing.
         </p>
          <SelectionBar/>
          <ResultTable type={FrameworkType.KEYED}/>

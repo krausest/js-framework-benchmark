@@ -1,0 +1,44 @@
+{
+  "name": "js-framework-benchmark-react-diagon",
+  "version": "1.0.0",
+  "description": "React Diagon demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "react:diagon",
+    "frameworkHomeURL": "https://www.diagon.dev/"
+  },
+  "scripts": {
+    "build-dev": "webpack --watch",
+    "build-prod": "webpack"
+  },
+  "keywords": [
+    "react",
+    "webpack"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.21.0",
+    "@babel/preset-env": "7.20.2",
+    "@babel/preset-react": "7.18.6",
+    "@types/node": "~18.15.0",
+    "@types/react": "~18.0.28",
+    "@types/react-dom": "~18.0.11",
+    "babel-loader": "9.1.2",
+    "webpack": "5.76.1",
+    "webpack-cli": "^5.0.1",
+    "ts-loader": "9.4.2",
+    "typescript": "4.9.5"
+  },
+  "dependencies": {
+    "diagon": "0.14.3",
+    "diagon-react": "0.14.3",
+    "react": "~18.2.0",
+    "react-dom": "~18.2.0"
+  }
+}

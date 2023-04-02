@@ -1,9 +1,8 @@
-import * as yargs from "yargs";
-import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./playwrightAccess";
-import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common";
+import yargs from "yargs";
+import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./playwrightAccess.js";
+import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
 import * as R from "ramda";
-import { valid } from "semver";
 import { ElementHandle, Page } from "playwright";
 
 let args: any = yargs(process.argv)
@@ -322,6 +321,7 @@ let runFrameworks = (args.framework && args.framework.length > 0 ? args.framewor
 let benchmarkOptions: BenchmarkOptions = {
   HOST: config.HOST,
   port: config.PORT.toFixed(),
+  browser: config.BROWSER,
   remoteDebuggingPort: config.REMOTE_DEBUGGING_PORT,
   chromePort: config.CHROME_PORT,
   headless: args.headless,
@@ -333,7 +333,7 @@ let benchmarkOptions: BenchmarkOptions = {
 };
 async function main() {
   if (args.help) {
-    yargs.showHelp();
+    // yargs.showHelp();
   } else {
     await runBench(runFrameworks);
   }

@@ -4,7 +4,11 @@
   "description": "Blazor WebAssembly demo",
   "js-framework-benchmark": {
     "frameworkVersion": "6.0.1",
-    "customURL": "/bundeled-dist/wwwroot/"
+    "customURL": "/bundeled-dist/wwwroot/",
+    "frameworkHomeURL": "https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "install": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to clone reflex-dom\\'s benchmark and build system use: && echo npm run install-force",

@@ -4,11 +4,12 @@
   "description": "React demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:mobx"
+    "frameworkVersionFromPackage": "react:mobx",
+    "frameworkHomeURL": "https://mobx.js.org/"
   },
   "scripts": {
-    "build-dev": "webpack -w -d",
-    "build-prod": "webpack -p"
+    "build-dev": "webpack --watch",
+    "build-prod": "webpack --mode production"
   },
   "keywords": [
     "react",
@@ -22,17 +23,15 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "babel-core": "6.26.3",
-    "babel-loader": "7.1.5",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-plugin-transform-decorators-legacy": "1.3.5",
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-react": "6.24.1",
-    "babel-preset-stage-0": "6.24.1",
-    "jsx-loader": "0.13.2",
-    "terser-webpack-plugin": "^3.0.6",
-    "webpack": "4.16.3",
-    "webpack-cli": "^3.1.0"
+    "@babel/core": "7.21.0",
+    "@babel/plugin-proposal-class-properties": "7.16.7",
+    "@babel/plugin-proposal-decorators": "^7.21.0",
+    "@babel/preset-env": "7.20.2",
+    "@babel/preset-react": "7.18.6",
+    "babel-loader": "9.1.2",
+    "terser-webpack-plugin": "^5.3.7",
+    "webpack": "5.76.1",
+    "webpack-cli": "^5.0.1"
   },
   "dependencies": {
     "mobx": "5.15.4",

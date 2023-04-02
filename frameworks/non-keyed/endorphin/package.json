@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Boilerplate for endorphin",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "endorphin"
+    "frameworkVersionFromPackage": "endorphin",
+    "frameworkHomeURL": "https://github.com/endorphinjs/endorphin"
   },
   "main": "index.js",
   "scripts": {

@@ -1,6 +1,6 @@
 import { Browser, Page } from "playwright-core";
 import { chromium } from "playwright";
-import { BenchmarkDriverOptions, config } from "./common";
+import { BenchmarkDriverOptions, config } from "./common.js";
 
 
 
@@ -87,7 +87,7 @@ function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
   } else if (process.platform == "linux") {
     return "/usr/bin/google-chrome";
   } else if(/^win/i.test(process.platform)) {
-    return 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';    
+    return 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';    
   } else {
     throw new Error("Path to Google Chrome executable must be specified");
   }
@@ -95,7 +95,7 @@ function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
 
 export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Promise<Browser> {
   let args = ['--window-size=1000,800', '--js-flags=--expose-gc'];
-  if (benchmarkOptions.headless) args.push('--headless=chrome');
+  if (benchmarkOptions.headless) args.push('--headless=new');
   const browser = await chromium.launch({
     args,
     headless: false,

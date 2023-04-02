@@ -4,13 +4,14 @@
   "description": "Purescript Halogen JS Benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": "6.1.3"
+    "frameworkVersion": "7.0.0",
+    "frameworkHomeURL": "https://github.com/purescript-halogen/purescript-halogen"
   },
   "scripts": {
     "postinstall": "spago install",
-    "clean": "rm -rf output .spago node_modules",
+    "clean": "rm -rf output output-es .spago node_modules",
     "build": "spago build",
-    "build-prod": "spago bundle-app --to output/bundle.js"
+    "build-prod": "spago build && purs-backend-es bundle-app --no-build --to output/bundle.js"
   },
   "keywords": [
     "purescript",
@@ -24,7 +25,9 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "purescript": "0.14.5",
-    "spago": "0.20.3"
+    "purescript": "^0.15.8",
+    "purs-backend-es": "^1.3.1",
+    "spago": "^0.20.9",
+    "esbuild": "^0.17.11"
   }
 }

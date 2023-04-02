@@ -1,9 +1,9 @@
 import { Browser, Page, CDPSession } from "playwright-core";
-import { BenchmarkType } from "./benchmarksCommon";
-import { benchmarks, CPUBenchmarkPlaywright, fileNameTrace, MemBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright";
-import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common";
-import { startBrowser } from "./playwrightAccess";
-import { computeResultsCPU } from "./timeline";
+import { BenchmarkType } from "./benchmarksCommon.js";
+import { benchmarks, CPUBenchmarkPlaywright, fileNameTrace, MemBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright.js";
+import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
+import { startBrowser } from "./playwrightAccess.js";
+import { computeResultsCPU } from "./timeline.js";
 
 
 let config: TConfig = defaultConfig;
@@ -170,7 +170,7 @@ async function runMemBenchmark(
         });
       }
 
-      await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {

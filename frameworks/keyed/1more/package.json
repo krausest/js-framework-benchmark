@@ -4,7 +4,8 @@
   "description": "1more demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "1more"
+    "frameworkVersionFromPackage": "1more",
+    "frameworkHomeURL": "https://github.com/Freak613/1more"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

@@ -31,25 +31,7 @@ const plugins = [
 ];
 
 if (isProduction) {
-  plugins.push(terser({
-    parse: {
-      ecma: 8,
-    },
-    compress: {
-      ecma: 5,
-      inline: true,
-      if_return: false,
-      reduce_funcs: false,
-      passes: 5,
-      comparisons: false,
-    },
-    output: {
-      ecma: 5,
-      comments: false,
-    },
-    toplevel: true,
-    module: true,
-  }));
+  plugins.push(terser());
 }
 
 // When in development, we want to use dev build of inferno.

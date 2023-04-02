@@ -1,0 +1,24 @@
+[package]
+authors = ["Greg Johnston"]
+edition = "2021"
+name = "js-framework-benchmark-leptos"
+version = "1.0.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = { version = "0.2", features = ["enable-interning"] }
+console_error_panic_hook = "0.1"
+getrandom = { version = "0.2.7", features = ["js"] }
+rand = { version = "0.8.5", features = ["small_rng"] }
+leptos = "0.2.1"
+web-sys = "0.3"
+
+[profile.release]
+codegen-units = 1
+lto = true
+panic = "abort"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ['-O4']

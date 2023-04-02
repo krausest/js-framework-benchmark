@@ -5,8 +5,8 @@
   "author": "Alexandre Esteves <alexandre.fmp.esteves@gmail.com>",
   "js-framework-benchmark": {
     "frameworkVersion": "0.4",
-    "customURL": "/bundled-dist",
-    "issues": []
+    "frameworkHomeURL": "https://reflex-frp.org/",
+    "customURL": "/bundled-dist"
   },
   "contributors": [
     "Ryan Trinkle <ryan.trinkle@gmail.com>"

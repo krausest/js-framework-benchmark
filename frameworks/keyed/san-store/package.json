@@ -1,0 +1,40 @@
+{
+  "name": "js-framework-benchmark-san-store",
+  "version": "1.0.0",
+  "description": "Benchmark for san store",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "san:san-store",
+    "frameworkHomeURL": "https://baidu.github.io/san/",
+    "issues": [
+      800,
+      1139
+    ]
+  },
+  "scripts": {
+    "build-dev": "webpack --watch",
+    "build-prod": "webpack --mode production"
+  },
+  "keywords": [
+    "san",
+    "san-store"
+  ],
+  "author": "zttonly",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.21.0",
+    "@babel/preset-env": "7.20.2",
+    "babel-loader": "9.1.2",    
+    "webpack": "5.76.1",
+    "webpack-cli": "5.0.1"
+  },
+  "dependencies": {
+    "san": "^3.12.2",
+    "san-store": "2.2.1",
+    "san-update": "2.1.0"
+  }
+}

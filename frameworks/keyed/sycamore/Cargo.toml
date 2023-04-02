@@ -8,11 +8,11 @@ version = "1.0.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-getrandom = {version = "0.2.7", features = ["js"]}
-rand = {version = "0.8.5", features = ["small_rng"]}
-sycamore = "0.7.1"
-wasm-bindgen = "0.2.81"
-web-sys = {version = "0.3.58", features = ["Window", "Document"]}
+getrandom = { version = "0.2.7", features = ["js"] }
+rand = { version = "0.8.5", features = ["small_rng"] }
+sycamore = "0.8.0"
+wasm-bindgen = "0.2.82"
+web-sys = { version = "0.3.59", features = ["Window", "Document"] }
 
 [profile.release]
 codegen-units = 1

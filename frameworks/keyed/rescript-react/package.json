@@ -4,7 +4,8 @@
   "description": "ReasonReact benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@rescript/react"
+    "frameworkVersionFromPackage": "@rescript/react",
+    "frameworkHomeURL": "https://rescript-lang.org/"
   },
   "scripts": {
     "build-dev": "webpack --watch",

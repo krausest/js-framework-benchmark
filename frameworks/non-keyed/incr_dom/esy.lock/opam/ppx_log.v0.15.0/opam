@@ -1,0 +1,29 @@
+opam-version: "2.0"
+maintainer: "Jane Street developers"
+authors: ["Jane Street Group, LLC"]
+homepage: "https://github.com/janestreet/ppx_log"
+bug-reports: "https://github.com/janestreet/ppx_log/issues"
+dev-repo: "git+https://github.com/janestreet/ppx_log.git"
+doc: "https://ocaml.janestreet.com/ocaml-core/latest/doc/ppx_log/index.html"
+license: "MIT"
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+]
+depends: [
+  "ocaml"            {>= "4.08.0"}
+  "base"             {>= "v0.15" & < "v0.16"}
+  "ppx_here"         {>= "v0.15" & < "v0.16"}
+  "ppx_sexp_conv"    {>= "v0.15" & < "v0.16"}
+  "ppx_sexp_message" {>= "v0.15" & < "v0.16"}
+  "sexplib"          {>= "v0.15" & < "v0.16"}
+  "dune"             {>= "2.0.0"}
+  "ppxlib"           {>= "0.23.0"}
+]
+synopsis: "Ppx_sexp_message-like extension nodes for lazily rendering log messages"
+description: "
+Part of the Jane Street's PPX rewriters collection. 
+"
+url {
+src: "https://ocaml.janestreet.com/ocaml-core/v0.15/files/ppx_log-v0.15.0.tar.gz"
+checksum: "sha256=037aa3c8c4dca5c7ce9154e981c146c92faeeac456931cf3c9496b4f9698763e"
+}

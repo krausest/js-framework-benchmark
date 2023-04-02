@@ -1,9 +1,9 @@
 import { Browser, CDPSession, Page } from "puppeteer-core";
-import { BenchmarkType } from "./benchmarksCommon";
-import { CPUBenchmarkPuppeteer, fileNameTrace, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer";
-import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common";
-import { startBrowser } from "./puppeteerAccess";
-import { computeResultsCPU } from "./timeline";
+import { BenchmarkType } from "./benchmarksCommon.js";
+import { CPUBenchmarkPuppeteer, fileNameTrace, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
+import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
+import { startBrowser } from "./puppeteerAccess.js";
+import { computeResultsCPU } from "./timeline.js";
 
 
 let config: TConfig = defaultConfig;
@@ -69,7 +69,12 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             });
         // }
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
-            await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
+            try {
+              await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
+            } catch (ex) {
+              console.log("**** loading benchmark failed, retrying");
+              await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
+            }
 
             // await (driver as any).sendDevToolsCommand('Network.enable');
             // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -113,16 +118,16 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
               await page.emulateCPUThrottling(benchmark.benchmarkInfo.throttleCPU);
           }
   
-            await page.tracing.start({path: fileNameTrace(framework, benchmark.benchmarkInfo, i), 
-                screenshots: false,
-                categories:categories
-            });
-           await forceGC(page, client);
+          await page.tracing.start({path: fileNameTrace(framework, benchmark.benchmarkInfo, i), 
+            screenshots: false,
+            categories:categories
+          });
+          await forceGC(page, client);
             console.log("runBenchmark");
             // let m1 = await page.metrics();
             await runBenchmark(page, benchmark, framework);
 
-            await wait(10);
+            await wait(40);
             await page.tracing.stop();
             // let m2 = await page.metrics();
             if (benchmark.benchmarkInfo.throttleCPU) {
@@ -176,8 +181,8 @@ async function runMemBenchmark(
           for (let i = 0; i < msg.args().length; ++i) console.log(`BROWSER: ${msg.args()[i]}`);
         });
       }
-
-      await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      
+      await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {

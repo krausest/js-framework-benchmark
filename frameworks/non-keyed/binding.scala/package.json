@@ -4,6 +4,7 @@
   "description": "Benchmark for Binding.scala",
   "js-framework-benchmark": {
     "frameworkVersion": "10.0.1",
+    "frameworkHomeURL": "https://github.com/ThoughtWorksInc/Binding.scala",
     "customURL": "/target/web/stage",
     "issues": []
   },

@@ -41,8 +41,8 @@ function rand( max: number)
 }
 
 
-
-function Button( props: mim.IHtmlButtonElementProps, children: any[]): any
+type ButtonProps = mim.JSX.IntrinsicElements["button"];
+function Button( props: ButtonProps, children: any[]): any
 {
     return <div class="col-sm-6 smallpad">
         <button type="button" class="btn btn-primary btn-block" {...props}>{children}</button>
@@ -54,7 +54,7 @@ function Button( props: mim.IHtmlButtonElementProps, children: any[]): any
 class Main extends mim.Component
 {
     @mim.trigger(0) private rows: Row[] = null;
-    public selectedRow: Row = undefined;
+    private selectedRow: Row = undefined;
     @mim.ref private vnTBody: mim.IElmVN<HTMLElement>;
 
     public render()
@@ -67,8 +67,8 @@ class Main extends mim.Component
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <Button id="run" click={this.onCreate1000}>Create 1,000 rows</Button>
-                            <Button id="runlots" click={this.onCreate10000}>Create 10,000 rows</Button>
+                            <Button id="run" click={[this.onCreate, 1000]}>Create 1,000 rows</Button>
+                            <Button id="runlots" click={[this.onCreate, 10000]}>Create 10,000 rows</Button>
                             <Button id="add" click={this.onAppend1000}>Append 1,000 rows</Button>
                             <Button id="update" click={this.onUpdateEvery10th}>Update every 10th row</Button>
                             <Button id="clear" click={this.onClear}>Clear</Button>
@@ -78,60 +78,65 @@ class Main extends mim.Component
                 </div>
             </div>
             <table class="table table-hover table-striped test-data">
-                {this.renderRows}
+                {this.renderTBody}
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>);
     }
 
-    private renderRows(): any
+    private renderTBody(): any
     {
         return <tbody vnref={this.vnTBody} updateStrategy={{disableKeyedNodeRecycling: true}}>
-            {this.rows?.map( row =>
-                <tr class={row.selectedTrigger} key={row}>
-                    <td class="col-md-1">{row.id}</td>
-                    <td class="col-md-4"><a click={[this.onSelectRowClicked, row]}>{row.labelTrigger}</a></td>
-                    <td class="col-md-1">
-                        <a click={[this.onDeleteRowClicked, row]}>
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"/>
-                        </a>
-                    </td>
-                    <td class="col-md-6"/>
-                </tr>
-            )}
+            {this.renderRows(this.rows)}
         </tbody>
     }
 
-    private onCreate1000()
+    private renderRows(rows: Row[]): any
     {
-        this.rows = buildRows( 1000);
+        return rows?.map(row =>
+            <tr class={row.selectedTrigger} key={row}>
+                <td class="col-md-1">{row.id}</td>
+                <td class="col-md-4"><a click={[this.onSelectRowClicked, row]}>{row.labelTrigger}</a></td>
+                <td class="col-md-1">
+                    <a click={[this.onDeleteRowClicked, row]}>
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"/>
+                    </a>
+                </td>
+                <td class="col-md-6"/>
+            </tr>
+        )
+    }
+
+    private onCreate(e: MouseEvent, n: number)
+    {
+        this.rows = buildRows(n);
         this.selectedRow = undefined;
     }
 
     private onAppend1000()
     {
     	let newRows = buildRows( 1000);
-        this.rows = this.rows ? this.rows.concat( newRows) : newRows;
+        if (this.rows)
+        {
+            this.rows.push(...newRows);
+            this.vnTBody.growChildren(undefined, this.renderRows(newRows), mim.TickSchedulingType.Sync)
+        }
+        else
+            this.rows = newRows;
     }
 
     private onUpdateEvery10th()
     {
-        if (!this.rows)
+        let len = this.rows?.length
+        if (!len)
             return;
 
         let row: Row;
-        for (let i = 0; i < this.rows.length; i += 10)
+        for (let i = 0; i < len; i += 10)
         {
             row = this.rows[i];
             row.labelTrigger.set( row.label += " !!!")
         }
-    }
-
-
-    private onCreate10000()
-    {
-        this.rows = buildRows( 10000);
-        this.selectedRow = undefined;
     }
 
     private onClear()
@@ -147,23 +152,24 @@ class Main extends mim.Component
             let t = this.rows[1];
             this.rows[1] = this.rows[998];
             this.rows[998] = t;
-            this.vnTBody.swapChildren( 1, 1, 998, 1);
+            this.vnTBody.swapChildren( 1, 1, 998, 1, mim.TickSchedulingType.Sync);
 		}
     }
 
-    public onSelectRowClicked = (e: MouseEvent, rowToSelect: Row): void =>
+    public onSelectRowClicked(e: MouseEvent, rowToSelect: Row): void
     {
-        if (rowToSelect === this.selectedRow)
+        let currSelectedRow = this.selectedRow;
+        if (rowToSelect === currSelectedRow)
             return;
 
-        if (this.selectedRow)
-            this.selectedRow.selectedTrigger.set( null);
+        if (currSelectedRow)
+            currSelectedRow.selectedTrigger.set( null);
 
         this.selectedRow = rowToSelect;
         rowToSelect.selectedTrigger.set( "danger");
     }
 
-    public onDeleteRowClicked = (e: MouseEvent, rowToDelete: Row): void =>
+    public onDeleteRowClicked(e: MouseEvent, rowToDelete: Row): void
     {
         if (rowToDelete === this.selectedRow)
             this.selectedRow = undefined;

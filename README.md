@@ -325,18 +325,20 @@ Your package.json must include some information for the benchmark. Since you cop
 ```
   ...
   "js-framework-benchmark": {
-    "frameworkVersion": ""
+    "frameworkVersion": "",
+    "frameworkHomeURL": ""
   },
   ...
 ```
 
-This one is a bit exceptional since vanillajs has no version. If you use a normal framework like react it carries a version information. For most frameworks you'll add a
+This one is a bit exceptional since vanillajs has no version and there no framework involved. If you use a normal framework like react it carries a version information and the framework should have an URL. For most frameworks you'll add a
 dependency to your framework in package.json. The benchmark can automatically determine the correct version information from package.json and package-lock.json if you specify the
 package name like that:
 
 ```
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react"
+    "frameworkHomeURL": "https://www.reactjs.org"
   },
 ```
 
@@ -357,6 +359,7 @@ You can set an optional different URL if needed or specify that your DOM uses a 
 Contributions are very welcome. Please use the following rules:
 
 - Name your directory frameworks/[keyed|non-keyed]/[FrameworkName]
+- The package.json in your directory must contain some important information see section 4.2 above.
 - Each contribution must be buildable by `npm install` and `npm run build-prod` command in the directory. What build-prod does is up to you. Often there's an `npm run build-dev` that creates a development build
 - Every implementation must use bootstrap provided in the root css directory.
 - All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server or other local web servers should not be local dependencies. It is installed from the root directory to allow access to bootstrap.

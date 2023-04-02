@@ -1,5 +1,5 @@
 const path = require('path');
-const MahalPlugin = require('mahal-webpack-loader/lib/plugin');
+const MahalPlugin = require('@mahaljs/webpack-loader/lib/plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -19,14 +19,19 @@ module.exports = {
                 test: /\.mahal?$/,
                 // loader: 'mahal-webpack-loader',
                 use: {
-                    loader: require.resolve('mahal-webpack-loader')
+                    loader: require.resolve('@mahaljs/webpack-loader')
                 },
                 exclude: /node_modules/
             },
             {
                 test: /\.css?$/,
                 use: [
-                    'style-loader',
+                    isEnvProduction ? {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            esModule: false,
+                        },
+                    } : 'style-loader',
                     'css-loader'
                 ],
             },
@@ -34,7 +39,12 @@ module.exports = {
                 test: /\.s[ac]ss$/i,
                 use: [
                     // Creates `style` nodes from JS strings
-                    'style-loader',
+                    isEnvProduction ? {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            esModule: false,
+                        },
+                    } : 'style-loader',
                     // Translates CSS into CommonJS
                     "css-loader",
                     // Compiles Sass to CSS
@@ -73,8 +83,8 @@ module.exports = {
         },
     },
     output: {
-        filename: isEnvProduction ? 'js/[name].js' : 'js/[name].js',
-        chunkFilename: isEnvProduction ? 'js/[name].chunk.js' : 'js/[name].chunk.js',
+        filename: isEnvProduction ? 'js/[name].[contenthash:8].js' : 'js/[name].js',
+        chunkFilename: isEnvProduction ? 'js/[name].[contenthash:8].chunk.js' : 'js/[name].chunk.js',
         path: path.resolve(rootFolder, 'dist'),
         publicPath: '/'
     },
@@ -83,8 +93,8 @@ module.exports = {
             lang: 'ts'
         }),
         new HtmlWebPackPlugin({
-            // cache: true,
-            // hash: true,
+            cache: true,
+            hash: true,
             template: 'src/index.html',
             minify: {
                 collapseWhitespace: true,
@@ -95,15 +105,9 @@ module.exports = {
             }
         }),
         new CleanWebpackPlugin(),
-        new CopyPlugin({
-            patterns: [{
-                from: './assets/',
-                to: ''
-            }]
-        }),
-        // new MiniCssExtractPlugin({
-        //     filename: 'css/[name].css',
-        //     chunkFilename: 'css/[name].chunk.css',
-        // })
+        new MiniCssExtractPlugin({
+            filename: isEnvProduction ? 'css/[name].[contenthash:8].css' : 'css/[name].css',
+            chunkFilename: isEnvProduction ? 'css/[name].[contenthash:8].chunk.css' : 'css/[name].chunk.css',
+        })
     ]
 };

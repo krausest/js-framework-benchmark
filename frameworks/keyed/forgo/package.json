@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "forgo",
+    "frameworkHomeURL": "https://github.com/forgojs/forgo#readme",
     "issues": []
   },
   "scripts": {

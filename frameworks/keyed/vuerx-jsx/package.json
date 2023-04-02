@@ -3,7 +3,8 @@
   "version": "0.2.0",
   "main": "dist/main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "vuerx-jsx"
+    "frameworkVersionFromPackage": "vuerx-jsx",
+    "frameworkHomeURL": "https://github.com/ryansolid/vuerx-jsx"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

@@ -4,7 +4,8 @@
   "description": "uhydro demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "uhydro"
+    "frameworkVersionFromPackage": "uhydro",
+    "frameworkHomeURL": "https://github.com/Krutsch/uhydro"
   },
   "scripts": {
     "build-dev": "html-bundle --hmr",

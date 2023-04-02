@@ -4,7 +4,8 @@
   "description": "neverland demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "neverland"
+    "frameworkVersionFromPackage": "neverland",
+    "frameworkHomeURL": "https://github.com/WebReflection/neverland"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

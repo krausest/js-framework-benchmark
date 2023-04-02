@@ -3,7 +3,11 @@
   "version": "0.16.1",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "ko-jsx"
+    "frameworkVersionFromPackage": "ko-jsx",
+    "frameworkHomeURL": "https://github.com/ryansolid/ko-jsx",
+    "issues": [
+      1139
+    ]
   },
   "scripts": {
     "build-dev": "rollup -c",

@@ -9,7 +9,11 @@
   ],
   "js-framework-benchmark": {
     "frameworkVersion": "1.1.0.0",
-    "customURL": "/"
+    "frameworkHomeURL": "https://haskell-miso.org/",
+    "customURL": "/",
+    "issues": [
+      1139
+    ]
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {

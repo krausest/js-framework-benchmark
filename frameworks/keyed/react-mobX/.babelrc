@@ -1,4 +1,10 @@
 {
-    presets: [ "es2015", "stage-0", "react"],
-    plugins: ["transform-decorators-legacy"]
-}
+    "presets": [ "@babel/preset-react" ],
+    "plugins": [
+        ["@babel/plugin-proposal-decorators", { "legacy": true }],
+        ["@babel/plugin-proposal-class-properties", { "loose": false }]
+    ],
+    "assumptions": {
+        "setPublicClassFields": false
+}}
+

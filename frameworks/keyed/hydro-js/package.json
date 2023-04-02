@@ -4,7 +4,8 @@
   "description": "hydro-js demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "hydro-js"
+    "frameworkVersionFromPackage": "hydro-js",
+    "frameworkHomeURL": "https://github.com/Krutsch/hydro-js"
   },
   "scripts": {
     "build-dev": "html-bundle --hmr",

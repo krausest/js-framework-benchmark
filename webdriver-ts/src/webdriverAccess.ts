@@ -1,6 +1,6 @@
 import { By, Capabilities, Condition, WebDriver, WebElement } from "selenium-webdriver";
-import * as chrome from "selenium-webdriver/chrome";
-import { BenchmarkDriverOptions, config } from "./common";
+import * as chrome from "selenium-webdriver/chrome.js";
+import { BenchmarkDriverOptions, config } from "./common.js";
 
 interface PathPart {
   tagName: string;
@@ -199,7 +199,7 @@ export function testElementLocatedById(driver: WebDriver, id: string, timeout = 
   );
 }
 
-async function retry<T>(retryCount: number, driver: WebDriver, fun: (driver: WebDriver, retryCount: number) => Promise<T>): Promise<T> {
+export async function retry<T>(retryCount: number, driver: WebDriver, fun: (driver: WebDriver, retryCount: number) => Promise<T>): Promise<T> {
   for (let i = 0; i < retryCount; i++) {
     try {
       return await fun(driver, i);

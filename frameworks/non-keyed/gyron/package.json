@@ -1,0 +1,32 @@
+{
+  "name": "js-framework-benchmark-gyron",
+  "version": "1.0.0",
+  "description": "Benchmark for gyron.js framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "gyron",
+    "frameworkHomeURL": "https://www.npmjs.com/package/gyron"
+  },
+  "scripts": {
+    "build-dev": "webpack --mode development --watch",
+    "build-prod": "webpack --mode production"
+  },
+  "keywords": [
+    "gyron"
+  ],
+  "author": "Link <linkorgs@163.com>",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@gyron/babel-plugin-jsx": "0.0.31",
+    "babel-loader": "9.1.2",
+    "webpack": "5.76.1",
+    "webpack-cli": "5.0.1"
+  },
+  "dependencies": {
+    "gyron": "0.0.16"
+  }
+}

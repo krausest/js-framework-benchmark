@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersion": "",
+    "frameworkHomeURL": "",
     "issues": [
       772
     ]

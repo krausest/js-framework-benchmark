@@ -1,8 +1,8 @@
 import * as fs from "fs";
-import * as yargs from "yargs";
-import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName } from "./benchmarksCommon";
-import { subbenchmarks } from "./benchmarksLighthouse";
-import { config, initializeFrameworks, JSONResult } from "./common";
+import yargs from "yargs";
+import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName } from "./benchmarksCommon.js";
+import { subbenchmarks } from "./benchmarksLighthouse.js";
+import { config, initializeFrameworks, JSONResult } from "./common.js";
 
 let args: any = yargs(process.argv)
   .string("url").default("url", config.HOST).argv;
@@ -88,6 +88,7 @@ async function main() {
               dir: (f.keyed ? "keyed/" : "non-keyed/" ) + f.name,
               keyed: f.keyed,
               issues: f.issues && f.issues.length > 0 ? f.issues : undefined,
+              frameworkHomeURL: f.frameworkHomeURL ?? ""
           })
       )
     ) +

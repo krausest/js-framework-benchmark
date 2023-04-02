@@ -1,0 +1,5 @@
+[build]
+target = "trunk.html"
+dist = "bundled-dist"
+public_url = "/frameworks/keyed/sledgehammer/bundled-dist/"
+filehash = false

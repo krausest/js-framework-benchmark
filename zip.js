@@ -42,9 +42,18 @@ for (let keyedType of ['keyed', 'non-keyed']) {
 		if (fs.existsSync(fd+"/public/") && ["ember","glimmer"].indexOf(name)==-1) {
 			zip.addLocalFolder(fd+"/public/", zipPathName+"/public/");
 		}
+		if (["karyon"].indexOf(name)>-1) {
+			zip.addLocalFile(fd+"/app.bundle.js", zipPathName)
+		}
 		if (fs.existsSync(fd+"/target/web/stage"))
 			zip.addLocalFolder(fd+"/target/web/stage", zipPathName+"/target/web/stage");
-		if (fs.existsSync(fd+"/output"))
+		if (name=="halogen" && fs.existsSync(fd+"/output")) {
+			zip.addLocalFile(fd+"/output/bundle.js", zipPathName+"/output")
+		} else if (name=="dojo" && fs.existsSync(fd+"/output/dist")) {
+			zip.addLocalFolder(fd+"/output/dist", zipPathName+"/output/dist", (file) => {
+				return !file.includes("/");
+			});
+		} else if (fs.existsSync(fd+"/output"))
 			zip.addLocalFolder(fd+"/output", zipPathName+"/output");
 		if (fs.existsSync(fd+"/build"))
 			zip.addLocalFolder(fd+"/build", zipPathName+"/build");

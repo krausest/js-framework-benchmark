@@ -5,6 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "redom",
+    "frameworkHomeURL": "https://redom.js.org/",
     "issues": [
       772
     ]

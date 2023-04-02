@@ -4,7 +4,8 @@
   "description": "Jotai demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:jotai"
+    "frameworkVersionFromPackage": "react:jotai",
+    "frameworkHomeURL": "https://github.com/pmndrs/jotai"
   },
   "scripts": {
     "build-dev": "webpack --watch",

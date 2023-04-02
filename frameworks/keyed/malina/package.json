@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Example for Malina.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "malinajs"
+    "frameworkVersionFromPackage": "malinajs",
+    "frameworkHomeURL": "https://www.npmjs.com/package/malinajs"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

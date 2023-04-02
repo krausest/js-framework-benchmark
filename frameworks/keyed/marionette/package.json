@@ -6,7 +6,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "marionette",
-    "issues": []
+    "frameworkHomeURL": "https://marionettejs.com/"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

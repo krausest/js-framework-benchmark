@@ -3,7 +3,8 @@
   "version": "1.1.1",
   "description": "Marko.JS demo",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "marko"
+    "frameworkVersionFromPackage": "marko",
+    "frameworkHomeURL": "https://markojs.com/"
   },
   "scripts": {
     "build-dev": "rollup -c rollup.config.js",
