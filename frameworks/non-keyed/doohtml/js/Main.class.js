@@ -53,9 +53,9 @@ Doo.define(
         }
 
 		buildData(count = DEFAULT_SIZE) {
-			const data = []
+			const data = new Array(count)
 			for (let i = 0; i < count; i++) {
-				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
+				data[i] = {id: this.ID++,label: `${adjectives[_random(lenA)]} ${colours[_random(lenB)]}  ${nouns[_random(lenC)]}`}
 			}
 			return data	
 		}
