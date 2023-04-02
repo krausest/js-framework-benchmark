@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+    "target": "es2022",
+    "module": "NodeNext",
+    "moduleResolution": "node16",
+    "declaration": false,
+    "sourceMap": false,
+    "importHelpers": true,
+    "noEmitHelpers": true,
+    "removeComments": false,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

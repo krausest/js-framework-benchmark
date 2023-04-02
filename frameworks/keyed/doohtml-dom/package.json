@@ -1,0 +1,24 @@
+{
+    "name": "js-framework-benchmark-doohtml",
+    "version": "0.91.5-beta",
+    "description": "DooHTML-DOM (no shadow) JS-Benchmark",
+    "main": "Main.class.js",
+    "js-framework-benchmark": {
+      "frameworkVersion": "",
+      "frameworkHomeURL": "https://doohtml.com",
+      "issues": [772, 1139]
+    },
+    "scripts": {
+      "build-dev": "exit 0",
+      "build-prod": "exit 0"
+    },
+    "keywords": [],
+    "author": "Henrik Javen",
+    "license": "Apache-2.0",
+    "homepage": "https://doohtml.com",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/hman61/js-framework-benchmark"
+    }
+  }
+  

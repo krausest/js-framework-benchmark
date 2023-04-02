@@ -6,6 +6,6 @@ export default {
   output: { file: `dist/index.js`, format: 'iife' },
   plugins: [
     minifyHTML(),
-    terser({ warnings: true, mangle: { module: true } })
+    terser()
   ]
 };

@@ -8,33 +8,29 @@ const rows = State([]);
 const selection = State();
 
 const create = ((ID, $) => count => [...Array(count)].map(() =>
-    Row(++ID, `${$(adjectives)} ${$(colours)} ${$(nouns)}`)
+    Row(++ID, State(`${$(adjectives)} ${$(colours)} ${$(nouns)}`))
 ))(0, $ => $[Math.round(Math.random() * 1000) % $.length]);
 
-const select = function () { selection(this.row.ID); };
+const select = function () { selection(this.ID); };
 
-const remove = function () {
-    const data = new Set(rows());
-    data.delete(this.row) && rows([...data]);
-};
+const remove = (filter => function () {
+    rows(rows().filter(filter, this.ID));
+})(function (row) { return row?.ID !== this; });
 
-const Row = (ID, label) => {
-    const danger = State.track(selection, ID);
-    const row = {is: 'tr', class: {danger}, ID, label: State(label)};
-    row.content = [
+const Row = (selected => (ID, text) =>
+    ({is: 'tr', content: [
         {is: 'td', class: 'col-md-1', content: ID},
         {is: 'td', class: 'col-md-4', content:
-            {is: 'a', action: select, row, content: row.label}},
+            {is: 'a', action: select, content: text}},
         {is: 'td', class: 'col-md-1', content:
-            {is: 'a', action: remove, row, content: Icon()}},
+            {is: 'a', action: remove, content: Icon('')}},
         {is: 'td', class: 'col-md-6'}
-    ];
-    return row;
-};
+    ], class: State.track(selection, ID, selected), ID, text})
+)(on => on && 'danger');
 
-const Icon = (type = '') =>
+const Icon = name =>
     ({is: 'span', attrs: {'aria-hidden': 'true'},
-        class: `glyphicon glyphicon-remove ${type}`});
+        class: `glyphicon glyphicon-remove ${name}`});
 
 const actions = [
     ['Create 1,000 rows', 'run', () => rows(create(1000))],
@@ -42,14 +38,12 @@ const actions = [
     ['Append 1,000 rows', 'add', () => rows([...rows(), ...create(1000)])],
     ['Clear', 'clear', () => rows([])],
     ['Update every 10th row', 'update', () => {
-        const data = rows();
-        for (let i = 0, row; i < data.length; i += 10)
-            (row = data[i])?.label(row.label() + ' !!!');
+        for (let i = 0, all = rows(), row; i < all.length; i += 10)
+            (row = all[i])?.text(`${row.text()} !!!`);
     }],
     ['Swap Rows', 'swaprows', () => {
-        const data = rows();
-        [data[1], data[998]] = [data[998], data[1]];
-        rows([...data]);
+        const all = rows();
+        [all[1], all[998]] = [all[998], all[1]], rows([...all]);
     }]].map(([content, id, click]) =>
         ({class: 'col-sm-6 smallpad', content:
             {is: 'button', id, class: 'btn btn-primary btn-block',
