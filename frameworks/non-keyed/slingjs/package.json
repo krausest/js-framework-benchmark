@@ -11,14 +11,14 @@
     "build-prod": "webpack -p"
   },
   "devDependencies": {
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10",
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.20.2",
-    "@babel/preset-env": "^7.20.2",
-    "@babel/register": "^7.4.0",
-    "babel-eslint": "^10.0.3",
-    "babel-loader": "^8.0.6"
+    "webpack": "4.41.2",
+    "webpack-cli": "3.3.10",
+    "@babel/cli": "7.2.3",
+    "@babel/core": "7.20.2",
+    "@babel/preset-env": "7.20.2",
+    "@babel/register": "7.4.0",
+    "babel-eslint": "10.0.3",
+    "babel-loader": "8.0.6"
   },
   "dependencies": {
     "slingjs": "17.7.1"
