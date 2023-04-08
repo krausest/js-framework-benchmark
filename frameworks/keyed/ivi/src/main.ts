@@ -1,7 +1,5 @@
-import { component, List } from "ivi";
-import { type Dispatch, useReducer } from "ivi/state";
-import { htm } from "ivi/template";
-import { createRoot, updateRoot } from "./root.js";
+import { defineRoot, dirtyCheck, update, component, List, eventDispatcher, getProps, useReducer } from "ivi";
+import { htm } from "@ivi/tpl";
 import { Entry, State, Action, ActionType } from "./types.js";
 
 const random = (max: number) => Math.round(Math.random() * 1000) % max;
@@ -58,69 +56,66 @@ function appStateReducer(state: State, action: Action): State {
   }
 }
 
+const dispatch = eventDispatcher<Action>("dispatch");
+
 interface RowProps {
-  readonly dispatch: Dispatch<Action>;
   readonly entry: Entry;
   readonly selected: boolean;
 }
 
-const Row = component<RowProps>(() => {
-  let _props: RowProps;
-  const onSelect = () => { _props.dispatch({ type: ActionType.Select, entry: _props.entry }); };
-  const onRemove = () => { _props.dispatch({ type: ActionType.Remove, entry: _props.entry }); };
-  return (props) => (
-    _props = props,
-    htm`
-    tr${props.selected ? "danger" : ""}
-      td.col-md-1 =${props.entry.id}
+const Row = component<RowProps>((c) => {
+  const onSelect = () => { dispatch(c, { type: ActionType.Select, entry: getProps(c).entry }); };
+  const onRemove = () => { dispatch(c, { type: ActionType.Remove, entry: getProps(c).entry }); };
+  return ({ entry, selected }) => htm`
+    tr${selected === true ? "danger" : ""}
+      td.col-md-1 =${entry.id}
       td.col-md-4
-        a @click=${onSelect} =${props.entry.label}
+        a @click=${onSelect} =${entry.label}
       td.col-md-1
-        a @click=${onRemove}
-          span.glyphicon.glyphicon-remove :aria-hidden='true'
+        a @click=${onRemove} span.glyphicon.glyphicon-remove :aria-hidden='true'
       td.col-md-6
-    `
-  );
-}, (a, b) => a.entry === b.entry && a.selected === b.selected);
+    `;
+});
 
-const Button = (text: string, id: string, onClick: () => void) => htm`-c
+const Button = (text: string, id: string, onClick: () => void) => /* preventClone */ htm`
   div.col-sm-6.smallpad
     button.btn.btn-primary.btn-block :type='button' :id=${id} @click=${onClick}
-      ${text}
+      =${text}
 `;
 
 const App = component((c) => {
-  const [state, dispatch] = useReducer(c, INITIAL_STATE, appStateReducer);
+  const [_state, _dispatch] = useReducer(c, INITIAL_STATE, appStateReducer);
 
+  const onDispatch = (ev: CustomEvent<Action>) => { _dispatch(ev.detail); };
   const buttons = [
-    Button("Create 1,000 rows", "run", () => { dispatch({ type: ActionType.Run }); }),
-    Button("Create 10,000 rows", "runlots", () => { dispatch({ type: ActionType.RunLots }); }),
-    Button("Append 1,000 rows", "add", () => { dispatch({ type: ActionType.Add }); }),
-    Button("Update every 10th row", "update", () => { dispatch({ type: ActionType.Update }); }),
-    Button("Clear", "clear", () => { dispatch({ type: ActionType.Clear }); }),
-    Button("Swap Rows", "swaprows", () => { dispatch({ type: ActionType.SwapRows }); }),
+    Button("Create 1,000 rows", "run", () => { _dispatch({ type: ActionType.Run }); }),
+    Button("Create 10,000 rows", "runlots", () => { _dispatch({ type: ActionType.RunLots }); }),
+    Button("Append 1,000 rows", "add", () => { _dispatch({ type: ActionType.Add }); }),
+    Button("Update every 10th row", "update", () => { _dispatch({ type: ActionType.Update }); }),
+    Button("Clear", "clear", () => { _dispatch({ type: ActionType.Clear }); }),
+    Button("Swap Rows", "swaprows", () => { _dispatch({ type: ActionType.SwapRows }); }),
   ];
 
   return () => {
-    const { data, selected } = state();
-    return htm`-c
+    const { data, selected } = _state();
+    return /* preventClone */ htm`
     div.container
       div.jumbotron
         div.row
-          div.col-md-6
-            h1 'ivi'
-          div.col-md-6
-            div.row ${buttons}
+          div.col-md-6 h1 'ivi'
+          div.col-md-6 div.row ${buttons}
       table.table.table-hover.table-striped.test-data
+        @dispatch=${onDispatch}
         ${data.length
-        ? htm`tbody ${List(data, getEntryId, (entry) => Row({ dispatch, entry, selected: entry.id === selected }))}`
-        : htm`tbody`}
+           ? htm`tbody ${List(data, getEntryId, (entry) => Row({ entry, selected: selected === entry.id }))}`
+           : htm`tbody`}
       span.preloadicon.glyphicon.glyphicon-remove :aria-hidden='true'
     `;
   };
 });
 
-updateRoot(
-  createRoot(document.getElementById("main")!),
-  App(),
+update(
+  // Defines a custom root node that disables batching for benchmark.
+  defineRoot((root) => { dirtyCheck(root); })(document.getElementById("main")!),
+  App()
 );
