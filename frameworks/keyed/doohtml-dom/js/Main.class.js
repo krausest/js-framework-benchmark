@@ -7,8 +7,8 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 const DEFAULT_SIZE = 1000
-const SWAP_ROW = 998
-const EMPTY = String('')
+const CHILD_1 = 1
+const CHILD_998 = 998
 Doo.define(
   	class Main extends Doo {
 		constructor() {
@@ -51,9 +51,9 @@ Doo.define(
         }
 
 		buildData(count = DEFAULT_SIZE) {
-			const data = []
+			const data = new Array(count)
 			for (let i = 0; i < count; i++) {
-				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
+				data[i] = {id: this.ID++,label: `${adjectives[_random(lenA)]} ${colours[_random(lenB)]}  ${nouns[_random(lenC)]}`}
 			}
 			return data	
 		}
@@ -126,16 +126,16 @@ Doo.define(
 		}
 
 		swapRows() {
-			if (this.data.rows.length > SWAP_ROW) {
-				let node1 = this.tbody.firstChild.nextSibling, 
-					swapRow = this.tbody.childNodes[SWAP_ROW],
+			if (this.data.rows.length > CHILD_998) {
+				let node1 = this.tbody.childNodes[CHILD_1], 
+					swapRow = this.tbody.childNodes[CHILD_998],
 					node999 = swapRow.nextSibling,
-					row1 = this.data.rows[1]
+					row1 = this.data.rows[CHILD_1]
 				
-				this.data.rows[1] = this.data.rows[SWAP_ROW];
-				this.data.rows[SWAP_ROW] = row1
-				
- 				this.tbody.insertBefore(node1.parentNode.replaceChild(swapRow, node1), node999)
+				this.data.rows[CHILD_1] = this.data.rows[CHILD_998];
+				this.data.rows[CHILD_998] = row1
+		 		this.tbody.insertBefore(swapRow, node1)
+		 		this.tbody.insertBefore(node1, node999)
 			}
 		}
 
