@@ -10,7 +10,7 @@
     ]
   },
   "scripts": {
-    "build-prod": "./node_modules/.bin/dojo build"
+    "build-prod": "NODE_OPTIONS=--openssl-legacy-provider ./node_modules/.bin/dojo build"
   },
   "dependencies": {
     "@dojo/framework": "8.0.0"
@@ -18,6 +18,7 @@
   "devDependencies": {
     "@dojo/cli": "8.0.0",
     "@dojo/cli-build-app": "8.0.0",
+    "postcss": "8.4.21",
     "typescript": "4.7.4"
   },
   "prettier": {
