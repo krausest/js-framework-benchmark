@@ -2,12 +2,14 @@ import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import { babel } from '@rollup/plugin-babel';
 import { URL } from 'url';
+import commonjs from '@rollup/plugin-commonjs';
 
 const plugins = [
   resolve({
     preferBuiltins: false,
     extensions: ['.js', '.jsx'],
   }),
+  commonjs(),
   babel({
     plugins: [
       [

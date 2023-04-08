@@ -73,44 +73,15 @@ const swapRows = () => {
   return false;
 };
 
-let prevBlock;
-
 const select = (id) => {
-  if (prevBlock) {
-    if (prevBlock.props.id === id) return;
-    const { id: prevId, label } = prevBlock.props;
-    prevBlock.patch(
-      Row(
-        {
-          id: prevId,
-          label,
-          className: '',
-        },
-        String(id)
-      )
-    );
-  }
-  const block = main.children.find((block) => block.props.id === id);
-  const { label } = block.props;
-  block.patch(
-    Row(
-      {
-        id,
-        label,
-        className: 'danger',
-      },
-      String(id)
-    )
-  );
-
-  prevBlock = block;
+  selected = id;
+  update();
 };
 
 const remove = (id) => {
   const index = list.findIndex((item) => item.id === id);
   list.splice(index, 1);
-  main.children[index].remove();
-  main.children.splice(index, 1);
+  update();
 };
 
 const Main = block(({ rows }) => (
