@@ -1,24 +1,14 @@
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
-import { babel } from '@rollup/plugin-babel';
 import { URL } from 'url';
+import million from 'million/compiler';
 
 const plugins = [
   resolve({
     preferBuiltins: false,
     extensions: ['.js', '.jsx'],
   }),
-  babel({
-    plugins: [
-      [
-        '@babel/plugin-transform-react-jsx',
-        {
-          runtime: 'classic',
-          pragma: 'h',
-        },
-      ],
-    ],
-  }),
+  million.rollup(),
   terser({
     parse: {
       ecma: 8,
