@@ -1,0 +1,28 @@
+{
+  "name": "js-framework-benchmark-non-keyed-cydon",
+  "version": "1.0.0",
+  "description": "Benchmark for cydon.js framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "cydon",
+    "frameworkHomeURL": "https://github.com/0-v-0/cydon",
+    "issues": [
+      1139
+    ]
+  },
+  "keywords": [
+    "cydon"
+  ],
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-replace": "^5.0.2",
+    "@rollup/plugin-terser": "^0.4.1",
+    "cydon": "^0.1.3",
+    "rollup": "^3.20.2",
+    "terser": "^5.16.9"
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "type": "module"
+}
