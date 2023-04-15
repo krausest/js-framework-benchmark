@@ -87,7 +87,7 @@ function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
   } else if (process.platform == "linux") {
     return "/usr/bin/google-chrome";
   } else if(/^win/i.test(process.platform)) {
-    return 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';    
+    return 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';    
   } else {
     throw new Error("Path to Google Chrome executable must be specified");
   }
