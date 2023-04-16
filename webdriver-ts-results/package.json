@@ -23,7 +23,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint './src/**/*.{ts,tsx}'",
-    "build-prod": "rimraf dist && cross-env NODE_ENV=\"production\" webpack --env prod -c webpack.config.js && rimraf table.html && rimraf \"BoxPlotTable*.js\" && cpx dist/table.html . && cpx \"dist/BoxPlotTable*.js\" . && cpx \"dist/plotly*.js\" ."
+    "build-prod": "rimraf --glob dist && cross-env NODE_ENV=\"production\" webpack --env prod -c webpack.config.js && rimraf --glob table.html && rimraf --glob \"BoxPlotTable*.js\" && cpx dist/table.html . && cpx \"dist/BoxPlotTable*.js\" . && cpx \"dist/plotly*.js\" ."
   },
   "eslintConfig": {
     "extends": "react-app"
