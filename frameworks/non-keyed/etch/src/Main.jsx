@@ -99,7 +99,7 @@ export class Main {
                     {rows}
                 </tbody>
             </table>
-            <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <span className="preloadicon glyphicon glyphicon-remove" ariaHidden="true"></span>
         </div>);
     }
 }

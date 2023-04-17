@@ -37,7 +37,7 @@ export class Row {
             <td className="col-md-4">
                 <a onClick={this.onClick}>{data.label}</a>
             </td>
-            <td className="col-md-1"><a onClick={this.onDelete}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+            <td className="col-md-1"><a onClick={this.onDelete}><span className="glyphicon glyphicon-remove" ariaHidden="true"></span></a></td>
             <td className="col-md-6"></td>
         </tr>);
     }
