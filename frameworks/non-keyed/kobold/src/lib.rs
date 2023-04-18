@@ -1,6 +1,5 @@
 use js_sys::Math;
 use kobold::prelude::*;
-use std::sync::atomic::{AtomicUsize, Ordering};
 use wasm_bindgen::prelude::*;
 
 const ADJECTIVES_LEN: usize = 25;
@@ -49,92 +48,94 @@ fn random(max: usize) -> usize {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-struct Label {
-    key: usize,
+struct RowData {
+    id: usize,
     label: String,
 }
 
 struct State {
-    labels: Vec<Label>,
+    rows: Vec<RowData>,
     selected: Option<usize>,
+    last: usize,
 }
 
 impl State {
     fn new() -> Self {
         State {
-            labels: Vec::new(),
+            rows: Vec::new(),
             selected: None,
+            last: 0,
         }
     }
-    fn remove(&mut self, key: usize) {
-        self.labels.retain(|row| row.key != key)
-    }
-    fn run(&mut self) {
-        self.labels = build_data(1_000);
-        self.selected = None;
-    }
-    fn run_lots(&mut self) {
-        self.labels = build_data(10_000);
-        self.selected = None;
-    }
-    fn add(&mut self) {
-        self.labels.append(&mut build_data(1_000))
-    }
-    fn update(&mut self) {
-        for i in 0..(self.labels.len() / 10) {
-            self.labels[i * 10].label += " !!!";
+    fn append_rows(&mut self, count: usize) {
+        self.rows.reserve_exact(count);
+        let d = self.last + 1;
+        for i in 0..count {
+            let adjective = ADJECTIVES[random(ADJECTIVES_LEN)];
+            let colour = COLOURS[random(COLOURS_LEN)];
+            let noun = NOUNS[random(NOUNS_LEN)];
+            let mut label = String::with_capacity(adjective.len() + colour.len() + noun.len() + 2);
+            label.push_str(adjective);
+            label.push(' ');
+            label.push_str(colour);
+            label.push(' ');
+            label.push_str(noun);
+            self.rows.push(RowData {
+                id: i + d,
+                label,
+            });
         }
-    }
-    fn clear(&mut self) {
-        self.labels.clear();
-        self.selected = None;
-    }
-    fn swap(&mut self, a: usize, b: usize) {
-        if self.labels.len() > a + 1 && self.labels.len() > b {
-            self.labels.swap(a, b);
-        }
+        self.last += count;
     }
 
+    fn remove(&mut self, id: usize) {
+        self.rows.remove(id);
+    }
+
+    fn run(&mut self) {
+        self.clear();
+        self.append_rows(1_000)
+    }
+    fn run_lots(&mut self) {
+        self.clear();
+        self.append_rows(10_000)
+    }
+    fn add(&mut self) {
+        self.append_rows(1_000)
+    }
+    fn update(&mut self) {
+        self.rows.iter_mut().step_by(10).for_each(|row| {
+            row.label.reserve_exact(4);
+            row.label.push_str(" !!!")
+        });
+    }
+    fn clear(&mut self) {
+        self.rows = Vec::new();
+        self.selected = None
+    }
+    fn swap(&mut self) {
+        if self.rows.len() > 998 {
+            self.rows.swap(1, 998);
+        }
+    }
     fn select(&mut self, id: usize) {
         self.selected = Some(id)
     }
 }
 
-static ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
-
-fn build_data(count: usize) -> Vec<Label> {
-    let mut list = Vec::with_capacity(count);
-    for _i in 0..count {
-        let adjective = ADJECTIVES[random(ADJECTIVES_LEN)];
-        let colour = COLOURS[random(COLOURS_LEN)];
-        let noun = NOUNS[random(NOUNS_LEN)];
-        let mut label = String::with_capacity(adjective.len() + colour.len() + noun.len() + 2);
-        label.push_str(adjective);
-        label.push(' ');
-        label.push_str(colour);
-        label.push(' ');
-        label.push_str(noun);
-        list.push(Label {
-            key: ID_COUNTER.load(Ordering::Relaxed),
-            label,
-        });
-        ID_COUNTER.store(ID_COUNTER.load(Ordering::Relaxed) + 1, Ordering::Relaxed);
-    }
-    list
-}
-
 #[component]
-fn Row(label: Label, state: &Hook<State>) -> impl View {
-    let is_in_danger = class!("danger" if state.selected == Some(label.key));
+fn Row(num: usize, row: RowData, state: &Hook<State>) -> impl View {
+    let is_in_danger = class!("danger" if state.selected == Some(row.id));
+
     bind! { state:
-        let remove = move |_| state.remove(label.key);
-        let select = move |_| state.select(label.key);
+        let remove = move |_| state.remove(num);
+        let select = move |_| state.select(row.id);
     }
 
     view! {
         <tr.{is_in_danger}>
-            <td class="col-md-1">{label.key.to_string()}</td>
-            <td class="col-md-4"><a onclick={select}>{label.label}</a></td>
+            <td class="col-md-1">{row.id.to_string()}</td>
+            <td class="col-md-4"><a onclick={select}>{row.label}</a></td>
             <td class="col-md-1"><a onclick={remove}><span class="glyphicon glyphicon-remove" aria_hidden="true"></span></a></td>
             <td class="col-md-6"/>
         </tr>
@@ -168,7 +169,7 @@ fn Button(action: ButtonAction, state: &Hook<State>) -> impl View {
             ButtonAction::Add => state.add(),
             ButtonAction::Update => state.update(),
             ButtonAction::Clear => state.clear(),
-            ButtonAction::Swap => state.swap(1,998),
+            ButtonAction::Swap => state.swap(),
         };
     }
 
@@ -208,7 +209,7 @@ fn App() -> impl View {
             </div>
             <table class="table table-hover table-striped test-data">
                 <tbody>
-                { for state.labels.iter().map(|l| view! { <Row {state} label={l.to_owned()} />}) }
+                { for state.rows.iter().enumerate().map(|(i,l)| view! { <Row {state}  num={i} row={l.to_owned()} />}) }
                 </tbody>
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria_hidden="true" />
