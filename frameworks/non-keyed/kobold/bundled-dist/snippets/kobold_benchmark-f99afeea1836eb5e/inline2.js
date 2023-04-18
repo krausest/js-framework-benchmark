@@ -1,4 +1,4 @@
-export function __e0_10f4d4d44b3ea73f(a,b,c,d,e) {
+export function __e0_7e970beef19ed0b9(a,b,c,d,e) {
 let e0=document.createElement("tr");
 e0.className=a;
 let e1=document.createElement("td");
@@ -16,7 +16,7 @@ let e5=document.createElement("a");
 e5.addEventListener("click",e);
 let e6=document.createElement("span");
 e6.className="glyphicon glyphicon-remove";
-e6.setAttribute("aria_hidden","true");
+e6.setAttribute("aria-hidden","true");
 e5.append(e6);
 e4.append(e5);
 let e7=document.createElement("td");

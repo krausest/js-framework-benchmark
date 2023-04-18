@@ -1,5 +1,5 @@
 [package]
-name = "js-framework-benchmark-kobold"
+name = "kobold_benchmark"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,16 +7,9 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-kobold = "0.7.0"
+kobold = "0.7.1"
 wasm-bindgen = "0.2.84"
 js-sys = "0.3.61"
-
-[dependencies.web-sys]
-version = "0.3"
-features = [
-  "Document",
-  "HtmlInputElement",
-]
 
 [profile.release]
 opt-level = 3

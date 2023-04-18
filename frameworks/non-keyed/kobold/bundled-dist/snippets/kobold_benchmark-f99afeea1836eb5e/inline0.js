@@ -1,4 +1,4 @@
-export function __e0_c1b0d2ff99009289(a,b,c,d,e,f,g) {
+export function __e0_f543312a9dbfd6ab(a,b,c,d,e,f,g) {
 let e0=document.createElement("div");
 e0.className="container";
 let e1=document.createElement("div");
@@ -25,7 +25,7 @@ e8.append(g);
 e7.append(e8);
 let e9=document.createElement("span");
 e9.className="preloadicon glyphicon glyphicon-remove";
-e9.setAttribute("aria_hidden","true");
+e9.setAttribute("aria-hidden","true");
 e0.append(e1,e7,e9);
 return e0;
 }

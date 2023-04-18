@@ -136,7 +136,7 @@ fn Row(num: usize, row: RowData, state: &Hook<State>) -> impl View {
         <tr.{is_in_danger}>
             <td class="col-md-1">{row.id.to_string()}</td>
             <td class="col-md-4"><a onclick={select}>{row.label}</a></td>
-            <td class="col-md-1"><a onclick={remove}><span class="glyphicon glyphicon-remove" aria_hidden="true"></span></a></td>
+            <td class="col-md-1"><a onclick={remove}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
             <td class="col-md-6"/>
         </tr>
     }
@@ -212,7 +212,7 @@ fn App() -> impl View {
                 { for state.rows.iter().enumerate().map(|(i,l)| view! { <Row {state}  num={i} row={l.to_owned()} />}) }
                 </tbody>
             </table>
-            <span class="preloadicon glyphicon glyphicon-remove" aria_hidden="true" />
+            <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
         </div>
         }
     })

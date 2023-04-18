@@ -1,10 +1,10 @@
 {
-  "name": "js-framework-benchmark-keyed-kobold",
+  "name": "js-framework-benchmark-nonkeyed-kobold",
   "version": "1.0.0",
   "description": "Benchmark for Kobold",
   "license": "MPL-2.0",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.7.0",
+    "frameworkVersion": "0.7.1",
     "frameworkHomeURL": "https://github.com/maciejhirsz/kobold",
     "issues": [
       1139
