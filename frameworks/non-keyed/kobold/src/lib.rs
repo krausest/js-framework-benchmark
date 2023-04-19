@@ -177,7 +177,7 @@ fn Button(action: ButtonAction, state: &Hook<State>) -> impl View {
     view! {
         <div class="col-sm-6 smallpad">
         <button
-            id={id}
+            id={static id}
             class="btn btn-primary btn-block"
             type="button"
             {onclick}
