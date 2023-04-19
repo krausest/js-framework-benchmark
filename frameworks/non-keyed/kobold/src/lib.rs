@@ -134,7 +134,7 @@ fn Row(num: usize, row: RowData, state: &Hook<State>) -> impl View {
 
     view! {
         <tr.{is_in_danger}>
-            <td class="col-md-1">{row.id.to_string()}</td>
+            <td class="col-md-1">{row.id}</td>
             <td class="col-md-4"><a onclick={select}>{row.label}</a></td>
             <td class="col-md-1"><a onclick={remove}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
             <td class="col-md-6"/>
