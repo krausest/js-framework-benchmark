@@ -74,7 +74,8 @@ impl State {
             let adjective = ADJECTIVES[random(ADJECTIVES_LEN)];
             let colour = COLOURS[random(COLOURS_LEN)];
             let noun = NOUNS[random(NOUNS_LEN)];
-            let mut label = String::with_capacity(adjective.len() + colour.len() + noun.len() + 2);
+            let mut label = String::new();
+            label.reserve_exact(adjective.len() + colour.len() + noun.len() + 2);
             label.push_str(adjective);
             label.push(' ');
             label.push_str(colour);
