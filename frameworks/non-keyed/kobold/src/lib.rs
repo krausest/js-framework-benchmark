@@ -182,7 +182,7 @@ fn Button(action: ButtonAction, state: &Hook<State>) -> impl View {
             type="button"
             {onclick}
         >
-            { text }
+            { static text }
         </button>
     </div>
     }
