@@ -125,18 +125,19 @@ impl State {
 }
 
 #[component]
-fn Row(num: usize, row: RowData, state: &Hook<State>) -> impl View {
-    let is_in_danger = class!("danger" if state.selected == Some(row.id));
+fn Row<'a>(num: usize, row: &'a RowData, state: &'a Hook<State>) -> impl View + 'a {
+    let id = row.id.to_owned();
+    let is_in_danger = class!("danger" if state.selected == Some(id));
 
     bind! { state:
         let remove = move |_| state.remove(num);
-        let select = move |_| state.select(row.id);
+        let select = move |_| state.select(id);
     }
 
     view! {
         <tr.{is_in_danger}>
-            <td class="col-md-1">{row.id}</td>
-            <td class="col-md-4"><a onclick={select}>{row.label}</a></td>
+            <td class="col-md-1">{id}</td>
+            <td class="col-md-4"><a onclick={select}>{ref row.label}</a></td>
             <td class="col-md-1"><a onclick={remove}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
             <td class="col-md-6"/>
         </tr>
@@ -177,7 +178,7 @@ fn Button(action: ButtonAction, state: &Hook<State>) -> impl View {
     view! {
         <div class="col-sm-6 smallpad">
         <button
-            id={static id}
+            id={  static id }
             class="btn btn-primary btn-block"
             type="button"
             {onclick}
@@ -210,7 +211,7 @@ fn App() -> impl View {
             </div>
             <table class="table table-hover table-striped test-data">
                 <tbody>
-                { for state.rows.iter().enumerate().map(|(i,l)| view! { <Row {state}  num={i} row={l.to_owned()} />}) }
+                { for state.rows.iter().enumerate().map(|(num,row)| view! { <Row {state}  {num} {row} /> }) }            
                 </tbody>
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
