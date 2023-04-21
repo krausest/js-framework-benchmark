@@ -284,6 +284,8 @@ if (process.env.HOST) {
 async function main() {
   let runBenchmarksArgs: string[] =  (args.benchmark && args.benchmark.length > 0) ? args.benchmark : [""];
   let runBenchmarks: Array<BenchmarkInfo> = benchmarkInfos.filter((b) =>
+    // afterframe currently only targets CPU benchmarks
+    (config.BENCHMARK_RUNNER !== BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME || b.type == BenchmarkType.CPU) && 
     runBenchmarksArgs.some((name) => b.id.toLowerCase().indexOf(name) > -1)
   );
   
@@ -291,7 +293,7 @@ async function main() {
   let runFrameworks: FrameworkData[];
   let matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
-  runFrameworks = await initializeFrameworks(matchesDirectoryArg);
+  runFrameworks = (await initializeFrameworks(matchesDirectoryArg)).filter(f => f.keyed || config.BENCHMARK_RUNNER !== BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME);
 
   console.log("ARGS.smotest", args.smoketest)
   if (args.smoketest) {
