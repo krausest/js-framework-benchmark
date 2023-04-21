@@ -1,9 +1,9 @@
-import * as lighthouse from "lighthouse";
 import *  as chromeLauncher from "chrome-launcher";
 
-import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
-import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./benchmarksLighthouse";
-import { StartupBenchmarkInfo } from "./benchmarksCommon";
+import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
+import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./benchmarksLighthouse.js";
+import { StartupBenchmarkInfo } from "./benchmarksCommon.js";
+import lighthouse from "lighthouse";
 
 let config: TConfig = defaultConfig;
 

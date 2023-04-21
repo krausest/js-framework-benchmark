@@ -2,7 +2,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use leptos::*;
 use rand::prelude::*;
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::{prelude::*, JsCast};
 
 static ADJECTIVES: &[&str] = &[
     "pretty",
@@ -42,16 +42,6 @@ static NOUNS: &[&str] = &[
     "pizza", "mouse", "keyboard",
 ];
 
-#[component]
-fn Button<'a>(cx: Scope, id: &'a str, text: &'a str) -> Element {
-    view! {
-        cx,
-        <div class="col-sm-6 smallpad">
-            <button id=id class="btn btn-primary btn-block" type="button">{text}</button>
-        </div>
-    }
-}
-
 #[derive(Copy, Debug, Clone, PartialEq, Eq, Hash)]
 struct RowData {
     id: usize,
@@ -89,12 +79,35 @@ fn build_data(cx: Scope, count: usize) -> Vec<RowData> {
     data
 }
 
+/// Button component.
 #[component]
-fn App(cx: Scope) -> Element {
+fn Button(
+    cx: Scope,
+    /// ID for the button element
+    id: &'static str,
+    /// Text that should be included
+    text: &'static str,
+) -> impl IntoView {
+    view! {
+        cx,
+        <div class="col-sm-6 smallpad">
+            <button
+                id=id
+                class="btn btn-primary btn-block"
+                type="button"
+            >
+                {text}
+            </button>
+        </div>
+    }
+}
+
+#[component]
+fn App(cx: Scope) -> impl IntoView {
     let (data, set_data) = create_signal(cx, Vec::<RowData>::new());
     let (selected, set_selected) = create_signal(cx, None::<usize>);
 
-    let remove = move |id| {
+    let remove = move |id: usize| {
         set_data.update(move |data| data.retain(|row| row.id != id));
     };
 
@@ -138,26 +151,31 @@ fn App(cx: Scope) -> Element {
     view! {
         cx,
         <div class="container">
-            <div class="jumbotron"><div class="row">
-            <div class="col-md-6"><h1>"Leptos"</h1></div>
-            <div class="col-md-6"><div class="row">
-                <Button id="run" text="Create 1,000 rows" on:click=run/>
-                <Button id="runlots" text="Create 10,000 rows" on:click=run_lots />
-                <Button id="add" text="Append 1,000 rows" on:click=add />
-                <Button id="update" text="Update every 10th row" on:click=update />
-                <Button id="clear" text="Clear" on:click=clear />
-                <Button id="swaprows" text="Swap Rows" on:click=swap_rows />
-            </div></div>
-            </div></div>
+            <div class="jumbotron">
+                <div class="row">
+                    <div class="col-md-6"><h1>"Leptos"</h1></div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <Button id="run" text="Create 1,000 rows" on:click=run/>
+                            <Button id="runlots" text="Create 10,000 rows" on:click=run_lots />
+                            <Button id="add" text="Append 1,000 rows" on:click=add />
+                            <Button id="update" text="Update every 10th row" on:click=update />
+                            <Button id="clear" text="Clear" on:click=clear />
+                            <Button id="swaprows" text="Swap Rows" on:click=swap_rows />
+                        </div>
+                    </div>
+                </div>
+            </div>
             <table class="table table-hover table-striped test-data">
                 <tbody>
-                    <For each=data key=|row| row.id>{{
-                        let is_selected = is_selected.clone();
-                        move |cx, row: &RowData| {
+                    <For
+                        each={data}
+                        key={|row| row.id}
+                        view=move |cx, row: RowData| {
                             let row_id = row.id;
                             let (label, _) = row.label;
                             let is_selected = is_selected.clone();
-                            view! {
+                            template! {
                                 cx,
                                 <tr class:danger={move || is_selected(Some(row_id))}>
                                     <td class="col-md-1">{row_id.to_string()}</td>
@@ -167,7 +185,7 @@ fn App(cx: Scope) -> Element {
                                 </tr>
                             }
                         }
-                    }}</For>
+                    />
                 </tbody>
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
@@ -177,8 +195,8 @@ fn App(cx: Scope) -> Element {
 
 #[wasm_bindgen(start)]
 pub fn start() {
-    let mount_el = document().query_selector("#main").unwrap().unwrap();
-    leptos::mount(mount_el.unchecked_into(), |cx| {
-        view! { cx, <App/> }
-    });
+    console_error_panic_hook::set_once();
+
+    let root = document().query_selector("#main").unwrap().unwrap();
+    mount_to(root.unchecked_into(), |cx| view! { cx, <App/> });
 }

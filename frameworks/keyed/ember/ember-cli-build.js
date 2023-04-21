@@ -1,10 +1,10 @@
-'use strict';
+﻿'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 const {Webpack} = require('@embroider/webpack');
 
 module.exports = function (defaults) {
-  let app = new EmberApp(defaults, {
+  const app = new EmberApp(defaults, {
     hinting: false,
     'ember-cli-terser': {
       terser: {

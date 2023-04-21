@@ -1,10 +1,10 @@
 import { WebDriver, logging } from "selenium-webdriver";
-import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriver";
-import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess";
+import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriver.js";
+import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess.js";
 
-import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
+import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
 import * as R from "ramda";
-import { BenchmarkType, DurationMeasurementMode } from "./benchmarksCommon";
+import { BenchmarkType, DurationMeasurementMode } from "./benchmarksCommon.js";
 
 let config: TConfig = defaultConfig;
 

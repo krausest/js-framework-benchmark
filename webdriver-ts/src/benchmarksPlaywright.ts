@@ -1,10 +1,10 @@
 // import { testTextContains, testTextContainsJS, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath } from './webdriverAccess'
 
 import { Browser, Page } from "playwright-core";
-import * as benchmarksCommon from "./benchmarksCommon";
-import { BenchmarkType } from "./benchmarksCommon";
-import { config, FrameworkData } from "./common";
-import { checkElementContainsText, checkElementExists, checkElementHasClass, checkElementNotExists, clickElement } from "./playwrightAccess";
+import * as benchmarksCommon from "./benchmarksCommon.js";
+import { BenchmarkType } from "./benchmarksCommon.js";
+import { config, FrameworkData } from "./common.js";
+import { checkElementContainsText, checkElementExists, checkElementHasClass, checkElementNotExists, clickElement } from "./playwrightAccess.js";
 
 
 export abstract class CPUBenchmarkPlaywright implements benchmarksCommon.BenchmarkImpl {

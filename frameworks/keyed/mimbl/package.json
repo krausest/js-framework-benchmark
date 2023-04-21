@@ -1,13 +1,10 @@
 {
   "name": "js-framework-benchmark-keyed-mimbl",
-  "version": "0.8.1",
+  "version": "0.10.4",
   "description": "Benchmark for Mimbl framework (keyed)",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mimbl",
-    "frameworkHomeURL": "https://mmichlin66.github.io/mimbl/about.html",
-    "issues": [
-      1139
-    ]
+    "frameworkHomeURL": "https://mimjs.com/"
   },
   "scripts": {
     "build-prod": "webpack"
@@ -18,19 +15,19 @@
   ],
   "author": "Michael Michlin",
   "license": "Apache-2.0",
-  "homepage": "https://mmichlin66.github.io",
+  "homepage": "https://mimjs.com/",
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "source-map-loader": "2.0.0",
-    "ts-loader": "8.0.13",
-    "typescript": "4.1.3",
-    "webpack": "5.11.1",
-    "webpack-cli": "^4.6.0"
+    "source-map-loader": "4.0.1",
+    "ts-loader": "9.4.2",
+    "typescript": "4.9.4",
+    "webpack": "5.75.0",
+    "webpack-cli": "^5.0.1"
   },
   "dependencies": {
-    "mimbl": "^0.8.1"
+    "mimbl": "^0.10.4"
   }
 }

@@ -11,8 +11,7 @@
     "frameworkHomeURL": "https://glimmerjs.com/",
     "customURL": "/dist",
     "issues": [
-      800,
-      1139
+      800
     ]
   },
   "scripts": {

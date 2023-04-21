@@ -10,7 +10,10 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "bdc",
-    "frameworkHomeURL": "https://github.com/bwhmather/bdc-js"
+    "frameworkHomeURL": "https://github.com/bwhmather/bdc-js",
+    "issues": [
+      1139
+    ]
   },
   "dependencies": {
     "bdc": "1.0.0"

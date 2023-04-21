@@ -1,4 +1,4 @@
-import { markup, textNode, detectChanges, wrapWithChangeDetector, renderElementWithoutClass } from '../node_modules/slingjs/sling.min.es5';
+import { markup, textNode, detectChanges, wrapWithChangeDetector, renderElementWithoutClass } from '../node_modules/slingjs/sling.min';
 var { Store } = require('./store.es6');
 
 export class ControllerComponent {
@@ -139,7 +139,7 @@ export class ControllerComponent {
                                     children: [
                                         markup('h1', {
                                             children: [
-                                                textNode('Sling.js 14.3.0')
+                                                textNode('Sling.js 18.0.0')
                                             ]
                                         })
                                     ]

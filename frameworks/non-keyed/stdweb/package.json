@@ -6,7 +6,7 @@
   "js-framework-benchmark": {
     "frameworkVersion": "0.4.17",
     "frameworkHomeURL": "https://docs.rs/stdweb/latest/stdweb/",
-    "issues": [772]
+    "issues": [772,1139]
   },
   "scripts": {
     "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",

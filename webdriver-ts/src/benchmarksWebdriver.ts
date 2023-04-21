@@ -1,13 +1,13 @@
 import { WebDriver } from "selenium-webdriver";
-import * as benchmarksCommon from "./benchmarksCommon";
-import { BenchmarkType } from "./benchmarksCommon";
-import { config, FrameworkData } from "./common";
+import * as benchmarksCommon from "./benchmarksCommon.js";
+import { BenchmarkType } from "./benchmarksCommon.js";
+import { config, FrameworkData } from "./common.js";
 import {
   clickElementById,
   clickElementByXPath,
   getTextByXPath, testClassContains, testElementLocatedById, testElementLocatedByXpath,
   testElementNotLocatedByXPath, testTextContains
-} from "./webdriverAccess";
+} from "./webdriverAccess.js";
 
 
 const SHORT_TIMEOUT = 20 * 1000;

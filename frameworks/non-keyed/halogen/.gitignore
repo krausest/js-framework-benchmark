@@ -8,4 +8,5 @@ node_modules
 .psci
 .psc*
 output
+output-es
 

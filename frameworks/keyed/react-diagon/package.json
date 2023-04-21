@@ -23,21 +23,21 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@babel/core": "7.12.3",
-    "@babel/preset-env": "7.12.1",
-    "@babel/preset-react": "7.12.1",
-    "@types/node": "~16.11.0",
-    "@types/react": "~18.0.17",
-    "@types/react-dom": "~18.0.6",
-    "babel-loader": "8.1.0",
-    "webpack": "5.11.1",
-    "webpack-cli": "^4.6.0",
-    "ts-loader": "8.0.13",
-    "typescript": "4.7.4"
+    "@babel/core": "7.21.0",
+    "@babel/preset-env": "7.20.2",
+    "@babel/preset-react": "7.18.6",
+    "@types/node": "~18.15.0",
+    "@types/react": "~18.0.28",
+    "@types/react-dom": "~18.0.11",
+    "babel-loader": "9.1.2",
+    "webpack": "5.76.1",
+    "webpack-cli": "^5.0.1",
+    "ts-loader": "9.4.2",
+    "typescript": "4.9.5"
   },
   "dependencies": {
-    "diagon": "0.13.0",
-    "diagon-react": "0.13.0",
+    "diagon": "0.14.3",
+    "diagon-react": "0.14.3",
     "react": "~18.2.0",
     "react-dom": "~18.2.0"
   }

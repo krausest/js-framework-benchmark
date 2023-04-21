@@ -1,10 +1,15 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const path = require('path')
 const fs = require('fs');
 const fsp = require('fs/promises');
 
 const app = express()
 const port = 8080
+
+let addCSP = false;
+
+app.use(express.json());
 
 let frameworkDirectory  = path.join(__dirname, "..", "frameworks");
 let webDriverResultDirectory  = path.join(__dirname, "..", "webdriver-ts-results");
@@ -42,11 +47,13 @@ async function loadFrameworkInfo(keyedDir, directoryName) {
             let packageLockJSON = JSON.parse(await fsp.readFile(packageLockJSONPath, "utf8"));
             result.versions = {};
             for (let packageName of packageNames) {
-              if (packageLockJSON.dependencies[packageName]) {
+              if (packageLockJSON.dependencies?.[packageName]) {
                 result.versions[packageName] = packageLockJSON.dependencies[packageName].version;
+              } else if (packageLockJSON.packages?.[`node_modules/${packageName}`]) {
+                result.versions[packageName] = packageLockJSON.packages[`node_modules/${packageName}`].version;
               } else {
                 result.versions[packageName] = "ERROR: Not found in package-lock";
-              }
+              }              
             }        
             result.frameworkVersionString = directoryName + "-v" + packageNames.map(p => result.versions[p]).join(" + ") + "-"+keyedDir;
             copyProps(result, packageJSON);
@@ -104,7 +111,16 @@ function addSiteIsolationForIndex(request, response, next) {
 }
 app.use(addSiteIsolationForIndex);
 
-app.use('/frameworks', express.static(frameworkDirectory))
+app.use('/frameworks', express.static(frameworkDirectory, 
+  {
+    setHeaders: function(res, path) {
+      if (addCSP && path.endsWith("index.html")) {
+        console.log("adding CSP to ", path);
+        res.setHeader('Content-Security-Policy', "default-src 'self'; report-uri /csp");
+      }
+    }
+  }
+))
 app.use('/webdriver-ts-results', express.static(webDriverResultDirectory))
 app.use('/css', express.static(path.join(frameworkDirectory, '..', 'css')))
 app.get('/index.html', async (req, res, next) => {
@@ -117,8 +133,41 @@ app.get('/ls', async (req, res) => {
     let t1 = Date.now();
     console.log("/ls duration ", (t1-t0));
 })
+app.use('/csp', bodyParser.json({ type: 'application/csp-report' }))
+
+let violations = []
+
+app.post('/csp', async (req, res) => {
+  console.log("/CSP ", req.body);
+  let uri = req.body['csp-report']["document-uri"]
+  let frameworkRegEx = /((non-)?keyed\/.*?\/)/
+  let framework = uri.match(frameworkRegEx)[0];
+  if (violations.indexOf(framework)==-1) {
+    violations.push(framework)
+  }
+  res.sendStatus(201);
+})
+
+app.get('/startCSP', async (req, res) => {
+  console.log("/startCSP");
+  violations = [];
+  addCSP = true;
+  res.send("OK")
+})
+
+app.get('/endCSP', async (req, res) => {
+  console.log("/endCSP");
+  violations = [];
+  addCSP = false;
+  res.send("OK")
+})
+
+app.get('/csp', async (req, res) => {
+  console.log("CSP violations recorded for", violations);
+  res.send(violations)
+})
 
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`)
+  console.log(`Server running on port ${port}`);
 })

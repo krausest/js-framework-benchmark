@@ -1,11 +1,12 @@
 import * as fs from "fs";
 import { result } from "lodash";
-import { BenchmarkInfo, BenchmarkType, fileName } from "./benchmarksCommon";
-import { BenchmarkLighthouse, StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse";
-import { TBenchmarkPuppeteer } from "./benchmarksPuppeteer";
-import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver";
-import { config as defaultConfig, FrameworkData, JSONResult } from "./common";
-import {jStat} from 'jstat';
+import { BenchmarkInfo, BenchmarkType, fileName } from "./benchmarksCommon.js";
+import { BenchmarkLighthouse, StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse.js";
+import { TBenchmarkPuppeteer } from "./benchmarksPuppeteer.js";
+import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver.js";
+import { config as defaultConfig, FrameworkData, JSONResult } from "./common.js";
+import pkg from 'jstat';
+const { jStat } = pkg;
 
 export type ResultLightHouse = {
   framework: FrameworkData;

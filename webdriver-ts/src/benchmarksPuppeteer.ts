@@ -1,10 +1,10 @@
 // import { testTextContains, testTextContainsJS, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath } from './webdriverAccess'
 
 import { Page } from "puppeteer-core";
-import * as benchmarksCommon from "./benchmarksCommon";
-import { BenchmarkType } from "./benchmarksCommon";
-import { config, FrameworkData } from "./common";
-import { checkElementContainsText, checkElementExists, checkElementHasClass, checkElementNotExists, clickElement } from "./puppeteerAccess";
+import * as benchmarksCommon from "./benchmarksCommon.js";
+import { BenchmarkType } from "./benchmarksCommon.js";
+import { config, FrameworkData } from "./common.js";
+import { checkElementContainsText, checkElementExists, checkElementHasClass, checkElementNotExists, clickElement } from "./puppeteerAccess.js";
 
 
 export abstract class CPUBenchmarkPuppeteer implements benchmarksCommon.BenchmarkImpl {

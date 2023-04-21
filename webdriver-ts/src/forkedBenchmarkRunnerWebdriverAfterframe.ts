@@ -1,10 +1,10 @@
 import { WebDriver, logging, Builder } from "selenium-webdriver";
-import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriverAfterframe";
-import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess";
+import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriverAfterframe.js";
+import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess.js";
 
-import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common";
-import { BenchmarkType } from "./benchmarksCommon";
-import { getAfterframeDurations, initMeasurement } from "./benchmarksWebdriverAfterframe";
+import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
+import { BenchmarkType } from "./benchmarksCommon.js";
+import { getAfterframeDurations, initMeasurement } from "./benchmarksWebdriverAfterframe.js";
 
 let config: TConfig = defaultConfig;
 

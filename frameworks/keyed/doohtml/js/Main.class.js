@@ -8,11 +8,14 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 
+const DEFAULT_SIZE = 1000
+const CHILD_1 = 1
+const CHILD_998 = 998
+
 Doo.define(
   	class Main extends Doo {
 		constructor() {
 			super(100)
-			this.scrollTarget = '.table'
 			this.defaultDataSet = 'rows'
 			this.ID = 1
 			this.data = {
@@ -32,7 +35,7 @@ Doo.define(
 
 		async dooAfterRender() {
 			this.tbody = this.shadow.querySelector('#tbody')
-			this.shadow.querySelector(this.scrollTarget).addEventListener('click', e => {
+			this.tbody.addEventListener('click', e => {
 				e.preventDefault()
 				if (e.target.parentElement.matches('.remove')) {
 					this.delete(e.target.parentElement)
@@ -50,23 +53,13 @@ Doo.define(
         	return undefined
         }
 
-		buildData(count = 1000) {
-			const data = []
+		buildData(count = DEFAULT_SIZE) {
+			const data = new Array(count)
 			for (let i = 0; i < count; i++) {
-				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
+				data[i] = {id: this.ID++,label: `${adjectives[_random(lenA)]} ${colours[_random(lenB)]}  ${nouns[_random(lenC)]}`}
 			}
 			return data	
 		}
-	
-		getIndex(row) {
-			let idx =  this.data.rows.findIndex((item, i) => {
-				if (item.id === row.key) {
-					return i
-				}
-			}) 
-			return idx
-		}
-
 		getIndex(row) {
 			let idx =  this.data.rows.findIndex((item, i) => {
 				if (item.id === row.key) {
@@ -116,37 +109,36 @@ Doo.define(
 				this.selectedRow.classList.remove('danger')
 				this.selectedRow = undefined
 			}
-			this.toggleSelect(this.getParentRow(elem))
+			if (elem) {
+				this.toggleSelect(this.getParentRow(elem))
+			}	
 		}
 
-		toggleSelect(elem) {
-			let row = this.getParentRow(elem)
+		toggleSelect(row) {
 			if (row) {
 				row.classList.toggle('danger')
 				if (row.classList.contains('danger')) {
 					this.selectedRow = row
 				}	
 			}    
-		}		
+		}
 
 		clear() {
-			this.data.rows = []
 			this.tbody.textContent = ''
+			this.data.rows = []
 		}
 
 		swapRows() {
-			if (this.data.rows.length > 998) {
-				let node1 = this.tbody.firstChild.nextSibling, 
-					node2 = node1.nextSibling,
-					node998 = this.tbody.childNodes[998],
-					node999 = node998.nextSibling,
-					row1 = this.data.rows[1]
+			if (this.data.rows.length > CHILD_998) {
+				let node1 = this.tbody.childNodes[CHILD_1], 
+					swapRow = this.tbody.childNodes[CHILD_998],
+					node999 = swapRow.nextSibling,
+					row1 = this.data.rows[CHILD_1]
 				
-				this.data.rows[1] = this.data.rows[998];
-				this.data.rows[998] = row1
-				
-				this.tbody.insertBefore(node998, node2)
-				this.tbody.insertBefore(node1, node999)
+				this.data.rows[CHILD_1] = this.data.rows[CHILD_998];
+				this.data.rows[CHILD_998] = row1
+		 		this.tbody.insertBefore(swapRow, node1)
+		 		this.tbody.insertBefore(node1, node999)
 			}
 		}
 
@@ -168,5 +160,7 @@ Doo.define(
 				}
 			})    
     	}
-	}
-)
+		async connectedCallback() {
+			super.connectedCallback()
+		}
+	})
