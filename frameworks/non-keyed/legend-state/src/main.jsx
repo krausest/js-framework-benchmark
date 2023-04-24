@@ -101,7 +101,7 @@ const Main = () => {
         <div className="container">
             <div className="jumbotron">
                 <div className="row">
-                    <div className="col-md-6"><h1>Legend-State</h1></div>
+                    <div className="col-md-6"><h1>Legend-State v0.14.0</h1></div>
                     <div className="col-md-6"><div className="row">
                         <Button id="run" title="Create 1,000 rows" cb={run} />
                         <Button id="runlots" title="Create 10,000 rows" cb={runLots} />
