@@ -1,22 +1,21 @@
 {
   "name": "js-framework-benchmark-etch-keyed",
-  "version": "1.0.0",
+  "version": "0.14.1",
   "description": "Etch keyed demo",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "etch",
-    "issues": [634]
+    "frameworkVersionFromPackage": "etch"
   },
   "scripts": {
-    "build-dev": "webpack -w -d",
-    "build-prod": "webpack -p"
+    "build-dev": "webpack --watch --mode=development",
+    "build-prod": "webpack --mode=production"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.6",
+    "@babel/core": "7.20.2",
     "babel-preset-atomic": "^2.4.2",
     "babel-loader": "^8.1.0",
     "jsx-loader": "0.13.2",
-    "webpack": "4.44.2",
-    "webpack-cli": "^3.3.12"
+    "webpack": "5.77.0",
+    "webpack-cli": "5.0.1"
   },
   "dependencies": {
     "etch": "0.14.1"
