@@ -54,9 +54,11 @@ async function runCPUBenchmark(
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
   let driver: WebDriver = null;
   try {
+    // let driver = buildDriver(benchmarkOptions); 
     let driver = await new Builder()
       .forBrowser(benchmarkOptions.browser)
       .build(); 
+    console.log(`using afterframe measurement with ${benchmarkOptions.browser}`)
     await driver.manage().window().maximize();
 
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
@@ -64,14 +66,21 @@ async function runCPUBenchmark(
       setUseRowShadowRoot(framework.useRowShadowRoot);
       setShadowRootName(framework.shadowRootName);
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
+      console.log("runCPUBenchmark: before loading page")
       // must be run with an IP adress otherwise Safari crashes with an error. 
       // Use the HOST env variable to set the HOST to an IP adress for safari!
       await driver.get(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      // Needed for Firefox
+      await driver.sleep(50);
+      console.log("runCPUBenchmark: initBenchmark")
       await initBenchmark(driver, benchmark, framework);
+      console.log("runCPUBenchmark: runBenchmark")
       await runBenchmark(driver, benchmark, framework);
+      console.log("runCPUBenchmark: getAfterframeDurations")
       results.push(...getAfterframeDurations());              
+      console.log("runCPUBenchmark: loop end")
     }
-    console.log("quit");
+    console.log("runCPUBenchmark: driver.quit");
     await driver.quit();
     return { error, warnings, result: results };
   } catch (e) {

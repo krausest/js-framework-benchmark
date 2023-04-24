@@ -5,6 +5,7 @@ import { config, FrameworkData } from "./common.js";
 import {
   clickElementById,
   clickElementByXPath,
+  findById,
   findByXPath,
   getTextByXPath, mainRoot, retry, testClassContains, testElementLocatedById, testElementLocatedByXpath,
   testElementNotLocatedByXPath, testTextContains
@@ -92,15 +93,15 @@ async function measureClickForElement(driver: WebDriver, elem: WebElement) {
 }
 
 async function measureClickElementById(driver: WebDriver, id: string, isInButtonArea: boolean) {
-  let elem = await mainRoot(driver, isInButtonArea);
-  elem = await elem.findElement(By.id(id));
-  measureClickForElement(driver, elem);
+  let elem = await findById(driver, id, isInButtonArea);
+  console.log("measureClickElementById: ", elem);
+  await measureClickForElement(driver, elem);
 }
 
 async function measureClickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
   let elem = await findByXPath(driver, xpath, isInButtonArea);
   if (!elem) throw `measureClickElementById ${xpath} failed. Element was not found.`;
-  measureClickForElement(driver, elem);
+  await measureClickForElement(driver, elem);
 }
 
 

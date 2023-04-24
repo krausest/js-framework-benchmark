@@ -9,7 +9,7 @@ import { BenchmarkType, DurationMeasurementMode } from "./benchmarksCommon.js";
 let config: TConfig = defaultConfig;
 
 // necessary to launch without specifiying a path
-require("chromedriver");
+import "chromedriver";
 
 interface Timingresult {
   type: string;
