@@ -92,7 +92,7 @@ function view(state$) {
 			<div className='jumbotron'>
 				<div className='row'>
 					<div className='col-md-6'>
-						<h1>Cycle.js dom@19.3.0</h1>
+						<h1>Cycle.js dom@20.4.0</h1>
 					</div>
 					<div className="col-md-6">
 						<div className="row">
@@ -128,7 +128,7 @@ function view(state$) {
 								<a className='select'>{item.label}</a>
 							</td>
 							<td className='col-md-1'>
-								<a className='remove'><span className='glyphicon glyphicon-remove'></span></a>
+								<a className='remove'><span className='glyphicon glyphicon-remove' ariaHidden="true"></span></a>
 							</td>
 							<td className='col-md-6'/>
 						</tr>
@@ -136,7 +136,7 @@ function view(state$) {
 				}
 				</tbody>
 			</table>
-			<span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+			<span className="preloadicon glyphicon glyphicon-remove" ariaHidden="true"></span>
 		</div>
 	);
 }
