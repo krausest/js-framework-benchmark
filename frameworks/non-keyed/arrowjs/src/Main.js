@@ -49,7 +49,7 @@ html`<div>
   <div class="jumbotron">
   <div class="row">
     <div class="col-md-6">
-      <h1>Arrowjs (keyed)</h1>
+      <h1>Arrowjs (Non-keyed)</h1>
     </div>
     <div class="col-md-6">
       <div class="row">
@@ -83,7 +83,7 @@ html`<div>
     data.items.map((row) => html`<tr class="${() => data.selected === row.id ? 'danger' : ''}">
           <td class="col-md-1">${row.id}</td>
           <td class="col-md-4">
-            <a @click="${() => select(row.id)}">${() => row.label}</a>
+            <a @click="${() => select(row.id)}">${row.label}</a>
           </td>
           <td class="col-md-1">
             <a @click="${() => remove(row.id)}">
@@ -91,7 +91,7 @@ html`<div>
             </a>
           </td>
           <td class="col-md-6"/>
-        </tr>`.key(row.id)
+        </tr>`
     )}
     </tbody>
   </table>
