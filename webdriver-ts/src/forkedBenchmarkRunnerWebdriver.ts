@@ -253,7 +253,7 @@ async function runCPUBenchmark(
   framework: FrameworkData,
   benchmark: CPUBenchmarkWebdriver,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
+): Promise<ErrorAndWarning<number>> {
   let error: string = undefined;
   let warnings: string[] = [];
 
@@ -286,11 +286,11 @@ async function runCPUBenchmark(
       await driver.executeScript("console.timeStamp('runBenchmark')");
       await runBenchmark(driver, benchmark, framework);
       if (benchmark.benchmarkInfo.throttleCPU) {
-        console.log("resetting CPU slowdown");
-        await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
+          console.log("resetting CPU slowdown");
+          await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
+        }
+        await driver.executeScript("console.timeStamp('finishedBenchmark')");
       }
-      await driver.executeScript("console.timeStamp('finishedBenchmark')");
-    }
     let result = await computeResultsCPU(driver, benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
     await driver.close();
     await driver.quit();
@@ -314,13 +314,13 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
+): Promise<ErrorAndWarning<number>> {
   let runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriver) as Array<CPUBenchmarkWebdriver>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning;
+  let errorAndWarnings: ErrorAndWarning<number>;
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }

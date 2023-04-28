@@ -89,7 +89,7 @@ async function runStartupBenchmark(
   framework: FrameworkData,
   benchmark: BenchmarkLighthouse,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
+): Promise<ErrorAndWarning<StartupBenchmarkResult>> {
   console.log("benchmarking startup", framework, benchmark.benchmarkInfo.id);
 
   let error: string = undefined;
@@ -106,13 +106,13 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
+): Promise<ErrorAndWarning<StartupBenchmarkResult>> {
   let runBenchmarks: Array<BenchmarkLighthouse> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof BenchmarkLighthouse) as Array<BenchmarkLighthouse>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (lighthouse)`;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning;
+  let errorAndWarnings: ErrorAndWarning<StartupBenchmarkResult>;
     errorAndWarnings = await runStartupBenchmark(framework, benchmark, benchmarkOptions);
   if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;

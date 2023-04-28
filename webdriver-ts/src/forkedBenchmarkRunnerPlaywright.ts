@@ -53,7 +53,7 @@ async function forceGC(page: Page, client: CDPSession) {
   }
 }
 
-async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPlaywright, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning>
+async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPlaywright, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning<number>>
 {
     let error: string = undefined;
     let warnings: string[] = [];
@@ -153,7 +153,7 @@ async function runMemBenchmark(
   framework: FrameworkData,
   benchmark: MemBenchmarkPlaywright,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
+): Promise<ErrorAndWarning<number>> {
   let error: string = undefined;
   let warnings: string[] = [];
   let results: number[] = [];
@@ -217,12 +217,12 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
+): Promise<ErrorAndWarning<number>> {
   let runBenchmarks: Array<TBenchmarkPlaywright> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && (b instanceof CPUBenchmarkPlaywright || b instanceof MemBenchmarkPlaywright) ) as Array<TBenchmarkPlaywright>;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning;
+  let errorAndWarnings: ErrorAndWarning<number>;
   if (benchmark.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark as CPUBenchmarkPlaywright, benchmarkOptions);
   } else {
