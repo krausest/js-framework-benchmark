@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-arrowjs",
+  "version": "1.0.0",
+  "description": "ArrowJs demo",
+  "js-framework-benchmark": {
+    "frameworkVersion": "1.0.0-alpha.9",
+    "frameworkHomeURL": "https://www.arrow-js.com/"
+  },
+  "scripts": {
+    "build-dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "keywords": [
+    "arrowjs"
+  ],
+  "author": "Abishek P",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}
