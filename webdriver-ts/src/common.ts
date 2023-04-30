@@ -1,5 +1,4 @@
 import axios from "axios";
-import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
 
 
 export interface JSONResult {
@@ -18,10 +17,10 @@ export interface JSONResult {
 
 export type TBenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
 
-export interface ErrorAndWarning {
+export interface ErrorAndWarning<T> {
   error: string;
   warnings: string[];
-  result?: number[] | StartupBenchmarkResult[];
+  result?: T[];
 }
 
 export interface BenchmarkDriverOptions {

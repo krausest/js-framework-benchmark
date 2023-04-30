@@ -1,16 +1,16 @@
+import {args} from './benchmarkArgs.js';
+import { BenchmarkOptions, BENCHMARK_RUNNER, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common.js";
 import { fork } from "child_process";
 import * as fs from "fs";
-import yargs from 'yargs';
 import { BenchmarkInfo, benchmarkInfos, BenchmarkType, CPUBenchmarkInfo, MemBenchmarkInfo, StartupBenchmarkInfo } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
-import { BenchmarkOptions, BENCHMARK_RUNNER, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common.js";
 import { writeResults } from "./writeResults.js";
 
 function forkAndCallBenchmark(
   framework: FrameworkData,
   benchmarkInfo: BenchmarkInfo,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
+): Promise<ErrorAndWarning<number|StartupBenchmarkResult>> {
   return new Promise((resolve, reject) => {
     let forkedRunner = null;
     if (benchmarkInfo.type === BenchmarkType.STARTUP_MAIN) {
@@ -35,7 +35,7 @@ function forkAndCallBenchmark(
       benchmarkId: benchmarkInfo.id,
       benchmarkOptions,
     });
-    forked.on("message", (msg: ErrorAndWarning) => {
+    forked.on("message", (msg: ErrorAndWarning<number|StartupBenchmarkResult>) => {
       if (config.LOG_DETAILS) console.log("FORKING: main process got message from child", msg);
       resolve(msg);
     });
@@ -243,23 +243,6 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkInfos: Benchmar
   }
 }
 
-// FIXME: Clean up args.
-// What works: npm run bench keyed/react, npm run bench -- keyed/react, npm run bench -- keyed/react --count 1 --benchmark 01_
-// What doesn't work (keyed/react becomes an element of argument benchmark): npm run bench -- --count 1 --benchmark 01_ keyed/react
-
-let args: any = yargs(process.argv)
-  .usage(
-    "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
-  )
-  .help("help")
-  .boolean("headless").default("headless", false)
-  .boolean("smoketest")
-  .string("runner").default("runner",config.BENCHMARK_RUNNER)
-  .string("browser").default("browser",config.BROWSER)
-  .array("framework")
-  .array("benchmark")
-  .string("chromeBinary").argv;
-
 let runner = args.runner;
 if ([BENCHMARK_RUNNER.WEBDRIVER_CDP,BENCHMARK_RUNNER.WEBDRIVER,BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME,
   BENCHMARK_RUNNER.PLAYWRIGHT,
@@ -305,7 +288,9 @@ async function main() {
     config.EXIT_ON_ERROR = true;
     console.log('Using smoketest config ', JSON.stringify(config));
   }
-    
+  if (config.BENCHMARK_RUNNER == BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME) {
+    config.RESULTS_DIRECTORY = "results_client_"+config.BROWSER;
+  }    
   if (!fs.existsSync(config.RESULTS_DIRECTORY)) fs.mkdirSync(config.RESULTS_DIRECTORY);
   if (!fs.existsSync(config.TRACES_DIRECTORY)) fs.mkdirSync(config.TRACES_DIRECTORY);
 

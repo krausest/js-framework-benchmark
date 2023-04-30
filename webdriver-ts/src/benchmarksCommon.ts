@@ -1,4 +1,5 @@
 import { FrameworkData, config } from "./common.js";
+import { args } from "./benchmarkArgs.js";
 
 export enum BenchmarkType {
   CPU,
@@ -96,7 +97,8 @@ const slowDownsOSX: ISlowDowns = {
 
 const slowDownsLinux: ISlowDowns = slowDownsOSX;
 
-const slowDowns: ISlowDowns = process.platform == "darwin" ? slowDownsOSX : slowDownsLinux;
+
+const slowDowns: ISlowDowns = args.nothrottling ? {} : (process.platform == "darwin" ? slowDownsOSX : slowDownsLinux);
 
 export function slowDownNote(benchmark: TBenchmarkID): string {
   return slowDowns[benchmark] ? " " + slowDowns[benchmark] + "x CPU slowdown." : "";
