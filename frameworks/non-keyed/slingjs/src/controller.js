@@ -139,7 +139,7 @@ export class ControllerComponent {
                                     children: [
                                         markup('h1', {
                                             children: [
-                                                textNode('Sling.js 18.0.0')
+                                                textNode('Sling.js 18.1.0')
                                             ]
                                         })
                                     ]
