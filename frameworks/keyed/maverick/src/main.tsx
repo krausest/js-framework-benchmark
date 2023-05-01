@@ -65,7 +65,7 @@ function App() {
     update = () => {
       const data = $data();
       for (let i = 0; i < data.length; i += 10) {
-        data[i].label.set((label) => label + "  !!!");
+        data[i].label.set((label) => label + " !!!");
       }
     },
     swapRows = () => {
