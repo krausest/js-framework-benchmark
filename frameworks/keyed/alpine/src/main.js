@@ -33,8 +33,7 @@ window.app = function() {
         this.data[i].label += ' !!!';
       }
     },
-    remove(id) {
-      const idx = this.data.findIndex(d => d.id === id);
+    remove(idx) {
       this.data.splice(idx, 1);
     },
     run() {
@@ -45,7 +44,11 @@ window.app = function() {
       this.data = buildData(10000);
       this.selected = undefined;
     },
-    select(id) { this.selected = id },
+    select(idx) {
+      if (this.data[this.selected]) this.data[this.selected].selected = false;
+      this.data[idx].selected = true;
+      this.selected = idx;
+    },
     swapRows() {
       const d = this.data;
       if (d.length > 998) {

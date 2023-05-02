@@ -80,14 +80,14 @@
       </div>
       <table class="table table-hover table-striped test-data">
         <tbody>
-          <template x-for="item of data" :key="item.id">
-            <tr :class="item.id === selected ? 'danger' : ''">
+          <template x-for="(item, idx) of data" :key="item.id">
+            <tr :class="item.selected && 'danger'">
               <td class="col-md-1" x-text="item.id"></td>
               <td class="col-md-4">
-                <a @click="select(item.id)" x-text="item.label"></a>
+                <a @click="select(idx)" x-text="item.label"></a>
               </td>
               <td class="col-md-1">
-                <a @click="remove(item.id)"
+                <a @click="remove(idx)"
                   ><span
                     class="glyphicon glyphicon-remove"
                     aria-hidden="true"
