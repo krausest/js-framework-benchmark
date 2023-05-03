@@ -10,7 +10,7 @@ let args: any = yargs(process.argv)
   )
   .help("help")
   .string("runner").default("runner","puppeteer")
-  .string("browser").default("browser","chrome")
+  .string("browser")
   .argv;
 
 console.log("args", args);
@@ -32,8 +32,7 @@ let benchmarkOptions: BenchmarkOptions = {
   allowThrottling: !args.nothrottling
 };
 
-
-
+let resultsDirectory = args.browser ? "./results_client_"+args.browser : "./results";
 
 async function main() {
   let frameworks = await initializeFrameworks(benchmarkOptions);
@@ -46,56 +45,63 @@ async function main() {
   let jsonResult: { framework: string; benchmark: string; values: number[] }[] = [];
   
   benchmarkInfos.forEach((benchmarkInfo, bIdx) => {
-    if (benchmarkInfo.type == BenchmarkType.STARTUP_MAIN) {
-      allBenchmarks = allBenchmarks.concat( subbenchmarks);
+    if (args.browser) {
+      if (benchmarkInfo.type == BenchmarkType.CPU) {
+        allBenchmarks.push(benchmarkInfo);
+      }
     } else {
-      allBenchmarks.push(benchmarkInfo);
+      if (benchmarkInfo.type == BenchmarkType.STARTUP_MAIN) {
+        allBenchmarks = allBenchmarks.concat( subbenchmarks);
+      } else {
+        allBenchmarks.push(benchmarkInfo);
+      }
     }
   });
-
+  
   frameworks.forEach((framework, fIdx) => {
     allBenchmarks.forEach((benchmarkInfo) => {
-
-      let name = `${fileName(framework, benchmarkInfo)}`;
-      let file = "./results/" + name;
-      if (fs.existsSync(file)) {
-        let data: JSONResult = JSON.parse(
-          fs.readFileSync(file, {
-            encoding: "utf-8",
-          })
-        );
-        if (data.values.some((v) => v == null))
-          console.log(`Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`);
-        let result: any = {
-          f: data.framework,
-          b: data.benchmark,
-          v: data.values.filter((v) => v != null),
-        };
-        let resultNice = {
-          framework: data.framework,
-          benchmark: data.benchmark,
-          values: data.values.filter((v) => v != null),
-        };
-        resultJS += "\n" + JSON.stringify(result) + ",";
-        jsonResult.push(resultNice);
-        if (benchmarkInfo.type === BenchmarkType.CPU && resultNice.values.length != config.NUM_ITERATIONS_FOR_BENCHMARK_CPU) {
-          console.log(
-            `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_CPU}`
+      if (!args.browser || framework.keyed) {
+        let name = `${fileName(framework, benchmarkInfo)}`;
+        let file = `${resultsDirectory}/${name}`;
+        if (fs.existsSync(file)) {
+          let data: JSONResult = JSON.parse(
+            fs.readFileSync(file, {
+              encoding: "utf-8",
+            })
           );
-        } else if (benchmarkInfo.type === BenchmarkType.MEM && resultNice.values.length != config.NUM_ITERATIONS_FOR_BENCHMARK_MEM) {
-          console.log(
-            `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_MEM}`
-          );
-        } else if (
-          benchmarkInfo.type === BenchmarkType.STARTUP &&
-          resultNice.values.length != config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP
-        ) {
-          console.log(
-            `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP}`
-          );
+          if (data.values.some((v) => v == null))
+            console.log(`Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`);
+          let result: any = {
+            f: data.framework,
+            b: data.benchmark,
+            v: data.values.filter((v) => v != null),
+          };
+          let resultNice = {
+            framework: data.framework,
+            benchmark: data.benchmark,
+            values: data.values.filter((v) => v != null),
+          };
+          resultJS += "\n" + JSON.stringify(result) + ",";
+          jsonResult.push(resultNice);
+          if (benchmarkInfo.type === BenchmarkType.CPU && resultNice.values.length != config.NUM_ITERATIONS_FOR_BENCHMARK_CPU) {
+            console.log(
+              `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_CPU}`
+            );
+          } else if (benchmarkInfo.type === BenchmarkType.MEM && resultNice.values.length != config.NUM_ITERATIONS_FOR_BENCHMARK_MEM) {
+            console.log(
+              `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_MEM}`
+            );
+          } else if (
+            benchmarkInfo.type === BenchmarkType.STARTUP &&
+            resultNice.values.length != config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP
+          ) {
+            console.log(
+              `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP}`
+            );
+          }
+        } else {
+          console.log("MISSING FILE", file);
         }
-      } else {
-        console.log("MISSING FILE", file);
       }
     });
   });
