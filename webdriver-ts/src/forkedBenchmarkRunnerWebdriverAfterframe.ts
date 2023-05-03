@@ -69,7 +69,7 @@ async function runCPUBenchmark(
       console.log("runCPUBenchmark: before loading page")
       // must be run with an IP adress otherwise Safari crashes with an error. 
       // Use the HOST env variable to set the HOST to an IP adress for safari!
-      await driver.get(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      await driver.get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`);
       // Needed for Firefox
       await driver.sleep(50);
       console.log("runCPUBenchmark: initBenchmark")
@@ -129,7 +129,6 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
-  if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       process.send(result);

@@ -1,20 +1,42 @@
 import * as fs from "fs";
 import yargs from "yargs";
-import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName } from "./benchmarksCommon.js";
+import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName, slowDownFactor } from "./benchmarksCommon.js";
 import { subbenchmarks } from "./benchmarksLighthouse.js";
-import { config, initializeFrameworks, JSONResult } from "./common.js";
+import { BenchmarkOptions, config, initializeFrameworks, JSONResult } from "./common.js";
 
 let args: any = yargs(process.argv)
-  .string("url").default("url", config.HOST).argv;
+  .usage(
+    "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
+  )
+  .help("help")
+  .string("runner").default("runner","puppeteer")
+  .string("browser").default("browser","chrome")
+  .argv;
 
-  console.log("config.URL", config.HOST);
-config.HOST = args.url;
-console.log("config.URL", config.HOST);
+console.log("args", args);
+
+let benchmarkOptions: BenchmarkOptions = {
+  port: 8080,
+  host: 'localhost',
+  browser: args.browser,
+  remoteDebuggingPort: 9999,
+  chromePort: 9998,
+  headless: args.headless,
+  chromeBinaryPath: args.chromeBinary,
+  numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+  numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
+  numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
+  batchSize: 1,
+  resultsDirectory: "results",
+  tracesDirectory: "traces",
+  allowThrottling: !args.nothrottling
+};
+
 
 
 
 async function main() {
-  let frameworks = await initializeFrameworks();
+  let frameworks = await initializeFrameworks(benchmarkOptions);
 
   let results: Map<string, Map<string, JSONResult>> = new Map();
 
@@ -93,7 +115,8 @@ async function main() {
       )
     ) +
     ";\n";
-  resultJS += "export const benchmarks = " + JSON.stringify(allBenchmarks) + ";\n";
+  let formattedBenchmarks = allBenchmarks.map(b => ({id:b.id, label: b.label, description: b.description(slowDownFactor(b.id, true)), type:b.type}));
+  resultJS += "export const benchmarks = " + JSON.stringify(formattedBenchmarks) + ";\n";
 
   fs.writeFileSync("../webdriver-ts-results/src/results.ts", resultJS, {
     encoding: "utf-8",

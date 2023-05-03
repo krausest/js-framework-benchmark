@@ -1,5 +1,5 @@
 import { Browser, Page, CDPSession } from "playwright-core";
-import { BenchmarkType } from "./benchmarksCommon.js";
+import { BenchmarkType, slowDownFactor } from "./benchmarksCommon.js";
 import { benchmarks, CPUBenchmarkPlaywright, fileNameTrace, MemBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
 import { startBrowser } from "./playwrightAccess.js";
@@ -73,7 +73,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
         // }
         let client = await page.context().newCDPSession(page);
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
-            await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
+            await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
 
             console.log("initBenchmark Playwright");
             await initBenchmark(browser, page, benchmark, framework);
@@ -102,12 +102,13 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             // ];
 
             await forceGC(page, client);
-            if (benchmark.benchmarkInfo.throttleCPU) {
-              console.log("CPU slowdown", benchmark.benchmarkInfo.throttleCPU);
-              await client.send('Emulation.setCPUThrottlingRate', { rate: benchmark.benchmarkInfo.throttleCPU });
+            let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
+            if (throttleCPU) {
+              console.log("CPU slowdown", throttleCPU);
+              await client.send('Emulation.setCPUThrottlingRate', { rate: throttleCPU });
             }
 
-            await browser.startTracing(page, {path: fileNameTrace(framework, benchmark.benchmarkInfo, i), 
+            await browser.startTracing(page, {path: fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), 
                 screenshots: false,
                 categories:categories
             });
@@ -116,10 +117,10 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
 
             await wait(40);
             await browser.stopTracing();
-            if (benchmark.benchmarkInfo.throttleCPU) {
+            if (throttleCPU) {
               await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });            
           }  
-            let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i), benchmark.benchmarkInfo.durationMeasurementMode);
+            let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
             results.push(result);
             console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
             if (result < 0)
@@ -170,7 +171,7 @@ async function runMemBenchmark(
         });
       }
 
-      await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
+      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -244,7 +245,6 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
-  if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       console.log("* success", result);

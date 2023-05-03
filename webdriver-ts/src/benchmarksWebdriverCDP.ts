@@ -1,7 +1,7 @@
 import { WebDriver } from "selenium-webdriver";
 import * as benchmarksCommon from "./benchmarksCommon.js";
 import { BenchmarkType } from "./benchmarksCommon.js";
-import { config, FrameworkData } from "./common.js";
+import { BenchmarkOptions, config, FrameworkData } from "./common.js";
 import {
   clickElementById,
   clickElementByXPath,
@@ -199,8 +199,8 @@ export const benchClear = new (class extends CPUBenchmarkWebdriverCDP {
 })();
 
 
-export function fileNameTrace(framework: FrameworkData, benchmark: benchmarksCommon.BenchmarkInfo, run: number) {
-  return `${config.TRACES_DIRECTORY}/${framework.fullNameWithKeyedAndVersion}_${benchmark.id}_${run}.json`;
+export function fileNameTrace(framework: FrameworkData, benchmark: benchmarksCommon.BenchmarkInfo, run: number, benchmarkOptions: BenchmarkOptions) {
+  return `${benchmarkOptions.tracesDirectory}/${framework.fullNameWithKeyedAndVersion}_${benchmark.id}_${run}.json`;
 }
 
 export const benchmarks = [

@@ -1,5 +1,5 @@
 import { Browser, CDPSession, Page } from "puppeteer-core";
-import { BenchmarkType } from "./benchmarksCommon.js";
+import { BenchmarkType, slowDownFactor } from "./benchmarksCommon.js";
 import { CPUBenchmarkPuppeteer, fileNameTrace, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
@@ -70,10 +70,10 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
         // }
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
             try {
-              await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
+              await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
             } catch (ex) {
               console.log("**** loading benchmark failed, retrying");
-              await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
+              await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
             }
 
             // await (driver as any).sendDevToolsCommand('Network.enable');
@@ -113,12 +113,13 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
 
             const client = await page.target().createCDPSession();
 
-            if (benchmark.benchmarkInfo.throttleCPU) {
-              console.log("CPU slowdown", benchmark.benchmarkInfo.throttleCPU);
-              await page.emulateCPUThrottling(benchmark.benchmarkInfo.throttleCPU);
+            let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
+            if (throttleCPU) {
+              console.log("CPU slowdown", throttleCPU);
+              await page.emulateCPUThrottling(throttleCPU);
           }
   
-          await page.tracing.start({path: fileNameTrace(framework, benchmark.benchmarkInfo, i), 
+          await page.tracing.start({path: fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), 
             screenshots: false,
             categories:categories
           });
@@ -130,13 +131,13 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             await wait(40);
             await page.tracing.stop();
             // let m2 = await page.metrics();
-            if (benchmark.benchmarkInfo.throttleCPU) {
+            if (throttleCPU) {
               await page.emulateCPUThrottling(1);
           }
   
             // console.log("afterBenchmark", m1, m2);
             // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
-            let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i), benchmark.benchmarkInfo.durationMeasurementMode);
+            let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
             results.push(result);
             console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
             if (result < 0)
@@ -182,7 +183,7 @@ async function runMemBenchmark(
         });
       }
       
-      await page.goto(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
+      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -265,7 +266,6 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
-  if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       process.send(result);
