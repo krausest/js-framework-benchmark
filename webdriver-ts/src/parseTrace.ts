@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { BenchmarkInfo, BenchmarkType, cpuBenchmarkInfos, DurationMeasurementMode } from './benchmarksCommon.js';
+import { BenchmarkInfo, BenchmarkType, cpuBenchmarkInfos, CPUBenchmarkResult, DurationMeasurementMode } from './benchmarksCommon.js';
 import { CPUBenchmarkPuppeteer, fileNameTrace } from './benchmarksPuppeteer.js';
 import { BenchmarkOptions, config, initializeFrameworks } from './common.js';
 import { computeResultsCPU } from './timeline.js';
@@ -44,7 +44,7 @@ async function readAll() {
     let frameworks = await initializeFrameworks(benchmarkOptions);
     for (let framework of frameworks) {
         for (let benchmarkInfo of cpuCPUBenchmarks) {
-            let results: number[] = [];
+            let results: CPUBenchmarkResult[] = [];
             for (let i = 0; i < 12; i++) {
                 let trace = `${fileNameTrace(framework, benchmarkInfo, i, benchmarkOptions)}`;
                 if (!fs.existsSync(trace)) {
@@ -52,11 +52,11 @@ async function readAll() {
                 } else {
                     console.log("checking ", trace, benchmarkInfo.durationMeasurementMode);
                     let result = await computeResultsCPU(config, trace, benchmarkInfo.durationMeasurementMode); 
-                    results.push(result);
+                    results.push({total:result, script:0});
                     console.log(result);
                 }
             }
-            results.sort((a: number, b: number) => a - b);
+            results.sort((a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total);
             results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);      
             await writeResults(benchmarkOptions.resultsDirectory, {
                 framework: framework,

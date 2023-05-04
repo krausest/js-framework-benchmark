@@ -2,7 +2,7 @@ import * as fs from "fs";
 import yargs from "yargs";
 import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName, slowDownFactor } from "./benchmarksCommon.js";
 import { subbenchmarks } from "./benchmarksLighthouse.js";
-import { BenchmarkOptions, config, initializeFrameworks, JSONResult } from "./common.js";
+import { BenchmarkOptions, config, initializeFrameworks, JSONResult, JSONResultData } from "./common.js";
 
 let args: any = yargs(process.argv)
   .usage(
@@ -42,7 +42,7 @@ async function main() {
   let resultJS = "import {RawResult} from './Common';\n\nexport const results: RawResult[]=[";
 
   let allBenchmarks: Array<BenchmarkInfo> = [];
-  let jsonResult: { framework: string; benchmark: string; values: number[] }[] = [];
+  let jsonResult: { framework: string; benchmark: string; values: {[key:string]: number[]} }[] = [];
   
   benchmarkInfos.forEach((benchmarkInfo, bIdx) => {
     if (args.browser) {
@@ -69,36 +69,44 @@ async function main() {
               encoding: "utf-8",
             })
           );
-          if (data.values.some((v) => v == null))
-            console.log(`Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`);
+
+          let values: {[k: string]: number[]} = {};
+          for (let key of Object.keys(data.values)) {
+            let vals = data.values[key].values.filter((v) => v != null);
+            values[key] = vals;
+            if (vals.some((v) => v == null))
+              console.log(`Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`);
+            if (benchmarkInfo.type === BenchmarkType.CPU && vals.length != config.NUM_ITERATIONS_FOR_BENCHMARK_CPU) {
+              console.log(
+                `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${vals.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_CPU}`
+              );
+            } else if (benchmarkInfo.type === BenchmarkType.MEM && vals.length != config.NUM_ITERATIONS_FOR_BENCHMARK_MEM) {
+              console.log(
+                `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${vals.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_MEM}`
+              );
+            } else if (
+              benchmarkInfo.type === BenchmarkType.STARTUP &&
+              vals.length != config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP
+            ) {
+              console.log(
+                `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${vals.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP}`
+              );
+            }
+          }  
+          console.log("values=", values);
           let result: any = {
             f: data.framework,
             b: data.benchmark,
-            v: data.values.filter((v) => v != null),
+            v: values,
           };
           let resultNice = {
             framework: data.framework,
             benchmark: data.benchmark,
-            values: data.values.filter((v) => v != null),
+            values: values,
           };
+
           resultJS += "\n" + JSON.stringify(result) + ",";
           jsonResult.push(resultNice);
-          if (benchmarkInfo.type === BenchmarkType.CPU && resultNice.values.length != config.NUM_ITERATIONS_FOR_BENCHMARK_CPU) {
-            console.log(
-              `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_CPU}`
-            );
-          } else if (benchmarkInfo.type === BenchmarkType.MEM && resultNice.values.length != config.NUM_ITERATIONS_FOR_BENCHMARK_MEM) {
-            console.log(
-              `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_MEM}`
-            );
-          } else if (
-            benchmarkInfo.type === BenchmarkType.STARTUP &&
-            resultNice.values.length != config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP
-          ) {
-            console.log(
-              `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${resultNice.values.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP}`
-            );
-          }
         } else {
           console.log("MISSING FILE", file);
         }

@@ -1,5 +1,5 @@
 import { Browser, CDPSession, Page } from "puppeteer-core";
-import { BenchmarkType, slowDownFactor } from "./benchmarksCommon.js";
+import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
 import { CPUBenchmarkPuppeteer, fileNameTrace, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
@@ -50,11 +50,11 @@ async function forceGC(page: Page, client: CDPSession) {
   }
 }
 
-async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPuppeteer, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning<number>>
+async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPuppeteer, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning<CPUBenchmarkResult>>
 {
     let error: string = undefined;
     let warnings: string[] = [];
-    let results: number[] = [];
+    let results: CPUBenchmarkResult[] = [];
 
     console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
     let browser : Browser = null;
@@ -125,12 +125,12 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
           });
           await forceGC(page, client);
             console.log("runBenchmark");
-            // let m1 = await page.metrics();
+            let m1 = await page.metrics();
             await runBenchmark(page, benchmark, framework);
 
             await wait(40);
             await page.tracing.stop();
-            // let m2 = await page.metrics();
+            let m2 = await page.metrics();
             if (throttleCPU) {
               await page.emulateCPUThrottling(1);
           }
@@ -138,7 +138,9 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             // console.log("afterBenchmark", m1, m2);
             // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
             let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
-            results.push(result);
+            let resultScript = (m2.ScriptDuration - m1.ScriptDuration)*1000.0;
+            console.log("**** resultJS = ", resultScript);
+            results.push({total:result, script: resultScript});
             console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
             if (result < 0)
                 throw new Error(`duration ${result} < 0`);                
@@ -236,13 +238,13 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number>> {
+): Promise<ErrorAndWarning<any>> {
   let runBenchmarks: Array<TBenchmarkPuppeteer> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && (b instanceof CPUBenchmarkPuppeteer || b instanceof MemBenchmarkPuppeteer) ) as Array<TBenchmarkPuppeteer>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (puppeteer)`;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning<number>;
+  let errorAndWarnings: ErrorAndWarning<any>;
   if (benchmark.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark as CPUBenchmarkPuppeteer, benchmarkOptions);
   } else {

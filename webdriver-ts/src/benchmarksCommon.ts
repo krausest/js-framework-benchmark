@@ -44,6 +44,11 @@ export interface BenchmarkImpl {
   type: BenchmarkType;
 }
 
+export interface CPUBenchmarkResult {
+  total: number;
+  script: number;
+}
+
 export function fileName(framework: FrameworkData, benchmark: BenchmarkInfo) {
   return `${framework.fullNameWithKeyedAndVersion}_${benchmark.id}.json`;
 }

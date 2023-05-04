@@ -5,6 +5,7 @@ const jStat = require('jstat').jStat;
 
 export enum StatisticResult {Slower, Undecided, Faster}
 export enum DisplayMode { DisplayMean, DisplayMedian, BoxPlot }
+export enum CpuDurationMode { Total='total', Script='script'}
 
 export enum FrameworkType { KEYED, NON_KEYED }
 
@@ -35,6 +36,8 @@ export const categories: Category[] = [
   {id:6, text:"[Issue]: Errors in the implementation", issues: [634], severity: Severity.Error},
 ]
 
+const DEFAULT_RESULTS_KEY = 'DEFAULT';
+
 interface IIssue {
     issue: number, 
     severity: Severity, 
@@ -64,18 +67,21 @@ export interface Benchmark {
 }
 
 export interface RawResult {
-    f: string;
-    b: string;
-    v: number[];
+    f: string,
+    b: string,
+    v: {[k:string]: number[]}
 }
 
-export interface Result {
-    framework: string;
-    benchmark: string;
+export interface ResultValues {
     values: number[];
     mean: number;
     median: number;
     standardDeviation: number;
+}
+export interface Result {
+    framework: string;
+    benchmark: string;
+    results: {[key:string]: ResultValues};
 }
 
 interface ResultData {
@@ -203,7 +209,8 @@ export class ResultTableData {
 
     constructor(public allFrameworks: Array<Framework>, public allBenchmarks: Array<Benchmark>, public results: ResultLookup,
         public selectedFrameworksInDropdown: Set<Framework>, public selectedBenchmarks: Set<Benchmark>, type: FrameworkType, sortKey: string,
-        public displayMode: DisplayMode, public compareWith: Framework|undefined, public selectedCategories: Set<number>) {     
+        public displayMode: DisplayMode, public compareWith: Framework|undefined, public selectedCategories: Set<number>,
+        public cpuDurationMode: string) {     
 
         this.selectedFameworks = new Set<Framework>();
 
@@ -341,13 +348,16 @@ export class ResultTableData {
     }
 
     computeFactors(benchmark: Benchmark): Array<TableResultValueEntry|null> {
+
+        let resultsKey = benchmark.type == BenchmarkType.CPU ? this.cpuDurationMode : DEFAULT_RESULTS_KEY;
+
         const benchmarkResults = this.frameworksForFactors.map(f => this.results(benchmark, f));
         const selectFn = (result: Result|null) => {
             if (result===null) return 0;
             if (this.displayMode === DisplayMode.DisplayMedian) {
-                return result.median;
+                return result.results[resultsKey].median;
             } else {
-                return result.mean;
+                return result.results[resultsKey].mean;
             }
         }
         const min = Math.max(benchmarkResults.reduce((min, result) => result===null ? min : Math.min(min, selectFn(result)), Number.POSITIVE_INFINITY));
@@ -357,13 +367,14 @@ export class ResultTableData {
         return this.frameworks.map(f => {
             const result = this.results(benchmark, f);
             if (result === null) return null;
+            const resultValues = result.results[resultsKey];
 
             const value = selectFn(result);
             const factor = value/min;
             // if (benchmark.type === BenchmarkType.CPU) {
             //     factor = Math.max(1, factor);
             // }    
-            const conficenceInterval = 1.959964 * (result.standardDeviation || 0) / Math.sqrt(result.values.length);
+            const conficenceInterval = 1.959964 * (resultValues.standardDeviation || 0) / Math.sqrt(resultValues.values.length);
             const conficenceIntervalStr = benchmark.type === BenchmarkType.MEM ? null : conficenceInterval.toFixed(1);
             const formattedValue = formatEn.format(value);
 
@@ -371,18 +382,19 @@ export class ResultTableData {
                 return new TableResultValueEntry(f.name, value, formattedValue, conficenceIntervalStr, factor, factor.toFixed(2), computeColor(factor), '#000', StatisticResult.Undecided);
             } else {
                 const compareWithResults = this.results(benchmark, this.compareWith)!;
+                const compareWithResultsValues = compareWithResults.results[resultsKey]
                     // let meanStr = 'x'; //mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true});
 
                 // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
                 // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
                 let statisticalResult = undefined;
                 let statisticalCol = undefined;
-                const compareWithMean = compareWithResults.mean;
-                const stdDev = result.standardDeviation || 0;
-                const compareWithResultsStdDev = compareWithResults.standardDeviation || 0;
+                const compareWithMean = compareWithResultsValues.mean;
+                const stdDev = compareWithResultsValues.standardDeviation || 0;
+                const compareWithResultsStdDev = compareWithResultsValues.standardDeviation || 0;
 
                 
-                const x1 = result.mean;
+                const x1 = resultValues.mean;
                 const x2 = compareWithMean;
                 const s1_2 = stdDev*stdDev;
                 const s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;

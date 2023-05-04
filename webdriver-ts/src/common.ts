@@ -1,18 +1,23 @@
 import axios from "axios";
 
+export interface JSONResultData {
+  min: number;
+  max: number;
+  mean: number;
+  stddev: number;
+  median: number;
+  values: Array<number>;
+}
 
+export interface JSONResultMap {
+  [key:string]: JSONResultData
+}
 export interface JSONResult {
   framework: string;
   keyed: boolean;
   benchmark: string;
   type: string;
-  min: number;
-  max: number;
-  mean: number;
-  geometricMean: number;
-  standardDeviation: number;
-  median: number;
-  values: Array<number>;
+  values: JSONResultMap;
 }
 
 export type TBenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";

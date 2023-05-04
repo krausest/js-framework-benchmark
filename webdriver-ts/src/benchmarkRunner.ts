@@ -2,7 +2,7 @@ import yargs from 'yargs';
 import { BenchmarkOptions, BENCHMARK_RUNNER, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common.js";
 import { fork } from "child_process";
 import * as fs from "fs";
-import { BenchmarkInfo, benchmarkInfos, BenchmarkType, CPUBenchmarkInfo, MemBenchmarkInfo, StartupBenchmarkInfo } from "./benchmarksCommon.js";
+import { BenchmarkInfo, benchmarkInfos, BenchmarkType, CPUBenchmarkInfo, CPUBenchmarkResult, MemBenchmarkInfo, StartupBenchmarkInfo } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
 import { writeResults } from "./writeResults.js";
 
@@ -10,7 +10,7 @@ function forkAndCallBenchmark(
   framework: FrameworkData,
   benchmarkInfo: BenchmarkInfo,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number|StartupBenchmarkResult>> {
+): Promise<ErrorAndWarning<number|CPUBenchmarkResult|StartupBenchmarkResult>> {
   return new Promise((resolve, reject) => {
     let forkedRunner = null;
     if (benchmarkInfo.type === BenchmarkType.STARTUP_MAIN) {
@@ -35,7 +35,7 @@ function forkAndCallBenchmark(
       benchmarkId: benchmarkInfo.id,
       benchmarkOptions,
     });
-    forked.on("message", (msg: ErrorAndWarning<number|StartupBenchmarkResult>) => {
+    forked.on("message", (msg: ErrorAndWarning<number|CPUBenchmarkResult|StartupBenchmarkResult>) => {
       if (config.LOG_DETAILS) console.log("FORKING: main process got message from child", msg);
       resolve(msg);
     });
@@ -111,7 +111,7 @@ async function runBenchmakLoop(
   let warnings: string[] = [];
   let errors: string[] = [];
 
-  let results: Array<number> = [];
+  let results: Array<CPUBenchmarkResult|number> = [];
   let count = 0;
 
   if (benchmarkInfo.type == BenchmarkType.CPU) {
@@ -132,7 +132,7 @@ async function runBenchmakLoop(
     console.log("FORKING: ", benchmarkInfo.id, " BatchSize ", benchmarkOptions.batchSize);
     let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
     if (Array.isArray(res.result)) {
-      results = results.concat(res.result as number[]);
+      results = results.concat(res.result as number[]|CPUBenchmarkResult[]);
     } else results.push(res.result);
     warnings = warnings.concat(res.warnings);
     if (res.error) {
@@ -148,19 +148,29 @@ async function runBenchmakLoop(
   }
   if (benchmarkInfo.type == BenchmarkType.CPU) {
     console.log("CPU results before: ", results);
-    (results as number[]).sort((a: number, b: number) => a - b);
+    (results as CPUBenchmarkResult[]).sort((a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total);
     results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
     // console.log("CPU results after: ", results)
   }
 
   console.log("******* result ", results);
   if (config.WRITE_RESULTS) {
-    await writeResults(benchmarkOptions.resultsDirectory, {
-      framework: framework,
-      benchmark: benchmarkInfo,
-      results: results,
-      type: benchmarkInfo.type as typeof BenchmarkType.CPU|BenchmarkType.MEM
-    });
+    if (benchmarkInfo.type == BenchmarkType.CPU) {
+      await writeResults(benchmarkOptions.resultsDirectory, {
+        framework: framework,
+        benchmark: benchmarkInfo,
+        results: results as CPUBenchmarkResult[],
+        type: BenchmarkType.CPU
+      });  
+    } else {
+      await writeResults(benchmarkOptions.resultsDirectory, {
+        framework: framework,
+        benchmark: benchmarkInfo,
+        results: results as number[],
+        type: BenchmarkType.MEM
+      });  
+    }
+
   }
   return { errors, warnings };
   // } else {
@@ -246,6 +256,7 @@ let args: any = yargs(process.argv)
   .string("browser").default("browser","chrome")
   .array("framework")
   .array("benchmark")
+  .number("count")
   .string("chromeBinary").argv;
 
 console.log("args", args);
@@ -278,6 +289,14 @@ let benchmarkOptions: BenchmarkOptions = {
   tracesDirectory: "traces",
   allowThrottling: !args.nothrottling
 };
+
+if (args.count) {
+  benchmarkOptions.numIterationsForCPUBenchmarks = args.count;
+  config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT = 0;
+  benchmarkOptions.numIterationsForMemBenchmarks = args.count;
+  benchmarkOptions.numIterationsForStartupBenchmark = args.count;
+}
+
 
 let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
 let frameworkArgument = !args.framework ? allArgs : args.framework;
