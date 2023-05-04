@@ -41,7 +41,6 @@ export function writeResults(resultDir: string, res: ResultLightHouse|ResultCPU|
     }
       break;
     case BenchmarkType.CPU:
-      console.log("writeResults", res);
       createResultFile(resultDir, ({total: res.results.map(r=>r.total), script: res.results.map(r=>r.script)}), res.framework, res.benchmark);
       break;
     case BenchmarkType.MEM:
@@ -51,7 +50,6 @@ export function writeResults(resultDir: string, res: ResultLightHouse|ResultCPU|
 }
 
 function createResultFile(resultDir: string, data: number[]|{[key:string]: number[]}, framework: FrameworkData, benchmark: BenchmarkInfo) {
-  console.log("createResultFile", data);
   let type = "";
   switch (benchmark.type) {
     case BenchmarkType.CPU:
@@ -91,7 +89,6 @@ function createResultFile(resultDir: string, data: number[]|{[key:string]: numbe
   } else {
     let values: {[k: string]: JSONResultData} = {};
     for (let key of Object.keys(data)) {
-      console.log("converting", key, data[key], data);
       values[key] = convertResult(key, data[key]);
     }
     let result: JSONResult = {

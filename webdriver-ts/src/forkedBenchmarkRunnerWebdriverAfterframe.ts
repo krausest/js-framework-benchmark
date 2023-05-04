@@ -3,7 +3,7 @@ import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriverAfterfra
 import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess.js";
 
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
-import { BenchmarkType } from "./benchmarksCommon.js";
+import { BenchmarkType, CPUBenchmarkResult } from "./benchmarksCommon.js";
 import { getAfterframeDurations, initMeasurement } from "./benchmarksWebdriverAfterframe.js";
 
 let config: TConfig = defaultConfig;
@@ -46,10 +46,10 @@ async function runCPUBenchmark(
   framework: FrameworkData,
   benchmark: CPUBenchmarkWebdriver,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number>> {
+): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
   let error: string = undefined;
   let warnings: string[] = [];
-  let results: number[] = [];
+  let results: CPUBenchmarkResult[] = [];
 
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
   let driver: WebDriver = null;
@@ -102,13 +102,13 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number>> {
+): Promise<ErrorAndWarning<number|CPUBenchmarkResult>> {
   let runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriver) as Array<CPUBenchmarkWebdriver>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning<number>;
+  let errorAndWarnings: ErrorAndWarning<number|CPUBenchmarkResult>;
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }

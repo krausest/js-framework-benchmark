@@ -139,7 +139,8 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
             let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
             let resultScript = (m2.ScriptDuration - m1.ScriptDuration)*1000.0;
-            console.log("**** resultJS = ", resultScript);
+            console.log("**** resultScript = ", resultScript);
+            if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
             results.push({total:result, script: resultScript});
             console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
             if (result < 0)

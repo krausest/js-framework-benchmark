@@ -1,5 +1,5 @@
 import { Browser, Page, CDPSession } from "playwright-core";
-import { BenchmarkType, slowDownFactor } from "./benchmarksCommon.js";
+import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
 import { benchmarks, CPUBenchmarkPlaywright, fileNameTrace, MemBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
 import { startBrowser } from "./playwrightAccess.js";
@@ -53,11 +53,11 @@ async function forceGC(page: Page, client: CDPSession) {
   }
 }
 
-async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPlaywright, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning<number>>
+async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPlaywright, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning<CPUBenchmarkResult>>
 {
     let error: string = undefined;
     let warnings: string[] = [];
-    let results: number[] = [];
+    let results: CPUBenchmarkResult[] = [];
 
     console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
     let browser : Browser = null;
@@ -72,6 +72,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             });
         // }
         let client = await page.context().newCDPSession(page);
+        await client.send('Performance.enable');
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
             await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
 
@@ -112,16 +113,28 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
                 screenshots: false,
                 categories:categories
             });
+            let m1 = (await client.send('Performance.getMetrics')).metrics;
+            let m1_val = m1.find(m => m.name === 'ScriptDuration').value;
+            let m1_Timestamp = m1.find(m => m.name === 'Timestamp').value;
+            console.log("m1", m1, m1_val);
             console.log("runBenchmark Playwright");
             await runBenchmark(browser, page, benchmark, framework);
 
             await wait(40);
+            let m2 = (await client.send('Performance.getMetrics')).metrics;
+            let m2_val = m2.find(m => m.name === 'ScriptDuration').value;
+            let m2_Timestamp = m2.find(m => m.name === 'Timestamp').value;
+            console.log("m2", m2, m2_val);
             await browser.stopTracing();
             if (throttleCPU) {
               await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });            
           }  
             let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
-            results.push(result);
+            let resultScript = (m2_val - m1_val)*1000.0;
+            console.log("**** resultScript = ", resultScript);
+            if (m2_Timestamp == m1_Timestamp) throw new Error("Page metrics timestamp didn't change");
+
+            results.push({total: result, script: resultScript});
             console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
             if (result < 0)
                 throw new Error(`duration ${result} < 0`);                
@@ -218,12 +231,12 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number>> {
+): Promise<ErrorAndWarning<number|CPUBenchmarkResult>> {
   let runBenchmarks: Array<TBenchmarkPlaywright> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && (b instanceof CPUBenchmarkPlaywright || b instanceof MemBenchmarkPlaywright) ) as Array<TBenchmarkPlaywright>;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning<number>;
+  let errorAndWarnings: ErrorAndWarning<number|CPUBenchmarkResult>;
   if (benchmark.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark as CPUBenchmarkPlaywright, benchmarkOptions);
   } else {

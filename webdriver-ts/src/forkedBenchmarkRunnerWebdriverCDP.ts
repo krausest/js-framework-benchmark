@@ -1,6 +1,6 @@
 import * as fs from "fs/promises";
 import { WebDriver } from "selenium-webdriver";
-import { BenchmarkType, slowDownFactor } from "./benchmarksCommon.js";
+import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
 import { benchmarks, CPUBenchmarkWebdriverCDP, fileNameTrace } from "./benchmarksWebdriverCDP.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
 import { computeResultsCPU } from "./timeline.js";
@@ -58,10 +58,10 @@ async function runCPUBenchmark(
   framework: FrameworkData,
   benchmark: CPUBenchmarkWebdriverCDP,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number>> {
+): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
   let error: string = undefined;
   let warnings: string[] = [];
-  let results: number[] = [];
+  let results: CPUBenchmarkResult[] = [];
 
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id, "with webdriver (tracing via CDP Connection)");
   let driver: WebDriver = null;
@@ -134,7 +134,7 @@ async function runCPUBenchmark(
       await p;
 
       let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
-      results.push(result);
+      results.push({total:result, script: 0});
       console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
       if (result < 0)
           throw new Error(`duration ${result} < 0`);                
@@ -162,13 +162,13 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number>> {
+): Promise<ErrorAndWarning<number|CPUBenchmarkResult>> {
   let runBenchmarks: Array<CPUBenchmarkWebdriverCDP> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriverCDP) as Array<CPUBenchmarkWebdriverCDP>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning<number>;
+  let errorAndWarnings: ErrorAndWarning<number|CPUBenchmarkResult>;
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }
