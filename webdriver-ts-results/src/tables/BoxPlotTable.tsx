@@ -37,7 +37,7 @@ const BoxPlot = ({traces}: {traces: Array<BoxPlotData>}): JSX.Element =>
 }
 
 const RenderBoxPlotsRow = ({frameworks, benchmark, results, currentSortKey, sortBy, cpuDurationMode}: {frameworks: Array<Framework>; benchmark: Benchmark; results: ResultLookup; currentSortKey: string; sortBy: (name: string) => void, cpuDurationMode: CpuDurationMode}) => {
-  let resultsValues = (framework: Framework) => results(benchmark, framework)?.results[cpuDurationMode] ?? [];
+  const resultsValues = (framework: Framework) => results(benchmark, framework)?.results[cpuDurationMode].values ?? [];
   return <tr key={benchmark.id} style={{height: 400}}>
       <th className='benchname'><button className={currentSortKey===benchmark.id ? 'sortKey textButton' : 'textButton'}
       onClick={(event) => {event.preventDefault(); sortBy(benchmark.id)}}>{benchmark.label}</button>
@@ -51,7 +51,7 @@ const RenderBoxPlotsRow = ({frameworks, benchmark, results, currentSortKey, sort
 
 const RenderBoxPlotsRows = ({frameworks, benchmarks, results, currentSortKey, sortBy, cpuDurationMode}: {frameworks: Array<Framework>; benchmarks: Array<Benchmark>; results: ResultLookup; currentSortKey: string; sortBy: (name: string) => void, cpuDurationMode: CpuDurationMode}) => {
   return <>{benchmarks.map((benchmark) =>
-      <RenderBoxPlotsRow frameworks={frameworks} benchmark={benchmark} results={results} currentSortKey={currentSortKey} sortBy={sortBy} cpuDurationMode={cpuDurationMode}/>
+      <RenderBoxPlotsRow key={benchmark.id} frameworks={frameworks} benchmark={benchmark} results={results} currentSortKey={currentSortKey} sortBy={sortBy} cpuDurationMode={cpuDurationMode}/>
   )}</>
 }
 // {data.frameworks.map(f => <th key={f.name}>{f.name}</th>)}

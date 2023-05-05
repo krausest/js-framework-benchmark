@@ -349,7 +349,7 @@ export class ResultTableData {
 
     computeFactors(benchmark: Benchmark): Array<TableResultValueEntry|null> {
 
-        let resultsKey = benchmark.type == BenchmarkType.CPU ? this.cpuDurationMode : DEFAULT_RESULTS_KEY;
+        const resultsKey = benchmark.type == BenchmarkType.CPU ? this.cpuDurationMode : DEFAULT_RESULTS_KEY;
 
         const benchmarkResults = this.frameworksForFactors.map(f => this.results(benchmark, f));
         const selectFn = (result: Result|null) => {

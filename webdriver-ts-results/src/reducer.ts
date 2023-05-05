@@ -10,10 +10,10 @@ const benchmarks = benchmark_orig.filter(b => b.id !== '32_startup-bt'
 const jStat = require('jstat').jStat;
 
 const results: Result[] = (rawResults as RawResult[]).map(res => {
-  let values: {[k: string]: ResultValues} = {};
-  for (let key of Object.keys(res.v)) {
-    let r = res.v[key];
-    let vals = {
+  const values: {[k: string]: ResultValues} = {};
+  for (const key of Object.keys(res.v)) {
+    const r = res.v[key];
+    const vals = {
       mean: r ? jStat.mean(r) : Number.NaN,
       median: r ? jStat.median(r) : Number.NaN,
       standardDeviation: r ? jStat.stdev(r, true) : Number.NaN,
@@ -133,7 +133,7 @@ function extractState(state: any): Partial<State> {
   }
   if (state.categories!==undefined) {
     const newSelectedCategories = new Set<number>();
-    for (const f of state?.categories) {
+    for (const f of state?.categories ?? []) {
       for (const sc of categories) {
         if (f === sc.id) newSelectedCategories.add(sc.id);
       }

@@ -9,7 +9,7 @@ const CompareRow = ({comparison, compareWith}: {comparison: Array<TableResultCom
     if (!compareWith) {
         return (<tr>
         <th>compare: Green means significantly faster, red significantly slower</th>
-        {comparison.map(result => result == null ? <th></th> : 
+        {comparison.map((result,idx) => result == null ? <th key={idx}></th> : 
             <th key={result.key} style={{backgroundColor:result.bgColor, color:result.textColor}}>
                 <button className={'sortKey textButton'} onClick={() => dispatch(compare(result.framework))}>compare</button>
             </th>    
@@ -19,7 +19,7 @@ const CompareRow = ({comparison, compareWith}: {comparison: Array<TableResultCom
         return (
             <tr>
         <th>compare: Green means significantly faster, red significantly slower</th>
-        {comparison.map(result => result == null ? <th></th> : 
+        {comparison.map((result,idx) => result == null ? <th key={idx}></th> : 
             <th key={result.key} style={{backgroundColor:result.bgColor, color:result.textColor}}>
                 {result.label}
                 {  (compareWith === result.framework) ? <button className={'sortKey textButton'} onClick={() => dispatch(stopCompare(result.framework))}>stop compare</button>

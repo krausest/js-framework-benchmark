@@ -10,7 +10,7 @@ const GeomMeanRow = ({geomMean, currentSortKey, sortBy, sortbyGeommeanEnum}: {ge
     return (
     <tr>
         <th><button className={currentSortKey === sortbyGeommeanEnum ? 'sortKey textButton' : 'textButton'} onClick={sort(sortbyGeommeanEnum)}>geometric mean</button>of all factors in the table</th>
-        {geomMean.map(result => result == null ? <th></th> : 
+        {geomMean.map((result,idx) => result == null ? <th key={idx}></th> : 
             <th key={result.key} style={{backgroundColor:result.bgColor, color:result.textColor}}>{result.mean.toFixed(2)}
             </th>    
         )}
