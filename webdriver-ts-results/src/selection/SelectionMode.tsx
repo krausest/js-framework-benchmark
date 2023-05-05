@@ -19,12 +19,14 @@ const SelectionMode = (): JSX.Element =>
             <option value={DisplayMode.DisplayMedian}>median results</option>
             <option value={DisplayMode.BoxPlot}>box plot</option>
         </select>
+        {/* 
+        <div className="hspan" />
         <label htmlFor="displayMode">(Experimental) Duration measurement mode</label>
         <div className="hspan" />
         <select id="displayMode" className="custom-select" value={cpuDurationMode} onChange={(evt) => dispatch(selectCpuDurationMode(evt.target.value as CpuDurationMode))}>
             <option value={CpuDurationMode.Total}>total duration</option>
             <option value={CpuDurationMode.Script}>only JS duration</option>
-        </select>
+        </select> */}
         </>
     );
 };

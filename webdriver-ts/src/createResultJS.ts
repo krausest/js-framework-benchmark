@@ -93,7 +93,6 @@ async function main() {
               );
             }
           }  
-          console.log("values=", values);
           let result: any = {
             f: data.framework,
             b: data.benchmark,
