@@ -63,6 +63,54 @@ interface Timingresult {
     return timingResults;
   }
   
+  const traceJSEventNames = [
+    'EventDispatch',
+    'EvaluateScript',
+    'v8.evaluateModule',
+    'FunctionCall',
+    'TimerFire',
+    'FireIdleCallback',
+    'FireAnimationFrame',
+    'RunMicrotasks',
+    'V8.Execute',
+  ];
+
+  export function extractRelevantJSEvents(config: TConfig, entries: any[]) {
+    let filteredEvents: any[] = [];
+    let click_start = 0;
+    let click_end = 0;
+  
+    entries.forEach(x => {
+        let e = x;
+        if (config.LOG_DEBUG) console.log(JSON.stringify(e));
+        if (e.name==='EventDispatch') {
+          if (e.args.data.type==="click") {
+            if (config.LOG_DETAILS) console.log("CLICK ",+e.ts);
+              click_start = +e.ts;
+              click_end = +e.ts+e.dur;
+              filteredEvents.push({type:'click', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur});
+          }
+        }
+        else if (traceJSEventNames.includes(e.name) && e.ph==="X") {
+            filteredEvents.push({type:e.name, ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, orig: JSON.stringify(e)});
+        }
+    });
+    return filteredEvents;
+  }
+  
+  async function fetchJSEventsFromPerformanceLog(config: TConfig, fileName: string): Promise<Timingresult[]> {
+    let timingResults : Timingresult[] = [];
+    let entries = [];
+    do {
+        let contents = await readFile(fileName, {encoding: "utf8"});
+        let json  = JSON.parse(contents)
+        let entries = json['traceEvents'];
+        const filteredEvents = extractRelevantJSEvents(config, entries);
+        timingResults = timingResults.concat(filteredEvents);
+    } while (entries.length > 0);
+    return timingResults;
+  }
+  
   function type_eq(requiredType: string) {
     return (e: Timingresult) => e.type=== requiredType;
   }
@@ -125,19 +173,22 @@ interface Timingresult {
   //     });
   //   console.log("#events total", entries.length, "#events after click", eventsAfterClick.length);
   
+  export interface CPUDurationResult {
+    tsStart: number;
+    tsEnd : number;
+    duration : number;
+  }
   
   //   const tasks = new Tracelib(eventsAfterClick)
   //   const summary = tasks.getSummary()
   //   console.log("painting", summary.painting, "rendering", summary.rendering, "scripting", summary.scripting)
   //   return summary.painting +summary.rendering + summary.scripting;
   // }
-  export async function computeResultsCPU(config: TConfig, fileName: string, durationMeasurementMode: DurationMeasurementMode): Promise<number> {
+  export async function computeResultsCPU(config: TConfig, fileName: string, durationMeasurementMode: DurationMeasurementMode): Promise<CPUDurationResult> {
     const perfLogEvents = (await fetchEventsFromPerformanceLog(config, fileName));
     let eventsDuringBenchmark = R.sortBy((e: Timingresult) => e.end)(perfLogEvents);
   
     // console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
-  
-    console.log("computeResultsCPU ",durationMeasurementMode)
   
     let clicks = R.filter(type_eq('click'))(eventsDuringBenchmark)
     if (clicks.length !== 1) {
@@ -213,6 +264,47 @@ interface Timingresult {
       }    
     }
   
-    return duration;
+    return {tsStart:click.ts, tsEnd:paint.end,  duration};
+  }
+  
+
+  export async function computeResultsJS(cpuTrace: CPUDurationResult, config: TConfig, fileName: string, durationMeasurementMode: DurationMeasurementMode): Promise<number> {
+    const totalDuration = cpuTrace;
+
+    const perfLogEvents = (await fetchJSEventsFromPerformanceLog(config, fileName));
+  
+    const eventsWithin = R.filter<Timingresult>(e => e.ts >= totalDuration.tsStart && e.ts <= totalDuration.tsEnd)(perfLogEvents);
+
+    for (let ev of eventsWithin) {
+      ev.ts -=  totalDuration.tsStart;
+      ev.end -= totalDuration.tsStart;
+    }
+    interface Interval {
+      start: number,
+      end: number,
+      timingResult: Timingresult
+    }
+    function isContained(testIv: Interval, otherIv: Interval) {
+      return intervals.some(iv => testIv.start>=otherIv.start && testIv.end<=otherIv.end);
+    }
+    function newContainedInterval(outer: Timingresult, intervals: Array<Interval>) {
+      let outerIv = {start: outer.ts, end: outer.end, timingResult: outer};
+      let cleanedUp: Array<Interval> = []
+      let isContainedRes = intervals.some(iv => isContained(outerIv, iv));
+      if (!isContainedRes) { cleanedUp.push(outerIv) }
+      for (let iv of intervals) {
+        if (iv.start<outer.ts || iv.end>outer.end) {
+          cleanedUp.push(iv);
+        }
+      }            
+      return cleanedUp;
+    }
+    
+    let intervals: Array<Interval> = [];
+    for (let ev of eventsWithin) {
+      intervals = newContainedInterval(ev, intervals);
+    }
+  
+    return intervals.reduce((p,c) => p+(c.end-c.start), 0)/1000.0;
   }
   

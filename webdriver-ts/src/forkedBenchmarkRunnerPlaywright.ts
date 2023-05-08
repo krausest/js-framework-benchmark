@@ -120,12 +120,12 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             console.log("runBenchmark Playwright");
             await runBenchmark(browser, page, benchmark, framework);
 
-            await wait(40);
+            await wait(4000);
+            await browser.stopTracing();
             let m2 = (await client.send('Performance.getMetrics')).metrics;
             let m2_val = m2.find(m => m.name === 'ScriptDuration').value;
             let m2_Timestamp = m2.find(m => m.name === 'Timestamp').value;
             console.log("m2", m2, m2_val);
-            await browser.stopTracing();
             if (throttleCPU) {
               await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });            
           }  
@@ -134,9 +134,9 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             console.log("**** resultScript = ", resultScript);
             if (m2_Timestamp == m1_Timestamp) throw new Error("Page metrics timestamp didn't change");
 
-            results.push({total: result, script: resultScript});
+            results.push({total: result.duration, script: resultScript});
             console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
-            if (result < 0)
+            if (result.duration < 0)
                 throw new Error(`duration ${result} < 0`);                
         }
         return {error, warnings, result: results};

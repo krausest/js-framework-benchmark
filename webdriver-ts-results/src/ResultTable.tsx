@@ -34,6 +34,7 @@ const ResultTable = ({type}: Props): JSX.Element|null => {
         <div key={texts[type].label}>
           <h1>{texts[type].label}</h1>
           <p>{texts[type].description}</p>
+          {cpuDurationMode==CpuDurationMode.Script && <h3>Warning: This is an experimental view. Don't rely on those values yet.</h3>}
             {
         displayMode === DisplayMode.BoxPlot ?
                 (

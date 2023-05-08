@@ -134,9 +134,9 @@ async function runCPUBenchmark(
       await p;
 
       let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
-      results.push({total:result, script: 0});
+      results.push({total:result.duration, script: 0});
       console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
-      if (result < 0)
+      if (result.duration < 0)
           throw new Error(`duration ${result} < 0`);                
 
     }
