@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ResultTableData, DisplayMode, BenchmarkType, FrameworkType} from './Common';
+import {ResultTableData, DisplayMode, BenchmarkType, FrameworkType, CpuDurationMode} from './Common';
 import CpuResultsTable from './tables/CpuResultsTable'
 import MemResultsTable from './tables/MemResultsTable'
 import StartupResultsTable from './tables/StartupResultsTable'
@@ -24,6 +24,7 @@ const ResultTable = ({type}: Props): JSX.Element|null => {
   const data = useSelector<State, ResultTableData|undefined>((state) => state.resultTables[type]);
   const currentSortKey = useSelector<State, string>((state) => state.sortKey);
   const displayMode = useSelector<State, DisplayMode>((state) => state.displayMode);
+  const cpuDurationMode = useSelector<State, CpuDurationMode>((state) => state.cpuDurationMode);
   const sortBy = (sortKey: string) => dispatch(sort(sortKey))
 
   if (data === undefined || data.frameworks.length===0 || (data.getResult(BenchmarkType.CPU).benchmarks.length===0 && data.getResult(BenchmarkType.STARTUP).benchmarks.length===0 && data.getResult(BenchmarkType.MEM).benchmarks.length===0)) return null;
@@ -33,11 +34,12 @@ const ResultTable = ({type}: Props): JSX.Element|null => {
         <div key={texts[type].label}>
           <h1>{texts[type].label}</h1>
           <p>{texts[type].description}</p>
+          {cpuDurationMode==CpuDurationMode.Script && <h3>Warning: This is an experimental view. Don't rely on those values yet.</h3>}
             {
         displayMode === DisplayMode.BoxPlot ?
                 (
             <React.Suspense fallback={<div>Loading...</div>}>
-              <BoxPlotTable results={data.results} frameworks={data.frameworks} benchmarks={data.getResult(BenchmarkType.CPU).benchmarks} currentSortKey={currentSortKey} sortBy={sortBy}/>
+              <BoxPlotTable results={data.results} frameworks={data.frameworks} benchmarks={data.getResult(BenchmarkType.CPU).benchmarks} currentSortKey={currentSortKey} sortBy={sortBy} cpuDurationMode={cpuDurationMode}/>
             </React.Suspense>
                 )
         :

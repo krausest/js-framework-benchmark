@@ -3,7 +3,7 @@ import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriverAfterfra
 import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess.js";
 
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
-import { BenchmarkType } from "./benchmarksCommon.js";
+import { BenchmarkType, CPUBenchmarkResult } from "./benchmarksCommon.js";
 import { getAfterframeDurations, initMeasurement } from "./benchmarksWebdriverAfterframe.js";
 
 let config: TConfig = defaultConfig;
@@ -46,10 +46,10 @@ async function runCPUBenchmark(
   framework: FrameworkData,
   benchmark: CPUBenchmarkWebdriver,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number>> {
+): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
   let error: string = undefined;
   let warnings: string[] = [];
-  let results: number[] = [];
+  let results: CPUBenchmarkResult[] = [];
 
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
   let driver: WebDriver = null;
@@ -69,7 +69,7 @@ async function runCPUBenchmark(
       console.log("runCPUBenchmark: before loading page")
       // must be run with an IP adress otherwise Safari crashes with an error. 
       // Use the HOST env variable to set the HOST to an IP adress for safari!
-      await driver.get(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      await driver.get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`);
       // Needed for Firefox
       await driver.sleep(50);
       console.log("runCPUBenchmark: initBenchmark")
@@ -102,13 +102,13 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number>> {
+): Promise<ErrorAndWarning<number|CPUBenchmarkResult>> {
   let runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriver) as Array<CPUBenchmarkWebdriver>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning<number>;
+  let errorAndWarnings: ErrorAndWarning<number|CPUBenchmarkResult>;
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }
@@ -129,7 +129,6 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
-  if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       process.send(result);

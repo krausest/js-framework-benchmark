@@ -3,7 +3,7 @@
 import { Page } from "puppeteer-core";
 import * as benchmarksCommon from "./benchmarksCommon.js";
 import { BenchmarkType } from "./benchmarksCommon.js";
-import { config, FrameworkData } from "./common.js";
+import { BenchmarkOptions, config, FrameworkData } from "./common.js";
 import { checkElementContainsText, checkElementExists, checkElementHasClass, checkElementNotExists, clickElement } from "./puppeteerAccess.js";
 
 
@@ -290,8 +290,8 @@ export const benchCreateClear5Memory = new (class extends MemBenchmarkPuppeteer 
 })();
 
 
-export function fileNameTrace(framework: FrameworkData, benchmark: benchmarksCommon.BenchmarkInfo, run: number) {
-  return `${config.TRACES_DIRECTORY}/${framework.fullNameWithKeyedAndVersion}_${benchmark.id}_${run}.json`;
+export function fileNameTrace(framework: FrameworkData, benchmark: benchmarksCommon.BenchmarkInfo, run: number, benchmarkOptions: BenchmarkOptions) {
+  return `${benchmarkOptions.tracesDirectory}/${framework.fullNameWithKeyedAndVersion}_${benchmark.id}_${run}.json`;
 }
 
 export const benchmarks = [

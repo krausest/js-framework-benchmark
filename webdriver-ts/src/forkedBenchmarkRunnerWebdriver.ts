@@ -4,7 +4,7 @@ import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, 
 
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
 import * as R from "ramda";
-import { BenchmarkType, DurationMeasurementMode } from "./benchmarksCommon.js";
+import { BenchmarkType, CPUBenchmarkResult, DurationMeasurementMode, slowDownFactor } from "./benchmarksCommon.js";
 
 let config: TConfig = defaultConfig;
 
@@ -126,7 +126,7 @@ async function computeResultsCPU(
   benchmark: CPUBenchmarkWebdriver,
   warnings: string[],
   expcectedResultCount: number
-): Promise<number[]> {
+): Promise<CPUBenchmarkResult[]> {
   let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
   if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
   const perfLogEvents = await fetchEventsFromPerformanceLog(driver);
@@ -135,7 +135,7 @@ async function computeResultsCPU(
   // if (config.LOG_DEBUG) console.log("filteredEvents ", asString(filteredEvents));
 
   let remaining = R.dropWhile(type_eq("initBenchmark"))(filteredEvents);
-  let results: number[] = [];
+  let results: CPUBenchmarkResult[] = [];
 
   while (remaining.length > 0) {
     let evts = R.splitWhen(type_eq("finishedBenchmark"))(remaining);
@@ -196,7 +196,8 @@ async function computeResultsCPU(
         console.log("soundness check failed. reported duration is bigger than whole benchmark duration", asString(eventsDuringBenchmark));
         throw "soundness check failed. reported duration is bigger than whole benchmark duration";
       }
-      results.push(duration);
+      // script is currently not implemented
+      results.push({total:duration, script:0});
     }
     remaining = R.drop(1, evts[1]);
   }
@@ -253,7 +254,7 @@ async function runCPUBenchmark(
   framework: FrameworkData,
   benchmark: CPUBenchmarkWebdriver,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number>> {
+): Promise<ErrorAndWarning<number|CPUBenchmarkResult>> {
   let error: string = undefined;
   let warnings: string[] = [];
 
@@ -266,7 +267,7 @@ async function runCPUBenchmark(
       setUseRowShadowRoot(framework.useRowShadowRoot);
       setShadowRootName(framework.shadowRootName);
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
-      await driver.get(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      await driver.get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -279,13 +280,14 @@ async function runCPUBenchmark(
       await driver.executeScript("console.timeStamp('initBenchmark')");
 
       await initBenchmark(driver, benchmark, framework);
-      if (benchmark.benchmarkInfo.throttleCPU) {
-        console.log("CPU slowdown", benchmark.benchmarkInfo.throttleCPU);
-        await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: benchmark.benchmarkInfo.throttleCPU });
+      let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
+      if (throttleCPU) {
+        console.log("CPU slowdown", throttleCPU);
+        await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: throttleCPU });
       }
       await driver.executeScript("console.timeStamp('runBenchmark')");
       await runBenchmark(driver, benchmark, framework);
-      if (benchmark.benchmarkInfo.throttleCPU) {
+      if (throttleCPU) {
           console.log("resetting CPU slowdown");
           await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
         }
@@ -314,13 +316,13 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number>> {
+): Promise<ErrorAndWarning<number|CPUBenchmarkResult>> {
   let runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriver) as Array<CPUBenchmarkWebdriver>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning<number>;
+  let errorAndWarnings: ErrorAndWarning<number|CPUBenchmarkResult>;
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }
@@ -343,7 +345,6 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
-  if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       process.send(result);

@@ -44,7 +44,7 @@ async function runLighthouse(framework: FrameworkData, startupBenchmarks: Startu
     let chrome = await chromeLauncher.launch(opts);
     let results: any = null;
     try {
-      results = await (lighthouse as any)(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, opts, null);
+      results = await (lighthouse as any)(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, opts, null);
       await chrome.kill();
     } catch (error) {
       console.log("error running lighthouse", error);
@@ -132,7 +132,6 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
-  if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       process.send(result);

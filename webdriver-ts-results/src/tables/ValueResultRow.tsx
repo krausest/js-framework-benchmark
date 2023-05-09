@@ -19,7 +19,7 @@ const ValueResultRow = ({benchIdx, resultsForBenchmark, benchmarks, currentSortK
           <div className="rowCount">{benchmarks[benchIdx].description}</div>
         </th>
         {resultsForBenchmark && resultsForBenchmark.map((result,idx) => result == null ? <td key={idx}></td> : 
-            <ValueCell {...result}/>)}
+            <ValueCell {...result} key={result.key}/>)}
     </tr>
 };
 

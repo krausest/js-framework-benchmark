@@ -1,2 +1,3 @@
 webpack.config.js
 .eslintrc.js
+src/results.ts

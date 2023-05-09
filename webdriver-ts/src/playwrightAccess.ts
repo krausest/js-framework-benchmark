@@ -1,7 +1,6 @@
 import { Browser, Page } from "playwright-core";
 import { chromium } from "playwright";
-import { BenchmarkDriverOptions, config } from "./common.js";
-
+import { BenchmarkOptions } from "./common.js";
 
 
 export async function checkElementNotExists(page: Page, selector: string) {
@@ -80,7 +79,7 @@ export async function checkElementHasClass(page: Page, selector: string, classNa
   throw `checkElementHasClass ${selector} failed. expected ${className}, but was ${clazzes}`;
 }
 
-function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
+function browserPath(benchmarkOptions: BenchmarkOptions) {
   if (benchmarkOptions.chromeBinaryPath) return benchmarkOptions.chromeBinaryPath;
   if (process.platform == "darwin") {
     return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -93,7 +92,7 @@ function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
   }
 }
 
-export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Promise<Browser> {
+export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<Browser> {
   let args = ['--window-size=1000,800', '--js-flags=--expose-gc'];
   if (benchmarkOptions.headless) args.push('--headless=new');
   const browser = await chromium.launch({

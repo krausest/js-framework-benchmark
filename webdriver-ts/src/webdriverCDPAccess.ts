@@ -1,6 +1,6 @@
 import { By, Capabilities, Condition, WebDriver, WebElement } from "selenium-webdriver";
 import * as chrome from "selenium-webdriver/chrome.js";
-import { BenchmarkDriverOptions, config } from "./common.js";
+import { BenchmarkOptions, config } from "./common.js";
 
 interface PathPart {
   tagName: string;
@@ -252,7 +252,7 @@ export async function mainRoot(driver: WebDriver, isInButtonArea: boolean): Prom
 
 // node_modules\.bin\chromedriver.cmd --verbose --port=9998 --log-path=chromedriver.log
 // SELENIUM_REMOTE_URL=http://localhost:9998
-export function buildDriver(benchmarkOptions: BenchmarkDriverOptions): WebDriver {
+export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
   let width = 1280;
   let height = 800;
 

@@ -1,4 +1,4 @@
-import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, categories, Severity } from "./Common"
+import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, categories, Severity, ResultValues, CpuDurationMode } from "./Common"
 import { benchmarks as benchmark_orig, frameworks, results as rawResults } from './results';
 
 // Temporarily disable script bootup time
@@ -9,12 +9,20 @@ const benchmarks = benchmark_orig.filter(b => b.id !== '32_startup-bt'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const jStat = require('jstat').jStat;
 
-const results: Result[] = (rawResults as RawResult[]).map(res => Object.assign(({ framework: res.f, benchmark: res.b, values: res.v }),
-  {
-    mean: res.v ? jStat.mean(res.v) : Number.NaN,
-    median: res.v ? jStat.median(res.v) : Number.NaN,
-    standardDeviation: res.v ? jStat.stdev(res.v, true) : Number.NaN
-  }));
+const results: Result[] = (rawResults as RawResult[]).map(res => {
+  const values: {[k: string]: ResultValues} = {};
+  for (const key of Object.keys(res.v)) {
+    const r = res.v[key];
+    const vals = {
+      mean: r ? jStat.mean(r) : Number.NaN,
+      median: r ? jStat.median(r) : Number.NaN,
+      standardDeviation: r ? jStat.stdev(r, true) : Number.NaN,
+      values: r
+    }
+    values[key] = vals;
+  }
+  return { framework: res.f, benchmark: res.b, results: values}
+  });
 
 const removeKeyedSuffix = (value: string) => {
   if (value.endsWith('-non-keyed')) return value.substring(0, value.length - 10)
@@ -52,6 +60,7 @@ export interface State {
   displayMode: DisplayMode;
   compareWith: CompareWith;
   categories: Set<number>;
+  cpuDurationMode: CpuDurationMode;
 }
 
 export const areAllBenchmarksSelected = (state: State, type: BenchmarkType): boolean => state.benchmarkLists[type].every(b => state.selectedBenchmarks.has(b))
@@ -87,13 +96,14 @@ let preInitialState: State = {
     [FrameworkType.KEYED]: undefined,
     [FrameworkType.NON_KEYED]: undefined
   },
-  categories: new Set(categories.filter(c => c.severity != Severity.Error).map(c => c.id))
+  categories: new Set(categories.filter(c => c.severity != Severity.Error).map(c => c.id)),
+  cpuDurationMode : CpuDurationMode.Total
 }
 
-function updateResultTable({ frameworks, benchmarks, selectedFrameworksDropDown: selectedFrameworks, selectedBenchmarks, sortKey, displayMode, compareWith, categories }: State) {
+function updateResultTable({ frameworks, benchmarks, selectedFrameworksDropDown: selectedFrameworks, selectedBenchmarks, sortKey, displayMode, compareWith, categories, cpuDurationMode }: State) {
   return {
-    [FrameworkType.KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.KEYED, sortKey, displayMode, compareWith[FrameworkType.KEYED], categories),
-    [FrameworkType.NON_KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.NON_KEYED, sortKey, displayMode, compareWith[FrameworkType.NON_KEYED], categories)
+    [FrameworkType.KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.KEYED, sortKey, displayMode, compareWith[FrameworkType.KEYED], categories, cpuDurationMode),
+    [FrameworkType.NON_KEYED]: new ResultTableData(frameworks, benchmarks, resultLookup, selectedFrameworks, selectedBenchmarks, FrameworkType.NON_KEYED, sortKey, displayMode, compareWith[FrameworkType.NON_KEYED], categories, cpuDurationMode)
   }
 }
 
@@ -123,7 +133,7 @@ function extractState(state: any): Partial<State> {
   }
   if (state.categories!==undefined) {
     const newSelectedCategories = new Set<number>();
-    for (const f of state?.categories) {
+    for (const f of state?.categories ?? []) {
       for (const sc of categories) {
         if (f === sc.id) newSelectedCategories.add(sc.id);
       }
@@ -192,6 +202,10 @@ interface SelectDisplayModeAction { type: 'SELECT_DISPLAYMODE'; data: { displayM
 export const selectDisplayMode = (displayMode: DisplayMode): SelectDisplayModeAction => {
   return { type: 'SELECT_DISPLAYMODE', data: { displayMode } }
 }
+interface SelectCpuDurationModeAction { type: 'SELECT_CPUDURATIONMODE'; data: { cpuDurationMode: CpuDurationMode } }
+export const selectCpuDurationMode = (cpuDurationMode: CpuDurationMode): SelectCpuDurationModeAction => {
+  return { type: 'SELECT_CPUDURATIONMODE', data: { cpuDurationMode } }
+}
 
 interface CompareAction { type: 'COMPARE'; data: { framework: Framework } }
 export const compare = (framework: Framework): CompareAction => {
@@ -217,7 +231,7 @@ export const setStateFromClipboard = (state: any): SetStateFromClipboardAction =
 
 type Action = SelectFrameworkAction | SelectAllFrameworksAction | SelectBenchmarkAction | SelectAllBenchmarksAction
   | SelectDisplayModeAction | CompareAction | StopCompareAction | SortAction
-  | SelectCategoryAction | SelectAllCategoriesAction | SetStateFromClipboardAction;
+  | SelectCategoryAction | SelectAllCategoriesAction | SetStateFromClipboardAction | SelectCpuDurationModeAction;
 
 export const reducer = (state = initialState, action: Action): State => {
   console.log("reducer", action)
@@ -265,6 +279,10 @@ export const reducer = (state = initialState, action: Action): State => {
     }
     case 'SELECT_DISPLAYMODE': {
       const t = { ...state, displayMode: action.data.displayMode };
+      return { ...t, resultTables: updateResultTable(t) };
+    }
+    case 'SELECT_CPUDURATIONMODE': {
+      const t = { ...state, cpuDurationMode: action.data.cpuDurationMode };
       return { ...t, resultTables: updateResultTable(t) };
     }
     case 'COMPARE': {

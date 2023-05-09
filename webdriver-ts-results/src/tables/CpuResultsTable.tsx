@@ -16,7 +16,7 @@ const CpuResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData;
                 <tr>                  
                   <th className='benchname'><button className={currentSortKey===SORT_BY_NAME ? 'sortKey textButton' : 'textButton'} onClick={(event) => {event.preventDefault(); sortBy(SORT_BY_NAME)}}>Name</button><br/>Duration for...</th>
                   {data.frameworks.map((f,idx) => <th key={idx}>{
-                      f.frameworkHomeURL ? <a target="_blank" href={f.frameworkHomeURL}>{f.displayname}</a> : f.displayname
+                      f.frameworkHomeURL ? <a target="_blank" rel="noreferrer" href={f.frameworkHomeURL}>{f.displayname}</a> : f.displayname
                     }
                   </th>)}
                 </tr>
@@ -37,7 +37,7 @@ const CpuResultsTable = ({data, currentSortKey, sortBy}: {data: ResultTableData;
                     <th>Implementation link</th>
                     {data.frameworks.map(f => 
                       <th key={f.name} >
-                        <a target="_blank" href={"https://github.com/krausest/js-framework-benchmark/tree/master/frameworks/"+f.dir}>code</a>
+                        <a target="_blank" rel="noreferrer" href={"https://github.com/krausest/js-framework-benchmark/tree/master/frameworks/"+f.dir}>code</a>
                       </th>)}
                 </tr>
               </thead>

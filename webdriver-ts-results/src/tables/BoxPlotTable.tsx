@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import {SORT_BY_NAME, Benchmark, Framework, ResultLookup} from '../Common'; 
+import {SORT_BY_NAME, Benchmark, Framework, ResultLookup, CpuDurationMode} from '../Common'; 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Plotly = require('plotly.js-cartesian-dist');
 
@@ -36,22 +36,28 @@ const BoxPlot = ({traces}: {traces: Array<BoxPlotData>}): JSX.Element =>
       return <div ref={elemRef} style={{height: '100%', width: '100%'}}></div>
 }
 
-const RenderBoxPlotsRows = ({frameworks, benchmarks, results, currentSortKey, sortBy}: {frameworks: Array<Framework>; benchmarks: Array<Benchmark>; results: ResultLookup; currentSortKey: string; sortBy: (name: string) => void}) => {
-    return <>{benchmarks.map((benchmark) =>
-    (<tr key={benchmark.id} style={{height: 400}}>
-        <th className='benchname'><button className={currentSortKey===benchmark.id ? 'sortKey textButton' : 'textButton'}
-        onClick={(event) => {event.preventDefault(); sortBy(benchmark.id)}}>{benchmark.label}</button>
-          <div className="rowCount">{benchmark.description}</div>
-        </th>
-        <td>
-            <BoxPlot traces={frameworks.map(f => ({framework: f.name, values: results(benchmark, f)?.values ?? [] })) as BoxPlotData[]}/>
-        </td>
-    </tr>))}</>
+const RenderBoxPlotsRow = ({frameworks, benchmark, results, currentSortKey, sortBy, cpuDurationMode}: {frameworks: Array<Framework>; benchmark: Benchmark; results: ResultLookup; currentSortKey: string; sortBy: (name: string) => void, cpuDurationMode: CpuDurationMode}) => {
+  const resultsValues = (framework: Framework) => results(benchmark, framework)?.results[cpuDurationMode].values ?? [];
+  return <tr key={benchmark.id} style={{height: 400}}>
+      <th className='benchname'><button className={currentSortKey===benchmark.id ? 'sortKey textButton' : 'textButton'}
+      onClick={(event) => {event.preventDefault(); sortBy(benchmark.id)}}>{benchmark.label}</button>
+        <div className="rowCount">{benchmark.description}</div>
+      </th>
+      <td>
+          <BoxPlot traces={frameworks.map(f => ({framework: f.name, values: resultsValues(f) })) as BoxPlotData[]}/>
+      </td>
+    </tr>;
+}
+
+const RenderBoxPlotsRows = ({frameworks, benchmarks, results, currentSortKey, sortBy, cpuDurationMode}: {frameworks: Array<Framework>; benchmarks: Array<Benchmark>; results: ResultLookup; currentSortKey: string; sortBy: (name: string) => void, cpuDurationMode: CpuDurationMode}) => {
+  return <>{benchmarks.map((benchmark) =>
+      <RenderBoxPlotsRow key={benchmark.id} frameworks={frameworks} benchmark={benchmark} results={results} currentSortKey={currentSortKey} sortBy={sortBy} cpuDurationMode={cpuDurationMode}/>
+  )}</>
 }
 // {data.frameworks.map(f => <th key={f.name}>{f.name}</th>)}
 
-const BoxPlotTable = ({frameworks, benchmarks, results, currentSortKey, sortBy}:
-    {frameworks: Array<Framework>; benchmarks: Array<Benchmark>; results: ResultLookup; currentSortKey: string; sortBy: (name: string) => void}): JSX.Element|null => {
+const BoxPlotTable = ({frameworks, benchmarks, results, currentSortKey, sortBy, cpuDurationMode}:
+    {frameworks: Array<Framework>; benchmarks: Array<Benchmark>; results: ResultLookup; currentSortKey: string; sortBy: (name: string) => void, cpuDurationMode: CpuDurationMode}): JSX.Element|null => {
     return benchmarks.length===0 ? null :
         (<div>
           <h3>Duration in milliseconds</h3>
@@ -63,7 +69,7 @@ const BoxPlotTable = ({frameworks, benchmarks, results, currentSortKey, sortBy}:
               </tr>
             </thead>
             <tbody>
-                <RenderBoxPlotsRows results={results} frameworks={frameworks} benchmarks={benchmarks} currentSortKey={currentSortKey} sortBy={sortBy}/>
+                <RenderBoxPlotsRows results={results} frameworks={frameworks} benchmarks={benchmarks} currentSortKey={currentSortKey} sortBy={sortBy} cpuDurationMode={cpuDurationMode}/>
             </tbody>
           </table>
         </div>);

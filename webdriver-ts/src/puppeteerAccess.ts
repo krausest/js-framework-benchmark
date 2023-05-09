@@ -1,6 +1,6 @@
 import * as puppeteer from "puppeteer-core";
 import { Page } from "puppeteer-core";
-import { BenchmarkDriverOptions, config } from "./common.js";
+import { BenchmarkOptions, config } from "./common.js";
 
 
 
@@ -79,7 +79,7 @@ export async function checkElementHasClass(page: Page, selector: string, classNa
   throw `checkElementHasClass ${selector} failed. expected ${className}, but was ${clazzes}`;
 }
 
-function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
+function browserPath(benchmarkOptions: BenchmarkOptions) {
   if (benchmarkOptions.chromeBinaryPath) return benchmarkOptions.chromeBinaryPath;
   if (process.platform == "darwin") {
     return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
@@ -92,7 +92,7 @@ function browserPath(benchmarkOptions: BenchmarkDriverOptions) {
   }
 }
 
-export async function startBrowser(benchmarkOptions: BenchmarkDriverOptions): Promise<puppeteer.Browser> {
+export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<puppeteer.Browser> {
   let width = 1280;
   let height = 800;
   let window_width = width,

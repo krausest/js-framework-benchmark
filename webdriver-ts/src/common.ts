@@ -1,18 +1,23 @@
 import axios from "axios";
 
+export interface JSONResultData {
+  min: number;
+  max: number;
+  mean: number;
+  stddev: number;
+  median: number;
+  values: Array<number>;
+}
 
+export interface JSONResultMap {
+  [key:string]: JSONResultData
+}
 export interface JSONResult {
   framework: string;
   keyed: boolean;
   benchmark: string;
   type: string;
-  min: number;
-  max: number;
-  mean: number;
-  geometricMean: number;
-  standardDeviation: number;
-  median: number;
-  values: Array<number>;
+  values: JSONResultMap;
 }
 
 export type TBenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
@@ -23,22 +28,30 @@ export interface ErrorAndWarning<T> {
   result?: T[];
 }
 
-export interface BenchmarkDriverOptions {
+export interface BenchmarkOptions {
+  host: string;
+  port: number;
   headless?: boolean;
   chromeBinaryPath?: string;
   remoteDebuggingPort: number;
   chromePort: number;
-}
-
-export interface BenchmarkOptions extends BenchmarkDriverOptions {
-  HOST: string;
-  port: string;
   batchSize: number;
   browser: string;
   numIterationsForCPUBenchmarks: number;
   numIterationsForMemBenchmarks: number;
   numIterationsForStartupBenchmark: number;
+
+  allowThrottling: boolean;
+  resultsDirectory:string,
+  tracesDirectory: string,
 }
+
+/*
+  RESULTS_DIRECTORY: "results",
+  TRACES_DIRECTORY: "traces",
+  BROWSER: "chrome",
+  HOST: 'localhost',
+*/
 
 export enum BENCHMARK_RUNNER { 
   PUPPETEER = "puppeteer", 
@@ -49,9 +62,6 @@ export enum BENCHMARK_RUNNER {
 }
 
 export let config = {
-  PORT: 8080,
-  REMOTE_DEBUGGING_PORT: 9999,
-  CHROME_PORT: 9998,
   NUM_ITERATIONS_FOR_BENCHMARK_CPU: 10,
   NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT: 2, // drop the # of slowest results
   NUM_ITERATIONS_FOR_BENCHMARK_MEM: 1,
@@ -66,11 +76,7 @@ export let config = {
   STARTUP_DURATION_FROM_EVENTLOG: true,
   STARTUP_SLEEP_DURATION: 1000,
   WRITE_RESULTS: true,
-  RESULTS_DIRECTORY: "results",
-  TRACES_DIRECTORY: "traces",
-  BROWSER: "chrome",
   ALLOW_BATCHING: true,
-  HOST: 'localhost',
   BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER
 };
 export type TConfig = typeof config;
@@ -119,17 +125,17 @@ export interface IMatchPredicate {
 
 const matchAll: IMatchPredicate = (frameworkDirectory: string) => true;
 
-export async function initializeFrameworks(matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkData[]> {
+export async function initializeFrameworks(benchmarkOptions: BenchmarkOptions, matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkData[]> {
   let lsResult ;
   try {
     lsResult = (
       // FIXME https://github.com/axios/axios/issues/5008
-    await (axios as any).get(`http://${config.HOST}:${config.PORT}/ls`)
+    await (axios as any).get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/ls`)
   ).data;
   } catch (err) {
     console.log(err);
-    console.log(`ERROR loading frameworks from http://${config.HOST}:${config.PORT}/ls. Is the server running?`);
-    throw new Error(`ERROR loading frameworks from http://${config.HOST}:${config.PORT}/ls. Is the server running?`);
+    console.log(`ERROR loading frameworks from http://${benchmarkOptions.host}:${benchmarkOptions.port}/ls. Is the server running?`);
+    throw new Error(`ERROR loading frameworks from http://${benchmarkOptions.host}:${benchmarkOptions.port}/ls. Is the server running?`);
   }
 
   let frameworks: FrameworkData[] = [];
