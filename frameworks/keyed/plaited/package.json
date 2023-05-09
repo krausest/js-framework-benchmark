@@ -15,6 +15,7 @@
     "frameworkHomeURL": "https://github.com/plaited/plaited",
     "useShadowRoot": true,
     "shadowRootName": "benchmark-island",
-    "buttonsInShadowRoot": true
+    "buttonsInShadowRoot": true,
+    "issues": [800]
   }
 }
