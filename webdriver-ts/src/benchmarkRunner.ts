@@ -324,10 +324,10 @@ console.log("benchmarkOptions", benchmarkOptions);
   console.log("ARGS.smotest", args.smoketest)
   if (args.smoketest) {
     config.WRITE_RESULTS = false;
-    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU = 1;
+    benchmarkOptions.numIterationsForCPUBenchmarks = 1,
+    benchmarkOptions.numIterationsForMemBenchmarks = 1,
+    benchmarkOptions.numIterationsForStartupBenchmark = 1,  
     config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT = 0;
-    config.NUM_ITERATIONS_FOR_BENCHMARK_MEM = 1;
-    config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP = 1;
     config.EXIT_ON_ERROR = true;
     console.log('Using smoketest config ', JSON.stringify(config));
   }
