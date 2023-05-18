@@ -8,11 +8,19 @@ const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 
 const colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
 const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
 
+const adjectivesLength = adjectives.length;
+const coloursLength = colours.length;
+const nounsLength = nouns.length;
+
 type Row = { label: string, id: number };
 function buildData(count = 1000) {
-  const data = new Array<Row>();
+  const data = new Array<Row>(count);
   for (let i = 0; i < count; i++)
-    data.push({ id: state.nextId++, label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}` });
+    data[i] = ({
+      id: state.nextId++,
+      label: `${adjectives[_random(adjectivesLength)]} ${colours[_random(coloursLength)]
+        } ${nouns[_random(nounsLength)]}`,
+    });
   return data;
 }
 
