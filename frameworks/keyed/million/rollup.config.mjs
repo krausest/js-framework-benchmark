@@ -32,7 +32,7 @@ export default {
       preferBuiltins: false,
       extensions: ['.js', '.jsx'],
     }),
-    million.rollup(),
+    million.rollup({ mode: 'optimize' }),
     terser(TERSER_OPTIONS),
   ],
 };
