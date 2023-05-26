@@ -1,4 +1,5 @@
 use js_sys::Math;
+use kobold::diff::VString;
 use kobold::prelude::*;
 use wasm_bindgen::prelude::*;
 
@@ -47,10 +48,10 @@ fn random(max: usize) -> usize {
     (Math::random() * 1000.0) as usize % max
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug)]
 struct RowData {
     id: usize,
-    label: String,
+    label: VString,
 }
 
 struct State {
@@ -83,7 +84,7 @@ impl State {
             label.push_str(noun);
             self.rows.push(RowData {
                 id: i + d,
-                label,
+                label: label.into(),
             });
         }
         self.last += count;
@@ -137,7 +138,7 @@ fn Row<'a>(num: usize, row: &'a RowData, state: &'a Hook<State>) -> impl View + 
     view! {
         <tr.{is_in_danger}>
             <td class="col-md-1">{id}</td>
-            <td class="col-md-4"><a onclick={select}>{row.label.to_owned()}</a></td>
+            <td class="col-md-4"><a onclick={select}>{&row.label}</a></td>
             <td class="col-md-1"><a onclick={remove}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
             <td class="col-md-6"/>
         </tr>
@@ -211,7 +212,7 @@ fn App() -> impl View {
             </div>
             <table class="table table-hover table-striped test-data">
                 <tbody>
-                { for state.rows.iter().enumerate().map(|(num,row)| view! { <Row {state}  {num} {row} /> }) }            
+                { for state.rows.iter().enumerate().map(|(num,row)| view! { <Row {state}  {num} {row} /> }) }
                 </tbody>
             </table>
             <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />

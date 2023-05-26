@@ -4,7 +4,7 @@
   "description": "Benchmark for Kobold",
   "license": "MPL-2.0",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.7.1",
+    "frameworkVersion": "0.9.1",
     "frameworkHomeURL": "https://github.com/maciejhirsz/kobold",
     "issues": [
       1139
