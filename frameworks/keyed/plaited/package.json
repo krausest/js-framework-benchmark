@@ -16,6 +16,6 @@
     "useShadowRoot": true,
     "shadowRootName": "benchmark-island",
     "buttonsInShadowRoot": true,
-    "issues": [800]
+    "issues": [800, 772]
   }
 }
