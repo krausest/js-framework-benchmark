@@ -1,4 +1,4 @@
-import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, categories, Severity, ResultValues, CpuDurationMode } from "./Common"
+import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, Severity, ResultValues, CpuDurationMode, knownIssues } from "./Common"
 import { benchmarks as benchmark_orig, frameworks, results as rawResults } from './results';
 
 // Temporarily disable script bootup time
@@ -96,7 +96,7 @@ let preInitialState: State = {
     [FrameworkType.KEYED]: undefined,
     [FrameworkType.NON_KEYED]: undefined
   },
-  categories: new Set(categories.filter(c => c.severity != Severity.Error).map(c => c.id)),
+  categories: new Set(knownIssues.map(ki => ki.issue)),
   cpuDurationMode : CpuDurationMode.Total
 }
 
@@ -130,15 +130,6 @@ function extractState(state: any): Partial<State> {
   }
   if (state.displayMode!==undefined) {
     t = { ...t, displayMode: state.displayMode };
-  }
-  if (state.categories!==undefined) {
-    const newSelectedCategories = new Set<number>();
-    for (const f of state?.categories ?? []) {
-      for (const sc of categories) {
-        if (f === sc.id) newSelectedCategories.add(sc.id);
-      }
-    }
-    t = { ...t, categories: newSelectedCategories };
   }
   return t;
 }
@@ -310,11 +301,6 @@ export const reducer = (state = initialState, action: Action): State => {
         categories.delete(action.data.categoryId);
       }
       const t = { ...state, categories };
-      return { ...t, resultTables: updateResultTable(t) };
-    }
-    case 'SELECT_ALL_CATEGORIES': {
-      const newCategories = (action.data.add) ? new Set(categories.map(c => c.id)) : new Set<number>();
-      const t = { ...state, categories: newCategories };
       return { ...t, resultTables: updateResultTable(t) };
     }
     default:

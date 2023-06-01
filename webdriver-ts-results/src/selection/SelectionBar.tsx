@@ -2,10 +2,9 @@ import * as React from 'react';
 import SelectBenchmarks from './SelectBenchmarks';
 import SelectFrameworks from './SelectFrameworks';
 import SelectionMode from './SelectionMode';
-import SelectionFilterIssues from './SelectionFilterIssues';
 import CopyPasteSelection from './CopyPasteSelection';
 
-export const SelectionBar = (): JSX.Element => 
+export const SelectionBar = ({showDurationSelection}:{showDurationSelection:boolean}): JSX.Element => 
 {
     console.log("SelectionBar")
     return (
@@ -15,9 +14,7 @@ export const SelectionBar = (): JSX.Element =>
                 <div className="hspan" />
                 <SelectBenchmarks />
                 <div className="hspan" />
-                <SelectionMode />
-                <div className="hspan" />
-                <SelectionFilterIssues />
+                <SelectionMode showDurationSelection={showDurationSelection}/>
                 <div className="hspan" />
                 <CopyPasteSelection />
             </div>

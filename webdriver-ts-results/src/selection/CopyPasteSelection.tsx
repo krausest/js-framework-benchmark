@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { categories } from '../Common';
 import { setStateFromClipboard, State } from '../reducer';
 
 const CopyPasteSelection = (): JSX.Element => 
@@ -37,8 +36,7 @@ const CopyPasteSelection = (): JSX.Element =>
         const serializedState = {
             frameworks: state.frameworks.filter(f => state.selectedFrameworksDropDown.has(f)).map(f => f.dir),
             benchmarks: state.benchmarks.filter(f => state.selectedBenchmarks.has(f)).map(f => f.id),
-            displayMode: state.displayMode,
-            categories: categories.filter(c => state.categories.has(c.id)).map(c => c.id)
+            displayMode: state.displayMode
         };
         const json = JSON.stringify(serializedState);
         navigator.clipboard.writeText(json);

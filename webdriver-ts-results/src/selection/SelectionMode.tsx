@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CpuDurationMode, DisplayMode } from '../Common';
 import { selectCpuDurationMode, selectDisplayMode, State } from '../reducer';
 
-const SelectionMode = (): JSX.Element => 
+const SelectionMode = ({showDurationSelection}:{showDurationSelection:boolean}): JSX.Element => 
 {
     console.log("SelectionMode")
     const dispatch = useDispatch();    
@@ -20,12 +20,16 @@ const SelectionMode = (): JSX.Element =>
             <option value={DisplayMode.BoxPlot}>box plot</option>
         </select>
         <div className="hspan" />
-        <label htmlFor="displayMode">(Experimental) Duration measurement mode</label>
-        <div className="hspan" />
-        <select id="displayMode" className="custom-select" value={cpuDurationMode} onChange={(evt) => dispatch(selectCpuDurationMode(evt.target.value as CpuDurationMode))}>
-            <option value={CpuDurationMode.Total}>total duration</option>
-            <option value={CpuDurationMode.Script}>only JS duration</option>
-        </select>
+        {showDurationSelection &&
+            <>
+            <label htmlFor="displayMode">(Experimental) Duration measurement mode</label>
+            <div className="hspan" />
+            <select id="displayMode" className="custom-select" value={cpuDurationMode} onChange={(evt) => dispatch(selectCpuDurationMode(evt.target.value as CpuDurationMode))}>
+                <option value={CpuDurationMode.Total}>total duration</option>
+                <option value={CpuDurationMode.Script}>only JS duration</option>
+            </select>
+            </>
+        }
         </>
     );
 };

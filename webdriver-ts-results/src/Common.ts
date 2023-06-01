@@ -20,22 +20,6 @@ export interface Framework {
 
 export enum Severity {Note, Error}
 
-interface Category {
-  id: number;
-  text: string;
-  issues: Array<number>;
-  severity: Severity;
-}
-
-export const categories: Category[] = [
-  {id:1, text:"[Note]: Manual DOM manipulations", issues: [772], severity: Severity.Note},
-  {id:2, text:"[Note]: View state on the model", issues: [800], severity: Severity.Note},
-  {id:3, text:"[Note]: Explicit requestAnimationFrame calls", issues: [796], severity: Severity.Note},
-  {id:4, text:"[Note]: Manual event delegation", issues: [801], severity: Severity.Note},
-  {id:5, text:"[Note]: Implementation uses runtime code generation", issues: [1139], severity: Severity.Note},
-  {id:6, text:"[Issue]: Errors in the implementation", issues: [634], severity: Severity.Error},
-]
-
 const DEFAULT_RESULTS_KEY = 'DEFAULT';
 
 interface IIssue {
@@ -52,6 +36,7 @@ export const knownIssues: IIssue[] = [
     {issue: 800, severity: Severity.Note, text:"[Note]: View state on the model", link: "https://github.com/krausest/js-framework-benchmark/issues/800"},
     {issue: 801, severity: Severity.Note, text:"[Note]: Implementation uses manual event delegation", link: "https://github.com/krausest/js-framework-benchmark/issues/801"},
     {issue: 1139, severity: Severity.Note, text:"[Note]: Implementation uses runtime code generation", link: "https://github.com/krausest/js-framework-benchmark/issues/1139"},
+    {issue: 1261, severity: Severity.Note, text:"[Note]: Manual caching of (v)dom nodes", link: "https://github.com/krausest/js-framework-benchmark/issues/1261"},
 ];
 
 export function findIssue(issueNumber: number): IIssue|undefined {
@@ -215,12 +200,7 @@ export class ResultTableData {
         this.selectedFameworks = new Set<Framework>();
 
         const allowedIssues = new Set<number>();
-        categories.forEach(c => {
-          if (selectedCategories.has(c.id)) {
-            for (const i of c.issues) { allowedIssues.add(i); }
-          }
-        });
-
+        knownIssues.forEach(i => allowedIssues.add(i.issue));
         console.log("ResultTableData", allowedIssues, selectedCategories);
 
         selectedFrameworksInDropdown.forEach(f => {
