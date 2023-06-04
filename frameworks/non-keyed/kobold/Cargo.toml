@@ -7,7 +7,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-kobold = "0.7.1"
+kobold = "0.9.1"
 wasm-bindgen = "0.2.84"
 js-sys = "0.3.61"
 
