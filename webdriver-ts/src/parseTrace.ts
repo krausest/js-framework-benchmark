@@ -72,4 +72,4 @@ async function readAll() {
     }
 }
 
-main().catch(err => {console.log("Error in isKeyed", err)}); 
+readAll().catch(err => {console.log("Error in isKeyed", err)}); 
