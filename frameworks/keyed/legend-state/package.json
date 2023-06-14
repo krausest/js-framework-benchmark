@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-legend-state",
-  "version": "0.14.0",
+  "version": "1.2.8",
   "description": "Legend-State demo",
   "main": "index.js",
   "sideEffects": false,
@@ -34,7 +34,7 @@
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
-    "@legendapp/state": "0.14.0",
+    "@legendapp/state": "1.2.8",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   }
