@@ -1,0 +1,27 @@
+{
+  "name": "js-framework-benchmark-bau",
+  "version": "1.2.0",
+  "description": "bau demo benchmark",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@grucloud/bau",
+    "frameworkHomeURL": "https://github.com/grucloud/bau"
+  },
+  "scripts": {
+    "build-dev": "vite",
+    "build-prod": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "bau"
+  ],
+  "author": "Frederic Heem",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "vite": "^4.3.9"
+  },
+  "dependencies": {
+    "@grucloud/bau": "0.18.0",
+    "bootstrap": "3.3.6"
+  }
+}
