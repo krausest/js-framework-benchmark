@@ -1,5 +1,4 @@
-//import Bau from "@grucloud/bau";
-import Bau from "../../../../bau/bau/src/bau";
+import Bau from "@grucloud/bau";
 
 const bau = Bau();
 

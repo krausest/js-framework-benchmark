@@ -21,7 +21,7 @@
     "vite": "^4.3.9"
   },
   "dependencies": {
-    "@grucloud/bau": "0.18.0",
+    "@grucloud/bau": "0.20.0",
     "bootstrap": "3.3.6"
   }
 }
