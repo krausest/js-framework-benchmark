@@ -24,17 +24,18 @@ let benchmarkOptions: BenchmarkOptions = {
     allowThrottling: false
   };
 
-async function main() {
+async function single() {
 
 
 
-    // for (let i = 0; i < 1; i++) {
-        const trace = `traces/ui5-webcomponents-v1.3.1-keyed_08_create1k-after1k_x2_2.json`;
+    for (let i = 0; i < 1; i++) {
+        // const trace = `traces/1more-v0.1.18-keyed_01_run1k_0.json`;
+        const trace = `traces/react-hooks-use-transition-v18.2.0-keyed_07_create10k_1.json`;
         console.log("analyzing trace ", trace);
         const cpuTrace = await computeResultsCPU(config, trace, DurationMeasurementMode.LAST_PAINT);
         console.log(trace, cpuTrace)
         console.log(trace, await computeResultsJS(cpuTrace, config, trace, DurationMeasurementMode.LAST_PAINT))
-    // }
+    }
 
 
 }
@@ -53,11 +54,11 @@ async function readAll() {
                 if (!fs.existsSync(trace)) {
                     console.log("ignoring ", trace, "since it doesn't exist.");
                 } else {
-                    console.log("checking ", trace, benchmarkInfo.durationMeasurementMode);
+                    // console.log("checking ", trace, benchmarkInfo.durationMeasurementMode);
                     let result = await computeResultsCPU(config, trace, benchmarkInfo.durationMeasurementMode); 
                     let resultJS = await computeResultsJS(result, config, trace, benchmarkInfo.durationMeasurementMode); 
                     results.push({total:result.duration, script:resultJS});
-                    console.log(result);
+                    // console.log(result);
                 }
             }
             results.sort((a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total);
@@ -72,4 +73,4 @@ async function readAll() {
     }
 }
 
-readAll().catch(err => {console.log("Error in isKeyed", err)}); 
+single().catch(err => {console.log("Error in isKeyed", err)}); 

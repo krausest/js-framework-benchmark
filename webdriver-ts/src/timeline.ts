@@ -230,7 +230,7 @@ interface Timingresult {
           console.log("IGNORING more than one paint due to FIRST_PAINT_AFTER_LAYOUT", fileName, duration);
       }
     }
-    console.log("duration", duration);
+    if (config.LOG_DEBUG) { console.log("duration", duration); }
   
     // let updateLayoutTree = R.filter((e: Timingresult) => e.ts > click.end)(R.filter(type_eq('updateLayoutTree'))(eventsDuringBenchmark));
     // console.log("updateLayoutTree", updateLayoutTree.length, updateLayoutTree[0].end);
@@ -279,6 +279,7 @@ interface Timingresult {
       ev.ts -=  totalDuration.tsStart;
       ev.end -= totalDuration.tsStart;
     }
+    console.log("eventsWithin", eventsWithin);
     interface Interval {
       start: number,
       end: number,
@@ -304,7 +305,13 @@ interface Timingresult {
     for (let ev of eventsWithin) {
       intervals = newContainedInterval(ev, intervals);
     }
+    if (intervals.length > 1) {
+      console.log(`*** More than 1 interval ${intervals.length} for ${fileName}`, intervals);
+    } else {
+      console.log(`1 interval for ${fileName}`, intervals);
+    }
   
-    return intervals.reduce((p,c) => p+(c.end-c.start), 0)/1000.0;
+    let res = intervals.reduce((p,c) => p+(c.end-c.start), 0)/1000.0;
+    return res;
   }
   

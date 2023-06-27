@@ -120,7 +120,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             console.log("runBenchmark Playwright");
             await runBenchmark(browser, page, benchmark, framework);
 
-            await wait(4000);
+            await wait(40);
             await browser.stopTracing();
             let m2 = (await client.send('Performance.getMetrics')).metrics;
             let m2_val = m2.find(m => m.name === 'ScriptDuration').value;
