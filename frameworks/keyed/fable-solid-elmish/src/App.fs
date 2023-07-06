@@ -65,24 +65,26 @@ let App =
             ]]
         ]]
         Html.table [ Attr.className "table table-hover table-striped test-data"; Html.children [
-            Html.tbody [ Html.children (model.data |> List.map (fun (id, label) -> 
-                Html.tr [ Attr.className (if id = string model.selected then "danger" else ""); Html.children [
-                    Html.td [ Attr.className "col-md-1"; Html.children [
-                        Html.text id
-                    ]]
-                    Html.td [ Attr.className "col-md-4"; Html.children [
-                        Html.a [ Attr.id id; Ev.onClick (fun _ -> dispatch (Select id)); Html.children [
-                            Html.text label
+            Html.tbody [ Html.children (
+                List.map (fun (id, label) -> 
+                    Html.tr [ Attr.className (if id = string model.selected then "danger" else ""); Html.children [
+                        Html.td [ Attr.className "col-md-1"; Html.children [
+                            Html.text id
                         ]]
-                    ]]
-                    Html.td [ Attr.className "col-md-1"; Html.children [
-                        Html.a [ Attr.id id; Ev.onClick (fun _ -> dispatch (Remove id)); Html.children [
-                            Html.span [ Attr.className "glyphicon glyphicon-remove"; Attr.ariaHidden true ]
+                        Html.td [ Attr.className "col-md-4"; Html.children [
+                            Html.a [ Attr.id id; Ev.onClick (fun _ -> dispatch (Select id)); Html.children [
+                                Html.text label
+                            ]]
                         ]]
+                        Html.td [ Attr.className "col-md-1"; Html.children [
+                            Html.a [ Attr.id id; Ev.onClick (fun _ -> dispatch (Remove id)); Html.children [
+                                Html.span [ Attr.className "glyphicon glyphicon-remove"; Attr.ariaHidden true ]
+                            ]]
+                        ]]
+                        Html.td [ Attr.className "col-md-6" ]
                     ]]
-                    Html.td [ Attr.className "col-md-6" ]
-                ]]
-            )) ]
+                ) model.data
+            )]
         ]]
     ]]
 
