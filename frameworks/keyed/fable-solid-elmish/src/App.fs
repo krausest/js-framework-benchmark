@@ -29,7 +29,7 @@ let update msg model =
     | Run       -> { selected = 0;              data = buildData 1000 }, Elmish.Cmd.none
     | RunLots   -> { selected = 0;              data = buildData 10000 }, Elmish.Cmd.none
     | Add       -> { selected = model.selected; data = List.append model.data (buildData 1000) }, Elmish.Cmd.none
-    | Update    -> { selected = model.selected; data = model.data |> List.mapi (fun i (id, label) -> if i % 10 = 0 then id, $"{label} !!!" else id, label) }, Elmish.Cmd.none
+    | Update    -> { selected = model.selected; data = model.data |> List.mapi (fun i el -> if i % 10 = 0 then fst el, $"{snd el} !!!" else el) }, Elmish.Cmd.none
     | SwapRows  -> { selected = model.selected; data = model.data |> List.mapi (fun i el -> if i = 1 then model.data.[998] else if i = 998 then model.data.[1] else el) }, Elmish.Cmd.none
     | Clear     -> { selected = 0;              data = [] }, Elmish.Cmd.none
     | Select id -> { selected = int id;         data = model.data }, Elmish.Cmd.none
@@ -66,7 +66,7 @@ let App =
         ]]
         Html.table [ Attr.className "table table-hover table-striped test-data"; Html.children [
             Html.tbody [ Html.children (
-                List.map (fun (id, label) -> 
+                List.map (fun (id, label: string) -> 
                     Html.tr [ Attr.className (if id = string model.selected then "danger" else ""); Html.children [
                         Html.td [ Attr.className "col-md-1"; Html.children [
                             Html.text id
