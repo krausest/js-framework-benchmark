@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>VanJS keyed</title>
+        <link href="/css/currentStyle.css" rel="stylesheet"/>
+        <script type="module">
+import van from "./van-0.12.3.min.js"
+
+const { h1, div, span, button, a, table, tr, td } = van.tags
+
+let idCounter = 1
+
+const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"]
+const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"]
+const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"]
+
+const pick = array => array[Math.round(Math.random() * 1000) % array.length]
+
+const buildData = count => {
+    let data = new Array(count)
+    for (let i = 0; i < count; i++) {
+        const label = van.state(`${pick(adjectives)} ${pick(colours)} ${pick(nouns)}`)
+        data[i] = { id: idCounter++, label }
+    }
+    return data
+}
+
+const data     = van.state(buildData(0))
+const selected = van.state(NaN)
+
+const run     = () => data.val = buildData(1000)
+const runLots = () => data.val = buildData(10000)
+const add     = () => data.val = data.val.concat(buildData(1000))
+const clear   = () => data.val = []
+const remove  = id => () => data.val = data.val.filter(x => x.id !== id)
+const select  = id => () => selected.val = id
+const update  = () => {
+    for (let i = 0; i < data.val.length; i += 10)
+        data.val[i].label.val += ' !!!'
+}
+const swapRows = () => {
+    if (data.val.length > 998)
+        data.val = data.val.map((x, i) => i === 1 ? data.val[998] : i === 998 ? data.val[1] : x)
+}
+
+const Button = (id, text, fn) =>
+    div({ class: 'col-sm-6 smallpad' },
+        button({ id, class: 'btn btn-primary btn-block', type: 'button', onclick: fn }, text)
+    )
+
+const Row = item =>
+    tr({ class: item.id === selected.val ? "danger" : "" },
+        td({ class: 'col-md-1' }, item.id),
+        td({ class: 'col-md-4' },
+            a({ onclick: select(item.id) }, item.label)
+        ),
+        td({ class: 'col-md-1' },
+            a({ onclick: remove(item.id) },
+                span({ class: 'glyphicon glyphicon-remove', 'aria-hidden': 'true' })
+            )
+        ),
+        td({ class: 'col-md-6' })
+    )
+
+const App =
+    div({ class: 'container' },
+        div({ class: 'jumbotron' },
+            div({ class: 'row' },
+                div({ class: 'col-md-6' },
+                    h1('VanJS keyed'),
+                ),
+                div({ class: 'col-md-6' },
+                    Button('run'     , 'Create 1,000 rows'    , run),
+                    Button('runlots' , 'Create 10,000 rows'   , runLots),
+                    Button('add'     , 'Append 1,000 rows'    , add),
+                    Button('update'  , 'Update every 10th row', update),
+                    Button('clear'   , 'Clear'                , clear),
+                    Button('swaprows', 'Swap Rows'            , swapRows)
+                )
+            )
+        ),
+        van.bind(data, data => 
+            table({ class: 'table table-hover table-striped test-data' }, data.map(Row))
+        ),
+        span({ class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' })
+    )
+
+van.add(document.getElementById('main'), App)
+        </script>
+    </head>
+    <body>
+        <div id='main'></div>
+    </body>
+</html>
