@@ -2,7 +2,7 @@
     "name": "js-framework-benchmark-solid",
     "version": "1.0.0",
     "js-framework-benchmark": {
-      "frameworkVersionFromPackage": "-",
+      "frameworkVersionFromPackage": "vanjs-org/van",
       "frameworkHomeURL": "https://vanjs.org/"
     },
     "scripts": {},
