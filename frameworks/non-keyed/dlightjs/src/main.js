@@ -63,11 +63,11 @@ class Main extends View {
   }
 
   @SubView
-  Button({ _$content, text, id, onclick }) {
+  Button({ _$content, id, onclick }) {
     div()
       .className("col-sm-6 smallpad")
     {
-      button(_$content ?? text)
+      button(_$content)
         .onclick(onclick)
         .id(id)
         .className("btn btn-primary btn-block")
@@ -94,22 +94,22 @@ class Main extends View {
             .className("row")
           {
             this.Button("Create 1,000 rows")
-              .onclick(this.addRows.bind(this))
+              .onclick(this.addRows)
               .id("run")
             this.Button("Create 10,000 rows")
-              .onclick(this.addBig.bind(this))
+              .onclick(this.addBig)
               .id("runlots")
             this.Button("Append 1,000 rows")
-              .onclick(this.append.bind(this))
+              .onclick(this.append)
               .id("add")
             this.Button("Update every 10th rows")
-              .onclick(this.update.bind(this))
+              .onclick(this.update)
               .id("update")
             this.Button("Clear")
-              .onclick(this.clearRows.bind(this))
+              .onclick(this.clearRows)
               .id("clear")
             this.Button("Swap Rows")
-              .onclick(this.swapRows.bind(this))
+              .onclick(this.swapRows)
               .id("swaprows")
           }
         }
