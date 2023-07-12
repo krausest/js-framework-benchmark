@@ -159,7 +159,7 @@ const Row = template(({ id, onRemove, onSelect, className, label }) => (
     </td>
     <td class="col-md-1">
       <a on:click={onRemove}>
-        <span class="glyphicon glyphicon-remove" aria-hidden />
+        <span class="glyphicon glyphicon-remove" aria-hidden="true" />
       </a>
     </td>
     <td class="col-md-6" />
