@@ -36,14 +36,14 @@ const actions = [
     ['Create 1,000 rows', 'run', () => rows(create(1000))],
     ['Create 10,000 rows', 'runlots', () => rows(create(10000))],
     ['Append 1,000 rows', 'add', () => rows([...rows(), ...create(1000)])],
+    ['Update every 10th row', 'update', () => State.batch(() => {
+        for (let r = rows(), i = 0; i < r.length; i += 10)
+            r[i]?.text(`${r[i].text()} !!!`);
+    })],
     ['Clear', 'clear', () => rows([])],
-    ['Update every 10th row', 'update', () => {
-        for (let i = 0, all = rows(), row; i < all.length; i += 10)
-            (row = all[i])?.text(`${row.text()} !!!`);
-    }],
     ['Swap Rows', 'swaprows', () => {
-        const all = rows();
-        [all[1], all[998]] = [all[998], all[1]], rows([...all]);
+        const r = rows();
+        [r[1], r[998]] = [r[998], r[1]], rows([...r]);
     }]].map(([content, id, click]) =>
         ({class: 'col-sm-6 smallpad', content:
             {is: 'button', id, class: 'btn btn-primary btn-block',
