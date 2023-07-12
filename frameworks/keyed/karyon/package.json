@@ -7,10 +7,10 @@
     "issues": [801]
   },
   "dependencies": {
-    "karyon": "1.6.0"
+    "karyon": "1.6.1"
   },
   "devDependencies": {
-    "esbuild": "0.15.15"
+    "esbuild": "0.18.10"
   },
   "scripts": {
     "build-prod": "esbuild app.js --bundle --minify --outfile=app.bundle.js"
