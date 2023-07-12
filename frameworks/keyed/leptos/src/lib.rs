@@ -175,6 +175,9 @@ fn App(cx: Scope) -> impl IntoView {
                             let row_id = row.id;
                             let (label, _) = row.label;
                             let is_selected = is_selected.clone();
+                            on_cleanup(cx, move || {
+                                label.dispose();
+                            });
                             template! {
                                 cx,
                                 <tr class:danger={move || is_selected(Some(row_id))}>
