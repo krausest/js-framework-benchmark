@@ -46,8 +46,9 @@ export default class App extends LightningElement {
         }
     }
     handleRowClick(evt) {
-        const { target } = evt;
-        const { interaction, id } = target.dataset;
+        const { target, currentTarget } = evt;
+        const { interaction } = target.dataset;
+        const { id } = currentTarget.dataset;
 
         if (interaction === 'select') {
             this.select(parseInt(id, 10));
