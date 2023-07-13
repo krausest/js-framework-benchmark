@@ -1,9 +1,8 @@
 import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 
-const plugins = [resolve(), commonjs(), svelte()];
+const plugins = [resolve(), svelte()];
 
 if (process.env.production) {
   plugins.push(terser());
