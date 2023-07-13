@@ -23,8 +23,8 @@
   "devDependencies": {
     "@vue/compiler-sfc": "3.3.4",
     "vue-loader": "17.2.2",
-    "webpack": "5.76.1",
-    "webpack-cli": "5.0.1"
+    "webpack": "5.88.1",
+    "webpack-cli": "5.1.4"
   },
   "dependencies": {
     "vue": "3.3.4"
