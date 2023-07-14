@@ -1,6 +1,7 @@
 {
   "name": "js-framework-benchmark-knockoutjs",
   "version": "1.0.0",
+  "type": "module",
   "description": "Knockout v3.5 demo",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "knockout",
@@ -15,13 +16,13 @@
   },
   "author": "Stefan Krause",
   "license": "Apache-2.0",
-  "devDependencies": {
-    "rollup": "1.11.3",
-    "rollup-plugin-commonjs": "9.2.0",
-    "rollup-plugin-node-resolve": "4.2.3",
-    "rollup-plugin-terser": "4.0.4"
-  },
   "dependencies": {
     "knockout": "3.5.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.2",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "rollup": "^3.26.2"
   }
 }
