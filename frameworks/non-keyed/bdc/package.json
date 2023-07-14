@@ -26,6 +26,6 @@
   },
   "scripts": {
     "build-dev": "rollup -c --watch",
-    "build-prod": "rollup -c"
+    "build-prod": "rollup -c --environment production"
   }
 }
