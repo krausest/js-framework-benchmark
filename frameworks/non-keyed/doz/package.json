@@ -6,11 +6,14 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "doz",
     "frameworkHomeURL": "https://github.com/dozjs/doz",
-    "issues": [800, 1139]
+    "issues": [
+      800,
+      1139
+    ]
   },
   "scripts": {
-    "build-dev": "webpack --watch --mode=development",
-    "build-prod": "webpack --mode=production"
+    "build-dev": "esbuild src/index.js --outfile=dist/main.js --bundle --watch",
+    "build-prod": "esbuild src/index.js --outfile=dist/main.js --bundle --minify"
   },
   "repository": {
     "type": "git",
@@ -29,7 +32,6 @@
     "doz": "4.0.3"
   },
   "devDependencies": {
-    "webpack": "5.76.1",
-    "webpack-cli": "5.0.1"
+    "esbuild": "^0.18.12"
   }
 }
