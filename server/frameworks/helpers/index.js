@@ -2,7 +2,7 @@ import fs from "fs";
 import fsp from "fs/promises";
 import path from "path";
 
-import { FrameworksDirectory } from "../../config/directories.js";
+import { frameworksDirectory } from "../../config/directories.js";
 
 function copyProps(result, benchmarkData) {
   const {
@@ -35,7 +35,7 @@ export async function loadFrameworkInfo(keyedDir, directoryName) {
   };
 
   const frameworkPath = path.resolve(
-    FrameworksDirectory,
+    frameworksDirectory,
     keyedDir,
     directoryName
   );

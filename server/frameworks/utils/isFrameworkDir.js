@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { FrameworksDirectory } from "../../config/directories.js";
+import { frameworksDirectory } from "../../config/directories.js";
 
 /**
  * @param {string} keyedDir
@@ -9,7 +9,7 @@ import { FrameworksDirectory } from "../../config/directories.js";
  */
 function isFrameworkDir(keyedDir, directoryName) {
   const frameworkPath = path.resolve(
-    FrameworksDirectory,
+    frameworksDirectory,
     keyedDir,
     directoryName
   );

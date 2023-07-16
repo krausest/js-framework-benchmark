@@ -1,11 +1,14 @@
-import path from "path";
-import { cwd } from "process";
+import { join } from "path";
+import process from "process";
 
-let FrameworksDirectory = path.join(cwd(), "..", "frameworks");
+const isFrameworksDirectorySpecifies = process.argv.length === 3;
 
-if (process.argv.length === 3) {
+const frameworksDirectory = isFrameworksDirectorySpecifies
+  ? join(process.cwd(), "..", process.argv[2])
+  : join(process.cwd(), "..", "frameworks");
+
+if (isFrameworksDirectorySpecifies) {
   console.log(`Changing working directory to ${process.argv[2]}`);
-  FrameworksDirectory = path.join(cwd(), "..", process.argv[2]);
 }
 
-export { FrameworksDirectory };
+export { frameworksDirectory };

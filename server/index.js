@@ -6,7 +6,7 @@ import { addSiteIsolationForIndex } from "./middlewares/addSiteIsolationForIndex
 import frameworksRouter from "./frameworks/frameworksRouter.js";
 import cspRouter from "./csp/cspRouter.js";
 import { isCSPEnabled } from "./csp/cspControllers.js";
-import { FrameworksDirectory } from "./config/directories.js";
+import { frameworksDirectory } from "./config/directories.js";
 
 const app = express();
 const PORT = 8080;
@@ -18,7 +18,7 @@ app.use(addSiteIsolationForIndex);
 
 app.use(
   "/frameworks",
-  express.static(FrameworksDirectory, {
+  express.static(frameworksDirectory, {
     setHeaders: (res, path) => {
       if (isCSPEnabled && path.endsWith("index.html")) {
         console.log("adding CSP to ", path);
@@ -31,7 +31,7 @@ app.use(
   })
 );
 app.use("/webdriver-ts-results", express.static(webDriverResultDirectory));
-app.use("/css", express.static(path.join(FrameworksDirectory, "..", "css")));
+app.use("/css", express.static(path.join(frameworksDirectory, "..", "css")));
 
 app.use(frameworksRouter);
 app.use(cspRouter);

@@ -1,13 +1,13 @@
 import path from "path";
 import fs from "fs";
 
-import { FrameworksDirectory } from "../config/directories.js";
+import { frameworksDirectory } from "../config/directories.js";
 import isFrameworkDir from "./utils/isFrameworkDir.js";
 import { loadFrameworkInfo } from "./helpers/index.js";
 
 export async function loadFrameworkVersionInformation(filterForFramework) {
   const resultsProm = [];
-  const frameworksPath = path.resolve(FrameworksDirectory);
+  const frameworksPath = path.resolve(frameworksDirectory);
   const keyedTypes = ["keyed", "non-keyed"];
 
   for (const keyedType of keyedTypes) {
