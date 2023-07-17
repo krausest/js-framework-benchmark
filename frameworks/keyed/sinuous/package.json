@@ -23,7 +23,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "sinuous": "0.28.1"
+    "sinuous": "^0.32.1"
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^6.0.3",
