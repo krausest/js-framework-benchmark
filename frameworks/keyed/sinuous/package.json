@@ -5,7 +5,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "sinuous",
     "frameworkHomeURL": "https://sinuous.dev/",
-    "issues": [800, 801]
+    "issues": [
+      800,
+      801
+    ]
   },
   "scripts": {
     "build-dev": "rollup -c -w",
@@ -22,9 +25,6 @@
     "sinuous": "0.28.1"
   },
   "devDependencies": {
-    "@babel/core": "7.4.4",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
     "rollup": "1.11.3",
     "rollup-plugin-babel": "4.3.2",
     "rollup-plugin-node-resolve": "4.2.3",
