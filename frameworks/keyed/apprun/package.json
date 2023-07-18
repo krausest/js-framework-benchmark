@@ -26,7 +26,7 @@
     "url": "https://github.com/yysun/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "esbuild": "^0.8.54"
+    "esbuild": "^0.18.13"
   },
   "dependencies": {
     "apprun": "^2.27.7"
