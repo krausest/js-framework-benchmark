@@ -6,7 +6,9 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "apprun",
     "frameworkHomeURL": "https://apprun.js.org/",
-    "issues": [801]
+    "issues": [
+      801
+    ]
   },
   "scripts": {
     "build-dev": "esbuild src/main.tsx --bundle --outfile=dist/main.js --serve=8080 --servedir=.",
@@ -14,7 +16,7 @@
   },
   "keywords": [
     "apprun",
-    "js benmarks"
+    "js benchmarks"
   ],
   "author": "Yiyi Sun <yiyisun@gmail.com",
   "license": "Apache-2.0",
