@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React,{ Component } from 'react';
 import { render } from 'react-dom';
 
 const random = (max) => Math.round(Math.random() * 1000) % max;
