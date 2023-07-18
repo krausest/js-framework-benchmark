@@ -69,8 +69,8 @@ struct Row {
 }
 
 impl Row {
-    fn new(id: usize, rng: &mut impl Rng) -> Rc<Self> {
-        Rc::new(Self {
+    fn new(id: usize, rng: &mut impl Rng) -> Self {
+        Self {
             id,
             label: Mutable::new(format!(
                 "{} {} {}",
@@ -78,7 +78,7 @@ impl Row {
                 COLOURS.choose(rng).unwrap_throw(),
                 NOUNS.choose(rng).unwrap_throw()
             )),
-        })
+        }
     }
 
     fn render(&self, app: Rc<App>) -> Tr {
@@ -95,7 +95,7 @@ struct RowParams {
 }
 
 struct App {
-    data: MutableVec<Rc<Row>>,
+    data: MutableVec<Row>,
     selected_row: Mutable<Option<usize>>,
     next_row_id: Cell<usize>,
     rng: RefCell<SmallRng>,
@@ -130,12 +130,10 @@ impl App {
         );
         let row_template = tr()
             .on_instantiate(|tr, RowParams { app, row }| {
-                let row_id = row.id;
                 tr.classes(Sig(app
                     .selected_row
-                    .signal_cloned()
-                    .map(move |selected_row| selected_row == Some(row_id))
-                    .dedupe()
+                    .signal()
+                    .eq(Some(row.id))
                     .map(|selected| selected.then_some("danger"))))
             })
             .children([id_cell, label_cell, remove_cell, td().class("col-md-6")])
@@ -186,7 +184,7 @@ impl App {
         self.data.lock_mut().retain(|row| row.id != row_id);
     }
 
-    fn new_row(&self) -> Rc<Row> {
+    fn new_row(&self) -> Row {
         let next_row_id = self.next_row_id.get();
         self.next_row_id.set(next_row_id + 1);
         Row::new(next_row_id, self.rng.borrow_mut().deref_mut())
