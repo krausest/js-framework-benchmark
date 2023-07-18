@@ -1,33 +1,40 @@
-var _ = require('lodash');
-var exec = require('child_process').execSync;
-var fs = require('fs');
-var commandExists = require('command-exists');
-const path = require('path');
-const rimraf = require('rimraf');
+const fs = require("fs");
+const path = require("path");
 
-function rmIfExists(base, name) {
-	let dir = path.join(base, name);
-	if(fs.existsSync(dir)) {
-		console.log("Clean ",dir);
-        rimraf.sync(dir);
-	}
+/**
+ * @param {string} dir
+ */
+function rmIfExists(dir) {
+  if (fs.existsSync(dir)) {
+    console.log("Cleaning", dir);
+    fs.rmSync(dir, { recursive: true });
+  }
 }
 
-for (let keyedType of ['keyed', 'non-keyed']) {
-    let dir = path.resolve('frameworks', keyedType);
-    let directories = fs.readdirSync(dir);
+/**
+ * @param {string} basePath
+ * @param {string} keyedTypes
+ */
+function cleanFrameworkDirectories(basePath, keyedTypes) {
+  for (const keyedType of keyedTypes) {
+    const frameworkDir = path.resolve(basePath, keyedType);
+    const directories = fs.readdirSync(frameworkDir);
 
-    for (let name of directories) {
-        let fd = path.resolve(dir, name);
-        console.log('cleaning ', fd);
-		if(fs.existsSync(fd+"/node_modules")) {
-			rimraf.sync(fd+"/node_modules");
-		}
-		rmIfExists(fd, "package-lock.json");
-		rmIfExists(fd, "yarn.lock");
-		rmIfExists(fd, "dist");
-		rmIfExists(fd, "elm-stuff");
-		rmIfExists(fd, "bower_components");
-		rmIfExists(fd, "node_modules");
-	}
+    for (const directory of directories) {
+      const frameworkPath = path.resolve(frameworkDir, directory);
+      console.log("cleaning ", frameworkPath);
+
+      rmIfExists(path.join(frameworkPath, "package-lock.json"));
+      rmIfExists(path.join(frameworkPath, "yarn.lock"));
+      rmIfExists(path.join(frameworkPath, "node_modules"));
+      rmIfExists(path.join(frameworkPath, "dist"));
+      rmIfExists(path.join(frameworkPath, "elm-stuff"));
+      rmIfExists(path.join(frameworkPath, "bower_components"));
+    }
+  }
 }
+
+const keyedTypes = ["keyed", "non-keyed"];
+const frameworksPath = path.resolve("frameworks");
+
+cleanFrameworkDirectories(frameworksPath, keyedTypes);
