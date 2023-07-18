@@ -1,11 +1,15 @@
 {
   "name": "js-framework-benchmark-sinuous",
   "version": "0.0.2",
+  "type": "module",
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "sinuous",
-    "frameworkHomeURL": "https://sinuous.dev/",
-    "issues": [800, 801]
+    "frameworkHomeURL": "https://sinuous.netlify.app/",
+    "issues": [
+      800,
+      801
+    ]
   },
   "scripts": {
     "build-dev": "rollup -c -w",
@@ -19,15 +23,12 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "sinuous": "0.28.1"
+    "sinuous": "^0.32.1"
   },
   "devDependencies": {
-    "@babel/core": "7.4.4",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "rollup": "1.11.3",
-    "rollup-plugin-babel": "4.3.2",
-    "rollup-plugin-node-resolve": "4.2.3",
-    "rollup-plugin-terser": "4.0.4"
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "rollup": "^3.26.2"
   }
 }
