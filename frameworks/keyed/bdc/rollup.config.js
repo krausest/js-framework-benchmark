@@ -1,20 +1,19 @@
 import resolve from '@rollup/plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 
+const isProduction = process.env.production;
 
 export default [
   {
     input: 'src/app.js',
     plugins: [
       resolve(),
-      terser(),
+      isProduction && terser()
     ],
     output: {
       format: 'iife',
       name: 'app',
       file: 'dist/app.min.js',
-      sourcemap: true,
-      sourcemapFile: 'dist/app.min.js.map'
     }
   },
 ]

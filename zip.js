@@ -1,62 +1,119 @@
-var _ = require('lodash');
-var exec = require('child_process').execSync;
-var fs = require('fs');
-var commandExists = require('command-exists');
-const path = require('path');
-const rimraf = require('rimraf');
+const fs = require("fs");
+const path = require("path");
 const AdmZip = require("adm-zip");
 
 const zip = new AdmZip();
 const outputFile = "build.zip";
+const keyedTypes = ["keyed", "non-keyed"];
 
 if (fs.existsSync(outputFile)) {
-	fs.rmSync(outputFile);
+  fs.rmSync(outputFile);
 }
 
-for (let keyedType of ['keyed', 'non-keyed']) {
-    let dir = path.resolve('frameworks', keyedType);
-    let directories = fs.readdirSync(dir);
+/**
+ * Adds a directory to the zip archive, if it exists.
+ * @param {string} sourcePath
+ * @param {string} zipPath
+ */
+function addLocalFolderIfExists(sourcePath, zipPath) {
+  if (fs.existsSync(sourcePath)) {
+    zip.addLocalFolder(sourcePath, zipPath);
+  }
+}
 
-	
-    for (let name of directories) {
-		let fd = path.resolve(dir, name);
-        console.log('zipping ', fd);
-		let zipPathName = "frameworks/"+"/"+keyedType+"/"+name;
-		
-		zip.addLocalFile(fd+"/package-lock.json", zipPathName);
-		
-		if (fs.existsSync(fd+"/dist"))
-			zip.addLocalFolder(fd+"/dist", zipPathName+"/dist");
-		if (fs.existsSync(fd+"/scripts/"))
-			zip.addLocalFolder(fd+"/scripts/", zipPathName+"/scripts/");
-		if (fs.existsSync(fd+"/node_modules/skruv/"))
-			zip.addLocalFolder(fd+"/node_modules/skruv/", zipPathName+"/node_modules/skruv/");
-		if (fs.existsSync(fd+"/node_modules/slim-js/dist"))
-			zip.addLocalFolder(fd+"/node_modules/slim-js/dist", zipPathName+"/node_modules/slim-js/dist");
-		if (fs.existsSync(fd+"/node_modules/@neow/core/dist"))
-			zip.addLocalFolder(fd+"/node_modules/@neow/core/dist", zipPathName+"/node_modules/@neow/core/dist");
-		if (name=="stem" && fs.existsSync(fd+"/node_modules/babel-polyfill/dist/")) {
-			zip.addLocalFolder(fd+"/node_modules/babel-polyfill/dist/", zipPathName+"/node_modules/babel-polyfill/dist/");
-			zip.addLocalFile(fd+"/src/bundle.js", zipPathName+"/src")
-		}
-		if (fs.existsSync(fd+"/public/") && ["ember","glimmer"].indexOf(name)==-1) {
-			zip.addLocalFolder(fd+"/public/", zipPathName+"/public/");
-		}
-		if (["karyon"].indexOf(name)>-1) {
-			zip.addLocalFile(fd+"/app.bundle.js", zipPathName)
-		}
-		if (fs.existsSync(fd+"/target/web/stage"))
-			zip.addLocalFolder(fd+"/target/web/stage", zipPathName+"/target/web/stage");
-		if (name=="halogen" && fs.existsSync(fd+"/output")) {
-			zip.addLocalFile(fd+"/output/bundle.js", zipPathName+"/output")
-		} else if (name=="dojo" && fs.existsSync(fd+"/output/dist")) {
-			zip.addLocalFolder(fd+"/output/dist", zipPathName+"/output/dist", (file) => {
-				return !file.includes("/");
-			});
-		} else if (fs.existsSync(fd+"/output"))
-			zip.addLocalFolder(fd+"/output", zipPathName+"/output");
-		if (fs.existsSync(fd+"/build"))
-			zip.addLocalFolder(fd+"/build", zipPathName+"/build");
-	}
+/**
+ * Adds a file to the zip archive, if it exists.
+ * @param {string} sourcePath
+ * @param {string} zipPath
+ */
+function addLocalFileIfExists(sourcePath, zipPath) {
+  if (fs.existsSync(sourcePath)) {
+    zip.addLocalFile(sourcePath, zipPath);
+  }
+}
+
+/**
+ * Adds frameworks to the zip archive
+ * @param {string} keyedType
+ * @param {string} frameworkDir
+ * @param {string} frameworkName
+ */
+function addFrameworksToZip(keyedType, frameworkDir, frameworkName) {
+  const zipFrameworkPath = `frameworks/${keyedType}/${frameworkName}`;
+
+  addLocalFileIfExists(
+    `${frameworkDir}/package-lock.json`,
+    `${zipFrameworkPath}`
+  );
+
+  addLocalFolderIfExists(`${frameworkDir}/dist`, `${zipFrameworkPath}/dist`);
+  addLocalFolderIfExists(
+    `${frameworkDir}/scripts`,
+    `${zipFrameworkPath}/scripts`
+  );
+  addLocalFolderIfExists(
+    `${frameworkDir}/node_modules/skruv`,
+    `${zipFrameworkPath}/node_modules/skruv`
+  );
+  addLocalFolderIfExists(
+    `${frameworkDir}/node_modules/slim-js/dist`,
+    `${zipFrameworkPath}/node_modules/slim-js/dist`
+  );
+  addLocalFolderIfExists(
+    `${frameworkDir}/node_modules/@neow/core/dist`,
+    `${zipFrameworkPath}/node_modules/@neow/core/dist`
+  );
+  addLocalFolderIfExists(
+    `${frameworkDir}/target/web/stage`,
+    `${zipFrameworkPath}/target/web/stage`
+  );
+  addLocalFolderIfExists(`${frameworkDir}/build`, `${zipFrameworkPath}/build`);
+
+  if (frameworkName !== "ember" && frameworkName !== "glimmer") {
+    addLocalFolderIfExists(
+      `${frameworkDir}/public`,
+      `${zipFrameworkPath}/public`
+    );
+  }
+
+  if (frameworkName === "halogen") {
+    addLocalFileIfExists(
+      `${frameworkDir}/output/bundle.js`,
+      `${zipFrameworkPath}/output`
+    );
+  } else if (frameworkName === "dojo") {
+    addLocalFolderIfExists(
+      `${frameworkDir}/output/dist`,
+      `${zipFrameworkPath}/output/dist`
+    );
+  } else if (frameworkName === "stem") {
+    addLocalFolderIfExists(
+      `${frameworkDir}/node_modules/babel-polyfill/dist`,
+      `${zipFrameworkPath}/node_modules/babel-polyfill/dist`
+    );
+    addLocalFileIfExists(
+      `${frameworkDir}/src/bundle.js`,
+      `${zipFrameworkPath}/src`
+    );
+  } else if (frameworkName === "karyon") {
+    addLocalFileIfExists(`${frameworkDir}/app.bundle.js`, zipFrameworkPath);
+  } else {
+    addLocalFolderIfExists(
+      `${frameworkDir}/output`,
+      `${zipFrameworkPath}/output`
+    );
+  }
+}
+
+for (const keyedType of keyedTypes) {
+  const frameworksDir = path.resolve("frameworks", keyedType);
+  const frameworkNames = fs.readdirSync(frameworksDir);
+
+  for (const frameworkName of frameworkNames) {
+    const frameworkDir = path.resolve(frameworksDir, frameworkName);
+    console.log("zipping ", frameworkDir);
+
+    addFrameworksToZip(keyedType, frameworkDir, frameworkName);
+  }
 }
 zip.writeZip(outputFile);
