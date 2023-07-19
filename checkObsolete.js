@@ -5,9 +5,6 @@ const path = require("path");
 
 const DEBUG = false;
 
-const missingPackageWarnings = [];
-const manualChecks = [];
-
 /**
  * Returns an array with arrays of types and names of frameworks
  * @example getFramewokrs()
@@ -23,16 +20,52 @@ function getFrameworks() {
   return [...keyedFrameworks, ...nonKeyedFrameworks];
 }
 
+const frameworks = getFrameworks();
+
+/**
+ * Looks for duplicate frameworks
+ * @param {{type: string, name: string}[]} frameworks
+ * @returns {string[]}
+ */
+function findDuplicateFrameworks(frameworks) {
+  const names = frameworks.map((framework) => framework.name); // Creates an array with framework names only
+  const duplicateNames = names.filter(
+    (name, index) => names.indexOf(name) !== index
+  ); // Filters out repetitive framework names
+
+  return duplicateNames;
+}
+
+const duplicateFrameworks = findDuplicateFrameworks(frameworks);
+const frameworksCache = new Map();
+
 /**
  * @param {string} packageName
  */
 function maybeObsolete(packageName) {
   try {
     const npmCmd = `npm view ${packageName} time`;
-    const output = execSync(npmCmd, {
-      stdio: ["ignore", "pipe", "ignore"],
-    }).toString();
-    const timeData = JSON5.parse(output);
+    let timeData;
+
+    if (duplicateFrameworks.includes(packageName)) {
+      if (frameworksCache.has(packageName)) {
+        const output = frameworksCache.get(packageName);
+        timeData = JSON5.parse(output);
+        return;
+      }
+
+      const output = execSync(npmCmd, {
+        stdio: ["ignore", "pipe", "ignore"],
+      }).toString();
+      timeData = JSON5.parse(output);
+
+      frameworksCache.set(packageName, JSON5.stringify(timeData));
+    } else {
+      const output = execSync(npmCmd, {
+        stdio: ["ignore", "pipe", "ignore"],
+      }).toString();
+      timeData = JSON5.parse(output);
+    }
 
     const now = new Date();
     const obsoleteDate = new Date(
@@ -45,18 +78,23 @@ function maybeObsolete(packageName) {
     const isObsolete = modifiedDate < obsoleteDate;
     const formattedDate = modifiedDate.toISOString().substring(0, 10);
 
-    return [isObsolete, packageName, formattedDate];
+    return { isObsolete, packageName, lastUpdate: formattedDate };
   } catch (error) {
     console.error(
       `Failed to execute npm view for ${packageName}. Error Code ${error.status} and message: ${error.message}`
     );
-    return [false, packageName, null];
+    return { isObsolete: false, packageName, lastUpdate: null };
   }
 }
 
-function checkFrameworks() {
-  const frameworks = getFrameworks();
+const missingPackageWarnings = [];
+const manualChecks = [];
 
+/**
+ * Checks frameworks in frameworks/keyed and frameworks/non-keyed for obsolescence,
+ * the presence of package.json and the presence of the frameworkVersionFromPackage property
+ */
+function checkFrameworks() {
   for (const { type, name } of frameworks) {
     const frameworkPath = path.join("frameworks", type, name);
     const packageJSONPath = path.join(frameworkPath, "package.json");
@@ -88,20 +126,25 @@ function checkFrameworks() {
       console.log(`Results for ${type}/${name} ${isPackageObsolete}`);
     }
 
-    const anyPackageObsolete = isPackageObsolete.some((r) => r[0]);
+    const anyPackageObsolete = isPackageObsolete.some(
+      (packageFramework) => packageFramework.isObsolete
+    );
+
     if (anyPackageObsolete) {
       const formattedPackages = isPackageObsolete
-        .map((result) => result.slice(1).join(":"))
+        .map((result) => `${result.packageName}:${result.lastUpdate}`)
         .join(", ");
 
       console.log(
-        `Last npm update for ${type}/${name} ${mainPackages} is older than a year: ${formattedPackages}`
+        `Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`
       );
-    } else {
-      if (DEBUG)
-        console.log(
-          `Last npm update for ${type}/${name} ${mainPackages} is newer than a year`
-        );
+      continue;
+    }
+
+    if (DEBUG) {
+      console.log(
+        `Last npm update for ${type}/${name} ${mainPackages} is newer than a year`
+      );
     }
   }
 
