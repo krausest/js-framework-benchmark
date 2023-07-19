@@ -1,35 +1,42 @@
 
-FROM ubuntu:21.10
+FROM ubuntu:22.04
 COPY install_rust.sh /root/
-RUN echo "unsafe-perm = true" > /root/.npmrc
-RUN echo "NG_CLI_ANALYTICS=ci" >> /root/.npmrc
+
+# Set up NPM
+RUN echo "unsafe-perm = true" > /root/.npmrc \
+    && echo "NG_CLI_ANALYTICS=ci" >> /root/.npmrc
+
+# Set up bower
 RUN echo "{ \"allow_root\": true }" >  /root/.bowerrc
 
 # replace shell with bash so we can source files
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+# Set debconf to Noninteractive mode
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
+# Install dependencies
 RUN apt-get update
-RUN apt-get install -y python3 m4 libtinfo5 libghc-zlib-dev rsync ghc haskell-stack curl g++ make git openjdk-8-jdk dos2unix python
+RUN apt-get install -y python3 m4 libtinfo5 libghc-zlib-dev rsync ghc haskell-stack g++ make git openjdk-8-jdk dos2unix wget curl
 
-ENV NVM_DIR /usr/local/nvm
-RUN mkdir -p $NVM_DIR
+# Add Node.js version & NVM to PATH
+ENV NVM_DIR /root/.nvm
 ENV NODE_VERSION 16.15.1
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
+
+RUN wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 
 # install node and npm
-RUN source $NVM_DIR/nvm.sh \
-    && nvm install $NODE_VERSION \
-    && nvm alias default $NODE_VERSION \
-    && nvm use default
+RUN source ${NVM_DIR}/nvm.sh \
+    && nvm install ${NODE_VERSION}
 
 # add node and npm to path so the commands are available
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+ENV NODE_PATH ${NVM_DIR}/v${NODE_VERSION}/lib/node_modules
+ENV PATH ${NVM_DIR}/versions/node/v${NODE_VERSION}/bin:$PATH
 
-RUN mkdir /server
-RUN mkdir /build
-RUN mkdir /src
+# Create directories
+RUN mkdir /server \
+    && mkdir /build \
+    && mkdir /src
 
 # Volume before chown changes owwner
 VOLUME /src
@@ -38,23 +45,20 @@ COPY package.json /build
 WORKDIR /build
 
 # Install rust
-RUN dos2unix /root/install_rust.sh
-RUN bash /root/install_rust.sh
+RUN dos2unix /root/install_rust.sh \
+    && bash /root/install_rust.sh
 
 # Create server
-
-COPY server /server
 WORKDIR /server
-RUN npm install
+COPY server /server
 
+RUN npm install
 # USER user
-
-RUN npm install
 EXPOSE 8080
-WORKDIR /build
-CMD ["mkdir", "/build/frameworks"]
-CMD ["mkdir", "/build/frameworks/keyed"]
-CMD ["mkdir", "/build/frameworks/non-keyed"]
+RUN mkdir /build/frameworks \
+    && mkdir /build/frameworks/keyed \
+    && mkdir /build/frameworks/non-keyed
+
 CMD ["/server/runserver-docker.sh"]
 #CMD ["node","index.js"]
 
