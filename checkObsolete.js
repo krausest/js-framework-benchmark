@@ -1,66 +1,117 @@
-var _ = require("lodash");
-var exec = require("child_process").execSync;
-var fs = require("fs");
-var path = require("path");
+const { execSync } = require("child_process");
+const fs = require("fs");
 const JSON5 = require("json5");
-
-let args = process.argv.length <= 2 ? [] : process.argv.slice(2, process.argv.length);
-
-var frameworks = [].concat(
-  fs.readdirSync("./frameworks/keyed").map((f) => ["keyed", f]),
-  fs.readdirSync("./frameworks/non-keyed").map((f) => ["non-keyed", f])
-);
-
-let now = new Date();
-let obsoleteDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDay());
-
-let warnings = [];
-let manually = [];
-
-function maybeObsolete(package) {
-  let output;
-  try {
-    let output = exec(`npm view ${package} time`, {
-      stdio: ["ignore", "pipe", "ignore"],
-    }).toString();
-    let r = JSON5.parse(output);
-    return [new Date(r.modified) < obsoleteDate, package, new Date(r.modified).toISOString().substring(0, 10)];
-  } catch (error) {
-    console.error(`Failed to execute npm view for ${package}. Error Code ${error.status} and message: ${error.message}`);
-    return [false, package, null];
-  }
-}
+const path = require("path");
 
 const DEBUG = false;
 
-for (f of frameworks) {
-  let [dir, name] = f;
-  let path = `frameworks/${dir}/${name}`;
-  if (!fs.existsSync(path + "/package.json")) {
-    warnings.push(`WARN: skipping ${dir}/${name} since there's no package.json`);
-  } else {
-    let packageJSON = JSON.parse(fs.readFileSync(path + "/package.json"));
-    let mainPackages = packageJSON?.["js-framework-benchmark"]?.frameworkVersionFromPackage;
-    if (mainPackages) {
-      if (DEBUG) console.log(`Checking ${dir}/${name} ${mainPackages}`);
-      let packages = mainPackages.split(":");
-      let maybeObsoleteResults = packages.map((p) => maybeObsolete(p));
-      if (DEBUG) console.log(`Results for ${dir}/${name} ${maybeObsoleteResults}`);
-      maybeObsoleteResult = maybeObsoleteResults.some((r) => r[0]);
-      if (maybeObsoleteResult) {
-        console.log(
-          `Last npm update for ${dir}/${name} ${mainPackages} is older than a year: ${maybeObsoleteResults
-            .map((a) => a.slice(1).join(":"))
-            .join(", ")}`
-        );
-      } else {
-        if (DEBUG) console.log(`    Last npm update for ${dir}/${name} ${mainPackages} is newer than a year`);
-      }
-    } else {
-      manually.push(`${dir}/${name} has no frameworkVersionFromPackage`);
-    }
+const missingPackageWarnings = [];
+const manualChecks = [];
+
+/**
+ * Returns an array with arrays of types and names of frameworks
+ * @example getFramewokrs()
+ * @returns [{type:"keyed", name:"vue"},{type:"keyed", name:"qwik"},{type:"non-keyed", name:"svelte"}]
+ */
+function getFrameworks() {
+  const keyedFrameworks = fs
+    .readdirSync("./frameworks/keyed")
+    .map((framework) => ({ type: "keyed", name: framework }));
+  const nonKeyedFrameworks = fs
+    .readdirSync("./frameworks/non-keyed")
+    .map((framework) => ({ type: "non-keyed", name: framework }));
+  return [...keyedFrameworks, ...nonKeyedFrameworks];
+}
+
+/**
+ * @param {string} packageName
+ */
+function maybeObsolete(packageName) {
+  try {
+    const npmCmd = `npm view ${packageName} time`;
+    const output = execSync(npmCmd, {
+      stdio: ["ignore", "pipe", "ignore"],
+    }).toString();
+    const timeData = JSON5.parse(output);
+
+    const now = new Date();
+    const obsoleteDate = new Date(
+      now.getFullYear() - 1,
+      now.getMonth(),
+      now.getDay()
+    );
+
+    const modifiedDate = new Date(timeData.modified);
+    const isObsolete = modifiedDate < obsoleteDate;
+    const formattedDate = modifiedDate.toISOString().substring(0, 10);
+
+    return [isObsolete, packageName, formattedDate];
+  } catch (error) {
+    console.error(
+      `Failed to execute npm view for ${packageName}. Error Code ${error.status} and message: ${error.message}`
+    );
+    return [false, packageName, null];
   }
 }
 
-if (warnings.length > 0) console.log("\nWarnings:\n" + warnings.join("\n"));
-if (manually.length > 0) console.log("\nThe following frameworks must be checked manually\n" + manually.join("\n"));
+function checkFrameworks() {
+  const frameworks = getFrameworks();
+
+  for (const { type, name } of frameworks) {
+    const frameworkPath = path.join("frameworks", type, name);
+    const packageJSONPath = path.join(frameworkPath, "package.json");
+
+    if (!fs.existsSync(packageJSONPath)) {
+      missingPackageWarnings.push(
+        `WARN: skipping ${type}/${name} since there's no package.json`
+      );
+      continue;
+    }
+
+    const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf-8"));
+    const mainPackages =
+      packageJSON?.["js-framework-benchmark"]?.frameworkVersionFromPackage;
+
+    if (!mainPackages) {
+      manualChecks.push(`${type}/${name} has no frameworkVersionFromPackage`);
+      continue;
+    }
+
+    if (DEBUG) {
+      console.log(`Checking ${type}/${name} ${mainPackages}`);
+    }
+
+    const packages = mainPackages.split(":");
+    const isPackageObsolete = packages.map(maybeObsolete);
+
+    if (DEBUG) {
+      console.log(`Results for ${type}/${name} ${isPackageObsolete}`);
+    }
+
+    const anyPackageObsolete = isPackageObsolete.some((r) => r[0]);
+    if (anyPackageObsolete) {
+      const formattedPackages = isPackageObsolete
+        .map((result) => result.slice(1).join(":"))
+        .join(", ");
+
+      console.log(
+        `Last npm update for ${type}/${name} ${mainPackages} is older than a year: ${formattedPackages}`
+      );
+    } else {
+      if (DEBUG)
+        console.log(
+          `Last npm update for ${type}/${name} ${mainPackages} is newer than a year`
+        );
+    }
+  }
+
+  if (missingPackageWarnings.length > 0)
+    console.warn("\nWarnings:\n" + missingPackageWarnings.join("\n"));
+  if (manualChecks.length > 0)
+    console.warn(
+      "\nThe following frameworks must be checked manually\n" +
+        manualChecks.join("\n")
+    );
+}
+
+checkFrameworks();
