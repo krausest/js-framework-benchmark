@@ -95,8 +95,6 @@ function addFrameworksToZip(keyedType, frameworkDir, frameworkName) {
       `${frameworkDir}/src/bundle.js`,
       `${zipFrameworkPath}/src`
     );
-  } else if (frameworkName === "karyon") {
-    addLocalFileIfExists(`${frameworkDir}/app.bundle.js`, zipFrameworkPath);
   } else {
     addLocalFolderIfExists(
       `${frameworkDir}/output`,
