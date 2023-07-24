@@ -1,20 +1,27 @@
-var _ = require('lodash');
-var exec = require('child_process').execSync;
-var fs = require('fs');
-var path = require('path');
-var yargs = require('yargs');
-const rimraf = require('rimraf');
+const { execSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
 
-let args = process.argv.length <= 2 ? [] : process.argv.slice(2, process.argv.length);
+const cliArgs = process.argv.length <= 2 ? [] : process.argv.slice(2);
 
 // Use npm ci or npm install ?
-let ci = args.includes("--ci");
+const useCi = cliArgs.includes("--ci");
+
 // Copy package-lock back for docker build or build locally?
-let docker = args.includes("--docker");
+const useDocker = cliArgs.includes("--docker");
 
-let frameworks = args.filter(a => !a.startsWith("--"));
+const frameworks = cliArgs.filter((a) => !a.startsWith("--"));
 
-console.log("rebuild-build-single.js started: args", args, "ci", ci, "docker", docker, "frameworks", frameworks);
+console.log(
+  "rebuild-build-single.js started: args",
+  cliArgs,
+  "useCi",
+  useCi,
+  "useDocker",
+  useDocker,
+  "frameworks",
+  frameworks
+);
 
 /*
 rebuild-single.js [--ci] [--docker] [keyed/framework1 ... non-keyed/frameworkN]
@@ -29,48 +36,72 @@ it calls npm ci and npm run build-prod for the benchmark
 Pass list of frameworks
 */
 
+/**
+ * Log command and run it with execSync
+ * @param {string} command
+ * @param {string|URL|undefined} cwd
+ */
+function runCommand(command, cwd = undefined) {
+  console.log(command);
+  execSync(command, { stdio: "inherit", cwd });
+}
 
-if (frameworks.length == 0) {
-    console.log("ERROR: Missing arguments. Command: docker-rebuild keyed/framework1 non-keyed/framework2 ...");
+/**
+ * @param {string} framework
+ */
+function rebuildFramework(framework) {
+  const components = framework.split("/");
+
+  if (components.length !== 2) {
+    console.log(
+      `ERROR: invalid name ${framework}. It must contain exactly one /.`
+    );
     process.exit(1);
+  }
+
+  const [keyed, name] = components;
+  const pathToFramework = path.join("frameworks", keyed, name);
+
+  if (useDocker) {
+    if (fs.existsSync(pathToFramework)) {
+      console.log("deleting folder ", pathToFramework);
+      fs.rmSync(pathToFramework, { recursive: true });
+    }
+
+    const rsyncCmd = `rsync -avC --exclude elm-stuff --exclude dist --exclude output ${
+      useCi ? "" : "--exclude package-lock.json"
+    } --exclude tmp --exclude node_modules --exclude bower_components /src/frameworks/${keyed}/${name} /build/frameworks/${keyed}/`;
+    runCommand(rsyncCmd);
+  }
+
+  const rmCmd = `rm -rf ${
+    useCi ? "" : "package-lock.json"
+  } yarn.lock dist elm-stuff bower_components node_modules output`;
+  runCommand(rmCmd, pathToFramework);
+
+  const installCmd = `npm ${useCi ? "ci" : "install"} && npm run build-prod`;
+  runCommand(installCmd, pathToFramework);
+
+  if (useDocker) {
+    const packageJSONPath = path.join(pathToFramework, "package-lock.json");
+    const destinationPath = path.join("/src", packageJSONPath);
+    fs.copyFileSync(packageJSONPath, destinationPath);
+  }
 }
 
-for (f of frameworks) {
-    let components = f.split("/");
-    if (components.length != 2) {
-        console.log(`ERROR: invalid name ${f}. It must contain exactly one /.`)
-        process.exit(1);
-    }
-    let [keyed, name] = components;
-    let path = `frameworks/${keyed}/${name}`
-    if (docker) {
-        if (fs.existsSync(path)) {
-            console.log("deleting folder ", path);
-            exec(`rm -r ${path}`);
-        }
-        let rsync_cmd = `rsync -avC --exclude elm-stuff --exclude dist --exclude output ${ci ? '' : '--exclude package-lock.json'} --exclude tmp --exclude node_modules --exclude bower_components /src/frameworks/${keyed}/${name} /build/frameworks/${keyed}/`;
-        console.log(rsync_cmd);
-        exec(rsync_cmd,
-        {
-            stdio: 'inherit'
-        });        
-    }
-    let rm_cmd = `rm -rf ${ci ? '' : 'package-lock.json'} yarn.lock dist elm-stuff bower_components node_modules output`;
-    console.log(rm_cmd);
-    exec(rm_cmd, {
-        cwd: path,
-        stdio: 'inherit'
-    });
-    let install_cmd = `npm ${ci ? 'ci' : 'install'} && npm run build-prod`;
-    console.log(install_cmd);
-    exec(install_cmd, {
-        cwd: path,
-        stdio: 'inherit'
-    });
-    if (docker) {
-        let packageLockPath = path + "/package-lock.json";
-        fs.copyFileSync(packageLockPath, "/src/" + packageLockPath)
-    }
+function rebuildFrameworks() {
+  if (!frameworks.length) {
+    console.log(
+      "ERROR: Missing arguments. Command: docker-rebuild keyed/framework1 non-keyed/framework2 ..."
+    );
+    process.exit(1);
+  }
+
+  for (const framework of frameworks) {
+    rebuildFramework(framework);
+  }
+
+  console.log("rebuild-build-single.js finished: Build finsished sucessfully!");
 }
 
-console.log("rebuild-build-single.js finished: Build finsished sucessfully!");
+rebuildFrameworks();
