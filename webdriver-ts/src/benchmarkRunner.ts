@@ -311,7 +311,7 @@ console.log("benchmarkOptions", benchmarkOptions);
   let runBenchmarksArgs: string[] =  (args.benchmark && args.benchmark.length > 0) ? args.benchmark : [""];
   let runBenchmarks: Array<BenchmarkInfo> = benchmarkInfos.filter((b) =>
     // afterframe currently only targets CPU benchmarks
-    (config.BENCHMARK_RUNNER !== BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME || b.type == BenchmarkType.CPU) && 
+    (config.BENCHMARK_RUNNER !== BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME || b.type == BenchmarkType.CPU) && 
     runBenchmarksArgs.some((name) => b.id.toLowerCase().indexOf(name) > -1)
   );
   

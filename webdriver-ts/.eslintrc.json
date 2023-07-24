@@ -10,9 +10,7 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "parserOptions": {
-    "project": [
-      "./tsconfig.json"
-    ]
+    "project": true
   },
   "rules": {
     "prefer-const": "off",
