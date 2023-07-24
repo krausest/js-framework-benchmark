@@ -2,6 +2,7 @@
   "name": "js-framework-benchmark-1more",
   "version": "0.1.18",
   "description": "1more demo",
+  "type": "module",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "1more",
@@ -9,7 +10,7 @@
   },
   "scripts": {
     "build-dev": "rollup -c -w",
-    "build-prod": "rollup -c"
+    "build-prod": "rollup -c --environment production"
   },
   "keywords": [
     "1more"
@@ -22,9 +23,9 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "rollup": "^0.58.2",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-terser": "^1.0.1"
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "rollup": "^3.26.3"
   },
   "dependencies": {
     "1more": "0.1.18"

@@ -1,7 +1,7 @@
-"use strict";
+import resolve from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
 
-import resolve from "rollup-plugin-node-resolve";
-import { terser } from "rollup-plugin-terser";
+const isProd = process.env.production;
 
 export default {
   input: "app.js",
@@ -9,14 +9,6 @@ export default {
     file: "dist/app.min.js",
     format: "es",
     name: "app",
-    sourcemap: false,
   },
-  plugins: [
-    resolve({
-      module: true,
-      jsnext: true,
-      browser: true,
-    }),
-    terser(),
-  ],
+  plugins: [resolve(), isProd && terser()],
 };
