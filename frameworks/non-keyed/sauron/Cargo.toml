@@ -1,7 +1,7 @@
 [package]
 name = "js-framework-benchmark-sauron"
 version = "0.1.0"
-authors = ["Markus Kohlhase <mail@markus-kohlhase.de>"]
+authors = ["Markus Kohlhase <mail@markus-kohlhase.de>", "Jovansonlee Cesar <ivanceras@gmail.com>" ]
 edition = "2021"
 
 [lib]
