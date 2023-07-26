@@ -186,14 +186,14 @@ const mainComponent = component(
       },
       {
         start: "afterLoad",
-        elements: [
-          { run: "#run" },
-          { runLots: "#runlots" },
-          { add: "#add" },
-          { update: "#update" },
-          { clear: "#clear" },
-          { swapRows: "#swaprows" },
-        ],
+        elements: {
+          run: "#run",
+          runLots: "#runlots",
+          add: "#add",
+          update: "#update",
+          clear: "#clear",
+          swapRows: "#swaprows",
+        },
       },
     ],
     export: {
