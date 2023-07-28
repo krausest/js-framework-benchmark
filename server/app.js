@@ -21,7 +21,7 @@ function build(options = {}) {
 
   fastify.register(staticRouter);
   fastify.register(frameworksRouter);
-  fastify.register(cspRouter);
+  fastify.register(cspRouter, { prefix: "/csp" });
 
   return fastify;
 }

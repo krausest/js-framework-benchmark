@@ -9,13 +9,13 @@ async function routes(fastify, _options) {
   fastify.addContentTypeParser(
     "application/csp-report",
     { parseAs: "string" },
-    fastify.getDefaultJsonParser("ignore", "ignore"),
+    fastify.getDefaultJsonParser("ignore", "ignore")
   );
 
-  fastify.get("/startCSP", enableCSP);
-  fastify.get("/endCSP", disableCSP);
-  fastify.get("/csp", getCSP);
-  fastify.post("/csp", addCSP);
+  fastify.get("/enable", enableCSP);
+  fastify.get("/disable", disableCSP);
+  fastify.get("/", getCSP);
+  fastify.post("/", addCSP);
 }
 
 export default routes;

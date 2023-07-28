@@ -52,7 +52,7 @@ async function runBench(frameworkNames: string[]) {
   let browser = await startBrowser(benchmarkOptions);
   let page = await browser.newPage();
   try {
-    await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/startCSP`)
+    await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/csp/enable`)
   } finally {
     await page.close();
     await browser.close();
