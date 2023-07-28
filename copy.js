@@ -1,98 +1,111 @@
-var _ = require('lodash');
-var exec = require('child_process').execSync;
-var fs = require('fs-extra');
-var path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-if (fs.existsSync("dist")) fs.removeSync("dist");
-fs.mkdirSync("dist");
-fs.mkdirSync("dist"+path.sep+"webdriver-ts");
-fs.copySync("webdriver-ts"+path.sep+"table.html", "dist"+path.sep+"webdriver-ts"+path.sep+"table.html");
+const internalExclude = ["node_modules", "elm-stuff", "project", ".DS_Store"];
+const rootExclude = ["dist", "node_modules", "webdriver-ts"];
 
-fs.copySync("index.html", "dist"+path.sep+"index.html");
-fs.copySync("css", "dist"+path.sep+"css");
+/**
+ * Checks whether a given file or directory `name` should be included based on certain conditions.
+ * @param {string} name
+ * @returns {boolean}
+ */
+function shouldInclude(name) {
+  const isBindingScala = name.includes("binding.scala");
 
-var excludes = ["node_modules","elm-stuff","project",".DS_Store"]
-var excludedDirectories = ['css', 'dist','node_modules','webdriver-ts'];
+  if (isBindingScala) {
+    const isTarget = name.includes("/target");
+    const isTargetWeb = name.includes("/target/web");
 
-// http://stackoverflow.com/questions/13786160/copy-folder-recursively-in-node-js
-function copyFileSync( source, target ) {
+    console.log(
+      `File: ${name}\nIs Binding Scala: ${isBindingScala}\nIs Target: ${isTarget}\nIs Target Web: ${isTargetWeb}`
+    );
 
-    var targetFile = target;
-
-    //if target is a directory a new file with the same name will be created
-    if ( fs.existsSync( target ) ) {
-        if ( fs.lstatSync( target ).isDirectory() ) {
-            targetFile = path.join( target, path.basename( source ) );
-        }
+    if (isTarget) {
+      return name.endsWith("/target") || isTargetWeb;
     }
+  }
 
-    fs.writeFileSync(targetFile, fs.readFileSync(source));
+  return internalExclude.every((ex) => !name.includes(ex));
 }
 
-function include(name) {
-		if (name.indexOf("binding.scala")>-1) {
-			console.log('name.indexOf("binding.scala")>-1', name.indexOf("/target")>-1, name.indexOf("/target/web")>-1, name);
-				if (name.indexOf("/target")>-1) {
-					return name.endsWith('/target') || name.indexOf("/target/web")>-1;
-				}
-		}
-		if (excludes.every(ex => name.indexOf(ex)==-1)) {
-			// console.log("<- filter", name);
-			return true;
-		} else {
-			return false;
-		}
-}
+/**
+ * Recursively copies the contents of one directory to another directory.
+ * @param {string} sourcePath
+ * @param {string} destinationPath
+ * @returns
+ */
+function copyFolderRecursiveSync(sourcePath, destinationPath) {
+  if (!fs.existsSync(sourcePath) || !fs.lstatSync(sourcePath).isDirectory()) {
+    return;
+  }
 
-function copyFolderRecursiveSync( source, target ) {
-    var files = [];
+  // Check if folder needs to be created or integrated
+  if (!fs.existsSync(destinationPath)) {
+    fs.mkdirSync(destinationPath);
+  }
 
-    //check if folder needs to be created or integrated
-    var targetFolder = path.join( target, path.basename( source ) );
-    if ( !fs.existsSync( targetFolder ) ) {
-        fs.mkdirSync( targetFolder );
+  const files = fs.readdirSync(sourcePath);
+
+  for (const file of files) {
+    const srcFilePath = path.join(sourcePath, file);
+    const destFilePath = path.join(destinationPath, file);
+
+    if (!shouldInclude(srcFilePath)) {
+      continue;
     }
 
-    //copy
-    if ( fs.lstatSync( source ).isDirectory() ) {
-        files = fs.readdirSync( source );
-        files.forEach( function ( file ) {
-			var curSource = path.join( source, file );
-			if (include(curSource)) {
-				if ( fs.lstatSync( curSource ).isDirectory() ) {
-					console.log("copy dir "+curSource);
-					copyFolderRecursiveSync( curSource, targetFolder );
-				} else if ( fs.lstatSync( curSource ).isSymbolicLink() ) {
-					console.log("**** LINK");
-				} else {
-					// console.log("copy file "+curSource);
-					copyFileSync( curSource, targetFolder );
-				}
-			}
-        } );
+    const fileStats = fs.lstatSync(srcFilePath);
+
+    if (fileStats.isDirectory()) {
+      console.log(`copy dir ${srcFilePath}`);
+      copyFolderRecursiveSync(srcFilePath, destFilePath);
+    } else if (fileStats.isSymbolicLink()) {
+      console.log("**** LINK");
+    } else {
+      fs.copyFileSync(srcFilePath, destFilePath);
     }
+  }
+} // It will be possible to replace with `fs.cpSync` if the version of Node.js >= 16.7.0.
+
+/**
+ * Reads the contents of the root directory and recursively copies the contents of each folder, unless they are excluded.
+ */
+function processDirectories() {
+  const directories = fs.readdirSync(".");
+  const nonHiddenDirectories = directories.filter(
+    (directory) => !directory.startsWith(".")
+  );
+
+  for (const directory of nonHiddenDirectories) {
+    if (
+      fs.statSync(directory).isDirectory() &&
+      !rootExclude.includes(directory)
+    ) {
+      const dirPath = path.join("dist", directory);
+      console.log(dirPath);
+      fs.mkdirSync(dirPath);
+      copyFolderRecursiveSync(directory, path.join("dist", directory));
+    }
+  }
 }
 
-_.each(fs.readdirSync('.'), function(name) {
-	if(fs.statSync(name).isDirectory() && name[0] !== '.' && excludedDirectories.indexOf(name)==-1) {
-		console.log("dist"+path.sep+name);
-		fs.mkdirSync("dist"+path.sep+name);
-		copyFolderRecursiveSync(name, "dist");
+/**
+ * Creates a dist directory, copies `table.html` from `webdriver-ts` and `index.html` into it,
+ * and then starts copying the project folders recursively using `processDirectories()`.
+ */
+function copyProjectToDist() {
+  fs.rmSync("dist", { force: true, recursive: true });
+  fs.mkdirSync(path.join("dist", "webdriver-ts"), { recursive: true });
 
-/*		fs.mkdirSync("dist"+path.sep+name);
-		if (fs.existsSync(name+path.sep+"dist")) {
-			fs.mkdirSync("dist"+path.sep+name+path.sep+"dist");
-			fs.copySync(name+path.sep+"dist", "dist"+path.sep+name+path.sep+"dist");
-			if (fs.existsSync(name+path.sep+"index.html")) {
-				fs.copySync(name+path.sep+"index.html", "dist"+path.sep+name+path.sep+"index.html");
-			}
-		} else {
-			if (fs.existsSync(name+path.sep+"index.html")) {
-				fs.copySync(name+path.sep+"index.html", "dist"+path.sep+name+path.sep+"index.html");
-			}
-		} */
-	}
-});
+  fs.copyFileSync(
+    path.join("webdriver-ts", "table.html"),
+    path.join("dist", "webdriver-ts", "table.html")
+  );
+  fs.copyFileSync("index.html", path.join("dist", "index.html"));
 
-fs.copySync("stem-v0.2.70-non-keyed/node_modules/babel-polyfill/dist/polyfill.min.js","dist/stem-v0.2.70/node_modules/babel-polyfill/dist");
+  processDirectories();
+}
 
+copyProjectToDist();
+
+module.exports = { copyProjectToDist };
