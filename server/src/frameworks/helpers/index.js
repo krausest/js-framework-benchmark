@@ -1,5 +1,4 @@
 import fs from "fs";
-import fsp from "fs/promises";
 import path from "path";
 
 import { frameworksDirectory } from "../../config/directories.js";
@@ -28,6 +27,19 @@ function copyProps(result, benchmarkData) {
     : undefined;
 }
 
+async function checkPackageJSON(packageJSONPath) {
+  try {
+    await fs.promises.access(packageJSONPath, fs.constants.R_OK);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+function buildFrameworkVersionString(directoryName, version, keyedDir) {
+  return `${directoryName}${version ? `-v${version}` : ""}-${keyedDir}`;
+}
+
 export async function loadFrameworkInfo(keyedDir, directoryName) {
   const result = {
     type: keyedDir,
@@ -37,17 +49,20 @@ export async function loadFrameworkInfo(keyedDir, directoryName) {
   const frameworkPath = path.resolve(
     frameworksDirectory,
     keyedDir,
-    directoryName
+    directoryName,
   );
   const packageJSONPath = path.resolve(frameworkPath, "package.json");
   const packageLockJSONPath = path.resolve(frameworkPath, "package-lock.json");
 
-  if (!fs.existsSync(packageJSONPath)) {
+  const hasPackageJSON = await checkPackageJSON(packageJSONPath);
+  if (!hasPackageJSON) {
     result.error = "No package.json found";
     return result;
   }
 
-  const packageJSON = JSON.parse(await fsp.readFile(packageJSONPath, "utf8"));
+  const packageJSON = JSON.parse(
+    await fs.promises.readFile(packageJSONPath, "utf8"),
+  );
   const benchmarkData = packageJSON["js-framework-benchmark"];
 
   if (!benchmarkData) {
@@ -59,7 +74,7 @@ export async function loadFrameworkInfo(keyedDir, directoryName) {
   if (benchmarkData.frameworkVersionFromPackage) {
     const packageNames = benchmarkData.frameworkVersionFromPackage.split(":");
     const packageLockJSON = JSON.parse(
-      await fsp.readFile(packageLockJSONPath, "utf8")
+      await fs.promises.readFile(packageLockJSONPath, "utf8"),
     );
 
     result.versions = {};
@@ -76,16 +91,20 @@ export async function loadFrameworkInfo(keyedDir, directoryName) {
       }
     }
 
-    result.frameworkVersionString = `${directoryName}-v${packageNames
-      .map((p) => result.versions[p])
-      .join(" + ")}-${keyedDir}`;
+    result.frameworkVersionString = buildFrameworkVersionString(
+      directoryName,
+      packageNames.map((p) => result.versions[p]).join(" + "),
+      keyedDir,
+    );
 
     copyProps(result, benchmarkData);
   } else if (typeof benchmarkData.frameworkVersion === "string") {
     result.version = benchmarkData.frameworkVersion;
-    result.frameworkVersionString = `${directoryName}${
-      result.version ? `-v${result.version}` : ""
-    }-${keyedDir}`;
+    result.frameworkVersionString = buildFrameworkVersionString(
+      directoryName,
+      result.version,
+      keyedDir,
+    );
 
     copyProps(result, benchmarkData);
   } else {

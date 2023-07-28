@@ -7,11 +7,11 @@ import { frameworksDirectory } from "../../config/directories.js";
  * @param {string} directoryName
  * @returns {boolean}
  */
-function isFrameworkDir(keyedDir, directoryName) {
+async function isFrameworkDir(keyedDir, directoryName) {
   const frameworkPath = path.resolve(
     frameworksDirectory,
     keyedDir,
-    directoryName
+    directoryName,
   );
   const packageJSONPath = path.resolve(frameworkPath, "package.json");
   const packageLockJSONPath = path.resolve(frameworkPath, "package-lock.json");

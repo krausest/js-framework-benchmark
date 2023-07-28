@@ -1,6 +1,8 @@
 import { join } from "path";
 import process from "process";
 
+// Checks if the directory is explicitly specified.
+// It can be specified by writing for example `npm run dev other-frameworks-directory`.
 const isFrameworksDirectorySpecifies = process.argv.length === 3;
 
 const frameworksDirectory = isFrameworksDirectorySpecifies
