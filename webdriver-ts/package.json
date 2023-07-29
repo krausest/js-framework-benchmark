@@ -26,7 +26,6 @@
     "@types/ramda": "0.29.0",
     "@types/selenium-webdriver": "4.1.13",
     "@types/semver": "7.3.13",
-    "@types/underscore": "1.11.4",
     "@types/yargs": "17.0.24",
     "@typescript-eslint/eslint-plugin": "5.59.1",
     "@typescript-eslint/parser": "5.59.1",
@@ -52,7 +51,6 @@
     "ramda": "0.29.0",
     "selenium-webdriver": "4.9.0",
     "semver": "7.5.0",
-    "underscore": "1.13.6",
     "yargs": "17.7.1"
   }
 }
