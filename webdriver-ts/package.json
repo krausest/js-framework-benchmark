@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint src/ --ext .ts",
     "tsbench": "cross-env LANG=\"en_US.UTF-8\" ts-node --files src/benchmarkRunner.ts",
     "bench": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
     "checkCSP": "cross-env LANG=\"en_US.UTF-8\" node dist/isCSPCompliant.js",
