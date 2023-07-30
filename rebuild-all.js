@@ -111,7 +111,7 @@ function buildFramework(framework) {
   //     execSync(`rm -r ${path}`);
   // }
   // rsync(keyed,name);
-  let filesToDelete = ((useCi) ? [] : ["package-lock.json"]).concat([
+  const filesToDelete = ((useCi) ? [] : ["package-lock.json"]).concat([
     "yarn-lock",
     "dist",
     "elm-stuff",
