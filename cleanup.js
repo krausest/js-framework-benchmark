@@ -1,40 +1,65 @@
 const fs = require("fs");
 const path = require("path");
+const yargs = require("yargs");
+
+const args = yargs(process.argv)
+  .help()
+  .string("framework-dir")
+  .default("framework-dir", "frameworks")
+  .array("keyed-types")
+  .default("keyed-types", ["keyed", "non-keyed"]).argv;
 
 /**
- * @param {string} dir
+ * @type {string}
  */
-function rmIfExists(dir) {
-  if (fs.existsSync(dir)) {
-    console.log("Cleaning", dir);
-    fs.rmSync(dir, { recursive: true });
+const frameworksDir = args.frameworkDir;
+
+/**
+ * @type {string[]}
+ */
+const keyedTypes = args.keyedTypes;
+
+const frameworksPath = path.resolve(frameworksDir);
+
+const filesToDelete = [
+  "package-lock.json",
+  "yarn-lock",
+  "dist",
+  "elm-stuff",
+  "bower_components",
+  "node_modules",
+];
+
+/**
+ * Delete specified files in the framework directory
+ * @param {string} frameworkPath
+ * @param {string[]} filesToDelete
+ */
+function deleteFrameworkFiles(frameworkPath, filesToDelete) {
+  for (const file of filesToDelete) {
+    const filePath = path.join(frameworkPath, file);
+    fs.rmSync(filePath, { recursive: true, force: true });
   }
+  console.log(`Deleted: ${filesToDelete}`);
 }
 
 /**
- * @param {string} basePath
+ * Cleans all framework directories of package-lock.json, yarn-lock and the elm-stuff, node-modules, bower-components and dist directories.
+ * @param {string} frameworksPath
  * @param {string} keyedTypes
  */
-function cleanFrameworkDirectories(basePath, keyedTypes) {
+function cleanFrameworkDirectories(frameworksPath, keyedTypes) {
   for (const keyedType of keyedTypes) {
-    const frameworkDir = path.resolve(basePath, keyedType);
+    const frameworkDir = path.resolve(frameworksPath, keyedType);
     const directories = fs.readdirSync(frameworkDir);
 
     for (const directory of directories) {
       const frameworkPath = path.resolve(frameworkDir, directory);
-      console.log("cleaning ", frameworkPath);
+      console.log(`cleaning ${frameworkPath}`);
 
-      rmIfExists(path.join(frameworkPath, "package-lock.json"));
-      rmIfExists(path.join(frameworkPath, "yarn.lock"));
-      rmIfExists(path.join(frameworkPath, "node_modules"));
-      rmIfExists(path.join(frameworkPath, "dist"));
-      rmIfExists(path.join(frameworkPath, "elm-stuff"));
-      rmIfExists(path.join(frameworkPath, "bower_components"));
+      deleteFrameworkFiles(frameworkPath, filesToDelete);
     }
   }
 }
-
-const keyedTypes = ["keyed", "non-keyed"];
-const frameworksPath = path.resolve("frameworks");
 
 cleanFrameworkDirectories(frameworksPath, keyedTypes);

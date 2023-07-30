@@ -1,20 +1,40 @@
 const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const yargs = require("yargs");
 
-const cliArgs = process.argv.length <= 2 ? [] : process.argv.slice(2);
+const args = yargs(process.argv.slice(2))
+  .usage("$0 [--ci --docker keyed/framework1 ... non-keyed/frameworkN]")
+  .boolean("ci")
+  .default("ci", false)
+  .describe("ci", "Use npm ci or npm install ?")
+  .boolean("docker")
+  .default("docker", false)
+  .describe(
+    "docker",
+    "Copy package-lock back for docker build or build locally?"
+  ).argv;
 
-// Use npm ci or npm install ?
-const useCi = cliArgs.includes("--ci");
+/**
+ * Use npm ci or npm install?
+ * @type {boolean}
+ */
+const useCi = args.ci;
 
-// Copy package-lock back for docker build or build locally?
-const useDocker = cliArgs.includes("--docker");
+/**
+ * Copy package-lock back for docker build or build locally?
+ * @type {boolean}
+ */
+const useDocker = args.docker;
 
-const frameworks = cliArgs.filter((a) => !a.startsWith("--"));
+/**
+ * @type {string}
+ */
+const frameworks = args._.filter((arg) => !arg.startsWith("--"));
 
 console.log(
   "rebuild-build-single.js started: args",
-  cliArgs,
+  args,
   "useCi",
   useCi,
   "useDocker",
@@ -22,6 +42,16 @@ console.log(
   "frameworks",
   frameworks
 );
+
+const filesToDelete = [
+  "yarn-lock",
+  "dist",
+  "elm-stuff",
+  "bower_components",
+  "node_modules",
+  "output",
+  useCi && "package-lock.json",
+].filter(Boolean);
 
 /*
 rebuild-single.js [--ci] [--docker] [keyed/framework1 ... non-keyed/frameworkN]
@@ -37,13 +67,26 @@ Pass list of frameworks
 */
 
 /**
- * Log command and run it with execSync
- * @param {string} command
- * @param {string|URL|undefined} cwd
+ * Run a command synchronously in the specified directory and log command
+ * @param {string} command - The command to run
+ * @param {string} cwd - The current working directory (optional)
  */
 function runCommand(command, cwd = undefined) {
   console.log(command);
   execSync(command, { stdio: "inherit", cwd });
+}
+
+/**
+ * Delete specified files in the framework directory
+ * @param {string} frameworkPath
+ * @param {string[]} filesToDelete
+ */
+function deleteFrameworkFiles(frameworkPath, filesToDelete) {
+  for (const file of filesToDelete) {
+    const filePath = path.join(frameworkPath, file);
+    fs.rmSync(filePath, { recursive: true, force: true });
+  }
+  console.log(`Deleted: ${filesToDelete}`);
 }
 
 /**
@@ -60,12 +103,12 @@ function rebuildFramework(framework) {
   }
 
   const [keyed, name] = components;
-  const pathToFramework = path.join("frameworks", keyed, name);
+  const frameworkPath = path.join("frameworks", keyed, name);
 
   if (useDocker) {
-    if (fs.existsSync(pathToFramework)) {
-      console.log("deleting folder ", pathToFramework);
-      fs.rmSync(pathToFramework, { recursive: true });
+    if (fs.existsSync(frameworkPath)) {
+      console.log("deleting folder ", frameworkPath);
+      fs.rmSync(frameworkPath, { recursive: true });
     }
 
     const rsyncCmd = `rsync -avC --exclude elm-stuff --exclude dist --exclude output ${
@@ -74,16 +117,16 @@ function rebuildFramework(framework) {
     runCommand(rsyncCmd);
   }
 
-  const rmCmd = `rm -rf ${
-    useCi ? "" : "package-lock.json"
-  } yarn.lock dist elm-stuff bower_components node_modules output`;
-  runCommand(rmCmd, pathToFramework);
+  deleteFrameworkFiles(frameworkPath, filesToDelete);
 
-  const installCmd = `npm ${useCi ? "ci" : "install"} && npm run build-prod`;
-  runCommand(installCmd, pathToFramework);
+  const installCmd = `npm ${useCi ? "ci" : "install"}`;
+  runCommand(installCmd, frameworkPath);
+
+  const buildCmd = "npm run build-prod";
+  runCommand(buildCmd, frameworkPath);
 
   if (useDocker) {
-    const packageJSONPath = path.join(pathToFramework, "package-lock.json");
+    const packageJSONPath = path.join(frameworkPath, "package-lock.json");
     const destinationPath = path.join("/src", packageJSONPath);
     fs.copyFileSync(packageJSONPath, destinationPath);
   }

@@ -2,22 +2,39 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 const JSON5 = require("json5");
 const path = require("path");
+const yargs = require("yargs");
 
-const DEBUG = false;
+const args = yargs(process.argv)
+  .usage("$0 [--debug]")
+  .help()
+  .boolean("debug")
+  .default("debug", false).argv;
 
 /**
- * Returns an array with arrays of types and names of frameworks
+ * @type {boolean}
+ */
+const DEBUG = args.debug;
+
+/**
+ * @typedef {Object} Framework
+ * @property {string} name - Name of the framework (e.g., "vue", "qwik", "svelte")
+ * @property {string} type - Type of the framework (e.g., "keyed" or "non-keyed")
+ */
+
+/**
+ * Returns an array of frameworks with their type and name
  * @example getFramewokrs()
- * @returns [{type:"keyed", name:"vue"},{type:"keyed", name:"qwik"},{type:"non-keyed", name:"svelte"}]
+ * @returns {Framework[]}
  */
 function getFrameworks() {
-  const keyedFrameworks = fs
-    .readdirSync("./frameworks/keyed")
-    .map((framework) => ({ type: "keyed", name: framework }));
-  const nonKeyedFrameworks = fs
-    .readdirSync("./frameworks/non-keyed")
-    .map((framework) => ({ type: "non-keyed", name: framework }));
-  return [...keyedFrameworks, ...nonKeyedFrameworks];
+  const framewokrsTypes = ["keyed", "non-keyed"];
+  const framewokrs = framewokrsTypes.flatMap((type) =>
+    fs
+      .readdirSync(path.join("framewokrs", type))
+      .map((framework) => ({ name: framework, type }))
+  );
+
+  return framewokrs;
 }
 
 const frameworks = getFrameworks();

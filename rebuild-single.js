@@ -1,17 +1,50 @@
 const { execSync } = require("child_process");
+const yargs = require("yargs");
 
-const args = process.argv.slice(2);
-const argsString = args.join(" ");
+const args = yargs(process.argv.slice(2))
+  .usage("$0 [--ci --docker keyed/framework1 ... non-keyed/frameworkN]")
+  .boolean("ci")
+  .default("ci", false)
+  .describe("ci", "Use npm ci or npm install ?")
+  .boolean("docker")
+  .default("docker", false)
+  .describe(
+    "docker",
+    "Copy package-lock back for docker build or build locally?"
+  ).argv;
 
-// Use npm ci or npm install ?
-const ci = args.includes("--ci");
+/**
+ * Use npm ci or npm install ?
+ * @type {boolean}
+ */
+const useCi = args.ci;
 
-// Copy package-lock back for docker build or build locally?
-const docker = args.includes("--docker");
+/**
+ * Copy package-lock back for docker build or build locally?
+ * @type {boolean}
+ */
+const useDocker = args.docker;
 
-const frameworks = args.filter((a) => !a.startsWith("--"));
+/**
+ * @type {string}
+ */
+const frameworks = args._.filter((arg) => !arg.startsWith("--"));
 
-console.log("args", args, "ci", ci, "docker", docker, "frameworks", frameworks);
+/**
+ * @type {string}
+ */
+const frameworksNames = frameworks.join(" ");
+
+console.log(
+  "args",
+  args,
+  "ci",
+  useCi,
+  "docker",
+  useDocker,
+  "frameworks",
+  frameworks
+);
 
 /*
 rebuild-single.js [--ci] [--docker] [keyed/framework1 ... non-keyed/frameworkN]
@@ -26,6 +59,16 @@ it calls npm ci and npm run build-prod for the benchmark
 Pass list of frameworks
 */
 
+/**
+ * Run a command synchronously in the specified directory and log command
+ * @param {string} command - The command to run
+ * @param {string} cwd - The current working directory (optional)
+ */
+function runCommand(command, cwd = undefined) {
+  console.log(command);
+  execSync(command, { stdio: "inherit", cwd });
+}
+
 try {
   if (frameworks.length == 0) {
     console.log(
@@ -34,19 +77,13 @@ try {
     process.exit(1);
   }
 
-  const buildCmd = docker
-    ? `docker exec -it js-framework-benchmark cp /src/rebuild-build-single.js /build/ && docker exec -it js-framework-benchmark node rebuild-build-single.js ${argsString}`
-    : `node rebuild-build-single.js ${argsString}`;
-  console.log(buildCmd);
-  execSync(buildCmd, {
-    stdio: "inherit",
-  });
+  const buildCmd = useDocker
+    ? `docker exec -it js-framework-benchmark cp /src/rebuild-build-single.js /build/ && docker exec -it js-framework-benchmark node rebuild-build-single.js ${frameworksNames}`
+    : `node rebuild-build-single.js ${frameworksNames}`;
+  runCommand(buildCmd);
 
-  const checkCmd = `node rebuild-check-single.js ${argsString}`;
-  console.log(checkCmd);
-  execSync(checkCmd, {
-    stdio: "inherit",
-  });
+  const checkCmd = `node rebuild-check-single.js ${frameworksNames}`;
+  runCommand(checkCmd);
 } catch (e) {
-  console.log(`ERROR: Rebuilding  ${argsString} was not successful`);
+  console.log(`ERROR: Rebuilding  ${frameworksNames} was not successful`);
 }

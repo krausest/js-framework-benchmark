@@ -2,6 +2,20 @@ const takeWhile = require("lodash/takeWhile");
 const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const yargs = require("yargs");
+
+const args = yargs(process.argv.slice(2))
+  .usage("$0 [--ci --docker keyed/framework1 ... non-keyed/frameworkN]")
+  .help()
+  .boolean("ci")
+  .default("ci", false)
+  .describe("ci", "Use npm ci or npm install?")
+  .boolean("docker")
+  .default("docker", false)
+  .describe(
+    "docker",
+    "Copy package-lock back for docker build or build locally?"
+  ).argv;
 
 /*
 This script rebuilds all frameworks from scratch,
@@ -12,31 +26,46 @@ If building a framework fails you can resume building like
 npm run rebuild-frameworks --restartWith keyed/react
 */
 
-const cliArgs = process.argv.slice(2);
+/**
+ * Use npm ci or npm install?
+ * @type {boolean}
+ */
+const useCi = args.ci;
 
-// Use npm ci or npm install ?
-const useCi = cliArgs.includes("--ci");
+/**
+ * Copy package-lock back for docker build or build locally?
+ * @type {boolean}
+ */
+const useDocker = args.docker;
 
-// Copy package-lock back for docker build or build locally?
-const useDocker = cliArgs.includes("--docker");
-
-const restartBuildingWith = cliArgs.find((arg) => !arg.startsWith("--"));
+const restartBuildingWith = args._.find((arg) => !arg.startsWith("--"));
 const restartWithFramework = restartBuildingWith || "";
 
 console.log(
   "ARGS",
+  args,
   "ci",
   useCi,
   "docker",
   useDocker,
   "restartWith",
-  restartWithFramework,
+  restartWithFramework
 );
+
+const filesToDelete = [
+  "yarn-lock",
+  "dist",
+  "elm-stuff",
+  "bower_components",
+  "node_modules",
+  "output",
+  useCi && "package-lock.json",
+].filter(Boolean);
 
 /**
  * @typedef {Object} Framework
- * @property {string} type - Type of the framework (e.g., "keyed" or "non-keyed")
  * @property {string} name - Name of the framework (e.g., "vue", "qwik", "svelte")
+ * @property {string} type - Type of the framework (e.g., "keyed" or "non-keyed")
  */
 
 /**
@@ -45,13 +74,14 @@ console.log(
  * @returns {Framework[]}
  */
 function getFrameworks() {
-  const keyedFrameworks = fs
-    .readdirSync("./frameworks/keyed")
-    .map((framework) => ({ type: "keyed", name: framework }));
-  const nonKeyedFrameworks = fs
-    .readdirSync("./frameworks/non-keyed")
-    .map((framework) => ({ type: "non-keyed", name: framework }));
-  return [...keyedFrameworks, ...nonKeyedFrameworks];
+  const keyedTypes = ["keyed", "non-keyed"];
+  const framewokrs = keyedTypes.flatMap((type) =>
+    fs
+      .readdirSync(path.join("frameworks", type))
+      .map((framework) => ({ name: framework, type }))
+  );
+
+  return framewokrs;
 }
 
 /**
@@ -68,7 +98,7 @@ function shouldSkipFramework({ type, name }) {
 }
 
 /**
- * Run a command synchronously in the specified directory
+ * Run a command synchronously in the specified directory and log command
  * @param {string} command - The command to run
  * @param {string} cwd - The current working directory (optional)
  */
@@ -111,15 +141,6 @@ function buildFramework(framework) {
   //     execSync(`rm -r ${path}`);
   // }
   // rsync(keyed,name);
-  const filesToDelete = [
-    "yarn-lock",
-    "dist",
-    "elm-stuff",
-    "bower_components",
-    "node_modules",
-    "output",
-    useCi ? "" : "package-lock.json",
-  ];
 
   deleteFrameworkFiles(frameworkPath, filesToDelete);
 
@@ -141,7 +162,7 @@ function buildFrameworks() {
   const skippableFrameworks = takeWhile(frameworks, shouldSkipFramework);
   const buildableFrameworks = frameworks.slice(skippableFrameworks.length);
 
-  console.log("Building frameworks:", buildableFrameworks);
+  // console.log("Building frameworks:", buildableFrameworks);
 
   for (const framework of buildableFrameworks) {
     buildFramework(framework);

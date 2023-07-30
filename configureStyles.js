@@ -4,7 +4,7 @@ const path = require("path");
 
 const args = yargs(process.argv)
   .usage("$0 [--bootstrap --minimal]")
-  .help("help")
+  .help()
   .boolean("bootstrap")
   .default("bootstrap", false)
   .boolean("minimal")

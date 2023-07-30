@@ -1,7 +1,11 @@
 const { execSync } = require("child_process");
+const yargs = require("yargs");
 
-const args = process.argv.slice(2);
-const frameworks = args.filter((a) => !a.startsWith("--"));
+const args = yargs(process.argv.slice(2))
+  .usage("$0 [keyed/framework1 ... non-keyed/frameworkN]")
+  .help().argv;
+
+const frameworks = args._.filter((a) => !a.startsWith("--"));
 const frameworkNames = frameworks.join(" ");
 
 console.log(
@@ -12,32 +16,33 @@ console.log(
 );
 
 /*
-rebuild-single.js [--ci] [--docker] [keyed/framework1 ... non-keyed/frameworkN]
+rebuild-check-single.js [keyed/framework1 ... non-keyed/frameworkN]
 
-This script rebuilds a single framework
-By default it rebuilds from scratch, deletes all package.json and package-lock.json files
-and invokes npm install and npm run build-prod for the benchmark
+This script is used to run benchmarks and check if the specified frameworks are keyed.
 
-With argument --ci it rebuilds using the package-lock.json dependencies, i.e.
-it calls npm ci and npm run build-prod for the benchmark
+It performs the following steps:
+1. Executes benchmarks for the specified frameworks with the necessary options.
+2. Checks if the specified frameworks are keyed.
 
 Pass list of frameworks
 */
 
+/**
+ * Run a command synchronously in the specified directory and log command
+ * @param {string} command - The command to run
+ * @param {string} cwd - The current working directory (optional)
+ */
+function runCommand(command, cwd = undefined) {
+  console.log(command);
+  execSync(command, { stdio: "inherit", cwd });
+}
+
 try {
   const benchCmd = `npm run bench -- --headless true --smoketest true ${frameworkNames}`;
-  console.log(benchCmd);
-  execSync(benchCmd, {
-    cwd: "webdriver-ts",
-    stdio: "inherit",
-  });
+  runCommand(benchCmd);
 
   const keyedCmd = `npm run isKeyed -- --headless true ${frameworkNames}`;
-  console.log(keyedCmd);
-  execSync(keyedCmd, {
-    cwd: "webdriver-ts",
-    stdio: "inherit",
-  });
+  runCommand(keyedCmd);
 
   console.log("rebuild-check-single.js finished");
   console.log("All checks are fine!");
