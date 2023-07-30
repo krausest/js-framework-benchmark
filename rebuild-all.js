@@ -111,15 +111,14 @@ function buildFramework(framework) {
   //     execSync(`rm -r ${path}`);
   // }
   // rsync(keyed,name);
-  const filesToDelete = [
+  let filesToDelete = ((useCi) ? [] : ["package-lock.json"]).concat([
     "yarn-lock",
     "dist",
     "elm-stuff",
     "bower_components",
     "node_modules",
     "output",
-    useCi ? "" : "package-lock.json",
-  ];
+  ]);
 
   deleteFrameworkFiles(frameworkPath, filesToDelete);
 
