@@ -1,4 +1,5 @@
 import Bau from "@grucloud/bau";
+//import Bau from "../../../../bau/bau/bau.js";
 
 const bau = Bau();
 
@@ -64,15 +65,18 @@ const N = [
 
 let nextId = 1;
 
+const buildLabel = () =>
+  //bau.state(
+  `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`;
+//);
+
 const buildData = (count) => {
   const data = new Array(count);
 
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: nextId++,
-      label: `${A[random(A.length)]} ${C[random(C.length)]} ${
-        N[random(N.length)]
-      }`,
+      label: buildLabel(),
     };
   }
 
@@ -100,6 +104,9 @@ const update = () => {
   for (let i = 0; i < dataState.val.length; i += 10) {
     const r = dataState.val[i];
     dataState.val[i].label = r.label + " !!!";
+
+    //    const label = dataState.val[i].label;
+    //   label.val = r.label.val + " !!!";
   }
 };
 
@@ -133,7 +140,7 @@ const Row = ({ id, label }) =>
     {
       class: {
         deps: [selectedState],
-        renderProp: (selected) => (selected == id ? "danger" : ""),
+        renderProp: () => (selected) => selected == id ? "danger" : "",
       },
     },
 
@@ -213,7 +220,7 @@ const Main = () =>
         render:
           ({ renderItem }) =>
           (arr) =>
-            tbody(arr.map(renderItem())),
+            tbody(arr.map(renderItem)),
         renderItem: () => Row,
       }),
       span({
