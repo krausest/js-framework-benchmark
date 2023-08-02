@@ -1,0 +1,34 @@
+{
+  "name": "js-framework-benchmark-rezact",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Rezact Benchmark",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.0.1",
+    "frameworkHomeURL": "https://rezact.io/"
+  },
+  "scripts": {
+    "build-dev": "vite",
+    "build-prod": "tsc && vite build"
+  },
+  "keywords": [
+    "rezact"
+  ],
+  "author": "Zach Lankton",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "acorn": "^8.10.0",
+    "acorn-jsx": "^5.3.2",
+    "acorn-walk": "^8.2.0",
+    "magic-string": "^0.30.1",
+    "path": "^0.12.7",
+    "typescript": "^5.0.2",
+    "url": "^0.11.1",
+    "vite": "^4.4.0"
+  }
+}
