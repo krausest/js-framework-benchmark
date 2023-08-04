@@ -135,12 +135,8 @@ const select = ({ id, event }) => {
 const Row = ({ id, label }) =>
   tr(
     {
-      class: {
-        deps: [selectedState],
-        renderProp: () => (selected) => selected == id ? "danger" : "",
-      },
+      class: () => (selectedState.val == id ? "danger" : ""),
     },
-
     td({ class: "col-md-1" }, id),
     td(
       { class: "col-md-4" },
@@ -212,14 +208,7 @@ const Main = () =>
     Jumbotron({}),
     table(
       { class: "table table-hover table-striped test-data" },
-      bau.bind({
-        deps: [dataState],
-        render:
-          ({ renderItem }) =>
-          (arr) =>
-            tbody(arr.map(renderItem)),
-        renderItem: () => Row,
-      }),
+      bau.loop(dataState, tbody(), Row),
       span({
         class: "preloadicon glyphicon glyphicon-remove",
         "aria-hidden": true,
