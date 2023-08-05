@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build-dev": "webpack --watch",
-    "build-prod": "webpack"
+    "build-prod": "webpack --mode=production"
   },
   "keywords": [
     "imba",
@@ -23,11 +23,12 @@
     "url": "https://github.com/allain/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "terser-webpack-plugin": "1.1.0",
-    "webpack": "4.22.0",
-    "webpack-cli": "3.1.2"
+    "loader-utils": "^1.4.2",
+    "terser-webpack-plugin": "^5.3.9",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "imba": "^1.4.1"
+    "imba": "^1.5.2"
   }
 }
