@@ -43,6 +43,11 @@ Pass list of frameworks
  */
 function runCommand(command, cwd = undefined) {
   console.log(command);
+  if (cwd) {
+    if (!fs.existsSync(cwd)) {
+      throw `working directory ${cwd} doesn't exist.`;
+    }
+  }
   execSync(command, { stdio: "inherit", cwd });
 }
 
