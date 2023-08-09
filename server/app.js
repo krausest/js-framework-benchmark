@@ -8,7 +8,7 @@ import staticRouter from "./src/static/staticRouter.js";
  * @param {import("fastify").FastifyServerOptions} options
  * @returns {import("fastify").FastifyInstance}
  */
-function build(options = {}) {
+function buildServer(options = {}) {
   const fastify = Fastify(options);
 
   fastify.addHook("onRequest", (request, reply, done) => {
@@ -26,4 +26,4 @@ function build(options = {}) {
   return fastify;
 }
 
-export { build };
+export { buildServer };

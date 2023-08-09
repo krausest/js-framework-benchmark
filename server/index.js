@@ -1,8 +1,8 @@
-import { build } from "./app.js";
+import { buildServer } from "./app.js";
 
 const PORT = 8080;
 
-const server = build();
+const server = buildServer();
 
 try {
   await server.listen({ port: PORT });

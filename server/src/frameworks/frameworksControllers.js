@@ -1,32 +1,28 @@
-import path from "path";
-import fs from "fs";
+import { loadFrameworkVersions } from "./frameworksServices.js";
 
-import { frameworksDirectory } from "../config/directories.js";
-import isFrameworkDir from "./utils/isFrameworkDir.js";
-import { loadFrameworkInfo } from "./helpers/index.js";
+/**
+ * @typedef {import("fastify").FastifyRequest} Request
+ * @typedef {import("fastify").FastifyReply} Reply
+ */
 
-export async function loadFrameworkVersionInformation(filterForFramework) {
-  const resultsProm = [];
-  const frameworksPath = path.resolve(frameworksDirectory);
-  const keyedTypes = ["keyed", "non-keyed"];
+/**
+ * @param {Request} request
+ * @param {Reply} reply
+ */
+export async function getFrameworksVersions(_request, reply) {
+  performance.mark("Start");
 
-  for (const keyedType of keyedTypes) {
-    const directories = fs.readdirSync(path.resolve(frameworksPath, keyedType));
+  const frameworks = await loadFrameworkVersions();
 
-    for (const directory of directories) {
-      const pathInFrameworksDir = `${keyedType}/${directory}`;
+  performance.mark("End");
 
-      if (filterForFramework && filterForFramework !== pathInFrameworksDir) {
-        continue;
-      }
+  const executionTime = performance.measure(
+    "/ls duration measurement",
+    "Start",
+    "End",
+  ).duration;
 
-      if (!isFrameworkDir(keyedType, directory)) {
-        continue;
-      }
+  console.log(`/ls duration: ${executionTime}ms`);
 
-      const frameworkInfo = loadFrameworkInfo(keyedType, directory);
-      resultsProm.push(frameworkInfo);
-    }
-  }
-  return Promise.all(resultsProm);
+  return reply.send(frameworks);
 }
