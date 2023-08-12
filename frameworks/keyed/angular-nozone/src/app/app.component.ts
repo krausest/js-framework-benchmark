@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgFor } from '@angular/common';
+import { ChangeDetectorRef, Component, VERSION } from '@angular/core';
 
 interface Data {
     id: number;
@@ -7,17 +8,20 @@ interface Data {
 
 @Component({
     selector: 'app-root',
+    standalone: true,
+    imports: [NgFor],
     templateUrl: './app.component.html',
-    styles: []
 })
 export class AppComponent {
     data: Array<Data> = [];
-    selected: number = undefined;
+    selected?: number = undefined;
     id: number = 1;
-    backup: Array<Data> = undefined;
+    backup?: Array<Data> = undefined;
     version: string;
 
-    constructor(private changeDetectorRef: ChangeDetectorRef) {}
+    constructor(private changeDetectorRef: ChangeDetectorRef) {
+        this.version = VERSION.full;
+    }
 
     buildData(count: number = 1000): Array<Data> {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
