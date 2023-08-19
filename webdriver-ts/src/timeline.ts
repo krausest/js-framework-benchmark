@@ -77,8 +77,6 @@ interface Timingresult {
 
   export function extractRelevantJSEvents(config: TConfig, entries: any[]) {
     let filteredEvents: any[] = [];
-    let click_start = 0;
-    let click_end = 0;
   
     entries.forEach(x => {
         let e = x;
@@ -86,8 +84,6 @@ interface Timingresult {
         if (e.name==='EventDispatch') {
           if (e.args.data.type==="click") {
             if (config.LOG_DETAILS) console.log("CLICK ",+e.ts);
-              click_start = +e.ts;
-              click_end = +e.ts+e.dur;
               filteredEvents.push({type:'click', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur});
           }
         }
@@ -286,7 +282,7 @@ interface Timingresult {
       timingResult: Timingresult
     }
     function isContained(testIv: Interval, otherIv: Interval) {
-      return intervals.some(iv => testIv.start>=otherIv.start && testIv.end<=otherIv.end);
+      return intervals.some(() => testIv.start>=otherIv.start && testIv.end<=otherIv.end);
     }
     function newContainedInterval(outer: Timingresult, intervals: Array<Interval>) {
       let outerIv = {start: outer.ts, end: outer.end, timingResult: outer};

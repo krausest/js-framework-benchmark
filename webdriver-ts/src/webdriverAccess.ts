@@ -2,11 +2,6 @@ import { Capabilities, Condition, WebDriver, WebElement } from "selenium-webdriv
 import * as chrome from "selenium-webdriver/chrome.js";
 import { BenchmarkOptions, config } from "./common.js";
 
-interface PathPart {
-  tagName: string;
-  index: number;
-}
-
 let useShadowRoot = false;
 let useRowShadowRoot = false;
 let shadowRootName = "";

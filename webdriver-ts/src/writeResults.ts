@@ -19,8 +19,6 @@ export type ResultCPU = {
   type: BenchmarkType.CPU; 
 }
 
-const DEFAULT = "default";
-
 export type ResultMem = {
   framework: FrameworkData;
   benchmark: BenchmarkInfo;

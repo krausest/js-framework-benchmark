@@ -40,9 +40,9 @@ async function single() {
 
 }
 
-async function readAll() {
-    let jsonResult: { framework: string; benchmark: string; values: number[] }[] = [];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function readAll() {
     let cpuCPUBenchmarks = Object.values(cpuBenchmarkInfos);
     
     let frameworks = await initializeFrameworks(benchmarkOptions);

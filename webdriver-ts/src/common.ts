@@ -94,16 +94,7 @@ export interface FrameworkData {
   frameworkHomeURL: string;
 }
 
-interface Options {
-  uri: string;
-  useShadowRoot?: boolean;
-}
-
 type KeyedType = "keyed" | "non-keyed";
-
-function computeHash(keyedType: KeyedType, directory: string) {
-  return keyedType + "/" + directory;
-}
 
 export interface FrameworkInformation {
   type: KeyedType;
@@ -123,7 +114,7 @@ export interface IMatchPredicate {
   (frameworkDirectory: string): boolean;
 }
 
-const matchAll: IMatchPredicate = (frameworkDirectory: string) => true;
+const matchAll: IMatchPredicate = () => true;
 
 export async function initializeFrameworks(benchmarkOptions: BenchmarkOptions, matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkData[]> {
   let lsResult ;
