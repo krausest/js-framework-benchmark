@@ -1,4 +1,4 @@
-import { By, Capabilities, Condition, WebDriver, WebElement } from "selenium-webdriver";
+import { Capabilities, Condition, WebDriver, WebElement } from "selenium-webdriver";
 import * as chrome from "selenium-webdriver/chrome.js";
 import { BenchmarkOptions, config } from "./common.js";
 

@@ -1,4 +1,4 @@
-import { BenchmarkOptions, FrameworkData, config } from "./common.js";
+import { FrameworkData, config } from "./common.js";
 
 export enum BenchmarkType {
   CPU,

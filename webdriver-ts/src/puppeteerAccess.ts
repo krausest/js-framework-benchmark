@@ -1,6 +1,6 @@
 import * as puppeteer from "puppeteer-core";
 import { Page } from "puppeteer-core";
-import { BenchmarkOptions, config } from "./common.js";
+import { BenchmarkOptions } from "./common.js";
 
 
 

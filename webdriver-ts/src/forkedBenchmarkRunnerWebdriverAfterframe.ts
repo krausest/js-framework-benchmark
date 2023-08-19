@@ -1,6 +1,6 @@
-import { WebDriver, logging, Builder } from "selenium-webdriver";
+import { WebDriver, Builder } from "selenium-webdriver";
 import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriverAfterframe.js";
-import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess.js";
+import { setUseShadowRoot, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess.js";
 
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
 import { BenchmarkType, CPUBenchmarkResult } from "./benchmarksCommon.js";

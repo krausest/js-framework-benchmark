@@ -2,7 +2,7 @@ import * as fs from "fs";
 import yargs from "yargs";
 import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName, slowDownFactor } from "./benchmarksCommon.js";
 import { subbenchmarks } from "./benchmarksLighthouse.js";
-import { BenchmarkOptions, config, initializeFrameworks, JSONResult, JSONResultData } from "./common.js";
+import { BenchmarkOptions, config, initializeFrameworks, JSONResult } from "./common.js";
 
 let args: any = yargs(process.argv)
   .usage(
