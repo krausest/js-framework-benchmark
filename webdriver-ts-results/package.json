@@ -16,7 +16,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "lint": "eslint src/",
     "build-prod": "rimraf --glob dist && cross-env NODE_ENV=\"production\" webpack --env prod && rimraf --glob table.html && rimraf --glob \"BoxPlotTable*.js\" && cpx dist/table.html . && cpx \"dist/BoxPlotTable*.js\" . && cpx \"dist/plotly*.js\" ."
   },
   "eslintConfig": {
@@ -43,6 +43,7 @@
     "@types/react-dom": "^18.2.7",
     "cpx": "1.5.0",
     "cross-env": "7.0.3",
+    "eslint": "^8.47.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "html-webpack-plugin": "^5.5.0",
     "inline-chunk-html-plugin": "^1.1.1",
