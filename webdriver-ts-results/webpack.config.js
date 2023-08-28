@@ -17,7 +17,7 @@ const loaders = [
 	},
 	{
 		test: /\.css$/,
-    use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+    use: ["style-loader", "css-loader" ],
 	}
 ];
 
@@ -54,19 +54,11 @@ export default [{
   },
 	resolve: {
 		extensions: [".js", ".ts", ".tsx"],
-		modules: [
-			__dirname,
-			path.resolve(__dirname, "src"),
-			"node_modules"
-        ],
-        alias: {
-            plotly: 'plotly.js-cartesian-dist'
-          }
 	},
     plugins: [
       // new BundleAnalyzerPlugin(),
         new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'public/index.html'),
+            template: path.join(__dirname, 'public', 'index.html'),
             filename: 'table.html',
             inject: true,
 		}),
