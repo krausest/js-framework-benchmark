@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const fs = require("node:fs");
 const yargs = require("yargs");
 const path = require("path");
 
@@ -12,18 +12,18 @@ const args = yargs(process.argv)
 
 // Function to copy CSS and generate shared-styles.html
 async function copyAndGenerateSharedStyles(sourceCss, mainCss) {
-  await fs.copy(sourceCss, path.join("css", "currentStyle.css"));
+  await fs.promises.cp(sourceCss, path.join("css", "currentStyle.css"));
 
   // Read the main CSS file
-  const mainCssContent = await fs.readFile(mainCss, "utf8");
+  const mainCssContent = await fs.promises.readFile(mainCss, "utf8");
 
   // Generate shared-styles.html content
   const sharedStylesContent = `<dom-module id="shared-styles"><template><style>${mainCssContent}</style></template></dom-module>`;
 
   // Write shared-styles.html
-  await fs.writeFile(
+  await fs.promises.writeFile(
     path.join("polymer-v2.0.0-non-keyed", "src", "shared-styles.html"),
-    sharedStylesContent
+    sharedStylesContent,
   );
 }
 
@@ -39,12 +39,12 @@ async function configureStyles() {
     if (args.bootstrap) {
       await copyAndGenerateSharedStyles(
         path.join("css", "useOriginalBootstrap.css"),
-        path.join("css", "bootstrap", "dist", "css", "bootstrap.min.css")
+        path.join("css", "bootstrap", "dist", "css", "bootstrap.min.css"),
       );
     } else {
       await copyAndGenerateSharedStyles(
         path.join("css", "useMinimalCss.css"),
-        path.join("css", "useMinimalCss.css")
+        path.join("css", "useMinimalCss.css"),
       );
     }
   } catch (error) {

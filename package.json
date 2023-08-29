@@ -51,7 +51,6 @@
   "dependencies": {
     "adm-zip": "^0.5.9",
     "cross-env": "^7.0.2",
-    "fs-extra": "9.0.0",
     "json5": "^2.2.0",
     "local-web-server": "4.1.0",
     "lodash": "^4.17.15",
