@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const AdmZip = require("adm-zip");
+import * as fs from "node:fs";
+import path from "node:path";
+import AdmZip from "adm-zip";
 
 const zip = new AdmZip();
 const outputFile = "build.zip";

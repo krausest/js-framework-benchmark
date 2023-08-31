@@ -1,6 +1,6 @@
-const fs = require("node:fs");
-const yargs = require("yargs");
-const path = require("path");
+import * as fs from "node:fs";
+import path from "node:path";
+import yargs from "yargs";
 
 const args = yargs(process.argv)
   .usage("$0 [--bootstrap --minimal]")

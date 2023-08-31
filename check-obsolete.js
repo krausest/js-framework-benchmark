@@ -1,8 +1,8 @@
-const { execSync } = require("child_process");
-const fs = require("fs");
-const JSON5 = require("json5");
-const path = require("path");
-const yargs = require("yargs");
+import { execSync } from "node:child_process";
+import * as fs from "node:fs";
+import path from "node:path";
+import JSON5 from "json5";
+import yargs from "yargs";
 
 const args = yargs(process.argv)
   .usage("$0 [--debug]")

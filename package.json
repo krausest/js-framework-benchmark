@@ -2,6 +2,7 @@
   "name": "js-framework-benchmark",
   "version": "1.0.0",
   "description": "Simple Benchmark for Javascript client side rendering",
+  "type": "module",
   "scripts": {
     "clean": "node cleanup.js",
     "build": "node rebuild-all.js --ci",

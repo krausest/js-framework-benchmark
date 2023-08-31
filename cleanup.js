@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const yargs = require("yargs");
+import * as fs from "node:fs";
+import path from "node:path";
+import yargs from "yargs";
 
 const args = yargs(process.argv)
   .help()

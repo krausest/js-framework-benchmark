@@ -1,5 +1,5 @@
-const { execSync } = require("child_process");
-const yargs = require("yargs");
+import { execSync } from "node:child_process";
+import yargs from "yargs";
 
 const args = yargs(process.argv.slice(2))
   .usage("$0 [keyed/framework1 ... non-keyed/frameworkN]")

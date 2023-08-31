@@ -1,7 +1,7 @@
-const { execSync } = require("child_process");
-const fs = require("fs");
-const path = require("path");
-const yargs = require("yargs");
+import { execSync } from "node:child_process";
+import * as fs from "node:fs";
+import path from "node:path";
+import yargs from "yargs";
 
 const args = yargs(process.argv.slice(2))
   .usage("$0 [--ci --docker keyed/framework1 ... non-keyed/frameworkN]")

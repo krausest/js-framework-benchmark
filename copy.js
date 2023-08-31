@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+import * as fs from "node:fs";
+import path from "node:path";
 
 const internalExclude = ["node_modules", "elm-stuff", "project", ".DS_Store"];
 const rootExclude = ["dist", "node_modules", "webdriver-ts"];
