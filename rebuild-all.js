@@ -100,7 +100,7 @@ function shouldSkipFramework({ type, name }) {
 /**
  * Run a command synchronously in the specified directory and log command
  * @param {string} command - The command to run
- * @param {string} cwd - The current working directory (optional)
+ * @param {string} [cwd] - The current working directory (optional)
  */
 function runCommand(command, cwd = undefined) {
   console.log(command);
