@@ -2,4 +2,8 @@
 node_modules
 
 # Build
-build
+dist/
+results/
+
+# Trace
+traces/
