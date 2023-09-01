@@ -1,4 +1,5 @@
 {
   "env": { "node": true, "es2024": true },
-  "extends": ["eslint:recommended"]
+  "extends": ["eslint:recommended"],
+  "parserOptions": { "sourceType": "module" }
 }
