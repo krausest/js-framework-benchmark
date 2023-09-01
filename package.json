@@ -30,7 +30,9 @@
     "docker-rebuild": "node rebuild-single.js -- --docker",
     "docker-rebuild-ci": "node rebuild-single.js -- --ci --docker",
     "docker-shell": "docker exec -it js-framework-benchmark /bin/bash",
-    "zip": "npm run docker-sync && docker exec -it js-framework-benchmark node zip.js && docker cp js-framework-benchmark:/build/build.zip ."
+    "zip": "npm run docker-sync && docker exec -it js-framework-benchmark node zip.js && docker cp js-framework-benchmark:/build/build.zip .",
+    "format": "prettier . \"!(broken-frameworks|frameworks)/**/*\" -w",
+    "lint": "eslint . --ignore-pattern \"/broken-frameworks/\" --ignore-pattern \"/frameworks/\""
   },
   "keywords": [
     "benchmark",
@@ -57,5 +59,9 @@
     "lodash": "^4.17.15",
     "rimraf": "^3.0.2",
     "yargs": "^15.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.48.0",
+    "prettier": "^3.0.3"
   }
 }
