@@ -45,8 +45,6 @@ async function runBench(frameworkNames: string[]) {
   runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
   console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
 
-  let frameworkMap = new Map<string, FrameworkData>();
-
   let allCorrect = true;
 
   let browser = await startBrowser(benchmarkOptions);
@@ -61,7 +59,6 @@ async function runBench(frameworkNames: string[]) {
   console.log("*** headless", benchmarkOptions.headless)
 
   for (let i = 0; i < runFrameworks.length; i++) {
-    let cspError = false;
     let browser = await startBrowser(benchmarkOptions);
     let page = await browser.newPage();
     try {

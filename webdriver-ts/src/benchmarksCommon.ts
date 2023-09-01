@@ -1,4 +1,4 @@
-import { BenchmarkOptions, FrameworkData, config } from "./common.js";
+import { FrameworkData, config } from "./common.js";
 
 export enum BenchmarkType {
   CPU,
@@ -189,19 +189,19 @@ export const memBenchmarkInfosArray: Array<MemBenchmarkInfo> = [
 {
   id: BENCHMARK_21,
   label: "ready memory",
-  description: (throttleCPU: number|undefined) => "Memory usage after page load.",
+  description: () => "Memory usage after page load.",
   type: BenchmarkType.MEM,
 },
 {
   id: BENCHMARK_22,
   label: "run memory",
-  description: (throttleCPU: number|undefined) => "Memory usage after adding 1,000 rows.",
+  description: () => "Memory usage after adding 1,000 rows.",
   type: BenchmarkType.MEM,
 },
 {
   id: BENCHMARK_23,
   label: "update every 10th row for 1k rows (5 cycles)",
-  description: (throttleCPU: number|undefined) => "Memory usage after clicking update every 10th row 5 times",
+  description: () => "Memory usage after clicking update every 10th row 5 times",
   type: BenchmarkType.MEM,
 },
 // {
@@ -213,13 +213,13 @@ export const memBenchmarkInfosArray: Array<MemBenchmarkInfo> = [
 {
   id: BENCHMARK_25,
   label: "creating/clearing 1k rows (5 cycles)",
-  description: (throttleCPU: number|undefined) => "Memory usage after creating and clearing 1000 rows 5 times",
+  description: () => "Memory usage after creating and clearing 1000 rows 5 times",
   type: BenchmarkType.MEM,
 },
 {
   id: BENCHMARK_26,
   label: "run memory 10k",
-  description: (throttleCPU: number|undefined) => "Memory usage after adding 10,000 rows.",
+  description: () => "Memory usage after adding 10,000 rows.",
   type: BenchmarkType.MEM,
 }];
 
@@ -228,7 +228,7 @@ export const startupBenchmarkInfosArray: Array<StartupMainBenchmarkInfo> = [
   id: BENCHMARK_30,
   type: BenchmarkType.STARTUP_MAIN,
   label: '',
-  description: (throttleCPU: number|undefined) => '',
+  description: () => '',
 },
 ];
 

@@ -1,4 +1,4 @@
-import { Interval, isContained, newContainedInterval } from "./interval.js";
+import { isContained, newContainedInterval } from "./interval.js";
 import {describe, expect, test} from '@jest/globals';
 
 describe('isContained', () => {

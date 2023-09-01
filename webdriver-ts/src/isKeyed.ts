@@ -247,8 +247,6 @@ async function runBench(frameworkNames: string[]) {
   runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
   console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
 
-  let frameworkMap = new Map<string, FrameworkData>();
-
   let allCorrect = true;
 
   console.log("*** headless", benchmarkOptions.headless)
