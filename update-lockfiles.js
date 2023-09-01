@@ -1,8 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const { execSync } = require("child_process");
-const { cwd } = require("process");
-const yargs = require("yargs");
+import { execSync } from "node:child_process";
+import { cwd } from "node:process";
+import * as fs from "node:fs";
+import path from "node:path";
+import yargs from "yargs";
 
 const args = yargs(process.argv)
   .usage("$0 [--frameworks-dir]")
@@ -44,7 +44,7 @@ function getFrameworks() {
     fs.readdirSync(path.join(frameworksDir, type)).map((framework) => ({
       name: framework,
       type,
-    }))
+    })),
   );
 
   return frameworks;
