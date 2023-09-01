@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { BenchmarkOptions, JSONResult, config, initializeFrameworks } from "./common.js";
+import { BenchmarkOptions, config, initializeFrameworks } from "./common.js";
 import * as dot from "dot";
 
 let benchmarkOptions: BenchmarkOptions = {

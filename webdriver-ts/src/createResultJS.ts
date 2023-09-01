@@ -2,7 +2,7 @@ import * as fs from "fs";
 import yargs from "yargs";
 import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName, slowDownFactor } from "./benchmarksCommon.js";
 import { subbenchmarks } from "./benchmarksLighthouse.js";
-import { BenchmarkOptions, config, initializeFrameworks, JSONResult, JSONResultData } from "./common.js";
+import { BenchmarkOptions, config, initializeFrameworks, JSONResult } from "./common.js";
 
 let args: any = yargs(process.argv)
   .usage(
@@ -37,14 +37,12 @@ let resultsDirectory = args.browser ? "./results_client_"+args.browser : "./resu
 async function main() {
   let frameworks = await initializeFrameworks(benchmarkOptions);
 
-  let results: Map<string, Map<string, JSONResult>> = new Map();
-
   let resultJS = "import {RawResult} from './Common';\n\nexport const results: RawResult[]=[";
 
   let allBenchmarks: Array<BenchmarkInfo> = [];
   let jsonResult: { framework: string; benchmark: string; values: {[key:string]: number[]} }[] = [];
   
-  benchmarkInfos.forEach((benchmarkInfo, bIdx) => {
+  benchmarkInfos.forEach((benchmarkInfo) => {
     if (args.browser) {
       if (benchmarkInfo.type == BenchmarkType.CPU) {
         allBenchmarks.push(benchmarkInfo);
@@ -58,7 +56,7 @@ async function main() {
     }
   });
   
-  frameworks.forEach((framework, fIdx) => {
+  frameworks.forEach((framework) => {
     allBenchmarks.forEach((benchmarkInfo) => {
       if (!args.browser || framework.keyed) {
         let name = `${fileName(framework, benchmarkInfo)}`;

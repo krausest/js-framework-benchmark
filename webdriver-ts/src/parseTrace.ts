@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import { BenchmarkInfo, BenchmarkType, cpuBenchmarkInfos, CPUBenchmarkResult, DurationMeasurementMode } from './benchmarksCommon.js';
-import { CPUBenchmarkPuppeteer, fileNameTrace } from './benchmarksPuppeteer.js';
+import { BenchmarkType, cpuBenchmarkInfos, CPUBenchmarkResult, DurationMeasurementMode } from './benchmarksCommon.js';
+import { fileNameTrace } from './benchmarksPuppeteer.js';
 import { BenchmarkOptions, config, initializeFrameworks } from './common.js';
 import { computeResultsCPU, computeResultsJS } from './timeline.js';
 import { writeResults } from "./writeResults.js";
@@ -40,9 +40,9 @@ async function single() {
 
 }
 
-async function readAll() {
-    let jsonResult: { framework: string; benchmark: string; values: number[] }[] = [];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function readAll() {
     let cpuCPUBenchmarks = Object.values(cpuBenchmarkInfos);
     
     let frameworks = await initializeFrameworks(benchmarkOptions);

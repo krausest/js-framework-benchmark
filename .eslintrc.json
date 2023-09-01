@@ -1,0 +1,4 @@
+{
+  "env": { "node": true, "es2024": true },
+  "extends": ["eslint:recommended"]
+}

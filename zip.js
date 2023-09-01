@@ -52,10 +52,6 @@ function addFrameworksToZip(keyedType, frameworkDir, frameworkName) {
     `${zipFrameworkPath}/scripts`
   );
   addLocalFolderIfExists(
-    `${frameworkDir}/node_modules/skruv`,
-    `${zipFrameworkPath}/node_modules/skruv`
-  );
-  addLocalFolderIfExists(
     `${frameworkDir}/node_modules/slim-js/dist`,
     `${zipFrameworkPath}/node_modules/slim-js/dist`
   );

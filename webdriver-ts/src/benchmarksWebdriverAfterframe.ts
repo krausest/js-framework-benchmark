@@ -1,4 +1,4 @@
-import { By, WebDriver, WebElement } from "selenium-webdriver";
+import { WebDriver, WebElement } from "selenium-webdriver";
 import * as benchmarksCommon from "./benchmarksCommon.js";
 import { BenchmarkType } from "./benchmarksCommon.js";
 import { config, FrameworkData } from "./common.js";
@@ -7,7 +7,7 @@ import {
   clickElementByXPath,
   findById,
   findByXPath,
-  getTextByXPath, mainRoot, retry, testClassContains, testElementLocatedById, testElementLocatedByXpath,
+  getTextByXPath, testClassContains, testElementLocatedById, testElementLocatedByXpath,
   testElementNotLocatedByXPath, testTextContains
 } from "./webdriverAccess.js";
 

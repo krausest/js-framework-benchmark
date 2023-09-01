@@ -345,7 +345,7 @@ console.log("benchmarkOptions", benchmarkOptions);
 }
 
 main()
-  .then((_) => {
+  .then(() => {
     console.log("successful run");
     process.exit(0);
   })
