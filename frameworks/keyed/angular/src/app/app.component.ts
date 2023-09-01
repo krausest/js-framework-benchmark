@@ -1,20 +1,22 @@
-import { Component, VERSION, AfterViewChecked} from '@angular/core';
+import { NgFor } from '@angular/common';
+import { Component, VERSION } from '@angular/core';
 
 interface Data {
-  id: number;
-  label: string;
+    id: number;
+    label: string;
 }
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styles: []
+    selector: 'app-root',
+    standalone: true,
+    imports: [NgFor],
+    templateUrl: './app.component.html',
 })
 export class AppComponent {
     data: Array<Data> = [];
-    selected: number = undefined;
+    selected?: number = undefined;
     id: number = 1;
-    backup: Array<Data> = undefined;
+    backup?: Array<Data> = undefined;
     version: string;
 
     constructor() {
