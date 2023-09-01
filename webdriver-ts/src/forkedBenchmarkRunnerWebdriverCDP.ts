@@ -109,7 +109,7 @@ async function runCPUBenchmark(
         },
       })
 
-      let p = new Promise((resolve) => {
+      let p = new Promise((resolve,reject) => {
         cdpConnection._wsConnection.on('message', async (msg: any) => {
           let message: any = JSON.parse(msg);
           // console.log("####", typeof message, message.method, Object.keys(message), message);

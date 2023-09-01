@@ -212,7 +212,7 @@ export const benchReadyMemory = new (class extends MemBenchmarkPlaywright {
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
   }
-  async run() {return await Promise.resolve(null);}
+  async run(browser: Browser, page: Page) {return await Promise.resolve(null);}
 })();
 
 export const benchRunMemory = new (class extends MemBenchmarkPlaywright {
