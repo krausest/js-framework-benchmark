@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-loss-of-precision */
 import {RawResult} from './Common';
 
 export const results: RawResult[]=[
