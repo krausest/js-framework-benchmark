@@ -21,7 +21,6 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/lodash": "4.14.194",
     "@types/node": "18.16.1",
     "@types/ramda": "0.29.0",
     "@types/selenium-webdriver": "4.1.13",
@@ -42,7 +41,6 @@
     "dot": "1.1.3",
     "jstat": "1.9.6",
     "lighthouse": "10.1.1",
-    "lodash": "4.17.21",
     "npm-check-updates": "16.10.9",
     "playwright": "1.33.0",
     "playwright-firefox": "1.33.0",
