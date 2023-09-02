@@ -2,7 +2,7 @@ import { execSync } from "node:child_process";
 import * as fs from "node:fs";
 import path from "node:path";
 import yargs from "yargs";
-import { takeWhile } from "lodash";
+import { takeWhile } from "./utils/common/index.js";
 
 const args = yargs(process.argv.slice(2))
   .usage("$0 [--ci --docker keyed/framework1 ... non-keyed/frameworkN]")
@@ -14,7 +14,7 @@ const args = yargs(process.argv.slice(2))
   .default("docker", false)
   .describe(
     "docker",
-    "Copy package-lock back for docker build or build locally?"
+    "Copy package-lock back for docker build or build locally?",
   ).argv;
 
 /*
@@ -49,7 +49,7 @@ console.log(
   "docker",
   useDocker,
   "restartWith",
-  restartWithFramework
+  restartWithFramework,
 );
 
 const filesToDelete = [
@@ -78,7 +78,7 @@ function getFrameworks() {
   const framewokrs = keyedTypes.flatMap((type) =>
     fs
       .readdirSync(path.join("frameworks", type))
-      .map((framework) => ({ name: framework, type }))
+      .map((framework) => ({ name: framework, type })),
   );
 
   return framewokrs;
