@@ -3,6 +3,7 @@ import * as fs from "node:fs";
 import path from "node:path";
 import yargs from "yargs";
 import { takeWhile } from "./utils/common/index.js";
+import { getFrameworks } from "./utils/frameworks/index.js";
 
 const args = yargs(process.argv.slice(2))
   .usage("$0 [--ci --docker keyed/framework1 ... non-keyed/frameworkN]")
@@ -67,22 +68,6 @@ const filesToDelete = [
  * @property {string} name - Name of the framework (e.g., "vue", "qwik", "svelte")
  * @property {string} type - Type of the framework (e.g., "keyed" or "non-keyed")
  */
-
-/**
- * Returns an array of frameworks with their type and name
- * @example getFramewokrs()
- * @returns {Framework[]}
- */
-function getFrameworks() {
-  const keyedTypes = ["keyed", "non-keyed"];
-  const framewokrs = keyedTypes.flatMap((type) =>
-    fs
-      .readdirSync(path.join("frameworks", type))
-      .map((framework) => ({ name: framework, type })),
-  );
-
-  return framewokrs;
-}
 
 /**
  * @param {Framework}
@@ -159,6 +144,7 @@ function buildFramework(framework) {
 
 function buildFrameworks() {
   const frameworks = getFrameworks();
+
   const skippableFrameworks = takeWhile(frameworks, shouldSkipFramework);
   const buildableFrameworks = frameworks.slice(skippableFrameworks.length);
 

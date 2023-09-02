@@ -3,6 +3,7 @@ import { cwd } from "node:process";
 import * as fs from "node:fs";
 import path from "node:path";
 import yargs from "yargs";
+import { getFrameworks } from "./utils/frameworks/index.js";
 
 const args = yargs(process.argv)
   .usage("$0 [--frameworks-dir]")
@@ -34,21 +35,6 @@ const latestLockfileVersion = args.latestLockfileVersion;
  * @property {string} name - Name of the framework (e.g., "vue", "qwik", "svelte")
  * @property {string} type - Type of the framework (e.g., "keyed" or "non-keyed")
  */
-
-/**
- * Returns an array with arrays of types and names of frameworks
- * @returns {Framework[]}
- */
-function getFrameworks() {
-  const frameworks = frameworksTypes.flatMap((type) =>
-    fs.readdirSync(path.join(frameworksDir, type)).map((framework) => ({
-      name: framework,
-      type,
-    })),
-  );
-
-  return frameworks;
-}
 
 /**
  * @param {string} frameworkPath
@@ -111,7 +97,7 @@ function processFramework(framework) {
  * Updates all frameworks lockfiles in the frameworks directory.
  */
 function processAllFrameworks() {
-  const frameworks = getFrameworks();
+  const frameworks = getFrameworks(frameworksDir, frameworksTypes);
 
   for (const framework of frameworks) {
     processFramework(framework);
