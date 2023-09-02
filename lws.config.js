@@ -1,7 +1,7 @@
-module.exports = {
-    port: 8080,
-    directory: '/build',
-    mine: {
-        "application/wasm": ['wasm']
-    },
-  }
+export default {
+  port: 8080,
+  directory: "/build",
+  mine: {
+    "application/wasm": ["wasm"],
+  },
+};
