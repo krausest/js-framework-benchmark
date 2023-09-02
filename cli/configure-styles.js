@@ -1,14 +1,5 @@
 import * as fs from "node:fs";
 import path from "node:path";
-import yargs from "yargs";
-
-const args = yargs(process.argv)
-  .usage("$0 [--bootstrap --minimal]")
-  .help()
-  .boolean("bootstrap")
-  .default("bootstrap", false)
-  .boolean("minimal")
-  .default("minimal", false).argv;
 
 // Function to copy CSS and generate shared-styles.html
 async function copyAndGenerateSharedStyles(sourceCss, mainCss) {
@@ -27,16 +18,23 @@ async function copyAndGenerateSharedStyles(sourceCss, mainCss) {
   );
 }
 
-// Main function
-async function configureStyles() {
+/**
+ * @param {Object} options
+ * @param {boolean} options.bootstrap
+ * @param {boolean} options.minimal
+ * @returns
+ */
+async function configureStyles(options) {
+  const { bootstrap, minimal } = options;
+
   try {
-    if (args.bootstrap ^ args.minimal) {
+    if (bootstrap ^ minimal) {
       console.log("ERROR: You must either choose bootstrap or minimal");
       return;
     }
 
     // Read and copy the appropriate CSS file
-    if (args.bootstrap) {
+    if (bootstrap) {
       await copyAndGenerateSharedStyles(
         path.join("css", "useOriginalBootstrap.css"),
         path.join("css", "bootstrap", "dist", "css", "bootstrap.min.css"),
@@ -52,4 +50,4 @@ async function configureStyles() {
   }
 }
 
-configureStyles();
+export { configureStyles };

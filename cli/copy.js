@@ -17,7 +17,7 @@ function shouldInclude(name) {
     const isTargetWeb = name.includes("/target/web");
 
     console.log(
-      `File: ${name}\nIs Binding Scala: ${isBindingScala}\nIs Target: ${isTarget}\nIs Target Web: ${isTargetWeb}`
+      `File: ${name}\nIs Binding Scala: ${isBindingScala}\nIs Target: ${isTarget}\nIs Target Web: ${isTargetWeb}`,
     );
 
     if (isTarget) {
@@ -73,7 +73,7 @@ function copyFolderRecursiveSync(sourcePath, destinationPath) {
 function processDirectories() {
   const directories = fs.readdirSync(".");
   const nonHiddenDirectories = directories.filter(
-    (directory) => !directory.startsWith(".")
+    (directory) => !directory.startsWith("."),
   );
 
   for (const directory of nonHiddenDirectories) {
@@ -99,13 +99,11 @@ function copyProjectToDist() {
 
   fs.copyFileSync(
     path.join("webdriver-ts", "table.html"),
-    path.join("dist", "webdriver-ts", "table.html")
+    path.join("dist", "webdriver-ts", "table.html"),
   );
   fs.copyFileSync("index.html", path.join("dist", "index.html"));
 
   processDirectories();
 }
 
-copyProjectToDist();
-
-module.exports = { copyProjectToDist };
+export { copyProjectToDist };

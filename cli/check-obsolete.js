@@ -1,20 +1,9 @@
+import JSON5 from "json5";
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
 import path from "node:path";
-import JSON5 from "json5";
-import yargs from "yargs";
-import { getFrameworks } from "./utils/frameworks/index.js";
 
-const args = yargs(process.argv)
-  .usage("$0 [--debug]")
-  .help()
-  .boolean("debug")
-  .default("debug", false).argv;
-
-/**
- * @type {boolean}
- */
-const DEBUG = args.debug;
+import { getFrameworks } from "../utils/frameworks/index.js";
 
 /**
  * @typedef {Object} Framework
@@ -80,12 +69,12 @@ function maybeObsolete(packageName) {
     const isObsolete = modifiedDate < obsoleteDate;
     const formattedDate = modifiedDate.toISOString().substring(0, 10);
 
-    return { isObsolete, packageName, lastUpdate: formattedDate };
+    return { isObsolete, lastUpdate: formattedDate, packageName };
   } catch (error) {
     console.error(
       `Failed to execute npm view for ${packageName}. Error Code ${error.status} and message: ${error.message}`,
     );
-    return { isObsolete: false, packageName, lastUpdate: null };
+    return { isObsolete: false, lastUpdate: null, packageName };
   }
 }
 
@@ -95,9 +84,13 @@ const manualChecks = [];
 /**
  * Checks frameworks in frameworks/keyed and frameworks/non-keyed for obsolescence,
  * the presence of package.json and the presence of the frameworkVersionFromPackage property
+ * @param {Object} options
+ * @param {boolean} options.debug
  */
-function checkFrameworks() {
-  for (const { type, name } of frameworks) {
+function checkObsoleteFrameworks(options) {
+  const DEBUG = options.debug ?? false;
+
+  for (const { name, type } of frameworks) {
     const frameworkPath = path.join("frameworks", type, name);
     const packageJSONPath = path.join(frameworkPath, "package.json");
 
@@ -159,4 +152,4 @@ function checkFrameworks() {
     );
 }
 
-checkFrameworks();
+export { checkObsoleteFrameworks };
