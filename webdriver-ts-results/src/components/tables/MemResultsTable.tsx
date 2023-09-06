@@ -2,25 +2,29 @@ import React from "react";
 import {
   ResultTableData,
   SORT_BY_NAME,
-  SORT_BY_GEOMMEAN_STARTUP,
+  SORT_BY_GEOMMEAN_MEM,
   BenchmarkType,
-} from "../Common";
+} from "../../Common";
 import ValueResultRow from "./ValueResultRow";
 import GeomMeanRow from "./GeomMeanRow";
 
-const StartupResultsTable = ({
-  data,
-  currentSortKey,
-  sortBy,
-}: {
+interface Props {
   data: ResultTableData;
   currentSortKey: string;
   sortBy: (name: string) => void;
-}): JSX.Element | null => {
-  const resultsStartup = data.getResult(BenchmarkType.STARTUP);
-  return resultsStartup.results.length === 0 ? null : (
+}
+
+const MemResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
+  const resultsMEM = data.getResult(BenchmarkType.MEM);
+
+  const handleSortByName = (event: React.MouseEvent) => {
+    event.preventDefault();
+    sortBy(SORT_BY_NAME);
+  };
+
+  return resultsMEM.results.length === 0 ? null : (
     <div>
-      <h3>Startup metrics (lighthouse with mobile simulation)</h3>
+      <h3>Memory allocation in MBs ± 95% confidence interval</h3>
       <table className="results">
         <thead>
           <tr>
@@ -31,10 +35,7 @@ const StartupResultsTable = ({
                     ? "sortKey textButton"
                     : "textButton"
                 }
-                onClick={(event) => {
-                  event.preventDefault();
-                  sortBy(SORT_BY_NAME);
-                }}
+                onClick={handleSortByName}
               >
                 Name
               </button>
@@ -45,12 +46,12 @@ const StartupResultsTable = ({
           </tr>
         </thead>
         <tbody>
-          {resultsStartup.results.map((resultsForBenchmark, benchIdx) => (
+          {resultsMEM.results.map((resultsForBenchmark, benchIdx) => (
             <ValueResultRow
-              key={resultsStartup.benchmarks[benchIdx]?.id}
+              key={resultsMEM.benchmarks[benchIdx]?.id}
               benchIdx={benchIdx}
               resultsForBenchmark={resultsForBenchmark}
-              benchmarks={resultsStartup.benchmarks}
+              benchmarks={resultsMEM.benchmarks}
               currentSortKey={currentSortKey}
               sortBy={sortBy}
             />
@@ -58,8 +59,8 @@ const StartupResultsTable = ({
           <GeomMeanRow
             currentSortKey={currentSortKey}
             sortBy={sortBy}
-            geomMean={resultsStartup.geomMean}
-            sortbyGeommeanEnum={SORT_BY_GEOMMEAN_STARTUP}
+            geomMean={resultsMEM.geomMean}
+            sortbyGeommeanEnum={SORT_BY_GEOMMEAN_MEM}
           />
         </tbody>
       </table>
@@ -67,4 +68,4 @@ const StartupResultsTable = ({
   );
 };
 
-export default StartupResultsTable;
+export default MemResultsTable;

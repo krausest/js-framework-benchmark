@@ -4,21 +4,24 @@ import {
   SORT_BY_NAME,
   SORT_BY_GEOMMEAN_CPU,
   BenchmarkType,
-} from "../Common";
+} from "../../Common";
 import GeomMeanRow from "./GeomMeanRow";
 import CompareRow from "./CompareRow";
 import ValueResultRow from "./ValueResultRow";
 
-const CpuResultsTable = ({
-  data,
-  currentSortKey,
-  sortBy,
-}: {
+interface Props {
   data: ResultTableData;
   currentSortKey: string;
   sortBy: (name: string) => void;
-}): JSX.Element | null => {
+}
+
+const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
   const resultsCPU = data.getResult(BenchmarkType.CPU);
+
+  const handleSortByName = (event: React.MouseEvent) => {
+    event.preventDefault();
+    sortBy(SORT_BY_NAME);
+  };
 
   return resultsCPU.results.length === 0 ? null : (
     <div>
@@ -36,10 +39,7 @@ const CpuResultsTable = ({
                     ? "sortKey textButton"
                     : "textButton"
                 }
-                onClick={(event) => {
-                  event.preventDefault();
-                  sortBy(SORT_BY_NAME);
-                }}
+                onClick={handleSortByName}
               >
                 Name
               </button>

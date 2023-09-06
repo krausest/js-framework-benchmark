@@ -5,7 +5,6 @@ import {
   DisplayMode,
   Framework,
   FrameworkType,
-  RawResult,
   Result,
   ResultTableData,
   SORT_BY_GEOMMEAN_CPU,
@@ -26,7 +25,7 @@ const benchmarks = benchmark_orig.filter(
   (b) => b.id !== "32_startup-bt" && b.id !== "33_startup-mainthreadcost",
 );
 
-const results: Result[] = (rawResults as RawResult[]).map((res) => {
+const results: Result[] = rawResults.map((res) => {
   const values: { [k: string]: ResultValues } = {};
   for (const key of Object.keys(res.v)) {
     const r = res.v[key];
@@ -57,14 +56,9 @@ const mappedFrameworks = frameworks.map((f) => ({
   frameworkHomeURL: f.frameworkHomeURL,
 }));
 
-const allBenchmarks = benchmarks.reduce(
-  (set, b) => set.add(b),
-  new Set<Benchmark>(),
-);
-const allFrameworks = mappedFrameworks.reduce(
-  (set, f) => set.add(f),
-  new Set<Framework>(),
-);
+const allBenchmarks = new Set([...benchmarks]);
+const allFrameworks = new Set([...mappedFrameworks]);
+
 const resultLookup = convertToMap(results);
 
 interface BenchmarkLists {

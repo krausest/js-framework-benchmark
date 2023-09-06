@@ -1,5 +1,5 @@
 import React from "react";
-import { TableResultValueEntry, Benchmark } from "../Common";
+import { TableResultValueEntry, Benchmark } from "../../Common";
 import ValueCell from "./ValueCell";
 
 interface Props {
@@ -9,17 +9,19 @@ interface Props {
   currentSortKey: string;
   sortBy: (name: string) => void;
 }
+
 const ValueResultRow = ({
   benchIdx,
   resultsForBenchmark,
   benchmarks,
   currentSortKey,
   sortBy,
-}: Props): JSX.Element => {
-  const sort = (sortValue: string) => (event: React.SyntheticEvent) => {
+}: Props) => {
+  const handleSort = (sortValue: string) => (event: React.SyntheticEvent) => {
     event.preventDefault();
     sortBy(sortValue);
   };
+
   return (
     <tr>
       <th className="benchname">
@@ -29,7 +31,7 @@ const ValueResultRow = ({
               ? "sortKey textButton"
               : "textButton"
           }
-          onClick={sort(benchmarks[benchIdx].id)}
+          onClick={handleSort(benchmarks[benchIdx].id)}
         >
           {benchmarks[benchIdx].label}
         </button>

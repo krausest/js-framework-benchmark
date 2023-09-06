@@ -1,21 +1,24 @@
 import React from "react";
-import { TableResultGeommeanEntry, T_SORT_BY_GEOMMEAN } from "../Common";
+import { TableResultGeommeanEntry, T_SORT_BY_GEOMMEAN } from "../../Common";
+
+interface Props {
+  geomMean: Array<TableResultGeommeanEntry | null>;
+  currentSortKey: string;
+  sortBy: (name: string) => void;
+  sortbyGeommeanEnum: T_SORT_BY_GEOMMEAN;
+}
 
 const GeomMeanRow = ({
   geomMean,
   currentSortKey,
   sortBy,
   sortbyGeommeanEnum,
-}: {
-  geomMean: Array<TableResultGeommeanEntry | null>;
-  currentSortKey: string;
-  sortBy: (name: string) => void;
-  sortbyGeommeanEnum: T_SORT_BY_GEOMMEAN;
-}): JSX.Element => {
-  const sort = (sortValue: string) => (event: React.SyntheticEvent) => {
+}: Props) => {
+  const handleSort = (sortValue: string) => (event: React.SyntheticEvent) => {
     event.preventDefault();
     sortBy(sortValue);
   };
+
   return (
     <tr>
       <th>
@@ -25,7 +28,7 @@ const GeomMeanRow = ({
               ? "sortKey textButton"
               : "textButton"
           }
-          onClick={sort(sortbyGeommeanEnum)}
+          onClick={handleSort(sortbyGeommeanEnum)}
         >
           geometric mean
         </button>

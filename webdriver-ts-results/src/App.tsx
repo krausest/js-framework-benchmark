@@ -1,10 +1,28 @@
-import * as React from "react";
+import React from "react";
 import "./App.css";
 import { FrameworkType, knownIssues } from "./Common";
-import ResultTable from "./ResultTable";
-import { SelectionBar } from "./selection/SelectionBar";
+import ResultTable from "./components/ResultTable";
+import { SelectionBar } from "./components/selection/SelectionBar";
 
-const App = (): JSX.Element => {
+const KnownIssuesList = () => {
+  return (
+    <>
+      <h3>Known issues and notes</h3>
+      {knownIssues.map((issue) => (
+        <dl key={issue.issue.toFixed()} id={issue.issue.toFixed()}>
+          <dt>
+            <a target="_blank" rel="noopener noreferrer" href={issue.link}>
+              {issue.issue.toFixed()}
+            </a>
+          </dt>
+          <dd>{issue.text}</dd>
+        </dl>
+      ))}
+    </>
+  );
+};
+
+const App = () => {
   // eslint-disable-next-line no-constant-condition
   const disclaimer = false ? (
     <div>
@@ -29,29 +47,23 @@ const App = (): JSX.Element => {
     </p>
   );
 
+  const testEnvironmentInfo = (
+    <p>
+      The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 13.5
+      (c)), Chrome 116.0.5845.82 (arm64) using the puppeteer benchmark driver
+      with reduced tracing.
+    </p>
+  );
+
   return (
     <div>
       {disclaimer}
-      <p>
-        The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX
-        13.5 (c)), Chrome 116.0.5845.82 (arm64)) using the puppeteer benchmark
-        driver with reduced tracing.
-      </p>
+      {testEnvironmentInfo}
+
       <SelectionBar showDurationSelection={false} />
       <ResultTable type={FrameworkType.KEYED} />
       <ResultTable type={FrameworkType.NON_KEYED} />
-
-      <h3>Known issues and notes</h3>
-      {knownIssues.map((issue) => (
-        <dl key={issue.issue.toFixed()} id={issue.issue.toFixed()}>
-          <dt>
-            <a target="_blank" rel="noopener noreferrer" href={issue.link}>
-              {issue.issue.toFixed()}
-            </a>
-          </dt>
-          <dd>{issue.text}</dd>
-        </dl>
-      ))}
+      <KnownIssuesList></KnownIssuesList>
     </div>
   );
 };

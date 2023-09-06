@@ -16,7 +16,7 @@ const ValueCell = ({
   bgColor,
   formattedFactor,
   deviation,
-}: Props): JSX.Element => {
+}: Props) => {
   return (
     <td style={{ backgroundColor: bgColor, color: textColor }}>
       <span className="mean">{formattedValue}</span>

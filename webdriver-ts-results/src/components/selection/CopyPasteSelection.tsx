@@ -1,38 +1,50 @@
-import * as React from "react";
+import React from "react";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setStateFromClipboard, State } from "../reducer";
+import { setStateFromClipboard, State } from "../../reducer";
 
-const CopyPasteSelection = (): JSX.Element => {
+const CopyPasteSelection = () => {
   console.log("CopyPasteSelection");
-  const dispatch = useDispatch();
-  const state = useSelector<State, State>((state) => state);
 
-  const performPaste = useCallback(
+  const dispatch = useDispatch();
+
+  const state = useSelector((state: State) => state);
+
+  const handlePasteError = (error: Error) => {
+    alert("Sorry - couldn't parse pasted selection");
+    console.error("Pasting state failed", error);
+  };
+
+  const handlePaste = useCallback(
     (text: string) => {
       try {
-        const jsonState = JSON.parse(text);
-        dispatch(setStateFromClipboard(jsonState));
-      } catch (e) {
-        alert("Sorry - couldn't parse pasted selection");
-        console.log("pasting state failed", e);
+        const parsedState = JSON.parse(text);
+        dispatch(setStateFromClipboard(parsedState));
+      } catch (error) {
+        handlePasteError(error as Error);
       }
     },
     [dispatch],
   );
 
+  const handleClipboardPaste = useCallback(
+    async (event: ClipboardEvent) => {
+      event.preventDefault();
+      const text = event.clipboardData?.getData("text/plain");
+      if (text) {
+        handlePaste(text);
+      }
+    },
+    [handlePaste],
+  );
+
   useEffect(() => {
-    const eh = (e: ClipboardEvent) => {
-      e.preventDefault();
-      const text = e.clipboardData?.getData("text/plain");
-      if (text) performPaste(text);
-    };
-    document.addEventListener("paste", eh);
+    document.addEventListener("paste", handleClipboardPaste);
     return () => {
-      document.removeEventListener("paste", eh);
+      document.removeEventListener("paste", handleClipboardPaste);
     };
-  }, [performPaste]);
+  }, [handleClipboardPaste]);
 
   const copy = () => {
     const serializedState = {
@@ -44,27 +56,37 @@ const CopyPasteSelection = (): JSX.Element => {
         .map((f) => f.id),
       displayMode: state.displayMode,
     };
+
     const json = JSON.stringify(serializedState);
-    navigator.clipboard.writeText(json);
-    window.location.hash = btoa(json);
+
+    try {
+      navigator.clipboard.writeText(json);
+      window.location.hash = btoa(json);
+    } catch (error) {
+      console.error("Copying state failed", error);
+    }
   };
-  const paste = useCallback(async () => {
+
+  const handlePasteFromClipboard = useCallback(async () => {
     try {
       const text = await navigator.clipboard.readText();
-      performPaste(text);
-    } catch (e) {
-      alert("Sorry - couldn't parse pasted selection");
-      console.log("pasting state failed", e);
+      handlePaste(text);
+    } catch (error) {
+      handlePasteError(error as Error);
     }
-  }, [performPaste]);
+  }, [handlePaste]);
+
   return (
     <>
       <p>Copy/paste current selection</p>
       <div className="hspan" />
-      <button className="iconbutton" onClick={copy}>
+      <button
+        className="iconbutton"
+        onClick={copy}
+        aria-label="Copy selected frameworks and benchmarks"
+      >
         {/* svg from https://ionic.io/ionicons */}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <title>Copy selected frameworks and benchmarks</title>
           <rect
             x="128"
             y="128"
@@ -87,10 +109,13 @@ const CopyPasteSelection = (): JSX.Element => {
           />
         </svg>
       </button>
-      <button className="iconbutton" onClick={paste}>
+      <button
+        className="iconbutton"
+        onClick={handlePasteFromClipboard}
+        aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
+      >
         {/* svg from https://ionic.io/ionicons */}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <title>Paste selected items (or use ctrl/cmd + v for firefox)</title>
           <path
             d="M336 64h32a48 48 0 0148 48v320a48 48 0 01-48 48H144a48 48 0 01-48-48V112a48 48 0 0148-48h32"
             fill="none"

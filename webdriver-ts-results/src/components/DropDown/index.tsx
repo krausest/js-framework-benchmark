@@ -6,7 +6,7 @@ interface Props {
   width: string;
 }
 
-const DropDown = ({ label, children, width }: Props): JSX.Element => {
+const DropDown = ({ label, children, width }: Props) => {
   const [open, setOpen] = useState(false);
   const toggle = useCallback(
     (event: React.SyntheticEvent<HTMLElement>) => {
