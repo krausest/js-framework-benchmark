@@ -17,11 +17,7 @@ export class AppComponent {
     selected?: number = undefined;
     id: number = 1;
     backup?: Array<Data> = undefined;
-    version: string;
-
-    constructor() {
-        this.version = VERSION.full;
-    }
+    version = VERSION.full;
 
     buildData(count: number = 1000): Array<Data> {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];

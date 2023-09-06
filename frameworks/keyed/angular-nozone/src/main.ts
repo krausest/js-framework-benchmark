@@ -1,6 +1,10 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import { appConfig } from './app/app.config';
+import { NgZone, ɵNoopNgZone } from '@angular/core';
 
-bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    // https://github.com/angular/angular/issues/47538
+    { provide: NgZone, useClass: ɵNoopNgZone }
+  ]
+});
