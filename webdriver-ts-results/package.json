@@ -17,9 +17,6 @@
     "lint": "eslint src/",
     "build-prod": "cross-env NODE_ENV=\"production\" webpack --mode production && rimraf --glob table.html && rimraf --glob \"BoxPlotTable*.js\" && cpx dist/table.html . && cpx \"dist/BoxPlotTable*.js\" . && cpx \"dist/plotly*.js\" ."
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       "last 1 chrome version",
