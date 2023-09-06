@@ -36,14 +36,14 @@ export enum Severity {
 
 const DEFAULT_RESULTS_KEY = "DEFAULT";
 
-interface IIssue {
+interface Issue {
   issue: number;
   severity: Severity;
   text: string;
   link: string;
 }
 
-export const knownIssues: IIssue[] = [
+export const knownIssues: Issue[] = [
   {
     issue: 634,
     severity: Severity.Error,
@@ -88,7 +88,7 @@ export const knownIssues: IIssue[] = [
   },
 ];
 
-export function findIssue(issueNumber: number): IIssue | undefined {
+export function findIssue(issueNumber: number): Issue | undefined {
   return knownIssues.find((i) => i.issue === issueNumber);
 }
 export enum BenchmarkType {
@@ -299,37 +299,52 @@ export class ResultTableData {
     public selectedCategories: Set<number>,
     public cpuDurationMode: string,
   ) {
-    this.selectedFameworks = new Set<Framework>();
+    const allowedIssues = new Set(knownIssues.map((issue) => issue.issue));
+    const defaultFrameworks = [
+      "vanillajs-keyed",
+      "vanillajs-1-keyed",
+      "vanillajs-non-keyed",
+      "vanillajs-1-non-keyed",
+    ];
 
-    const allowedIssues = new Set<number>();
-    knownIssues.forEach((i) => allowedIssues.add(i.issue));
     console.log("ResultTableData", allowedIssues, selectedCategories);
 
-    selectedFrameworksInDropdown.forEach((f) => {
+    this.selectedFameworks = new Set<Framework>();
+
+    selectedFrameworksInDropdown.forEach((framework) => {
       if (
-        f.issues.every((i) => allowedIssues.has(i)) ||
-        f.name === "vanillajs-keyed" ||
-        f.name === "vanillajs-1-keyed" ||
-        f.name === "vanillajs-non-keyed" ||
-        f.name === "vanillajs-1-non-keyed"
+        this.isFrameworkAllowed(framework, allowedIssues, defaultFrameworks)
       ) {
-        this.selectedFameworks.add(f);
+        this.selectedFameworks.add(framework);
       }
     });
-    this.frameworks = this.allFrameworks.filter(
-      (framework) =>
-        framework.type === type && this.selectedFameworks.has(framework),
-    );
+    this.frameworks = this.filterFrameworksByType(this.selectedFameworks, type);
     this.frameworksForFactors = this.allFrameworks.filter(
       (framework) =>
         framework.type === type &&
-        (framework.issues.every((i) => allowedIssues.has(i)) ||
-          framework.name === "vanillajs-keyed" ||
-          framework.name === "vanillajs-1-keyed" ||
-          framework.name === "vanillajs-non-keyed" ||
-          framework.name === "vanillajs-1-non-keyed"),
+        this.isFrameworkAllowed(framework, allowedIssues, defaultFrameworks),
     );
+
     this.update(sortKey);
+  }
+  private isFrameworkAllowed(
+    framework: Framework,
+    allowedIssues: Set<number>,
+    defaultFrameworks: Array<string>,
+  ) {
+    return (
+      framework.issues.every((i) => allowedIssues.has(i)) ||
+      defaultFrameworks.includes(framework.name)
+    );
+  }
+  private filterFrameworksByType(
+    selectedFrameworks: Set<Framework>,
+    type: FrameworkType,
+  ) {
+    return this.allFrameworks.filter(
+      (framework) =>
+        framework.type === type && selectedFrameworks.has(framework),
+    );
   }
   private update(sortKey: string) {
     console.time("update");
@@ -361,9 +376,16 @@ export class ResultTableData {
 
       return { benchmarks, results, geomMean, comparison };
     };
-    [BenchmarkType.CPU, BenchmarkType.MEM, BenchmarkType.STARTUP].forEach(
-      (type) => this.resultsMap.set(type, createResult(type)),
-    );
+
+    const benchmarkTypes = [
+      BenchmarkType.CPU,
+      BenchmarkType.MEM,
+      BenchmarkType.STARTUP,
+    ];
+    for (const type of benchmarkTypes) {
+      this.resultsMap.set(type, createResult(type));
+    }
+
     this.sortBy(sortKey);
     console.timeEnd("update");
   }
@@ -417,43 +439,31 @@ export class ResultTableData {
         sortValue: sortValue,
       };
     });
-    zipped.sort((a, b) => {
-      if (a.sortValue! < b.sortValue!) return -1;
-      else if (a.sortValue === b.sortValue) return 0;
-      return 1;
-    });
-    const remappedIdx = zipped.map((z) => z.origIndex);
+
+    const remappedIdx = zipped
+      .sort((a, b) => Number(a.sortValue) - Number(b.sortValue))
+      .map((z) => z.origIndex);
+
     this.frameworks = this.remap(remappedIdx, this.frameworks);
-    [BenchmarkType.CPU, BenchmarkType.MEM, BenchmarkType.STARTUP].forEach(
-      (type) => {
-        this.getResult(type).results = this.getResult(type).results.map((row) =>
-          this.remap(remappedIdx, row),
-        );
-      },
-    );
-    [BenchmarkType.CPU, BenchmarkType.MEM, BenchmarkType.STARTUP].forEach(
-      (type) => {
-        this.getResult(type).geomMean = this.remap(
-          remappedIdx,
-          this.getResult(type).geomMean,
-        );
-      },
-    );
-    [BenchmarkType.CPU, BenchmarkType.MEM, BenchmarkType.STARTUP].forEach(
-      (type) => {
-        this.getResult(type).comparison = this.remap(
-          remappedIdx,
-          this.getResult(type).comparison,
-        );
-      },
-    );
+
+    const benchmarkTypes = [
+      BenchmarkType.CPU,
+      BenchmarkType.MEM,
+      BenchmarkType.STARTUP,
+    ];
+
+    for (const type of benchmarkTypes) {
+      const result = this.getResult(type);
+
+      result.results = result.results.map((row) =>
+        this.remap(remappedIdx, row),
+      );
+      result.geomMean = this.remap(remappedIdx, result.geomMean);
+      result.comparison = this.remap(remappedIdx, result.comparison);
+    }
   }
   remap<T>(remappedIdx: Array<number>, array: Array<T>): Array<T> {
-    const copy = new Array<T>(array.length);
-    remappedIdx.forEach((idx, i) => {
-      copy[i] = array[idx];
-    });
-    return copy;
+    return remappedIdx.map((idx) => array[idx]);
   }
 
   computeGeometricMean(
@@ -462,13 +472,13 @@ export class ResultTableData {
     resultsCPUForFramework: Array<TableResultValueEntry | null>,
   ): TableResultGeommeanEntry {
     let count = 0.0;
-    const gMean = resultsCPUForFramework.reduce((gMean, r) => {
-      if (r !== null) {
-        count++;
-        gMean *= r.factor as number;
-      }
-      return gMean;
-    }, 1.0);
+    let gMean = 1.0;
+    for (const r of resultsCPUForFramework) {
+      if (r === null) continue;
+      gMean *= r.factor;
+      count++;
+    }
+
     const value = Math.pow(gMean, 1 / count);
     return this.compareWith
       ? new TableResultGeommeanEntry(
@@ -488,36 +498,10 @@ export class ResultTableData {
   }
   computeComparison(
     framework: Framework,
-    benchmarksCPU: Array<Benchmark>,
+    benchmarksCPU: Array<Benchmark>, // Remove cause unused
     resultsCPUForFramework: Array<TableResultValueEntry | null>,
   ): TableResultComparisonEntry {
-    if (this.compareWith) {
-      let statisticResult: StatisticResult | undefined = undefined;
-      resultsCPUForFramework.forEach((r) => {
-        if (r?.statisticResult !== StatisticResult.Undecided) {
-          if (statisticResult === undefined) {
-            statisticResult = r?.statisticResult;
-          } else {
-            if (statisticResult !== r?.statisticResult)
-              statisticResult = StatisticResult.Undecided;
-          }
-        }
-      });
-      let label = "";
-      statisticResult = statisticResult! ?? StatisticResult.Undecided;
-      if (statisticResult === StatisticResult.Faster) {
-        label = "faster!";
-      } else if (statisticResult === StatisticResult.Slower) {
-        label = "slower!";
-      }
-      return new TableResultComparisonEntry(
-        framework.name,
-        framework,
-        label,
-        colorsForStatisticResult(statisticResult)[0],
-        colorsForStatisticResult(statisticResult)[1],
-      );
-    } else {
+    if (!this.compareWith) {
       return new TableResultComparisonEntry(
         framework.name,
         framework,
@@ -526,6 +510,33 @@ export class ResultTableData {
         "#000",
       );
     }
+
+    let statisticResult: StatisticResult | undefined = undefined;
+
+    for (const r of resultsCPUForFramework) {
+      if (r?.statisticResult !== StatisticResult.Undecided) {
+        if (!statisticResult) {
+          statisticResult = r?.statisticResult;
+        } else if (statisticResult !== r?.statisticResult) {
+          statisticResult = StatisticResult.Undecided;
+        }
+      }
+    }
+
+    let label = "";
+    statisticResult ??= StatisticResult.Undecided;
+    if (statisticResult === StatisticResult.Faster) {
+      label = "faster!";
+    } else if (statisticResult === StatisticResult.Slower) {
+      label = "slower!";
+    }
+    return new TableResultComparisonEntry(
+      framework.name,
+      framework,
+      label,
+      colorsForStatisticResult(statisticResult)[0],
+      colorsForStatisticResult(statisticResult)[1],
+    );
   }
 
   computeFactors(benchmark: Benchmark): Array<TableResultValueEntry | null> {
@@ -586,47 +597,49 @@ export class ResultTableData {
           "#000",
           StatisticResult.Undecided,
         );
-      } else {
-        const compareWithResults = this.results(benchmark, this.compareWith)!;
-        const compareWithResultsValues = compareWithResults.results[resultsKey];
-        // let meanStr = 'x'; //mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true});
-
-        // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
-        // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
-        let statisticalResult = undefined;
-        let statisticalCol = undefined;
-        const compareWithMean = compareWithResultsValues.mean;
-        const stdDev = compareWithResultsValues.standardDeviation || 0;
-        const compareWithResultsStdDev =
-          compareWithResultsValues.standardDeviation || 0;
-
-        const x1 = resultValues.mean;
-        const x2 = compareWithMean;
-        const s1_2 = stdDev * stdDev;
-        const s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
-        const n1 = 10;
-        const n2 = 10;
-        const ny =
-          Math.pow(s1_2 / n1 + s2_2 / n2, 2) /
-          ((s1_2 * s1_2) / (n1 * n1 * (n1 - 1)) +
-            (s2_2 * s2_2) / (n2 * n2 * (n2 - 1)));
-        const t = (x1 - x2) / Math.sqrt(s1_2 / n1 + s2_2 / n2);
-        const p = (1.0 - jStat.studentt.cdf(Math.abs(t), ny)) * 2;
-        statisticalCol = statisticComputeColor(t, p);
-        statisticalResult = (p * 100).toFixed(3) + "%";
-        return new TableResultValueEntry(
-          f.name,
-          value,
-          formattedValue,
-          conficenceIntervalStr,
-          factor,
-          factor.toFixed(2),
-          statisticalCol[0],
-          statisticalCol[1],
-          statisticalCol[2],
-          statisticalResult,
-        );
       }
+
+      const compareWithResults = this.results(benchmark, this.compareWith)!;
+      const compareWithResultsValues = compareWithResults.results[resultsKey];
+      // let meanStr = 'x'; //mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true});
+
+      // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
+      // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
+      let statisticalResult = undefined;
+      let statisticalCol = undefined;
+      const compareWithMean = compareWithResultsValues.mean;
+      const stdDev = compareWithResultsValues.standardDeviation || 0;
+      const compareWithResultsStdDev =
+        compareWithResultsValues.standardDeviation || 0;
+
+      const x1 = resultValues.mean;
+      const x2 = compareWithMean;
+      const s1_2 = stdDev * stdDev;
+      const s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
+      const n1 = 10;
+      const n2 = 10;
+      const ny =
+        Math.pow(s1_2 / n1 + s2_2 / n2, 2) /
+        ((s1_2 * s1_2) / (n1 * n1 * (n1 - 1)) +
+          (s2_2 * s2_2) / (n2 * n2 * (n2 - 1)));
+      const t = (x1 - x2) / Math.sqrt(s1_2 / n1 + s2_2 / n2);
+      const p = (1.0 - jStat.studentt.cdf(Math.abs(t), ny)) * 2;
+
+      statisticalCol = statisticComputeColor(t, p);
+      statisticalResult = (p * 100).toFixed(3) + "%";
+
+      return new TableResultValueEntry(
+        f.name,
+        value,
+        formattedValue,
+        conficenceIntervalStr,
+        factor,
+        factor.toFixed(2),
+        statisticalCol[0],
+        statisticalCol[1],
+        statisticalCol[2],
+        statisticalResult,
+      );
     });
   }
 }

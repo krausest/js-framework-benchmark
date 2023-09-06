@@ -385,45 +385,60 @@ export const reducer = (state = initialState, action: Action): State => {
   console.log("reducer", action);
   switch (action.type) {
     case "SET_STATE_FROM_CLIPBOARD": {
-      if (action.data) {
-        const t = { ...state, ...extractState(action.data) };
-        return { ...t, resultTables: updateResultTable(t) };
-      } else {
+      if (!action.data) {
         console.log("no state found");
         return state;
       }
+
+      const t = { ...state, ...extractState(action.data) };
+      return { ...t, resultTables: updateResultTable(t) };
     }
     case "SELECT_FRAMEWORK": {
       const newSelectedFramework = new Set(state.selectedFrameworksDropDown);
-      if (action.data.add) newSelectedFramework.add(action.data.framework);
-      else newSelectedFramework.delete(action.data.framework);
+
+      action.data.add
+        ? newSelectedFramework.add(action.data.framework)
+        : newSelectedFramework.delete(action.data.framework);
+
       const t = { ...state, selectedFrameworksDropDown: newSelectedFramework };
       return { ...t, resultTables: updateResultTable(t) };
     }
     case "SELECT_ALL_FRAMEWORKS": {
       const newSelectedFramework = new Set(state.selectedFrameworksDropDown);
-      for (const f of action.data.frameworkType === FrameworkType.KEYED
-        ? state.frameworkLists[FrameworkType.KEYED]
-        : state.frameworkLists[FrameworkType.NON_KEYED]) {
-        if (action.data.add) newSelectedFramework.add(f);
-        else newSelectedFramework.delete(f);
+      const frameworks =
+        action.data.frameworkType === FrameworkType.KEYED
+          ? state.frameworkLists[FrameworkType.KEYED]
+          : state.frameworkLists[FrameworkType.NON_KEYED];
+
+      for (const f of frameworks) {
+        action.data.add
+          ? newSelectedFramework.add(f)
+          : newSelectedFramework.delete(f);
       }
+
       const t = { ...state, selectedFrameworksDropDown: newSelectedFramework };
       return { ...t, resultTables: updateResultTable(t) };
     }
     case "SELECT_BENCHMARK": {
       const newSelectedBenchmark = new Set(state.selectedBenchmarks);
-      if (action.data.add) newSelectedBenchmark.add(action.data.benchmark);
-      else newSelectedBenchmark.delete(action.data.benchmark);
+
+      action.data.add
+        ? newSelectedBenchmark.add(action.data.benchmark)
+        : newSelectedBenchmark.delete(action.data.benchmark);
+
       const t = { ...state, selectedBenchmarks: newSelectedBenchmark };
       return { ...t, resultTables: updateResultTable(t) };
     }
     case "SELECT_ALL_BENCHMARKS": {
       const newSelectedBenchmark = new Set(state.selectedBenchmarks);
-      for (const b of state.benchmarkLists[action.data.benchmarkType]) {
-        if (action.data.add) newSelectedBenchmark.add(b);
-        else newSelectedBenchmark.delete(b);
+      const benchmarks = state.benchmarkLists[action.data.benchmarkType];
+
+      for (const b of benchmarks) {
+        action.data.add
+          ? newSelectedBenchmark.add(b)
+          : newSelectedBenchmark.delete(b);
       }
+
       const t = { ...state, selectedBenchmarks: newSelectedBenchmark };
       return { ...t, resultTables: updateResultTable(t) };
     }
@@ -445,6 +460,7 @@ export const reducer = (state = initialState, action: Action): State => {
     case "STOP_COMPARE": {
       const compareWith = { ...state.compareWith };
       compareWith[action.data.framework.type] = undefined;
+
       const t = { ...state, compareWith: compareWith };
       return { ...t, resultTables: updateResultTable(t) };
     }
@@ -454,11 +470,11 @@ export const reducer = (state = initialState, action: Action): State => {
     }
     case "SELECT_CATEGORY": {
       const categories = new Set(state.categories);
-      if (action.data.add) {
-        categories.add(action.data.categoryId);
-      } else {
-        categories.delete(action.data.categoryId);
-      }
+
+      action.data.add
+        ? categories.add(action.data.categoryId)
+        : categories.delete(action.data.categoryId);
+
       const t = { ...state, categories };
       return { ...t, resultTables: updateResultTable(t) };
     }
