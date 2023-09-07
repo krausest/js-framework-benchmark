@@ -2,7 +2,8 @@
 node_modules
 
 # Build
-build/
 dist/
-plotly.*
-BoxPlotTable.*
+results/
+
+# Trace
+traces/

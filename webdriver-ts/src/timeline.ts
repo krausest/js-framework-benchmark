@@ -282,7 +282,7 @@ interface Timingresult {
       timingResult: Timingresult
     }
     function isContained(testIv: Interval, otherIv: Interval) {
-      return intervals.some(() => testIv.start>=otherIv.start && testIv.end<=otherIv.end);
+      return testIv.start>=otherIv.start && testIv.end<=otherIv.end;
     }
     function newContainedInterval(outer: Timingresult, intervals: Array<Interval>) {
       let outerIv = {start: outer.ts, end: outer.end, timingResult: outer};

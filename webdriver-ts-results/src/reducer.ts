@@ -1,13 +1,12 @@
-import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, Severity, ResultValues, CpuDurationMode, knownIssues } from "./Common"
+import { Benchmark, BenchmarkType, convertToMap, DisplayMode, Framework, FrameworkType, RawResult, Result, ResultTableData, SORT_BY_GEOMMEAN_CPU, ResultValues, CpuDurationMode, knownIssues } from "./Common"
 import { benchmarks as benchmark_orig, frameworks, results as rawResults } from './results';
+import { jStat } from "jstat";
 
 // Temporarily disable script bootup time
 //const benchmarks = benchmark_orig;
 const benchmarks = benchmark_orig.filter(b => b.id !== '32_startup-bt'
         && b.id !== '33_startup-mainthreadcost');
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const jStat = require('jstat').jStat;
+        
 
 const results: Result[] = (rawResults as RawResult[]).map(res => {
   const values: {[k: string]: ResultValues} = {};
@@ -29,7 +28,7 @@ const removeKeyedSuffix = (value: string) => {
   else if (value.endsWith('-keyed')) return value.substring(0, value.length - 6)
   return value;
 }
-const mappedFrameworks = frameworks.map((f:any) => ({ name: f.name, dir: f.dir, displayname: removeKeyedSuffix(f.name), issues: f.issues ?? [], type: f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED, frameworkHomeURL: f.frameworkHomeURL }));
+const mappedFrameworks = frameworks.map((f) => ({ name: f.name, dir: f.dir, displayname: removeKeyedSuffix(f.name), issues: f.issues ?? [], type: f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED, frameworkHomeURL: f.frameworkHomeURL }));
 
 const allBenchmarks = benchmarks.reduce((set, b) => set.add(b), new Set<Benchmark>());
 const allFrameworks = mappedFrameworks.reduce((set, f) => set.add(f), new Set<Framework>());

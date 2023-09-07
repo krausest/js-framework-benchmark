@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import {SORT_BY_NAME, Benchmark, Framework, ResultLookup, CpuDurationMode} from '../Common'; 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Plotly = require('plotly.js-cartesian-dist');
+import Plotly from 'plotly.js-cartesian-dist';
 
 interface BoxPlotData {
     framework: string;
