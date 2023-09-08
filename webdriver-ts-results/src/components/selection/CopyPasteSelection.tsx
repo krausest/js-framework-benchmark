@@ -3,6 +3,8 @@ import { useCallback } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setStateFromClipboard, State } from "../../reducer";
+import PasteIcon from "../../assets/icons/PasteIcon";
+import CopyIcon from "../../assets/icons/CopyIcon";
 
 const CopyPasteSelection = () => {
   console.log("CopyPasteSelection");
@@ -85,57 +87,14 @@ const CopyPasteSelection = () => {
         onClick={copy}
         aria-label="Copy selected frameworks and benchmarks"
       >
-        {/* svg from https://ionic.io/ionicons */}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <rect
-            x="128"
-            y="128"
-            width="336"
-            height="336"
-            rx="57"
-            ry="57"
-            fill="none"
-            stroke="currentColor"
-            strokeLinejoin="round"
-            strokeWidth="32"
-          />
-          <path
-            d="M383.5 128l.5-24a56.16 56.16 0 00-56-56H112a64.19 64.19 0 00-64 64v216a56.16 56.16 0 0056 56h24"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="32"
-          />
-        </svg>
+        <CopyIcon></CopyIcon>
       </button>
       <button
         className="iconbutton"
         onClick={handlePasteFromClipboard}
         aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
       >
-        {/* svg from https://ionic.io/ionicons */}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-          <path
-            d="M336 64h32a48 48 0 0148 48v320a48 48 0 01-48 48H144a48 48 0 01-48-48V112a48 48 0 0148-48h32"
-            fill="none"
-            stroke="currentColor"
-            strokeLinejoin="round"
-            strokeWidth="32"
-          />
-          <rect
-            x="176"
-            y="32"
-            width="160"
-            height="64"
-            rx="26.13"
-            ry="26.13"
-            fill="none"
-            stroke="currentColor"
-            strokeLinejoin="round"
-            strokeWidth="32"
-          />
-        </svg>
+        <PasteIcon></PasteIcon>
       </button>
     </>
   );
