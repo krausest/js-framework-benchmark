@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
-import { rezact } from "./src/lib/rezact/rezact-plugin";
+import { rezact } from "@rezact/rezact/vite-plugin";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -12,45 +12,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
 
   const rollupInputs = {
     main: resolve(__dirname + "/src", "index.html"),
-    HelloWorldRezact: resolve(
-      __dirname,
-      "src/examples/HelloWorldRezact/index.html"
-    ),
-    HelloWorldSvelte: resolve(
-      __dirname,
-      "src/examples/HelloWorldSvelte/index.html"
-    ),
-    HelloWorldMultipleRezact: resolve(
-      __dirname,
-      "src/examples/HelloWorldMultipleRezact/index.html"
-    ),
-    HelloWorldMultipleSvelte: resolve(
-      __dirname,
-      "src/examples/HelloWorldMultipleSvelte/index.html"
-    ),
-    CounterRezact: resolve(__dirname, "src/examples/CounterRezact/index.html"),
-    CounterSvelte: resolve(__dirname, "src/examples/CounterSvelte/index.html"),
-
-    CounterMultipleRezact: resolve(
-      __dirname,
-      "src/examples/CounterMultipleRezact/index.html"
-    ),
-    CounterMultipleSvelte: resolve(
-      __dirname,
-      "src/examples/CounterMultipleSvelte/index.html"
-    ),
-
-    ListRezact: resolve(__dirname, "src/examples/ListRezact/index.html"),
-    ListSvelte: resolve(__dirname, "src/examples/ListSvelte/index.html"),
-
-    BenchmarkRezact: resolve(
-      __dirname,
-      "src/examples/BenchmarkRezact/index.html"
-    ),
-    BenchmarkSvelte: resolve(
-      __dirname,
-      "src/examples/BenchmarkSvelte/index.html"
-    ),
+   
   };
 
   const rollupInput = { input: rollupInputs[example] };
@@ -63,6 +25,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
     resolve: {
       alias: {
         src: "/src",
+        rezact: "@rezact/rezact",
       },
     },
     build: {

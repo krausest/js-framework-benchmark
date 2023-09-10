@@ -1,4 +1,3 @@
-import { xCreateElement, xFragment } from "src/lib/rezact/rezact";
 
 export function Page() {
   let rowId = 1;
@@ -6,42 +5,28 @@ export function Page() {
   let $selected = -1;
 
   const add = () => {
-      // const start = performance.now();
-      $data = $data.concat(buildData(1000));
-      // $perfTime = performance.now() - start;
+      $data.push(...buildData(1000));
     },
     clear = () => {
-      // const start = performance.now();
       $data = [];
-      // $perfTime = performance.now() - start;
     },
     partialUpdate = () => {
-      // const start = performance.now();
       for (let i = 0; i < $data.length; i += 10) {
         $data[i].$label += " !!!";
       }
-      // $perfTime = performance.now() - start;
     },
     run = () => {
-      // const start = performance.now();
       $data = buildData(1000);
-      // $perfTime = performance.now() - start;
     },
     select = (id) => {
-      // const start = performance.now();
       $selected = id;
-      // $perfTime = performance.now() - start;
     },
     runLots = () => {
-      // const start = performance.now();
       $data = buildData(10000);
-      // $perfTime = performance.now() - start;
     },
     swapRows = () => {
       if ($data.length > 998) {
-        // const start = performance.now();
-        $data = swapElements($data.v, 1, 998);
-        // $perfTime = performance.now() - start;
+        $data = swapElements($data.getValue(), 1, 998);
       }
     };
 
@@ -129,70 +114,28 @@ export function Page() {
       <div class="jumbotron">
         <div class="row">
           <div class="col-md-6">
-            <h1>Rezact-"keyed"</h1>
+            <h1>Rezact (keyed)</h1>
           </div>
           <div class="col-md-6">
             <div class="row">
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="run"
-                  onClick={run}
-                >
-                  Create 1,000 rows
-                </button>
-              </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="runlots"
-                  onClick={runLots}
-                >
-                  Create 10,000 rows
-                </button>
-              </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="add"
-                  onClick={add}
-                >
-                  Append 1,000 rows
-                </button>
-              </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="update"
-                  onClick={partialUpdate}
-                >
-                  Update every 10th row
-                </button>
-              </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="clear"
-                  onClick={clear}
-                >
-                  Clear
-                </button>
-              </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="swaprows"
-                  onClick={swapRows}
-                >
-                  Swap Rows
-                </button>
-              </div>
+              <Button id="run" onClick={run}>
+                Create 1,000 rows
+              </Button>
+              <Button id="runlots" onClick={runLots}>
+                Create 10,000 rows
+              </Button>
+              <Button id="add" onClick={add}>
+                Append 1,000 rows
+              </Button>
+              <Button id="update" onClick={partialUpdate}>
+                Update every 10th row
+              </Button>
+              <Button id="clear" onClick={clear}>
+                Clear
+              </Button>
+              <Button id="swaprows" onClick={swapRows}>
+                Swap Rows
+              </Button>
             </div>
           </div>
         </div>
@@ -200,20 +143,15 @@ export function Page() {
       <table class="table table-hover table-striped test-data">
         <tbody>
           {$data.map(($row) => {
+            const id = $row.id;
             return (
-              <tr class={$selected === $row.id ? "danger" : ""}>
-                <td class="col-md-1">{$row.id}</td>
+              <tr class={$selected === id ? "danger" : ""}>
+                <td class="col-md-1">{id}</td>
                 <td class="col-md-4">
-                  <a onClick={() => select($row.id)}>{$row.$label}</a>
+                  <a onClick={() => select(id)}>{$row.$label}</a>
                 </td>
                 <td class="col-md-1">
-                  <a
-                    onClick={() => {
-                      // const start = performance.now();
-                      $data.deleteValue($row);
-                      // $perfTime = performance.now() - start;
-                    }}
-                  >
+                  <a onClick={() => $data.deleteValue($row)}>
                     <span
                       class="glyphicon glyphicon-remove"
                       aria-hidden="true"
@@ -231,5 +169,20 @@ export function Page() {
         aria-hidden="true"
       ></span>
     </>
+  );
+}
+
+function Button(props) {
+  return (
+    <div class="col-sm-6 smallpad">
+      <button
+        type="button"
+        class="btn btn-primary btn-block"
+        id={props.id}
+        onClick={props.onClick}
+      >
+        {props.children}
+      </button>
+    </div>
   );
 }

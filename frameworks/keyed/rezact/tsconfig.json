@@ -17,20 +17,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "verbatimModuleSyntax": false,
 
     /* Linting */
-    "strict": false,
+    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-
-    "baseUrl": "./",
-    "paths": {
-      "src/*": ["./src/*"]
-    },
-
-    "esModuleInterop": true
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src"]
 }

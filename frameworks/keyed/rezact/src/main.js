@@ -1,4 +1,5 @@
-import { render } from "src/lib/rezact/rezact";
+
+import { render } from "@rezact/rezact";
 import { Page } from "./Main.tsx";
 
 const app = document.getElementById("main");
