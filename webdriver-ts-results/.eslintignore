@@ -1,3 +1,8 @@
-webpack.config.js
-.eslintrc.js
-src/results.ts
+# Dependencies
+node_modules
+
+# Build
+build/
+dist/
+plotly.*
+BoxPlotTable.*

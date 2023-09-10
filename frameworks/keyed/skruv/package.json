@@ -1,21 +1,24 @@
 {
-  "name": "skruv-v0.1.0-js-benchmark",
+  "name": "skruv-js-benchmark",
   "version": "1.0.0",
-  "description": "skruv v0.1.0 js benchmark",
+  "description": "skruv js benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "skruv",
-    "frameworkHomeURL": "https://github.com/skruv/skruv"
+    "frameworkHomeURL": "https://skruv.io"
   },
   "scripts": {
-    "build-prod": "exit 0"
+    "build-prod": "esbuild src/index.js --bundle --minify --format=esm --outfile=dist/index.min.js"
   },
   "dependencies": {
-    "skruv": "0.1.0"
+    "skruv": "0.6.3"
   },
   "keywords": [
     "skruv"
   ],
   "author": "Svante Richter",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.18.13"
+  }
 }

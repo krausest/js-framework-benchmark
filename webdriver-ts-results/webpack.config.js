@@ -1,12 +1,14 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-var InlineChunkHtmlPlugin = require('inline-chunk-html-plugin');
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+// const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+import InlineChunkHtmlPlugin from 'inline-chunk-html-plugin';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-var path = require('path')
-var cache = true;
-var loaders = [
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const loaders = [
 	{
-		test: /\.tsx$|\.ts$/,
+		test: /\.tsx?$/,
 		loader: 'ts-loader',
 		exclude: /node_modules/,
     options: {
@@ -15,14 +17,12 @@ var loaders = [
 	},
 	{
 		test: /\.css$/,
-    use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+    use: ["style-loader", "css-loader" ],
 	}
 ];
-var extensions = [
-	'.ts', '.tsx', '.ts', '.js'
-];
 
-module.exports = [{
+/** @type {import("webpack").Configuration} */
+export default [{
 	cache: true,
 	module: {
 		rules: loaders
@@ -53,20 +53,12 @@ module.exports = [{
     }
   },
 	resolve: {
-		extensions: extensions,
-		modules: [
-			__dirname,
-			path.resolve(__dirname, "src"),
-			"node_modules"
-        ],
-        alias: {
-            plotly: 'plotly.js-cartesian-dist'
-          }
+		extensions: [".js", ".ts", ".tsx"],
 	},
     plugins: [
       // new BundleAnalyzerPlugin(),
         new HtmlWebpackPlugin({
-            template: path.join(__dirname, 'public/index.html'),
+            template: path.join(__dirname, 'public', 'index.html'),
             filename: 'table.html',
             inject: true,
 		}),

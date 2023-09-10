@@ -6,9 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dioxus = "0.3.1"
-dioxus-web = "0.3.1"
+dioxus = "0.4"
+dioxus-web = { version = "0.4", default-features = false }
 js-sys = "*"
+slab = "0.4.8"
 
 [profile.release]
 opt-level = 3

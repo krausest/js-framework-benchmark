@@ -89,11 +89,6 @@ export async function findByXPath(driver: WebDriver, path: string, isInButtonAre
   return n;
 }
 
-function elemNull(v: any) {
-  console.log("*** ELEMENT WAS NULL");
-  return false;
-}
-
 function waitForCondition(driver: WebDriver) {
   return async function (text: string, fn: (driver: WebDriver) => Promise<boolean>, timeout: number): Promise<boolean> {
     return await driver.wait(new Condition<Promise<boolean>>(text, fn), timeout);
@@ -189,7 +184,7 @@ export function testElementLocatedById(driver: WebDriver, id: string, timeout = 
     async function (driver) {
       try {
         let elem = await mainRoot(driver, isInButtonArea);
-        elem = await elem.findElement(By.id(id));
+        await elem.findElement(By.id(id));
         return true;
       } catch (err) {
         // console.log("ignoring error in testElementLocatedById for id = "+id,err.toString().split("\n")[0]);

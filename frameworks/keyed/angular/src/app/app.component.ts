@@ -1,25 +1,23 @@
-import { Component, VERSION, AfterViewChecked} from '@angular/core';
+import { NgFor } from '@angular/common';
+import { Component, VERSION } from '@angular/core';
 
 interface Data {
-  id: number;
-  label: string;
+    id: number;
+    label: string;
 }
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styles: []
+    selector: 'app-root',
+    standalone: true,
+    imports: [NgFor],
+    templateUrl: './app.component.html',
 })
 export class AppComponent {
     data: Array<Data> = [];
-    selected: number = undefined;
+    selected?: number = undefined;
     id: number = 1;
-    backup: Array<Data> = undefined;
-    version: string;
-
-    constructor() {
-        this.version = VERSION.full;
-    }
+    backup?: Array<Data> = undefined;
+    version = VERSION.full;
 
     buildData(count: number = 1000): Array<Data> {
         var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
