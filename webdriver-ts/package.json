@@ -43,7 +43,6 @@
     "ejs": "^3.1.9",
     "jstat": "1.9.6",
     "lighthouse": "10.1.1",
-    "npm-check-updates": "16.10.9",
     "playwright": "1.33.0",
     "playwright-firefox": "1.33.0",
     "playwright-webkit": "1.33.0",
