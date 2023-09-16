@@ -1,5 +1,5 @@
 import { isContained, newContainedInterval } from "./interval.js";
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "vitest";
 
 describe("isContained Function", () => {
   test("When the smaller interval is fully contained within the larger one, should return true", () => {
