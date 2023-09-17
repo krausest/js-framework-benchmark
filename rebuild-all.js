@@ -1,7 +1,22 @@
-const takeWhile = require("lodash/takeWhile");
-const { execSync } = require("child_process");
-const fs = require("fs");
-const path = require("path");
+import { execSync } from "node:child_process";
+import * as fs from "node:fs";
+import path from "node:path";
+import yargs from "yargs";
+import { takeWhile } from "./utils/common/index.js";
+import { getFrameworks } from "./utils/frameworks/index.js";
+
+const args = yargs(process.argv.slice(2))
+  .usage("$0 [--ci --docker keyed/framework1 ... non-keyed/frameworkN]")
+  .help()
+  .boolean("ci")
+  .default("ci", false)
+  .describe("ci", "Use npm ci or npm install?")
+  .boolean("docker")
+  .default("docker", false)
+  .describe(
+    "docker",
+    "Copy package-lock back for docker build or build locally?",
+  ).argv;
 
 /*
 This script rebuilds all frameworks from scratch,
@@ -12,19 +27,24 @@ If building a framework fails you can resume building like
 npm run rebuild-frameworks --restartWith keyed/react
 */
 
-const cliArgs = process.argv.slice(2);
+/**
+ * Use npm ci or npm install?
+ * @type {boolean}
+ */
+const useCi = args.ci;
 
-// Use npm ci or npm install ?
-const useCi = cliArgs.includes("--ci");
+/**
+ * Copy package-lock back for docker build or build locally?
+ * @type {boolean}
+ */
+const useDocker = args.docker;
 
-// Copy package-lock back for docker build or build locally?
-const useDocker = cliArgs.includes("--docker");
-
-const restartBuildingWith = cliArgs.find((arg) => !arg.startsWith("--"));
+const restartBuildingWith = args._.find((arg) => !arg.startsWith("--"));
 const restartWithFramework = restartBuildingWith || "";
 
 console.log(
   "ARGS",
+  args,
   "ci",
   useCi,
   "docker",
@@ -33,26 +53,21 @@ console.log(
   restartWithFramework,
 );
 
-/**
- * @typedef {Object} Framework
- * @property {string} type - Type of the framework (e.g., "keyed" or "non-keyed")
- * @property {string} name - Name of the framework (e.g., "vue", "qwik", "svelte")
- */
+const filesToDelete = [
+  "yarn-lock",
+  "dist",
+  "elm-stuff",
+  "bower_components",
+  "node_modules",
+  "output",
+  useCi && "package-lock.json",
+].filter(Boolean);
 
 /**
- * Returns an array of frameworks with their type and name
- * @example getFramewokrs()
- * @returns {Framework[]}
+ * @typedef {Object} Framework
+ * @property {string} name - Name of the framework (e.g., "vue", "qwik", "svelte")
+ * @property {string} type - Type of the framework (e.g., "keyed" or "non-keyed")
  */
-function getFrameworks() {
-  const keyedFrameworks = fs
-    .readdirSync("./frameworks/keyed")
-    .map((framework) => ({ type: "keyed", name: framework }));
-  const nonKeyedFrameworks = fs
-    .readdirSync("./frameworks/non-keyed")
-    .map((framework) => ({ type: "non-keyed", name: framework }));
-  return [...keyedFrameworks, ...nonKeyedFrameworks];
-}
 
 /**
  * @param {Framework}
@@ -68,9 +83,9 @@ function shouldSkipFramework({ type, name }) {
 }
 
 /**
- * Run a command synchronously in the specified directory
+ * Run a command synchronously in the specified directory and log command
  * @param {string} command - The command to run
- * @param {string} cwd - The current working directory (optional)
+ * @param {string} [cwd] - The current working directory (optional)
  */
 function runCommand(command, cwd = undefined) {
   console.log(command);
@@ -111,14 +126,6 @@ function buildFramework(framework) {
   //     execSync(`rm -r ${path}`);
   // }
   // rsync(keyed,name);
-  const filesToDelete = ((useCi) ? [] : ["package-lock.json"]).concat([
-    "yarn-lock",
-    "dist",
-    "elm-stuff",
-    "bower_components",
-    "node_modules",
-    "output",
-  ]);
 
   deleteFrameworkFiles(frameworkPath, filesToDelete);
 
@@ -137,10 +144,11 @@ function buildFramework(framework) {
 
 function buildFrameworks() {
   const frameworks = getFrameworks();
+
   const skippableFrameworks = takeWhile(frameworks, shouldSkipFramework);
   const buildableFrameworks = frameworks.slice(skippableFrameworks.length);
 
-  console.log("Building frameworks:", buildableFrameworks);
+  // console.log("Building frameworks:", buildableFrameworks);
 
   for (const framework of buildableFrameworks) {
     buildFramework(framework);

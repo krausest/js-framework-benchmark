@@ -1,14 +1,10 @@
-const fs = require("fs");
-const path = require("path");
-const AdmZip = require("adm-zip");
+import AdmZip from "adm-zip";
+import * as fs from "node:fs";
+import path from "node:path";
 
 const zip = new AdmZip();
 const outputFile = "build.zip";
-const keyedTypes = ["keyed", "non-keyed"];
-
-if (fs.existsSync(outputFile)) {
-  fs.rmSync(outputFile);
-}
+const frameworksTypes = ["keyed", "non-keyed"];
 
 /**
  * Adds a directory to the zip archive, if it exists.
@@ -34,80 +30,89 @@ function addLocalFileIfExists(sourcePath, zipPath) {
 
 /**
  * Adds frameworks to the zip archive
- * @param {string} keyedType
+ * @param {string} frameworkType
  * @param {string} frameworkDir
  * @param {string} frameworkName
  */
-function addFrameworksToZip(keyedType, frameworkDir, frameworkName) {
-  const zipFrameworkPath = `frameworks/${keyedType}/${frameworkName}`;
+function addFrameworksToZip(frameworkType, frameworkDir, frameworkName) {
+  const zipFrameworkPath = path.join(
+    "frameworks",
+    frameworkType,
+    frameworkName,
+  );
 
   addLocalFileIfExists(
     `${frameworkDir}/package-lock.json`,
-    `${zipFrameworkPath}`
+    `${zipFrameworkPath}`,
   );
 
   addLocalFolderIfExists(`${frameworkDir}/dist`, `${zipFrameworkPath}/dist`);
   addLocalFolderIfExists(
     `${frameworkDir}/scripts`,
-    `${zipFrameworkPath}/scripts`
+    `${zipFrameworkPath}/scripts`,
   );
   addLocalFolderIfExists(
     `${frameworkDir}/node_modules/slim-js/dist`,
-    `${zipFrameworkPath}/node_modules/slim-js/dist`
+    `${zipFrameworkPath}/node_modules/slim-js/dist`,
   );
   addLocalFolderIfExists(
     `${frameworkDir}/node_modules/@neow/core/dist`,
-    `${zipFrameworkPath}/node_modules/@neow/core/dist`
+    `${zipFrameworkPath}/node_modules/@neow/core/dist`,
   );
   addLocalFolderIfExists(
     `${frameworkDir}/target/web/stage`,
-    `${zipFrameworkPath}/target/web/stage`
+    `${zipFrameworkPath}/target/web/stage`,
   );
   addLocalFolderIfExists(`${frameworkDir}/build`, `${zipFrameworkPath}/build`);
 
   if (frameworkName !== "ember" && frameworkName !== "glimmer") {
     addLocalFolderIfExists(
       `${frameworkDir}/public`,
-      `${zipFrameworkPath}/public`
+      `${zipFrameworkPath}/public`,
     );
   }
 
   if (frameworkName === "halogen") {
     addLocalFileIfExists(
       `${frameworkDir}/output/bundle.js`,
-      `${zipFrameworkPath}/output`
+      `${zipFrameworkPath}/output`,
     );
   } else if (frameworkName === "dojo") {
     addLocalFolderIfExists(
       `${frameworkDir}/output/dist`,
-      `${zipFrameworkPath}/output/dist`
+      `${zipFrameworkPath}/output/dist`,
     );
   } else if (frameworkName === "stem") {
     addLocalFolderIfExists(
       `${frameworkDir}/node_modules/babel-polyfill/dist`,
-      `${zipFrameworkPath}/node_modules/babel-polyfill/dist`
+      `${zipFrameworkPath}/node_modules/babel-polyfill/dist`,
     );
     addLocalFileIfExists(
       `${frameworkDir}/src/bundle.js`,
-      `${zipFrameworkPath}/src`
+      `${zipFrameworkPath}/src`,
     );
   } else {
     addLocalFolderIfExists(
       `${frameworkDir}/output`,
-      `${zipFrameworkPath}/output`
+      `${zipFrameworkPath}/output`,
     );
   }
 }
 
-for (const keyedType of keyedTypes) {
-  const frameworksDir = path.resolve("frameworks", keyedType);
-  const frameworkNames = fs.readdirSync(frameworksDir);
+function createFrameworkZipArchive() {
+  for (const frameworkType of frameworksTypes) {
+    const frameworkTypeDirPath = path.resolve("frameworks", frameworkType);
+    const frameworkNames = fs.readdirSync(frameworkTypeDirPath);
 
-  for (const frameworkName of frameworkNames) {
-    const frameworkDir = path.resolve(frameworksDir, frameworkName);
-    console.log("zipping ", frameworkDir);
+    for (const frameworkName of frameworkNames) {
+      const frameworkPath = path.resolve(frameworkTypeDirPath, frameworkName);
+      console.log("zipping ", frameworkPath);
 
-    addFrameworksToZip(keyedType, frameworkDir, frameworkName);
+      addFrameworksToZip(frameworkType, frameworkPath, frameworkName);
+    }
   }
+
+  zip.writeZip(outputFile);
 }
-zip.writeZip(outputFile);
+
+export { createFrameworkZipArchive };

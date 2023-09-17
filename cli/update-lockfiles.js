@@ -1,33 +1,9 @@
-const fs = require("fs");
-const path = require("path");
-const { execSync } = require("child_process");
-const { cwd } = require("process");
-const yargs = require("yargs");
+import { execSync } from "node:child_process";
+import * as fs from "node:fs";
+import path from "node:path";
+import { cwd } from "node:process";
 
-const args = yargs(process.argv)
-  .usage("$0 [--frameworks-dir]")
-  .help("help")
-  .string("frameworks-dir")
-  .default("frameworks-dir", "frameworks")
-  .array("frameworks-types")
-  .default("frameworks-types", ["keyed", "non-keyed"])
-  .number("latest-lockfile-version")
-  .default("latest-lockfile-version", 3).argv;
-
-/**
- * @type {string}
- */
-const frameworksDir = args.frameworksDir;
-
-/**
- * @type {string[]}
- */
-const frameworksTypes = args.frameworksTypes;
-
-/**
- * @type {number}
- */
-const latestLockfileVersion = args.latestLockfileVersion;
+import { getFrameworks } from "../utils/frameworks/index.js";
 
 /**
  * @typedef {Object} Framework
@@ -35,24 +11,7 @@ const latestLockfileVersion = args.latestLockfileVersion;
  * @property {string} type - Type of the framework (e.g., "keyed" or "non-keyed")
  */
 
-/**
- * Returns an array with arrays of types and names of frameworks
- * @returns {Framework[]}
- */
-function getFrameworks() {
-  const frameworks = frameworksTypes.flatMap((type) =>
-    fs.readdirSync(path.join(frameworksDir, type)).map((framework) => ({
-      name: framework,
-      type,
-    }))
-  );
-
-  return frameworks;
-}
-
-/**
- * @param {string} frameworkPath
- */
+/** @param {string} frameworkPath */
 function runNpmInstall(frameworkPath) {
   try {
     execSync("npm install --package-lock-only", {
@@ -87,13 +46,19 @@ function getPackageLockJSONVersion(packageLockJSONPath) {
 /**
  * Updates the lockfile of one framework
  * @param {Framework} framework
+ * @param {number} latestLockfileVersion
+ * @param {string} frameworkDirPath
  */
-function processFramework(framework) {
+function updateFrameworkLockfile(
+  framework,
+  latestLockfileVersion,
+  frameworkDirPath,
+) {
   const { name, type } = framework;
 
   console.log(`Checking ${type} ${name} lockfile`);
 
-  const frameworkPath = path.join(cwd(), frameworksDir, type, name);
+  const frameworkPath = path.join(cwd(), frameworkDirPath, type, name);
 
   const packageLockJSONPath = path.join(frameworkPath, "package-lock.json");
   const packageLockJSONVersion = getPackageLockJSONVersion(packageLockJSONPath);
@@ -109,13 +74,23 @@ function processFramework(framework) {
 
 /**
  * Updates all frameworks lockfiles in the frameworks directory.
+ * @param {Object} options
+ * @param {string} options.frameworksDirPath
+ * @param {string} options.frameworksTypes
+ * @param {string} options.latestLockfileVersion
  */
-function processAllFrameworks() {
-  const frameworks = getFrameworks();
+function updateLockfilesOfAllFrameworks(options) {
+  const { frameworksDirPath, frameworksTypes, latestLockfileVersion } = options;
+
+  const frameworks = getFrameworks(frameworksDirPath, frameworksTypes);
 
   for (const framework of frameworks) {
-    processFramework(framework);
+    updateFrameworkLockfile(
+      framework,
+      latestLockfileVersion,
+      frameworksDirPath,
+    );
   }
 }
 
-processAllFrameworks();
+export { updateLockfilesOfAllFrameworks };

@@ -1,24 +1,15 @@
-const { execSync } = require("child_process");
-const fs = require("fs");
-const JSON5 = require("json5");
-const path = require("path");
+import JSON5 from "json5";
+import { execSync } from "node:child_process";
+import * as fs from "node:fs";
+import path from "node:path";
 
-const DEBUG = false;
+import { getFrameworks } from "../utils/frameworks/index.js";
 
 /**
- * Returns an array with arrays of types and names of frameworks
- * @example getFramewokrs()
- * @returns [{type:"keyed", name:"vue"},{type:"keyed", name:"qwik"},{type:"non-keyed", name:"svelte"}]
+ * @typedef {Object} Framework
+ * @property {string} name - Name of the framework (e.g., "vue", "qwik", "svelte")
+ * @property {string} type - Type of the framework (e.g., "keyed" or "non-keyed")
  */
-function getFrameworks() {
-  const keyedFrameworks = fs
-    .readdirSync("./frameworks/keyed")
-    .map((framework) => ({ type: "keyed", name: framework }));
-  const nonKeyedFrameworks = fs
-    .readdirSync("./frameworks/non-keyed")
-    .map((framework) => ({ type: "non-keyed", name: framework }));
-  return [...keyedFrameworks, ...nonKeyedFrameworks];
-}
 
 const frameworks = getFrameworks();
 
@@ -30,7 +21,7 @@ const frameworks = getFrameworks();
 function findDuplicateFrameworks(frameworks) {
   const names = frameworks.map((framework) => framework.name); // Creates an array with framework names only
   const duplicateNames = names.filter(
-    (name, index) => names.indexOf(name) !== index
+    (name, index) => names.indexOf(name) !== index,
   ); // Filters out repetitive framework names
 
   return duplicateNames;
@@ -71,19 +62,19 @@ function maybeObsolete(packageName) {
     const obsoleteDate = new Date(
       now.getFullYear() - 1,
       now.getMonth(),
-      now.getDay()
+      now.getDay(),
     );
 
     const modifiedDate = new Date(timeData.modified);
     const isObsolete = modifiedDate < obsoleteDate;
     const formattedDate = modifiedDate.toISOString().substring(0, 10);
 
-    return { isObsolete, packageName, lastUpdate: formattedDate };
+    return { isObsolete, lastUpdate: formattedDate, packageName };
   } catch (error) {
     console.error(
-      `Failed to execute npm view for ${packageName}. Error Code ${error.status} and message: ${error.message}`
+      `Failed to execute npm view for ${packageName}. Error Code ${error.status} and message: ${error.message}`,
     );
-    return { isObsolete: false, packageName, lastUpdate: null };
+    return { isObsolete: false, lastUpdate: null, packageName };
   }
 }
 
@@ -93,15 +84,19 @@ const manualChecks = [];
 /**
  * Checks frameworks in frameworks/keyed and frameworks/non-keyed for obsolescence,
  * the presence of package.json and the presence of the frameworkVersionFromPackage property
+ * @param {Object} options
+ * @param {boolean} options.debug
  */
-function checkFrameworks() {
-  for (const { type, name } of frameworks) {
+function checkObsoleteFrameworks(options) {
+  const DEBUG = options.debug ?? false;
+
+  for (const { name, type } of frameworks) {
     const frameworkPath = path.join("frameworks", type, name);
     const packageJSONPath = path.join(frameworkPath, "package.json");
 
     if (!fs.existsSync(packageJSONPath)) {
       missingPackageWarnings.push(
-        `WARN: skipping ${type}/${name} since there's no package.json`
+        `WARN: skipping ${type}/${name} since there's no package.json`,
       );
       continue;
     }
@@ -127,7 +122,7 @@ function checkFrameworks() {
     }
 
     const anyPackageObsolete = isPackageObsolete.some(
-      (packageFramework) => packageFramework.isObsolete
+      (packageFramework) => packageFramework.isObsolete,
     );
 
     if (anyPackageObsolete) {
@@ -136,14 +131,14 @@ function checkFrameworks() {
         .join(", ");
 
       console.log(
-        `Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`
+        `Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`,
       );
       continue;
     }
 
     if (DEBUG) {
       console.log(
-        `Last npm update for ${type}/${name} ${mainPackages} is newer than a year`
+        `Last npm update for ${type}/${name} ${mainPackages} is newer than a year`,
       );
     }
   }
@@ -153,8 +148,8 @@ function checkFrameworks() {
   if (manualChecks.length > 0)
     console.warn(
       "\nThe following frameworks must be checked manually\n" +
-        manualChecks.join("\n")
+        manualChecks.join("\n"),
     );
 }
 
-checkFrameworks();
+export { checkObsoleteFrameworks };

@@ -2,6 +2,7 @@
   "name": "js-framework-benchmark",
   "version": "1.0.0",
   "description": "Simple Benchmark for Javascript client side rendering",
+  "type": "module",
   "scripts": {
     "clean": "node cleanup.js",
     "build": "node rebuild-all.js --ci",
@@ -30,7 +31,7 @@
     "docker-rebuild": "node rebuild-single.js -- --docker",
     "docker-rebuild-ci": "node rebuild-single.js -- --ci --docker",
     "docker-shell": "docker exec -it js-framework-benchmark /bin/bash",
-    "zip": "npm run docker-sync && docker exec -it js-framework-benchmark node zip.js && docker cp js-framework-benchmark:/build/build.zip .",
+    "zip": "npm run docker-sync && docker exec -it js-framework-benchmark node cli zip && docker cp js-framework-benchmark:/build/build.zip .",
     "format": "prettier . \"!(broken-frameworks|frameworks)/**/*\" -w",
     "lint": "eslint . --ignore-pattern \"/broken-frameworks/\" --ignore-pattern \"/frameworks/\""
   },
@@ -52,16 +53,15 @@
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "dependencies": {
     "adm-zip": "^0.5.9",
+    "commander": "^11.0.0",
     "cross-env": "^7.0.2",
-    "fs-extra": "9.0.0",
     "json5": "^2.2.0",
-    "local-web-server": "4.1.0",
-    "lodash": "^4.17.15",
     "rimraf": "^3.0.2",
-    "yargs": "^15.3.1"
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "eslint": "^8.48.0",
+    "local-web-server": "^5.3.0",
     "prettier": "^3.0.3"
   }
 }
