@@ -6,6 +6,8 @@ import { buildFrameworkVersionString, copyProps } from "./helpers/index.js";
 
 const keyedTypes = ["keyed", "non-keyed"];
 
+const exclusionDirectories = [".Ds_Store"];
+
 class PackageJSONProvider {
   #frameworksDir;
 
@@ -151,7 +153,7 @@ export async function loadFrameworkInfo(keyedDir, framework) {
   return result;
 }
 
-export async function loadFrameworkVersions(filterForFramework) {
+export async function loadFrameworkVersions() {
   const resultsProm = [];
 
   for (const keyedType of keyedTypes) {
@@ -159,13 +161,11 @@ export async function loadFrameworkVersions(filterForFramework) {
       path.resolve(frameworksDirectory, keyedType),
     );
 
-    for (const directory of directories) {
-      const frameworkPath = path.join(keyedType, directory);
+    const filteredDirectories = directories.filter(
+      (directory) => !exclusionDirectories.includes(directory),
+    );
 
-      if (filterForFramework && filterForFramework !== frameworkPath) {
-        continue;
-      }
-
+    for (const directory of filteredDirectories) {
       if (!isFrameworkDir(keyedType, directory)) {
         continue;
       }
