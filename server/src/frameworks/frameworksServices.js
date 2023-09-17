@@ -6,8 +6,6 @@ import { buildFrameworkVersionString, copyProps } from "./helpers/index.js";
 
 const keyedTypes = ["keyed", "non-keyed"];
 
-const exclusionDirectories = [".Ds_Store"];
-
 class PackageJSONProvider {
   #frameworksDir;
 
@@ -73,7 +71,7 @@ class PackageJSONProvider {
  * @param {string} framework
  * @returns {boolean}
  */
-async function isFrameworkDir(keyedDir, framework) {
+function isFrameworkDir(keyedDir, framework) {
   const frameworkPath = path.resolve(frameworksDirectory, keyedDir, framework);
   const packageJSONPath = path.resolve(frameworkPath, "package.json");
   const packageLockJSONPath = path.resolve(frameworkPath, "package-lock.json");
@@ -161,11 +159,7 @@ export async function loadFrameworkVersions() {
       path.resolve(frameworksDirectory, keyedType),
     );
 
-    const filteredDirectories = directories.filter(
-      (directory) => !exclusionDirectories.includes(directory),
-    );
-
-    for (const directory of filteredDirectories) {
+    for (const directory of directories) {
       if (!isFrameworkDir(keyedType, directory)) {
         continue;
       }
