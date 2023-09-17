@@ -36,10 +36,10 @@ const actions = [
     ['Create 1,000 rows', 'run', () => rows(create(1000))],
     ['Create 10,000 rows', 'runlots', () => rows(create(10000))],
     ['Append 1,000 rows', 'add', () => rows([...rows(), ...create(1000)])],
-    ['Update every 10th row', 'update', () => State.batch(() => {
+    ['Update every 10th row', 'update', () => {
         for (let r = rows(), i = 0; i < r.length; i += 10)
             r[i]?.text(`${r[i].text()} !!!`);
-    })],
+    }],
     ['Clear', 'clear', () => rows([])],
     ['Swap Rows', 'swaprows', () => {
         const r = rows();
