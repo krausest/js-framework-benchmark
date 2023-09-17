@@ -1,17 +1,17 @@
 import React from "react";
 import { useCallback } from "react";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setStateFromClipboard, State } from "../../reducer";
+import { useRootStore } from "../../reducer";
 import PasteIcon from "../../assets/icons/PasteIcon";
 import CopyIcon from "../../assets/icons/CopyIcon";
 
 const CopyPasteSelection = () => {
   console.log("CopyPasteSelection");
 
-  const dispatch = useDispatch();
-
-  const state = useSelector((state: State) => state);
+  const state = useRootStore((state) => state);
+  const setStateFromClipboard = useRootStore(
+    (state) => state.setStateFromClipboard,
+  );
 
   const handlePasteError = (error: Error) => {
     alert("Sorry - couldn't parse pasted selection");
@@ -22,12 +22,12 @@ const CopyPasteSelection = () => {
     (text: string) => {
       try {
         const parsedState = JSON.parse(text);
-        dispatch(setStateFromClipboard(parsedState));
+        setStateFromClipboard(parsedState);
       } catch (error) {
         handlePasteError(error as Error);
       }
     },
-    [dispatch],
+    [setStateFromClipboard],
   );
 
   const handleClipboardPaste = useCallback(

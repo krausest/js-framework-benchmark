@@ -1,14 +1,7 @@
 import React from "react";
 import DropDownContents from "../../DropDown/DropDownContents";
-import { useDispatch, useSelector } from "react-redux";
 import { FrameworkType } from "../../../Common";
-import {
-  State,
-  isNoneFrameworkSelected,
-  areAllFrameworksSelected,
-  selectAllFrameworks,
-  selectFramework,
-} from "../../../reducer";
+import { useRootStore } from "../../../reducer";
 import FrameworkSelectorList from "./FrameworkSelectorList";
 
 interface Props {
@@ -19,34 +12,34 @@ interface Props {
 const FrameworkSelectorCategory = ({ label, frameworkType }: Props) => {
   console.log("FrameworkSelectorCategory");
 
-  const dispatch = useDispatch();
+  const selectedFrameworks = useRootStore(
+    (state) => state.selectedFrameworksDropDown,
+  );
+  const frameworks = useRootStore(
+    (state) => state.frameworkLists[frameworkType],
+  );
+  const isNoneSelected = useRootStore((state) => state.isNoneFrameworkSelected);
+  const areAllSelected = useRootStore(
+    (state) => state.areAllFrameworksSelected,
+  );
 
-  const selectedFrameworks = useSelector(
-    (state: State) => state.selectedFrameworksDropDown,
-  );
-  const isNoneSelected = useSelector((state: State) =>
-    isNoneFrameworkSelected(state, frameworkType),
-  );
-  const areAllSelected = useSelector((state: State) =>
-    areAllFrameworksSelected(state, frameworkType),
-  );
-
-  const frameworks = useSelector(
-    (state: State) => state.frameworkLists[frameworkType],
+  const selectFramework = useRootStore((state) => state.selectFramework);
+  const selectAllFrameworks = useRootStore(
+    (state) => state.selectAllFrameworks,
   );
 
   return (
     <DropDownContents
       grid
-      isNoneSelected={isNoneSelected}
-      areAllSelected={areAllSelected}
-      selectNone={() => dispatch(selectAllFrameworks(frameworkType, false))}
-      selectAll={() => dispatch(selectAllFrameworks(frameworkType, true))}
+      isNoneSelected={isNoneSelected(frameworkType)}
+      areAllSelected={areAllSelected(frameworkType)}
+      selectNone={() => selectAllFrameworks(frameworkType, false)}
+      selectAll={() => selectAllFrameworks(frameworkType, true)}
     >
       <h3>{label}</h3>
       <FrameworkSelectorList
         isSelected={(framework) => selectedFrameworks.has(framework)}
-        select={(framework, add) => dispatch(selectFramework(framework, add))}
+        select={(framework, add) => selectFramework(framework, add)}
         frameworks={frameworks}
       />
     </DropDownContents>
