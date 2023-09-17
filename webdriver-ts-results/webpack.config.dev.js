@@ -1,25 +1,21 @@
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import InlineChunkHtmlPlugin from "inline-chunk-html-plugin";
 import path from "path";
-import { rules } from "./tools/webpack/webpack.rules.js";
 import { fileURLToPath } from "url";
+import { rules } from "./tools/webpack/webpack.rules.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import("webpack").Configuration} */
 export default {
-  entry: "./src/index.tsx",
-  output: {
-    clean: true,
-    publicPath: "/",
-    filename: "[name].[contenthash].js",
-    path: path.resolve(__dirname, "dist"),
-  },
-  resolve: {
-    extensions: [".tsx", ".ts", ".js"],
-  },
   module: {
     rules,
+  },
+  entry: {
+    main: "./src/index.tsx",
+  },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name].[contenthash].js",
   },
   optimization: {
     splitChunks: {
@@ -39,12 +35,12 @@ export default {
       },
     },
   },
+  resolve: {
+    extensions: [".js", ".ts", ".tsx"],
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./public/index.html",
-      filename: "table.html",
-      inject: true,
     }),
-    new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/main|vendor|BoxPlotTable/]),
   ],
 };

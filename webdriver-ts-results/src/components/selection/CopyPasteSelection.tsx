@@ -1,0 +1,103 @@
+import React from "react";
+import { useCallback } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setStateFromClipboard, State } from "../../reducer";
+import PasteIcon from "../../assets/icons/PasteIcon";
+import CopyIcon from "../../assets/icons/CopyIcon";
+
+const CopyPasteSelection = () => {
+  console.log("CopyPasteSelection");
+
+  const dispatch = useDispatch();
+
+  const state = useSelector((state: State) => state);
+
+  const handlePasteError = (error: Error) => {
+    alert("Sorry - couldn't parse pasted selection");
+    console.error("Pasting state failed", error);
+  };
+
+  const handlePaste = useCallback(
+    (text: string) => {
+      try {
+        const parsedState = JSON.parse(text);
+        dispatch(setStateFromClipboard(parsedState));
+      } catch (error) {
+        handlePasteError(error as Error);
+      }
+    },
+    [dispatch],
+  );
+
+  const handleClipboardPaste = useCallback(
+    async (event: ClipboardEvent) => {
+      event.preventDefault();
+      const text = event.clipboardData?.getData("text/plain");
+      if (text) {
+        handlePaste(text);
+      }
+    },
+    [handlePaste],
+  );
+
+  useEffect(() => {
+    document.addEventListener("paste", handleClipboardPaste);
+    return () => {
+      document.removeEventListener("paste", handleClipboardPaste);
+    };
+  }, [handleClipboardPaste]);
+
+  const copy = () => {
+    const serializedState = {
+      frameworks: state.frameworks
+        .filter((f) => state.selectedFrameworksDropDown.has(f))
+        .map((f) => f.dir),
+      benchmarks: state.benchmarks
+        .filter((f) => state.selectedBenchmarks.has(f))
+        .map((f) => f.id),
+      displayMode: state.displayMode,
+    };
+
+    const json = JSON.stringify(serializedState);
+
+    try {
+      navigator.clipboard.writeText(json);
+      window.location.hash = btoa(json);
+    } catch (error) {
+      console.error("Copying state failed", error);
+    }
+  };
+
+  const handlePasteFromClipboard = useCallback(async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      handlePaste(text);
+    } catch (error) {
+      handlePasteError(error as Error);
+    }
+  }, [handlePaste]);
+
+  return (
+    <>
+      <p>Copy/paste current selection</p>
+      <div className="hspan" />
+      <button
+        className="iconbutton"
+        onClick={copy}
+        aria-label="Copy selected frameworks and benchmarks"
+      >
+        <CopyIcon></CopyIcon>
+      </button>
+      <button
+        className="iconbutton"
+        onClick={handlePasteFromClipboard}
+        aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
+      >
+        <PasteIcon></PasteIcon>
+      </button>
+    </>
+  );
+};
+
+export default CopyPasteSelection;
