@@ -1,5 +1,5 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import * as fs from "node:fs";
 
 import { frameworksDirectory } from "../config/directories.js";
 import { buildFrameworkVersionString, copyProps } from "./helpers/index.js";
