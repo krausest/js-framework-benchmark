@@ -1,0 +1,6 @@
+npm WARN deprecated @microsoft/fast-jss-utilities@4.8.0: This package is no longer maintained.  See what we're doing today at https://github.com/microsoft/fast
+npm WARN deprecated @microsoft/fast-components-class-name-contracts-base@4.8.0: This package is no longer maintained.  See what we're doing today at https://github.com/microsoft/fast
+npm WARN deprecated @microsoft/fast-components-class-name-contracts-msft@4.9.0: This package is no longer maintained.  See what we're doing today at https://github.com/microsoft/fast
+npm WARN deprecated @microsoft/fast-components-styles-msft@4.29.0: This package is no longer maintained.  See what we're doing today at https://github.com/microsoft/fast
+npm WARN deprecated @microsoft/fast-jss-manager@4.2.0: This package is no longer maintained.  See what we're doing today at https://github.com/microsoft/fast
+npm WARN deprecated @microsoft/fast-components-msft@1.6.0: This package has been deprecated in favor of @fluentui/web-components.
