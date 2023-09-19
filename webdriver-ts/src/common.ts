@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export interface JSONResultData {
   min: number;
   max: number;
@@ -53,12 +51,12 @@ export interface BenchmarkOptions {
   HOST: 'localhost',
 */
 
-export enum BENCHMARK_RUNNER { 
-  PUPPETEER = "puppeteer", 
-  PLAYWRIGHT = "playwright", 
-  WEBDRIVER_CDP = "webdrivercdp", 
+export enum BENCHMARK_RUNNER {
+  PUPPETEER = "puppeteer",
+  PLAYWRIGHT = "playwright",
+  WEBDRIVER_CDP = "webdrivercdp",
   WEBDRIVER = "webdriver",
-  WEBDRIVER_AFTERFRAME = "webdriver-afterframe" 
+  WEBDRIVER_AFTERFRAME = "webdriver-afterframe"
 }
 
 export let config = {
@@ -116,37 +114,63 @@ export interface IMatchPredicate {
 
 const matchAll: IMatchPredicate = () => true;
 
-export async function initializeFrameworks(benchmarkOptions: BenchmarkOptions, matchPredicate: IMatchPredicate = matchAll): Promise<FrameworkData[]> {
-  let lsResult ;
+async function fetchFrameworks(url: string) {
   try {
-    lsResult = (
-      // FIXME https://github.com/axios/axios/issues/5008
-    await (axios as any).get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/ls`)
-  ).data;
-  } catch (err) {
-    console.log(err);
-    console.log(`ERROR loading frameworks from http://${benchmarkOptions.host}:${benchmarkOptions.port}/ls. Is the server running?`);
-    throw new Error(`ERROR loading frameworks from http://${benchmarkOptions.host}:${benchmarkOptions.port}/ls. Is the server running?`);
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Fetch error: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+}
+
+export async function initializeFrameworks(
+  benchmarkOptions: BenchmarkOptions,
+  matchPredicate: IMatchPredicate = matchAll,
+): Promise<FrameworkData[]> {
+  let lsResult;
+  const lsUrl = `http://${benchmarkOptions.host}:${benchmarkOptions.port}/ls`;
+
+  try {
+    lsResult = await fetchFrameworks(lsUrl);
+  } catch (error) {
+    throw new Error(error);
   }
 
   let frameworks: FrameworkData[] = [];
   for (let ls of lsResult) {
     let frameworkVersionInformation: FrameworkInformation = ls;
-    let fullName = frameworkVersionInformation.type + "/" + frameworkVersionInformation.directory;
+    let fullName =
+      frameworkVersionInformation.type +
+      "/" +
+      frameworkVersionInformation.directory;
     if (matchPredicate(fullName)) {
       frameworks.push({
-          name: frameworkVersionInformation.directory,
-          fullNameWithKeyedAndVersion: frameworkVersionInformation.frameworkVersionString,
-          uri: "frameworks/" + fullName + (frameworkVersionInformation.customURL ? frameworkVersionInformation.customURL : ""),
-          keyed: frameworkVersionInformation.type === "keyed",
-          useShadowRoot: !!frameworkVersionInformation.useShadowRoot,
-          useRowShadowRoot: !!frameworkVersionInformation.useRowShadowRoot,
-          shadowRootName: frameworkVersionInformation.shadowRootName,
-          buttonsInShadowRoot: !!frameworkVersionInformation.buttonsInShadowRoot,
-          issues: (frameworkVersionInformation.issues ?? []).map(i => Number(i)),
-          frameworkHomeURL: frameworkVersionInformation.frameworkHomeURL ?? ""
-        });
-      }
+        name: frameworkVersionInformation.directory,
+        fullNameWithKeyedAndVersion:
+          frameworkVersionInformation.frameworkVersionString,
+        uri:
+          "frameworks/" +
+          fullName +
+          (frameworkVersionInformation.customURL
+            ? frameworkVersionInformation.customURL
+            : ""),
+        keyed: frameworkVersionInformation.type === "keyed",
+        useShadowRoot: !!frameworkVersionInformation.useShadowRoot,
+        useRowShadowRoot: !!frameworkVersionInformation.useRowShadowRoot,
+        shadowRootName: frameworkVersionInformation.shadowRootName,
+        buttonsInShadowRoot: !!frameworkVersionInformation.buttonsInShadowRoot,
+        issues: (frameworkVersionInformation.issues ?? []).map((i) =>
+          Number(i),
+        ),
+        frameworkHomeURL: frameworkVersionInformation.frameworkHomeURL ?? "",
+      });
+    }
   }
   if (config.LOG_DETAILS) {
     console.log("All available frameworks: ");

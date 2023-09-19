@@ -1,9 +1,10 @@
 import fastifyStatic from "@fastify/static";
-import path from "path";
-import { cwd } from "process";
+import path from "node:path";
+import { cwd } from "node:process";
 
 import { isCSPEnabled } from "../csp/cspControllers.js";
 import { frameworksDirectory } from "../config/directories.js";
+import { generateAndServeIndex } from "../frameworks/frameworksControllers.js";
 
 const projectRootPath = path.join(cwd(), "..");
 
@@ -37,9 +38,8 @@ async function routes(fastify) {
     decorateReply: false,
   });
 
-  fastify.get("/index.html", async (_request, reply) => {
-    return reply.sendFile("index.html", projectRootPath);
-  });
+  fastify.get("/", generateAndServeIndex);
+  fastify.get("/index.html", generateAndServeIndex);
 }
 
 export default routes;
