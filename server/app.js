@@ -2,6 +2,8 @@ import Fastify from "fastify";
 import frameworksRouter from "./src/frameworks/frameworksRouter.js";
 import cspRouter from "./src/csp/cspRouter.js";
 import staticRouter from "./src/static/staticRouter.js";
+import * as ejs from "ejs";
+import * as fastifyView from "@fastify/view";
 
 /**
  * Builds the server but does not start it. Need it for testing API
@@ -10,6 +12,12 @@ import staticRouter from "./src/static/staticRouter.js";
  */
 function buildServer(options = {}) {
   const fastify = Fastify(options);
+
+  fastify.register(fastifyView, {
+    engine: {
+      ejs: ejs,
+    },
+  });
 
   fastify.addHook("onRequest", (request, reply, done) => {
     if (request.url.endsWith("index.html")) {
