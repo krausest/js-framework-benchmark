@@ -18,7 +18,8 @@
     "@fastify/static": "^6.11.2",
     "@fastify/view": "^8.2.0",
     "ejs": "^3.1.9",
-    "fastify": "^4.23.2"
+    "fastify": "^4.23.2",
+    "html-minifier": "^4.0.0"
   },
   "devDependencies": {
     "@types/ejs": "^3.1.2",

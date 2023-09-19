@@ -4,6 +4,7 @@ import cspRouter from "./src/csp/cspRouter.js";
 import staticRouter from "./src/static/staticRouter.js";
 import * as ejs from "ejs";
 import * as fastifyView from "@fastify/view";
+import minifier from "html-minifier";
 
 /**
  * Builds the server but does not start it. Need it for testing API
@@ -16,6 +17,9 @@ function buildServer(options = {}) {
   fastify.register(fastifyView, {
     engine: {
       ejs: ejs,
+    },
+    options: {
+      useHtmlMinifier: minifier,
     },
   });
 
