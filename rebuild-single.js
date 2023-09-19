@@ -25,7 +25,7 @@ const frameworks = args._.filter((arg) => !arg.startsWith("--"));
 const frameworksNames = frameworks.join(" ");
 
 console.log(
-  "args",
+  "rebuild-single.js args",
   args,
   "ci",
   useCi,
@@ -64,7 +64,7 @@ try {
     process.exit(1);
   }
 
-  const buildCmd = `node rebuild-build-single.js ${frameworksNames}`;
+  const buildCmd = `node rebuild-build-single.js ${useCi ? '--ci' : ''} ${frameworksNames}`;
   runCommand(buildCmd);
 
   const checkCmd = `node rebuild-check-single.js ${frameworksNames}`;

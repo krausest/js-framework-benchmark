@@ -37,8 +37,7 @@ const filesToDelete = [
   "bower_components",
   "node_modules",
   "output",
-  useCi && "package-lock.json",
-].filter(Boolean);
+].concat(useCi ? [] : ["package-lock.json"]);
 
 /*
 rebuild-single.js [--ci] [keyed/framework1 ... non-keyed/frameworkN]

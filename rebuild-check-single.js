@@ -39,10 +39,10 @@ function runCommand(command, cwd = undefined) {
 
 try {
   const benchCmd = `npm run bench -- --headless true --smoketest true ${frameworkNames}`;
-  runCommand(benchCmd);
+  runCommand(benchCmd, "webdriver-ts");
 
   const keyedCmd = `npm run isKeyed -- --headless true ${frameworkNames}`;
-  runCommand(keyedCmd);
+  runCommand(keyedCmd, "webdriver-ts");
 
   console.log("rebuild-check-single.js finished");
   console.log("All checks are fine!");
