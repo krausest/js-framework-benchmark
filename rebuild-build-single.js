@@ -4,28 +4,17 @@ import path from "node:path";
 import yargs from "yargs";
 
 const args = yargs(process.argv.slice(2))
-  .usage("$0 [--ci --docker keyed/framework1 ... non-keyed/frameworkN]")
+  .usage("$0 [--ci keyed/framework1 ... non-keyed/frameworkN]")
   .boolean("ci")
   .default("ci", false)
   .describe("ci", "Use npm ci or npm install ?")
-  .boolean("docker")
-  .default("docker", false)
-  .describe(
-    "docker",
-    "Copy package-lock back for docker build or build locally?"
-  ).argv;
+  .argv;
 
 /**
  * Use npm ci or npm install?
  * @type {boolean}
  */
 const useCi = args.ci;
-
-/**
- * Copy package-lock back for docker build or build locally?
- * @type {boolean}
- */
-const useDocker = args.docker;
 
 /**
  * @type {string}
@@ -37,8 +26,6 @@ console.log(
   args,
   "useCi",
   useCi,
-  "useDocker",
-  useDocker,
   "frameworks",
   frameworks
 );
@@ -54,7 +41,7 @@ const filesToDelete = [
 ].filter(Boolean);
 
 /*
-rebuild-single.js [--ci] [--docker] [keyed/framework1 ... non-keyed/frameworkN]
+rebuild-single.js [--ci] [keyed/framework1 ... non-keyed/frameworkN]
 
 This script rebuilds a single framework
 By default it rebuilds from scratch, deletes all package.json and package-lock.json files
@@ -110,18 +97,6 @@ function rebuildFramework(framework) {
   const [keyed, name] = components;
   const frameworkPath = path.join("frameworks", keyed, name);
 
-  if (useDocker) {
-    if (fs.existsSync(frameworkPath)) {
-      console.log("deleting folder ", frameworkPath);
-      fs.rmSync(frameworkPath, { recursive: true });
-    }
-
-    const rsyncCmd = `rsync -avC --exclude elm-stuff --exclude dist --exclude output ${
-      useCi ? "" : "--exclude package-lock.json"
-    } --exclude tmp --exclude node_modules --exclude bower_components /src/frameworks/${keyed}/${name} /build/frameworks/${keyed}/`;
-    runCommand(rsyncCmd);
-  }
-
   deleteFrameworkFiles(frameworkPath, filesToDelete);
 
   const installCmd = `npm ${useCi ? "ci" : "install"}`;
@@ -130,17 +105,12 @@ function rebuildFramework(framework) {
   const buildCmd = "npm run build-prod";
   runCommand(buildCmd, frameworkPath);
 
-  if (useDocker) {
-    const packageJSONPath = path.join(frameworkPath, "package-lock.json");
-    const destinationPath = path.join("/src", packageJSONPath);
-    fs.copyFileSync(packageJSONPath, destinationPath);
-  }
 }
 
 function rebuildFrameworks() {
   if (!frameworks.length) {
     console.log(
-      "ERROR: Missing arguments. Command: docker-rebuild keyed/framework1 non-keyed/framework2 ..."
+      "ERROR: Missing arguments. Command: rebuild keyed/framework1 non-keyed/framework2 ..."
     );
     process.exit(1);
   }

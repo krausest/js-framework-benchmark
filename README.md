@@ -268,7 +268,7 @@ cd ..
 npm run build-prod
 ```
 
-After downloading the whole internet it starts building it. Basically there should be no errors during the build, but I can't guarantee that the dependencies won't break. (There's a docker build on the way which might make building it more robust. See https://github.com/krausest/js-framework-benchmark/wiki/%5BUnder-construction%5D-Build-all-frameworks-with-docker)
+After downloading the whole internet it starts building it. Basically there should be no errors during the build, but I can't guarantee that the dependencies won't break. 
 
 You can now run the benchmark for all frameworks by invoking:
 

@@ -6,17 +6,12 @@ import { takeWhile } from "./utils/common/index.js";
 import { getFrameworks } from "./utils/frameworks/index.js";
 
 const args = yargs(process.argv.slice(2))
-  .usage("$0 [--ci --docker keyed/framework1 ... non-keyed/frameworkN]")
+  .usage("$0 [--ci keyed/framework1 ... non-keyed/frameworkN]")
   .help()
   .boolean("ci")
   .default("ci", false)
   .describe("ci", "Use npm ci or npm install?")
-  .boolean("docker")
-  .default("docker", false)
-  .describe(
-    "docker",
-    "Copy package-lock back for docker build or build locally?",
-  ).argv;
+  .argv;
 
 /*
 This script rebuilds all frameworks from scratch,
@@ -33,12 +28,6 @@ npm run rebuild-frameworks --restartWith keyed/react
  */
 const useCi = args.ci;
 
-/**
- * Copy package-lock back for docker build or build locally?
- * @type {boolean}
- */
-const useDocker = args.docker;
-
 const restartBuildingWith = args._.find((arg) => !arg.startsWith("--"));
 const restartWithFramework = restartBuildingWith || "";
 
@@ -47,8 +36,6 @@ console.log(
   args,
   "ci",
   useCi,
-  "docker",
-  useDocker,
   "restartWith",
   restartWithFramework,
 );
@@ -134,12 +121,6 @@ function buildFramework(framework) {
 
   const buildCmd = "npm run build-prod";
   runCommand(buildCmd, frameworkPath);
-
-  if (useDocker) {
-    const packageLockPath = path.join(frameworkPath, "package-lock.json");
-    const destinationPath = path.join("/src", packageLockPath);
-    fs.copyFileSync(packageLockPath, destinationPath);
-  }
 }
 
 function buildFrameworks() {
