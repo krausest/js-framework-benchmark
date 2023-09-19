@@ -19,8 +19,8 @@
     "install-server": "cd server && npm ci",
     "install-webdriver-ts-results": "cd webdriver-ts-results && npm ci",
     "install-local": "npm run install-webdriver-ts && npm run install-webdriver-ts-results && npm run install-server",
-    "rebuild": "node rebuild-single.js --",
-    "rebuild-ci": "node rebuild-single.js -- --ci",
+    "rebuild": "node rebuild-single.js",
+    "rebuild-ci": "node rebuild-single.js --ci",
     "zip": "node cli.js zip",
     "format": "prettier . \"!(broken-frameworks|frameworks)/**/*\" -w",
     "lint": "eslint . --ignore-pattern \"/broken-frameworks/\" --ignore-pattern \"/frameworks/\""
