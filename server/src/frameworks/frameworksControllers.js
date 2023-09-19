@@ -1,10 +1,6 @@
 // @ts-check
 import { loadFrameworkVersions } from "./frameworksServices.js";
-import { generateIndexHtml } from "./helpers/index.js";
-import path from "node:path";
-import { cwd } from "node:process";
-
-const projectRootPath = path.join(cwd(), "..");
+import { prepareFrameworkData } from "./helpers/index.js";
 
 /**
  * @typedef {import("fastify").FastifyRequest} Request
@@ -40,7 +36,5 @@ export async function getFrameworksVersions(request, reply) {
  * @param {Reply} reply
  */
 export async function generateAndServeIndex(request, reply) {
-  await generateIndexHtml();
-
-  return reply.sendFile("index.html", projectRootPath);
+  return reply.view("templates/index.ejs", {frameworks: await prepareFrameworkData()});
 }
