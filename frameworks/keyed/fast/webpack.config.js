@@ -10,7 +10,7 @@ export default function (env, { mode }) {
   return {
     mode: production ? 'production' : 'development',
     entry: {
-      app: ['./src/main.ts']
+      app: ['./src/App.ts']
     },
     output: {
       filename: 'bundle.js',

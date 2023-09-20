@@ -1,5 +1,4 @@
 import { customElement, FASTElement, html, attr, css, FAST } from '@microsoft/fast-element';
-import { typography } from './typography';
 import { provideFASTDesignSystem, fastButton, fastCheckbox } from '@microsoft/fast-components';
 provideFASTDesignSystem().register(fastButton()).register(fastCheckbox());
 
@@ -10,8 +9,6 @@ const template = html<TodoItem>`
 `;
 
 const styles = css`
-  ${typography}
-
   :host {
     display: flex;
   }
