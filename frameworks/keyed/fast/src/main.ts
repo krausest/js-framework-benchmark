@@ -1,4 +1,12 @@
-import { FASTElement, customElement } from '@microsoft/fast-element'
+import { FASTElement, customElement } from '@microsoft/fast-element';
+import { DataItem, buildData } from './build-dummy-data';
 
-@customElement('name-tag')
-export class NameTag extends FASTElement {}
+class DataStore {
+  data: DataItem[];
+
+  constructor() {
+    this.data = buildData();
+  }
+}
+
+new DataStore();

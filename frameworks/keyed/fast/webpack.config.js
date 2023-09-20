@@ -9,9 +9,8 @@ export default function (env, { mode }) {
   const production = mode === 'production';
   return {
     mode: production ? 'production' : 'development',
-    devtool: production ? 'source-maps' : 'inline-source-map',
     entry: {
-      app: ['./src/todo-item.ts']
+      app: ['./src/main.ts']
     },
     output: {
       filename: 'bundle.js',
