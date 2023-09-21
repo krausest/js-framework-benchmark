@@ -74,7 +74,7 @@ export async  function initMeasurement(driver: WebDriver) {
 
 async function measureClickForElement(driver: WebDriver, elem: WebElement) {
   if (!elem) throw `measureClickForElement failed. Element was not found.`;
-  let duration = await driver.executeAsyncScript(`
+  const duration = await driver.executeAsyncScript(`
       let callback = arguments[arguments.length - 1];
       let elem = arguments[0];
       let base = document;
@@ -93,13 +93,13 @@ async function measureClickForElement(driver: WebDriver, elem: WebElement) {
 }
 
 async function measureClickElementById(driver: WebDriver, id: string, isInButtonArea: boolean) {
-  let elem = await findById(driver, id, isInButtonArea);
+  const elem = await findById(driver, id, isInButtonArea);
   console.log("measureClickElementById: ", elem);
   await measureClickForElement(driver, elem);
 }
 
 async function measureClickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
-  let elem = await findByXPath(driver, xpath, isInButtonArea);
+  const elem = await findByXPath(driver, xpath, isInButtonArea);
   if (!elem) throw `measureClickElementById ${xpath} failed. Element was not found.`;
   await measureClickForElement(driver, elem);
 }
@@ -192,13 +192,13 @@ export const benchSwapRows = new (class extends CPUBenchmarkWebdriver {
     await clickElementById(driver, "run", true);
     await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
     for (let i = 0; i <= config.WARMUP_COUNT; i++) {
-      let text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
+      const text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
       await clickElementById(driver, "swaprows", true);
       await testTextContains(driver, "//tbody/tr[999]/td[2]/a", text, config.TIMEOUT, false);
     }
   }
   async run(driver: WebDriver) {
-    let text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
+    const text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
     await measureClickElementById(driver, "swaprows", true);
     await testTextContains(driver, "//tbody/tr[999]/td[2]/a", text, config.TIMEOUT, false);
   }

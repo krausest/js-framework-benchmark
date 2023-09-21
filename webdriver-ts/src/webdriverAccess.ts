@@ -3,6 +3,7 @@ import * as chrome from "selenium-webdriver/chrome.js";
 import { BenchmarkOptions, config } from "./common.js";
 
 let useShadowRoot = false;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let useRowShadowRoot = false;
 let shadowRootName = "";
 let buttonsInShadowRoot = false;
@@ -24,11 +25,11 @@ export function setButtonsInShadowRoot(val: boolean) {
 }
 
 function convertPath(path: string): string {
-  let parts = path.split(/\//).filter((v) => !!v);
-  let res = [];
-  for (let part of parts) {
-    let components = part.split(/\[|]/).filter((v) => !!v);
-    let tagName = components[0];
+  const parts = path.split(/\//).filter((v) => !!v);
+  const res = [];
+  for (const part of parts) {
+    const components = part.split(/\[|]/).filter((v) => !!v);
+    const tagName = components[0];
     let index = 0;
     if (components.length == 2) {
       index = Number(components[1]);
@@ -46,15 +47,15 @@ function convertPath(path: string): string {
 
 export async function findById(driver: WebDriver, id: string, isInButtonArea: boolean): Promise<WebElement> 
 {
-  let root= mainRoot(driver, isInButtonArea);
+  const root= mainRoot(driver, isInButtonArea);
   if (config.LOG_DEBUG) console.log("findById selector ", `${root}.querySelector('#${id}')`);
   return await (driver.executeScript(`return ${root}.querySelector('#${id}')`) as Promise<WebElement>)
 }
 
 // Fake findByXPath for simple XPath expressions to allow usage with shadow dom
 export async function findByXPath(driver: WebDriver, path: string, isInButtonArea: boolean): Promise<WebElement> {
-  let paths = convertPath(path);
-  let root = mainRoot(driver, isInButtonArea);
+  const paths = convertPath(path);
+  const root = mainRoot(driver, isInButtonArea);
   try {
     if (config.LOG_DEBUG) console.log("findByXPath: selector = ", `return ${root}.querySelector('${paths}')`);
      return await driver.executeScript(`return ${root}.querySelector('${paths}')`) 
@@ -78,9 +79,9 @@ export async function testTextContains(driver: WebDriver, xpath: string, text: s
     async function (driver) {
       try {
         if (config.LOG_DEBUG) console.log("testTextContains", xpath);
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        const elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
-        let v = await elem.getText();
+        const v = await elem.getText();
         return v && v.indexOf(text) > -1;
       } catch (err) {
         console.log("ignoring error in testTextContains for xpath = " + xpath + " text = " + text, err.toString().split("\n")[0]);
@@ -95,9 +96,9 @@ export async function testTextNotContained(driver: WebDriver, xpath: string, tex
     `testTextNotContained ${xpath} ${text}`,
     async function (driver) {
       try {
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        const elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
-        let v = await elem.getText();
+        const v = await elem.getText();
         return v && v.indexOf(text) == -1;
       } catch (err) {
         console.log("ignoring error in testTextNotContained for xpath = " + xpath + " text = " + text, err.toString().split("\n")[0]);
@@ -112,9 +113,9 @@ export async function testClassContains(driver: WebDriver, xpath: string, text: 
     `testClassContains ${xpath} ${text}`,
     async function (driver) {
       try {
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        const elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
-        let v = await elem.getAttribute("class");
+        const v = await elem.getAttribute("class");
         return v && v.indexOf(text) > -1;
       } catch (err) {
         console.log("ignoring error in testClassContains for xpath = " + xpath + " text = " + text, err.toString().split("\n")[0]);
@@ -129,7 +130,7 @@ export async function testElementLocatedByXpath(driver: WebDriver, xpath: string
     `testElementLocatedByXpath ${xpath}`,
     async function (driver) {
       try {
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        const elem = await findByXPath(driver, xpath, isInButtonArea);
         return elem ? true : false;
       } catch (err) {
         console.log("ignoring error in testElementLocatedByXpath for xpath = " + xpath, err.toString());
@@ -144,7 +145,7 @@ export async function testElementNotLocatedByXPath(driver: WebDriver, xpath: str
     `testElementNotLocatedByXPath ${xpath}`,
     async function (driver) {
       try {
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        const elem = await findByXPath(driver, xpath, isInButtonArea);
         if (config.LOG_DEBUG) console.log("testElementNotLocatedByXPath", xpath, elem);
         return elem ? false : true;
       } catch (err) {
@@ -160,9 +161,9 @@ export async function testElementLocatedById(driver: WebDriver, id: string, time
     `testElementLocatedById ${id}`,
     async function (driver) {
       try {
-        let root= mainRoot(driver, isInButtonArea);
+        const root= mainRoot(driver, isInButtonArea);
         if (config.LOG_DEBUG) console.log("testElementLocatedById selector ",`return ${root}.querySelector('#${id}')`);
-        let elem = await driver.executeScript(`return ${root}.querySelector('#${id}')`)
+        const elem = await driver.executeScript(`return ${root}.querySelector('#${id}')`)
         return !!elem;
       } catch (err) {
         // console.log("ignoring error in testElementLocatedById for id = "+id,err.toString().split("\n")[0]);
@@ -187,7 +188,7 @@ export async function retry<T>(retryCount: number, driver: WebDriver, fun: (driv
 // No idea how that can be explained
 export async function clickElementById(driver: WebDriver, id: string, isInButtonArea: boolean) {
   return await retry(5, driver, async function (driver) {
-    let elem = await findById(driver, id, isInButtonArea);
+    const elem = await findById(driver, id, isInButtonArea);
     if (config.LOG_DEBUG) console.log("clickElementById: ", elem);
     await elem.click();
   });
@@ -196,7 +197,7 @@ export async function clickElementById(driver: WebDriver, id: string, isInButton
 export async function clickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
   return await retry(5, driver, async function (driver, count) {
     if (count > 1 && config.LOG_DETAILS) console.log("clickElementByXPath ", xpath, " attempt #", count);
-    let elem = await findByXPath(driver, xpath, isInButtonArea);
+    const elem = await findByXPath(driver, xpath, isInButtonArea);
     await elem.click();
   });
   // Stale element possible:
@@ -206,7 +207,7 @@ export async function clickElementByXPath(driver: WebDriver, xpath: string, isIn
 export async function getTextByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean): Promise<string> {
   return await retry(5, driver, async function (driver, count) {
     if (count > 1 && config.LOG_DETAILS) console.log("getTextByXPath ", xpath, " attempt #", count);
-    let elem = await findByXPath(driver, xpath, isInButtonArea);
+    const elem = await findByXPath(driver, xpath, isInButtonArea);
     return await elem.getText();
   });
 }
@@ -226,10 +227,10 @@ export function mainRoot(driver: WebDriver, isInButtonArea: boolean): string {
 // node_modules\.bin\chromedriver.cmd --verbose --port=9998 --log-path=chromedriver.log
 // SELENIUM_REMOTE_URL=http://localhost:9998
 export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
-  let width = 1280;
-  let height = 800;
+  const width = 1280;
+  const height = 800;
 
-  let args = [
+  const args = [
     "--js-flags=--expose-gc",
     "--enable-precise-memory-info",
     "--flag-switches-begin","--enable-zero-copy","--enable-features=RawDraw","--flag-switches-end",
@@ -257,7 +258,7 @@ export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
     args.push("--no-sandbox");
   }
 
-  let caps = new Capabilities({
+  const caps = new Capabilities({
     browserName: "chrome",
     platform: "ANY",
     version: "stable",
@@ -278,8 +279,8 @@ export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
   });
 
   // port probing fails sometimes on windows, the following driver construction avoids probing:
-  let service = new chrome.ServiceBuilder().setPort(benchmarkOptions.chromePort).build();
-  let driver = chrome.Driver.createSession(caps, service);
+  const service = new chrome.ServiceBuilder().setPort(benchmarkOptions.chromePort).build();
+  const driver = chrome.Driver.createSession(caps, service);
 
   return driver;
 }

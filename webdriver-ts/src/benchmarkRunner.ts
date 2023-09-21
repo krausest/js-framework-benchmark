@@ -58,10 +58,10 @@ async function runBenchmakLoopStartup(
   benchmarkOptions: BenchmarkOptions
 ): Promise<{ errors: string[]; warnings: string[] }> {
   let warnings: string[] = [];
-  let errors: string[] = [];
+  const errors: string[] = [];
 
   let results: Array<StartupBenchmarkResult> = [];
-  let count = benchmarkOptions.numIterationsForStartupBenchmark;
+  const count = benchmarkOptions.numIterationsForStartupBenchmark;
   benchmarkOptions.batchSize = 1;
 
   let retries = 0;
@@ -72,7 +72,7 @@ async function runBenchmakLoopStartup(
 
   while (done < count) {
     console.log("FORKING: ", benchmarkInfo.id, " BatchSize ", benchmarkOptions.batchSize);
-    let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
+    const res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
     if (Array.isArray(res.result)) {
       results = results.concat(res.result as StartupBenchmarkResult[]);
     } else results.push(res.result);
@@ -109,7 +109,7 @@ async function runBenchmakLoop(
   benchmarkOptions: BenchmarkOptions
 ): Promise<{ errors: string[]; warnings: string[] }> {
   let warnings: string[] = [];
-  let errors: string[] = [];
+  const errors: string[] = [];
 
   let results: Array<CPUBenchmarkResult|number> = [];
   let count = 0;
@@ -130,7 +130,7 @@ async function runBenchmakLoop(
   while (results.length < count) {
     benchmarkOptions.batchSize = Math.min(benchmarkOptions.batchSize, count - results.length);
     console.log("FORKING: ", benchmarkInfo.id, " BatchSize ", benchmarkOptions.batchSize);
-    let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
+    const res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
     if (Array.isArray(res.result)) {
       results = results.concat(res.result as number[]|CPUBenchmarkResult[]);
     } else results.push(res.result);
@@ -181,8 +181,8 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkInfos: Benchmar
   let errors: string[] = [];
   let warnings: string[] = [];
 
-  let restart: string = undefined;
-  let index = runFrameworks.findIndex((f) => f.fullNameWithKeyedAndVersion === restart);
+  const restart: string = undefined;
+  const index = runFrameworks.findIndex((f) => f.fullNameWithKeyedAndVersion === restart);
   if (index > -1) {
     runFrameworks = runFrameworks.slice(index);
   }
@@ -244,7 +244,7 @@ async function main() {
 // What works: npm run bench keyed/react, npm run bench -- keyed/react, npm run bench -- keyed/react --count 1 --benchmark 01_
 // What doesn't work (keyed/react becomes an element of argument benchmark): npm run bench -- --count 1 --benchmark 01_ keyed/react
 
-let args: any = yargs(process.argv)
+const args: any = yargs(process.argv)
   .usage(
     "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
   )
@@ -261,7 +261,7 @@ let args: any = yargs(process.argv)
 
 console.log("args", args);
 
-let runner = args.runner;
+const runner = args.runner;
 if ([BENCHMARK_RUNNER.WEBDRIVER_CDP,BENCHMARK_RUNNER.WEBDRIVER,BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME,
   BENCHMARK_RUNNER.PLAYWRIGHT,
   BENCHMARK_RUNNER.PUPPETEER].includes(runner)) {
@@ -273,7 +273,7 @@ if ([BENCHMARK_RUNNER.WEBDRIVER_CDP,BENCHMARK_RUNNER.WEBDRIVER,BENCHMARK_RUNNER.
 }
 console.log("HEADLESS*** ", args.headless);
 
-let benchmarkOptions: BenchmarkOptions = {
+const benchmarkOptions: BenchmarkOptions = {
   port: 8080,
   host: 'localhost',
   browser: args.browser,
@@ -298,8 +298,8 @@ if (args.count) {
 }
 
 
-let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
-let frameworkArgument = !args.framework ? allArgs : args.framework;
+const allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
+const frameworkArgument = !args.framework ? allArgs : args.framework;
 console.log("args", args, "allArgs", allArgs);
 
 if (process.env.HOST) {
@@ -308,18 +308,17 @@ if (process.env.HOST) {
 }
 console.log("benchmarkOptions", benchmarkOptions);
 
-  let runBenchmarksArgs: string[] =  (args.benchmark && args.benchmark.length > 0) ? args.benchmark : [""];
-  let runBenchmarks: Array<BenchmarkInfo> = benchmarkInfos.filter((b) =>
+  const runBenchmarksArgs: string[] =  (args.benchmark && args.benchmark.length > 0) ? args.benchmark : [""];
+  const runBenchmarks: Array<BenchmarkInfo> = benchmarkInfos.filter((b) =>
     // afterframe currently only targets CPU benchmarks
     (config.BENCHMARK_RUNNER !== BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME || b.type == BenchmarkType.CPU) && 
     runBenchmarksArgs.some((name) => b.id.toLowerCase().indexOf(name) > -1)
   );
   
   
-  let runFrameworks: FrameworkData[];
-  let matchesDirectoryArg = (directoryName: string) =>
+  const matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
-  runFrameworks = (await initializeFrameworks(benchmarkOptions, matchesDirectoryArg)).filter(f => f.keyed || config.BENCHMARK_RUNNER !== BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME);
+  const runFrameworks = (await initializeFrameworks(benchmarkOptions, matchesDirectoryArg)).filter(f => f.keyed || config.BENCHMARK_RUNNER !== BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME);
 
   console.log("ARGS.smotest", args.smoketest)
   if (args.smoketest) {

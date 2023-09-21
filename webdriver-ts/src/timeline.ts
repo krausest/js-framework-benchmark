@@ -13,12 +13,12 @@ interface Timingresult {
   }
   
   export function extractRelevantEvents(config: TConfig, entries: any[]) {
-    let filteredEvents: Timingresult[] = [];
+    const filteredEvents: Timingresult[] = [];
     let click_start = 0;
     let click_end = 0;
   
     entries.forEach(x => {
-        let e = x;
+        const e = x;
         if (config.LOG_DEBUG) console.log(JSON.stringify(e));
         if (e.name==='EventDispatch') {
             if (e.args.data.type==="click") {
@@ -52,11 +52,11 @@ interface Timingresult {
   
   async function fetchEventsFromPerformanceLog(config: TConfig, fileName: string): Promise<Timingresult[]> {
     let timingResults : Timingresult[] = [];
-    let entries = [];
+    const entries = [];
     do {
-        let contents = await readFile(fileName, {encoding: "utf8"});
-        let json  = JSON.parse(contents)
-        let entries = json['traceEvents'];
+        const contents = await readFile(fileName, {encoding: "utf8"});
+        const json  = JSON.parse(contents)
+        const entries = json['traceEvents'];
         const filteredEvents = extractRelevantEvents(config, entries);
         timingResults = timingResults.concat(filteredEvents);
     } while (entries.length > 0);
@@ -76,10 +76,10 @@ interface Timingresult {
   ];
 
   export function extractRelevantJSEvents(config: TConfig, entries: any[]) {
-    let filteredEvents: any[] = [];
+    const filteredEvents: any[] = [];
   
     entries.forEach(x => {
-        let e = x;
+        const e = x;
         if (config.LOG_DEBUG) console.log(JSON.stringify(e));
         if (e.name==='EventDispatch') {
           if (e.args.data.type==="click") {
@@ -96,11 +96,11 @@ interface Timingresult {
   
   async function fetchJSEventsFromPerformanceLog(config: TConfig, fileName: string): Promise<Timingresult[]> {
     let timingResults : Timingresult[] = [];
-    let entries = [];
+    const entries = [];
     do {
-        let contents = await readFile(fileName, {encoding: "utf8"});
-        let json  = JSON.parse(contents)
-        let entries = json['traceEvents'];
+        const contents = await readFile(fileName, {encoding: "utf8"});
+        const json  = JSON.parse(contents)
+        const entries = json['traceEvents'];
         const filteredEvents = extractRelevantJSEvents(config, entries);
         timingResults = timingResults.concat(filteredEvents);
     } while (entries.length > 0);
@@ -182,19 +182,19 @@ interface Timingresult {
   // }
   export async function computeResultsCPU(config: TConfig, fileName: string, durationMeasurementMode: DurationMeasurementMode): Promise<CPUDurationResult> {
     const perfLogEvents = (await fetchEventsFromPerformanceLog(config, fileName));
-    let eventsDuringBenchmark = R.sortBy((e: Timingresult) => e.end)(perfLogEvents);
+    const eventsDuringBenchmark = R.sortBy((e: Timingresult) => e.end)(perfLogEvents);
   
     // console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
   
-    let clicks = R.filter(type_eq('click'))(eventsDuringBenchmark)
+    const clicks = R.filter(type_eq('click'))(eventsDuringBenchmark)
     if (clicks.length !== 1) {
         console.log("exactly one click event is expected", eventsDuringBenchmark);
         throw "exactly one click event is expected";
     }
-    let click = clicks[0];
+    const click = clicks[0];
   
     let onlyUsePaintEventsAfter: Timingresult;
-    let layouts = R.filter((e: Timingresult) => e.ts > click.end)(R.filter(type_eq('layout'))(eventsDuringBenchmark))
+    const layouts = R.filter((e: Timingresult) => e.ts > click.end)(R.filter(type_eq('layout'))(eventsDuringBenchmark))
     if (durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT) {
       if (layouts.length > 1) {
         console.log("INFO: more than one layout event found");
@@ -210,12 +210,12 @@ interface Timingresult {
       onlyUsePaintEventsAfter = click;
     }
   
-    let paints = R.filter((e: Timingresult) => e.ts > onlyUsePaintEventsAfter.end)(R.filter(type_eq('paint'))(eventsDuringBenchmark));
+    const paints = R.filter((e: Timingresult) => e.ts > onlyUsePaintEventsAfter.end)(R.filter(type_eq('paint'))(eventsDuringBenchmark));
     if (paints.length == 0) {
       console.log("ERROR: No paint event found ",fileName);
       throw "No paint event found";
     } 
-    let paint = paints[durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT ? 0 : paints.length-1];
+    const paint = paints[durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT ? 0 : paints.length-1];
     let duration = (paint.end - clicks[0].ts)/1000.0;
     if (paints.length > 1) {
       console.log("more than one paint event found ",fileName);
@@ -231,15 +231,15 @@ interface Timingresult {
     // let updateLayoutTree = R.filter((e: Timingresult) => e.ts > click.end)(R.filter(type_eq('updateLayoutTree'))(eventsDuringBenchmark));
     // console.log("updateLayoutTree", updateLayoutTree.length, updateLayoutTree[0].end);
   
-    let rafs_withinClick = R.filter((e: Timingresult) => e.ts >= click.ts && e.ts <= click.end)(R.filter(type_eq('requestAnimationFrame'))(eventsDuringBenchmark));
-    let fafs =  R.filter((e: Timingresult) => e.ts >= click.ts && e.ts < paint.ts)(R.filter(type_eq('fireAnimationFrame'))(eventsDuringBenchmark));
+    const rafs_withinClick = R.filter((e: Timingresult) => e.ts >= click.ts && e.ts <= click.end)(R.filter(type_eq('requestAnimationFrame'))(eventsDuringBenchmark));
+    const fafs =  R.filter((e: Timingresult) => e.ts >= click.ts && e.ts < paint.ts)(R.filter(type_eq('fireAnimationFrame'))(eventsDuringBenchmark));
   
     if (rafs_withinClick.length>0 && fafs.length>0) {
-      let waitDelay = (fafs[0].ts - click.end) / 1000.0;
+      const waitDelay = (fafs[0].ts - click.end) / 1000.0;
       if (rafs_withinClick.length==1 && fafs.length==1) {
         if (waitDelay > 16) {
           let ignored = false;
-          for (let e of layouts) {
+          for (const e of layouts) {
             if (e.ts<fafs[0].ts) {
               console.log("IGNORING 1 raf, 1 faf, but layout before raf", waitDelay, fileName);
               ignored = true;
@@ -264,6 +264,7 @@ interface Timingresult {
   }
   
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   export async function computeResultsJS(cpuTrace: CPUDurationResult, config: TConfig, fileName: string, durationMeasurementMode: DurationMeasurementMode): Promise<number> {
     const totalDuration = cpuTrace;
 
@@ -271,7 +272,7 @@ interface Timingresult {
   
     const eventsWithin = R.filter<Timingresult>(e => e.ts >= totalDuration.tsStart && e.ts <= totalDuration.tsEnd)(perfLogEvents);
 
-    for (let ev of eventsWithin) {
+    for (const ev of eventsWithin) {
       ev.ts -=  totalDuration.tsStart;
       ev.end -= totalDuration.tsStart;
     }
@@ -285,11 +286,11 @@ interface Timingresult {
       return testIv.start>=otherIv.start && testIv.end<=otherIv.end;
     }
     function newContainedInterval(outer: Timingresult, intervals: Array<Interval>) {
-      let outerIv = {start: outer.ts, end: outer.end, timingResult: outer};
-      let cleanedUp: Array<Interval> = []
-      let isContainedRes = intervals.some(iv => isContained(outerIv, iv));
+      const outerIv = {start: outer.ts, end: outer.end, timingResult: outer};
+      const cleanedUp: Array<Interval> = []
+      const isContainedRes = intervals.some(iv => isContained(outerIv, iv));
       if (!isContainedRes) { cleanedUp.push(outerIv) }
-      for (let iv of intervals) {
+      for (const iv of intervals) {
         if (iv.start<outer.ts || iv.end>outer.end) {
           cleanedUp.push(iv);
         }
@@ -298,7 +299,7 @@ interface Timingresult {
     }
     
     let intervals: Array<Interval> = [];
-    for (let ev of eventsWithin) {
+    for (const ev of eventsWithin) {
       intervals = newContainedInterval(ev, intervals);
     }
     if (intervals.length > 1) {
@@ -307,7 +308,7 @@ interface Timingresult {
       console.log(`1 interval for ${fileName}`, intervals);
     }
   
-    let res = intervals.reduce((p,c) => p+(c.end-c.start), 0)/1000.0;
+    const res = intervals.reduce((p,c) => p+(c.end-c.start), 0)/1000.0;
     return res;
   }
   

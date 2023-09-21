@@ -57,8 +57,8 @@ async function forceGC(page: Page, client: CDPSession) {
 async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPlaywright, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning<CPUBenchmarkResult>>
 {
     let error: string = undefined;
-    let warnings: string[] = [];
-    let results: CPUBenchmarkResult[] = [];
+    const warnings: string[] = [];
+    const results: CPUBenchmarkResult[] = [];
 
     console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
     let browser : Browser = null;
@@ -72,7 +72,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
                 console.log(`BROWSER: ${msg.args()[i]}`);
             });
         // }
-        let client = await page.context().newCDPSession(page);
+        const client = await page.context().newCDPSession(page);
         await client.send('Performance.enable');
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
             await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
@@ -83,7 +83,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             // result svelte-v3.46.2-keyed_01_run1k.json min 67.237 max 71.611 mean 69.4036 median 69.20949999999999 stddev 1.3601652023845432
             // default categories:
             // result svelte-v3.46.2-keyed_01_run1k.json min 61.334 max 65.92 mean 63.84379999999999 median 63.756 stddev 1.5925086987377977
-            let categories = [
+            const categories = [
                 "blink.user_timing",
                 "devtools.timeline",
                 'disabled-by-default-devtools.timeline',
@@ -104,7 +104,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             // ];
 
             await forceGC(page, client);
-            let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
+            const throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
             if (throttleCPU) {
               console.log("CPU slowdown", throttleCPU);
               await client.send('Emulation.setCPUThrottlingRate', { rate: throttleCPU });
@@ -114,24 +114,24 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
                 screenshots: false,
                 categories:categories
             });
-            let m1 = (await client.send('Performance.getMetrics')).metrics;
-            let m1_val = m1.find(m => m.name === 'ScriptDuration').value;
-            let m1_Timestamp = m1.find(m => m.name === 'Timestamp').value;
+            const m1 = (await client.send('Performance.getMetrics')).metrics;
+            const m1_val = m1.find(m => m.name === 'ScriptDuration').value;
+            const m1_Timestamp = m1.find(m => m.name === 'Timestamp').value;
             console.log("m1", m1, m1_val);
             console.log("runBenchmark Playwright");
             await runBenchmark(browser, page, benchmark, framework);
 
             await wait(40);
             await browser.stopTracing();
-            let m2 = (await client.send('Performance.getMetrics')).metrics;
-            let m2_val = m2.find(m => m.name === 'ScriptDuration').value;
-            let m2_Timestamp = m2.find(m => m.name === 'Timestamp').value;
+            const m2 = (await client.send('Performance.getMetrics')).metrics;
+            const m2_val = m2.find(m => m.name === 'ScriptDuration').value;
+            const m2_Timestamp = m2.find(m => m.name === 'Timestamp').value;
             console.log("m2", m2, m2_val);
             if (throttleCPU) {
               await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });            
           }  
-            let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
-            let resultScript = (m2_val - m1_val)*1000.0;
+            const result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
+            const resultScript = (m2_val - m1_val)*1000.0;
             console.log("**** resultScript = ", resultScript);
             if (m2_Timestamp == m1_Timestamp) throw new Error("Page metrics timestamp didn't change");
 
@@ -170,8 +170,8 @@ async function runMemBenchmark(
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number>> {
   let error: string = undefined;
-  let warnings: string[] = [];
-  let results: number[] = [];
+  const warnings: string[] = [];
+  const results: number[] = [];
 
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
   let browser: Browser = null;
@@ -195,7 +195,7 @@ async function runMemBenchmark(
       //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
       // });
       console.log("initBenchmark");
-      let client = await page.context().newCDPSession(page);
+      const client = await page.context().newCDPSession(page);
       await client.send('Performance.enable');
       await initBenchmark(browser, page, benchmark, framework);
 
@@ -205,7 +205,7 @@ async function runMemBenchmark(
       await wait(40);
       // let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
 
-      let result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
+      const result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
       console.log("afterBenchmark ");
       results.push(result);
       console.log(`memory result for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
@@ -233,9 +233,9 @@ export async function executeBenchmark(
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number|CPUBenchmarkResult>> {
-  let runBenchmarks: Array<TBenchmarkPlaywright> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && (b instanceof CPUBenchmarkPlaywright || b instanceof MemBenchmarkPlaywright) ) as Array<TBenchmarkPlaywright>;
+  const runBenchmarks: Array<TBenchmarkPlaywright> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && (b instanceof CPUBenchmarkPlaywright || b instanceof MemBenchmarkPlaywright) ) as Array<TBenchmarkPlaywright>;
 
-  let benchmark = runBenchmarks[0];
+  const benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning<number|CPUBenchmarkResult>;
   if (benchmark.type == BenchmarkType.CPU) {
@@ -250,7 +250,7 @@ export async function executeBenchmark(
 process.on("message", (msg: any) => {
   config = msg.config;
   console.log("START PLAYWRIGHT BENCHMARK.");
-  let {
+  const {
     framework,
     benchmarkId,
     benchmarkOptions,

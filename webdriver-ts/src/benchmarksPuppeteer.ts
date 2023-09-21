@@ -25,7 +25,7 @@ export abstract class MemBenchmarkPuppeteer implements benchmarksCommon.Benchmar
 
 export type TBenchmarkPuppeteer = CPUBenchmarkPuppeteer | MemBenchmarkPuppeteer;
 
-export let benchRun = new class extends CPUBenchmarkPuppeteer {
+export const benchRun = new class extends CPUBenchmarkPuppeteer {
   constructor() {
       super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_01]);
   }
@@ -109,7 +109,7 @@ export const benchSwapRows = new class extends CPUBenchmarkPuppeteer {
       await clickElement(page, "pierce/#run");
       await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
       for (let i = 0; i <= config.WARMUP_COUNT; i++) {
-          let text = ((i%2) == 0) ? "2" : "999";
+          const text = ((i%2) == 0) ? "2" : "999";
           await clickElement(page, "pierce/#swaprows");
           await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text);
       }
@@ -211,6 +211,7 @@ export const benchReadyMemory = new (class extends MemBenchmarkPuppeteer {
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async run(page: Page) {return await Promise.resolve(null);}
 })();
 

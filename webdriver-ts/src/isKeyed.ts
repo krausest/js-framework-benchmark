@@ -5,7 +5,7 @@ import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from ".
 import * as R from "ramda";
 import { ElementHandle, Page } from "playwright";
 
-let args: any = yargs(process.argv)
+const args: any = yargs(process.argv)
   .usage(
     "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
   )
@@ -19,7 +19,7 @@ console.log("args", args);
 
 console.log("HEADLESS*** ", args.headless);
 
-let benchmarkOptions: BenchmarkOptions = {
+const benchmarkOptions: BenchmarkOptions = {
   port: 8080,
   host: 'localhost',
   browser: args.browser,
@@ -36,11 +36,11 @@ let benchmarkOptions: BenchmarkOptions = {
   allowThrottling: !args.nothrottling
 };
 
-let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
-let frameworkArgument = !args.framework ? allArgs : args.framework;
+const allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
+const frameworkArgument = !args.framework ? allArgs : args.framework;
 console.log("args", args, "allArgs", allArgs);
 
-let init = (shadowRootName: string) => `
+const init = (shadowRootName: string) => `
 window.nonKeyedDetector_reset = function() {
     window.nonKeyedDetector_tradded = [];
     window.nonKeyedDetector_trremoved = [];
@@ -125,7 +125,7 @@ window.nonKeyedDetector_reset();
 `;
 
 function isKeyedRun(result: any, shouldBeKeyed: boolean): boolean {
-  let r = result.tradded >= 1000 && result.trremoved >= 1000;
+  const r = result.tradded >= 1000 && result.trremoved >= 1000;
   if (r && !shouldBeKeyed) {
     // console.log(
     //   `Non-keyed test for create rows failed. Expected that TRs should be recycled, but there were ${result.tradded} added TRs and ${result.trremoved} were removed`
@@ -138,7 +138,7 @@ function isKeyedRun(result: any, shouldBeKeyed: boolean): boolean {
   return r;
 }
 function isKeyedRemove(result: any, shouldBeKeyed: boolean): boolean {
-  let r = result.removedStoredTr;
+  const r = result.removedStoredTr;
   if (r && !shouldBeKeyed) {
     // console.log(`Note: Non-keyed test for remove is acutally keyed. Expected that the dom node for the 2nd row would NOT be removed, but it was.`);
   } else if (!r && shouldBeKeyed) {
@@ -147,7 +147,7 @@ function isKeyedRemove(result: any, shouldBeKeyed: boolean): boolean {
   return r;
 }
 function isKeyedSwapRow(result: any, shouldBeKeyed: boolean): boolean {
-  let r = result.tradded > 0 && result.trremoved > 0 && result.newNodes == 0;
+  const r = result.tradded > 0 && result.trremoved > 0 && result.newNodes == 0;
   if (r && !shouldBeKeyed) {
     // console.log(
     //   `Non-keyed test for swap failed. Expected than no TRs are added or removed, but there were ${result.tradded} added and ${result.trremoved} removed`
@@ -165,9 +165,9 @@ function isKeyedSwapRow(result: any, shouldBeKeyed: boolean): boolean {
 }
 
 async function assertChildNodes(elem: ElementHandle<HTMLElement>, expectedNodes: string[], message: string) {
-  let elements = await elem.$$("*");
-  let allNodes = await Promise.all(elements.map((e) => e.evaluate(e => e.tagName)));
-  let toLower = (array: string[]) => array.map(s => s.toLowerCase());
+  const elements = await elem.$$("*");
+  const allNodes = await Promise.all(elements.map((e) => e.evaluate(e => e.tagName)));
+  const toLower = (array: string[]) => array.map(s => s.toLowerCase());
   if (!R.equals(toLower(allNodes), toLower(expectedNodes))) {
     console.log("ERROR in html structure for " + message);
     console.log("  expected:", expectedNodes);
@@ -184,7 +184,7 @@ function niceEmptyString(val: string[]): string {
 }
 
 async function assertClassesContained(elem: ElementHandle<HTMLElement>, expectedClassNames: string[], message: string) {
-  let actualClassNames = (await elem.evaluate(e => e.className)).split(" ");
+  const actualClassNames = (await elem.evaluate(e => e.className)).split(" ");
   if (!expectedClassNames.every((expected) => actualClassNames.includes(expected))) {
     console.log(
       "css class not correct. Expected for " + message + " to be " + expectedClassNames + " but was " + niceEmptyString(actualClassNames)
@@ -195,36 +195,36 @@ async function assertClassesContained(elem: ElementHandle<HTMLElement>, expected
 }
 
 export async function checkTRcorrect(page: Page): Promise<boolean> {
-  let tr = await page.$("tbody>tr:nth-of-type(1000)");
+  const tr = await page.$("tbody>tr:nth-of-type(1000)");
   if (!(await assertChildNodes(tr as ElementHandle<HTMLElement>, ["td", "td", "a", "td", "a", "span", "td"], "tr"))) {
     return false;
   }
 
   // first td
-  let td1 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
+  const td1 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
   if (!(await assertClassesContained(td1 as ElementHandle<HTMLElement>, ["col-md-1"], "first td"))) {
     return false;
   }
 
   // second td
-  let td2 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(2)");
+  const td2 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(2)");
   if (!(await assertClassesContained(td2 as ElementHandle<HTMLElement>, ["col-md-4"], "second td"))) {
     return false;
   }
 
   // third td
-  let td3 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(3)");
+  const td3 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(3)");
   if (!(await assertClassesContained(td3 as ElementHandle<HTMLElement>, ["col-md-1"], "third td"))) {
     return false;
   }
 
   // span in third td
-  let span = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(3)>a>span");
+  const span = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(3)>a>span");
   if (!(await assertClassesContained(span as ElementHandle<HTMLElement>, ["glyphicon", "glyphicon-remove"], "span in a in third td"))) {
     return false;
   }
   // console.log("names", await span.evaluate(e => e.getAttributeNames()));
-  let spanAria = await span.evaluate(e => e.getAttribute("aria-hidden"));
+  const spanAria = await span.evaluate(e => e.getAttribute("aria-hidden"));
   // console.log("aria ", spanAria);
   if ("true" !== spanAria) {
     console.log("Expected to find 'aria-hidden'=true on span in third td, but found ", spanAria);
@@ -232,7 +232,7 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
   }
 
   // // fourth td
-  let td4 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(4)");
+  const td4 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(4)");
   if (!(await assertClassesContained(td4 as ElementHandle<HTMLElement>, ["col-md-6"], "fourth td"))) {
     return false;
   }
@@ -240,11 +240,11 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
   return true;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function runBench(frameworkNames: string[]) {
-  let runFrameworks;
-  let matchesDirectoryArg = (directoryName: string) =>
+  const matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
-  runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
+  const runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
   console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
 
   let allCorrect = true;
@@ -252,10 +252,10 @@ async function runBench(frameworkNames: string[]) {
   console.log("*** headless", benchmarkOptions.headless)
 
   for (let i = 0; i < runFrameworks.length; i++) {
-    let browser = await startBrowser(benchmarkOptions);
-    let page = await browser.newPage();
+    const browser = await startBrowser(benchmarkOptions);
+    const page = await browser.newPage();
     try {
-      let framework: FrameworkData = runFrameworks[i];
+      const framework: FrameworkData = runFrameworks[i];
 
       await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
       await checkElementExists(page, "#add");
@@ -263,12 +263,12 @@ async function runBench(frameworkNames: string[]) {
       await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
 
       // check html for tr
-      let htmlCorrect = await checkTRcorrect(page);
+      const htmlCorrect = await checkTRcorrect(page);
       if (!htmlCorrect) {
         console.log("ERROR: Framework " + framework.fullNameWithKeyedAndVersion + " html is not correct");
         allCorrect = false;
       }
-      let str = init(framework.shadowRootName);
+      const str = init(framework.shadowRootName);
       await page.evaluate(str);
       if (framework.useShadowRoot) {
         await page.evaluate(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`);
@@ -281,14 +281,14 @@ async function runBench(frameworkNames: string[]) {
       await clickElement(page, "#swaprows");
       await checkElementContainsText(page, "tbody>tr:nth-of-type(2)>td:nth-of-type(1)", "999");
       let res = await page.evaluate("nonKeyedDetector_result()");
-      let keyedSwap = isKeyedSwapRow(res, framework.keyed);
+      const keyedSwap = isKeyedSwapRow(res, framework.keyed);
       // run
       await page.evaluate("nonKeyedDetector_storeTr()");
       await page.evaluate("window.nonKeyedDetector_reset()");
       await clickElement(page, "#run");
       await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "2000");
       res = await page.evaluate("nonKeyedDetector_result()");
-      let keyedRun = isKeyedRun(res, framework.keyed);
+      const keyedRun = isKeyedRun(res, framework.keyed);
       // // remove
       await page.evaluate("nonKeyedDetector_storeTr()");
       await page.evaluate("window.nonKeyedDetector_reset()");
@@ -296,8 +296,8 @@ async function runBench(frameworkNames: string[]) {
       await clickElement(page, `tbody>tr:nth-of-type(2)>td:nth-of-type(3)>a>span:nth-of-type(1)`);
       await checkElementContainsText(page, `tbody>tr:nth-of-type(2)>td:nth-of-type(1)`, "1003");
       res = await page.evaluate("nonKeyedDetector_result()");
-      let keyedRemove = isKeyedRemove(res, framework.keyed);
-      let keyed = keyedRemove && keyedRun && keyedSwap;
+      const keyedRemove = isKeyedRemove(res, framework.keyed);
+      const keyed = keyedRemove && keyedRun && keyedSwap;
       console.log(
         framework.fullNameWithKeyedAndVersion +
           " is " +
@@ -330,7 +330,7 @@ async function runBench(frameworkNames: string[]) {
   if (!allCorrect) process.exit(1);
 }
 
-let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map((v: string) => v.toString());
+const runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map((v: string) => v.toString());
 
 async function main() {
   if (args.help) {

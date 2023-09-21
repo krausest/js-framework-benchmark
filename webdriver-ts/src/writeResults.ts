@@ -30,8 +30,8 @@ export function writeResults(resultDir: string, res: ResultLightHouse|ResultCPU|
 
   switch(res.type) {
   case BenchmarkType.STARTUP:
-    for (let subbench of subbenchmarks) {
-      let results = res.results.filter(r => r.benchmark.id == subbench.id).map(r => r.result);
+    for (const subbench of subbenchmarks) {
+      const results = res.results.filter(r => r.benchmark.id == subbench.id).map(r => r.result);
       createResultFile(resultDir, results, res.framework, subbench);
     }
       break;
@@ -57,9 +57,9 @@ function createResultFile(resultDir: string, data: number[]|{[key:string]: numbe
       type = "startup";
       break;
     }
-    let convertResult = (label: string, data: number[]) => {
-      let s = jStat(data);
-      let res = {
+    const convertResult = (label: string, data: number[]) => {
+      const s = jStat(data);
+      const res = {
         min: s.min(),
         max: s.max(),
         mean:s.mean(),
@@ -73,7 +73,7 @@ function createResultFile(resultDir: string, data: number[]|{[key:string]: numbe
       return res;
     }
   if (Array.isArray(data)) {
-    let result: JSONResult = {
+    const result: JSONResult = {
       framework: framework.fullNameWithKeyedAndVersion,
       keyed: framework.keyed,
       benchmark: benchmark.id,
@@ -82,11 +82,11 @@ function createResultFile(resultDir: string, data: number[]|{[key:string]: numbe
     };
     fs.writeFileSync(`${resultDir}/${fileName(framework, benchmark)}`, JSON.stringify(result), { encoding: "utf8" });
   } else {
-    let values: {[k: string]: JSONResultData} = {};
-    for (let key of Object.keys(data)) {
+    const values: {[k: string]: JSONResultData} = {};
+    for (const key of Object.keys(data)) {
       values[key] = convertResult(key, data[key]);
     }
-    let result: JSONResult = {
+    const result: JSONResult = {
       framework: framework.fullNameWithKeyedAndVersion,
       keyed: framework.keyed,
       benchmark: benchmark.id,

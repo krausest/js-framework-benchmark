@@ -25,7 +25,7 @@ export abstract class MemBenchmarkPlaywright implements benchmarksCommon.Benchma
 
 export type TBenchmarkPlaywright = CPUBenchmarkPlaywright | MemBenchmarkPlaywright;
 
-export let benchRun = new class extends CPUBenchmarkPlaywright {
+export const benchRun = new class extends CPUBenchmarkPlaywright {
   constructor() {
       super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_01]);
   }
@@ -108,7 +108,7 @@ export const benchSwapRows = new class extends CPUBenchmarkPlaywright {
       await clickElement(page, "#run");
       await checkElementExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
       for (let i = 0; i <= config.WARMUP_COUNT; i++) {
-          let text = ((i%2) == 0) ? "2" : "999";
+          const text = ((i%2) == 0) ? "2" : "999";
           await clickElement(page, "#swaprows");
           await checkElementContainsText(page, "tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text);
       }
@@ -212,6 +212,7 @@ export const benchReadyMemory = new (class extends MemBenchmarkPlaywright {
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async run(browser: Browser, page: Page) {return await Promise.resolve(null);}
 })();
 

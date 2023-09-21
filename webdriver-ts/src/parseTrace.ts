@@ -7,7 +7,7 @@ import { writeResults } from "./writeResults.js";
 // let TimelineModelBrowser = require("./timeline-model-browser.js");
 //var DevtoolsTimelineModel = require('devtools-timeline-model');
 
-let benchmarkOptions: BenchmarkOptions = {
+const benchmarkOptions: BenchmarkOptions = {
     port: 8080,
     host: 'localhost',
     browser: 'chrome',
@@ -43,20 +43,20 @@ async function single() {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function readAll() {
-    let cpuCPUBenchmarks = Object.values(cpuBenchmarkInfos);
+    const cpuCPUBenchmarks = Object.values(cpuBenchmarkInfos);
     
-    let frameworks = await initializeFrameworks(benchmarkOptions);
-    for (let framework of frameworks) {
-        for (let benchmarkInfo of cpuCPUBenchmarks) {
+    const frameworks = await initializeFrameworks(benchmarkOptions);
+    for (const framework of frameworks) {
+        for (const benchmarkInfo of cpuCPUBenchmarks) {
             let results: CPUBenchmarkResult[] = [];
             for (let i = 0; i < 12; i++) {
-                let trace = `${fileNameTrace(framework, benchmarkInfo, i, benchmarkOptions)}`;
+                const trace = `${fileNameTrace(framework, benchmarkInfo, i, benchmarkOptions)}`;
                 if (!fs.existsSync(trace)) {
                     console.log("ignoring ", trace, "since it doesn't exist.");
                 } else {
                     // console.log("checking ", trace, benchmarkInfo.durationMeasurementMode);
-                    let result = await computeResultsCPU(config, trace, benchmarkInfo.durationMeasurementMode); 
-                    let resultJS = await computeResultsJS(result, config, trace, benchmarkInfo.durationMeasurementMode); 
+                    const result = await computeResultsCPU(config, trace, benchmarkInfo.durationMeasurementMode); 
+                    const resultJS = await computeResultsJS(result, config, trace, benchmarkInfo.durationMeasurementMode); 
                     results.push({total:result.duration, script:resultJS});
                     // console.log(result);
                 }
