@@ -1,6 +1,6 @@
 import './index'; // import all our components
-import { customElement, FASTElement, html, attr, css, FAST, repeat } from '@microsoft/fast-element';
-import { DataItem, buildData } from './utils/build-dummy-data';
+import { customElement, FASTElement, html, observable, when } from '@microsoft/fast-element';
+import { RowItem, buildData } from './utils/build-dummy-data';
 
 const template = html<BenchmarkApp>`
   <div class="jumbotron">
@@ -10,30 +10,26 @@ const template = html<BenchmarkApp>`
       </div>
       <div class="col-md-6">
         <div class="row">
-          <action-triggers></action-triggers>
+          <action-triggers
+            @action=${(x, c) => {
+              x.onAction(c.event);
+            }}
+          ></action-triggers>
         </div>
       </div>
     </div>
   </div>
-  <table class="table table-hover table-striped test-data">
-    <tbody id="tbody">
-      ${repeat(
-        x => x.data,
-        html<DataItem>`
-          <tr data-id="${x => x.id}">
-            <td class="col-md-1">${x => x.id}</td>
-            <td class="col-md-4">
-              <a class="lbl">${x => x.label}</a>
-            </td>
-            <td class="col-md-1">
-              <a class="remove"> <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-            </td>
-            <td class="col-md-6"></td>
-          </tr>
-        `
-      )}
-    </tbody>
-  </table>
+  ${when(
+    x => x.rows?.length,
+    html`
+      <data-table
+        :rows=${x => x.rows}
+        @action=${(x, c) => {
+          x.onAction(c.event);
+        }}
+      ></data-table>
+    `
+  )}
 `;
 
 /**
@@ -49,10 +45,76 @@ const template = html<BenchmarkApp>`
   shadowOptions: null
 })
 export class BenchmarkApp extends FASTElement {
-  data: DataItem[];
+  @observable rows?: RowItem[];
 
-  constructor() {
-    super();
-    this.data = buildData();
+  createOneThousandRows() {
+    this.clear();
+    this.rows = buildData();
+  }
+
+  createTenThousandRows() {
+    this.rows = buildData(10000);
+  }
+
+  appendOneThousandRows() {
+    const lastRowId = this.rows ? this.rows[this.rows.length - 1].id : 0;
+    this.rows = this.rows ? this.rows.concat(buildData(1000, lastRowId)) : buildData();
+  }
+
+  updateEveryTenthRowLabel() {
+    if (!this.rows) return;
+
+    for (let i = 0; i < this.rows.length; i += 10) {
+      this.rows[i].label += ' !!!';
+    }
+
+    this.triggerRerender();
+  }
+
+  clear() {
+    this.rows = [];
+  }
+
+  swapTwoRows() {
+    if (!this.rows) return;
+
+    if (this.rows.length > 998) {
+      const secondRow = this.rows[1];
+      const secondToLastRow = this.rows[998];
+      this.rows[1] = secondToLastRow;
+      this.rows[998] = secondRow;
+    }
+
+    this.triggerRerender();
+  }
+
+  deleteSingleRow(rowId: number) {
+    if (!this.rows) return;
+
+    const rowIndex = this.rows.findIndex(row => row.id === rowId);
+    if (rowIndex > -1) {
+      this.rows.splice(rowIndex, 1);
+    }
+  }
+
+  onAction(event: Event) {
+    const eventDetails = (event as CustomEvent).detail;
+    const { name, data } = eventDetails;
+
+    if (name === 'run') return this.createOneThousandRows();
+    if (name === 'runlots') return this.createTenThousandRows();
+    if (name === 'add') return this.appendOneThousandRows();
+    if (name === 'update') return this.updateEveryTenthRowLabel();
+    if (name === 'clear') return this.clear();
+    if (name === 'swaprows') return this.swapTwoRows();
+    if (name === 'deleteRow') return this.deleteSingleRow(data);
+
+    throw new Error('unknown event name!');
+  }
+
+  private triggerRerender() {
+    if (!this.rows) return;
+    // trigger an update
+    this.rows = this.rows.slice();
   }
 }
