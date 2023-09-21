@@ -12,44 +12,24 @@
     "redux": "^4.2.1"
   },
   "scripts": {
-    "start": "webpack serve --mode development -c webpack.config.dev.js",
-    "build": "webpack --mode production",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build:prod": "tsc && SINGLEFILE=true vite build && mv dist/index.html table.html",
     "lint": "eslint src/",
-    "build-prod": "cross-env NODE_ENV=\"production\" webpack --mode production && rimraf --glob table.html && rimraf --glob \"BoxPlotTable*.js\" && cpx dist/table.html . && cpx \"dist/BoxPlotTable*.js\" . && cpx \"dist/plotly*.js\" ."
-  },
-  "browserslist": {
-    "production": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@types/node": "^20.5.3",
+    "@types/node": "^20.6.2",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.5.0",
-    "@typescript-eslint/parser": "^6.5.0",
-    "cpx": "1.5.0",
-    "cross-env": "7.0.3",
-    "css-loader": "^6.8.1",
-    "eslint": "^8.47.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "@vitejs/plugin-react": "^4.0.4",
+    "eslint": "^8.49.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "html-webpack-plugin": "^5.5.3",
-    "inline-chunk-html-plugin": "^1.1.1",
-    "rimraf": "^4.3.1",
-    "style-loader": "^3.3.3",
-    "ts-loader": "^9.4.4",
     "typescript": "^5.2.2",
-    "webpack": "^5.88.2",
-    "webpack-bundle-analyzer": "^4.9.1",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "vite": "^4.4.9",
+    "vite-plugin-singlefile": "^0.13.5"
   }
 }

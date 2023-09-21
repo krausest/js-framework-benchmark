@@ -12,9 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { sort, State } from "../reducer";
 import { benchmarks } from "../results";
 
-const BoxPlotTable = React.lazy(
-  () => import(/* webpackChunkName: "BoxPlotTable" */ "./BoxPlotTable"),
-);
+const BoxPlotTable = React.lazy(() => import("./BoxPlotTable/BoxPlotTable"));
 
 interface Props {
   type: FrameworkType;
