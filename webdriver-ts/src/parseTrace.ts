@@ -28,13 +28,13 @@ async function single() {
 
 
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 12; i++) {
         // const trace = `traces/1more-v0.1.18-keyed_01_run1k_0.json`;
-        const trace = `traces/react-hooks-use-transition-v18.2.0-keyed_07_create10k_1.json`;
+        const trace = `traces/vanillajs-1-keyed_04_select1k_${i}.json`;
         console.log("analyzing trace ", trace);
         const cpuTrace = await computeResultsCPU(config, trace, DurationMeasurementMode.LAST_PAINT);
         console.log(trace, cpuTrace)
-        console.log(trace, await computeResultsJS(cpuTrace, config, trace, DurationMeasurementMode.LAST_PAINT))
+        // console.log(trace, await computeResultsJS(cpuTrace, config, trace, DurationMeasurementMode.LAST_PAINT))
     }
 
 
@@ -55,10 +55,11 @@ async function readAll() {
                     console.log("ignoring ", trace, "since it doesn't exist.");
                 } else {
                     // console.log("checking ", trace, benchmarkInfo.durationMeasurementMode);
+                    console.log("analyzing trace ", trace);
                     let result = await computeResultsCPU(config, trace, benchmarkInfo.durationMeasurementMode); 
                     let resultJS = await computeResultsJS(result, config, trace, benchmarkInfo.durationMeasurementMode); 
                     results.push({total:result.duration, script:resultJS});
-                    // console.log(result);
+                    console.log(result);
                 }
             }
             results.sort((a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total);
@@ -73,4 +74,4 @@ async function readAll() {
     }
 }
 
-single().catch(err => {console.log("Error in isKeyed", err)}); 
+readAll().catch(err => {console.log("Error in isKeyed", err)}); 

@@ -33,6 +33,12 @@ interface Timingresult {
         } else if (e.name==='Layout' && e.ph==="X") {
           if (config.LOG_DETAILS) console.log("Layout",+e.ts, +e.ts+e.dur-click_start);
             filteredEvents.push({type:'layout', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
+        } else if (e.name==='Commit' && e.ph==="X") {
+          if (config.LOG_DETAILS) console.log("COMMIT PAINT",+e.ts, +e.ts+e.dur-click_start);
+            if (e.dur>1000) {
+              console.log("LOOOOOONG COMMIT ",+e.dur)
+            }
+            filteredEvents.push({type:'paint', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
         } else if (e.name==='Paint' && e.ph==="X") {
           if (config.LOG_DETAILS) console.log("PAINT",+e.ts, +e.ts+e.dur-click_start);
             filteredEvents.push({type:'paint', ts: +e.ts, dur: +e.dur, end: +e.ts+e.dur, evt: JSON.stringify(e)});
