@@ -16,6 +16,7 @@ async function routes(fastify) {
   fastify.register(fastifyStatic, {
     root: frameworksDirectory,
     prefix: "/frameworks",
+    preCompressed: true,
     setHeaders: (res, path) => {
       if (isCSPEnabled && path.endsWith("index.html")) {
         res.setHeader(
