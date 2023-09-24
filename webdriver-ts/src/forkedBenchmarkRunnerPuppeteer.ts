@@ -1,9 +1,9 @@
 import { Browser, CDPSession, Page } from "puppeteer-core";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
-import { CPUBenchmarkPuppeteer, fileNameTrace, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
+import { CPUBenchmarkPuppeteer, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
-import { computeResultsCPU, computeResultsJS } from "./timeline.js";
+import { PlausibilityCheck, computeResultsCPU, computeResultsJS, fileNameTrace } from "./timeline.js";
 
 
 let config: TConfig = defaultConfig;
@@ -51,11 +51,10 @@ async function forceGC(page: Page, client: CDPSession) {
   }
 }
 
-async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPuppeteer, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning<CPUBenchmarkResult>>
+async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmarkPuppeteer, benchmarkOptions: BenchmarkOptions): Promise<ErrorAndWarning<unknown>>
 {
     let error: string = undefined;
     let warnings: string[] = [];
-    let results: CPUBenchmarkResult[] = [];
 
     console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
     let browser : Browser = null;
@@ -135,19 +134,12 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             if (throttleCPU) {
               await page.emulateCPUThrottling(1);
           }
-  
-            // console.log("afterBenchmark", m1, m2);
-            // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
-            let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
-            let resultScript = await computeResultsJS(result, config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
-            console.log("**** resultScript = ", resultScript);
-            if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
-            results.push({total:result.duration, script: resultScript});
-            console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
-            if (result.duration < 0)
-                throw new Error(`duration ${result} < 0`);                
+          let warning_logger = (...msgs: any) => {
+              warnings.push(msgs.join(" "));
+              console.log("WARNING: ", ...msgs);
+          }
         }
-        return {error, warnings, result: results};
+        return {error, warnings};
     } catch (e) {
         console.log("ERROR ", e);
         error = convertError(e);

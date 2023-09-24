@@ -1,77 +1,50 @@
-import * as fs from 'fs';
-import { BenchmarkType, cpuBenchmarkInfos, CPUBenchmarkResult, DurationMeasurementMode } from './benchmarksCommon.js';
-import { fileNameTrace } from './benchmarksPuppeteer.js';
-import { BenchmarkOptions, config, initializeFrameworks } from './common.js';
-import { computeResultsCPU, computeResultsJS } from './timeline.js';
+import { BENCHMARK_01, BENCHMARK_04, BENCHMARK_07, BenchmarkInfo, BenchmarkType, CPUBenchmarkInfo, cpuBenchmarkInfos, CPUBenchmarkResult } from './benchmarksCommon.js';
+import { BenchmarkOptions, config, FrameworkData, initializeFrameworks } from './common.js';
+import { computeResultsCPU, computeResultsJS, parseCPUTrace, PlausibilityCheck } from './timeline.js';
 import { writeResults } from "./writeResults.js";
-// let TimelineModelBrowser = require("./timeline-model-browser.js");
-//var DevtoolsTimelineModel = require('devtools-timeline-model');
 
-let benchmarkOptions: BenchmarkOptions = {
-    port: 8080,
-    host: 'localhost',
-    browser: 'chrome',
-    remoteDebuggingPort: 9999,
-    chromePort: 9998,
-    headless: true,
-    chromeBinaryPath: undefined,
-    numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
-    numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
-    numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
-    batchSize: 1,
-    resultsDirectory: "results",
-    tracesDirectory: "traces",
-    allowThrottling: false
-  };
-
-async function single() {
-
-
-
-    for (let i = 0; i < 12; i++) {
+async function debugSingle() {
+    // for (let i = 0; i < 12; i++) {
+        // const trace = `traces/alpine-v3.12.0-keyed_07_create10k_${i}.json`;
+        // const trace = `traces/alpine-v3.12.0-keyed_07_create10k_0.jsontraces/1more-v0.1.18-keyed_01_run1k_0.json`;
+        // const trace = `traces/alpine-v3.12.0-keyed_07_create10k_0.json`;
+        const trace = `traces/arrowjs-v1.0.0-alpha.9-keyed_07_create10k_0.json`;
+        // const trace = `traces/better-react-v1.1.3-keyed_04_select1k_1.json`;
         // const trace = `traces/1more-v0.1.18-keyed_01_run1k_0.json`;
-        const trace = `traces/vanillajs-1-keyed_04_select1k_${i}.json`;
         console.log("analyzing trace ", trace);
-        const cpuTrace = await computeResultsCPU(config, trace, DurationMeasurementMode.LAST_PAINT);
+        const cpuTrace = await computeResultsCPU(trace);
         console.log(trace, cpuTrace)
         // console.log(trace, await computeResultsJS(cpuTrace, config, trace, DurationMeasurementMode.LAST_PAINT))
-    }
-
-
+    // }
 }
 
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function readAll() {
-    let cpuCPUBenchmarks = Object.values(cpuBenchmarkInfos);
+async function debugAll() {
+    let benchmarkOptions: BenchmarkOptions = {
+        port: 8080,
+        host: 'localhost',
+        browser: 'chrome',
+        remoteDebuggingPort: 9999,
+        chromePort: 9998,
+        headless: true,
+        chromeBinaryPath: undefined,
+        numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+        numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
+        numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
+        batchSize: 1,
+        resultsDirectory: "results",
+        tracesDirectory: "traces",
+        allowThrottling: false
+      };
     
     let frameworks = await initializeFrameworks(benchmarkOptions);
+    let cpuCPUBenchmarks = Object.values(cpuBenchmarkInfos);
+    let plausibilityCheck = new PlausibilityCheck();
     for (let framework of frameworks) {
         for (let benchmarkInfo of cpuCPUBenchmarks) {
-            let results: CPUBenchmarkResult[] = [];
-            for (let i = 0; i < 12; i++) {
-                let trace = `${fileNameTrace(framework, benchmarkInfo, i, benchmarkOptions)}`;
-                if (!fs.existsSync(trace)) {
-                    console.log("ignoring ", trace, "since it doesn't exist.");
-                } else {
-                    // console.log("checking ", trace, benchmarkInfo.durationMeasurementMode);
-                    console.log("analyzing trace ", trace);
-                    let result = await computeResultsCPU(config, trace, benchmarkInfo.durationMeasurementMode); 
-                    let resultJS = await computeResultsJS(result, config, trace, benchmarkInfo.durationMeasurementMode); 
-                    results.push({total:result.duration, script:resultJS});
-                    console.log(result);
-                }
-            }
-            results.sort((a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total);
-            results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);      
-            await writeResults(benchmarkOptions.resultsDirectory, {
-                framework: framework,
-                benchmark: benchmarkInfo,
-                results: results,
-                type: BenchmarkType.CPU
-              });
+            await parseCPUTrace(benchmarkOptions, framework, benchmarkInfo, plausibilityCheck);
         }
     }
+    plausibilityCheck.print();
 }
 
-readAll().catch(err => {console.log("Error in isKeyed", err)}); 
+debugSingle().then(() => console.log("done")).catch(err => console.log(err));
