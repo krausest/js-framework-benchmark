@@ -1,6 +1,7 @@
 :root {
   --border-color: #ccc;
 }
+
 *,
 ::before,
 ::after {
@@ -45,37 +46,47 @@ input + label {
   margin-bottom: 5px;
 }
 
-table.results {
+td {
+  text-align: center;
+}
+.results {
+  width: 100%;
+  max-width: 100%;
+}
+.results__table-container {
+  overflow-x: scroll;
+}
+.results__table {
   font-size: 11px;
+  width: 100%;
   table-layout: fixed;
-  width: 1px;
-  overflow: visible;
-  display: table;
-  border-spacing: 0 0;
+  border-spacing: 0;
   border-collapse: collapse;
 }
-table.results th {
+.results__table th {
   width: 60px;
   font-weight: normal;
   font-size: 11px;
+  z-index: 9;
   text-align: center;
   word-break: normal;
   hyphens: auto;
   -webkit-hyphens: auto;
 }
-table.results th.benchname {
+.results__table th.benchname {
   width: 120px;
 }
-table.results td {
+.results__table th,
+.results__table td {
   padding: 3px;
   border: 1px solid #ddd;
 }
-table.results th {
-  padding: 3px;
-  border: 1px solid #ddd;
-}
-td {
-  text-align: center;
+.results__table th:first-child,
+.results__table td:first-child {
+  position: sticky;
+  left: 0;
+  width: 120px;
+  background-color: white;
 }
 
 .rowCount {

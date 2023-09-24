@@ -23,45 +23,47 @@ const MemResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
   };
 
   return resultsMEM.results.length === 0 ? null : (
-    <div>
+    <div className="results">
       <h3>Memory allocation in MBs ± 95% confidence interval</h3>
-      <table className="results">
-        <thead>
-          <tr>
-            <th className="benchname">
-              <button
-                className={`button button__text ${
+      <div className="results__table-container">
+        <table className="results__table">
+          <thead>
+            <tr>
+              <th className="benchname">
+                <button
+                  className={`button button__text ${
                     currentSortKey === SORT_BY_NAME ? "sort-key" : ""
-                }`}
-                onClick={handleSortByName}
-              >
-                Name
-              </button>
-            </th>
-            {data.frameworks.map((f) => (
-              <th key={f.displayname}>{f.displayname}</th>
+                  }`}
+                  onClick={handleSortByName}
+                >
+                  Name
+                </button>
+              </th>
+              {data.frameworks.map((f) => (
+                <th key={f.displayname}>{f.displayname}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {resultsMEM.results.map((resultsForBenchmark, benchIdx) => (
+              <ValueResultRow
+                key={resultsMEM.benchmarks[benchIdx]?.id}
+                benchIdx={benchIdx}
+                resultsForBenchmark={resultsForBenchmark}
+                benchmarks={resultsMEM.benchmarks}
+                currentSortKey={currentSortKey}
+                sortBy={sortBy}
+              />
             ))}
-          </tr>
-        </thead>
-        <tbody>
-          {resultsMEM.results.map((resultsForBenchmark, benchIdx) => (
-            <ValueResultRow
-              key={resultsMEM.benchmarks[benchIdx]?.id}
-              benchIdx={benchIdx}
-              resultsForBenchmark={resultsForBenchmark}
-              benchmarks={resultsMEM.benchmarks}
+            <GeomMeanRow
               currentSortKey={currentSortKey}
               sortBy={sortBy}
+              geomMean={resultsMEM.geomMean}
+              sortbyGeommeanEnum={SORT_BY_GEOMMEAN_MEM}
             />
-          ))}
-          <GeomMeanRow
-            currentSortKey={currentSortKey}
-            sortBy={sortBy}
-            geomMean={resultsMEM.geomMean}
-            sortbyGeommeanEnum={SORT_BY_GEOMMEAN_MEM}
-          />
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
