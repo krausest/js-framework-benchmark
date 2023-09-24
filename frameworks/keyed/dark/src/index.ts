@@ -140,6 +140,7 @@ const Row = memo(
 const App = component(() => {
   const store = useMemo(() => new Store(), []);
   const { data$, selected$ } = store.getState();
+  const items = data$.value();
 
   const run = (e: E<MouseEvent>) => {
     e.stopPropagation();
@@ -188,11 +189,10 @@ const App = component(() => {
       table({
         class: "table table-hover table-striped test-data",
         slot: tbody({
-          slot: data$
-            .value()
-            .map((item) =>
-              Row({ key: item.id, item, selected$, remove, select })
-            ),
+          key: items.length > 0 ? 1 : 2,
+          slot: items.map((item) =>
+            Row({ key: item.id, item, selected$, remove, select })
+          ),
         }),
       }),
       span({

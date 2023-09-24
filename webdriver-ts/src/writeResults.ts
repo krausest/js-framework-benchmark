@@ -1,10 +1,7 @@
 import * as fs from "fs";
-import { result } from "lodash";
 import { BenchmarkInfo, BenchmarkType, CPUBenchmarkResult, fileName } from "./benchmarksCommon.js";
-import { BenchmarkLighthouse, StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse.js";
-import { TBenchmarkPuppeteer } from "./benchmarksPuppeteer.js";
-import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver.js";
-import { config as defaultConfig, FrameworkData, JSONResult, JSONResultData } from "./common.js";
+import { StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse.js";
+import { FrameworkData, JSONResult, JSONResultData } from "./common.js";
 import pkg from 'jstat';
 const { jStat } = pkg;
 
@@ -21,8 +18,6 @@ export type ResultCPU = {
   results: CPUBenchmarkResult[];
   type: BenchmarkType.CPU; 
 }
-
-const DEFAULT = "default";
 
 export type ResultMem = {
   framework: FrameworkData;

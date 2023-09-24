@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const jStat = require('jstat').jStat;
+import { jStat } from "jstat"
 
 export enum StatisticResult {Slower, Undecided, Faster}
 export enum DisplayMode { DisplayMean, DisplayMedian, BoxPlot }

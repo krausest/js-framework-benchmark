@@ -64,15 +64,18 @@ const N = [
 
 let nextId = 1;
 
+const buildLabel = () =>
+  bau.state(
+    `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`
+  );
+
 const buildData = (count) => {
   const data = new Array(count);
 
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: nextId++,
-      label: `${A[random(A.length)]} ${C[random(C.length)]} ${
-        N[random(N.length)]
-      }`,
+      label: buildLabel(),
     };
   }
 
@@ -99,7 +102,8 @@ const add = () => {
 const update = () => {
   for (let i = 0; i < dataState.val.length; i += 10) {
     const r = dataState.val[i];
-    dataState.val[i].label = r.label + " !!!";
+    const label = dataState.val[i].label;
+    label.val = r.label.val + " !!!";
   }
 };
 
@@ -131,12 +135,8 @@ const select = ({ id, event }) => {
 const Row = ({ id, label }) =>
   tr(
     {
-      class: {
-        deps: [selectedState],
-        renderProp: (selected) => (selected == id ? "danger" : ""),
-      },
+      class: () => (selectedState.val == id ? "danger" : ""),
     },
-
     td({ class: "col-md-1" }, id),
     td(
       { class: "col-md-4" },
@@ -208,14 +208,7 @@ const Main = () =>
     Jumbotron({}),
     table(
       { class: "table table-hover table-striped test-data" },
-      bau.bind({
-        deps: [dataState],
-        render:
-          ({ renderItem }) =>
-          (arr) =>
-            tbody(arr.map(renderItem())),
-        renderItem: () => Row,
-      }),
+      bau.loop(dataState, tbody(), Row),
       span({
         class: "preloadicon glyphicon glyphicon-remove",
         "aria-hidden": true,

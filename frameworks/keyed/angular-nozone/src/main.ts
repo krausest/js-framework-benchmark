@@ -1,11 +1,10 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowser } from '@angular/platform-browser';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { NgZone, ɵNoopNgZone } from '@angular/core';
 
-import { AppModule } from './app/app.module';
-
-enableProdMode();
-
-platformBrowser().bootstrapModule(AppModule, {
-  ngZone: 'noop'
-})
-  .catch(err => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    // https://github.com/angular/angular/issues/47538
+    { provide: NgZone, useClass: ɵNoopNgZone }
+  ]
+});
