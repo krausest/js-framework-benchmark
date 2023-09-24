@@ -26,7 +26,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
-    "@rezact/rezact": "1.0.15-beta.1",
+    "@rezact/rezact": "1.0.15-beta.9",
     "url": "^0.11.1"
   }
 }
