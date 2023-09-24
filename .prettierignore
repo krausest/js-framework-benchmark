@@ -14,3 +14,7 @@ output/
 webdriver-ts/results.json
 webdriver-ts/results/
 webdriver-ts/traces/
+
+# Webdriver-ts-results
+webdriver-ts-results/table.html
+webdriver-ts-results/src/results.ts
