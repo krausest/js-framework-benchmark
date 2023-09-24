@@ -24,6 +24,7 @@ select {
   font-size: 14px;
 }
 
+.select-bar {
   background-color: #fafafa;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
@@ -37,10 +38,6 @@ select {
 
 input + label {
   margin-left: 5px;
-}
-.hspan {
-  display: inline-block;
-  width: 10px;
 }
 
 .panel-body .checkbox {
@@ -76,21 +73,6 @@ table.results td {
 table.results th {
   padding: 3px;
   border: 1px solid #ddd;
-}
-.top1 {
-  background-color: #63bf7c;
-}
-.top2 {
-  background-color: #d1d580;
-}
-.top3 {
-  background-color: #ffec84;
-}
-.top4 {
-  background-color: #fcaa78;
-}
-.top5 {
-  background-color: #f9696c;
 }
 td {
   text-align: center;
@@ -165,10 +147,10 @@ dd {
 }
 
 .header-row {
+  margin: 20px 0;
   display: flex;
-}
-.header-row > * {
-  align-self: center;
+  align-items: center;
+  gap: 10px;
 }
 
 .error {

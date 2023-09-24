@@ -12,7 +12,6 @@ const DurationModeSelector = ({ cpuDurationMode, onChange }: Props) => {
       <label htmlFor="durationMode">
         (Experimental) Duration measurement mode
       </label>
-      <div className="hspan" />
       <select
         id="durationMode"
         className="custom-select"

@@ -10,7 +10,6 @@ const DisplayModeSelector = ({ displayMode, onChange }: Props) => {
   return (
     <>
       <label htmlFor="displayMode">Display mode</label>
-      <div className="hspan" />
       <select
         id="displayMode"
         className="custom-select"
