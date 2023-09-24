@@ -29,12 +29,34 @@ select {
   background-color: #fafafa;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
+  padding: 20px 0;
+  flex-direction: column;
+  display: flex;
+  gap: 10px;
 }
+.select-bar__dropdowns {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+@media screen and (width>=640px) {
+  .select-bar {
+    flex-direction: unset;
+    align-items: center;
+  }
+}
+@media screen and (width>=768px) {
+  .select-bar {
+    align-items: center;
+  }
+}
+
 select {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   height: 29px;
-  background: #fff;
+  background: white;
 }
 
 input + label {
@@ -155,13 +177,6 @@ dd {
 
 .button__icon:active {
   border: 1px solid #888;
-}
-
-.header-row {
-  margin: 20px 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .error {

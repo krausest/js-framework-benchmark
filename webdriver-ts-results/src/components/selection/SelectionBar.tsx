@@ -1,7 +1,7 @@
 import React from "react";
 import BenchmarkSelector from "./BenchmarkSelector";
 import FrameworkSelector from "./FrameworkSelector";
-import ModeSelector from "./ModeSelector";
+import ModeSelecionPanel from "./ModeSelectionPanel";
 import CopyPasteSelection from "./CopyPasteSelection";
 
 interface Props {
@@ -13,12 +13,12 @@ export const SelectionBar = ({ showDurationSelection }: Props) => {
 
   return (
     <div className="select-bar">
-      <div className="header-row">
+      <div className="select-bar__dropdowns">
         <FrameworkSelector />
         <BenchmarkSelector />
-        <ModeSelector showDurationSelection={showDurationSelection} />
-        <CopyPasteSelection />
       </div>
+      <ModeSelecionPanel showDurationSelection={showDurationSelection} />
+      <CopyPasteSelection />
     </div>
   );
 };

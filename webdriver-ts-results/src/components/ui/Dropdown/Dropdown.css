@@ -6,7 +6,6 @@
 .dropdown-content {
   position: absolute;
   top: 100%;
-  left: 0;
   display: none;
   min-width: 160px;
   background-color: #f9f9f9;
