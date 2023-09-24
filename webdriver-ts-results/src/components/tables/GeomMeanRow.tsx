@@ -23,11 +23,9 @@ const GeomMeanRow = ({
     <tr>
       <th>
         <button
-          className={
-            currentSortKey === sortbyGeommeanEnum
-              ? "sortKey textButton"
-              : "textButton"
-          }
+          className={`button button__text ${
+            currentSortKey === sortbyGeommeanEnum ? "sort-key" : ""
+          }`}
           onClick={handleSort(sortbyGeommeanEnum)}
         >
           geometric mean

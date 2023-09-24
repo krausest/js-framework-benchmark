@@ -1,5 +1,5 @@
 import React from "react";
-import DropDownContents from "../../DropDown/DropDownContents";
+import SelectorContentContainer from "../SelectorContentContainer";
 import { FrameworkType } from "../../../Common";
 import { useRootStore } from "../../../reducer";
 import FrameworkSelectorList from "./FrameworkSelectorList";
@@ -29,20 +29,20 @@ const FrameworkSelectorCategory = ({ label, frameworkType }: Props) => {
   );
 
   return (
-    <DropDownContents
+    <SelectorContentContainer
       grid
       isNoneSelected={isNoneSelected(frameworkType)}
       areAllSelected={areAllSelected(frameworkType)}
       selectNone={() => selectAllFrameworks(frameworkType, false)}
       selectAll={() => selectAllFrameworks(frameworkType, true)}
+      label={label}
     >
-      <h3>{label}</h3>
       <FrameworkSelectorList
         isSelected={(framework) => selectedFrameworks.has(framework)}
         select={(framework, add) => selectFramework(framework, add)}
         frameworks={frameworks}
       />
-    </DropDownContents>
+    </SelectorContentContainer>
   );
 };
 

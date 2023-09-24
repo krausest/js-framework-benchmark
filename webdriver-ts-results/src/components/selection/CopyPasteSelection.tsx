@@ -81,21 +81,22 @@ const CopyPasteSelection = () => {
   return (
     <>
       <p>Copy/paste current selection</p>
-      <div className="hspan" />
-      <button
-        className="iconbutton"
-        onClick={copy}
-        aria-label="Copy selected frameworks and benchmarks"
-      >
-        <CopyIcon></CopyIcon>
-      </button>
-      <button
-        className="iconbutton"
-        onClick={handlePasteFromClipboard}
-        aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
-      >
-        <PasteIcon></PasteIcon>
-      </button>
+      <div>
+        <button
+          className="button__icon"
+          onClick={copy}
+          aria-label="Copy selected frameworks and benchmarks"
+        >
+          <CopyIcon></CopyIcon>
+        </button>
+        <button
+          className="button__icon"
+          onClick={handlePasteFromClipboard}
+          aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
+        >
+          <PasteIcon></PasteIcon>
+        </button>
+      </div>
     </>
   );
 };

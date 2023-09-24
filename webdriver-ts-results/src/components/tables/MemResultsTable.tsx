@@ -30,11 +30,9 @@ const MemResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
           <tr>
             <th className="benchname">
               <button
-                className={
-                  currentSortKey === SORT_BY_NAME
-                    ? "sortKey textButton"
-                    : "textButton"
-                }
+                className={`button button__text ${
+                    currentSortKey === SORT_BY_NAME ? "sort-key" : ""
+                }`}
                 onClick={handleSortByName}
               >
                 Name

@@ -38,11 +38,9 @@ const BoxPlotTable = ({
           <tr>
             <th className="benchname">
               <button
-                className={
-                  currentSortKey === SORT_BY_NAME
-                    ? "sortKey textButton"
-                    : "textButton"
-                }
+                className={`button button__text ${
+                    currentSortKey === SORT_BY_NAME ? "sort-key" : ""
+                }`}
                 aria-label="Sort frameworks in ascending order (asc)"
                 onClick={handleSortByName}
               >

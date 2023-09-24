@@ -41,11 +41,9 @@ const BoxPlotTableRow = ({
     <tr key={benchmark.id} style={{ height: 400 }}>
       <th className="benchname">
         <button
-          className={
-            currentSortKey === benchmark.id
-              ? "sortKey textButton"
-              : "textButton"
-          }
+          className={`button button__text ${
+            currentSortKey === benchmark.id ? "sort-key" : ""
+          }`}
           onClick={handleSortByBenchmarkResults}
           aria-label="Sort by benchmark results (from best to worst)"
         >
