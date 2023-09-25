@@ -52,7 +52,7 @@ const CopyPasteSelection = () => {
   const copy = () => {
     const serializedState = {
       frameworks: state.frameworks
-        .filter((f) => state.selectedFrameworksDropDown.has(f))
+        .filter((f) => state.selectedFrameworks.has(f))
         .map((f) => f.dir),
       benchmarks: state.benchmarks
         .filter((f) => state.selectedBenchmarks.has(f))

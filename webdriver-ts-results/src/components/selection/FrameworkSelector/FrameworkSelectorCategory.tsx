@@ -12,9 +12,7 @@ interface Props {
 const FrameworkSelectorCategory = ({ label, frameworkType }: Props) => {
   console.log("FrameworkSelectorCategory");
 
-  const selectedFrameworks = useRootStore(
-    (state) => state.selectedFrameworksDropDown,
-  );
+  const selectedFrameworks = useRootStore((state) => state.selectedFrameworks);
   const frameworks = useRootStore(
     (state) => state.frameworkLists[frameworkType],
   );
