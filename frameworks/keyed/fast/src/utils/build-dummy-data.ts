@@ -7,7 +7,9 @@ export function _random(max: number) {
   return Math.round(Math.random() * 1000) % max;
 }
 
-export function buildData(count = 1000, lastRowId = 0): RowItem[] {
+let id = 1;
+
+export function buildData(count = 1000): RowItem[] {
   const adjectives = [
     'pretty',
     'large',
@@ -53,9 +55,8 @@ export function buildData(count = 1000, lastRowId = 0): RowItem[] {
     'keyboard'
   ];
   const data = [];
-  let id = lastRowId + 1;
 
-  for (let i = lastRowId; i < lastRowId + count; i++) {
+  for (let i = 0; i < count; i++) {
     const adjective = adjectives[_random(adjectives.length)];
     const color = colors[_random(colors.length)];
     const noun = nouns[_random(nouns.length)];

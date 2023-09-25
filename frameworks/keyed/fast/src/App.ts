@@ -24,6 +24,7 @@ const template = html<BenchmarkApp>`
     html`
       <data-table
         :rows=${x => x.rows}
+        :selectedRowId=${x => x.selectedRowId}
         @action=${(x, c) => {
           x.onAction(c.event);
         }}
@@ -46,6 +47,7 @@ const template = html<BenchmarkApp>`
 })
 export class BenchmarkApp extends FASTElement {
   @observable rows?: RowItem[];
+  backupData?: RowItem[];
 
   createOneThousandRows() {
     this.clear();
@@ -57,8 +59,7 @@ export class BenchmarkApp extends FASTElement {
   }
 
   appendOneThousandRows() {
-    const lastRowId = this.rows ? this.rows[this.rows.length - 1].id : 0;
-    this.rows = this.rows ? this.rows.concat(buildData(1000, lastRowId)) : buildData();
+    this.rows = this.rows ? this.rows.concat(buildData(1000)) : buildData();
   }
 
   updateEveryTenthRowLabel() {
@@ -101,13 +102,13 @@ export class BenchmarkApp extends FASTElement {
     const eventDetails = (event as CustomEvent).detail;
     const { name, data } = eventDetails;
 
-    if (name === 'run') return this.createOneThousandRows();
-    if (name === 'runlots') return this.createTenThousandRows();
     if (name === 'add') return this.appendOneThousandRows();
+    if (name === 'run') return this.createOneThousandRows();
     if (name === 'update') return this.updateEveryTenthRowLabel();
+    if (name === 'runlots') return this.createTenThousandRows();
     if (name === 'clear') return this.clear();
     if (name === 'swaprows') return this.swapTwoRows();
-    if (name === 'deleteRow') return this.deleteSingleRow(data);
+    if (name === 'deleteSingleRow') return this.deleteSingleRow(data);
 
     throw new Error('unknown event name!');
   }
