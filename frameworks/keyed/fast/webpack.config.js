@@ -21,14 +21,6 @@ export default function (env, { mode }) {
       extensions: ['.ts', '.js'],
       modules: ['src', 'node_modules']
     },
-    devServer: {
-      port: 9000,
-      historyApiFallback: true,
-      open: !process.env.CI,
-      static: {
-        directory: path.join(__dirname, '/')
-      }
-    },
     module: {
       rules: [
         {
