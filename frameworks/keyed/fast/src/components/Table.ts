@@ -62,15 +62,12 @@ export class Table extends FASTElement {
 
     if (target.classList.contains('lbl')) {
       const rowId = target.dataset['rowId'];
-      this.toggleSelectRow(Number(rowId));
+      this.selectRow(Number(rowId));
       return;
     }
   }
 
-  toggleSelectRow(rowId: number) {
-    const rowIndex = this.rows.findIndex(row => row.id === rowId);
-    if (rowIndex > -1) {
-      this.selectedRowId = rowIndex + 1;
-    }
+  private selectRow(rowId: number) {
+    this.selectedRowId = rowId;
   }
 }
