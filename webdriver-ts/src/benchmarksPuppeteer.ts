@@ -289,11 +289,6 @@ export const benchCreateClear5Memory = new (class extends MemBenchmarkPuppeteer 
   }
 })();
 
-
-export function fileNameTrace(framework: FrameworkData, benchmark: benchmarksCommon.BenchmarkInfo, run: number, benchmarkOptions: BenchmarkOptions) {
-  return `${benchmarkOptions.tracesDirectory}/${framework.fullNameWithKeyedAndVersion}_${benchmark.id}_${run}.json`;
-}
-
 export const benchmarks = [
   benchRun, 
   benchReplaceAll,

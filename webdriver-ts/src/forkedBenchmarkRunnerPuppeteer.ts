@@ -1,9 +1,9 @@
 import { Browser, CDPSession, Page } from "puppeteer-core";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
-import { CPUBenchmarkPuppeteer, fileNameTrace, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
+import { CPUBenchmarkPuppeteer, MemBenchmarkPuppeteer, TBenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
-import { computeResultsCPU, computeResultsJS } from "./timeline.js";
+import { computeResultsCPU, computeResultsJS, fileNameTrace } from "./timeline.js";
 
 
 let config: TConfig = defaultConfig;
@@ -138,8 +138,8 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
   
             // console.log("afterBenchmark", m1, m2);
             // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
-            let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
-            let resultScript = await computeResultsJS(result, config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
+            let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
+            let resultScript = await computeResultsJS(result, config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
             console.log("**** resultScript = ", resultScript);
             if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
             results.push({total:result.duration, script: resultScript});

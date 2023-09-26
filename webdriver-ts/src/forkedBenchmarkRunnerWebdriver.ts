@@ -4,7 +4,7 @@ import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, 
 
 import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
 import * as R from "ramda";
-import { BenchmarkType, CPUBenchmarkResult, DurationMeasurementMode, slowDownFactor } from "./benchmarksCommon.js";
+import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
 
 let config: TConfig = defaultConfig;
 
@@ -155,22 +155,18 @@ async function computeResultsCPU(
       if (config.LOG_DEBUG) console.log("eventsAfterClick", eventsAfterClick);
 
     let lastLayoutEvent: Timingresult;
-    if (benchmark.benchmarkInfo.durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT) {
-      let layouts = R.filter(type_eq('layout'))(eventsAfterClick)
-      layouts = R.filter((e: Timingresult) => e.ts > clicks[0].end)(layouts);
-      if (layouts.length > 1) {
-        console.log("INFO: more than one layout event found");
-        layouts.forEach(l => {
-          console.log("layout event",l.end-clicks[0].ts);
-        })
-        } else if (layouts.length == 0) {
-        console.log("ERROR: exactly one layout event is expected", eventsAfterClick);
-        throw "exactly one layouts event is expected";
-      }
-      lastLayoutEvent = layouts[layouts.length-1];
-    } else {
+    let layouts = R.filter(type_eq('layout'))(eventsAfterClick)
+    layouts = R.filter((e: Timingresult) => e.ts > clicks[0].end)(layouts);
+    if (layouts.length > 1) {
+      console.log("INFO: more than one layout event found");
+      layouts.forEach(l => {
+        console.log("layout event",l.end-clicks[0].ts);
+      })
+      } else if (layouts.length == 0) {
+      console.log("WARNING: exactly one layout event is expected", eventsAfterClick);
       lastLayoutEvent = clicks[0];
     }
+
     let paintsP = R.filter(type_eq('paint'))(eventsAfterClick);
     paintsP = R.filter((e: Timingresult) => e.ts > lastLayoutEvent.end)(paintsP);
     if (paintsP.length == 0) {
@@ -184,7 +180,7 @@ async function computeResultsCPU(
       })
       }
 
-    let duration = (paintsP[benchmark.benchmarkInfo.durationMeasurementMode==DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT ? 0 : paintsP.length-1].end - clicks[0].ts)/1000.0;
+    let duration = (paintsP[paintsP.length-1].end - clicks[0].ts)/1000.0;
       let upperBoundForSoundnessCheck = (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000.0;
 
       if (duration < 0) {
