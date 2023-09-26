@@ -310,6 +310,7 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
     2. Run the server from the root directory: `npm start`
     3. Visit your page in the browser (URL follows the folder structure): `http://localhost:8080/frameworks/keyed/fast/index.html`
     4. Note: Its important to always start the server from the root, because that way you'll get access to global CSS that all apps must share
+    5. Note 2: **AVOID SHADOW DOM** - if your framework relies on Shadow Dom (like Fast framework does), you should turn it off. Otherwise you won't get access to global CSS.
 5. Add the "action triggers" - buttons that all apps must have (see `frameworks/keyed/vanillajs/index.html`)
    1. Note: Action triggers are simply buttons that are used to run the benchmarks (adding rows, deleting rows, swapping them, etc). Those buttons can be static HTML, or you can render them dynamically (with JS) with your framework of choice 
    2. Make sure your HTML elements have the same classes and structure as VanillaJS, otherwise benchmarks won't be able to find your elements on the page, and you will not get the global CSS (Bootstrap)
@@ -411,24 +412,24 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
           selectRow(rowId: number) {}
         }
       ```
-    1. Note: your app doesn't need methods with the same name - you should write idiomatic code and follow the best practices of your framework of choice. The example above is just to give you an idea of which operations must be supported, but how you choose to implement those methods can be very different from one framework to the next. 
-1. Manually testing your app - do this before you run the benchmarks
+    2. Note: your app doesn't need methods with the same name - you should write idiomatic code and follow the best practices of your framework of choice. The example above is just to give you an idea of which operations must be supported, but how you choose to implement those methods can be very different from one framework to the next. 
+8. Manually testing your app - do this before you run the benchmarks
    1. Open your page and click on the buttons, make sure your app adds 1000 rows, then removes them, or swaps them, or adds/removes 10,000 rows. 
    2. To do this, you'll probably need to watch your local files and compile them into some sort of a bundle, like `frameworks\keyed\fast\dist\bundle.js` which will be loaded through a script tag in your HTML file
    3. For example, in Fast folder we have webpack watching our files: ` "build-dev": "rimraf dist && webpack --config webpack.config.js --watch --mode=development",` 
    4. That means we have two terminal tabs running
       1. One for the server from the root folder `npm start`
       2. And another in our local folder where webpack is watching the files
-2. Run the single benchmark for your framework
+9. Run the single benchmark for your framework
    1.  Once you manually verified that everything works as expected, run a single benchmark and make sure all of the tests are running
    2.  If you forgot something, one of the benchmarks will probably fail - for example it won't be able to find an element on the page or similar
    3.  Keep the server in the root folder running `npm start`, and in another terminal tab, also from the root folder run `npm run bench -- --framework keyed/fast` (or whatever is your framework `keyed/react`, `keyed/angular`, etc.).
    4.  The benchmark runner will open and close Chrome multiple times. The whole thing will take a couple of minutes.
-3.  Optional: run the benchmark for VanillaJS as comparison
+10. Optional: run the benchmark for VanillaJS as comparison
     1.  ` npm run bench -- --framework keyed/vanillajs`
-4.  Build the report
+11. Build the report
     1. `npm run results`
-5.  Open the report in your browser (NOTE: the server must still be running if you want to see this page)
+12. Open the report in your browser (NOTE: the server must still be running if you want to see this page)
     1. `http://localhost:8080/webdriver-ts-results/table.html`
 
 ## 4.1 Building the app
