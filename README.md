@@ -304,7 +304,7 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
     2. Create `index.html` in the root of your folder where your app will be served `touch /frameworks/keyed/fast/index.html`
     3. Note: your html file must use the global CSS styles `<link href="/css/currentStyle.css" rel="stylesheet" />`
 4.  Serve the page - Test that your html page is loaded properly in the browser
-    1. For example put <h1>Hello World - Fast Framework</h1> somewhere
+    1. For example put `<h1>Hello World - Fast Framework</h1>` somewhere
     2. Run the server from the root directory: `npm start`
     3. Visit your page in the browser (URL follows the folder structure): `http://localhost:8080/frameworks/keyed/fast/index.html`
     4. Note: Its important to always start the server from the root, because that way you'll get access to global CSS that all apps must share
