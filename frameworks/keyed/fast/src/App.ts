@@ -50,7 +50,7 @@ export class BenchmarkApp extends FASTElement {
   backupData?: RowItem[];
 
   createOneThousandRows() {
-    this.clear();
+    this.deleteAllRows();
     this.rows = buildData();
   }
 
@@ -72,7 +72,7 @@ export class BenchmarkApp extends FASTElement {
     this.triggerRerender();
   }
 
-  clear() {
+  deleteAllRows() {
     this.rows = [];
   }
 
@@ -106,7 +106,7 @@ export class BenchmarkApp extends FASTElement {
     if (name === 'run') return this.createOneThousandRows();
     if (name === 'update') return this.updateEveryTenthRowLabel();
     if (name === 'runlots') return this.createTenThousandRows();
-    if (name === 'clear') return this.clear();
+    if (name === 'clear') return this.deleteAllRows();
     if (name === 'swaprows') return this.swapTwoRows();
     if (name === 'deleteSingleRow') return this.deleteSingleRow(data);
 
