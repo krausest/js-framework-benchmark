@@ -295,6 +295,8 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
 ## 4. Contributing a new implementation
 
 ## TL;DR
+![demo](https://github.com/dsvorc41/js-framework-benchmark/assets/20287188/91ae2d64-7362-4be8-b88f-e52637b33fa5)
+
 1. Install all of the root-level dependencies
     1. `cd js-framework-benchmark/`
     1. `npm ci` or `npm i`
@@ -311,7 +313,7 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
 5. Add the "action triggers" - buttons that all apps must have (see `frameworks/keyed/vanillajs/index.html`)
    1. Note: Action triggers are simply buttons that are used to run the benchmarks (adding rows, deleting rows, swapping them, etc). Those buttons can be static HTML, or you can render them with your framework of choice 
    2. Make sure your HTML elements have the same classes and structure as VanillaJS, otherwise benchmarks won't be able to find your elements on the page, and you will not get the global CSS (Bootstrap)
-   3. Add the html example below and open the page. You should see nicely formatted elements on the page, like in the GIF image below.
+   3. Add the html example below and open the page. You should see nicely formatted elements on the page, like in the GIF image above.
    4. Example for action triggers
       ```html
           <body>
