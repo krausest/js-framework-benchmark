@@ -154,20 +154,21 @@ interface Timingresult {
     // The PID for the click event. We're dropping all events from other processes.
     let pid = click.pid;
     let eventsDuringBenchmark = R.filter((e: Timingresult) => (e.ts > click.end || e.type === 'click'))(events);
+    if (config.LOG_DETAILS) logEvents(eventsDuringBenchmark, click);
 
     let droppedNonMainProcessCommitEvents = false;
     let droppedNonMainProcessOtherEvents = false;
     let eventsOnMainThreadDuringBenchmark = R.filter((e: Timingresult) => e.pid === pid)(eventsDuringBenchmark);
     if (eventsOnMainThreadDuringBenchmark.length !== eventsDuringBenchmark.length) {
       let droppedEvents = R.filter((e: Timingresult) => e.pid !== pid)(events);
-      console.log("droppedEvents:")
-      logEvents(droppedEvents, click);
       if (R.any((e: Timingresult) => e.type === 'commit')(droppedEvents)) {
         console.log("INFO: Dropping commit events from other processes", fileName);
+        logEvents(droppedEvents, click);
         droppedNonMainProcessCommitEvents = true
       }
       if (R.any((e: Timingresult) => e.type !== 'commit')(droppedEvents)) {
         console.log("INFO: Dropping non-commit events from other processes", fileName);
+        logEvents(droppedEvents, click);
         droppedNonMainProcessOtherEvents = true;
       }
     }
@@ -175,11 +176,7 @@ interface Timingresult {
     let startFrom = (R.filter(type_eq('click','fireAnimationFrame', 'timerFire', 'layout','functioncall'))(eventsOnMainThreadDuringBenchmark));
     // we're looking for the commit after this event
     let startFromEvent = startFrom[startFrom.length-1];
-    console.log("DEBUG: searching for commit event after", startFromEvent,"for", fileName);
-    if (startFromEvent.type == 'functioncall') {
-      console.log("INFO: Commit event is searched after a functioncall event  ",fileName);
-      logEvents(eventsOnMainThreadDuringBenchmark, click);
-    }
+    if (config.LOG_DETAILS) console.log("DEBUG: searching for commit event after", startFromEvent,"for", fileName);
     let commit = R.find((e: Timingresult) => e.ts > startFromEvent.end)(R.filter(type_eq('commit'))(eventsOnMainThreadDuringBenchmark));
     let allCommitsAfterClick = (R.filter(type_eq('commit'))(eventsOnMainThreadDuringBenchmark));
 
@@ -277,21 +274,27 @@ interface Timingresult {
 
     print() {
       console.log("\n==== Results of PlausibilityCheck:");      
-      console.log("Info: The following implementation had a unnecessary layout event for select row:");
-      for (let [impl,maxDelay] of this.maxDeltaBetweenCommits.entries()) {
-        if (maxDelay>0) console.log(` ${impl}: ${maxDelay}`);
+      if (this.maxDeltaBetweenCommits.size>0) {
+        console.log("Info: The following implementation had a unnecessary layout event for select row:");
+        for (let [impl,maxDelay] of this.maxDeltaBetweenCommits.entries()) {
+          if (maxDelay>0) console.log(` ${impl}: ${maxDelay}`);
+        }
+        console.log("  Interpretation: Just an information. Could be optimized, but not a bug in the implementation.");
       }
-      console.log("  Interpretation: Just an information. Could be optimized, but not a bug in the implementation.");
-      console.log("Info: Some frameworks have a delay between raf and fire animation frame longer than 16 msecs. The correction was:");
-      for (let [impl,maxDelay] of this.raf_long_delays.entries()) {
-        if (maxDelay>0) console.log(` ${impl}: ${maxDelay}`);
+      if (this.raf_long_delays.size>0) {
+        console.log("Info: Some frameworks have a delay between raf and fire animation frame longer than 16 msecs. The correction was:");
+        for (let [impl,maxDelay] of this.raf_long_delays.entries()) {
+          if (maxDelay>0) console.log(` ${impl}: ${maxDelay}`);
+        }
+        console.log("  Interpretation: If the list contains more than just a few entries or large numbers the results should be checked");
       }
-      console.log("  Interpretation: If the list contains more than just a few entries or large numbers the results should be checked");
-      console.log("Warning: Implemenations with multiple commit events:");
-      for (let [impl,maxDelay] of this.maxDeltaBetweenCommits.entries()) {
-        if (maxDelay>0) console.log(` ${impl}: ${maxDelay}`);
+      if (this.maxDeltaBetweenCommits.size>0) {
+        console.log("Info: Implemenations with multiple commit events and max delay between both:");
+        for (let [impl,maxDelay] of this.maxDeltaBetweenCommits.entries()) {
+          if (maxDelay>0) console.log(` ${impl}: ${maxDelay}`);
+        }
+        console.log("  Interpretation: Those frameworks make measuring the duration of the benchmark difficult. The results should be checked occasionally for correctness.");
       }
-      console.log("  Interpretation: Those frameworks make measuring the duration of the benchmark difficult. The results should be checked occasionally for correctness.");
   }
 }
 

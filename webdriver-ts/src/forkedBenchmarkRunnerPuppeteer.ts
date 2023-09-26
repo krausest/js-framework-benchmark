@@ -143,7 +143,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             console.log("**** resultScript = ", resultScript);
             if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
             results.push({total:result.duration, script: resultScript});
-            console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
+            console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(result)}`);
             if (result.duration < 0)
                 throw new Error(`duration ${result} < 0`);                
         }
