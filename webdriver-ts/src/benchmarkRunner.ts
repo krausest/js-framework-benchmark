@@ -135,7 +135,9 @@ async function runBenchmakLoop(
     let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
     if (Array.isArray(res.result)) {
       results = results.concat(res.result as number[]|CPUBenchmarkResult[]);
-    } else results.push(res.result);
+    } else if (res.result !==undefined) {
+      results.push(res.result);
+    }
     warnings = warnings.concat(res.warnings);
     if (res.error) {
       if (res.error.indexOf("Server terminated early with status 1") > -1) {

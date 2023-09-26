@@ -85,12 +85,7 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
                 //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
                 // });
             console.log("initBenchmark");
-            try {
-              await initBenchmark(page, benchmark, framework);
-            } catch (ex) {
-              console.log("**** initBenchmark failed, retrying");
-              await initBenchmark(page, benchmark, framework);
-            }
+            await initBenchmark(page, benchmark, framework);
 
             let categories = [
                 "blink.user_timing",

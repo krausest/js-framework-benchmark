@@ -4,7 +4,7 @@ import { Browser, Page } from "playwright-core";
 import * as benchmarksCommon from "./benchmarksCommon.js";
 import { BenchmarkType } from "./benchmarksCommon.js";
 import { BenchmarkOptions, config, FrameworkData } from "./common.js";
-import { checkElementContainsText, checkElementExists, checkElementHasClass, checkElementNotExists, clickElement } from "./playwrightAccess.js";
+import { checkCountForSelector, checkElementContainsText, checkElementExists, checkElementHasClass, checkElementNotExists, clickElement } from "./playwrightAccess.js";
 
 
 export abstract class CPUBenchmarkPlaywright implements benchmarksCommon.BenchmarkImpl {
@@ -91,6 +91,7 @@ export const benchSelect = new class extends CPUBenchmarkPlaywright {
     for (let i = 0; i <= config.WARMUP_COUNT; i++) {
       await clickElement(page, `tbody>tr:nth-of-type(${i+5})>td:nth-of-type(2)>a`);
       await checkElementHasClass(page, `tbody>tr:nth-of-type(${i+5})`, "danger");
+      await checkCountForSelector(page, "tbody>tr.danger", 1);
     }
   }
   async run(browser: Browser,page: Page) {
