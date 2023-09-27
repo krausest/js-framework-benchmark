@@ -65,7 +65,7 @@ export class BenchmarkApp extends FASTElement {
     if (!this.rows) return;
 
     for (let i = 0; i < this.rows.length; i += 10) {
-      // make a copy, then update the array using slice. See below for details
+      // make a copy, then update the array using .splice(). See below for details
       // https://www.fast.design/docs/fast-element/observables-and-state/#observing-arrays
       let rowItem = Object.create(this.rows[i]);
       rowItem.label += ' !!!';
