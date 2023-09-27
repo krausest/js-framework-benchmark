@@ -1,7 +1,17 @@
-import *  as chromeLauncher from "chrome-launcher";
+import * as chromeLauncher from "chrome-launcher";
 
-import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
-import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./benchmarksLighthouse.js";
+import {
+  TConfig,
+  config as defaultConfig,
+  FrameworkData,
+  ErrorAndWarning,
+  BenchmarkOptions,
+} from "./common.js";
+import {
+  BenchmarkLighthouse,
+  StartupBenchmarkResult,
+  benchmarks,
+} from "./benchmarksLighthouse.js";
 import { StartupBenchmarkInfo } from "./benchmarksCommon.js";
 import lighthouse from "lighthouse";
 
@@ -16,7 +26,11 @@ function extractRawValue(results: any, id: string) {
   return audit_with_id.numericValue;
 }
 
-async function runLighthouse(framework: FrameworkData, startupBenchmarks: StartupBenchmarkInfo[], benchmarkOptions: BenchmarkOptions): Promise<StartupBenchmarkResult[]> {
+async function runLighthouse(
+  framework: FrameworkData,
+  startupBenchmarks: StartupBenchmarkInfo[],
+  benchmarkOptions: BenchmarkOptions,
+): Promise<StartupBenchmarkResult[]> {
   const opts: any = {
     chromeFlags: [
       "--headless",
@@ -32,7 +46,8 @@ async function runLighthouse(framework: FrameworkData, startupBenchmarks: Startu
       "--disable-extensions",
       "--disable-default-apps",
       "--window-size=1200,800",
-      "--remote-debugging-port=" + benchmarkOptions.remoteDebuggingPort.toFixed(),
+      "--remote-debugging-port=" +
+        benchmarkOptions.remoteDebuggingPort.toFixed(),
     ],
     onlyCategories: ["performance"],
     port: benchmarkOptions.remoteDebuggingPort.toFixed(),
@@ -40,11 +55,16 @@ async function runLighthouse(framework: FrameworkData, startupBenchmarks: Startu
   };
 
   try {
-    if (benchmarkOptions.chromeBinaryPath) opts.chromePath = benchmarkOptions.chromeBinaryPath;
+    if (benchmarkOptions.chromeBinaryPath)
+      opts.chromePath = benchmarkOptions.chromeBinaryPath;
     const chrome = await chromeLauncher.launch(opts);
     let results: any = null;
     try {
-      results = await (lighthouse as any)(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, opts, null);
+      results = await (lighthouse as any)(
+        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
+        opts,
+        null,
+      );
       await chrome.kill();
     } catch (error) {
       console.log("error running lighthouse", error);
@@ -53,8 +73,11 @@ async function runLighthouse(framework: FrameworkData, startupBenchmarks: Startu
     }
     if (config.LOG_DEBUG) console.log("lighthouse result", results);
 
-    return startupBenchmarks.map(bench => {
-      return {benchmark: bench, result: bench.fn(extractRawValue(results.lhr, bench.property))} as StartupBenchmarkResult;
+    return startupBenchmarks.map((bench) => {
+      return {
+        benchmark: bench,
+        result: bench.fn(extractRawValue(results.lhr, bench.property)),
+      } as StartupBenchmarkResult;
     });
   } catch (error) {
     console.log("error running lighthouse", error);
@@ -71,7 +94,7 @@ function convertError(error: any): string {
     " instance of Error",
     error instanceof Error,
     " Message: ",
-    error.message
+    error.message,
   );
   if (typeof error === "string") {
     console.log("Error is string");
@@ -88,13 +111,17 @@ function convertError(error: any): string {
 async function runStartupBenchmark(
   framework: FrameworkData,
   benchmark: BenchmarkLighthouse,
-  benchmarkOptions: BenchmarkOptions
+  benchmarkOptions: BenchmarkOptions,
 ): Promise<ErrorAndWarning<StartupBenchmarkResult>> {
   console.log("benchmarking startup", framework, benchmark.benchmarkInfo.id);
 
   let error: string = undefined;
   try {
-    const result = await runLighthouse(framework, benchmark.subbenchmarks, benchmarkOptions);
+    const result = await runLighthouse(
+      framework,
+      benchmark.subbenchmarks,
+      benchmarkOptions,
+    );
     return { error, warnings: [], result };
   } catch (e) {
     error = convertError(e);
@@ -105,15 +132,24 @@ async function runStartupBenchmark(
 export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
-  benchmarkOptions: BenchmarkOptions
+  benchmarkOptions: BenchmarkOptions,
 ): Promise<ErrorAndWarning<StartupBenchmarkResult>> {
-  const runBenchmarks: Array<BenchmarkLighthouse> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof BenchmarkLighthouse) as Array<BenchmarkLighthouse>;
-  if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (lighthouse)`;
+  const runBenchmarks: Array<BenchmarkLighthouse> = benchmarks.filter(
+    (b) =>
+      benchmarkId === b.benchmarkInfo.id && b instanceof BenchmarkLighthouse,
+  ) as Array<BenchmarkLighthouse>;
+  if (runBenchmarks.length != 1)
+    throw `Benchmark name ${benchmarkId} is not unique (lighthouse)`;
 
   const benchmark = runBenchmarks[0];
 
-  const errorAndWarnings = await runStartupBenchmark(framework, benchmark, benchmarkOptions);
-  if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorAndWarnings);
+  const errorAndWarnings = await runStartupBenchmark(
+    framework,
+    benchmark,
+    benchmarkOptions,
+  );
+  if (config.LOG_DEBUG)
+    console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }
 

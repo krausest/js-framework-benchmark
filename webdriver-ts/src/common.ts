@@ -8,7 +8,7 @@ export interface JSONResultData {
 }
 
 export interface JSONResultMap {
-  [key:string]: JSONResultData
+  [key: string]: JSONResultData;
 }
 export interface JSONResult {
   framework: string;
@@ -40,8 +40,8 @@ export interface BenchmarkOptions {
   numIterationsForStartupBenchmark: number;
 
   allowThrottling: boolean;
-  resultsDirectory:string,
-  tracesDirectory: string,
+  resultsDirectory: string;
+  tracesDirectory: string;
 }
 
 /*
@@ -56,7 +56,7 @@ export enum BENCHMARK_RUNNER {
   PLAYWRIGHT = "playwright",
   WEBDRIVER_CDP = "webdrivercdp",
   WEBDRIVER = "webdriver",
-  WEBDRIVER_AFTERFRAME = "webdriver-afterframe"
+  WEBDRIVER_AFTERFRAME = "webdriver-afterframe",
 }
 
 export const config = {
@@ -75,7 +75,7 @@ export const config = {
   STARTUP_SLEEP_DURATION: 1000,
   WRITE_RESULTS: true,
   ALLOW_BATCHING: true,
-  BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER
+  BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER,
 };
 export type TConfig = typeof config;
 
@@ -103,7 +103,7 @@ export interface FrameworkInformation {
   useRowShadowRoot?: boolean;
   shadowRootName?: string;
   buttonsInShadowRoot?: boolean;
-  versions?: {[key: string]: string};
+  versions?: { [key: string]: string };
   frameworkVersionString: string;
   frameworkHomeURL: string;
 }

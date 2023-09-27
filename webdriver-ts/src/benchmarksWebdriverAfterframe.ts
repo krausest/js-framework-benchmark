@@ -7,21 +7,23 @@ import {
   clickElementByXPath,
   findById,
   findByXPath,
-  getTextByXPath, testClassContains, testElementLocatedById, testElementLocatedByXpath,
-  testElementNotLocatedByXPath, testTextContains
+  getTextByXPath,
+  testClassContains,
+  testElementLocatedById,
+  testElementLocatedByXpath,
+  testElementNotLocatedByXPath,
+  testTextContains,
 } from "./webdriverAccess.js";
 
-
 const SHORT_TIMEOUT = 20 * 1000;
-
 
 let durations: Array<number> = [];
 
 export function getAfterframeDurations() {
-  return durations.map(d => ({total:d, script:0}));
+  return durations.map((d) => ({ total: d, script: 0 }));
 }
 
-export async  function initMeasurement(driver: WebDriver) {
+export async function initMeasurement(driver: WebDriver) {
   // From https://github.com/andrewiggins/afterframe, MIT licensed
   const afterFrame = `
   /**
@@ -74,7 +76,8 @@ export async  function initMeasurement(driver: WebDriver) {
 
 async function measureClickForElement(driver: WebDriver, elem: WebElement) {
   if (!elem) throw `measureClickForElement failed. Element was not found.`;
-  const duration = await driver.executeAsyncScript(`
+  const duration = (await driver.executeAsyncScript(
+    `
       let callback = arguments[arguments.length - 1];
       let elem = arguments[0];
       let base = document;
@@ -87,28 +90,37 @@ async function measureClickForElement(driver: WebDriver, elem: WebElement) {
         window.lastDuration = t;
         callback(t);
       })
-    `, elem) as number;
+    `,
+    elem,
+  )) as number;
   durations.push(duration);
   console.log("computed duration ", duration);
 }
 
-async function measureClickElementById(driver: WebDriver, id: string, isInButtonArea: boolean) {
+async function measureClickElementById(
+  driver: WebDriver,
+  id: string,
+  isInButtonArea: boolean,
+) {
   const elem = await findById(driver, id, isInButtonArea);
   console.log("measureClickElementById: ", elem);
   await measureClickForElement(driver, elem);
 }
 
-async function measureClickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
+async function measureClickElementByXPath(
+  driver: WebDriver,
+  xpath: string,
+  isInButtonArea: boolean,
+) {
   const elem = await findByXPath(driver, xpath, isInButtonArea);
-  if (!elem) throw `measureClickElementById ${xpath} failed. Element was not found.`;
+  if (!elem)
+    throw `measureClickElementById ${xpath} failed. Element was not found.`;
   await measureClickForElement(driver, elem);
 }
 
-
 export abstract class CPUBenchmarkWebdriver {
   type = BenchmarkType.CPU;
-  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmarkInfo) {
-  }
+  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmarkInfo) {}
   abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
   abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
 }
@@ -116,19 +128,36 @@ export abstract class CPUBenchmarkWebdriver {
 export const benchRun = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_01]);
-  } 
+  }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     for (let i = 0; i < config.WARMUP_COUNT; i++) {
       await clickElementById(driver, "run", true);
-      await testTextContains(driver, "//tbody/tr[1]/td[1]", (i * 1000 + 1).toFixed(), config.TIMEOUT, false);
+      await testTextContains(
+        driver,
+        "//tbody/tr[1]/td[1]",
+        (i * 1000 + 1).toFixed(),
+        config.TIMEOUT,
+        false,
+      );
       await clickElementById(driver, "clear", true);
-      await testElementNotLocatedByXPath(driver, "//tbody/tr[1]", config.TIMEOUT, false);
+      await testElementNotLocatedByXPath(
+        driver,
+        "//tbody/tr[1]",
+        config.TIMEOUT,
+        false,
+      );
     }
   }
   async run(driver: WebDriver) {
     await measureClickElementById(driver, "run", true);
-    await testTextContains(driver, "//tbody/tr[1]/td[1]", (config.WARMUP_COUNT * 1000 + 1).toFixed(), config.TIMEOUT, false);
+    await testTextContains(
+      driver,
+      "//tbody/tr[1]/td[1]",
+      (config.WARMUP_COUNT * 1000 + 1).toFixed(),
+      config.TIMEOUT,
+      false,
+    );
   }
 })();
 
@@ -140,12 +169,24 @@ export const benchReplaceAll = new (class extends CPUBenchmarkWebdriver {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     for (let i = 0; i < config.WARMUP_COUNT; i++) {
       await clickElementById(driver, "run", true);
-      await testTextContains(driver, "//tbody/tr[1]/td[1]", (i * 1000 + 1).toFixed(), config.TIMEOUT, false);
+      await testTextContains(
+        driver,
+        "//tbody/tr[1]/td[1]",
+        (i * 1000 + 1).toFixed(),
+        config.TIMEOUT,
+        false,
+      );
     }
   }
   async run(driver: WebDriver) {
     await measureClickElementById(driver, "run", true);
-    await testTextContains(driver, "//tbody/tr[1]/td[1]", "5001", config.TIMEOUT, false);
+    await testTextContains(
+      driver,
+      "//tbody/tr[1]/td[1]",
+      "5001",
+      config.TIMEOUT,
+      false,
+    );
   }
 })();
 
@@ -156,15 +197,32 @@ export const benchUpdate = new (class extends CPUBenchmarkWebdriver {
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     await clickElementById(driver, "run", true);
-    await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
+    await testElementLocatedByXpath(
+      driver,
+      "//tbody/tr[1000]/td[2]/a",
+      config.TIMEOUT,
+      false,
+    );
     for (let i = 0; i < 3; i++) {
       await clickElementById(driver, "update", true);
-      await testTextContains(driver, "//tbody/tr[991]/td[2]/a", " !!!".repeat(i + 1), config.TIMEOUT, false);
+      await testTextContains(
+        driver,
+        "//tbody/tr[991]/td[2]/a",
+        " !!!".repeat(i + 1),
+        config.TIMEOUT,
+        false,
+      );
     }
   }
   async run(driver: WebDriver) {
     await measureClickElementById(driver, "update", true);
-    await testTextContains(driver, "//tbody/tr[991]/td[2]/a", " !!!".repeat(3 + 1), config.TIMEOUT, false);
+    await testTextContains(
+      driver,
+      "//tbody/tr[991]/td[2]/a",
+      " !!!".repeat(3 + 1),
+      config.TIMEOUT,
+      false,
+    );
   }
 })();
 
@@ -175,11 +233,22 @@ export const benchSelect = new (class extends CPUBenchmarkWebdriver {
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     await clickElementById(driver, "run", true);
-    await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
+    await testElementLocatedByXpath(
+      driver,
+      "//tbody/tr[1]/td[2]/a",
+      config.TIMEOUT,
+      false,
+    );
   }
   async run(driver: WebDriver) {
     await measureClickElementByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
-    await testClassContains(driver, "//tbody/tr[2]", "danger", config.TIMEOUT, false);
+    await testClassContains(
+      driver,
+      "//tbody/tr[2]",
+      "danger",
+      config.TIMEOUT,
+      false,
+    );
   }
 })();
 
@@ -190,17 +259,34 @@ export const benchSwapRows = new (class extends CPUBenchmarkWebdriver {
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     await clickElementById(driver, "run", true);
-    await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
+    await testElementLocatedByXpath(
+      driver,
+      "//tbody/tr[1]/td[2]/a",
+      config.TIMEOUT,
+      false,
+    );
     for (let i = 0; i <= config.WARMUP_COUNT; i++) {
       const text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
       await clickElementById(driver, "swaprows", true);
-      await testTextContains(driver, "//tbody/tr[999]/td[2]/a", text, config.TIMEOUT, false);
+      await testTextContains(
+        driver,
+        "//tbody/tr[999]/td[2]/a",
+        text,
+        config.TIMEOUT,
+        false,
+      );
     }
   }
   async run(driver: WebDriver) {
     const text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
     await measureClickElementById(driver, "swaprows", true);
-    await testTextContains(driver, "//tbody/tr[999]/td[2]/a", text, config.TIMEOUT, false);
+    await testTextContains(
+      driver,
+      "//tbody/tr[999]/td[2]/a",
+      text,
+      config.TIMEOUT,
+      false,
+    );
   }
 })();
 
@@ -211,29 +297,78 @@ export const benchRemove = new (class extends CPUBenchmarkWebdriver {
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     await clickElementById(driver, "run", true);
-    await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
+    await testElementLocatedByXpath(
+      driver,
+      "//tbody/tr[1]/td[2]/a",
+      config.TIMEOUT,
+      false,
+    );
     for (let i = 0; i < config.WARMUP_COUNT; i++) {
       await testTextContains(
         driver,
         `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`,
         (config.WARMUP_COUNT - i + 4).toString(),
         config.TIMEOUT,
-        false
+        false,
       );
-      await clickElementByXPath(driver, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[3]/a/span[1]`, false);
-      await testTextContains(driver, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`, "10", config.TIMEOUT, false);
+      await clickElementByXPath(
+        driver,
+        `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[3]/a/span[1]`,
+        false,
+      );
+      await testTextContains(
+        driver,
+        `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`,
+        "10",
+        config.TIMEOUT,
+        false,
+      );
     }
-    await testTextContains(driver, "//tbody/tr[5]/td[1]", "10", config.TIMEOUT, false);
-    await testTextContains(driver, "//tbody/tr[4]/td[1]", "4", config.TIMEOUT, false);
+    await testTextContains(
+      driver,
+      "//tbody/tr[5]/td[1]",
+      "10",
+      config.TIMEOUT,
+      false,
+    );
+    await testTextContains(
+      driver,
+      "//tbody/tr[4]/td[1]",
+      "4",
+      config.TIMEOUT,
+      false,
+    );
 
     // Click on a row the second time
-    await testTextContains(driver, `//tbody/tr[6]/td[1]`, "11", config.TIMEOUT, false);
+    await testTextContains(
+      driver,
+      `//tbody/tr[6]/td[1]`,
+      "11",
+      config.TIMEOUT,
+      false,
+    );
     await clickElementByXPath(driver, `//tbody/tr[6]/td[3]/a/span[1]`, false);
-    await testTextContains(driver, `//tbody/tr[6]/td[1]`, "12", config.TIMEOUT, false);
+    await testTextContains(
+      driver,
+      `//tbody/tr[6]/td[1]`,
+      "12",
+      config.TIMEOUT,
+      false,
+    );
   }
   async run(driver: WebDriver) {
-    await measureClickElementByXPath(driver, "//tbody/tr[4]/td[3]/a/span[1]", false);
-    await testTextContains(driver, "//tbody/tr[4]/td[1]", "10", config.TIMEOUT, false);
+    await measureClickElementByXPath(
+      driver,
+      "//tbody/tr[4]/td[3]/a/span[1]",
+      false,
+    );
+    await testTextContains(
+      driver,
+      "//tbody/tr[4]/td[1]",
+      "10",
+      config.TIMEOUT,
+      false,
+    );
   }
 })();
 
@@ -245,14 +380,30 @@ export const benchRunBig = new (class extends CPUBenchmarkWebdriver {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     for (let i = 0; i < config.WARMUP_COUNT; i++) {
       await clickElementById(driver, "run", true);
-      await testTextContains(driver, "//tbody/tr[1]/td[1]", (i * 1000 + 1).toFixed(), config.TIMEOUT, false);
+      await testTextContains(
+        driver,
+        "//tbody/tr[1]/td[1]",
+        (i * 1000 + 1).toFixed(),
+        config.TIMEOUT,
+        false,
+      );
       await clickElementById(driver, "clear", true);
-      await testElementNotLocatedByXPath(driver, "//tbody/tr[1]", config.TIMEOUT, false);
+      await testElementNotLocatedByXPath(
+        driver,
+        "//tbody/tr[1]",
+        config.TIMEOUT,
+        false,
+      );
     }
   }
   async run(driver: WebDriver) {
     await measureClickElementById(driver, "runlots", true);
-    await testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a", config.TIMEOUT, false);
+    await testElementLocatedByXpath(
+      driver,
+      "//tbody/tr[10000]/td[2]/a",
+      config.TIMEOUT,
+      false,
+    );
   }
 })();
 
@@ -263,11 +414,21 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkWebdriver {
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     await clickElementById(driver, "run", true);
-    await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
+    await testElementLocatedByXpath(
+      driver,
+      "//tbody/tr[1000]/td[2]/a",
+      config.TIMEOUT,
+      false,
+    );
   }
   async run(driver: WebDriver) {
     await measureClickElementById(driver, "add", true);
-    await testElementLocatedByXpath(driver, "//tbody/tr[1100]/td[2]/a", config.TIMEOUT, false);
+    await testElementLocatedByXpath(
+      driver,
+      "//tbody/tr[1100]/td[2]/a",
+      config.TIMEOUT,
+      false,
+    );
   }
 })();
 
@@ -279,27 +440,47 @@ export const benchClear = new (class extends CPUBenchmarkWebdriver {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     for (let i = 0; i < config.WARMUP_COUNT; i++) {
       await clickElementById(driver, "run", true);
-      await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
+      await testElementLocatedByXpath(
+        driver,
+        "//tbody/tr[1000]/td[2]/a",
+        config.TIMEOUT,
+        false,
+      );
       await clickElementById(driver, "clear", true);
-      await testElementNotLocatedByXPath(driver, "//tbody/tr[1]", config.TIMEOUT, false);
+      await testElementNotLocatedByXPath(
+        driver,
+        "//tbody/tr[1]",
+        config.TIMEOUT,
+        false,
+      );
     }
     await clickElementById(driver, "run", true);
-    await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
+    await testElementLocatedByXpath(
+      driver,
+      "//tbody/tr[1000]/td[2]/a",
+      config.TIMEOUT,
+      false,
+    );
   }
   async run(driver: WebDriver) {
     await measureClickElementById(driver, "clear", true);
-    await testElementNotLocatedByXPath(driver, "//tbody/tr[1]", config.TIMEOUT, false);
+    await testElementNotLocatedByXPath(
+      driver,
+      "//tbody/tr[1]",
+      config.TIMEOUT,
+      false,
+    );
   }
 })();
 
 export const benchmarks = [
-  benchRun, 
+  benchRun,
   benchReplaceAll,
-  benchUpdate, 
-  benchSelect, 
-  benchSwapRows, 
-  benchRemove, 
-  benchRunBig, 
-  benchAppendToManyRows, 
-  benchClear, 
+  benchUpdate,
+  benchSelect,
+  benchSwapRows,
+  benchRemove,
+  benchRunBig,
+  benchAppendToManyRows,
+  benchClear,
 ];
