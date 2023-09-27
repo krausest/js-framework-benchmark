@@ -19,17 +19,7 @@ const template = html<Table>`
             </td>
             <td class="col-md-6"></td>
           </tr>
-        `,
-        /**
-         * List Rendering without view recycling
-         *
-         * With recycle set to false,
-         * Fast will re-render when internal properties of
-         * RowItem[] change (e.g. id or label)
-         *
-         * https://www.fast.design/docs/fast-element/using-directives
-         */
-        { recycle: false }
+        `
       )}
     </tbody>
   </table>

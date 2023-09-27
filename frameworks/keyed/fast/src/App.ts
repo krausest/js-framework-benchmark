@@ -24,7 +24,6 @@ const template = html<BenchmarkApp>`
     html`
       <data-table
         :rows=${x => x.rows}
-        :selectedRowId=${x => x.selectedRowId}
         @action=${(x, c) => {
           x.onAction(c.event);
         }}
@@ -66,27 +65,37 @@ export class BenchmarkApp extends FASTElement {
     if (!this.rows) return;
 
     for (let i = 0; i < this.rows.length; i += 10) {
-      this.rows[i].label += ' !!!';
+      // make a copy, then update the array using slice. See below for details
+      // https://www.fast.design/docs/fast-element/observables-and-state/#observing-arrays
+      let rowItem = Object.create(this.rows[i]);
+      rowItem.label += ' !!!';
+      this.rows.splice(i, 1, rowItem);
     }
-
-    this.triggerRerender();
   }
 
   deleteAllRows() {
     this.rows = [];
   }
 
+  /**
+   * The observation system cannot track changes made directly
+   * through an index update. e.g. arr[3] = 'new value';.
+   * This is due to a limitation in JavaScript.
+   *
+   * To work around this, update arrays with the
+   * equivalent splice code e.g. arr.splice(3, 1, 'new value');
+   *
+   * https://www.fast.design/docs/fast-element/observables-and-state/#observing-arrays
+   */
   swapTwoRows() {
     if (!this.rows) return;
 
     if (this.rows.length > 998) {
       const secondRow = this.rows[1];
       const secondToLastRow = this.rows[998];
-      this.rows[1] = secondToLastRow;
-      this.rows[998] = secondRow;
+      this.rows.splice(1, 1, secondToLastRow);
+      this.rows.splice(998, 1, secondRow);
     }
-
-    this.triggerRerender();
   }
 
   deleteSingleRow(rowId: number) {
@@ -111,11 +120,5 @@ export class BenchmarkApp extends FASTElement {
     if (name === 'deleteSingleRow') return this.deleteSingleRow(data);
 
     throw new Error('unknown event name!');
-  }
-
-  private triggerRerender() {
-    if (!this.rows) return;
-    // trigger an update
-    this.rows = this.rows.slice();
   }
 }
