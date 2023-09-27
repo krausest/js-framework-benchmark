@@ -5,6 +5,7 @@ import * as fs from "fs";
 import { BenchmarkInfo, benchmarkInfos, BenchmarkType, CPUBenchmarkInfo, CPUBenchmarkResult, MemBenchmarkInfo, StartupBenchmarkInfo } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
 import { writeResults } from "./writeResults.js";
+import { PlausibilityCheck, parseCPUTrace } from './timeline.js';
 
 function forkAndCallBenchmark(
   framework: FrameworkData,
@@ -106,7 +107,8 @@ async function runBenchmakLoopStartup(
 async function runBenchmakLoop(
   framework: FrameworkData,
   benchmarkInfo: CPUBenchmarkInfo|MemBenchmarkInfo,
-  benchmarkOptions: BenchmarkOptions
+  benchmarkOptions: BenchmarkOptions,
+  plausibilityCheck: PlausibilityCheck
 ): Promise<{ errors: string[]; warnings: string[] }> {
   let warnings: string[] = [];
   const errors: string[] = [];
@@ -133,7 +135,9 @@ async function runBenchmakLoop(
     const res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
     if (Array.isArray(res.result)) {
       results = results.concat(res.result as number[]|CPUBenchmarkResult[]);
-    } else results.push(res.result);
+    } else if (res.result !==undefined) {
+      results.push(res.result);
+    }
     warnings = warnings.concat(res.warnings);
     if (res.error) {
       if (res.error.indexOf("Server terminated early with status 1") > -1) {
@@ -196,6 +200,8 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkInfos: Benchmar
     benchmarkInfos.map((b) => b.id)
   );
 
+  let plausibilityCheck = new PlausibilityCheck();
+
   for (let i = 0; i < runFrameworks.length; i++) {
     for (let j = 0; j < benchmarkInfos.length; j++) {
       try {
@@ -204,9 +210,9 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkInfos: Benchmar
         if (benchmarkInfos[j].type == BenchmarkType.STARTUP_MAIN) {
           result = await runBenchmakLoopStartup(runFrameworks[i], benchmarkInfos[j] as StartupBenchmarkInfo, benchmarkOptions)
         } else if (benchmarkInfos[j].type == BenchmarkType.CPU) {
-          result = await runBenchmakLoop(runFrameworks[i], benchmarkInfos[j] as CPUBenchmarkInfo, benchmarkOptions);
+          result = await runBenchmakLoop(runFrameworks[i], benchmarkInfos[j] as CPUBenchmarkInfo, benchmarkOptions, plausibilityCheck);
         } else {
-          result = await runBenchmakLoop(runFrameworks[i], benchmarkInfos[j] as MemBenchmarkInfo, benchmarkOptions);
+          result = await runBenchmakLoop(runFrameworks[i], benchmarkInfos[j] as MemBenchmarkInfo, benchmarkOptions, plausibilityCheck);
         }
         errors = errors.concat(result.errors);
         warnings = warnings.concat(result.warnings);
@@ -227,6 +233,8 @@ async function runBench(runFrameworks: FrameworkData[], benchmarkInfos: Benchmar
     });
   }
 
+  plausibilityCheck.print();
+
   if (errors.length > 0) {
     console.log("================================");
     console.log("The following benchmarks failed:");
@@ -244,7 +252,9 @@ async function main() {
 // What works: npm run bench keyed/react, npm run bench -- keyed/react, npm run bench -- keyed/react --count 1 --benchmark 01_
 // What doesn't work (keyed/react becomes an element of argument benchmark): npm run bench -- --count 1 --benchmark 01_ keyed/react
 
-const args: any = yargs(process.argv)
+  console.error("PLEASE MAKE SURE THAT YOUR MOUSE IS OUTSIDE OF THE BROWSER WINDOW - and sorry for shouting :-) ");
+
+let args: any = yargs(process.argv)
   .usage(
     "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
   )

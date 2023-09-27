@@ -4,7 +4,7 @@ import { Page } from "puppeteer-core";
 import * as benchmarksCommon from "./benchmarksCommon.js";
 import { BenchmarkType } from "./benchmarksCommon.js";
 import { BenchmarkOptions, config, FrameworkData } from "./common.js";
-import { checkElementContainsText, checkElementExists, checkElementHasClass, checkElementNotExists, clickElement } from "./puppeteerAccess.js";
+import { checkCountForSelector, checkElementContainsText, checkElementExists, checkElementHasClass, checkElementNotExists, clickElement } from "./puppeteerAccess.js";
 
 
 export abstract class CPUBenchmarkPuppeteer implements benchmarksCommon.BenchmarkImpl {
@@ -92,6 +92,7 @@ export const benchSelect = new class extends CPUBenchmarkPuppeteer {
     for (let i = 0; i <= config.WARMUP_COUNT; i++) {
       await clickElement(page, `pierce/tbody>tr:nth-of-type(${i+5})>td:nth-of-type(2)>a`);
       await checkElementHasClass(page, `pierce/tbody>tr:nth-of-type(${i+5})`, "danger");
+      await checkCountForSelector(page, "pierce/tbody>tr.danger", 1);
     }
   }
   async run(page: Page) {
@@ -289,11 +290,6 @@ export const benchCreateClear5Memory = new (class extends MemBenchmarkPuppeteer 
     }
   }
 })();
-
-
-export function fileNameTrace(framework: FrameworkData, benchmark: benchmarksCommon.BenchmarkInfo, run: number, benchmarkOptions: BenchmarkOptions) {
-  return `${benchmarkOptions.tracesDirectory}/${framework.fullNameWithKeyedAndVersion}_${benchmark.id}_${run}.json`;
-}
 
 export const benchmarks = [
   benchRun, 

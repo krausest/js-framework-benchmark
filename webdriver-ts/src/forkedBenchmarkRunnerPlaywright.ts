@@ -1,9 +1,9 @@
 import { Browser, Page, CDPSession } from "playwright-core";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
-import { benchmarks, CPUBenchmarkPlaywright, fileNameTrace, MemBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright.js";
+import { benchmarks, CPUBenchmarkPlaywright, MemBenchmarkPlaywright, TBenchmarkPlaywright } from "./benchmarksPlaywright.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
 import { startBrowser } from "./playwrightAccess.js";
-import { computeResultsCPU } from "./timeline.js";
+import { computeResultsCPU, fileNameTrace } from "./timeline.js";
 
 
 let config: TConfig = defaultConfig;
@@ -130,8 +130,9 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             if (throttleCPU) {
               await client.send('Emulation.setCPUThrottlingRate', { rate: 1 });            
           }  
-            const result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
-            const resultScript = (m2_val - m1_val)*1000.0;
+            let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
+            let resultScript = (m2_val - m1_val)*1000.0;
+          
             console.log("**** resultScript = ", resultScript);
             if (m2_Timestamp == m1_Timestamp) throw new Error("Page metrics timestamp didn't change");
 
