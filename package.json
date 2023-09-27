@@ -51,6 +51,8 @@
   },
   "devDependencies": {
     "eslint": "^8.48.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
     "local-web-server": "^5.3.0",
     "prettier": "^3.0.3"
   }

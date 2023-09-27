@@ -1,0 +1,11 @@
+{
+  "!(frameworks|broken-frameworks)/**/*.{json,md,yml,yaml,html}": [
+    "prettier --write"
+  ],
+  "!(frameworks|broken-frameworks)/**/*.{js,cjs,ts}": [
+    "eslint",
+    "prettier --write"
+  ],
+  "./*.{json,md,yml,yaml,html}": ["prettier --write"],
+  "./*.{js,cjs,ts}": ["eslint", "prettier --write"]
+}
