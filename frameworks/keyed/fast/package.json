@@ -20,7 +20,7 @@
     "url": "https://github.com/dsvorc41/js-framework-benchmark.git"
   },
   "dependencies": {
-    "@microsoft/fast-element": "1.12.0",
+    "@microsoft/fast-element": "2.0.0-beta.26",
     "tslib": "2.6.2"
   },
   "devDependencies": {
