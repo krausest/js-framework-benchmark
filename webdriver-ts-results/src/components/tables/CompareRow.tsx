@@ -1,7 +1,6 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import { Framework, TableResultComparisonEntry } from "../../Common";
-import { compare, stopCompare } from "../../reducer";
+import { useRootStore } from "../../reducer";
 
 interface Props {
   comparison: Array<TableResultComparisonEntry | null>;
@@ -9,7 +8,8 @@ interface Props {
 }
 
 const CompareRow = ({ comparison, compareWith }: Props) => {
-  const dispatch = useDispatch();
+  const compare = useRootStore((state) => state.compare);
+  const stopCompare = useRootStore((state) => state.stopCompare);
 
   const renderComparisonCell = (
     result: TableResultComparisonEntry | null,
@@ -23,9 +23,7 @@ const CompareRow = ({ comparison, compareWith }: Props) => {
     const isComparing = compareWith === framework;
 
     const handleToggleComparing = () => {
-      isComparing
-        ? dispatch(stopCompare(framework))
-        : dispatch(compare(framework));
+      isComparing ? stopCompare(framework) : compare(framework);
     };
 
     return (

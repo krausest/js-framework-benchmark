@@ -7,37 +7,34 @@ export enum BenchmarkType {
   STARTUP,
 }
 
-export enum DurationMeasurementMode {
-  FIRST_PAINT_AFTER_LAYOUT,
-  LAST_PAINT
-}
-
-export interface BenchmarkInfo {
+export interface BenchmarkInfoBase {
   id: string;
   label: string;
   description(throttleCPU: number|undefined): string;
   type: BenchmarkType;
 }
 
-export interface CPUBenchmarkInfo extends BenchmarkInfo {
+export interface CPUBenchmarkInfo extends BenchmarkInfoBase {
   allowBatching: boolean;
-  durationMeasurementMode: DurationMeasurementMode;
   type: BenchmarkType.CPU;
+  layoutEventRequired: boolean;
 }
 
-export interface MemBenchmarkInfo extends BenchmarkInfo {
+export interface MemBenchmarkInfo extends BenchmarkInfoBase {
   type: BenchmarkType.MEM;
 }
 
-export interface StartupMainBenchmarkInfo extends BenchmarkInfo {
+export interface StartupMainBenchmarkInfo extends BenchmarkInfoBase {
   type: BenchmarkType.STARTUP_MAIN;
 }
 
-export interface StartupBenchmarkInfo extends BenchmarkInfo {
+export interface StartupBenchmarkInfo extends BenchmarkInfoBase {
   type: BenchmarkType.STARTUP;
   property: string;
   fn: (x:number) => number;
 }
+
+export type BenchmarkInfo = CPUBenchmarkInfo | MemBenchmarkInfo | StartupMainBenchmarkInfo | StartupBenchmarkInfo;
 
 export interface BenchmarkImpl {
   benchmarkInfo: BenchmarkInfo;
@@ -110,7 +107,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   " warmup runs)." + slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
+  layoutEventRequired: true
 },
 {
   id: BENCHMARK_02,
@@ -119,7 +116,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
               " warmup runs)." + slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
+  layoutEventRequired: true
 },
 {
   id: BENCHMARK_03,
@@ -128,7 +125,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
               slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
+  layoutEventRequired: true
 },
 {
   id: BENCHMARK_04,
@@ -138,7 +135,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
               slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
+  layoutEventRequired: false
 },
 {
   id: BENCHMARK_05,
@@ -148,7 +145,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
                 slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
+  layoutEventRequired: true
 },
 {
   id: BENCHMARK_06,
@@ -157,7 +154,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
               slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
+  layoutEventRequired: true
 },
 {
   id: BENCHMARK_07,
@@ -165,7 +162,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     description: (throttleCPU: number|undefined) => "creating 10,000 rows. (" +config.WARMUP_COUNT +" warmup runs with 1k rows)." + slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
     allowBatching: true,
-    durationMeasurementMode: DurationMeasurementMode.FIRST_PAINT_AFTER_LAYOUT
+    layoutEventRequired: true
   },
 {
   id: BENCHMARK_08,
@@ -173,7 +170,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   description: (throttleCPU: number|undefined) => "appending 1,000 to a table of 10,000 rows." + slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
+  layoutEventRequired: true
 },
 {
   id: BENCHMARK_09,
@@ -181,7 +178,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   description: (throttleCPU: number|undefined) => "clearing a table with 1,000 rows." + slowDownNote(throttleCPU)+ " (" +config.WARMUP_COUNT +" warmup runs).",
   type: BenchmarkType.CPU,
   allowBatching: true,
-  durationMeasurementMode: DurationMeasurementMode.LAST_PAINT
+  layoutEventRequired: true
 }
 ];
 

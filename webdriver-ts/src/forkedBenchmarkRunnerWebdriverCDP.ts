@@ -1,9 +1,9 @@
 import * as fs from "fs/promises";
 import { WebDriver } from "selenium-webdriver";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
-import { benchmarks, CPUBenchmarkWebdriverCDP, fileNameTrace } from "./benchmarksWebdriverCDP.js";
+import { benchmarks, CPUBenchmarkWebdriverCDP } from "./benchmarksWebdriverCDP.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
-import { computeResultsCPU } from "./timeline.js";
+import { computeResultsCPU, fileNameTrace } from "./timeline.js";
 import { buildDriver, setButtonsInShadowRoot, setShadowRootName, setUseRowShadowRoot, setUseShadowRoot } from "./webdriverCDPAccess.js";
 
 
@@ -133,7 +133,7 @@ async function runCPUBenchmark(
       await cdpConnection.execute("Tracing.end", {});
       await p;
 
-      let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), benchmark.benchmarkInfo.durationMeasurementMode);
+      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
       results.push({total:result.duration, script: 0});
       console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
       if (result.duration < 0)

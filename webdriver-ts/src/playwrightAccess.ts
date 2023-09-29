@@ -79,6 +79,19 @@ export async function checkElementHasClass(page: Page, selector: string, classNa
   throw `checkElementHasClass ${selector} failed. expected ${className}, but was ${clazzes}`;
 }
 
+export async function checkCountForSelector(page: Page, selector: string, expectedCount: number): Promise<void> {
+  let elems = await page.$$(selector);
+  if (elems) {
+    if (expectedCount!==elems.length) {
+      throw `checkCountForSelector ${selector} failed. expected ${expectedCount}, but ${elems.length} were found`;
+    }
+  } else {
+    if (expectedCount!==0) {
+      throw `checkCountForSelector ${selector} failed. expected ${expectedCount}, but selector was not found`;
+    }
+  }
+}
+
 function browserPath(benchmarkOptions: BenchmarkOptions) {
   if (benchmarkOptions.chromeBinaryPath) return benchmarkOptions.chromeBinaryPath;
   if (process.platform == "darwin") {

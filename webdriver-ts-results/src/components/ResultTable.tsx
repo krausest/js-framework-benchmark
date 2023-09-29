@@ -8,9 +8,8 @@ import {
 import CpuResultsTable from "./tables/CpuResultsTable";
 import MemResultsTable from "./tables/MemResultsTable";
 import StartupResultsTable from "./tables/StartupResultsTable";
-import { useDispatch, useSelector } from "react-redux";
-import { sort, State } from "../reducer";
 import { benchmarks } from "../results";
+import { useRootStore } from "../reducer";
 
 const BoxPlotTable = React.lazy(() => import("./BoxPlotTable/BoxPlotTable"));
 
@@ -32,14 +31,13 @@ const ResultTable = ({ type }: Props) => {
     },
   };
 
-  const dispatch = useDispatch();
+  const data = useRootStore((state) => state.resultTables[type]);
+  const currentSortKey = useRootStore((state) => state.sortKey);
+  const displayMode = useRootStore((state) => state.displayMode);
+  const cpuDurationMode = useRootStore((state) => state.cpuDurationMode);
+  const sort = useRootStore((state) => state.sort);
 
-  const data = useSelector((state: State) => state.resultTables[type]);
-  const currentSortKey = useSelector((state: State) => state.sortKey);
-  const displayMode = useSelector((state: State) => state.displayMode);
-  const cpuDurationMode = useSelector((state: State) => state.cpuDurationMode);
-
-  const sortBy = (sortKey: string) => dispatch(sort(sortKey));
+  const sortBy = (sortKey: string) => sort(sortKey);
 
   if (
     !data ||
