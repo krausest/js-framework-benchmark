@@ -8,8 +8,7 @@
     "plotly.js-cartesian-dist": "2.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.0.5",
-    "redux": "^4.2.1"
+    "zustand": "^4.4.1"
   },
   "scripts": {
     "start": "webpack serve --mode development -c webpack.config.dev.js",
