@@ -6,7 +6,15 @@ const plugins = [
   babel({
     babelHelpers: "bundled",
     exclude: "node_modules/**",
-    presets: ["dlight"],
+    presets: ["dlight"]
+  }),
+  babel({
+    babelHelpers: "bundled",
+    exclude: "node_modules/**",
+    plugins: [
+      ["@babel/plugin-proposal-decorators", { version: "legacy" }],
+      ["@babel/plugin-proposal-class-properties", { loose: true }]
+    ]
   }),
   resolve({ extensions: [".js"] }),
 ]

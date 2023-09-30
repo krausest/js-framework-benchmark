@@ -1,4 +1,4 @@
-import DLight, { View, render } from "@dlightjs/dlight"
+import { View, render } from "@dlightjs/dlight"
 
 let idCounter = 1
 
@@ -19,7 +19,8 @@ function buildData(count) {
   return data
 }
 
-class Main extends View {
+@View
+class Main {
   rows = []
   selectIdx = -1
   addRows() {
@@ -62,19 +63,19 @@ class Main extends View {
     this.rows = [...this.rows]
   }
 
-  @SubView
-  Button({ _$content, id, onclick }) {
+  @View
+  Button({ content, id, onclick }) {
     div()
       .className("col-sm-6 smallpad")
     {
-      button(_$content)
+      button(content)
         .onclick(onclick)
         .id(id)
         .className("btn btn-primary btn-block")
     }
   }
 
-  @SubView
+  @View
   Jumbotron() {
     div()
       .className("jumbotron")
