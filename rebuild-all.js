@@ -47,8 +47,7 @@ const filesToDelete = [
   "bower_components",
   "node_modules",
   "output",
-  useCi && "package-lock.json",
-].filter(Boolean);
+].concat(useCi ? [] : ["package-lock.json"]);
 
 /**
  * @typedef {Object} Framework

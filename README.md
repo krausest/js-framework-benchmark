@@ -142,6 +142,10 @@ This installs just a few top level dependencies for the building the frameworks 
 ```
 npm ci
 ```
+Then install the server:
+```
+npm run install-server
+```
 
 We start the local web server in the root directory
 
