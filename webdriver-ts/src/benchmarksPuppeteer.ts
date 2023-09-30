@@ -20,6 +20,8 @@ import {
   clickElement,
 } from "./puppeteerAccess.js";
 
+const WARMUP_COUNT = config.WARMUP_COUNT;
+
 export abstract class CPUBenchmarkPuppeteer implements BenchmarkImpl {
   type = BenchmarkType.CPU;
   constructor(public benchmarkInfo: CPUBenchmarkInfo) {}
@@ -42,7 +44,7 @@ export const benchRun = new (class extends CPUBenchmarkPuppeteer {
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < WARMUP_COUNT; i++) {
       await clickElement(page, "pierce/#run");
       await checkElementContainsText(
         page,
@@ -61,7 +63,7 @@ export const benchRun = new (class extends CPUBenchmarkPuppeteer {
     await checkElementContainsText(
       page,
       "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
-      ((config.WARMUP_COUNT + 1) * 1000).toFixed(),
+      ((WARMUP_COUNT + 1) * 1000).toFixed(),
     );
   }
 })();
@@ -72,7 +74,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkPuppeteer {
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < WARMUP_COUNT; i++) {
       await clickElement(page, "pierce/#run");
       await checkElementContainsText(
         page,
@@ -133,7 +135,7 @@ export const benchSelect = new (class extends CPUBenchmarkPuppeteer {
       "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
       "1000",
     );
-    for (let i = 0; i <= config.WARMUP_COUNT; i++) {
+    for (let i = 0; i <= WARMUP_COUNT; i++) {
       await clickElement(
         page,
         `pierce/tbody>tr:nth-of-type(${i + 5})>td:nth-of-type(2)>a`,
@@ -170,7 +172,7 @@ export const benchSwapRows = new (class extends CPUBenchmarkPuppeteer {
       page,
       "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
     );
-    for (let i = 0; i <= config.WARMUP_COUNT; i++) {
+    for (let i = 0; i <= WARMUP_COUNT; i++) {
       const text = i % 2 == 0 ? "2" : "999";
       await clickElement(page, "pierce/#swaprows");
       await checkElementContainsText(
@@ -206,24 +208,24 @@ export const benchRemove = new (class extends CPUBenchmarkPuppeteer {
       page,
       "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
     );
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < WARMUP_COUNT; i++) {
       await checkElementContainsText(
         page,
         `pierce/tbody>tr:nth-of-type(${
-          config.WARMUP_COUNT - i + 4
+          WARMUP_COUNT - i + 4
         })>td:nth-of-type(1)`,
-        (config.WARMUP_COUNT - i + 4).toString(),
+        (WARMUP_COUNT - i + 4).toString(),
       );
       await clickElement(
         page,
         `pierce/tbody>tr:nth-of-type(${
-          config.WARMUP_COUNT - i + 4
+          WARMUP_COUNT - i + 4
         })>td:nth-of-type(3)>a>span:nth-of-type(1)`,
       );
       await checkElementContainsText(
         page,
         `pierce/tbody>tr:nth-of-type(${
-          config.WARMUP_COUNT - i + 4
+          WARMUP_COUNT - i + 4
         })>td:nth-of-type(1)`,
         "10",
       );
@@ -273,7 +275,7 @@ export const benchRunBig = new (class extends CPUBenchmarkPuppeteer {
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < WARMUP_COUNT; i++) {
       await clickElement(page, "pierce/#run");
       await checkElementContainsText(
         page,
@@ -323,7 +325,7 @@ export const benchClear = new (class extends CPUBenchmarkPuppeteer {
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < WARMUP_COUNT; i++) {
       await clickElement(page, "pierce/#run");
       await checkElementContainsText(
         page,
@@ -340,7 +342,7 @@ export const benchClear = new (class extends CPUBenchmarkPuppeteer {
     await checkElementContainsText(
       page,
       "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
-      (config.WARMUP_COUNT * 1000 + 1).toFixed(),
+      (WARMUP_COUNT * 1000 + 1).toFixed(),
     );
   }
   async run(page: Page) {

@@ -20,6 +20,8 @@ import {
   clickElement,
 } from "./playwrightAccess.js";
 
+const WARMUP_COUNT = config.WARMUP_COUNT;
+
 export abstract class CPUBenchmarkPlaywright implements BenchmarkImpl {
   type = BenchmarkType.CPU;
   constructor(public benchmarkInfo: CPUBenchmarkInfo) {}
@@ -60,7 +62,7 @@ export const benchRun = new (class extends CPUBenchmarkPlaywright {
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < WARMUP_COUNT; i++) {
       await clickElement(page, "#run");
       await checkElementContainsText(
         page,
@@ -79,7 +81,7 @@ export const benchRun = new (class extends CPUBenchmarkPlaywright {
     await checkElementContainsText(
       page,
       "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
-      ((config.WARMUP_COUNT + 1) * 1000).toFixed(),
+      ((WARMUP_COUNT + 1) * 1000).toFixed(),
     );
   }
 })();
@@ -90,7 +92,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkPlaywright {
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < WARMUP_COUNT; i++) {
       await clickElement(page, "#run");
       await checkElementContainsText(
         page,
@@ -151,7 +153,7 @@ export const benchSelect = new (class extends CPUBenchmarkPlaywright {
       "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
       "1000",
     );
-    for (let i = 0; i <= config.WARMUP_COUNT; i++) {
+    for (let i = 0; i <= WARMUP_COUNT; i++) {
       await clickElement(
         page,
         `tbody>tr:nth-of-type(${i + 5})>td:nth-of-type(2)>a`,
@@ -181,7 +183,7 @@ export const benchSwapRows = new (class extends CPUBenchmarkPlaywright {
       page,
       "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
     );
-    for (let i = 0; i <= config.WARMUP_COUNT; i++) {
+    for (let i = 0; i <= WARMUP_COUNT; i++) {
       const text = i % 2 == 0 ? "2" : "999";
       await clickElement(page, "#swaprows");
       await checkElementContainsText(
@@ -217,25 +219,21 @@ export const benchRemove = new (class extends CPUBenchmarkPlaywright {
       page,
       "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
     );
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < WARMUP_COUNT; i++) {
       await checkElementContainsText(
         page,
-        `tbody>tr:nth-of-type(${
-          config.WARMUP_COUNT - i + 4
-        })>td:nth-of-type(1)`,
-        (config.WARMUP_COUNT - i + 4).toString(),
+        `tbody>tr:nth-of-type(${WARMUP_COUNT - i + 4})>td:nth-of-type(1)`,
+        (WARMUP_COUNT - i + 4).toString(),
       );
       await clickElement(
         page,
         `tbody>tr:nth-of-type(${
-          config.WARMUP_COUNT - i + 4
+          WARMUP_COUNT - i + 4
         })>td:nth-of-type(3)>a>span:nth-of-type(1)`,
       );
       await checkElementContainsText(
         page,
-        `tbody>tr:nth-of-type(${
-          config.WARMUP_COUNT - i + 4
-        })>td:nth-of-type(1)`,
+        `tbody>tr:nth-of-type(${WARMUP_COUNT - i + 4})>td:nth-of-type(1)`,
         "10",
       );
     }
@@ -285,7 +283,7 @@ export const benchRunBig = new (class extends CPUBenchmarkPlaywright {
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < WARMUP_COUNT; i++) {
       await clickElement(page, "#run");
       await checkElementContainsText(
         page,
@@ -335,7 +333,7 @@ export const benchClear = new (class extends CPUBenchmarkPlaywright {
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < WARMUP_COUNT; i++) {
       await clickElement(page, "#run");
       await checkElementContainsText(
         page,
@@ -352,7 +350,7 @@ export const benchClear = new (class extends CPUBenchmarkPlaywright {
     await checkElementContainsText(
       page,
       "tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
-      (config.WARMUP_COUNT * 1000 + 1).toFixed(),
+      (WARMUP_COUNT * 1000 + 1).toFixed(),
     );
   }
   async run(browser: Browser, page: Page) {

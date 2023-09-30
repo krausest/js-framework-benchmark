@@ -8,6 +8,9 @@ import {
 import * as chrome from "selenium-webdriver/chrome.js";
 import { BenchmarkOptions, config } from "./common.js";
 
+const TIMEOUT = config.TIMEOUT;
+const LOG_DETAILS = config.LOG_DETAILS;
+
 interface PathPart {
   tagName: string;
   index: number;
@@ -126,7 +129,7 @@ export async function testTextContains(
   driver: WebDriver,
   xpath: string,
   text: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return await waitForCondition(driver)(
@@ -155,7 +158,7 @@ export function testTextNotContained(
   driver: WebDriver,
   xpath: string,
   text: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return waitForCondition(driver)(
@@ -184,7 +187,7 @@ export function testClassContains(
   driver: WebDriver,
   xpath: string,
   text: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return waitForCondition(driver)(
@@ -212,7 +215,7 @@ export function testClassContains(
 export function testElementLocatedByXpath(
   driver: WebDriver,
   xpath: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return waitForCondition(driver)(
@@ -235,7 +238,7 @@ export function testElementLocatedByXpath(
 export function testElementNotLocatedByXPath(
   driver: WebDriver,
   xpath: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return waitForCondition(driver)(
@@ -258,7 +261,7 @@ export function testElementNotLocatedByXPath(
 export function testElementLocatedById(
   driver: WebDriver,
   id: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return waitForCondition(driver)(
@@ -311,7 +314,7 @@ export function clickElementByXPath(
   isInButtonArea: boolean,
 ) {
   return retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS)
+    if (count > 1 && LOG_DETAILS)
       console.log("clickElementByXPath ", xpath, " attempt #", count);
     const elem = await findByXPath(driver, xpath, isInButtonArea);
     await elem.click();
@@ -326,7 +329,7 @@ export async function getTextByXPath(
   isInButtonArea: boolean,
 ): Promise<string> {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS)
+    if (count > 1 && LOG_DETAILS)
       console.log("getTextByXPath ", xpath, " attempt #", count);
     const elem = await findByXPath(driver, xpath, isInButtonArea);
     return await elem.getText();

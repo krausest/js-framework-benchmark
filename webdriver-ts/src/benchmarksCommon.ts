@@ -1,5 +1,7 @@
 import { FrameworkData, config } from "./common.js";
 
+const WARMUP_COUNT = config.WARMUP_COUNT;
+
 export enum BenchmarkType {
   CPU,
   MEM,
@@ -112,7 +114,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     label: "create rows",
     description: (throttleCPU: number | undefined) =>
       "creating 1,000 rows (" +
-      config.WARMUP_COUNT +
+      WARMUP_COUNT +
       " warmup runs)." +
       slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
@@ -124,7 +126,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     label: "replace all rows",
     description: (throttleCPU: number | undefined) =>
       "updating all 1,000 rows (" +
-      config.WARMUP_COUNT +
+      WARMUP_COUNT +
       " warmup runs)." +
       slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
@@ -146,7 +148,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     label: "select row",
     description: (throttleCPU: number | undefined) =>
       "highlighting a selected row. (" +
-      config.WARMUP_COUNT +
+      WARMUP_COUNT +
       " warmup runs)." +
       slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
@@ -158,7 +160,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     label: "swap rows",
     description: (throttleCPU: number | undefined) =>
       "swap 2 rows for table with 1,000 rows. (" +
-      config.WARMUP_COUNT +
+      WARMUP_COUNT +
       " warmup runs)." +
       slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
@@ -170,7 +172,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     label: "remove row",
     description: (throttleCPU: number | undefined) =>
       "removing one row. (" +
-      config.WARMUP_COUNT +
+      WARMUP_COUNT +
       " warmup runs)." +
       slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
@@ -182,7 +184,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     label: "create many rows",
     description: (throttleCPU: number | undefined) =>
       "creating 10,000 rows. (" +
-      config.WARMUP_COUNT +
+      WARMUP_COUNT +
       " warmup runs with 1k rows)." +
       slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
@@ -205,7 +207,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
       "clearing a table with 1,000 rows." +
       slowDownNote(throttleCPU) +
       " (" +
-      config.WARMUP_COUNT +
+      WARMUP_COUNT +
       " warmup runs).",
     type: BenchmarkType.CPU,
     allowBatching: true,

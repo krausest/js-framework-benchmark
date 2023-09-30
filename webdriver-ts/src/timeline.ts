@@ -9,6 +9,9 @@ import {
 import { BenchmarkOptions, FrameworkData, TConfig, config } from "./common.js";
 import { writeResults } from "./writeResults.js";
 
+const LOG_DEBUG = config.LOG_DEBUG;
+const LOG_DETAILS = config.LOG_DETAILS;
+
 interface Timingresult {
   type: string;
   ts: number;
@@ -26,10 +29,10 @@ export function extractRelevantEvents(entries: any[]) {
 
   entries.forEach((x) => {
     const e = x;
-    if (config.LOG_DEBUG) console.log(JSON.stringify(e));
+    if (LOG_DEBUG) console.log(JSON.stringify(e));
     if (e.name === "EventDispatch") {
       if (e.args.data.type === "click") {
-        if (config.LOG_DETAILS) console.log("CLICK ", +e.ts);
+        if (LOG_DETAILS) console.log("CLICK ", +e.ts);
         click_start = +e.ts;
         click_end = +e.ts + e.dur;
         filteredEvents.push({
@@ -42,7 +45,7 @@ export function extractRelevantEvents(entries: any[]) {
         });
       }
     } else if (e.name === "Layout" && e.ph === "X") {
-      if (config.LOG_DETAILS)
+      if (LOG_DETAILS)
         console.log("Layout", +e.ts, +e.ts + e.dur - click_start);
       filteredEvents.push({
         type: "layout",
@@ -53,7 +56,7 @@ export function extractRelevantEvents(entries: any[]) {
         evt: JSON.stringify(e),
       });
     } else if (e.name === "FunctionCall" && e.ph === "X") {
-      if (config.LOG_DETAILS)
+      if (LOG_DETAILS)
         console.log("FunctionCall", +e.ts, +e.ts + e.dur - click_start);
       filteredEvents.push({
         type: "functioncall",
@@ -64,7 +67,7 @@ export function extractRelevantEvents(entries: any[]) {
         evt: JSON.stringify(e),
       });
     } else if (e.name === "HitTest" && e.ph === "X") {
-      if (config.LOG_DETAILS)
+      if (LOG_DETAILS)
         console.log("HitTest", +e.ts, +e.ts + e.dur - click_start);
       filteredEvents.push({
         type: "hittest",
@@ -75,7 +78,7 @@ export function extractRelevantEvents(entries: any[]) {
         evt: JSON.stringify(e),
       });
     } else if (e.name === "Commit" && e.ph === "X") {
-      if (config.LOG_DETAILS)
+      if (LOG_DETAILS)
         console.log("COMMIT PAINT", +e.ts, +e.ts + e.dur - click_start);
       filteredEvents.push({
         type: "commit",
@@ -86,8 +89,7 @@ export function extractRelevantEvents(entries: any[]) {
         evt: JSON.stringify(e),
       });
     } else if (e.name === "Paint" && e.ph === "X") {
-      if (config.LOG_DETAILS)
-        console.log("PAINT", +e.ts, +e.ts + e.dur - click_start);
+      if (LOG_DETAILS) console.log("PAINT", +e.ts, +e.ts + e.dur - click_start);
       filteredEvents.push({
         type: "paint",
         ts: +e.ts,
@@ -97,7 +99,7 @@ export function extractRelevantEvents(entries: any[]) {
         evt: JSON.stringify(e),
       });
     } else if (e.name === "FireAnimationFrame" && e.ph === "X") {
-      if (config.LOG_DETAILS)
+      if (LOG_DETAILS)
         console.log("FireAnimationFrame", +e.ts, +e.ts - click_start);
       filteredEvents.push({
         type: "fireAnimationFrame",
@@ -108,7 +110,7 @@ export function extractRelevantEvents(entries: any[]) {
         evt: JSON.stringify(e),
       });
     } else if (e.name === "TimerFire" && e.ph === "X") {
-      if (config.LOG_DETAILS)
+      if (LOG_DETAILS)
         console.log("TimerFire", +e.ts, +e.ts - click_start, +e.ts - click_end);
       filteredEvents.push({
         type: "timerFire",
@@ -119,7 +121,7 @@ export function extractRelevantEvents(entries: any[]) {
         evt: JSON.stringify(e),
       });
     } else if (e.name === "RequestAnimationFrame") {
-      if (config.LOG_DETAILS)
+      if (LOG_DETAILS)
         console.log(
           "RequestAnimationFrame",
           +e.ts,
@@ -171,10 +173,10 @@ export function extractRelevantJSEvents(config: TConfig, entries: any[]) {
 
   entries.forEach((x) => {
     const e = x;
-    if (config.LOG_DEBUG) console.log(JSON.stringify(e));
+    if (LOG_DEBUG) console.log(JSON.stringify(e));
     if (e.name === "EventDispatch") {
       if (e.args.data.type === "click") {
-        if (config.LOG_DETAILS) console.log("CLICK ", +e.ts);
+        if (LOG_DETAILS) console.log("CLICK ", +e.ts);
         filteredEvents.push({
           type: "click",
           ts: +e.ts,
@@ -257,7 +259,7 @@ export async function computeResultsCPU(
   const eventsDuringBenchmark = R.filter(
     (e: Timingresult) => e.ts > click.end || e.type === "click",
   )(events);
-  if (config.LOG_DETAILS) logEvents(eventsDuringBenchmark, click);
+  if (LOG_DETAILS) logEvents(eventsDuringBenchmark, click);
 
   let droppedNonMainProcessCommitEvents = false;
   let droppedNonMainProcessOtherEvents = false;
@@ -297,7 +299,7 @@ export async function computeResultsCPU(
   )(eventsOnMainThreadDuringBenchmark);
   // we're looking for the commit after this event
   const startFromEvent = startFrom[startFrom.length - 1];
-  if (config.LOG_DETAILS)
+  if (LOG_DETAILS)
     console.log(
       "DEBUG: searching for commit event after",
       startFromEvent,
@@ -327,7 +329,7 @@ export async function computeResultsCPU(
     1000.0;
 
   let duration = (commit.end - clicks[0].ts) / 1000.0;
-  if (config.LOG_DEBUG) {
+  if (LOG_DEBUG) {
     console.log("duration", duration);
   }
 
