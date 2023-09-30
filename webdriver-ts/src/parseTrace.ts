@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  BENCHMARK_01,
-  BENCHMARK_04,
-  BENCHMARK_07,
   BenchmarkInfo,
   BenchmarkType,
   CPUBenchmarkInfo,

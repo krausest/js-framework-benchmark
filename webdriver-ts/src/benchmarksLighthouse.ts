@@ -1,4 +1,4 @@
-import * as benchmarksCommon from "./benchmarksCommon.js";
+import { Benchmark, startupBenchmarkInfos } from "./benchmarksCommon.js";
 import {
   BenchmarkImpl,
   BenchmarkType,
@@ -62,8 +62,7 @@ export const subbenchmarks = [
 
 export class BenchmarkLighthouse implements BenchmarkImpl {
   type = BenchmarkType.STARTUP_MAIN;
-  benchmarkInfo =
-    benchmarksCommon.startupBenchmarkInfos[benchmarksCommon.BENCHMARK_30];
+  benchmarkInfo = startupBenchmarkInfos[Benchmark._30];
   subbenchmarks = subbenchmarks;
 }
 
