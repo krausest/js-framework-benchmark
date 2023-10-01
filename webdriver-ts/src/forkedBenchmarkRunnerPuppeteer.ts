@@ -15,7 +15,7 @@ import {
   config as defaultConfig,
   ErrorAndWarning,
   FrameworkData,
-  TConfig,
+  Config,
 } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
 import {
@@ -24,7 +24,7 @@ import {
   fileNameTrace,
 } from "./timeline.js";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 const { LOG_PROGRESS, LOG_DETAILS, LOG_DEBUG } = config;
 
 async function runBenchmark(

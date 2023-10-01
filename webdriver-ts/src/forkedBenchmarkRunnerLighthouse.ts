@@ -1,7 +1,7 @@
 import * as chromeLauncher from "chrome-launcher";
 
 import {
-  TConfig,
+  Config,
   config as defaultConfig,
   FrameworkData,
   ErrorAndWarning,
@@ -15,7 +15,7 @@ import {
 import { StartupBenchmarkInfo } from "./benchmarksCommon.js";
 import lighthouse from "lighthouse";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 const { LOG_DEBUG } = config;
 
 function extractRawValue(results: any, id: string) {

@@ -18,7 +18,7 @@ export interface JSONResult {
   values: JSONResultMap;
 }
 
-export type TBenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
+export type BenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
 
 export interface ErrorAndWarning<T> {
   error: string;
@@ -51,7 +51,7 @@ export interface BenchmarkOptions {
   HOST: 'localhost',
 */
 
-export enum BENCHMARK_RUNNER {
+export enum BenchmarkRunner {
   PUPPETEER = "puppeteer",
   PLAYWRIGHT = "playwright",
   WEBDRIVER_CDP = "webdrivercdp",
@@ -75,9 +75,9 @@ export const config = {
   STARTUP_SLEEP_DURATION: 1000,
   WRITE_RESULTS: true,
   ALLOW_BATCHING: true,
-  BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER,
+  BENCHMARK_RUNNER: BenchmarkRunner.PUPPETEER,
 };
-export type TConfig = typeof config;
+export type Config = typeof config;
 
 export interface FrameworkData {
   name: string;

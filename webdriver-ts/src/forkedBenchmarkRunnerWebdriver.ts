@@ -9,7 +9,7 @@ import {
 } from "./webdriverAccess.js";
 
 import {
-  TConfig,
+  Config,
   config as defaultConfig,
   FrameworkData,
   ErrorAndWarning,
@@ -22,7 +22,7 @@ import {
   slowDownFactor,
 } from "./benchmarksCommon.js";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 const { LOG_DETAILS, LOG_TIMELINE, LOG_DEBUG, LOG_PROGRESS } = config;
 
 // necessary to launch without specifiying a path

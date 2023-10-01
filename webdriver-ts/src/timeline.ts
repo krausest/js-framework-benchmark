@@ -6,7 +6,7 @@ import {
   CPUBenchmarkInfo,
   CPUBenchmarkResult,
 } from "./benchmarksCommon.js";
-import { BenchmarkOptions, FrameworkData, TConfig, config } from "./common.js";
+import { BenchmarkOptions, FrameworkData, Config, config } from "./common.js";
 import { writeResults } from "./writeResults.js";
 
 const { LOG_DEBUG, LOG_DETAILS } = config;
@@ -167,7 +167,7 @@ const traceJSEventNames = [
   "V8.Execute",
 ];
 
-export function extractRelevantJSEvents(config: TConfig, entries: any[]) {
+export function extractRelevantJSEvents(config: Config, entries: any[]) {
   const filteredEvents: any[] = [];
 
   entries.forEach((x) => {
@@ -197,7 +197,7 @@ export function extractRelevantJSEvents(config: TConfig, entries: any[]) {
 }
 
 async function fetchJSEventsFromPerformanceLog(
-  config: TConfig,
+  config: Config,
   fileName: string,
 ): Promise<Timingresult[]> {
   let timingResults: Timingresult[] = [];
@@ -504,7 +504,7 @@ interface Interval {
 
 export async function computeResultsJS(
   cpuTrace: CPUDurationResult,
-  config: TConfig,
+  config: Config,
   fileName: string,
 ): Promise<number> {
   const totalDuration = cpuTrace;

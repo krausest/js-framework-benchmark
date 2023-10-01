@@ -11,7 +11,7 @@ import {
 } from "./webdriverAccess.js";
 
 import {
-  TConfig,
+  Config,
   config as defaultConfig,
   FrameworkData,
   ErrorAndWarning,
@@ -23,7 +23,7 @@ import {
   initMeasurement,
 } from "./benchmarksWebdriverAfterframe.js";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 const { LOG_PROGRESS, LOG_DEBUG } = config;
 
 async function runBenchmark(
