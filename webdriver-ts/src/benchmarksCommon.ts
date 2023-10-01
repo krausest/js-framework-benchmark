@@ -1,6 +1,6 @@
 import { FrameworkData, config } from "./common.js";
 
-const WARMUP_COUNT = config.WARMUP_COUNT;
+const { WARMUP_COUNT } = config;
 
 export enum BenchmarkType {
   CPU,

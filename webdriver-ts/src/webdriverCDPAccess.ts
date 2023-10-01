@@ -8,8 +8,7 @@ import {
 import * as chrome from "selenium-webdriver/chrome.js";
 import { BenchmarkOptions, config } from "./common.js";
 
-const TIMEOUT = config.TIMEOUT;
-const LOG_DETAILS = config.LOG_DETAILS;
+const { TIMEOUT, LOG_DETAILS } = config;
 
 interface PathPart {
   tagName: string;

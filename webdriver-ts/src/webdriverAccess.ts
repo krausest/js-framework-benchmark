@@ -7,6 +7,8 @@ import {
 import * as chrome from "selenium-webdriver/chrome.js";
 import { BenchmarkOptions, config } from "./common.js";
 
+const { TIMEOUT, LOG_DEBUG, LOG_DETAILS } = config;
+
 let useShadowRoot = false;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let useRowShadowRoot = false;
@@ -35,15 +37,13 @@ function convertPath(path: string): string {
   for (const part of parts) {
     const components = part.split(/\[|]/).filter((v) => !!v);
     const tagName = components[0];
-    let index = 0;
-    if (components.length == 2) {
+    let index = 1;
+    if (components.length === 2) {
       index = Number(components[1]);
       if (!index) {
         console.log("Index can't be parsed", components[1]);
         throw "Index can't be parsed " + components[1];
       }
-    } else {
-      index = 1;
     }
     res.push(`${tagName}:nth-of-type(${index})`);
   }
@@ -56,7 +56,7 @@ export async function findById(
   isInButtonArea: boolean,
 ): Promise<WebElement> {
   const root = mainRoot(driver, isInButtonArea);
-  if (config.LOG_DEBUG)
+  if (LOG_DEBUG)
     console.log("findById selector ", `${root}.querySelector('#${id}')`);
   return await (driver.executeScript(
     `return ${root}.querySelector('#${id}')`,
@@ -72,7 +72,7 @@ export async function findByXPath(
   const paths = convertPath(path);
   const root = mainRoot(driver, isInButtonArea);
   try {
-    if (config.LOG_DEBUG)
+    if (LOG_DEBUG)
       console.log(
         "findByXPath: selector = ",
         `return ${root}.querySelector('${paths}')`,
@@ -105,14 +105,14 @@ export async function testTextContains(
   driver: WebDriver,
   xpath: string,
   text: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return await waitForCondition(driver)(
     `testTextContains ${xpath} ${text}`,
     async function (driver) {
       try {
-        if (config.LOG_DEBUG) console.log("testTextContains", xpath);
+        if (LOG_DEBUG) console.log("testTextContains", xpath);
         const elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         const v = await elem.getText();
@@ -135,7 +135,7 @@ export async function testTextNotContained(
   driver: WebDriver,
   xpath: string,
   text: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return await waitForCondition(driver)(
@@ -164,7 +164,7 @@ export async function testClassContains(
   driver: WebDriver,
   xpath: string,
   text: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return await waitForCondition(driver)(
@@ -192,7 +192,7 @@ export async function testClassContains(
 export async function testElementLocatedByXpath(
   driver: WebDriver,
   xpath: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return await waitForCondition(driver)(
@@ -215,7 +215,7 @@ export async function testElementLocatedByXpath(
 export async function testElementNotLocatedByXPath(
   driver: WebDriver,
   xpath: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return await waitForCondition(driver)(
@@ -223,8 +223,7 @@ export async function testElementNotLocatedByXPath(
     async function (driver) {
       try {
         const elem = await findByXPath(driver, xpath, isInButtonArea);
-        if (config.LOG_DEBUG)
-          console.log("testElementNotLocatedByXPath", xpath, elem);
+        if (LOG_DEBUG) console.log("testElementNotLocatedByXPath", xpath, elem);
         return elem ? false : true;
       } catch (err) {
         console.log(
@@ -240,7 +239,7 @@ export async function testElementNotLocatedByXPath(
 export async function testElementLocatedById(
   driver: WebDriver,
   id: string,
-  timeout = config.TIMEOUT,
+  timeout = TIMEOUT,
   isInButtonArea: boolean,
 ) {
   return await waitForCondition(driver)(
@@ -248,7 +247,7 @@ export async function testElementLocatedById(
     async function (driver) {
       try {
         const root = mainRoot(driver, isInButtonArea);
-        if (config.LOG_DEBUG)
+        if (LOG_DEBUG)
           console.log(
             "testElementLocatedById selector ",
             `return ${root}.querySelector('#${id}')`,
@@ -289,7 +288,7 @@ export async function clickElementById(
 ) {
   return await retry(5, driver, async function (driver) {
     const elem = await findById(driver, id, isInButtonArea);
-    if (config.LOG_DEBUG) console.log("clickElementById: ", elem);
+    if (LOG_DEBUG) console.log("clickElementById: ", elem);
     await elem.click();
   });
 }
@@ -300,7 +299,7 @@ export async function clickElementByXPath(
   isInButtonArea: boolean,
 ) {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS)
+    if (count > 1 && LOG_DETAILS)
       console.log("clickElementByXPath ", xpath, " attempt #", count);
     const elem = await findByXPath(driver, xpath, isInButtonArea);
     await elem.click();
@@ -315,7 +314,7 @@ export async function getTextByXPath(
   isInButtonArea: boolean,
 ): Promise<string> {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS)
+    if (count > 1 && LOG_DETAILS)
       console.log("getTextByXPath ", xpath, " attempt #", count);
     const elem = await findByXPath(driver, xpath, isInButtonArea);
     return await elem.getText();

@@ -21,6 +21,7 @@ import { startBrowser } from "./playwrightAccess.js";
 import { computeResultsCPU, fileNameTrace } from "./timeline.js";
 
 let config: TConfig = defaultConfig;
+const { LOG_PROGRESS, LOG_DETAILS, LOG_DEBUG } = config;
 
 async function runBenchmark(
   browser: Browser,
@@ -29,7 +30,7 @@ async function runBenchmark(
   framework: FrameworkData,
 ): Promise<void> {
   await benchmark.run(browser, page, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after run ",
       benchmark.benchmarkInfo.id,
@@ -45,7 +46,7 @@ async function initBenchmark(
   framework: FrameworkData,
 ): Promise<void> {
   await benchmark.init(browser, page, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after initialized ",
       benchmark.benchmarkInfo.id,
@@ -105,7 +106,7 @@ async function runCPUBenchmark(
   try {
     browser = await startBrowser(benchmarkOptions);
     page = await browser.newPage();
-    // if (config.LOG_DETAILS) {
+    // if (LOG_DETAILS) {
     page.on("console", (msg) => {
       for (let i = 0; i < msg.args().length; ++i)
         console.log(`BROWSER: ${msg.args()[i]}`);
@@ -236,7 +237,7 @@ async function runMemBenchmark(
     browser = await startBrowser(benchmarkOptions);
     const page = await browser.newPage();
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
-      if (config.LOG_DETAILS) {
+      if (LOG_DETAILS) {
         page.on("console", (msg) => {
           for (let i = 0; i < msg.args().length; ++i)
             console.log(`BROWSER: ${msg.args()[i]}`);
@@ -327,7 +328,7 @@ export async function executeBenchmark(
     );
   }
 
-  if (config.LOG_DEBUG)
+  if (LOG_DEBUG)
     console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }

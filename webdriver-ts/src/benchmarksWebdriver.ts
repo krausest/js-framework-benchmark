@@ -18,8 +18,7 @@ import {
 } from "./webdriverAccess.js";
 
 const SHORT_TIMEOUT = 20 * 1000;
-const WARMUP_COUNT = config.WARMUP_COUNT;
-const TIMEOUT = config.TIMEOUT;
+const { WARMUP_COUNT, TIMEOUT } = config;
 
 export abstract class CPUBenchmarkWebdriver {
   type = BenchmarkType.CPU;

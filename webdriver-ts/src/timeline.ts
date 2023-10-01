@@ -9,8 +9,7 @@ import {
 import { BenchmarkOptions, FrameworkData, TConfig, config } from "./common.js";
 import { writeResults } from "./writeResults.js";
 
-const LOG_DEBUG = config.LOG_DEBUG;
-const LOG_DETAILS = config.LOG_DETAILS;
+const { LOG_DEBUG, LOG_DETAILS } = config;
 
 interface Timingresult {
   type: string;

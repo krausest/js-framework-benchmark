@@ -24,6 +24,7 @@ import {
 } from "./benchmarksWebdriverAfterframe.js";
 
 let config: TConfig = defaultConfig;
+const { LOG_PROGRESS, LOG_DEBUG } = config;
 
 async function runBenchmark(
   driver: WebDriver,
@@ -31,7 +32,7 @@ async function runBenchmark(
   framework: FrameworkData,
 ): Promise<void> {
   await benchmark.run(driver, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after run ",
       benchmark.benchmarkInfo.id,
@@ -46,7 +47,7 @@ async function initBenchmark(
   framework: FrameworkData,
 ): Promise<void> {
   await benchmark.init(driver, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after initialized ",
       benchmark.benchmarkInfo.id,
@@ -162,7 +163,7 @@ export async function executeBenchmark(
     );
   }
 
-  if (config.LOG_DEBUG)
+  if (LOG_DEBUG)
     console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }

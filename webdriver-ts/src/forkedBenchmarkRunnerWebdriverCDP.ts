@@ -26,6 +26,7 @@ import {
 } from "./webdriverCDPAccess.js";
 
 let config: TConfig = defaultConfig;
+const { LOG_PROGRESS, LOG_DEBUG } = config;
 
 // necessary to launch without specifiying a path
 require("chromedriver");
@@ -36,7 +37,7 @@ async function runBenchmark(
   framework: FrameworkData,
 ): Promise<void> {
   await benchmark.run(driver, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after run ",
       benchmark.benchmarkInfo.id,
@@ -51,7 +52,7 @@ async function initBenchmark(
   framework: FrameworkData,
 ): Promise<void> {
   await benchmark.init(driver, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after initialized ",
       benchmark.benchmarkInfo.id,
@@ -255,7 +256,7 @@ export async function executeBenchmark(
     );
   }
 
-  if (config.LOG_DEBUG)
+  if (LOG_DEBUG)
     console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }
@@ -263,7 +264,7 @@ export async function executeBenchmark(
 process.on("message", (msg: any) => {
   config = msg.config;
   console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
-  // if (config.LOG_DEBUG) console.log("child process got message", msg);
+  // if (LOG_DEBUG) console.log("child process got message", msg);
 
   const {
     framework,

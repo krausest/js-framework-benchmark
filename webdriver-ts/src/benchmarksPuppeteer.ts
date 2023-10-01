@@ -20,7 +20,7 @@ import {
   clickElement,
 } from "./puppeteerAccess.js";
 
-const WARMUP_COUNT = config.WARMUP_COUNT;
+const { WARMUP_COUNT } = config;
 
 export abstract class CPUBenchmarkPuppeteer implements BenchmarkImpl {
   type = BenchmarkType.CPU;

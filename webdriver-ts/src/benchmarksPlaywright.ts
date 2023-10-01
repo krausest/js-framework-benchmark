@@ -20,7 +20,7 @@ import {
   clickElement,
 } from "./playwrightAccess.js";
 
-const WARMUP_COUNT = config.WARMUP_COUNT;
+const { WARMUP_COUNT } = config;
 
 export abstract class CPUBenchmarkPlaywright implements BenchmarkImpl {
   type = BenchmarkType.CPU;
