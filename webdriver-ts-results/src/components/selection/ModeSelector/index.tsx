@@ -1,10 +1,5 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  selectCpuDurationMode,
-  selectDisplayMode,
-  State,
-} from "../../../reducer";
+import { useRootStore } from "../../../reducer";
 import DisplayModeSelector from "./DisplayModeSelector";
 import DurationModeSelector from "./DurationModeSelector";
 
@@ -15,22 +10,24 @@ interface Props {
 const ModeSelector = ({ showDurationSelection }: Props) => {
   console.log("ModeSelector");
 
-  const dispatch = useDispatch();
-
-  const displayMode = useSelector((state: State) => state.displayMode);
-  const cpuDurationMode = useSelector((state: State) => state.cpuDurationMode);
+  const displayMode = useRootStore((state) => state.displayMode);
+  const cpuDurationMode = useRootStore((state) => state.cpuDurationMode);
+  const selectDisplayMode = useRootStore((state) => state.selectDisplayMode);
+  const selectCpuDurationMode = useRootStore(
+    (state) => state.selectCpuDurationMode,
+  );
 
   return (
     <>
       <DisplayModeSelector
         displayMode={displayMode}
-        onChange={(value) => dispatch(selectDisplayMode(value))}
+        onChange={(value) => selectDisplayMode(value)}
       />
 
       {showDurationSelection && (
         <DurationModeSelector
           cpuDurationMode={cpuDurationMode}
-          onChange={(value) => dispatch(selectCpuDurationMode(value))}
+          onChange={(value) => selectCpuDurationMode(value)}
         />
       )}
     </>

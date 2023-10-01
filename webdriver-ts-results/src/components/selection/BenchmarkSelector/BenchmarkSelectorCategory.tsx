@@ -1,13 +1,6 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { BenchmarkType } from "../../../Common";
-import {
-  areAllBenchmarksSelected,
-  isNoneBenchmarkSelected,
-  selectBenchmark,
-  selectAllBenchmarks,
-  State,
-} from "../../../reducer";
+import { useRootStore } from "../../../reducer";
 import DropDownContents from "../../DropDown/DropDownContents";
 import BenchmarkSelectorList from "./BenchmarkSelectorList";
 
@@ -19,32 +12,30 @@ interface Props {
 const BenchmarkSelectorCategory = ({ label, benchmarkType }: Props) => {
   console.log("BenchmarkSelectorCategory");
 
-  const dispatch = useDispatch();
-
-  const benchmarks = useSelector(
-    (state: State) => state.benchmarkLists[benchmarkType],
+  const benchmarks = useRootStore(
+    (state) => state.benchmarkLists[benchmarkType],
   );
-  const selectedBenchmarks = useSelector(
-    (state: State) => state.selectedBenchmarks,
+  const selectedBenchmarks = useRootStore((state) => state.selectedBenchmarks);
+  const isNoneSelected = useRootStore((state) => state.isNoneBenchmarkSelected);
+  const areAllSelected = useRootStore(
+    (state) => state.areAllBenchmarksSelected,
   );
-  const isNoneSelected = useSelector((state: State) =>
-    isNoneBenchmarkSelected(state, benchmarkType),
+  const selectAllBenchmarks = useRootStore(
+    (state) => state.selectAllBenchmarks,
   );
-  const areAllSelected = useSelector((state: State) =>
-    areAllBenchmarksSelected(state, benchmarkType),
-  );
+  const selectBenchmark = useRootStore((state) => state.selectBenchmark);
 
   return (
     <DropDownContents
-      isNoneSelected={isNoneSelected}
-      areAllSelected={areAllSelected}
-      selectNone={() => dispatch(selectAllBenchmarks(benchmarkType, false))}
-      selectAll={() => dispatch(selectAllBenchmarks(benchmarkType, true))}
+      isNoneSelected={isNoneSelected(benchmarkType)}
+      areAllSelected={areAllSelected(benchmarkType)}
+      selectNone={() => selectAllBenchmarks(benchmarkType, false)}
+      selectAll={() => selectAllBenchmarks(benchmarkType, true)}
     >
       <h3>{label}</h3>
       <BenchmarkSelectorList
         isSelected={(benchmark) => selectedBenchmarks.has(benchmark)}
-        select={(benchmark, add) => dispatch(selectBenchmark(benchmark, add))}
+        select={(benchmark, add) => selectBenchmark(benchmark, add)}
         benchmarks={benchmarks}
       />
     </DropDownContents>

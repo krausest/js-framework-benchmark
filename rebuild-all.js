@@ -10,6 +10,7 @@ const args = yargs(process.argv.slice(2))
   .help()
   .boolean("ci")
   .default("ci", false)
+  .default("restartWith", "")
   .describe("ci", "Use npm ci or npm install?")
   .argv;
 
@@ -28,8 +29,7 @@ npm run rebuild-frameworks --restartWith keyed/react
  */
 const useCi = args.ci;
 
-const restartBuildingWith = args._.find((arg) => !arg.startsWith("--"));
-const restartWithFramework = restartBuildingWith || "";
+const restartWithFramework = args.restartWith;
 
 console.log(
   "ARGS",
@@ -47,8 +47,7 @@ const filesToDelete = [
   "bower_components",
   "node_modules",
   "output",
-  useCi && "package-lock.json",
-].filter(Boolean);
+].concat(useCi ? [] : ["package-lock.json"]);
 
 /**
  * @typedef {Object} Framework
