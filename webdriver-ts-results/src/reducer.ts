@@ -116,7 +116,7 @@ interface Actions {
 function updateResultTable({
   frameworks,
   benchmarks,
-  selectedFrameworks: selectedFrameworks,
+  selectedFrameworks,
   selectedBenchmarks,
   sortKey,
   displayMode,
@@ -173,7 +173,7 @@ function extractState(state: any): Partial<State> {
         if (f === sf.dir) newSelectedFramework.add(sf);
       }
     }
-    t = { ...t, selectedFrameworksDropDown: newSelectedFramework };
+    t = { ...t, selectedFrameworks: newSelectedFramework };
   }
   if (state.displayMode !== undefined) {
     t = { ...t, displayMode: state.displayMode };
@@ -253,11 +253,8 @@ export const useRootStore = create<State & Actions>((set, get) => ({
       ? newSelectedFramework.add(framework)
       : newSelectedFramework.delete(framework);
 
-    const t = { ...get(), selectedFrameworksDropDown: newSelectedFramework };
-    return set(() => ({
-      ...t,
-      resultTables: updateResultTable(t),
-    }));
+    const t = { ...get(), selectedFrameworks: newSelectedFramework };
+    return set(() => ({ ...t, resultTables: updateResultTable(t) }));
   },
   selectAllFrameworks: (frameworkType: FrameworkType, add: boolean) => {
     const newSelectedFramework = new Set(get().selectedFrameworks);
@@ -272,7 +269,7 @@ export const useRootStore = create<State & Actions>((set, get) => ({
         : newSelectedFramework.delete(framework);
     }
 
-    const t = { ...get(), selectedFrameworksDropDown: newSelectedFramework };
+    const t = { ...get(), selectedFrameworks: newSelectedFramework };
     return set(() => ({
       ...t,
       resultTables: updateResultTable(t),
