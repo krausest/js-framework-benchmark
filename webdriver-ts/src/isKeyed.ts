@@ -201,8 +201,9 @@ async function assertChildNodes(
 }
 
 function niceEmptyString(val: string[]): string {
-  if (!val || val.length === 0) return "[empty]";
-  if (val.every((v) => v.length === 0)) return "[empty]";
+  if (!val || val.every((v) => v.length === 0)) {
+    return "[empty]";
+  }
   return val.toString();
 }
 

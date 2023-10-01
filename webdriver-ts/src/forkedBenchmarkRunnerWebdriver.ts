@@ -257,7 +257,7 @@ async function runBenchmark(
   driver: WebDriver,
   benchmark: CPUBenchmarkWebdriver,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.run(driver, framework);
   if (config.LOG_PROGRESS)
     console.log(
@@ -272,7 +272,7 @@ async function initBenchmark(
   driver: WebDriver,
   benchmark: CPUBenchmarkWebdriver,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.init(driver, framework);
   if (config.LOG_PROGRESS)
     console.log(

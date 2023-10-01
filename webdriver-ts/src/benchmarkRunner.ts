@@ -8,7 +8,7 @@ import {
   initializeFrameworks,
 } from "./common.js";
 import { fork } from "child_process";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import {
   BenchmarkInfo,
   benchmarkInfos,
@@ -114,26 +114,27 @@ async function runBenchmakLoopStartup(
     } else results.push(res.result);
     warnings = warnings.concat(res.warnings);
     if (res.error) {
-      if (res.error.indexOf("Server terminated early with status 1") > -1) {
-        console.log(
-          "******* STRANGE selenium error found - retry #",
-          retries + 1,
-        );
-        retries++;
-        if (retries == 3) break;
-      } else {
+      if (!res.error.includes("Server terminated early with status 1")) {
         errors.push(
           `Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` +
             res.error,
         );
         break;
       }
+
+      console.log(
+        "******* STRANGE selenium error found - retry #",
+        retries + 1,
+      );
+      retries++;
+
+      if (retries == 3) break;
     }
     done++;
   }
   console.log("******* result ", results);
   if (config.WRITE_RESULTS) {
-    await writeResults(benchmarkOptions.resultsDirectory, {
+    writeResults(benchmarkOptions.resultsDirectory, {
       framework: framework,
       benchmark: benchmarkInfo,
       results: results,
@@ -193,20 +194,20 @@ async function runBenchmakLoop(
     }
     warnings = warnings.concat(res.warnings);
     if (res.error) {
-      if (res.error.indexOf("Server terminated early with status 1") > -1) {
-        console.log(
-          "******* STRANGE selenium error found - retry #",
-          retries + 1,
-        );
-        retries++;
-        if (retries == 3) break;
-      } else {
+      if (res.error.includes("Server terminated early with status 1")) {
         errors.push(
           `Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` +
             res.error,
         );
         break;
       }
+
+      console.log(
+        "******* STRANGE selenium error found - retry #",
+        retries + 1,
+      );
+      retries++;
+      if (retries == 3) break;
     }
   }
   if (benchmarkInfo.type == BenchmarkType.CPU) {
@@ -221,14 +222,14 @@ async function runBenchmakLoop(
   console.log("******* result ", results);
   if (config.WRITE_RESULTS) {
     if (benchmarkInfo.type == BenchmarkType.CPU) {
-      await writeResults(benchmarkOptions.resultsDirectory, {
+      writeResults(benchmarkOptions.resultsDirectory, {
         framework: framework,
         benchmark: benchmarkInfo,
         results: results as CPUBenchmarkResult[],
         type: BenchmarkType.CPU,
       });
     } else {
-      await writeResults(benchmarkOptions.resultsDirectory, {
+      writeResults(benchmarkOptions.resultsDirectory, {
         framework: framework,
         benchmark: benchmarkInfo,
         results: results as number[],

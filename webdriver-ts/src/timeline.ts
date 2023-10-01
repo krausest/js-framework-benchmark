@@ -1,5 +1,5 @@
-import { readFile } from "fs/promises";
-import * as fs from "fs";
+import { readFile } from "node:fs/promises";
+import * as fs from "node:fs";
 import * as R from "ramda";
 import {
   BenchmarkType,
@@ -316,12 +316,12 @@ export async function computeResultsCPU(
   const numberCommits = allCommitsAfterClick.length;
   if (!commit) {
     console.log("INFO: No commit event found according to filter ", fileName);
-    if (allCommitsAfterClick.length == 0) {
+    if (allCommitsAfterClick.length === 0) {
       console.log("ERROR: No commit event found for ", fileName);
       throw "No commit event found for " + fileName;
-    } else {
-      commit = allCommitsAfterClick[allCommitsAfterClick.length - 1];
     }
+
+    commit = allCommitsAfterClick[allCommitsAfterClick.length - 1];
   }
   const maxDeltaBetweenCommits =
     (allCommitsAfterClick[allCommitsAfterClick.length - 1].ts -
@@ -347,7 +347,7 @@ export async function computeResultsCPU(
   let raf_long_delay = 0;
   if (rafs_withinClick.length > 0 && fafs.length > 0) {
     const waitDelay = (fafs[0].ts - click.end) / 1000.0;
-    if (rafs_withinClick.length == 1 && fafs.length == 1) {
+    if (rafs_withinClick.length === 1 && fafs.length === 1) {
       if (waitDelay > 16) {
         let ignored = false;
         for (const e of layouts) {
@@ -377,7 +377,7 @@ export async function computeResultsCPU(
           fileName,
         );
       }
-    } else if (fafs.length == 1) {
+    } else if (fafs.length === 1) {
       throw (
         "Unexpected situation. Did not happen in the past. One fire animation frame, but non consistent request animation frames in " +
         fileName
@@ -497,6 +497,12 @@ export class PlausibilityCheck {
   }
 }
 
+interface Interval {
+  start: number;
+  end: number;
+  timingResult: Timingresult;
+}
+
 export async function computeResultsJS(
   cpuTrace: CPUDurationResult,
   config: TConfig,
@@ -514,11 +520,7 @@ export async function computeResultsJS(
     ev.ts -= totalDuration.tsStart;
     ev.end -= totalDuration.tsStart;
   }
-  interface Interval {
-    start: number;
-    end: number;
-    timingResult: Timingresult;
-  }
+
   function isContained(testIv: Interval, otherIv: Interval) {
     return testIv.start >= otherIv.start && testIv.end <= otherIv.end;
   }
@@ -573,24 +575,23 @@ export async function parseCPUTrace(
     )}`;
     if (!fs.existsSync(trace)) {
       throw new Error(`Trace file ${trace} does not exist`);
-    } else {
-      console.log("analyzing trace ", trace);
-      try {
-        const result = await computeResultsCPU(trace);
-        plausibilityCheck.check(result, trace, framework, benchmarkInfo);
-        // let resultJS = await computeResultsJS(result, config, trace);
-        results.push({ total: result.duration, script: 0 });
-        console.log(result);
-      } catch (e) {
-        console.log(e);
-      }
+    }
+    console.log("analyzing trace ", trace);
+    try {
+      const result = await computeResultsCPU(trace);
+      plausibilityCheck.check(result, trace, framework, benchmarkInfo);
+      // let resultJS = await computeResultsJS(result, config, trace);
+      results.push({ total: result.duration, script: 0 });
+      console.log(result);
+    } catch (e) {
+      console.log(e);
     }
   }
   results.sort(
     (a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total,
   );
   results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
-  await writeResults(benchmarkOptions.resultsDirectory, {
+  writeResults(benchmarkOptions.resultsDirectory, {
     framework: framework,
     benchmark: benchmarkInfo,
     results: results,

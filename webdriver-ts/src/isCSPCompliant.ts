@@ -5,12 +5,7 @@ import {
   clickElement,
   startBrowser,
 } from "./playwrightAccess.js";
-import {
-  config,
-  FrameworkData,
-  initializeFrameworks,
-  BenchmarkOptions,
-} from "./common.js";
+import { config, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
 const args: any = yargs(process.argv)
   .usage(
@@ -78,12 +73,10 @@ async function runBench(frameworkNames: string[]) {
 
   console.log("*** headless", benchmarkOptions.headless);
 
-  for (let i = 0; i < runFrameworks.length; i++) {
+  for (const framework of runFrameworks) {
     const browser = await startBrowser(benchmarkOptions);
     const page = await browser.newPage();
     try {
-      const framework: FrameworkData = runFrameworks[i];
-
       await page.goto(
         `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
         { waitUntil: "networkidle" },
@@ -92,7 +85,7 @@ async function runBench(frameworkNames: string[]) {
         await checkElementExists(page, "#add");
       } catch (err) {
         console.log(
-          `CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - during load`,
+          `CSP test failed for ${framework.fullNameWithKeyedAndVersion} - during load`,
         );
       }
       await clickElement(page, "#add");
@@ -104,11 +97,11 @@ async function runBench(frameworkNames: string[]) {
         );
       } catch (err) {
         console.log(
-          `CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - when clicking`,
+          `CSP test failed for ${framework.fullNameWithKeyedAndVersion} - when clicking`,
         );
       }
     } catch (e) {
-      //console.log("ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion, e);
+      //console.log("ERROR running " + framework.fullNameWithKeyedAndVersion, e);
       allCorrect = false;
     } finally {
       try {

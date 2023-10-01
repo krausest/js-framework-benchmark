@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 import {
   BenchmarkInfo,
   BenchmarkType,
@@ -9,9 +9,8 @@ import {
   StartupBenchmarkResult,
   subbenchmarks,
 } from "./benchmarksLighthouse.js";
-import { FrameworkData, JSONResult, JSONResultData } from "./common.js";
-import pkg from "jstat";
-const { jStat } = pkg;
+import { FrameworkData, JSONResult, JSONResultMap } from "./common.js";
+import { jStat } from "jstat";
 
 export type ResultLightHouse = {
   framework: FrameworkData;
@@ -104,35 +103,29 @@ function createResultFile(
     );
     return res;
   };
+
+  let values: JSONResultMap;
+
   if (Array.isArray(data)) {
-    const result: JSONResult = {
-      framework: framework.fullNameWithKeyedAndVersion,
-      keyed: framework.keyed,
-      benchmark: benchmark.id,
-      type: type,
-      values: { DEFAULT: convertResult("", data as number[]) },
-    };
-    fs.writeFileSync(
-      `${resultDir}/${fileName(framework, benchmark)}`,
-      JSON.stringify(result),
-      { encoding: "utf8" },
-    );
+    values = { DEFAULT: convertResult("", data as number[]) };
   } else {
-    const values: { [k: string]: JSONResultData } = {};
+    values = {};
     for (const key of Object.keys(data)) {
       values[key] = convertResult(key, data[key]);
     }
-    const result: JSONResult = {
-      framework: framework.fullNameWithKeyedAndVersion,
-      keyed: framework.keyed,
-      benchmark: benchmark.id,
-      type: type,
-      values,
-    };
-    fs.writeFileSync(
-      `${resultDir}/${fileName(framework, benchmark)}`,
-      JSON.stringify(result),
-      { encoding: "utf8" },
-    );
   }
+
+  const result: JSONResult = {
+    framework: framework.fullNameWithKeyedAndVersion,
+    keyed: framework.keyed,
+    benchmark: benchmark.id,
+    type: type,
+    values,
+  };
+
+  fs.writeFileSync(
+    `${resultDir}/${fileName(framework, benchmark)}`,
+    JSON.stringify(result),
+    { encoding: "utf8" },
+  );
 }

@@ -27,7 +27,7 @@ async function runBenchmark(
   page: Page,
   benchmark: TBenchmarkPlaywright,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.run(browser, page, framework);
   if (config.LOG_PROGRESS)
     console.log(
@@ -43,7 +43,7 @@ async function initBenchmark(
   page: Page,
   benchmark: TBenchmarkPlaywright,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.init(browser, page, framework);
   if (config.LOG_PROGRESS)
     console.log(
@@ -326,6 +326,7 @@ export async function executeBenchmark(
       benchmarkOptions,
     );
   }
+
   if (config.LOG_DEBUG)
     console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;

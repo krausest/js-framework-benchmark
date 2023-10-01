@@ -30,7 +30,7 @@ async function runBenchmark(
   page: Page,
   benchmark: TBenchmarkPuppeteer,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.run(page, framework);
   if (config.LOG_PROGRESS)
     console.log(
@@ -45,7 +45,7 @@ async function initBenchmark(
   page: Page,
   benchmark: TBenchmarkPuppeteer,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.init(page, framework);
   if (config.LOG_PROGRESS)
     console.log(

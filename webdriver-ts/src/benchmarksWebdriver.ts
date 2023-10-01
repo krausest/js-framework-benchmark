@@ -24,8 +24,8 @@ const TIMEOUT = config.TIMEOUT;
 export abstract class CPUBenchmarkWebdriver {
   type = BenchmarkType.CPU;
   constructor(public benchmarkInfo: CPUBenchmarkInfo) {}
-  abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
-  abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
+  abstract init(driver: WebDriver, framework: FrameworkData): Promise<void>;
+  abstract run(driver: WebDriver, framework: FrameworkData): Promise<void>;
 }
 
 export const benchRun = new (class extends CPUBenchmarkWebdriver {

@@ -1,24 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  BenchmarkInfo,
-  BenchmarkType,
-  CPUBenchmarkInfo,
-  cpuBenchmarkInfos,
-  CPUBenchmarkResult,
-} from "./benchmarksCommon.js";
-import {
-  BenchmarkOptions,
-  config,
-  FrameworkData,
-  initializeFrameworks,
-} from "./common.js";
+import { cpuBenchmarkInfos } from "./benchmarksCommon.js";
+import { BenchmarkOptions, config, initializeFrameworks } from "./common.js";
 import {
   computeResultsCPU,
-  computeResultsJS,
   parseCPUTrace,
   PlausibilityCheck,
 } from "./timeline.js";
-import { writeResults } from "./writeResults.js";
 
 async function debugSingle() {
   // for (let i = 0; i < 12; i++) {
@@ -35,6 +21,7 @@ async function debugSingle() {
   // }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function debugAll() {
   const benchmarkOptions: BenchmarkOptions = {
     port: 8080,

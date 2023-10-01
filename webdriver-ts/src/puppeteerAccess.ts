@@ -130,13 +130,8 @@ export async function startBrowser(
 ): Promise<puppeteer.Browser> {
   const width = 1280;
   const height = 800;
-  const window_width = width,
-    window_height = height;
 
-  const args = [
-    `--window-size=${window_width},${window_height}`,
-    "--js-flags=--expose-gc",
-  ];
+  const args = [`--window-size=${width},${height}`, "--js-flags=--expose-gc"];
   if (benchmarkOptions.headless) args.push("--headless=new");
 
   const browser = await puppeteer.launch({
