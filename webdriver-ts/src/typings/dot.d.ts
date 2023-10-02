@@ -1,4 +1,4 @@
-declare module 'dot' {
-    let dot: any;
-    export = dot;
+declare module "dot" {
+  let dot: any;
+  export = dot;
 }

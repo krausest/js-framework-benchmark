@@ -1,16 +1,27 @@
 import yargs from "yargs";
-import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./playwrightAccess.js";
-import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common.js";
+import {
+  checkElementContainsText,
+  checkElementExists,
+  clickElement,
+  startBrowser,
+} from "./playwrightAccess.js";
+import {
+  config,
+  FrameworkData,
+  initializeFrameworks,
+  BenchmarkOptions,
+} from "./common.js";
 
 import * as R from "ramda";
 import { ElementHandle, Page } from "playwright";
 
 let args: any = yargs(process.argv)
   .usage(
-    "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
+    "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]",
   )
   .help("help")
-  .boolean("headless").default("headless", false)
+  .boolean("headless")
+  .default("headless", false)
   .array("framework")
   .array("benchmark")
   .string("chromeBinary").argv;
@@ -21,19 +32,21 @@ console.log("HEADLESS*** ", args.headless);
 
 let benchmarkOptions: BenchmarkOptions = {
   port: 8080,
-  host: 'localhost',
+  host: "localhost",
   browser: args.browser,
   remoteDebuggingPort: 9999,
   chromePort: 9998,
   headless: args.headless,
   chromeBinaryPath: args.chromeBinary,
-  numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+  numIterationsForCPUBenchmarks:
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU +
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
   numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
   numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
   batchSize: 1,
   resultsDirectory: "results",
   tracesDirectory: "traces",
-  allowThrottling: !args.nothrottling
+  allowThrottling: !args.nothrottling,
 };
 
 let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
@@ -132,7 +145,7 @@ function isKeyedRun(result: any, shouldBeKeyed: boolean): boolean {
     // );
   } else if (!r && shouldBeKeyed) {
     console.log(
-      `Keyed test for create rows failed. Expected that 1000 TRs should be removed and added, but there were ${result.tradded} added TRs and ${result.trremoved} were removed`
+      `Keyed test for create rows failed. Expected that 1000 TRs should be removed and added, but there were ${result.tradded} added TRs and ${result.trremoved} were removed`,
     );
   }
   return r;
@@ -142,7 +155,9 @@ function isKeyedRemove(result: any, shouldBeKeyed: boolean): boolean {
   if (r && !shouldBeKeyed) {
     // console.log(`Note: Non-keyed test for remove is acutally keyed. Expected that the dom node for the 2nd row would NOT be removed, but it was.`);
   } else if (!r && shouldBeKeyed) {
-    console.log(`Keyed test for remove failed. Expected that the dom node for the 2nd row would be removed, but it wasn't`);
+    console.log(
+      `Keyed test for remove failed. Expected that the dom node for the 2nd row would be removed, but it wasn't`,
+    );
   }
   return r;
 }
@@ -154,20 +169,28 @@ function isKeyedSwapRow(result: any, shouldBeKeyed: boolean): boolean {
     // );
   } else if (!r && shouldBeKeyed) {
     if (result.newNodes > 0) {
-      console.log(`Keyed test for swap failed. Swap must add the TRs that it removed, but there were ${result.newNodes} new nodes`);
+      console.log(
+        `Keyed test for swap failed. Swap must add the TRs that it removed, but there were ${result.newNodes} new nodes`,
+      );
     } else {
       console.log(
-        `Keyed test for swap failed. Expected at least 1 added and 1 removed TR, but there were ${result.tradded} added and ${result.trremoved} removed`
+        `Keyed test for swap failed. Expected at least 1 added and 1 removed TR, but there were ${result.tradded} added and ${result.trremoved} removed`,
       );
     }
   }
   return r;
 }
 
-async function assertChildNodes(elem: ElementHandle<HTMLElement>, expectedNodes: string[], message: string) {
+async function assertChildNodes(
+  elem: ElementHandle<HTMLElement>,
+  expectedNodes: string[],
+  message: string,
+) {
   let elements = await elem.$$("*");
-  let allNodes = await Promise.all(elements.map((e) => e.evaluate(e => e.tagName)));
-  let toLower = (array: string[]) => array.map(s => s.toLowerCase());
+  let allNodes = await Promise.all(
+    elements.map((e) => e.evaluate((e) => e.tagName)),
+  );
+  let toLower = (array: string[]) => array.map((s) => s.toLowerCase());
   if (!R.equals(toLower(allNodes), toLower(expectedNodes))) {
     console.log("ERROR in html structure for " + message);
     console.log("  expected:", expectedNodes);
@@ -183,11 +206,22 @@ function niceEmptyString(val: string[]): string {
   return val.toString();
 }
 
-async function assertClassesContained(elem: ElementHandle<HTMLElement>, expectedClassNames: string[], message: string) {
-  let actualClassNames = (await elem.evaluate(e => e.className)).split(" ");
-  if (!expectedClassNames.every((expected) => actualClassNames.includes(expected))) {
+async function assertClassesContained(
+  elem: ElementHandle<HTMLElement>,
+  expectedClassNames: string[],
+  message: string,
+) {
+  let actualClassNames = (await elem.evaluate((e) => e.className)).split(" ");
+  if (
+    !expectedClassNames.every((expected) => actualClassNames.includes(expected))
+  ) {
     console.log(
-      "css class not correct. Expected for " + message + " to be " + expectedClassNames + " but was " + niceEmptyString(actualClassNames)
+      "css class not correct. Expected for " +
+        message +
+        " to be " +
+        expectedClassNames +
+        " but was " +
+        niceEmptyString(actualClassNames),
     );
     return false;
   }
@@ -196,44 +230,85 @@ async function assertClassesContained(elem: ElementHandle<HTMLElement>, expected
 
 export async function checkTRcorrect(page: Page): Promise<boolean> {
   let tr = await page.$("tbody>tr:nth-of-type(1000)");
-  if (!(await assertChildNodes(tr as ElementHandle<HTMLElement>, ["td", "td", "a", "td", "a", "span", "td"], "tr"))) {
+  if (
+    !(await assertChildNodes(
+      tr as ElementHandle<HTMLElement>,
+      ["td", "td", "a", "td", "a", "span", "td"],
+      "tr",
+    ))
+  ) {
     return false;
   }
 
   // first td
   let td1 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
-  if (!(await assertClassesContained(td1 as ElementHandle<HTMLElement>, ["col-md-1"], "first td"))) {
+  if (
+    !(await assertClassesContained(
+      td1 as ElementHandle<HTMLElement>,
+      ["col-md-1"],
+      "first td",
+    ))
+  ) {
     return false;
   }
 
   // second td
   let td2 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(2)");
-  if (!(await assertClassesContained(td2 as ElementHandle<HTMLElement>, ["col-md-4"], "second td"))) {
+  if (
+    !(await assertClassesContained(
+      td2 as ElementHandle<HTMLElement>,
+      ["col-md-4"],
+      "second td",
+    ))
+  ) {
     return false;
   }
 
   // third td
   let td3 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(3)");
-  if (!(await assertClassesContained(td3 as ElementHandle<HTMLElement>, ["col-md-1"], "third td"))) {
+  if (
+    !(await assertClassesContained(
+      td3 as ElementHandle<HTMLElement>,
+      ["col-md-1"],
+      "third td",
+    ))
+  ) {
     return false;
   }
 
   // span in third td
-  let span = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(3)>a>span");
-  if (!(await assertClassesContained(span as ElementHandle<HTMLElement>, ["glyphicon", "glyphicon-remove"], "span in a in third td"))) {
+  let span = await page.$(
+    "tbody>tr:nth-of-type(1000)>td:nth-of-type(3)>a>span",
+  );
+  if (
+    !(await assertClassesContained(
+      span as ElementHandle<HTMLElement>,
+      ["glyphicon", "glyphicon-remove"],
+      "span in a in third td",
+    ))
+  ) {
     return false;
   }
   // console.log("names", await span.evaluate(e => e.getAttributeNames()));
-  let spanAria = await span.evaluate(e => e.getAttribute("aria-hidden"));
+  let spanAria = await span.evaluate((e) => e.getAttribute("aria-hidden"));
   // console.log("aria ", spanAria);
   if ("true" !== spanAria) {
-    console.log("Expected to find 'aria-hidden'=true on span in third td, but found ", spanAria);
+    console.log(
+      "Expected to find 'aria-hidden'=true on span in third td, but found ",
+      spanAria,
+    );
     return false;
   }
 
   // // fourth td
   let td4 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(4)");
-  if (!(await assertClassesContained(td4 as ElementHandle<HTMLElement>, ["col-md-6"], "fourth td"))) {
+  if (
+    !(await assertClassesContained(
+      td4 as ElementHandle<HTMLElement>,
+      ["col-md-6"],
+      "fourth td",
+    ))
+  ) {
     return false;
   }
 
@@ -243,13 +318,20 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
 async function runBench(frameworkNames: string[]) {
   let runFrameworks;
   let matchesDirectoryArg = (directoryName: string) =>
-    frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
-  runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
-  console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
+    frameworkArgument.length == 0 ||
+    frameworkArgument.some((arg: string) => arg == directoryName);
+  runFrameworks = await initializeFrameworks(
+    benchmarkOptions,
+    matchesDirectoryArg,
+  );
+  console.log(
+    "Frameworks that will be checked",
+    runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "),
+  );
 
   let allCorrect = true;
 
-  console.log("*** headless", benchmarkOptions.headless)
+  console.log("*** headless", benchmarkOptions.headless);
 
   for (let i = 0; i < runFrameworks.length; i++) {
     let browser = await startBrowser(benchmarkOptions);
@@ -257,44 +339,78 @@ async function runBench(frameworkNames: string[]) {
     try {
       let framework: FrameworkData = runFrameworks[i];
 
-      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
+      await page.goto(
+        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
+        { waitUntil: "networkidle" },
+      );
       await checkElementExists(page, "#add");
       await clickElement(page, "#add");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
+      await checkElementContainsText(
+        page,
+        "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
+        "1000",
+      );
 
       // check html for tr
       let htmlCorrect = await checkTRcorrect(page);
       if (!htmlCorrect) {
-        console.log("ERROR: Framework " + framework.fullNameWithKeyedAndVersion + " html is not correct");
+        console.log(
+          "ERROR: Framework " +
+            framework.fullNameWithKeyedAndVersion +
+            " html is not correct",
+        );
         allCorrect = false;
       }
       let str = init(framework.shadowRootName);
       await page.evaluate(str);
       if (framework.useShadowRoot) {
-        await page.evaluate(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`);
+        await page.evaluate(
+          `window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`,
+        );
       } else {
-        await page.evaluate(`window.nonKeyedDetector_setUseShadowDom(undefined);`);
+        await page.evaluate(
+          `window.nonKeyedDetector_setUseShadowDom(undefined);`,
+        );
       }
       await page.evaluate("window.nonKeyedDetector_instrument()");
       // swap
       await page.evaluate("nonKeyedDetector_storeTr()");
       await clickElement(page, "#swaprows");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(2)>td:nth-of-type(1)", "999");
+      await checkElementContainsText(
+        page,
+        "tbody>tr:nth-of-type(2)>td:nth-of-type(1)",
+        "999",
+      );
       let res = await page.evaluate("nonKeyedDetector_result()");
       let keyedSwap = isKeyedSwapRow(res, framework.keyed);
       // run
       await page.evaluate("nonKeyedDetector_storeTr()");
       await page.evaluate("window.nonKeyedDetector_reset()");
       await clickElement(page, "#run");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "2000");
+      await checkElementContainsText(
+        page,
+        "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
+        "2000",
+      );
       res = await page.evaluate("nonKeyedDetector_result()");
       let keyedRun = isKeyedRun(res, framework.keyed);
       // // remove
       await page.evaluate("nonKeyedDetector_storeTr()");
       await page.evaluate("window.nonKeyedDetector_reset()");
-      await checkElementContainsText(page, `tbody>tr:nth-of-type(2)>td:nth-of-type(1)`, "1002");
-      await clickElement(page, `tbody>tr:nth-of-type(2)>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-      await checkElementContainsText(page, `tbody>tr:nth-of-type(2)>td:nth-of-type(1)`, "1003");
+      await checkElementContainsText(
+        page,
+        `tbody>tr:nth-of-type(2)>td:nth-of-type(1)`,
+        "1002",
+      );
+      await clickElement(
+        page,
+        `tbody>tr:nth-of-type(2)>td:nth-of-type(3)>a>span:nth-of-type(1)`,
+      );
+      await checkElementContainsText(
+        page,
+        `tbody>tr:nth-of-type(2)>td:nth-of-type(1)`,
+        "1003",
+      );
       res = await page.evaluate("nonKeyedDetector_result()");
       let keyedRemove = isKeyedRemove(res, framework.keyed);
       let keyed = keyedRemove && keyedRun && keyedSwap;
@@ -309,14 +425,21 @@ async function runBench(frameworkNames: string[]) {
           " for 'swap rows benchmark' " +
           ". It'll appear as " +
           (keyed ? "keyed" : "non-keyed") +
-          " in the results"
+          " in the results",
       );
       if (framework.keyed !== keyed) {
-        console.log("ERROR: Framework " + framework.fullNameWithKeyedAndVersion + " is not correctly categorized");
+        console.log(
+          "ERROR: Framework " +
+            framework.fullNameWithKeyedAndVersion +
+            " is not correctly categorized",
+        );
         allCorrect = false;
       }
     } catch (e) {
-      console.log("ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion, e);
+      console.log(
+        "ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion,
+        e,
+      );
       allCorrect = false;
     } finally {
       try {
@@ -330,7 +453,9 @@ async function runBench(frameworkNames: string[]) {
   if (!allCorrect) process.exit(1);
 }
 
-let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map((v: string) => v.toString());
+let runFrameworks = (
+  args.framework && args.framework.length > 0 ? args.framework : [""]
+).map((v: string) => v.toString());
 
 async function main() {
   if (args.help) {
@@ -340,4 +465,6 @@ async function main() {
   }
 }
 
-main().catch(err => {console.log("Error in isKeyed", err)});
+main().catch((err) => {
+  console.log("Error in isKeyed", err);
+});
