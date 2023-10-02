@@ -13,7 +13,6 @@
     "resultsChrome": "node dist/createResultJS.js --browser chrome && cd .. && cd webdriver-ts-results && npm run build-prod",
     "resultsFirefox": "node dist/createResultJS.js --browser firefox && cd .. && cd webdriver-ts-results && npm run build-prod",
     "resultsSafari": "node dist/createResultJS.js --browser safari && cd .. && cd webdriver-ts-results && npm run build-prod",
-    "index": "node dist/createIndex.js",
     "isKeyed": "cross-env LANG=\"en_US.UTF-8\" node dist/isKeyed.js",
     "test": "vitest --run",
     "test:watch": "vitest",
