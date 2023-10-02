@@ -9,7 +9,7 @@
     "bench": "cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
     "checkCSP": "cross-env LANG=\"en_US.UTF-8\" node dist/isCSPCompliant.js",
     "compile": "tsc",
-    "results": "node dist/createResultJS.js && cd .. && cd webdriver-ts-results && npm run build-prod",
+    "results": "node dist/createResultJS.js && cd .. && cd webdriver-ts-results && npm run build",
     "resultsChrome": "node dist/createResultJS.js --browser chrome && cd .. && cd webdriver-ts-results && npm run build-prod",
     "resultsFirefox": "node dist/createResultJS.js --browser firefox && cd .. && cd webdriver-ts-results && npm run build-prod",
     "resultsSafari": "node dist/createResultJS.js --browser safari && cd .. && cd webdriver-ts-results && npm run build-prod",

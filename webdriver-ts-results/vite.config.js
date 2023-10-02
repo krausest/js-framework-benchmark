@@ -6,12 +6,11 @@ const needSinglefile = !!process.env.SINGLEFILE;
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "",
   build: {
+    assetsDir: "",
     rollupOptions: {
       output: {
-        entryFileNames: "[name].js",
-        chunkFileNames: "[name].js",
-        assetFileNames: "[name][extname]",
         manualChunks: !needSinglefile
           ? {
               plotly: ["plotly.js-cartesian-dist"],
