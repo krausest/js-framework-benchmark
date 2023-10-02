@@ -50,7 +50,7 @@ struct RowData {
 
 static ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
 
-fn build_data(cx: Scope, count: usize) -> Vec<RowData> {
+fn build_data(count: usize) -> Vec<RowData> {
     let mut thread_rng = thread_rng();
 
     let mut data = Vec::new();
@@ -70,7 +70,7 @@ fn build_data(cx: Scope, count: usize) -> Vec<RowData> {
 
         data.push(RowData {
             id: ID_COUNTER.load(Ordering::Relaxed),
-            label: create_signal(cx, label),
+            label: create_signal(label),
         });
 
         ID_COUNTER.store(ID_COUNTER.load(Ordering::Relaxed) + 1, Ordering::Relaxed);
@@ -82,14 +82,12 @@ fn build_data(cx: Scope, count: usize) -> Vec<RowData> {
 /// Button component.
 #[component]
 fn Button(
-    cx: Scope,
     /// ID for the button element
     id: &'static str,
     /// Text that should be included
     text: &'static str,
 ) -> impl IntoView {
     view! {
-        cx,
         <div class="col-sm-6 smallpad">
             <button
                 id=id
@@ -103,26 +101,26 @@ fn Button(
 }
 
 #[component]
-fn App(cx: Scope) -> impl IntoView {
-    let (data, set_data) = create_signal(cx, Vec::<RowData>::new());
-    let (selected, set_selected) = create_signal(cx, None::<usize>);
+fn App() -> impl IntoView {
+    let (data, set_data) = create_signal(Vec::<RowData>::new());
+    let (selected, set_selected) = create_signal(None::<usize>);
 
     let remove = move |id: usize| {
         set_data.update(move |data| data.retain(|row| row.id != id));
     };
 
     let run = move |_| {
-        set_data(build_data(cx, 1000));
+        set_data(build_data(1000));
         set_selected(None);
     };
 
     let run_lots = move |_| {
-        set_data(build_data(cx, 10000));
+        set_data(build_data(10000));
         set_selected(None);
     };
 
     let add = move |_| {
-        set_data.update(move |data| data.append(&mut build_data(cx, 1000)));
+        set_data.update(move |data| data.append(&mut build_data(1000)));
     };
 
     let update = move |_| {
@@ -146,10 +144,9 @@ fn App(cx: Scope) -> impl IntoView {
         });
     };
 
-    let is_selected = create_selector(cx, selected);
+    let is_selected = create_selector(selected);
 
     view! {
-        cx,
         <div class="container">
             <div class="jumbotron">
                 <div class="row">
@@ -171,16 +168,15 @@ fn App(cx: Scope) -> impl IntoView {
                     <For
                         each={data}
                         key={|row| row.id}
-                        view=move |cx, row: RowData| {
+                        children=move |row: RowData| {
                             let row_id = row.id;
                             let (label, _) = row.label;
                             let is_selected = is_selected.clone();
-                            on_cleanup(cx, move || {
+                            on_cleanup(move || {
                                 label.dispose();
                             });
                             template! {
-                                cx,
-                                <tr class:danger={move || is_selected(Some(row_id))}>
+                                <tr class:danger={move || is_selected.selected(Some(row_id))}>
                                     <td class="col-md-1">{row_id.to_string()}</td>
                                     <td class="col-md-4"><a on:click=move |_| set_selected(Some(row_id))>{move || label.get()}</a></td>
                                     <td class="col-md-1"><a on:click=move |_| remove(row_id)><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
@@ -201,5 +197,5 @@ pub fn start() {
     console_error_panic_hook::set_once();
 
     let root = document().query_selector("#main").unwrap().unwrap();
-    mount_to(root.unchecked_into(), |cx| view! { cx, <App/> });
+    mount_to(root.unchecked_into(), || view! { <App/> });
 }
