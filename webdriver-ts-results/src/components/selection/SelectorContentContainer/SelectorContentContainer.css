@@ -1,0 +1,13 @@
+.selector-content-container {
+  position: relative;
+}
+
+.selector-content-container__actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.selector-content-container__content.grid {
+  column-count: 3;
+}

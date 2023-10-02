@@ -31,38 +31,38 @@ const BoxPlotTable = ({
   };
 
   return (
-    <div>
+    <div className="results">
       <h3>Duration in milliseconds</h3>
-      <table className="results">
-        <thead>
-          <tr>
-            <th className="benchname">
-              <button
-                className={
-                  currentSortKey === SORT_BY_NAME
-                    ? "sortKey textButton"
-                    : "textButton"
-                }
-                aria-label="Sort frameworks in ascending order (asc)"
-                onClick={handleSortByName}
-              >
-                Name
-              </button>
-            </th>
-            <th style={{ width: frameworks.length * 70 + 100 }}></th>
-          </tr>
-        </thead>
-        <tbody>
-          <BoxPlotTableRows
-            results={results}
-            frameworks={frameworks}
-            benchmarks={benchmarks}
-            currentSortKey={currentSortKey}
-            sortBy={sortBy}
-            cpuDurationMode={cpuDurationMode}
-          />
-        </tbody>
-      </table>
+      <div className="results__table-container">
+        <table className="results__table">
+          <thead>
+            <tr>
+              <th className="benchname">
+                <button
+                  className={`button button__text ${
+                    currentSortKey === SORT_BY_NAME ? "sort-key" : ""
+                  }`}
+                  aria-label="Sort frameworks in ascending order (asc)"
+                  onClick={handleSortByName}
+                >
+                  Name
+                </button>
+              </th>
+              <th style={{ width: frameworks.length * 70 + 100 }}></th>
+            </tr>
+          </thead>
+          <tbody>
+            <BoxPlotTableRows
+              results={results}
+              frameworks={frameworks}
+              benchmarks={benchmarks}
+              currentSortKey={currentSortKey}
+              sortBy={sortBy}
+              cpuDurationMode={cpuDurationMode}
+            />
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

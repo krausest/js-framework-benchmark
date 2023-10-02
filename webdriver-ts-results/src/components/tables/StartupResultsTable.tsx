@@ -23,47 +23,47 @@ const StartupResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
   };
 
   return resultsStartup.results.length === 0 ? null : (
-    <div>
+    <div className="results">
       <h3>Startup metrics (lighthouse with mobile simulation)</h3>
-      <table className="results">
-        <thead>
-          <tr>
-            <th className="benchname">
-              <button
-                className={
-                  currentSortKey === SORT_BY_NAME
-                    ? "sortKey textButton"
-                    : "textButton"
-                }
-                onClick={handleSortByName}
-              >
-                Name
-              </button>
-            </th>
-            {data.frameworks.map((f) => (
-              <th key={f.displayname}>{f.displayname}</th>
+      <div className="results__table-container">
+        <table className="results__table">
+          <thead>
+            <tr>
+              <th className="benchname">
+                <button
+                  className={`button button__text ${
+                    currentSortKey === SORT_BY_NAME ? "sort-key" : ""
+                  }`}
+                  onClick={handleSortByName}
+                >
+                  Name
+                </button>
+              </th>
+              {data.frameworks.map((f) => (
+                <th key={f.displayname}>{f.displayname}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {resultsStartup.results.map((resultsForBenchmark, benchIdx) => (
+              <ValueResultRow
+                key={resultsStartup.benchmarks[benchIdx]?.id}
+                benchIdx={benchIdx}
+                resultsForBenchmark={resultsForBenchmark}
+                benchmarks={resultsStartup.benchmarks}
+                currentSortKey={currentSortKey}
+                sortBy={sortBy}
+              />
             ))}
-          </tr>
-        </thead>
-        <tbody>
-          {resultsStartup.results.map((resultsForBenchmark, benchIdx) => (
-            <ValueResultRow
-              key={resultsStartup.benchmarks[benchIdx]?.id}
-              benchIdx={benchIdx}
-              resultsForBenchmark={resultsForBenchmark}
-              benchmarks={resultsStartup.benchmarks}
+            <GeomMeanRow
               currentSortKey={currentSortKey}
               sortBy={sortBy}
+              geomMean={resultsStartup.geomMean}
+              sortbyGeommeanEnum={SORT_BY_GEOMMEAN_STARTUP}
             />
-          ))}
-          <GeomMeanRow
-            currentSortKey={currentSortKey}
-            sortBy={sortBy}
-            geomMean={resultsStartup.geomMean}
-            sortbyGeommeanEnum={SORT_BY_GEOMMEAN_STARTUP}
-          />
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
