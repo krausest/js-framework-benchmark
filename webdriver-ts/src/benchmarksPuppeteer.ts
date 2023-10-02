@@ -34,7 +34,7 @@ export abstract class MemBenchmarkPuppeteer implements BenchmarkImpl {
   abstract run(page: Page, framework: FrameworkData): Promise<any>;
 }
 
-export type TBenchmarkPuppeteer = CPUBenchmarkPuppeteer | MemBenchmarkPuppeteer;
+export type BenchmarkPuppeteer = CPUBenchmarkPuppeteer | MemBenchmarkPuppeteer;
 
 export let benchRun = new (class extends CPUBenchmarkPuppeteer {
   constructor() {

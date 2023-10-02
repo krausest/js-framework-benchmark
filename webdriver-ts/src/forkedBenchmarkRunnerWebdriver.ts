@@ -9,7 +9,7 @@ import {
 } from "./webdriverAccess.js";
 
 import {
-  TConfig,
+  Config,
   config as defaultConfig,
   FrameworkData,
   ErrorAndWarning,
@@ -22,12 +22,12 @@ import {
   slowDownFactor,
 } from "./benchmarksCommon.js";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 
 // necessary to launch without specifiying a path
 import "chromedriver";
 
-interface Timingresult {
+interface TimingResult {
   type: string;
   ts: number;
   dur?: number;
@@ -37,7 +37,7 @@ interface Timingresult {
 }
 
 function extractRelevantEvents(entries: logging.Entry[]) {
-  let filteredEvents: Timingresult[] = [];
+  let filteredEvents: TimingResult[] = [];
   let protocolEvents: any[] = [];
   entries.forEach((x) => {
     let e = JSON.parse(x.message).message;
@@ -118,8 +118,8 @@ function extractRelevantEvents(entries: logging.Entry[]) {
 
 async function fetchEventsFromPerformanceLog(
   driver: WebDriver,
-): Promise<{ timingResults: Timingresult[]; protocolResults: any[] }> {
-  let timingResults: Timingresult[] = [];
+): Promise<{ timingResults: TimingResult[]; protocolResults: any[] }> {
+  let timingResults: TimingResult[] = [];
   let protocolResults: any[] = [];
   let entries = [];
   do {
@@ -132,13 +132,13 @@ async function fetchEventsFromPerformanceLog(
 }
 
 function type_eq(requiredType: string) {
-  return (e: Timingresult) => e.type === requiredType;
+  return (e: TimingResult) => e.type === requiredType;
 }
 function type_neq(requiredType: string) {
-  return (e: Timingresult) => e.type !== requiredType;
+  return (e: TimingResult) => e.type !== requiredType;
 }
 
-function asString(res: Timingresult[]): string {
+function asString(res: TimingResult[]): string {
   return res.reduce((old, cur) => old + "\n" + JSON.stringify(cur), "");
 }
 
@@ -185,9 +185,9 @@ async function computeResultsCPU(
 
       if (config.LOG_DEBUG) console.log("eventsAfterClick", eventsAfterClick);
 
-      let lastLayoutEvent: Timingresult;
+      let lastLayoutEvent: TimingResult;
       let layouts = R.filter(type_eq("layout"))(eventsAfterClick);
-      layouts = R.filter((e: Timingresult) => e.ts > clicks[0].end)(layouts);
+      layouts = R.filter((e: TimingResult) => e.ts > clicks[0].end)(layouts);
       if (layouts.length > 1) {
         console.log("INFO: more than one layout event found");
         layouts.forEach((l) => {
@@ -202,7 +202,7 @@ async function computeResultsCPU(
       }
 
       let paintsP = R.filter(type_eq("paint"))(eventsAfterClick);
-      paintsP = R.filter((e: Timingresult) => e.ts > lastLayoutEvent.end)(
+      paintsP = R.filter((e: TimingResult) => e.ts > lastLayoutEvent.end)(
         paintsP,
       );
       if (paintsP.length == 0) {

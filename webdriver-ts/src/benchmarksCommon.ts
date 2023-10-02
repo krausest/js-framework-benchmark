@@ -73,7 +73,7 @@ export enum Benchmark {
   _30 = "30_startup",
 }
 
-export type TBenchmarkID =
+export type BenchmarkId =
   | typeof Benchmark._01
   | typeof Benchmark._02
   | typeof Benchmark._03

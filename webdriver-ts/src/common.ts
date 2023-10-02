@@ -18,7 +18,7 @@ export interface JSONResult {
   values: JSONResultMap;
 }
 
-export type TBenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
+export type BenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
 
 export interface ErrorAndWarning<T> {
   error: string;
@@ -51,7 +51,7 @@ export interface BenchmarkOptions {
   HOST: 'localhost',
 */
 
-export enum BENCHMARK_RUNNER {
+export enum BenchmarkRunner {
   PUPPETEER = "puppeteer",
   PLAYWRIGHT = "playwright",
   WEBDRIVER_CDP = "webdrivercdp",
@@ -75,9 +75,9 @@ export let config = {
   STARTUP_SLEEP_DURATION: 1000,
   WRITE_RESULTS: true,
   ALLOW_BATCHING: true,
-  BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER,
+  BENCHMARK_RUNNER: BenchmarkRunner.PUPPETEER,
 };
-export type TConfig = typeof config;
+export type Config = typeof config;
 
 export interface FrameworkData {
   name: string;
@@ -108,11 +108,11 @@ export interface FrameworkInformation {
   frameworkHomeURL: string;
 }
 
-export interface IMatchPredicate {
+export interface MatchPredicate {
   (frameworkDirectory: string): boolean;
 }
 
-const matchAll: IMatchPredicate = () => true;
+const matchAll: MatchPredicate = () => true;
 
 async function fetchFrameworks(url: string) {
   try {
@@ -131,7 +131,7 @@ async function fetchFrameworks(url: string) {
 
 export async function initializeFrameworks(
   benchmarkOptions: BenchmarkOptions,
-  matchPredicate: IMatchPredicate = matchAll,
+  matchPredicate: MatchPredicate = matchAll,
 ): Promise<FrameworkData[]> {
   let lsResult;
   const lsUrl = `http://${benchmarkOptions.host}:${benchmarkOptions.port}/ls`;

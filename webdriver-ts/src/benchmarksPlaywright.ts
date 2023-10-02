@@ -50,7 +50,7 @@ export abstract class MemBenchmarkPlaywright implements BenchmarkImpl {
   ): Promise<any>;
 }
 
-export type TBenchmarkPlaywright =
+export type BenchmarkPlaywright =
   | CPUBenchmarkPlaywright
   | MemBenchmarkPlaywright;
 
