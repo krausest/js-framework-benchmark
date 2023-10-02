@@ -24,6 +24,8 @@ import {
 
 let config: Config = defaultConfig;
 
+const { LOG_DETAILS, LOG_TIMELINE, LOG_PROGRESS, LOG_DEBUG } = config;
+
 // necessary to launch without specifiying a path
 import "chromedriver";
 
@@ -41,7 +43,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
   let protocolEvents: any[] = [];
   entries.forEach((x) => {
     let e = JSON.parse(x.message).message;
-    if (config.LOG_DETAILS) console.log(JSON.stringify(e));
+    if (LOG_DETAILS) console.log(JSON.stringify(e));
     if (e.method === "Tracing.dataCollected") {
       protocolEvents.push(e);
     }
@@ -52,7 +54,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
       protocolEvents.push(e);
     } else if (e.params.name === "EventDispatch") {
       if (e.params.args.data.type === "click") {
-        if (config.LOG_TIMELINE) console.log("CLICK ", JSON.stringify(e));
+        if (LOG_TIMELINE) console.log("CLICK ", JSON.stringify(e));
         filteredEvents.push({
           type: "click",
           ts: +e.params.ts,
@@ -73,7 +75,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         dur: 0,
         end: +e.params.ts,
       });
-      if (config.LOG_TIMELINE) console.log("TIMESTAMP ", JSON.stringify(e));
+      if (LOG_TIMELINE) console.log("TIMESTAMP ", JSON.stringify(e));
     } else if (e.params.name === "navigationStart") {
       filteredEvents.push({
         type: "navigationStart",
@@ -81,11 +83,9 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         dur: 0,
         end: +e.params.ts,
       });
-      if (config.LOG_TIMELINE)
-        console.log("NAVIGATION START ", JSON.stringify(e));
+      if (LOG_TIMELINE) console.log("NAVIGATION START ", JSON.stringify(e));
     } else if (e.params.name === "CompositeLayers" && e.params.ph == "X") {
-      if (config.LOG_TIMELINE)
-        console.log("COMPOSITELAYERS ", JSON.stringify(e));
+      if (LOG_TIMELINE) console.log("COMPOSITELAYERS ", JSON.stringify(e));
       filteredEvents.push({
         type: "compositelayers",
         ts: +e.params.ts,
@@ -94,7 +94,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         evt: JSON.stringify(e),
       });
     } else if (e.params.name === "Layout" && e.params.ph == "X") {
-      if (config.LOG_TIMELINE) console.log("LAYOUT ", JSON.stringify(e));
+      if (LOG_TIMELINE) console.log("LAYOUT ", JSON.stringify(e));
       filteredEvents.push({
         type: "layout",
         ts: +e.params.ts,
@@ -103,7 +103,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         evt: JSON.stringify(e),
       });
     } else if (e.params.name === "Paint" && e.params.ph == "X") {
-      if (config.LOG_TIMELINE) console.log("PAINT ", JSON.stringify(e));
+      if (LOG_TIMELINE) console.log("PAINT ", JSON.stringify(e));
       filteredEvents.push({
         type: "paint",
         ts: +e.params.ts,
@@ -151,11 +151,11 @@ async function computeResultsCPU(
   expcectedResultCount: number,
 ): Promise<CPUBenchmarkResult[]> {
   let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
-  if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
+  if (LOG_DEBUG) console.log("browser entries", entriesBrowser);
   const perfLogEvents = await fetchEventsFromPerformanceLog(driver);
   let filteredEvents = perfLogEvents.timingResults;
 
-  // if (config.LOG_DEBUG) console.log("filteredEvents ", asString(filteredEvents));
+  // if (LOG_DEBUG) console.log("filteredEvents ", asString(filteredEvents));
 
   let remaining = R.dropWhile(type_eq("initBenchmark"))(filteredEvents);
   let results: CPUBenchmarkResult[] = [];
@@ -167,7 +167,7 @@ async function computeResultsCPU(
         evts[0],
       );
 
-      if (config.LOG_DEBUG)
+      if (LOG_DEBUG)
         console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
 
       let clicks = R.filter(type_eq("click"))(eventsDuringBenchmark);
@@ -183,7 +183,7 @@ async function computeResultsCPU(
         eventsDuringBenchmark,
       );
 
-      if (config.LOG_DEBUG) console.log("eventsAfterClick", eventsAfterClick);
+      if (LOG_DEBUG) console.log("eventsAfterClick", eventsAfterClick);
 
       let lastLayoutEvent: TimingResult;
       let layouts = R.filter(type_eq("layout"))(eventsAfterClick);
@@ -256,9 +256,9 @@ async function runBenchmark(
   driver: WebDriver,
   benchmark: CPUBenchmarkWebdriver,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.run(driver, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after run ",
       benchmark.benchmarkInfo.id,
@@ -271,9 +271,9 @@ async function initBenchmark(
   driver: WebDriver,
   benchmark: CPUBenchmarkWebdriver,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.init(driver, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after initialized ",
       benchmark.benchmarkInfo.id,
@@ -417,7 +417,7 @@ export async function executeBenchmark(
     );
   }
 
-  if (config.LOG_DEBUG)
+  if (LOG_DEBUG)
     console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }
@@ -425,7 +425,7 @@ export async function executeBenchmark(
 process.on("message", (msg: any) => {
   config = msg.config;
   console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
-  // if (config.LOG_DEBUG) console.log("child process got message", msg);
+  // if (LOG_DEBUG) console.log("child process got message", msg);
 
   let {
     framework,

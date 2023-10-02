@@ -27,12 +27,12 @@ export abstract class CPUBenchmarkPlaywright implements BenchmarkImpl {
     browser: Browser,
     page: Page,
     framework: FrameworkData,
-  ): Promise<any>;
+  ): Promise<void>;
   abstract run(
     browser: Browser,
     page: Page,
     framework: FrameworkData,
-  ): Promise<any>;
+  ): Promise<void>;
 }
 
 export abstract class MemBenchmarkPlaywright implements BenchmarkImpl {
@@ -42,12 +42,12 @@ export abstract class MemBenchmarkPlaywright implements BenchmarkImpl {
     browser: Browser,
     page: Page,
     framework: FrameworkData,
-  ): Promise<any>;
+  ): Promise<void>;
   abstract run(
     browser: Browser,
     page: Page,
     framework: FrameworkData,
-  ): Promise<any>;
+  ): Promise<void>;
 }
 
 export type BenchmarkPlaywright =

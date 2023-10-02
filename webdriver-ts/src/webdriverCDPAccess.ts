@@ -8,6 +8,8 @@ import {
 import * as chrome from "selenium-webdriver/chrome.js";
 import { BenchmarkOptions, config } from "./common.js";
 
+const { LOG_DETAILS } = config;
+
 interface PathPart {
   tagName: string;
   index: number;
@@ -136,7 +138,7 @@ export async function testTextContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && v.indexOf(text) > -1;
+        return v && v.includes(text);
       } catch (err) {
         console.log(
           "ignoring error in testTextContains for xpath = " +
@@ -194,7 +196,7 @@ export function testClassContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getAttribute("class");
-        return v && v.indexOf(text) > -1;
+        return v && v.includes(text);
       } catch (err) {
         console.log(
           "ignoring error in testClassContains for xpath = " +
@@ -311,7 +313,7 @@ export function clickElementByXPath(
   isInButtonArea: boolean,
 ) {
   return retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS)
+    if (count > 1 && LOG_DETAILS)
       console.log("clickElementByXPath ", xpath, " attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     await elem.click();
@@ -326,7 +328,7 @@ export async function getTextByXPath(
   isInButtonArea: boolean,
 ): Promise<string> {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS)
+    if (count > 1 && LOG_DETAILS)
       console.log("getTextByXPath ", xpath, " attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     return await elem.getText();

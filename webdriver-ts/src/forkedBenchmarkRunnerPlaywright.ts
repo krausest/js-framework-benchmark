@@ -22,14 +22,16 @@ import { computeResultsCPU, fileNameTrace } from "./timeline.js";
 
 let config: Config = defaultConfig;
 
+const { LOG_PROGRESS, LOG_DEBUG, LOG_DETAILS } = config;
+
 async function runBenchmark(
   browser: Browser,
   page: Page,
   benchmark: BenchmarkPlaywright,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.run(browser, page, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after run ",
       benchmark.benchmarkInfo.id,
@@ -43,9 +45,9 @@ async function initBenchmark(
   page: Page,
   benchmark: BenchmarkPlaywright,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.init(browser, page, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after initialized ",
       benchmark.benchmarkInfo.id,
@@ -105,10 +107,11 @@ async function runCPUBenchmark(
   try {
     browser = await startBrowser(benchmarkOptions);
     page = await browser.newPage();
-    // if (config.LOG_DETAILS) {
+    // if (LOG_DETAILS) {
     page.on("console", (msg) => {
-      for (let i = 0; i < msg.args().length; ++i)
-        console.log(`BROWSER: ${msg.args()[i]}`);
+      for (const arg of msg.args()) {
+        console.log(`BROWSER: ${arg}`);
+      }
     });
     // }
     let client = await page.context().newCDPSession(page);
@@ -235,10 +238,11 @@ async function runMemBenchmark(
     browser = await startBrowser(benchmarkOptions);
     const page = await browser.newPage();
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
-      if (config.LOG_DETAILS) {
+      if (LOG_DETAILS) {
         page.on("console", (msg) => {
-          for (let i = 0; i < msg.args().length; ++i)
-            console.log(`BROWSER: ${msg.args()[i]}`);
+          for (const arg of msg.args()) {
+            console.log(`BROWSER: ${arg}`);
+          }
         });
       }
 
@@ -325,7 +329,7 @@ export async function executeBenchmark(
       benchmarkOptions,
     );
   }
-  if (config.LOG_DEBUG)
+  if (LOG_DEBUG)
     console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }

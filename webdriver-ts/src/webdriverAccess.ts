@@ -7,6 +7,8 @@ import {
 import * as chrome from "selenium-webdriver/chrome.js";
 import { BenchmarkOptions, config } from "./common.js";
 
+const { LOG_DEBUG, LOG_DETAILS } = config;
+
 let useShadowRoot = false;
 let useRowShadowRoot = false;
 let shadowRootName = "";
@@ -55,7 +57,7 @@ export async function findById(
   isInButtonArea: boolean,
 ): Promise<WebElement> {
   let root = mainRoot(driver, isInButtonArea);
-  if (config.LOG_DEBUG)
+  if (LOG_DEBUG)
     console.log("findById selector ", `${root}.querySelector('#${id}')`);
   return await (driver.executeScript(
     `return ${root}.querySelector('#${id}')`,
@@ -71,7 +73,7 @@ export async function findByXPath(
   let paths = convertPath(path);
   let root = mainRoot(driver, isInButtonArea);
   try {
-    if (config.LOG_DEBUG)
+    if (LOG_DEBUG)
       console.log(
         "findByXPath: selector = ",
         `return ${root}.querySelector('${paths}')`,
@@ -111,11 +113,11 @@ export async function testTextContains(
     `testTextContains ${xpath} ${text}`,
     async function (driver) {
       try {
-        if (config.LOG_DEBUG) console.log("testTextContains", xpath);
+        if (LOG_DEBUG) console.log("testTextContains", xpath);
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && v.indexOf(text) > -1;
+        return v && v.includes(text);
       } catch (err) {
         console.log(
           "ignoring error in testTextContains for xpath = " +
@@ -173,7 +175,7 @@ export async function testClassContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getAttribute("class");
-        return v && v.indexOf(text) > -1;
+        return v && v.includes(text);
       } catch (err) {
         console.log(
           "ignoring error in testClassContains for xpath = " +
@@ -222,8 +224,7 @@ export async function testElementNotLocatedByXPath(
     async function (driver) {
       try {
         let elem = await findByXPath(driver, xpath, isInButtonArea);
-        if (config.LOG_DEBUG)
-          console.log("testElementNotLocatedByXPath", xpath, elem);
+        if (LOG_DEBUG) console.log("testElementNotLocatedByXPath", xpath, elem);
         return elem ? false : true;
       } catch (err) {
         console.log(
@@ -247,7 +248,7 @@ export async function testElementLocatedById(
     async function (driver) {
       try {
         let root = mainRoot(driver, isInButtonArea);
-        if (config.LOG_DEBUG)
+        if (LOG_DEBUG)
           console.log(
             "testElementLocatedById selector ",
             `return ${root}.querySelector('#${id}')`,
@@ -288,7 +289,7 @@ export async function clickElementById(
 ) {
   return await retry(5, driver, async function (driver) {
     let elem = await findById(driver, id, isInButtonArea);
-    if (config.LOG_DEBUG) console.log("clickElementById: ", elem);
+    if (LOG_DEBUG) console.log("clickElementById: ", elem);
     await elem.click();
   });
 }
@@ -299,7 +300,7 @@ export async function clickElementByXPath(
   isInButtonArea: boolean,
 ) {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS)
+    if (count > 1 && LOG_DETAILS)
       console.log("clickElementByXPath ", xpath, " attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     await elem.click();
@@ -314,7 +315,7 @@ export async function getTextByXPath(
   isInButtonArea: boolean,
 ): Promise<string> {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS)
+    if (count > 1 && LOG_DETAILS)
       console.log("getTextByXPath ", xpath, " attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     return await elem.getText();

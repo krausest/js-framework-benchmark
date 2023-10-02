@@ -25,13 +25,15 @@ import {
 
 let config: Config = defaultConfig;
 
+const { LOG_PROGRESS, LOG_DEBUG } = config;
+
 async function runBenchmark(
   driver: WebDriver,
   benchmark: CPUBenchmarkWebdriver,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.run(driver, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after run ",
       benchmark.benchmarkInfo.id,
@@ -44,9 +46,9 @@ async function initBenchmark(
   driver: WebDriver,
   benchmark: CPUBenchmarkWebdriver,
   framework: FrameworkData,
-): Promise<any> {
+): Promise<void> {
   await benchmark.init(driver, framework);
-  if (config.LOG_PROGRESS)
+  if (LOG_PROGRESS)
     console.log(
       "after initialized ",
       benchmark.benchmarkInfo.id,
@@ -162,7 +164,7 @@ export async function executeBenchmark(
     );
   }
 
-  if (config.LOG_DEBUG)
+  if (LOG_DEBUG)
     console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }

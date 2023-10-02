@@ -8,7 +8,7 @@ import {
   initializeFrameworks,
 } from "./common.js";
 import { fork } from "child_process";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import {
   BenchmarkInfo,
   benchmarkInfos,
@@ -21,6 +21,8 @@ import {
 import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
 import { writeResults } from "./writeResults.js";
 import { PlausibilityCheck } from "./timeline.js";
+
+const { LOG_DETAILS, LOG_DEBUG } = config;
 
 function forkAndCallBenchmark(
   framework: FrameworkData,
@@ -48,7 +50,7 @@ function forkAndCallBenchmark(
     }
     console.log("forking ", forkedRunner);
     const forked = fork(forkedRunner);
-    if (config.LOG_DETAILS) console.log("FORKING:  forked child process");
+    if (LOG_DETAILS) console.log("FORKING:  forked child process");
     forked.send({
       config,
       framework,
@@ -62,20 +64,20 @@ function forkAndCallBenchmark(
           number | CPUBenchmarkResult | StartupBenchmarkResult
         >,
       ) => {
-        if (config.LOG_DETAILS)
+        if (LOG_DETAILS)
           console.log("FORKING: main process got message from child", msg);
         resolve(msg);
       },
     );
     forked.on("close", (msg) => {
-      if (config.LOG_DETAILS) console.log("FORKING: child closed", msg);
+      if (LOG_DETAILS) console.log("FORKING: child closed", msg);
     });
     forked.on("error", (msg) => {
-      if (config.LOG_DETAILS) console.log("FORKING: child error", msg);
+      if (LOG_DETAILS) console.log("FORKING: child error", msg);
       reject(msg);
     });
     forked.on("exit", (code, signal) => {
-      if (config.LOG_DEBUG) console.log("child exit", code, signal);
+      if (LOG_DEBUG) console.log("child exit", code, signal);
     });
   });
 }
@@ -114,7 +116,7 @@ async function runBenchmakLoopStartup(
     } else results.push(res.result);
     warnings = warnings.concat(res.warnings);
     if (res.error) {
-      if (res.error.indexOf("Server terminated early with status 1") > -1) {
+      if (res.error.includes("Server terminated early with status 1")) {
         console.log(
           "******* STRANGE selenium error found - retry #",
           retries + 1,
@@ -194,7 +196,7 @@ async function runBenchmakLoop(
     }
     warnings = warnings.concat(res.warnings);
     if (res.error) {
-      if (res.error.indexOf("Server terminated early with status 1") > -1) {
+      if (res.error.includes("Server terminated early with status 1")) {
         console.log(
           "******* STRANGE selenium error found - retry #",
           retries + 1,
@@ -427,7 +429,7 @@ async function main() {
       // afterframe currently only targets CPU benchmarks
       (config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME ||
         b.type == BenchmarkType.CPU) &&
-      runBenchmarksArgs.some((name) => b.id.toLowerCase().indexOf(name) > -1),
+      runBenchmarksArgs.some((name) => b.id.toLowerCase().includes(name)),
   );
 
   let runFrameworks: FrameworkData[];

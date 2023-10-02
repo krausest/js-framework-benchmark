@@ -23,15 +23,15 @@ import {
 export abstract class CPUBenchmarkPuppeteer implements BenchmarkImpl {
   type = BenchmarkType.CPU;
   constructor(public benchmarkInfo: CPUBenchmarkInfo) {}
-  abstract init(page: Page, framework: FrameworkData): Promise<any>;
-  abstract run(page: Page, framework: FrameworkData): Promise<any>;
+  abstract init(page: Page, framework: FrameworkData): Promise<void>;
+  abstract run(page: Page, framework: FrameworkData): Promise<void>;
 }
 
 export abstract class MemBenchmarkPuppeteer implements BenchmarkImpl {
   type = BenchmarkType.MEM;
   constructor(public benchmarkInfo: MemBenchmarkInfo) {}
-  abstract init(page: Page, framework: FrameworkData): Promise<any>;
-  abstract run(page: Page, framework: FrameworkData): Promise<any>;
+  abstract init(page: Page, framework: FrameworkData): Promise<void>;
+  abstract run(page: Page, framework: FrameworkData): Promise<void>;
 }
 
 export type BenchmarkPuppeteer = CPUBenchmarkPuppeteer | MemBenchmarkPuppeteer;

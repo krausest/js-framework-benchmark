@@ -119,7 +119,7 @@ window.nonKeyedDetector_instrument = function() {
     return true;
 }
 window.nonKeyedDetector_result = function() {
-    return {tradded: nonKeyedDetector_tradded.length, trremoved: nonKeyedDetector_trremoved.length, removedStoredTr: nonKeyedDetector_trremoved.indexOf(window.storedTr)>-1, newNodes: countDiff(window.nonKeyedDetector_tradded, window.nonKeyedDetector_trremoved),
+    return {tradded: nonKeyedDetector_tradded.length, trremoved: nonKeyedDetector_trremoved.length, removedStoredTr: nonKeyedDetector_trremoved.includes(window.storedTr), newNodes: countDiff(window.nonKeyedDetector_tradded, window.nonKeyedDetector_trremoved),
 //      storedTr_debug: window.storedTr.innerText, trremoved_debug: nonKeyedDetector_trremoved.map(t => t.innerText).join(","),
 //      traddedDebug: JSON.stringify(nonKeyedDetector_tradded.map(d => d.innerHTML))
     };
@@ -333,12 +333,10 @@ async function runBench(frameworkNames: string[]) {
 
   console.log("*** headless", benchmarkOptions.headless);
 
-  for (let i = 0; i < runFrameworks.length; i++) {
+  for (const framework of runFrameworks) {
     let browser = await startBrowser(benchmarkOptions);
     let page = await browser.newPage();
     try {
-      let framework: FrameworkData = runFrameworks[i];
-
       await page.goto(
         `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
         { waitUntil: "networkidle" },
@@ -436,10 +434,7 @@ async function runBench(frameworkNames: string[]) {
         allCorrect = false;
       }
     } catch (e) {
-      console.log(
-        "ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion,
-        e,
-      );
+      console.log("ERROR running " + framework.fullNameWithKeyedAndVersion, e);
       allCorrect = false;
     } finally {
       try {

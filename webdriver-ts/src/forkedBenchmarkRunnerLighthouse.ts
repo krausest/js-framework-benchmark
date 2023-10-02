@@ -17,6 +17,8 @@ import lighthouse from "lighthouse";
 
 let config: Config = defaultConfig;
 
+const { LOG_DEBUG } = config;
+
 function extractRawValue(results: any, id: string) {
   let audits = results.audits;
   if (!audits) return null;
@@ -71,7 +73,7 @@ async function runLighthouse(
       await chrome.kill();
       throw error;
     }
-    if (config.LOG_DEBUG) console.log("lighthouse result", results);
+    if (LOG_DEBUG) console.log("lighthouse result", results);
 
     return startupBenchmarks.map((bench) => {
       return {
@@ -149,7 +151,7 @@ export async function executeBenchmark(
     benchmark,
     benchmarkOptions,
   );
-  if (config.LOG_DEBUG)
+  if (LOG_DEBUG)
     console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }
@@ -157,7 +159,7 @@ export async function executeBenchmark(
 process.on("message", (msg: any) => {
   config = msg.config;
   console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
-  // if (config.LOG_DEBUG) console.log("child process got message", msg);
+  // if (LOG_DEBUG) console.log("child process got message", msg);
 
   let {
     framework,
