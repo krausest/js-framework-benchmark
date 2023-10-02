@@ -80,7 +80,7 @@ td {
 }
 .results__table {
   font-size: 11px;
-  width: 100%;
+  width: 150px;
   table-layout: fixed;
   border-spacing: 0;
   border-collapse: collapse;
