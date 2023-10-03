@@ -161,6 +161,7 @@ async function runCPUBenchmark(
         },
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       let p = new Promise((resolve, reject) => {
         cdpConnection._wsConnection.on("message", async (msg: any) => {
           let message: any = JSON.parse(msg);

@@ -10,6 +10,7 @@ import { BenchmarkOptions, config } from "./common.js";
 const { LOG_DEBUG, LOG_DETAILS } = config;
 
 let useShadowRoot = false;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let useRowShadowRoot = false;
 let shadowRootName = "";
 let buttonsInShadowRoot = false;
@@ -146,7 +147,7 @@ export async function testTextNotContained(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && v.indexOf(text) == -1;
+        return v && !v.includes(text);
       } catch (err) {
         console.log(
           "ignoring error in testTextNotContained for xpath = " +

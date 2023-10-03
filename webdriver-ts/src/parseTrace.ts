@@ -21,6 +21,7 @@ async function debugSingle() {
   // }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function debugAll() {
   let benchmarkOptions: BenchmarkOptions = {
     port: 8080,

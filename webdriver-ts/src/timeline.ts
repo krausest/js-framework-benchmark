@@ -240,7 +240,6 @@ function logEvents(events: TimingResult[], click: TimingResult) {
 
 export async function computeResultsCPU(
   fileName: string,
-  warning_logger: (...msg: any) => void = console.log,
 ): Promise<CPUDurationResult> {
   const perfLogEvents = await fetchEventsFromPerformanceLog(fileName);
   let events = R.sortBy((e: TimingResult) => e.end)(perfLogEvents);

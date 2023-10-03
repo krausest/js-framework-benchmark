@@ -151,7 +151,6 @@ async function runBenchmakLoop(
   framework: FrameworkData,
   benchmarkInfo: CPUBenchmarkInfo | MemBenchmarkInfo,
   benchmarkOptions: BenchmarkOptions,
-  plausibilityCheck: PlausibilityCheck,
 ): Promise<{ errors: string[]; warnings: string[] }> {
   let warnings: string[] = [];
   let errors: string[] = [];
@@ -287,14 +286,12 @@ async function runBench(
             runFrameworks[i],
             benchmarkInfos[j] as CPUBenchmarkInfo,
             benchmarkOptions,
-            plausibilityCheck,
           );
         } else {
           result = await runBenchmakLoop(
             runFrameworks[i],
             benchmarkInfos[j] as MemBenchmarkInfo,
             benchmarkOptions,
-            plausibilityCheck,
           );
         }
         errors = errors.concat(result.errors);

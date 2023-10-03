@@ -5,12 +5,7 @@ import {
   clickElement,
   startBrowser,
 } from "./playwrightAccess.js";
-import {
-  config,
-  FrameworkData,
-  initializeFrameworks,
-  BenchmarkOptions,
-} from "./common.js";
+import { config, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
 let args: any = yargs(process.argv)
   .usage(
@@ -50,6 +45,7 @@ let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
 
 console.log("args.framework", args.framework, !args.framework);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function runBench(frameworkNames: string[]) {
   let runFrameworks;
   let matchesDirectoryArg = (directoryName: string) =>

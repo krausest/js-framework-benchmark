@@ -5,12 +5,7 @@ import {
   clickElement,
   startBrowser,
 } from "./playwrightAccess.js";
-import {
-  config,
-  FrameworkData,
-  initializeFrameworks,
-  BenchmarkOptions,
-} from "./common.js";
+import { config, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
 import * as R from "ramda";
 import { ElementHandle, Page } from "playwright";
@@ -315,6 +310,7 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
   return true;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function runBench(frameworkNames: string[]) {
   let runFrameworks;
   let matchesDirectoryArg = (directoryName: string) =>
