@@ -44,6 +44,16 @@ The current snapshot that may not have the same quality (i.e.
 results might be for mixed browser versions, number of runs per benchmark may vary) can be seen [here](https://krausest.github.io/js-framework-benchmark/current.html)
 [![Results](images/results.png?raw=true "Results")](https://krausest.github.io/js-framework-benchmark/current.html)
 
+## Keyed vs non-keyed frameworks
+
+Some frameworks like react, vue.js or angular allow to create a 1:1-relationship between a data item and a DOM node by assigning a “key” attribute (or for angular specifying “trackBy” in *ngFor). If you use some identifier of the data as the key you get the “keyed” mode. Any update to the data will update the associated DOM node. If you reorder the list, the DOM nodes will be reordered accordingly.
+
+The other mode is “non-keyed” and this is what e.g. vue.js uses by default for lists. In this mode a change to the data items can modify DOM nodes that were associated with other data before. This can be more performant, since costly DOM operations can be avoided (e.g. first removing old nodes, and the adding new nodes) and the existing DOM nodes are updated to display the new data. For react and angular using the item index as the key uses “non-keyed” mode for those frameworks.
+
+Depending on your requirements the “non-keyed” mode can be a performance gain or can cause severe problems so one must choose carefully the mode and check that the framework supports that mode.
+
+Read more here: [https://www.stefankrause.net/wp/?p=342](https://www.stefankrause.net/wp/?p=342)
+
 # 1 NEW: Run pre-built binaries for all frameworks
 
 There are currently ~60 framework entries in this repository. Installing (and maintaining) those can be challenging, but here are simplified instructions how to get started.
