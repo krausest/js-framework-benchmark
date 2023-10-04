@@ -10,7 +10,8 @@ import {
   subbenchmarks,
 } from "./benchmarksLighthouse.js";
 import { FrameworkData, JSONResult, JSONResultData } from "./common.js";
-import { jStat } from "jstat";
+import pkg from "jstat";
+const { jStat } = pkg;
 
 export type ResultLightHouse = {
   framework: FrameworkData;
