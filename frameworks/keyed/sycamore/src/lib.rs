@@ -42,18 +42,9 @@ static NOUNS: &[&str] = &[
     "pizza", "mouse", "keyboard",
 ];
 
-#[derive(Prop)]
-struct ButtonProps<'a> {
-    id: &'static str,
-    text: &'static str,
-    callback: Box<dyn Fn() + 'a>,
-}
-
-#[component]
-fn Button<'a, G: Html>(cx: Scope<'a>, props: ButtonProps<'a>) -> View<G> {
-    let ButtonProps { id, text, callback } = props;
-
-    view! { cx,
+#[component(inline_props)]
+fn Button<G: Html>(id: &'static str, text: &'static str, callback: Box<dyn Fn()>) -> View<G> {
+    view! {
         div(class="col-sm-6 smallpad") {
             button(id=id, class="btn btn-primary btn-block", type="button", on:click=move |_| callback()) {
                 (text)
@@ -65,7 +56,7 @@ fn Button<'a, G: Html>(cx: Scope<'a>, props: ButtonProps<'a>) -> View<G> {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct RowData {
     id: usize,
-    label: RcSignal<String>,
+    label: Signal<String>,
 }
 
 static ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
@@ -90,7 +81,7 @@ fn build_data(count: usize) -> Vec<RowData> {
 
         data.push(RowData {
             id: ID_COUNTER.load(Ordering::Relaxed),
-            label: create_rc_signal(label),
+            label: create_signal(label),
         });
 
         ID_COUNTER.store(ID_COUNTER.load(Ordering::Relaxed) + 1, Ordering::Relaxed);
@@ -100,56 +91,48 @@ fn build_data(count: usize) -> Vec<RowData> {
 }
 
 #[component]
-fn App<G: Html>(cx: Scope) -> View<G> {
-    let data = create_signal(cx, Vec::<RowData>::new());
-    let selected = create_signal(cx, None::<usize>);
+fn App<G: Html>() -> View<G> {
+    let data = create_signal(Vec::<RowData>::new());
+    let selected = create_signal(None::<usize>);
 
-    let remove = |id| {
-        data.set(
-            data.get()
-                .iter()
-                .filter(|row| row.id != id)
-                .cloned()
-                .collect(),
-        );
-    };
+    let remove = move |id| data.update(|d| d.retain(|row| row.id != id));
 
-    let run = || {
+    let run = move || {
+        selected.set(None);
         data.set(build_data(1000));
-        selected.set(None);
     };
 
-    let runlots = || {
+    let runlots = move || {
+        selected.set(None);
         data.set(build_data(10000));
-        selected.set(None);
     };
 
-    let add = || {
-        data.set(data.get().iter().cloned().chain(build_data(1000)).collect());
+    let add = move || {
+        let new = build_data(1000);
+        data.update(|d| d.extend(new));
     };
 
-    let update = || {
-        let mut tmp = (*data.get()).clone();
-        for row in tmp.iter_mut().step_by(10) {
-            row.label.set(format!("{} !!!", row.label.get()));
+    let update = move || {
+        let d = data.get_clone();
+        for row in d.into_iter().step_by(10) {
+            row.label.update(|l| *l = format!("{} !!!", l));
         }
-        data.set(tmp);
     };
 
-    let clear = || {
+    let clear = move || {
         data.set(Vec::new());
         selected.set(None);
     };
 
-    let swaprows = || {
-        let mut d = (*data.get()).clone();
-        if d.len() > 998 {
-            d.swap(1, 998);
-        }
-        data.set(d);
+    let swaprows = move || {
+        data.update(|d| {
+            if d.len() > 998 {
+                d.swap(1, 998);
+            }
+        })
     };
 
-    view! { cx,
+    view! {
         div(class="container") {
             div(class="jumbotron") {
                 div(class="row") {
@@ -169,15 +152,18 @@ fn App<G: Html>(cx: Scope) -> View<G> {
             table(class="table table-hover table-striped test-data") {
                 tbody {
                     Keyed(
-                        iterable=data,
-                        view=move |cx, row| {
-                            let is_selected = create_selector(cx, move || *selected.get() == Some(row.id));
+                        iterable=*data,
+                        view=move |row| {
+                            let is_selected = create_selector(move || selected.get() == Some(row.id));
                             let handle_click = move |_| selected.set(Some(row.id));
-                            view! { cx,
-                                tr(class=is_selected.get().then(|| "danger").unwrap_or("")) {
+                            on_cleanup(move || {
+                                row.label.dispose();
+                            });
+                            view! {
+                                tr(class=if is_selected.get() { "danger" } else { "" }) {
                                     td(class="col-md-1") { (row.id) }
                                     td(class="col-md-4") {
-                                        a(on:click=handle_click) { (row.label.get()) }
+                                        a(on:click=handle_click) { (row.label.get_clone()) }
                                     }
                                     td(class="col-md-1") {
                                         a(on:click=move |_| remove(row.id)) {
@@ -197,8 +183,9 @@ fn App<G: Html>(cx: Scope) -> View<G> {
 }
 
 #[wasm_bindgen(start)]
-pub fn start() {
+fn start() {
     let document = web_sys::window().unwrap().document().unwrap();
     let mount_el = document.query_selector("#main").unwrap().unwrap();
-    sycamore::render_to(|cx| view! { cx, App {} }, &mount_el);
+
+    sycamore::render_to(App, &mount_el);
 }
