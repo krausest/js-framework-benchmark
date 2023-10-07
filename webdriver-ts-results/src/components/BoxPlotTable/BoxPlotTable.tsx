@@ -5,7 +5,7 @@ import {
   Framework,
   ResultLookup,
   CpuDurationMode,
-} from "../../Common";
+} from "@/Common";
 import BoxPlotTableRows from "./BoxPlotTableRows";
 
 interface Props {

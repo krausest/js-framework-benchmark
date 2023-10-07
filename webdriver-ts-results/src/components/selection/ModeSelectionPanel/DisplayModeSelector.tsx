@@ -1,5 +1,5 @@
 import React from "react";
-import { DisplayMode } from "../../../Common";
+import { DisplayMode } from "@/Common";
 
 interface Props {
   displayMode: DisplayMode;

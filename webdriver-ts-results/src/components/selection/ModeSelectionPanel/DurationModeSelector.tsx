@@ -1,5 +1,5 @@
 import React from "react";
-import { CpuDurationMode } from "../../../Common";
+import { CpuDurationMode } from "@/Common";
 
 interface Props {
   cpuDurationMode: CpuDurationMode;
