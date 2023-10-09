@@ -1,13 +1,13 @@
 import React from "react";
 import { BenchmarkType } from "../../../Common";
-import DropDown from "../../DropDown";
+import Dropdown from "../../ui/Dropdown";
 import BenchmarkSelectorCategory from "./BenchmarkSelectorCategory";
 
 const BenchmarkSelector = () => {
   console.log("BenchmarkSelector");
 
   return (
-    <DropDown label="Which benchmarks?" width="300px">
+    <Dropdown label="Which benchmarks?" width="300px">
       <BenchmarkSelectorCategory
         benchmarkType={BenchmarkType.CPU}
         label="Duration"
@@ -20,7 +20,7 @@ const BenchmarkSelector = () => {
         benchmarkType={BenchmarkType.MEM}
         label="Memory"
       />
-    </DropDown>
+    </Dropdown>
   );
 };
 

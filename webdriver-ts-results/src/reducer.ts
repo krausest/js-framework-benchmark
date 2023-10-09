@@ -86,7 +86,7 @@ interface State {
   benchmarks: Array<Benchmark>;
   frameworks: Array<Framework>;
   selectedBenchmarks: Set<Benchmark>;
-  selectedFrameworksDropDown: Set<Framework>;
+  selectedFrameworks: Set<Framework>;
   resultTables: ResultTables;
   sortKey: string;
   displayMode: DisplayMode;
@@ -116,7 +116,7 @@ interface Actions {
 function updateResultTable({
   frameworks,
   benchmarks,
-  selectedFrameworksDropDown: selectedFrameworks,
+  selectedFrameworks,
   selectedBenchmarks,
   sortKey,
   displayMode,
@@ -173,7 +173,7 @@ function extractState(state: any): Partial<State> {
         if (f === sf.dir) newSelectedFramework.add(sf);
       }
     }
-    t = { ...t, selectedFrameworksDropDown: newSelectedFramework };
+    t = { ...t, selectedFrameworks: newSelectedFramework };
   }
   if (state.displayMode !== undefined) {
     t = { ...t, displayMode: state.displayMode };
@@ -202,7 +202,7 @@ const preInitialState: State = {
   },
   // dynamic
   selectedBenchmarks: allBenchmarks,
-  selectedFrameworksDropDown: allFrameworks,
+  selectedFrameworks: allFrameworks,
   sortKey: SORT_BY_GEOMMEAN_CPU,
   displayMode: DisplayMode.DisplayMedian,
   resultTables: {
@@ -237,27 +237,27 @@ export const useRootStore = create<State & Actions>((set, get) => ({
   },
   areAllFrameworksSelected: (type) => {
     return get().frameworkLists[type].every((framework) =>
-      get().selectedFrameworksDropDown.has(framework),
+      get().selectedFrameworks.has(framework),
     );
   },
   isNoneFrameworkSelected: (type) => {
     return get().frameworkLists[type].every(
-      (framework) => !get().selectedFrameworksDropDown.has(framework),
+      (framework) => !get().selectedFrameworks.has(framework),
     );
   },
   // Actions
   selectFramework: (framework: Framework, add: boolean) => {
-    const newSelectedFramework = new Set(get().selectedFrameworksDropDown);
+    const newSelectedFramework = new Set(get().selectedFrameworks);
 
     add
       ? newSelectedFramework.add(framework)
       : newSelectedFramework.delete(framework);
 
-    const t = { ...get(), selectedFrameworksDropDown: newSelectedFramework };
+    const t = { ...get(), selectedFrameworks: newSelectedFramework };
     return set(() => ({ ...t, resultTables: updateResultTable(t) }));
   },
   selectAllFrameworks: (frameworkType: FrameworkType, add: boolean) => {
-    const newSelectedFramework = new Set(get().selectedFrameworksDropDown);
+    const newSelectedFramework = new Set(get().selectedFrameworks);
     const frameworks =
       frameworkType === FrameworkType.KEYED
         ? get().frameworkLists[FrameworkType.KEYED]
@@ -269,7 +269,7 @@ export const useRootStore = create<State & Actions>((set, get) => ({
         : newSelectedFramework.delete(framework);
     }
 
-    const t = { ...get(), selectedFrameworksDropDown: newSelectedFramework };
+    const t = { ...get(), selectedFrameworks: newSelectedFramework };
     return set(() => ({
       ...t,
       resultTables: updateResultTable(t),

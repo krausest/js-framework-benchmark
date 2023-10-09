@@ -26,11 +26,9 @@ const ValueResultRow = ({
     <tr>
       <th className="benchname">
         <button
-          className={
-            currentSortKey === benchmarks[benchIdx].id
-              ? "sortKey textButton"
-              : "textButton"
-          }
+          className={`button button__text ${
+            currentSortKey === benchmarks[benchIdx].id ? "sort-key" : ""
+          }`}
           onClick={handleSort(benchmarks[benchIdx].id)}
         >
           {benchmarks[benchIdx].label}

@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "ES2022",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
+    "noEmit": true,
     "esModuleInterop": true,
     "strict": true,
     "module": "ESNext",
@@ -12,5 +13,6 @@
     "isolatedModules": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

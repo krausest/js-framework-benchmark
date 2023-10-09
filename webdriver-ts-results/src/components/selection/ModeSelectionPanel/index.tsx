@@ -2,12 +2,13 @@ import React from "react";
 import { useRootStore } from "../../../reducer";
 import DisplayModeSelector from "./DisplayModeSelector";
 import DurationModeSelector from "./DurationModeSelector";
+import "./ModeSelectionPanel.css";
 
 interface Props {
   showDurationSelection: boolean;
 }
 
-const ModeSelector = ({ showDurationSelection }: Props) => {
+const ModeSelecionPanel = ({ showDurationSelection }: Props) => {
   console.log("ModeSelector");
 
   const displayMode = useRootStore((state) => state.displayMode);
@@ -19,19 +20,21 @@ const ModeSelector = ({ showDurationSelection }: Props) => {
 
   return (
     <>
-      <DisplayModeSelector
-        displayMode={displayMode}
-        onChange={(value) => selectDisplayMode(value)}
-      />
-
-      {showDurationSelection && (
-        <DurationModeSelector
-          cpuDurationMode={cpuDurationMode}
-          onChange={(value) => selectCpuDurationMode(value)}
+      <div className="mode-selection-panel">
+        <DisplayModeSelector
+          displayMode={displayMode}
+          onChange={(value) => selectDisplayMode(value)}
         />
-      )}
+
+        {showDurationSelection ? (
+          <DurationModeSelector
+            cpuDurationMode={cpuDurationMode}
+            onChange={(value) => selectCpuDurationMode(value)}
+          />
+        ) : null}
+      </div>
     </>
   );
 };
 
-export default ModeSelector;
+export default ModeSelecionPanel;

@@ -1,7 +1,7 @@
 import React from "react";
 import { BenchmarkType } from "../../../Common";
 import { useRootStore } from "../../../reducer";
-import DropDownContents from "../../DropDown/DropDownContents";
+import SelectorContentContainer from "../SelectorContentContainer";
 import BenchmarkSelectorList from "./BenchmarkSelectorList";
 
 interface Props {
@@ -26,19 +26,19 @@ const BenchmarkSelectorCategory = ({ label, benchmarkType }: Props) => {
   const selectBenchmark = useRootStore((state) => state.selectBenchmark);
 
   return (
-    <DropDownContents
+    <SelectorContentContainer
       isNoneSelected={isNoneSelected(benchmarkType)}
       areAllSelected={areAllSelected(benchmarkType)}
       selectNone={() => selectAllBenchmarks(benchmarkType, false)}
       selectAll={() => selectAllBenchmarks(benchmarkType, true)}
+      label={label}
     >
-      <h3>{label}</h3>
       <BenchmarkSelectorList
         isSelected={(benchmark) => selectedBenchmarks.has(benchmark)}
         select={(benchmark, add) => selectBenchmark(benchmark, add)}
         benchmarks={benchmarks}
       />
-    </DropDownContents>
+    </SelectorContentContainer>
   );
 };
 
