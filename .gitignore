@@ -29,12 +29,6 @@ jspm_packages
 bower_components
 dist
 
-# pre-built binaries for faster startup (downloaded and unzipped)
-pre-built-binaries
-
-# test results - no need to include them in our commits
-webdriver-ts-results
-
 .idea
 .vscode
 .DS_Store
