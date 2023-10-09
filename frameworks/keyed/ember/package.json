@@ -52,7 +52,7 @@
     "ember-load-initializers": "^2.1.2",
     "ember-qunit": "^6.1.1",
     "ember-resolver": "^10.0.0",
-    "ember-source": "4.10.0",
+    "ember-source": "^5.3.0",
     "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-ember": "^11.4.3",
