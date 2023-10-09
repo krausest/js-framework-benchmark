@@ -80,7 +80,7 @@ const buildData = (count) => {
 const eachComponent = each(
   "table-rows",
   ({ importedData }) => importedData.rows,
-  `<tr key={{row.id}} class={{[selected]}}>
+  `<tr key="{{row.id}}" class="{{[selected]}}">
     <td class='col-md-1'>{{row.id}}</td>
     <td class='col-md-4'><a :click="{{importedData.setSelected(row.id)}}" class='lbl'>{{row.label}}</a></td>
     <td class='col-md-1'><a :click="{{importedData.delete(row.id)}}" class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td>
