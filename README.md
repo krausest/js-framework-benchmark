@@ -308,7 +308,9 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
 
 ## 4. Contributing a new implementation
 
-## TL;DR
+## 4.1 Example instructions for a real implementation
+Thanks @dsvorc41 for providing the following description:
+TL;DR:
 ![demo](https://github.com/dsvorc41/js-framework-benchmark/assets/20287188/91ae2d64-7362-4be8-b88f-e52637b33fa5)
 
 1. Install all of the root-level dependencies
@@ -446,7 +448,7 @@ After that you can check all results in [http://localhost:8080/webdriver-ts/tabl
 12. Open the report in your browser (NOTE: the server must still be running if you want to see this page)
     1. `http://localhost:8080/webdriver-ts-results/table.html`
 
-## 4.1 Building the app
+## 4.2 Building the app
 
 For contributions it is basically sufficient to create a new directory for your framework that supports `npm install` and `npm run build-prod` and can be then opened in the browser. All other steps are optional. Let's simulate that by copying vanillajs.
 
@@ -468,7 +470,7 @@ In most cases you'll need `npm install` and `npm run build-prod` and then check 
 
 (Of course in reality you'd rather throw out the javascript source files and use your framework there instead of only changing the html file.)
 
-## 4.2 Adding your new implementation to the results table.
+## 4.3 Adding your new implementation to the results table.
 
 (Notice: Updating common.ts is no longer necessary, super-vanillajs is visible in the result table)
 
@@ -506,7 +508,7 @@ The other important, but optional properties for js-framework-benchmark are show
 
 You can set an optional different URL if needed or specify that your DOM uses a shadow root.
 
-## 4.3 Submitting your implementation
+## 4.4 Submitting your implementation
 
 Contributions are very welcome. Please use the following rules:
 
