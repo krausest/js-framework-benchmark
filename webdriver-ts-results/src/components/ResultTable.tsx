@@ -11,9 +11,7 @@ import StartupResultsTable from "./tables/StartupResultsTable";
 import { benchmarks } from "../results";
 import { useRootStore } from "../reducer";
 
-const BoxPlotTable = React.lazy(
-  () => import(/* webpackChunkName: "BoxPlotTable" */ "./BoxPlotTable"),
-);
+const BoxPlotTable = React.lazy(() => import("./BoxPlotTable/BoxPlotTable"));
 
 interface Props {
   type: FrameworkType;

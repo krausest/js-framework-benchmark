@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRootStore } from "../../reducer";
 import PasteIcon from "../../assets/icons/PasteIcon";
 import CopyIcon from "../../assets/icons/CopyIcon";
+import "./CopyPasteSelection.css";
 
 const CopyPasteSelection = () => {
   console.log("CopyPasteSelection");
@@ -51,7 +52,7 @@ const CopyPasteSelection = () => {
   const copy = () => {
     const serializedState = {
       frameworks: state.frameworks
-        .filter((f) => state.selectedFrameworksDropDown.has(f))
+        .filter((f) => state.selectedFrameworks.has(f))
         .map((f) => f.dir),
       benchmarks: state.benchmarks
         .filter((f) => state.selectedBenchmarks.has(f))
@@ -80,22 +81,25 @@ const CopyPasteSelection = () => {
 
   return (
     <>
-      <p>Copy/paste current selection</p>
-      <div className="hspan" />
-      <button
-        className="iconbutton"
-        onClick={copy}
-        aria-label="Copy selected frameworks and benchmarks"
-      >
-        <CopyIcon></CopyIcon>
-      </button>
-      <button
-        className="iconbutton"
-        onClick={handlePasteFromClipboard}
-        aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
-      >
-        <PasteIcon></PasteIcon>
-      </button>
+      <div className="copy-paste-panel">
+        <p>Copy/paste current selection</p>
+        <div>
+          <button
+            className="button__icon"
+            onClick={copy}
+            aria-label="Copy selected frameworks and benchmarks"
+          >
+            <CopyIcon></CopyIcon>
+          </button>
+          <button
+            className="button__icon"
+            onClick={handlePasteFromClipboard}
+            aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
+          >
+            <PasteIcon></PasteIcon>
+          </button>
+        </div>
+      </div>
     </>
   );
 };

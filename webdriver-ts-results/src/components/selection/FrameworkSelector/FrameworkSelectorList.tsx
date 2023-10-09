@@ -16,13 +16,13 @@ const FrameworkSelectorList = ({ frameworks, isSelected, select }: Props) => {
         <div key={item.name}>
           <input
             className="form-check-input"
-            id={"inp-" + item.name + "-" + item.type}
+            id={`inp-${item.name}-${item.type}`}
             type="checkbox"
             onChange={(evt) => select(item, evt.target.checked)}
             checked={isSelected(item)}
           />
           <label
-            htmlFor={"inp-" + item.name + "-" + item.type}
+            htmlFor={`inp-${item.name}-${item.type}`}
             className="form-check-label"
           >
             {item.displayname}
