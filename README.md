@@ -60,15 +60,15 @@ There are currently ~60 framework entries in this repository. Installing (and ma
 
 ## 1.1 Prerequisites
 
-Have _node.js (>=v16.14.2)_ installed. If you want to do yourself a favour use nvm for that and install yarn. The benchmark has been tested with node vv16.14.2.
+Have _node.js (>=v20.8.0)_ installed. If you want to do yourself a favour use nvm for that. The benchmark has been tested with node v20.8.0.
 Please make sure that the following command work before trying to build:
 
 ```
 > npm
 npm -version
-8.5.0
+10.1.0
 > node --version
-v16.14.2
+v20.8.0
 ```
 
 ## 1.2 Downloading the pre-built binaries and starting the server
