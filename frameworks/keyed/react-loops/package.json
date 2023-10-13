@@ -5,7 +5,7 @@
   "description": "React demo",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:react-loops",
+    "frameworkVersionFromPackage": "react-loops",
     "frameworkHomeURL": "https://github.com/leebyron/react-loops"
   },
   "scripts": {
