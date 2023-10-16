@@ -118,13 +118,10 @@ const App = () => {
     },
     clear = () => (data.value = []),
     remove = (id) => {
-      // data.value = data.value.filter((d) => d.id !== id);
-
       const idx = data.value.findIndex((d) => d.id === id);
       data.value = [...data.value.slice(0, idx), ...data.value.slice(idx + 1)];
     },
     select = (id) => {
-      // console.log('select', id)
       selected.value = id;
     };
 
