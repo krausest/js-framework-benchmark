@@ -113,6 +113,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
 
   let args = [`--window-size=${window_width},${window_height}`,'--js-flags=--expose-gc' ];
   if (benchmarkOptions.headless) args.push('--headless=new');
+  args.push("--enable-benchmarking");
 
   const browser = await puppeteer.launch({
     headless: false,

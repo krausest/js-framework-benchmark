@@ -2,6 +2,7 @@ import React from "react";
 import { TableResultGeommeanEntry, T_SORT_BY_GEOMMEAN } from "../../Common";
 
 interface Props {
+  weighted: boolean;
   geomMean: Array<TableResultGeommeanEntry | null>;
   currentSortKey: string;
   sortBy: (name: string) => void;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const GeomMeanRow = ({
+  weighted,
   geomMean,
   currentSortKey,
   sortBy,
@@ -28,7 +30,7 @@ const GeomMeanRow = ({
           }`}
           onClick={handleSort(sortbyGeommeanEnum)}
         >
-          geometric mean
+          {weighted ? 'weighted ' : ''} geometric mean
         </button>
         of all factors in the table
       </th>

@@ -2,7 +2,7 @@ import yargs from 'yargs';
 import { BenchmarkOptions, BENCHMARK_RUNNER, config, ErrorAndWarning, FrameworkData, initializeFrameworks } from "./common.js";
 import { fork } from "child_process";
 import * as fs from "fs";
-import { BenchmarkInfo, benchmarkInfos, BenchmarkType, CPUBenchmarkInfo, CPUBenchmarkResult, MemBenchmarkInfo, StartupBenchmarkInfo } from "./benchmarksCommon.js";
+import { BenchmarkInfo, benchmarkInfos, BenchmarkType, CPUBenchmarkInfo, cpuBenchmarkInfosArray, CPUBenchmarkResult, MemBenchmarkInfo, StartupBenchmarkInfo } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
 import { writeResults } from "./writeResults.js";
 import { PlausibilityCheck, parseCPUTrace } from './timeline.js';
@@ -117,8 +117,7 @@ async function runBenchmakLoop(
   let count = 0;
 
   if (benchmarkInfo.type == BenchmarkType.CPU) {
-    count = benchmarkOptions.numIterationsForCPUBenchmarks;
-    // FIXME
+    count = benchmarkOptions.numIterationsForCPUBenchmarks + benchmarkInfo.additionalNumberOfRuns;
     benchmarkOptions.batchSize = config.ALLOW_BATCHING && benchmarkInfo.allowBatching ? count : 1;
   } else if (benchmarkInfo.type == BenchmarkType.MEM) {
     count = benchmarkOptions.numIterationsForMemBenchmarks;
@@ -153,7 +152,7 @@ async function runBenchmakLoop(
   if (benchmarkInfo.type == BenchmarkType.CPU) {
     console.log("CPU results before: ", results);
     (results as CPUBenchmarkResult[]).sort((a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total);
-    results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
+    // results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
     // console.log("CPU results after: ", results)
   }
 
@@ -325,7 +324,6 @@ console.log("benchmarkOptions", benchmarkOptions);
     runBenchmarksArgs.some((name) => b.id.toLowerCase().indexOf(name) > -1)
   );
   
-  
   let runFrameworks: FrameworkData[];
   let matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
@@ -339,6 +337,9 @@ console.log("benchmarkOptions", benchmarkOptions);
     benchmarkOptions.numIterationsForStartupBenchmark = 1,  
     config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT = 0;
     config.EXIT_ON_ERROR = true;
+    cpuBenchmarkInfosArray.forEach((b) => {
+      b.additionalNumberOfRuns = 0;
+    })
     console.log('Using smoketest config ', JSON.stringify(config));
   }
   if (config.BENCHMARK_RUNNER == BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME) {

@@ -360,9 +360,10 @@ export class ResultTableData {
       const geomMean = this.frameworks.map((framework, idx) => {
         const resultsForFramework = results.map((arr) => arr[idx]);
         return this.computeGeometricMean(
+          type,
           framework,
           benchmarks,
-          resultsForFramework,
+          resultsForFramework
         );
       });
       const comparison = this.frameworks.map((framework, idx) => {
@@ -370,7 +371,7 @@ export class ResultTableData {
         return this.computeComparison(
           framework,
           benchmarks,
-          resultsForFramework,
+          resultsForFramework
         );
       });
 
@@ -467,19 +468,26 @@ export class ResultTableData {
   }
 
   computeGeometricMean(
+    type: BenchmarkType,
     framework: Framework,
-    benchmarksCPU: Array<Benchmark>,
-    resultsCPUForFramework: Array<TableResultValueEntry | null>,
+    benchmarks: Array<Benchmark>,
+    resultsForFramework: Array<TableResultValueEntry | null>,
   ): TableResultGeommeanEntry {
-    let count = 0.0;
-    let gMean = 1.0;
-    for (const r of resultsCPUForFramework) {
-      if (r === null) continue;
-      gMean *= r.factor;
-      count++;
+    let benchmarkWeights: Array<number>;
+    if (type == BenchmarkType.CPU) {
+      benchmarkWeights = [0.64280248137063,0.5607178150466176,0.5643800750716564,0.1925635870170522,0.13200612879341714,0.5277091212292658,0.5644449600965534,0.5508359820582848,0.4225836631419211];
+    } else {
+      benchmarkWeights = new Array(benchmarks.length).fill(1);
     }
 
-    const value = Math.pow(gMean, 1 / count);
+    let gMean = 0.0;
+    resultsForFramework.forEach((r,idx) => {
+        if (r !== null && !isNaN(r.factor)) {
+            gMean += benchmarkWeights[idx] * Math.log(r.factor);
+        }
+    });
+    const value = Math.exp(gMean / benchmarkWeights.reduce((a,b) => a+b, 0))
+
     return this.compareWith
       ? new TableResultGeommeanEntry(
           framework.name,
@@ -608,16 +616,15 @@ export class ResultTableData {
       let statisticalResult = undefined;
       let statisticalCol = undefined;
       const compareWithMean = compareWithResultsValues.mean;
-      const stdDev = compareWithResultsValues.standardDeviation || 0;
-      const compareWithResultsStdDev =
-        compareWithResultsValues.standardDeviation || 0;
+      const stdDev = resultValues.standardDeviation || 0;
+      const compareWithResultsStdDev = compareWithResultsValues.standardDeviation || 0;
 
       const x1 = resultValues.mean;
       const x2 = compareWithMean;
       const s1_2 = stdDev * stdDev;
       const s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
-      const n1 = 10;
-      const n2 = 10;
+      const n1 = compareWithResultsValues.values.length;
+      const n2 = resultValues.values.length;
       const ny =
         Math.pow(s1_2 / n1 + s2_2 / n2, 2) /
         ((s1_2 * s1_2) / (n1 * n1 * (n1 - 1)) +

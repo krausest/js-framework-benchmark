@@ -56,6 +56,7 @@ const StartupResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
               />
             ))}
             <GeomMeanRow
+              weighted={false}
               currentSortKey={currentSortKey}
               sortBy={sortBy}
               geomMean={resultsStartup.geomMean}
