@@ -123,9 +123,8 @@ const run = () => {
   select = (id) => {
     selected.value = id;
   };
-  
-const App = () => {
 
+const App = () => {
   return (
     <div class="container">
       <div class="jumbotron">
@@ -147,29 +146,20 @@ const App = () => {
       </div>
       <table class="table table-hover table-striped test-data">
         <tbody>
-          {data.value.map((row) => {
-            let rowId = row.id;
-            return (
-              <tr key={rowId} class={selected.value === rowId ? "danger" : ""}>
-                <td class="col-md-1" textContent={rowId} />
-                <td class="col-md-4">
-                  <a
-                    onClick={() => select(rowId)}
-                    textContent={row.label.value}
-                  />
-                </td>
-                <td class="col-md-1">
-                  <a onClick={() => remove(rowId)}>
-                    <span
-                      class="glyphicon glyphicon-remove"
-                      aria-hidden="true"
-                    />
-                  </a>
-                </td>
-                <td class="col-md-6" />
-              </tr>
-            );
-          })}
+          {data.value.map((row) => (
+            <tr key={row.id} class={selected.value === row.id ? "danger" : ""}>
+              <td class="col-md-1" textContent={row.id} />
+              <td class="col-md-4">
+                <a onClick={() => select(row.id)} textContent={row.label} />
+              </td>
+              <td class="col-md-1">
+                <a onClick={() => remove(row.id)}>
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true" />
+                </a>
+              </td>
+              <td class="col-md-6" />
+            </tr>
+          ))}
         </tbody>
       </table>
       <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
