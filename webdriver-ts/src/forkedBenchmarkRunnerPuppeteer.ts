@@ -59,17 +59,11 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
 
     console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
     let browser : Browser = null;
-    let page : Page = null;
     try {
         browser = await startBrowser(benchmarkOptions);
-        page = await browser.newPage();
-        // if (config.LOG_DETAILS) {
-            page.on('console', (msg) => {
-                for (let i = 0; i < msg.args().length; ++i)
-                console.log(`BROWSER: ${msg.args()[i]}`);
-            });
-        // }
         for (let i = 0; i <benchmarkOptions.batchSize; i++) {
+            const page = await browser.newPage();
+            page.on("console", (msg) => console.log('BROWSER:', ...msg.args()));
             try {
               await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle0"});
             } catch (ex) {
@@ -139,6 +133,9 @@ async function runCPUBenchmark(framework: FrameworkData, benchmark: CPUBenchmark
             if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
             results.push({total:result.duration, script: resultScript});
             console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(result)}`);
+
+            await page.close();
+
             if (result.duration < 0)
                 throw new Error(`duration ${result} < 0`);                
         }
