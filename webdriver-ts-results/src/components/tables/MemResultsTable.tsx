@@ -56,6 +56,7 @@ const MemResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
               />
             ))}
             <GeomMeanRow
+              weighted={false}
               currentSortKey={currentSortKey}
               sortBy={sortBy}
               geomMean={resultsMEM.geomMean}

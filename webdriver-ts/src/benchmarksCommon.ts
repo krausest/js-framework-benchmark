@@ -18,6 +18,7 @@ export interface CPUBenchmarkInfo extends BenchmarkInfoBase {
   allowBatching: boolean;
   type: BenchmarkType.CPU;
   layoutEventRequired: boolean;
+  additionalNumberOfRuns: number;
 }
 
 export interface MemBenchmarkInfo extends BenchmarkInfoBase {
@@ -83,12 +84,11 @@ export type TBenchmarkID =
   | typeof BENCHMARK_30;
 
 const throttlingFactors: {[idx:string]: number} = {
-  [BENCHMARK_03]: 16,
-  [BENCHMARK_04]: 16,
+  [BENCHMARK_03]: 4,
+  [BENCHMARK_04]: 4,
   [BENCHMARK_05]: 4,
-  [BENCHMARK_06]: 4,
-  [BENCHMARK_08]: 2,
-  [BENCHMARK_09]: 8
+  [BENCHMARK_06]: 2,
+  [BENCHMARK_09]: 4
 };
 
 export function slowDownNote(throttleCPU: number|undefined): string {
@@ -107,7 +107,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   " warmup runs)." + slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  layoutEventRequired: true
+  layoutEventRequired: true,
+  additionalNumberOfRuns: 0
 },
 {
   id: BENCHMARK_02,
@@ -116,7 +117,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
               " warmup runs)." + slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  layoutEventRequired: true
+  layoutEventRequired: true,
+  additionalNumberOfRuns: 0
 },
 {
   id: BENCHMARK_03,
@@ -125,7 +127,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
               slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  layoutEventRequired: true
+  layoutEventRequired: true,
+  additionalNumberOfRuns: 0
 },
 {
   id: BENCHMARK_04,
@@ -135,7 +138,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
               slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  layoutEventRequired: false
+  layoutEventRequired: false,
+  additionalNumberOfRuns: 10
 },
 {
   id: BENCHMARK_05,
@@ -145,7 +149,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
                 slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  layoutEventRequired: true
+  layoutEventRequired: true,
+  additionalNumberOfRuns: 0
 },
 {
   id: BENCHMARK_06,
@@ -154,7 +159,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
               slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  layoutEventRequired: true
+  layoutEventRequired: true,
+  additionalNumberOfRuns: 0
 },
 {
   id: BENCHMARK_07,
@@ -162,7 +168,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     description: (throttleCPU: number|undefined) => "creating 10,000 rows. (" +config.WARMUP_COUNT +" warmup runs with 1k rows)." + slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
     allowBatching: true,
-    layoutEventRequired: true
+    layoutEventRequired: true,
+    additionalNumberOfRuns: 0
   },
 {
   id: BENCHMARK_08,
@@ -170,7 +177,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   description: (throttleCPU: number|undefined) => "appending 1,000 to a table of 10,000 rows." + slowDownNote(throttleCPU),
   type: BenchmarkType.CPU,
   allowBatching: true,
-  layoutEventRequired: true
+  layoutEventRequired: true,
+  additionalNumberOfRuns: 0
 },
 {
   id: BENCHMARK_09,
@@ -178,7 +186,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   description: (throttleCPU: number|undefined) => "clearing a table with 1,000 rows." + slowDownNote(throttleCPU)+ " (" +config.WARMUP_COUNT +" warmup runs).",
   type: BenchmarkType.CPU,
   allowBatching: true,
-  layoutEventRequired: true
+  layoutEventRequired: true,
+  additionalNumberOfRuns: 0
 }
 ];
 

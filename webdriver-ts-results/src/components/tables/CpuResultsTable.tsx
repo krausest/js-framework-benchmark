@@ -109,6 +109,7 @@ const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
               />
             ))}
             <GeomMeanRow
+              weighted={true}
               currentSortKey={currentSortKey}
               sortBy={sortBy}
               geomMean={resultsCPU.geomMean}
