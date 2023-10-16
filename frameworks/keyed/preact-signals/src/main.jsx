@@ -93,37 +93,38 @@ const Button = ({ id, text, fn }) => (
 const data = signal([]);
 const selected = signal(null);
 
-const App = () => {
-  const run = () => {
-      data.value = buildData(1000);
-    },
-    runLots = () => (data.value = buildData(10000)),
-    add = () => {
-      data.value = data.value.concat(buildData(1000));
-    },
-    update = () =>
-      batch(() => {
-        for (let i = 0, d = data.value, len = d.length; i < len; i += 10) {
-          d[i].label.value = d[i].label.value + " !!!";
-        }
-      }),
-    swapRows = () => {
-      const d = data.value.slice();
-      if (d.length > 998) {
-        let tmp = d[1];
-        d[1] = d[998];
-        d[998] = tmp;
-        data.value = d;
+const run = () => {
+    data.value = buildData(1000);
+  },
+  runLots = () => (data.value = buildData(10000)),
+  add = () => {
+    data.value = data.value.concat(buildData(1000));
+  },
+  update = () =>
+    batch(() => {
+      for (let i = 0, d = data.value, len = d.length; i < len; i += 10) {
+        d[i].label.value = d[i].label.value + " !!!";
       }
-    },
-    clear = () => (data.value = []),
-    remove = (id) => {
-      const idx = data.value.findIndex((d) => d.id === id);
-      data.value = [...data.value.slice(0, idx), ...data.value.slice(idx + 1)];
-    },
-    select = (id) => {
-      selected.value = id;
-    };
+    }),
+  swapRows = () => {
+    const d = data.value.slice();
+    if (d.length > 998) {
+      let tmp = d[1];
+      d[1] = d[998];
+      d[998] = tmp;
+      data.value = d;
+    }
+  },
+  clear = () => (data.value = []),
+  remove = (id) => {
+    const idx = data.value.findIndex((d) => d.id === id);
+    data.value = [...data.value.slice(0, idx), ...data.value.slice(idx + 1)];
+  },
+  select = (id) => {
+    selected.value = id;
+  };
+  
+const App = () => {
 
   return (
     <div class="container">
