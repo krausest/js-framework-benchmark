@@ -616,16 +616,15 @@ export class ResultTableData {
       let statisticalResult = undefined;
       let statisticalCol = undefined;
       const compareWithMean = compareWithResultsValues.mean;
-      const stdDev = compareWithResultsValues.standardDeviation || 0;
-      const compareWithResultsStdDev =
-        compareWithResultsValues.standardDeviation || 0;
+      const stdDev = resultValues.standardDeviation || 0;
+      const compareWithResultsStdDev = compareWithResultsValues.standardDeviation || 0;
 
       const x1 = resultValues.mean;
       const x2 = compareWithMean;
       const s1_2 = stdDev * stdDev;
       const s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
-      const n1 = 10;
-      const n2 = 10;
+      const n1 = compareWithResultsValues.values.length;
+      const n2 = resultValues.values.length;
       const ny =
         Math.pow(s1_2 / n1 + s2_2 / n2, 2) /
         ((s1_2 * s1_2) / (n1 * n1 * (n1 - 1)) +
