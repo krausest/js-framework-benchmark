@@ -1,4 +1,4 @@
-import s2 from './main.min.js'
+import s2 from '../node_modules/s2-engine/dist/main.mjs';
 //s2.debug=true
 cleanupTemplates();
 
@@ -49,7 +49,7 @@ function select () {
   this.cls = 'danger';
 }
 
-const [node, proxy] = s2(state, document.querySelector('#main'))
+const [proxy, node] = s2(state, document.querySelector('#main'))
 document.body.appendChild(node)
 window.p = proxy
 
