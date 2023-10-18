@@ -76,6 +76,7 @@ const buildData = (count) => {
     });
   return data;
 };
+
 const eachComponent = each(
   "table-rows",
   ({ importedData }) => importedData.rows,
@@ -86,12 +87,10 @@ const eachComponent = each(
     <td class='col-md-6'></td>
   </tr>`,
   {
-    values: ({ row, importedData }) => {
-      return {
-        selected: {
-          danger: row.id === importedData.selected,
-        },
-      };
+    values: {
+      selected: {
+        "row.id === importedData.selected": "danger",
+      },
     },
     valueName: "row",
     functionName: "updateTable",

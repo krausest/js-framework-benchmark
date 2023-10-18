@@ -93,6 +93,8 @@ async function main() {
             let vals = data.values[key].values.filter((v) => v != null);
             values[key] = vals;
             if (vals.some((v) => v == null))
+              console.log(`Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`);
+            if (benchmarkInfo.type === BenchmarkType.CPU && vals.length != (config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + benchmarkInfo.additionalNumberOfRuns))
               console.log(
                 `Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`,
               );

@@ -17,6 +17,7 @@ import {
   CPUBenchmarkResult,
   MemBenchmarkInfo,
   StartupBenchmarkInfo,
+  cpuBenchmarkInfosArray,
 } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
 import { writeResults } from "./writeResults.js";
@@ -159,10 +160,11 @@ async function runBenchmakLoop(
   let count = 0;
 
   if (benchmarkInfo.type == BenchmarkType.CPU) {
-    count = benchmarkOptions.numIterationsForCPUBenchmarks;
-    // FIXME
+    count =
+      benchmarkOptions.numIterationsForCPUBenchmarks +
+      benchmarkInfo.additionalNumberOfRuns;
     benchmarkOptions.batchSize =
-      config.ALLOW_BATCHING && benchmarkInfo.allowBatching ? count : 1;
+      ALLOW_BATCHING && benchmarkInfo.allowBatching ? count : 1;
   } else if (benchmarkInfo.type == BenchmarkType.MEM) {
     count = benchmarkOptions.numIterationsForMemBenchmarks;
     benchmarkOptions.batchSize = 1;
@@ -216,7 +218,7 @@ async function runBenchmakLoop(
     (results as CPUBenchmarkResult[]).sort(
       (a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total,
     );
-    results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
+    // results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
     // console.log("CPU results after: ", results)
   }
 
@@ -428,7 +430,7 @@ async function main() {
         b.type == BenchmarkType.CPU) &&
       runBenchmarksArgs.some((name) => b.id.toLowerCase().includes(name)),
   );
-
+  
   let runFrameworks: FrameworkData[];
   let matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length == 0 ||
@@ -449,11 +451,10 @@ async function main() {
       (benchmarkOptions.numIterationsForStartupBenchmark = 1),
       (config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT = 0);
     config.EXIT_ON_ERROR = true;
-    console.log("Using smoketest config ", JSON.stringify(config));
-  }
-  if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER_AFTERFRAME) {
-    benchmarkOptions.resultsDirectory =
-      "results_client_" + benchmarkOptions.browser;
+    cpuBenchmarkInfosArray.forEach((b) => {
+      b.additionalNumberOfRuns = 0;
+    })
+    console.log('Using smoketest config ', JSON.stringify(config));
   }
   if (!fs.existsSync(benchmarkOptions.resultsDirectory))
     fs.mkdirSync(benchmarkOptions.resultsDirectory);

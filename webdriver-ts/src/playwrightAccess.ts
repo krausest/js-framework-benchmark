@@ -129,7 +129,11 @@ function browserPath(benchmarkOptions: BenchmarkOptions) {
 export async function startBrowser(
   benchmarkOptions: BenchmarkOptions,
 ): Promise<Browser> {
-  let args = ["--window-size=1000,800", "--js-flags=--expose-gc"];
+  const args = [
+    "--window-size=1000,800",
+    "--js-flags=--expose-gc",
+    "--enable-benchmarking",
+  ];
   if (benchmarkOptions.headless) args.push("--headless=new");
   const browser = await chromium.launch({
     args,

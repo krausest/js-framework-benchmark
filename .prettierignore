@@ -12,7 +12,6 @@ output/
 
 # Webdriver-ts
 webdriver-ts/results.json
-webdriver-ts/results/
 webdriver-ts/traces/
 
 # Webdriver-ts-results

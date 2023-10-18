@@ -18,6 +18,7 @@ export interface CPUBenchmarkInfo extends BenchmarkInfoBase {
   allowBatching: boolean;
   type: BenchmarkType.CPU;
   layoutEventRequired: boolean;
+  additionalNumberOfRuns: number;
 }
 
 export interface MemBenchmarkInfo extends BenchmarkInfoBase {
@@ -86,12 +87,11 @@ export type BenchmarkId =
   | typeof Benchmark._30;
 
 const throttlingFactors: { [idx: string]: number } = {
-  [Benchmark._03]: 16,
-  [Benchmark._04]: 16,
+  [Benchmark._03]: 4,
+  [Benchmark._04]: 4,
   [Benchmark._05]: 4,
-  [Benchmark._06]: 4,
-  [Benchmark._08]: 2,
-  [Benchmark._09]: 8,
+  [Benchmark._06]: 2,
+  [Benchmark._09]: 4,
 };
 
 export function slowDownNote(throttleCPU: number | undefined): string {
@@ -118,6 +118,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
+    additionalNumberOfRuns: 0,
   },
   {
     id: Benchmark._02,
@@ -130,6 +131,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
+    additionalNumberOfRuns: 0,
   },
   {
     id: Benchmark._03,
@@ -140,6 +142,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
+    additionalNumberOfRuns: 0,
   },
   {
     id: Benchmark._04,
@@ -152,6 +155,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: false,
+    additionalNumberOfRuns: 10,
   },
   {
     id: Benchmark._05,
@@ -164,6 +168,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
+    additionalNumberOfRuns: 0,
   },
   {
     id: Benchmark._06,
@@ -176,6 +181,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
+    additionalNumberOfRuns: 0,
   },
   {
     id: Benchmark._07,
@@ -188,6 +194,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
+    additionalNumberOfRuns: 0,
   },
   {
     id: Benchmark._08,
@@ -197,6 +204,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
+    additionalNumberOfRuns: 0,
   },
   {
     id: Benchmark._09,
@@ -210,6 +218,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
+    additionalNumberOfRuns: 0,
   },
 ];
 
@@ -264,19 +273,19 @@ export const startupBenchmarkInfosArray: Array<StartupMainBenchmarkInfo> = [
 ];
 
 export const cpuBenchmarkInfos: { [idx: string]: CPUBenchmarkInfo } = {};
-for (let bi of cpuBenchmarkInfosArray) {
+for (const bi of cpuBenchmarkInfosArray) {
   cpuBenchmarkInfos[bi.id] = bi;
 }
 
 export const memBenchmarkInfos: { [idx: string]: MemBenchmarkInfo } = {};
-for (let bi of memBenchmarkInfosArray) {
+for (const bi of memBenchmarkInfosArray) {
   memBenchmarkInfos[bi.id] = bi;
 }
 
 export const startupBenchmarkInfos: {
   [idx: string]: StartupMainBenchmarkInfo;
 } = {};
-for (let bi of startupBenchmarkInfosArray) {
+for (const bi of startupBenchmarkInfosArray) {
   startupBenchmarkInfos[bi.id] = bi;
 }
 
