@@ -1,8 +1,15 @@
 // import { testTextContains, testTextContainsJS, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath } from './webdriverAccess'
 
 import { Browser, Page } from "playwright-core";
-import * as benchmarksCommon from "./benchmarksCommon.js";
-import { BenchmarkType } from "./benchmarksCommon.js";
+import {
+  Benchmark,
+  BenchmarkImpl,
+  BenchmarkType,
+  CPUBenchmarkInfo,
+  MemBenchmarkInfo,
+  cpuBenchmarkInfos,
+  memBenchmarkInfos,
+} from "./benchmarksCommon.js";
 import { BenchmarkOptions, config, FrameworkData } from "./common.js";
 import {
   checkCountForSelector,
@@ -13,16 +20,16 @@ import {
   clickElement,
 } from "./playwrightAccess.js";
 
-export abstract class CPUBenchmarkPlaywright implements benchmarksCommon.BenchmarkImpl {
+export abstract class CPUBenchmarkPlaywright implements BenchmarkImpl {
   type = BenchmarkType.CPU;
-  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmarkInfo) {}
+  constructor(public benchmarkInfo: CPUBenchmarkInfo) {}
   abstract init(browser: Browser, page: Page, framework: FrameworkData): Promise<any>;
   abstract run(browser: Browser, page: Page, framework: FrameworkData): Promise<any>;
 }
 
-export abstract class MemBenchmarkPlaywright implements benchmarksCommon.BenchmarkImpl {
+export abstract class MemBenchmarkPlaywright implements BenchmarkImpl {
   type = BenchmarkType.MEM;
-  constructor(public benchmarkInfo: benchmarksCommon.MemBenchmarkInfo) {}
+  constructor(public benchmarkInfo: MemBenchmarkInfo) {}
   abstract init(browser: Browser, page: Page, framework: FrameworkData): Promise<any>;
   abstract run(browser: Browser, page: Page, framework: FrameworkData): Promise<any>;
 }
@@ -31,7 +38,7 @@ export type BenchmarkPlaywright = CPUBenchmarkPlaywright | MemBenchmarkPlaywrigh
 
 export let benchRun = new (class extends CPUBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_01]);
+    super(cpuBenchmarkInfos[Benchmark._01]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -58,7 +65,7 @@ export let benchRun = new (class extends CPUBenchmarkPlaywright {
 
 export const benchReplaceAll = new (class extends CPUBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_02]);
+    super(cpuBenchmarkInfos[Benchmark._02]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -79,7 +86,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkPlaywright {
 
 export const benchUpdate = new (class extends CPUBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_03]);
+    super(cpuBenchmarkInfos[Benchmark._03]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -106,7 +113,7 @@ export const benchUpdate = new (class extends CPUBenchmarkPlaywright {
 
 export const benchSelect = new (class extends CPUBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_04]);
+    super(cpuBenchmarkInfos[Benchmark._04]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -126,7 +133,7 @@ export const benchSelect = new (class extends CPUBenchmarkPlaywright {
 
 export const benchSwapRows = new (class extends CPUBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_05]);
+    super(cpuBenchmarkInfos[Benchmark._05]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -147,7 +154,7 @@ export const benchSwapRows = new (class extends CPUBenchmarkPlaywright {
 
 export const benchRemove = new (class extends CPUBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_06]);
+    super(cpuBenchmarkInfos[Benchmark._06]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -187,7 +194,7 @@ export const benchRemove = new (class extends CPUBenchmarkPlaywright {
 
 export const benchRunBig = new (class extends CPUBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_07]);
+    super(cpuBenchmarkInfos[Benchmark._07]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -210,7 +217,7 @@ export const benchRunBig = new (class extends CPUBenchmarkPlaywright {
 
 export const benchAppendToManyRows = new (class extends CPUBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_08]);
+    super(cpuBenchmarkInfos[Benchmark._08]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -225,7 +232,7 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkPlaywright {
 
 export const benchClear = new (class extends CPUBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_09]);
+    super(cpuBenchmarkInfos[Benchmark._09]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -254,7 +261,7 @@ export const benchClear = new (class extends CPUBenchmarkPlaywright {
 
 export const benchReadyMemory = new (class extends MemBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_21]);
+    super(memBenchmarkInfos[Benchmark._21]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -266,7 +273,7 @@ export const benchReadyMemory = new (class extends MemBenchmarkPlaywright {
 
 export const benchRunMemory = new (class extends MemBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_22]);
+    super(memBenchmarkInfos[Benchmark._22]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -279,7 +286,7 @@ export const benchRunMemory = new (class extends MemBenchmarkPlaywright {
 
 export const benchRun10KMemory = new (class extends MemBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_26]);
+    super(memBenchmarkInfos[Benchmark._26]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#runlots");
@@ -292,7 +299,7 @@ export const benchRun10KMemory = new (class extends MemBenchmarkPlaywright {
 
 export const benchUpdate5Memory = new (class extends MemBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_23]);
+    super(memBenchmarkInfos[Benchmark._23]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
@@ -312,7 +319,7 @@ export const benchUpdate5Memory = new (class extends MemBenchmarkPlaywright {
 
 // export const benchReplace5Memory = new (class extends MemBenchmarkPlaywright {
 //   constructor() {
-//     super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_24]);
+//     super(memBenchmarkInfos[Benchmark._24]);
 //   }
 //   async init(browser: Browser, page: Page) {
 //     await checkElementExists(page, "#run");
@@ -327,7 +334,7 @@ export const benchUpdate5Memory = new (class extends MemBenchmarkPlaywright {
 
 export const benchCreateClear5Memory = new (class extends MemBenchmarkPlaywright {
   constructor() {
-    super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_25]);
+    super(memBenchmarkInfos[Benchmark._25]);
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");

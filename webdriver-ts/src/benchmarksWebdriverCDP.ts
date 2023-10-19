@@ -1,6 +1,10 @@
 import { WebDriver } from "selenium-webdriver";
-import * as benchmarksCommon from "./benchmarksCommon.js";
-import { BenchmarkType } from "./benchmarksCommon.js";
+import {
+  BenchmarkType,
+  Benchmark,
+  cpuBenchmarkInfos,
+  CPUBenchmarkInfo,
+} from "./benchmarksCommon.js";
 import { BenchmarkOptions, config, FrameworkData } from "./common.js";
 import {
   clickElementById,
@@ -17,14 +21,14 @@ const SHORT_TIMEOUT = 20 * 1000;
 
 export abstract class CPUBenchmarkWebdriverCDP {
   type = BenchmarkType.CPU;
-  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmarkInfo) {}
+  constructor(public benchmarkInfo: CPUBenchmarkInfo) {}
   abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
   abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
 }
 
 export const benchRun = new (class extends CPUBenchmarkWebdriverCDP {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_01]);
+    super(cpuBenchmarkInfos[Benchmark._01]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -55,7 +59,7 @@ export const benchRun = new (class extends CPUBenchmarkWebdriverCDP {
 
 export const benchReplaceAll = new (class extends CPUBenchmarkWebdriverCDP {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_02]);
+    super(cpuBenchmarkInfos[Benchmark._02]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -78,7 +82,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkWebdriverCDP {
 
 export const benchUpdate = new (class extends CPUBenchmarkWebdriverCDP {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_03]);
+    super(cpuBenchmarkInfos[Benchmark._03]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -109,7 +113,7 @@ export const benchUpdate = new (class extends CPUBenchmarkWebdriverCDP {
 
 export const benchSelect = new (class extends CPUBenchmarkWebdriverCDP {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_04]);
+    super(cpuBenchmarkInfos[Benchmark._04]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -124,7 +128,7 @@ export const benchSelect = new (class extends CPUBenchmarkWebdriverCDP {
 
 export const benchSwapRows = new (class extends CPUBenchmarkWebdriverCDP {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_05]);
+    super(cpuBenchmarkInfos[Benchmark._05]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -145,7 +149,7 @@ export const benchSwapRows = new (class extends CPUBenchmarkWebdriverCDP {
 
 export const benchRemove = new (class extends CPUBenchmarkWebdriverCDP {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_06]);
+    super(cpuBenchmarkInfos[Benchmark._06]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -188,7 +192,7 @@ export const benchRemove = new (class extends CPUBenchmarkWebdriverCDP {
 
 export const benchRunBig = new (class extends CPUBenchmarkWebdriverCDP {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_07]);
+    super(cpuBenchmarkInfos[Benchmark._07]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -213,7 +217,7 @@ export const benchRunBig = new (class extends CPUBenchmarkWebdriverCDP {
 
 export const benchAppendToManyRows = new (class extends CPUBenchmarkWebdriverCDP {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_08]);
+    super(cpuBenchmarkInfos[Benchmark._08]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -228,7 +232,7 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkWebdriverCDP
 
 export const benchClear = new (class extends CPUBenchmarkWebdriverCDP {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_09]);
+    super(cpuBenchmarkInfos[Benchmark._09]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);

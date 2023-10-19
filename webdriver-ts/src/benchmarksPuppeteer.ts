@@ -1,8 +1,15 @@
 // import { testTextContains, testTextContainsJS, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath } from './webdriverAccess'
 
 import { Page } from "puppeteer-core";
-import * as benchmarksCommon from "./benchmarksCommon.js";
-import { BenchmarkType } from "./benchmarksCommon.js";
+import {
+  BenchmarkType,
+  Benchmark,
+  memBenchmarkInfos,
+  cpuBenchmarkInfos,
+  CPUBenchmarkInfo,
+  BenchmarkImpl,
+  MemBenchmarkInfo,
+} from "./benchmarksCommon.js";
 import { BenchmarkOptions, config, FrameworkData } from "./common.js";
 import {
   checkCountForSelector,
@@ -13,16 +20,16 @@ import {
   clickElement,
 } from "./puppeteerAccess.js";
 
-export abstract class CPUBenchmarkPuppeteer implements benchmarksCommon.BenchmarkImpl {
+export abstract class CPUBenchmarkPuppeteer implements BenchmarkImpl {
   type = BenchmarkType.CPU;
-  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmarkInfo) {}
+  constructor(public benchmarkInfo: CPUBenchmarkInfo) {}
   abstract init(page: Page, framework: FrameworkData): Promise<any>;
   abstract run(page: Page, framework: FrameworkData): Promise<any>;
 }
 
-export abstract class MemBenchmarkPuppeteer implements benchmarksCommon.BenchmarkImpl {
+export abstract class MemBenchmarkPuppeteer implements BenchmarkImpl {
   type = BenchmarkType.MEM;
-  constructor(public benchmarkInfo: benchmarksCommon.MemBenchmarkInfo) {}
+  constructor(public benchmarkInfo: MemBenchmarkInfo) {}
   abstract init(page: Page, framework: FrameworkData): Promise<any>;
   abstract run(page: Page, framework: FrameworkData): Promise<any>;
 }
@@ -31,7 +38,7 @@ export type BenchmarkPuppeteer = CPUBenchmarkPuppeteer | MemBenchmarkPuppeteer;
 
 export let benchRun = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_01]);
+    super(cpuBenchmarkInfos[Benchmark._01]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -58,7 +65,7 @@ export let benchRun = new (class extends CPUBenchmarkPuppeteer {
 
 export const benchReplaceAll = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_02]);
+    super(cpuBenchmarkInfos[Benchmark._02]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -83,7 +90,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkPuppeteer {
 
 export const benchUpdate = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_03]);
+    super(cpuBenchmarkInfos[Benchmark._03]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -110,7 +117,7 @@ export const benchUpdate = new (class extends CPUBenchmarkPuppeteer {
 
 export const benchSelect = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_04]);
+    super(cpuBenchmarkInfos[Benchmark._04]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -134,7 +141,7 @@ export const benchSelect = new (class extends CPUBenchmarkPuppeteer {
 
 export const benchSwapRows = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_05]);
+    super(cpuBenchmarkInfos[Benchmark._05]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -159,7 +166,7 @@ export const benchSwapRows = new (class extends CPUBenchmarkPuppeteer {
 
 export const benchRemove = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_06]);
+    super(cpuBenchmarkInfos[Benchmark._06]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -204,7 +211,7 @@ export const benchRemove = new (class extends CPUBenchmarkPuppeteer {
 })();
 export const benchRunBig = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_07]);
+    super(cpuBenchmarkInfos[Benchmark._07]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -227,7 +234,7 @@ export const benchRunBig = new (class extends CPUBenchmarkPuppeteer {
 
 export const benchAppendToManyRows = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_08]);
+    super(cpuBenchmarkInfos[Benchmark._08]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -242,7 +249,7 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkPuppeteer {
 
 export const benchClear = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_09]);
+    super(cpuBenchmarkInfos[Benchmark._09]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -271,7 +278,7 @@ export const benchClear = new (class extends CPUBenchmarkPuppeteer {
 
 export const benchReadyMemory = new (class extends MemBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_21]);
+    super(memBenchmarkInfos[Benchmark._21]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -283,7 +290,7 @@ export const benchReadyMemory = new (class extends MemBenchmarkPuppeteer {
 
 export const benchRunMemory = new (class extends MemBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_22]);
+    super(memBenchmarkInfos[Benchmark._22]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -296,7 +303,7 @@ export const benchRunMemory = new (class extends MemBenchmarkPuppeteer {
 
 export const benchRun10KMemory = new (class extends MemBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_26]);
+    super(memBenchmarkInfos[Benchmark._26]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#runlots");
@@ -309,7 +316,7 @@ export const benchRun10KMemory = new (class extends MemBenchmarkPuppeteer {
 
 export const benchUpdate5Memory = new (class extends MemBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_23]);
+    super(memBenchmarkInfos[Benchmark._23]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
@@ -330,7 +337,7 @@ export const benchUpdate5Memory = new (class extends MemBenchmarkPuppeteer {
 
 // export const benchReplace5Memory = new (class extends MemBenchmarkPuppeteer {
 //   constructor() {
-//     super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_24]);
+//     super(memBenchmarkInfos[Benchmark._24]);
 //   }
 //   async init(page: Page) {
 //     await checkElementExists(page, "pierce/#run");
@@ -345,7 +352,7 @@ export const benchUpdate5Memory = new (class extends MemBenchmarkPuppeteer {
 
 export const benchCreateClear5Memory = new (class extends MemBenchmarkPuppeteer {
   constructor() {
-    super(benchmarksCommon.memBenchmarkInfos[benchmarksCommon.BENCHMARK_25]);
+    super(memBenchmarkInfos[Benchmark._25]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
