@@ -4,7 +4,7 @@
   "description": "Benchmark for wasm-bindgen",
   "license": "ISC",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.2.47",
+    "frameworkVersion": "0.2.84",
     "frameworkHomeURL": "https://rustwasm.github.io/docs/wasm-bindgen/",
     "customURL": "/bundled-dist",
     "issues": [772, 1139]
