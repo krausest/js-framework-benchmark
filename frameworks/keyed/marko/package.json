@@ -3,7 +3,8 @@
   "description": "The default Marko starter app",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "marko",
-    "frameworkHomeURL": "https://markojs.com/"
+    "frameworkHomeURL": "https://markojs.com/",
+    "customURL": "/dist"
   },
   "version": "1.0.0",
   "type": "module",
