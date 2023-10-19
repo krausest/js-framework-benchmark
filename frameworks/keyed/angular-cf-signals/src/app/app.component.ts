@@ -59,7 +59,7 @@ const nouns = [
 
 interface Data {
   id: number;
-  label: WritableSignal<string>;
+  label: string;
 }
 
 @Component({
@@ -82,11 +82,9 @@ export class AppComponent {
     for (let i = 0; i < count; i++) {
       data[i] = {
         id: this.id++,
-        label: signal<string>(
-          `${adjectives[this.#random(adjectives.length)]} ${
-            colours[this.#random(colours.length)]
-          } ${nouns[this.#random(nouns.length)]}`,
-        ),
+        label: `${adjectives[this.#random(adjectives.length)]} ${
+          colours[this.#random(colours.length)]
+        } ${nouns[this.#random(nouns.length)]}`,
       };
     }
     return data;
@@ -103,13 +101,17 @@ export class AppComponent {
   }
 
   add() {
-    this.data.update(data=>[...data, ...this.buildData(1000)]);
+    this.data.update((data) => [...data, ...this.buildData(1000)]);
   }
 
   update() {
-    for (let i = 0, d = this.data(), len = d.length; i < len; i += 10) {
-      d[i].label.update((l) => l + " !!!");
-    }
+    this.data.update((data) => {
+      for (let i = 0; i < data.length; i += 10) {
+        const item = data[i];
+        data[i] = { ...item, label: item.label + " !!!" };
+      }
+      return data;
+    });
   }
 
   clear() {
@@ -132,9 +134,9 @@ export class AppComponent {
   }
 
   delete(id: number) {
-    this.data.update(d => {
-      const idx = d.findIndex(d => d.id === id);
+    this.data.update((d) => {
+      const idx = d.findIndex((d) => d.id === id);
       return [...d.slice(0, idx), ...d.slice(idx + 1)];
-    })
+    });
   }
 }
