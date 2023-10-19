@@ -2,11 +2,11 @@ import { readFile } from "fs/promises";
 import * as fs from "fs";
 import * as R from "ramda";
 import { BenchmarkType, CPUBenchmarkInfo, CPUBenchmarkResult } from "./benchmarksCommon.js";
-import { BenchmarkOptions, FrameworkData, TConfig, config } from "./common.js";
+import { BenchmarkOptions, FrameworkData, Config, config } from "./common.js";
 import { writeResults } from "./writeResults.js";
 import { start } from "repl";
 
-interface Timingresult {
+interface TimingResult {
   type: string;
   ts: number;
   dur?: number;
@@ -17,7 +17,7 @@ interface Timingresult {
 }
 
 export function extractRelevantEvents(entries: any[]) {
-  let filteredEvents: Timingresult[] = [];
+  let filteredEvents: TimingResult[] = [];
   let click_start = 0;
   let click_end = 0;
 
@@ -125,8 +125,8 @@ export function extractRelevantEvents(entries: any[]) {
   return filteredEvents;
 }
 
-async function fetchEventsFromPerformanceLog(fileName: string): Promise<Timingresult[]> {
-  let timingResults: Timingresult[] = [];
+async function fetchEventsFromPerformanceLog(fileName: string): Promise<TimingResult[]> {
+  let timingResults: TimingResult[] = [];
   let entries = [];
   do {
     let contents = await readFile(fileName, { encoding: "utf8" });
@@ -150,7 +150,7 @@ const traceJSEventNames = [
   "V8.Execute",
 ];
 
-export function extractRelevantJSEvents(config: TConfig, entries: any[]) {
+export function extractRelevantJSEvents(config: Config, entries: any[]) {
   let filteredEvents: any[] = [];
 
   entries.forEach((x) => {
@@ -175,10 +175,10 @@ export function extractRelevantJSEvents(config: TConfig, entries: any[]) {
 }
 
 async function fetchJSEventsFromPerformanceLog(
-  config: TConfig,
+  config: Config,
   fileName: string
-): Promise<Timingresult[]> {
-  let timingResults: Timingresult[] = [];
+): Promise<TimingResult[]> {
+  let timingResults: TimingResult[] = [];
   let entries = [];
   do {
     let contents = await readFile(fileName, { encoding: "utf8" });
@@ -191,7 +191,7 @@ async function fetchJSEventsFromPerformanceLog(
 }
 
 function type_eq(...requiredTypes: string[]) {
-  return (e: Timingresult) => requiredTypes.includes(e.type);
+  return (e: TimingResult) => requiredTypes.includes(e.type);
 }
 export interface CPUDurationResult {
   tsStart: number;
@@ -205,7 +205,7 @@ export interface CPUDurationResult {
   raf_long_delay: number;
 }
 
-function logEvents(events: Timingresult[], click: Timingresult) {
+function logEvents(events: TimingResult[], click: TimingResult) {
   events.forEach((e) => {
     console.log("event", e.type, `${e.ts - click.ts} - ${e.end - click.ts}`, e.evt);
   });
@@ -216,7 +216,7 @@ export async function computeResultsCPU(
   warning_logger: (...msg: any) => void = console.log
 ): Promise<CPUDurationResult> {
   const perfLogEvents = await fetchEventsFromPerformanceLog(fileName);
-  let events = R.sortBy((e: Timingresult) => e.end)(perfLogEvents);
+  let events = R.sortBy((e: TimingResult) => e.end)(perfLogEvents);
 
   // Find click event. This is the start of the benchmark
   let clicks = R.filter(type_eq("click"))(events);
@@ -228,24 +228,24 @@ export async function computeResultsCPU(
   let click = clicks[0];
   // The PID for the click event. We're dropping all events from other processes.
   let pid = click.pid;
-  let eventsDuringBenchmark = R.filter((e: Timingresult) => e.ts > click.end || e.type === "click")(
+  let eventsDuringBenchmark = R.filter((e: TimingResult) => e.ts > click.end || e.type === "click")(
     events
   );
   if (config.LOG_DETAILS) logEvents(eventsDuringBenchmark, click);
 
   let droppedNonMainProcessCommitEvents = false;
   let droppedNonMainProcessOtherEvents = false;
-  let eventsOnMainThreadDuringBenchmark = R.filter((e: Timingresult) => e.pid === pid)(
+  let eventsOnMainThreadDuringBenchmark = R.filter((e: TimingResult) => e.pid === pid)(
     eventsDuringBenchmark
   );
   if (eventsOnMainThreadDuringBenchmark.length !== eventsDuringBenchmark.length) {
-    let droppedEvents = R.filter((e: Timingresult) => e.pid !== pid)(events);
-    if (R.any((e: Timingresult) => e.type === "commit")(droppedEvents)) {
+    let droppedEvents = R.filter((e: TimingResult) => e.pid !== pid)(events);
+    if (R.any((e: TimingResult) => e.type === "commit")(droppedEvents)) {
       console.log("INFO: Dropping commit events from other processes", fileName);
       logEvents(droppedEvents, click);
       droppedNonMainProcessCommitEvents = true;
     }
-    if (R.any((e: Timingresult) => e.type !== "commit")(droppedEvents)) {
+    if (R.any((e: TimingResult) => e.type !== "commit")(droppedEvents)) {
       console.log("INFO: Dropping non-commit events from other processes", fileName);
       logEvents(droppedEvents, click);
       droppedNonMainProcessOtherEvents = true;
@@ -259,7 +259,7 @@ export async function computeResultsCPU(
   let startFromEvent = startFrom[startFrom.length - 1];
   if (config.LOG_DETAILS)
     console.log("DEBUG: searching for commit event after", startFromEvent, "for", fileName);
-  let commit = R.find((e: Timingresult) => e.ts > startFromEvent.end)(
+  let commit = R.find((e: TimingResult) => e.ts > startFromEvent.end)(
     R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark)
   );
   let allCommitsAfterClick = R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark);
@@ -285,10 +285,10 @@ export async function computeResultsCPU(
 
   let layouts = R.filter(type_eq("layout"))(eventsOnMainThreadDuringBenchmark);
   // Adjust bogus delay for requestAnimationFrame
-  let rafs_withinClick = R.filter((e: Timingresult) => e.ts >= click.ts && e.ts <= click.end)(
+  let rafs_withinClick = R.filter((e: TimingResult) => e.ts >= click.ts && e.ts <= click.end)(
     R.filter(type_eq("requestAnimationFrame"))(events)
   );
-  let fafs = R.filter((e: Timingresult) => e.ts >= click.ts && e.ts < commit.ts)(
+  let fafs = R.filter((e: TimingResult) => e.ts >= click.ts && e.ts < commit.ts)(
     R.filter(type_eq("fireAnimationFrame"))(events)
   );
 
@@ -427,14 +427,14 @@ export class PlausibilityCheck {
 
 export async function computeResultsJS(
   cpuTrace: CPUDurationResult,
-  config: TConfig,
+  config: Config,
   fileName: string
 ): Promise<number> {
   const totalDuration = cpuTrace;
 
   const perfLogEvents = await fetchJSEventsFromPerformanceLog(config, fileName);
 
-  const eventsWithin = R.filter<Timingresult>(
+  const eventsWithin = R.filter<TimingResult>(
     (e) => e.ts >= totalDuration.tsStart && e.ts <= totalDuration.tsEnd
   )(perfLogEvents);
 
@@ -445,12 +445,12 @@ export async function computeResultsJS(
   interface Interval {
     start: number;
     end: number;
-    timingResult: Timingresult;
+    timingResult: TimingResult;
   }
   function isContained(testIv: Interval, otherIv: Interval) {
     return testIv.start >= otherIv.start && testIv.end <= otherIv.end;
   }
-  function newContainedInterval(outer: Timingresult, intervals: Array<Interval>) {
+  function newContainedInterval(outer: TimingResult, intervals: Array<Interval>) {
     let outerIv = { start: outer.ts, end: outer.end, timingResult: outer };
     let cleanedUp: Array<Interval> = [];
     let isContainedRes = intervals.some((iv) => isContained(outerIv, iv));

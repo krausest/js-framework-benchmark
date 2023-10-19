@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { BenchmarkInfo, BenchmarkType, CPUBenchmarkResult, fileName } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse.js";
-import { FrameworkData, JSONResult, JSONResultData } from "./common.js";
+import { FrameworkData, JsonResult, JsonResultData } from "./common.js";
 import pkg from "jstat";
 const { jStat } = pkg;
 
@@ -80,7 +80,7 @@ function createResultFile(
     return res;
   };
   if (Array.isArray(data)) {
-    let result: JSONResult = {
+    let result: JsonResult = {
       framework: framework.fullNameWithKeyedAndVersion,
       keyed: framework.keyed,
       benchmark: benchmark.id,
@@ -91,11 +91,11 @@ function createResultFile(
       encoding: "utf8",
     });
   } else {
-    let values: { [k: string]: JSONResultData } = {};
+    let values: { [k: string]: JsonResultData } = {};
     for (let key of Object.keys(data)) {
       values[key] = convertResult(key, data[key]);
     }
-    let result: JSONResult = {
+    let result: JsonResult = {
       framework: framework.fullNameWithKeyedAndVersion,
       keyed: framework.keyed,
       benchmark: benchmark.id,

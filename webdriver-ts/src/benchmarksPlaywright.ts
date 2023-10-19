@@ -27,7 +27,7 @@ export abstract class MemBenchmarkPlaywright implements benchmarksCommon.Benchma
   abstract run(browser: Browser, page: Page, framework: FrameworkData): Promise<any>;
 }
 
-export type TBenchmarkPlaywright = CPUBenchmarkPlaywright | MemBenchmarkPlaywright;
+export type BenchmarkPlaywright = CPUBenchmarkPlaywright | MemBenchmarkPlaywright;
 
 export let benchRun = new (class extends CPUBenchmarkPlaywright {
   constructor() {

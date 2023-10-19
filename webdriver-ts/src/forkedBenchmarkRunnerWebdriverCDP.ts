@@ -7,7 +7,7 @@ import {
   config as defaultConfig,
   ErrorAndWarning,
   FrameworkData,
-  TConfig,
+  Config,
 } from "./common.js";
 import { computeResultsCPU, fileNameTrace } from "./timeline.js";
 import {
@@ -18,7 +18,7 @@ import {
   setUseShadowRoot,
 } from "./webdriverCDPAccess.js";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 
 // necessary to launch without specifiying a path
 require("chromedriver");

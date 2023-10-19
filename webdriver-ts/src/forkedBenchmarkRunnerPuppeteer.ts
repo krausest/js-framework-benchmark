@@ -3,7 +3,7 @@ import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksC
 import {
   CPUBenchmarkPuppeteer,
   MemBenchmarkPuppeteer,
-  TBenchmarkPuppeteer,
+  BenchmarkPuppeteer,
   benchmarks,
 } from "./benchmarksPuppeteer.js";
 import {
@@ -11,16 +11,16 @@ import {
   config as defaultConfig,
   ErrorAndWarning,
   FrameworkData,
-  TConfig,
+  Config,
 } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
 import { computeResultsCPU, computeResultsJS, fileNameTrace } from "./timeline.js";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 
 async function runBenchmark(
   page: Page,
-  benchmark: TBenchmarkPuppeteer,
+  benchmark: BenchmarkPuppeteer,
   framework: FrameworkData
 ): Promise<any> {
   await benchmark.run(page, framework);
@@ -30,7 +30,7 @@ async function runBenchmark(
 
 async function initBenchmark(
   page: Page,
-  benchmark: TBenchmarkPuppeteer,
+  benchmark: BenchmarkPuppeteer,
   framework: FrameworkData
 ): Promise<any> {
   await benchmark.init(page, framework);
@@ -291,11 +291,11 @@ export async function executeBenchmark(
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<any>> {
-  let runBenchmarks: Array<TBenchmarkPuppeteer> = benchmarks.filter(
+  let runBenchmarks: Array<BenchmarkPuppeteer> = benchmarks.filter(
     (b) =>
       benchmarkId === b.benchmarkInfo.id &&
       (b instanceof CPUBenchmarkPuppeteer || b instanceof MemBenchmarkPuppeteer)
-  ) as Array<TBenchmarkPuppeteer>;
+  ) as Array<BenchmarkPuppeteer>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (puppeteer)`;
 
   let benchmark = runBenchmarks[0];

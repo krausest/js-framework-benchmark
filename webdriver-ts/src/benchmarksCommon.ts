@@ -74,7 +74,7 @@ export const BENCHMARK_26 = "26_run-10k-memory";
 
 export const BENCHMARK_30 = "30_startup";
 
-export type TBenchmarkID =
+export type BenchmarkId =
   | typeof BENCHMARK_01
   | typeof BENCHMARK_02
   | typeof BENCHMARK_03
