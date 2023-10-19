@@ -1,5 +1,4 @@
-import { NgFor } from '@angular/common';
-import { ChangeDetectorRef, Component, VERSION, inject } from '@angular/core';
+import {ChangeDetectorRef, Component, VERSION, inject} from '@angular/core';
 
 interface Data {
     id: number;
@@ -9,7 +8,6 @@ interface Data {
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [NgFor],
     templateUrl: './app.component.html',
 })
 export class AppComponent {
@@ -35,10 +33,6 @@ export class AppComponent {
 
     _random(max: number) {
         return Math.round(Math.random() * 1000) % max;
-    }
-
-    itemById(index: number, item: Data) {
-        return item.id;
     }
 
     select(item: Data, event: Event) {
