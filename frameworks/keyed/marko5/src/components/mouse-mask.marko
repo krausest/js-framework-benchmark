@@ -1,0 +1,42 @@
+<div.mouse-mask style=`--mouse-x:${state.x};--mouse-y:${state.y};`/>
+
+class {
+  onCreate() {
+    this.state = { x: "center", y: "center" };
+    this.boundMove = this.move.bind(this);
+  }
+  onMount() {
+    window.addEventListener("mousemove", this.boundMove);
+  }
+  onDestory() {
+    window.removeEventListener("mousemove", this.boundMove);
+  }
+  move(e) {
+    this.state.x = e.clientX + "px";
+    this.state.y = e.clientY + "px";
+  }
+}
+
+style {
+  .mouse-mask {    
+    position: fixed;
+    top:0; bottom:0; right:0; left:0;
+    touch-action: none;
+    pointer-events: none;
+    inset: 0;
+    background-color: transparent;
+    backdrop-filter: grayscale(100%) brightness(30%);
+    -webkit-backdrop-filter: grayscale(100%) brightness(30%);
+    
+    mask-image: radial-gradient(
+      circle at var(--mouse-x) var(--mouse-y), 
+      transparent 15%,
+      black 50%
+    );
+    -webkit-mask-image: radial-gradient(
+      circle at var(--mouse-x) var(--mouse-y), 
+      transparent 15%,
+      black 50%
+    );
+  }
+}

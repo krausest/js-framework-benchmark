@@ -1,0 +1,18 @@
+{
+  "name": "my-app",
+  "description": "The default Marko starter app",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "marko": "^5.31.0"
+  },
+  "devDependencies": {
+    "@marko/run": "^0.2.0"
+  },
+  "private": true,
+  "scripts": {
+    "build-prod": "marko-run build",
+    "dev": "marko-run",
+    "preview": "marko-run preview"
+  }
+}
