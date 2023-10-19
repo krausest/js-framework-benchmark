@@ -72,7 +72,7 @@ v20.8.0
 ```
 
 ## 1.2 Downloading the pre-built binaries and starting the server
-Builiding all frameworks can be challenging. There's a new way that allows to skip that and just run the benchmark without builiding all implementationss.
+building all frameworks can be challenging. There's a new way that allows to skip that and just run the benchmark without builiding all implementations.
 
 
 Start with checking out a tagged release like that. Pick the release that you want (e.g. chrome 100):
@@ -106,13 +106,13 @@ npm run results
 Open js-framework-benchmark/webdriver-ts-results/table.html in a browser and take a look at the results. You can open the result table with the link [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html)
 
 
-Here's what you should do when the benchmark run was not sucessful. Let's assume the benchmark printed the following to the console:
+Here's what you should do when the benchmark run was not successful. Let's assume the benchmark printed the following to the console:
 ```
 ================================
 The following benchmarks failed:
 ================================
 Executing frameworks/non-keyed/ef-js and benchmark 04_select1k failed: No paint event found
-run was not completely sucessful Benchmarking failed with errors
+run was not completely successful Benchmarking failed with errors
 ```
 You'll now have to run the benchmark again for those that failed like that:
 ```
