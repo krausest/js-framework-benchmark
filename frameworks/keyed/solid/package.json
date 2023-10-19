@@ -19,7 +19,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "solid-js": "1.7.8"
+    "solid-js": "^1.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
