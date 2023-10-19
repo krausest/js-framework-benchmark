@@ -125,7 +125,7 @@ async function fetchFrameworks(url: string) {
     return await response.json();
   } catch (error) {
     console.log(error);
-    throw new Error(error);
+    throw new Error(error as string);
   }
 }
 
@@ -139,7 +139,7 @@ export async function initializeFrameworks(
   try {
     lsResult = await fetchFrameworks(lsUrl);
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error as string);
   }
 
   let frameworks: FrameworkData[] = [];

@@ -259,7 +259,7 @@ async function runBench(
         warnings = warnings.concat(result.warnings);
       } catch (e) {
         console.log("UNHANDELED ERROR", e);
-        errors.push(e);
+        errors.push(e as string);
       }
     }
   }
