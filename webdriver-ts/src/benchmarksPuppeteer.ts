@@ -10,7 +10,7 @@ import {
   BenchmarkImpl,
   MemBenchmarkInfo,
 } from "./benchmarksCommon.js";
-import { BenchmarkOptions, config, FrameworkData } from "./common.js";
+import { config, FrameworkData } from "./common.js";
 import {
   checkCountForSelector,
   checkElementContainsText,
@@ -283,7 +283,7 @@ export const benchReadyMemory = new (class extends MemBenchmarkPuppeteer {
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
   }
-  async run(page: Page) {
+  async run() {
     return await Promise.resolve(null);
   }
 })();

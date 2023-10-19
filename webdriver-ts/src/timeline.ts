@@ -4,7 +4,6 @@ import * as R from "ramda";
 import { BenchmarkType, CPUBenchmarkInfo, CPUBenchmarkResult } from "./benchmarksCommon.js";
 import { BenchmarkOptions, FrameworkData, Config, config } from "./common.js";
 import { writeResults } from "./writeResults.js";
-import { start } from "repl";
 
 interface TimingResult {
   type: string;
@@ -211,10 +210,7 @@ function logEvents(events: TimingResult[], click: TimingResult) {
   });
 }
 
-export async function computeResultsCPU(
-  fileName: string,
-  warning_logger: (...msg: any) => void = console.log
-): Promise<CPUDurationResult> {
+export async function computeResultsCPU(fileName: string): Promise<CPUDurationResult> {
   const perfLogEvents = await fetchEventsFromPerformanceLog(fileName);
   let events = R.sortBy((e: TimingResult) => e.end)(perfLogEvents);
 

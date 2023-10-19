@@ -11,7 +11,6 @@ module.exports = {
   rules: {
     "prefer-const": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-unused-vars": "off",
     "require-await": "error",
     "@typescript-eslint/no-floating-promises": "error",
   },

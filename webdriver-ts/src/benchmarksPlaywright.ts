@@ -10,7 +10,7 @@ import {
   cpuBenchmarkInfos,
   memBenchmarkInfos,
 } from "./benchmarksCommon.js";
-import { BenchmarkOptions, config, FrameworkData } from "./common.js";
+import { config, FrameworkData } from "./common.js";
 import {
   checkCountForSelector,
   checkElementContainsText,
@@ -266,7 +266,7 @@ export const benchReadyMemory = new (class extends MemBenchmarkPlaywright {
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
   }
-  async run(browser: Browser, page: Page) {
+  async run() {
     return await Promise.resolve(null);
   }
 })();

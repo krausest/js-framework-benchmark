@@ -5,7 +5,7 @@ import {
   cpuBenchmarkInfos,
   CPUBenchmarkInfo,
 } from "./benchmarksCommon.js";
-import { BenchmarkOptions, config, FrameworkData } from "./common.js";
+import { config, FrameworkData } from "./common.js";
 import {
   clickElementById,
   clickElementByXPath,

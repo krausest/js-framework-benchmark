@@ -21,7 +21,7 @@ import {
 } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
 import { writeResults } from "./writeResults.js";
-import { PlausibilityCheck, parseCPUTrace } from "./timeline.js";
+import { PlausibilityCheck } from "./timeline.js";
 
 function forkAndCallBenchmark(
   framework: FrameworkData,
@@ -128,6 +128,7 @@ async function runBenchmakLoop(
   framework: FrameworkData,
   benchmarkInfo: CPUBenchmarkInfo | MemBenchmarkInfo,
   benchmarkOptions: BenchmarkOptions,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   plausibilityCheck: PlausibilityCheck
 ): Promise<{ errors: string[]; warnings: string[] }> {
   let warnings: string[] = [];
