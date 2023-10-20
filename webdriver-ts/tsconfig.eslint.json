@@ -1,5 +1,5 @@
 {
-  "compilerOptions": { "moduleResolution": "NodeNext" },
-  "include": ["./**/*", "./.eslintrc.cjs"],
-  "exclude": ["node_modules", "dist"]
+  "extends": "./tsconfig.json",
+  "include": ["**/*", "./.eslintrc.cjs"],
+  "exclude": ["node_modules", "dist", "results", "unittests"]
 }

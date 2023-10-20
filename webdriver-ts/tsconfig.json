@@ -9,14 +9,14 @@
     "target": "es2017",
     "allowSyntheticDefaultImports": true,
     "noLib": false,
-    "typeRoots": ["./node_modules/@types", "./src/typings"],
 
     "noImplicitAny": true,
+    "noImplicitThis": true,
     "alwaysStrict": true,
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "useUnknownInCatchVariables": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*"],
   "exclude": ["**/*.test.ts"]
 }
