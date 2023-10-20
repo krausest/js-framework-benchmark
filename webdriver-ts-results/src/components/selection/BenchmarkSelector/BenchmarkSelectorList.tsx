@@ -1,5 +1,5 @@
 import React from "react";
-import type { Benchmark } from "../../../Common";
+import type { Benchmark } from "@/Common";
 
 interface Props {
   benchmarks: Array<Benchmark>;

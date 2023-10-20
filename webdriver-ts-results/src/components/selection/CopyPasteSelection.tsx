@@ -1,9 +1,9 @@
 import React from "react";
 import { useCallback } from "react";
 import { useEffect } from "react";
-import { useRootStore } from "../../reducer";
-import PasteIcon from "../../assets/icons/PasteIcon";
-import CopyIcon from "../../assets/icons/CopyIcon";
+import { useRootStore } from "@/reducer";
+import PasteIcon from "@/assets/icons/PasteIcon";
+import CopyIcon from "@/assets/icons/CopyIcon";
 import "./CopyPasteSelection.css";
 
 const CopyPasteSelection = () => {

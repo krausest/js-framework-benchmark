@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Benchmark,
-  Framework,
-  ResultLookup,
-  CpuDurationMode,
-} from "../../Common";
+import { Benchmark, Framework, ResultLookup, CpuDurationMode } from "@/Common";
 import BoxPlotTableRow from "./BoxPlotTableRow";
 
 interface Props {
