@@ -1,3 +1,3 @@
-declare module 'jstat' {
-    export let jStat: any;
+declare module "jstat" {
+  export let jStat: any;
 }

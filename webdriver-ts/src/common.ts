@@ -8,7 +8,7 @@ export interface JSONResultData {
 }
 
 export interface JSONResultMap {
-  [key:string]: JSONResultData
+  [key: string]: JSONResultData;
 }
 export interface JSONResult {
   framework: string;
@@ -40,8 +40,8 @@ export interface BenchmarkOptions {
   numIterationsForStartupBenchmark: number;
 
   allowThrottling: boolean;
-  resultsDirectory:string,
-  tracesDirectory: string,
+  resultsDirectory: string;
+  tracesDirectory: string;
 }
 
 /*
@@ -56,11 +56,11 @@ export enum BENCHMARK_RUNNER {
   PLAYWRIGHT = "playwright",
   WEBDRIVER_CDP = "webdrivercdp",
   WEBDRIVER = "webdriver",
-  WEBDRIVER_AFTERFRAME = "webdriver-afterframe"
+  WEBDRIVER_AFTERFRAME = "webdriver-afterframe",
 }
 
 export let config = {
-  NUM_ITERATIONS_FOR_BENCHMARK_CPU: 15, 
+  NUM_ITERATIONS_FOR_BENCHMARK_CPU: 15,
   NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT: 0, // drop the # of slowest results
   NUM_ITERATIONS_FOR_BENCHMARK_MEM: 1,
   NUM_ITERATIONS_FOR_BENCHMARK_STARTUP: 1,
@@ -75,7 +75,7 @@ export let config = {
   STARTUP_SLEEP_DURATION: 1000,
   WRITE_RESULTS: true,
   ALLOW_BATCHING: true,
-  BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER
+  BENCHMARK_RUNNER: BENCHMARK_RUNNER.PUPPETEER,
 };
 export type TConfig = typeof config;
 
@@ -103,7 +103,7 @@ export interface FrameworkInformation {
   useRowShadowRoot?: boolean;
   shadowRootName?: string;
   buttonsInShadowRoot?: boolean;
-  versions?: {[key: string]: string};
+  versions?: { [key: string]: string };
   frameworkVersionString: string;
   frameworkHomeURL: string;
 }
@@ -131,7 +131,7 @@ async function fetchFrameworks(url: string) {
 
 export async function initializeFrameworks(
   benchmarkOptions: BenchmarkOptions,
-  matchPredicate: IMatchPredicate = matchAll,
+  matchPredicate: IMatchPredicate = matchAll
 ): Promise<FrameworkData[]> {
   let lsResult;
   const lsUrl = `http://${benchmarkOptions.host}:${benchmarkOptions.port}/ls`;
@@ -145,29 +145,21 @@ export async function initializeFrameworks(
   let frameworks: FrameworkData[] = [];
   for (let ls of lsResult) {
     let frameworkVersionInformation: FrameworkInformation = ls;
-    let fullName =
-      frameworkVersionInformation.type +
-      "/" +
-      frameworkVersionInformation.directory;
+    let fullName = frameworkVersionInformation.type + "/" + frameworkVersionInformation.directory;
     if (matchPredicate(fullName)) {
       frameworks.push({
         name: frameworkVersionInformation.directory,
-        fullNameWithKeyedAndVersion:
-          frameworkVersionInformation.frameworkVersionString,
+        fullNameWithKeyedAndVersion: frameworkVersionInformation.frameworkVersionString,
         uri:
           "frameworks/" +
           fullName +
-          (frameworkVersionInformation.customURL
-            ? frameworkVersionInformation.customURL
-            : ""),
+          (frameworkVersionInformation.customURL ? frameworkVersionInformation.customURL : ""),
         keyed: frameworkVersionInformation.type === "keyed",
         useShadowRoot: !!frameworkVersionInformation.useShadowRoot,
         useRowShadowRoot: !!frameworkVersionInformation.useRowShadowRoot,
         shadowRootName: frameworkVersionInformation.shadowRootName,
         buttonsInShadowRoot: !!frameworkVersionInformation.buttonsInShadowRoot,
-        issues: (frameworkVersionInformation.issues ?? []).map((i) =>
-          Number(i),
-        ),
+        issues: (frameworkVersionInformation.issues ?? []).map((i) => Number(i)),
         frameworkHomeURL: frameworkVersionInformation.frameworkHomeURL ?? "",
       });
     }
