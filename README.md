@@ -46,11 +46,11 @@ results might be for mixed browser versions, number of runs per benchmark may va
 
 ## Keyed vs non-keyed frameworks
 
-Some frameworks like react, vue.js or angular allow to create a 1:1-relationship between a data item and a DOM node by assigning a “key” attribute (or for angular specifying “trackBy” in *ngFor). If you use some identifier of the data as the key you get the “keyed” mode. Any update to the data will update the associated DOM node. If you reorder the list, the DOM nodes will be reordered accordingly.
+Some frameworks like React, Vue.js or Angular, allow you to create a 1:1 relationship between a data item and a DOM node by assigning a “key” attribute (or for Angular, specifying “trackBy” in *ngFor). If you use some identifier of the data as the key, you get the “keyed” mode. Any update to the data will update the associated DOM node. If you reorder the list, the DOM nodes will be reordered accordingly.
 
-The other mode is “non-keyed” and this is what e.g. vue.js uses by default for lists. In this mode a change to the data items can modify DOM nodes that were associated with other data before. This can be more performant, since costly DOM operations can be avoided (e.g. first removing old nodes, and the adding new nodes) and the existing DOM nodes are updated to display the new data. For react and angular using the item index as the key uses “non-keyed” mode for those frameworks.
+The other mode is “non-keyed” and this is what e.g. vue.js uses by default for lists. In this mode, a change to the data items can modify DOM nodes that were associated with other data before. This can be more performant, since costly DOM operations can be avoided (e.g. first removing old nodes and then adding new nodes) and the existing DOM nodes are updated to display the new data. For React and Angular, using the item index as the key uses “non-keyed” mode for those frameworks.
 
-Depending on your requirements the “non-keyed” mode can be a performance gain or can cause severe problems so one must choose carefully the mode and check that the framework supports that mode.
+Depending on your requirements, the “non-keyed” mode can be a performance gain or can cause severe problems, so one must carefully choose the mode and check that the framework supports that mode.
 
 Read more here: [https://www.stefankrause.net/wp/?p=342](https://www.stefankrause.net/wp/?p=342)
 
