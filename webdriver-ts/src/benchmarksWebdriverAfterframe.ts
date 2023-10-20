@@ -7,21 +7,23 @@ import {
   clickElementByXPath,
   findById,
   findByXPath,
-  getTextByXPath, testClassContains, testElementLocatedById, testElementLocatedByXpath,
-  testElementNotLocatedByXPath, testTextContains
+  getTextByXPath,
+  testClassContains,
+  testElementLocatedById,
+  testElementLocatedByXpath,
+  testElementNotLocatedByXPath,
+  testTextContains,
 } from "./webdriverAccess.js";
 
-
 const SHORT_TIMEOUT = 20 * 1000;
-
 
 let durations: Array<number> = [];
 
 export function getAfterframeDurations() {
-  return durations.map(d => ({total:d, script:0}));
+  return durations.map((d) => ({ total: d, script: 0 }));
 }
 
-export async  function initMeasurement(driver: WebDriver) {
+export async function initMeasurement(driver: WebDriver) {
   // From https://github.com/andrewiggins/afterframe, MIT licensed
   const afterFrame = `
   /**
@@ -74,7 +76,8 @@ export async  function initMeasurement(driver: WebDriver) {
 
 async function measureClickForElement(driver: WebDriver, elem: WebElement) {
   if (!elem) throw `measureClickForElement failed. Element was not found.`;
-  let duration = await driver.executeAsyncScript(`
+  let duration = (await driver.executeAsyncScript(
+    `
       let callback = arguments[arguments.length - 1];
       let elem = arguments[0];
       let base = document;
@@ -87,7 +90,9 @@ async function measureClickForElement(driver: WebDriver, elem: WebElement) {
         window.lastDuration = t;
         callback(t);
       })
-    `, elem) as number;
+    `,
+    elem
+  )) as number;
   durations.push(duration);
   console.log("computed duration ", duration);
 }
@@ -98,17 +103,19 @@ async function measureClickElementById(driver: WebDriver, id: string, isInButton
   await measureClickForElement(driver, elem);
 }
 
-async function measureClickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
+async function measureClickElementByXPath(
+  driver: WebDriver,
+  xpath: string,
+  isInButtonArea: boolean
+) {
   let elem = await findByXPath(driver, xpath, isInButtonArea);
   if (!elem) throw `measureClickElementById ${xpath} failed. Element was not found.`;
   await measureClickForElement(driver, elem);
 }
 
-
 export abstract class CPUBenchmarkWebdriver {
   type = BenchmarkType.CPU;
-  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmarkInfo) {
-  }
+  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmarkInfo) {}
   abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
   abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
 }

@@ -5,17 +5,19 @@ import { BenchmarkOptions, config, FrameworkData } from "./common.js";
 import {
   clickElementById,
   clickElementByXPath,
-  getTextByXPath, testClassContains, testElementLocatedById, testElementLocatedByXpath,
-  testElementNotLocatedByXPath, testTextContains
+  getTextByXPath,
+  testClassContains,
+  testElementLocatedById,
+  testElementLocatedByXpath,
+  testElementNotLocatedByXPath,
+  testTextContains,
 } from "./webdriverCDPAccess.js";
-
 
 const SHORT_TIMEOUT = 20 * 1000;
 
 export abstract class CPUBenchmarkWebdriverCDP {
   type = BenchmarkType.CPU;
-  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmarkInfo) {
-  }
+  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmarkInfo) {}
   abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
   abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
 }
@@ -155,7 +157,8 @@ export const benchRunBig = new (class extends CPUBenchmarkWebdriverCDP {
       await testTextContains(driver, "//tbody/tr[1]/td[1]", (i * 1000 + 1).toFixed(), config.TIMEOUT, false);
       await clickElementById(driver, "clear", true);
       await testElementNotLocatedByXPath(driver, "//tbody/tr[1]", config.TIMEOUT, false);
-    }  }
+    }
+  }
   async run(driver: WebDriver) {
     await clickElementById(driver, "runlots", true);
     await testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a", config.TIMEOUT, false);

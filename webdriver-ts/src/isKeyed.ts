@@ -1,5 +1,10 @@
 import yargs from "yargs";
-import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./playwrightAccess.js";
+import {
+  checkElementContainsText,
+  checkElementExists,
+  clickElement,
+  startBrowser,
+} from "./playwrightAccess.js";
 import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
 import * as R from "ramda";
@@ -10,7 +15,8 @@ let args: any = yargs(process.argv)
     "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
   )
   .help("help")
-  .boolean("headless").default("headless", false)
+  .boolean("headless")
+  .default("headless", false)
   .array("framework")
   .array("benchmark")
   .string("chromeBinary").argv;
@@ -21,19 +27,21 @@ console.log("HEADLESS*** ", args.headless);
 
 let benchmarkOptions: BenchmarkOptions = {
   port: 8080,
-  host: 'localhost',
+  host: "localhost",
   browser: args.browser,
   remoteDebuggingPort: 9999,
   chromePort: 9998,
   headless: args.headless,
   chromeBinaryPath: args.chromeBinary,
-  numIterationsForCPUBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+  numIterationsForCPUBenchmarks:
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU +
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
   numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
   numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
   batchSize: 1,
   resultsDirectory: "results",
   tracesDirectory: "traces",
-  allowThrottling: !args.nothrottling
+  allowThrottling: !args.nothrottling,
 };
 
 let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
@@ -164,10 +172,14 @@ function isKeyedSwapRow(result: any, shouldBeKeyed: boolean): boolean {
   return r;
 }
 
-async function assertChildNodes(elem: ElementHandle<HTMLElement>, expectedNodes: string[], message: string) {
+async function assertChildNodes(
+  elem: ElementHandle<HTMLElement>,
+  expectedNodes: string[],
+  message: string
+) {
   let elements = await elem.$$("*");
-  let allNodes = await Promise.all(elements.map((e) => e.evaluate(e => e.tagName)));
-  let toLower = (array: string[]) => array.map(s => s.toLowerCase());
+  let allNodes = await Promise.all(elements.map((e) => e.evaluate((e) => e.tagName)));
+  let toLower = (array: string[]) => array.map((s) => s.toLowerCase());
   if (!R.equals(toLower(allNodes), toLower(expectedNodes))) {
     console.log("ERROR in html structure for " + message);
     console.log("  expected:", expectedNodes);
@@ -183,11 +195,20 @@ function niceEmptyString(val: string[]): string {
   return val.toString();
 }
 
-async function assertClassesContained(elem: ElementHandle<HTMLElement>, expectedClassNames: string[], message: string) {
-  let actualClassNames = (await elem.evaluate(e => e.className)).split(" ");
+async function assertClassesContained(
+  elem: ElementHandle<HTMLElement>,
+  expectedClassNames: string[],
+  message: string
+) {
+  let actualClassNames = (await elem.evaluate((e) => e.className)).split(" ");
   if (!expectedClassNames.every((expected) => actualClassNames.includes(expected))) {
     console.log(
-      "css class not correct. Expected for " + message + " to be " + expectedClassNames + " but was " + niceEmptyString(actualClassNames)
+      "css class not correct. Expected for " +
+        message +
+        " to be " +
+        expectedClassNames +
+        " but was " +
+        niceEmptyString(actualClassNames)
     );
     return false;
   }
@@ -224,7 +245,7 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
     return false;
   }
   // console.log("names", await span.evaluate(e => e.getAttributeNames()));
-  let spanAria = await span.evaluate(e => e.getAttribute("aria-hidden"));
+  let spanAria = await span.evaluate((e) => e.getAttribute("aria-hidden"));
   // console.log("aria ", spanAria);
   if ("true" !== spanAria) {
     console.log("Expected to find 'aria-hidden'=true on span in third td, but found ", spanAria);
@@ -245,11 +266,14 @@ async function runBench(frameworkNames: string[]) {
   let matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
   runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
-  console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
+  console.log(
+    "Frameworks that will be checked",
+    runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" ")
+  );
 
   let allCorrect = true;
 
-  console.log("*** headless", benchmarkOptions.headless)
+  console.log("*** headless", benchmarkOptions.headless);
 
   for (let i = 0; i < runFrameworks.length; i++) {
     let browser = await startBrowser(benchmarkOptions);
@@ -257,7 +281,12 @@ async function runBench(frameworkNames: string[]) {
     try {
       let framework: FrameworkData = runFrameworks[i];
 
-      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {waitUntil: "networkidle"});
+      await page.goto(
+        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
+        {
+          waitUntil: "networkidle",
+        }
+      );
       await checkElementExists(page, "#add");
       await clickElement(page, "#add");
       await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
@@ -312,7 +341,11 @@ async function runBench(frameworkNames: string[]) {
           " in the results"
       );
       if (framework.keyed !== keyed) {
-        console.log("ERROR: Framework " + framework.fullNameWithKeyedAndVersion + " is not correctly categorized");
+        console.log(
+          "ERROR: Framework " +
+            framework.fullNameWithKeyedAndVersion +
+            " is not correctly categorized"
+        );
         allCorrect = false;
       }
     } catch (e) {
@@ -330,7 +363,9 @@ async function runBench(frameworkNames: string[]) {
   if (!allCorrect) process.exit(1);
 }
 
-let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map((v: string) => v.toString());
+let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(
+  (v: string) => v.toString()
+);
 
 async function main() {
   if (args.help) {
@@ -340,4 +375,6 @@ async function main() {
   }
 }
 
-main().catch(err => {console.log("Error in isKeyed", err)});
+main().catch((err) => {
+  console.log("Error in isKeyed", err);
+});

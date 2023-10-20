@@ -6,8 +6,8 @@ export interface StartupBenchmarkResult extends BenchmarkImpl {
   result: number;
 }
 
-let id = (x:number) => x;
-let toKb = (x:number) => x/1024;
+let id = (x: number) => x;
+let toKb = (x: number) => x / 1024;
 
 export const benchStartupConsistentlyInteractive: StartupBenchmarkInfo = {
   id: "31_startup-ci",
@@ -45,7 +45,12 @@ export const benchStartupTotalBytes: StartupBenchmarkInfo = {
   type: BenchmarkType.STARTUP,
 };
 
-export const subbenchmarks = [benchStartupConsistentlyInteractive, benchStartupBootup, benchStartupMainThreadWorkCost, benchStartupTotalBytes];
+export const subbenchmarks = [
+  benchStartupConsistentlyInteractive,
+  benchStartupBootup,
+  benchStartupMainThreadWorkCost,
+  benchStartupTotalBytes,
+];
 
 export class BenchmarkLighthouse implements BenchmarkImpl {
   type = BenchmarkType.STARTUP_MAIN;
