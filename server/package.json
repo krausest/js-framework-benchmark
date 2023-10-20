@@ -9,7 +9,6 @@
     "dev": "nodemon index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier -w .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -25,7 +24,6 @@
     "@types/ejs": "^3.1.2",
     "@types/node": "^20.6.2",
     "eslint": "^8.49.0",
-    "nodemon": "^3.0.1",
-    "prettier": "^3.0.3"
+    "nodemon": "^3.0.1"
   }
 }
