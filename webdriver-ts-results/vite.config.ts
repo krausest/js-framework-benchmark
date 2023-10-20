@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
+import tsconfigPaths from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react";
 
 const needSinglefile = !!process.env.SINGLEFILE;
@@ -19,5 +20,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [react(), needSinglefile && viteSingleFile()],
+  plugins: [react(), tsconfigPaths(), needSinglefile && viteSingleFile()],
 });

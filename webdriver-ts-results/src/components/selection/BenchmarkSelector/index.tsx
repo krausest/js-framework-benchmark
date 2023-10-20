@@ -1,6 +1,6 @@
 import React from "react";
-import { BenchmarkType } from "../../../Common";
-import Dropdown from "../../ui/Dropdown";
+import { BenchmarkType } from "@/Common";
+import Dropdown from "@components/ui/Dropdown";
 import BenchmarkSelectorCategory from "./BenchmarkSelectorCategory";
 
 const BenchmarkSelector = () => {

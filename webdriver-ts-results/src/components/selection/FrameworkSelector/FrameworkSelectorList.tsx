@@ -1,5 +1,5 @@
 import React from "react";
-import { Framework } from "../../../Common";
+import { Framework } from "@/Common";
 
 interface Props {
   frameworks: Array<Framework>;
