@@ -30,7 +30,7 @@
     </div>
     <table class="table table-hover table-striped test-data">
         <tbody>
-            <for(item in state.data)>
+            <for|item| of=state.data>
                 <row item=item
                     selected=(item.id == state.selected)
                     key=item.id
