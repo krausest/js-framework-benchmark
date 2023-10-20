@@ -1,7 +1,7 @@
 import { setData, createApp } from "strve-js";
 import { buildData } from "./data.js";
 
-let selected = undefined;
+let selected;
 let rows = [];
 
 function setRows(update = rows.slice()) {
@@ -38,7 +38,7 @@ function remove(id) {
 function select(id) {
   setData(
     () => {
-      selected = +id;
+      selected = id;
     },
     {
       name: TbodyComponent,
