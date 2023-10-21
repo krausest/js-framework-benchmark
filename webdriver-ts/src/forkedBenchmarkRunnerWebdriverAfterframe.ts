@@ -79,14 +79,14 @@ async function runCPUBenchmark(
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
   let error: string = undefined;
-  let warnings: string[] = [];
-  let results: CPUBenchmarkResult[] = [];
+  const warnings: string[] = [];
+  const results: CPUBenchmarkResult[] = [];
 
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
-  let driver: WebDriver = null;
+  const driver: WebDriver = null;
   try {
     // let driver = buildDriver(benchmarkOptions);
-    let driver = await new Builder().forBrowser(benchmarkOptions.browser).build();
+    const driver = await new Builder().forBrowser(benchmarkOptions.browser).build();
     console.log(`using afterframe measurement with ${benchmarkOptions.browser}`);
     await driver.manage().window().maximize();
 
@@ -134,12 +134,12 @@ export async function executeBenchmark(
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number | CPUBenchmarkResult>> {
-  let runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(
+  const runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(
     (b) => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriver
   ) as Array<CPUBenchmarkWebdriver>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
-  let benchmark = runBenchmarks[0];
+  const benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult>;
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
@@ -153,7 +153,7 @@ export async function executeBenchmark(
 process.on("message", (msg: any) => {
   config = msg.config;
   console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
-  let {
+  const {
     framework,
     benchmarkId,
     benchmarkOptions,

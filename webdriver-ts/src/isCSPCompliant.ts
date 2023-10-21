@@ -7,7 +7,7 @@ import {
 } from "./playwrightAccess.js";
 import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
-let args: any = yargs(process.argv)
+const args: any = yargs(process.argv)
   .usage(
     "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
   )
@@ -22,7 +22,7 @@ console.log("args", args);
 
 console.log("HEADLESS*** ", args.headless);
 
-let benchmarkOptions: BenchmarkOptions = {
+const benchmarkOptions: BenchmarkOptions = {
   port: 8080,
   host: "localhost",
   browser: args.browser,
@@ -41,7 +41,7 @@ let benchmarkOptions: BenchmarkOptions = {
   allowThrottling: !args.nothrottling,
 };
 
-let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
+const allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
 
 console.log("args.framework", args.framework, !args.framework);
 
@@ -49,10 +49,9 @@ async function runBench(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   frameworkNames: string[] // Not used in the function, but is used when calling the function in other files
 ) {
-  let runFrameworks;
-  let matchesDirectoryArg = (directoryName: string) =>
+  const matchesDirectoryArg = (directoryName: string) =>
     allArgs.length == 0 || allArgs.some((arg: string) => arg == directoryName);
-  runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
+  const runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
   console.log(
     "Frameworks that will be checked",
     runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" ")
@@ -72,10 +71,10 @@ async function runBench(
   console.log("*** headless", benchmarkOptions.headless);
 
   for (let i = 0; i < runFrameworks.length; i++) {
-    let browser = await startBrowser(benchmarkOptions);
-    let page = await browser.newPage();
+    const browser = await startBrowser(benchmarkOptions);
+    const page = await browser.newPage();
     try {
-      let framework: FrameworkData = runFrameworks[i];
+      const framework: FrameworkData = runFrameworks[i];
 
       await page.goto(
         `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
@@ -121,7 +120,7 @@ async function runBench(
     await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/csp`);
     const extractedText = await page.$eval("*", (el: any) => el.innerText);
     console.log(extractedText);
-    let failed = JSON.parse(extractedText);
+    const failed = JSON.parse(extractedText);
     console.log("CSP check failed for the following frameworks:\n", failed.join("\n"));
   } finally {
     await page.close();
@@ -131,7 +130,7 @@ async function runBench(
   if (!allCorrect) process.exit(1);
 }
 
-let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(
+const runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(
   (v: string) => v.toString()
 );
 

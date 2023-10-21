@@ -16,12 +16,12 @@ interface TimingResult {
 }
 
 export function extractRelevantEvents(entries: any[]) {
-  let filteredEvents: TimingResult[] = [];
+  const filteredEvents: TimingResult[] = [];
   let click_start = 0;
   let click_end = 0;
 
   entries.forEach((x) => {
-    let e = x;
+    const e = x;
     if (config.LOG_DEBUG) console.log(JSON.stringify(e));
     if (e.name === "EventDispatch") {
       if (e.args.data.type === "click") {
@@ -61,11 +61,11 @@ export function extractRelevantEvents(entries: any[]) {
   
 async function fetchEventsFromPerformanceLog(fileName: string): Promise<TimingResult[]> {
   let timingResults: TimingResult[] = [];
-    let entries = [];
+    const entries = [];
     do {
-      let contents = await readFile(fileName, { encoding: "utf8" });
-      let json = JSON.parse(contents);
-      let entries = json["traceEvents"];
+      const contents = await readFile(fileName, { encoding: "utf8" });
+      const json = JSON.parse(contents);
+      const entries = json["traceEvents"];
       const filteredEvents = extractRelevantEvents(entries);
       timingResults = timingResults.concat(filteredEvents);
     } while (entries.length > 0);
@@ -85,10 +85,10 @@ const traceJSEventNames = [
 ];
 
 export function extractRelevantJSEvents(config: Config, entries: any[]) {
-  let filteredEvents: any[] = [];
+  const filteredEvents: any[] = [];
   
   entries.forEach((x) => {
-    let e = x;
+    const e = x;
     if (config.LOG_DEBUG) console.log(JSON.stringify(e));
     if (e.name === "EventDispatch") {
       if (e.args.data.type === "click") {
@@ -107,11 +107,11 @@ async function fetchJSEventsFromPerformanceLog(
   fileName: string
 ): Promise<TimingResult[]> {
   let timingResults: TimingResult[] = [];
-  let entries = [];
+  const entries = [];
   do {
-    let contents = await readFile(fileName, { encoding: "utf8" });
-    let json = JSON.parse(contents);
-    let entries = json["traceEvents"];
+    const contents = await readFile(fileName, { encoding: "utf8" });
+    const json = JSON.parse(contents);
+    const entries = json["traceEvents"];
     const filteredEvents = extractRelevantJSEvents(config, entries);
     timingResults = timingResults.concat(filteredEvents);
   } while (entries.length > 0);
@@ -145,27 +145,27 @@ export async function computeResultsCPU(
   fileName: string,
 ): Promise<CPUDurationResult> {
   const perfLogEvents = await fetchEventsFromPerformanceLog(fileName);
-  let events = R.sortBy((e: TimingResult) => e.end)(perfLogEvents);
+  const events = R.sortBy((e: TimingResult) => e.end)(perfLogEvents);
   
   // Find click event. This is the start of the benchmark
-  let clicks = R.filter(type_eq("click"))(events);
+  const clicks = R.filter(type_eq("click"))(events);
   // Invariant: There must be exactly one click event
   if (clicks.length !== 1) {
     console.log("exactly one click event is expected", fileName, events);
     throw "exactly one click event is expected";
   }
-  let click = clicks[0];
+  const click = clicks[0];
   // The PID for the click event. We"re dropping all events from other processes.
-  let pid = click.pid;
-  let eventsDuringBenchmark = R.filter((e: TimingResult) => e.ts > click.end || e.type === "click")(events);
+  const pid = click.pid;
+  const eventsDuringBenchmark = R.filter((e: TimingResult) => e.ts > click.end || e.type === "click")(events);
   if (config.LOG_DETAILS) logEvents(eventsDuringBenchmark, click);
 
   let droppedNonMainProcessCommitEvents = false;
   let droppedNonMainProcessOtherEvents = false;
   
-  let eventsOnMainThreadDuringBenchmark = R.filter((e: TimingResult) => e.pid === pid)(eventsDuringBenchmark);
+  const eventsOnMainThreadDuringBenchmark = R.filter((e: TimingResult) => e.pid === pid)(eventsDuringBenchmark);
   if (eventsOnMainThreadDuringBenchmark.length !== eventsDuringBenchmark.length) {
-    let droppedEvents = R.filter((e: TimingResult) => e.pid !== pid)(events);
+    const droppedEvents = R.filter((e: TimingResult) => e.pid !== pid)(events);
     if (R.any((e: TimingResult) => e.type === "commit")(droppedEvents)) {
       console.log("INFO: Dropping commit events from other processes", fileName);
       logEvents(droppedEvents, click);
@@ -178,14 +178,14 @@ export async function computeResultsCPU(
     }
   }
 
-  let startFrom = R.filter(type_eq("click", "fireAnimationFrame", "timerFire", "layout", "functioncall"))(eventsOnMainThreadDuringBenchmark);
+  const startFrom = R.filter(type_eq("click", "fireAnimationFrame", "timerFire", "layout", "functioncall"))(eventsOnMainThreadDuringBenchmark);
   // we're looking for the commit after this event
-  let startFromEvent = startFrom[startFrom.length - 1];
+  const startFromEvent = startFrom[startFrom.length - 1];
   if (config.LOG_DETAILS) console.log("DEBUG: searching for commit event after", startFromEvent, "for", fileName);
   let commit = R.find((e: TimingResult) => e.ts > startFromEvent.end)(R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark));
-  let allCommitsAfterClick = R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark);
+  const allCommitsAfterClick = R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark);
 
-  let numberCommits = allCommitsAfterClick.length;
+  const numberCommits = allCommitsAfterClick.length;
   if (!commit) {
     console.log("INFO: No commit event found according to filter ", fileName);
     if (allCommitsAfterClick.length == 0) {
@@ -195,28 +195,28 @@ export async function computeResultsCPU(
       commit = allCommitsAfterClick[allCommitsAfterClick.length - 1];
     }
   } 
-  let maxDeltaBetweenCommits = (allCommitsAfterClick[allCommitsAfterClick.length-1].ts - allCommitsAfterClick[0].ts)/1000.0;
+  const maxDeltaBetweenCommits = (allCommitsAfterClick[allCommitsAfterClick.length-1].ts - allCommitsAfterClick[0].ts)/1000.0;
 
   let duration = (commit.end - clicks[0].ts) / 1000.0;
   if (config.LOG_DEBUG) console.log("duration", duration);
   
-  let layouts = R.filter(type_eq("layout"))(eventsOnMainThreadDuringBenchmark);
+  const layouts = R.filter(type_eq("layout"))(eventsOnMainThreadDuringBenchmark);
   
   // Adjust bogus delay for requestAnimationFrame
-  let rafs_withinClick = R.filter((e: TimingResult) => e.ts >= click.ts && e.ts <= click.end)(
+  const rafs_withinClick = R.filter((e: TimingResult) => e.ts >= click.ts && e.ts <= click.end)(
     R.filter(type_eq("requestAnimationFrame"))(events)
   );
-  let fafs = R.filter((e: TimingResult) => e.ts >= click.ts && e.ts < commit.ts)(
+  const fafs = R.filter((e: TimingResult) => e.ts >= click.ts && e.ts < commit.ts)(
     R.filter(type_eq("fireAnimationFrame"))(events)
   );
   
   let raf_long_delay = 0;
   if (rafs_withinClick.length > 0 && fafs.length > 0) {
-    let waitDelay = (fafs[0].ts - click.end) / 1000.0;
+    const waitDelay = (fafs[0].ts - click.end) / 1000.0;
     if (rafs_withinClick.length == 1 && fafs.length == 1) {
       if (waitDelay > 16) {
         let ignored = false;
-        for (let e of layouts) {
+        for (const e of layouts) {
           if (e.ts < fafs[0].ts) {
               console.log("IGNORING 1 raf, 1 faf, but layout before raf", waitDelay, fileName);
               ignored = true;
@@ -302,21 +302,21 @@ export class PlausibilityCheck {
     console.log("\n==== Results of PlausibilityCheck:");      
     if (this.maxDeltaBetweenCommits.size > 0) {
       console.log("Info: The following implementation had a unnecessary layout event for select row:");
-      for (let [impl, maxDelay] of this.maxDeltaBetweenCommits.entries()) {
+      for (const [impl, maxDelay] of this.maxDeltaBetweenCommits.entries()) {
         if (maxDelay > 0) console.log(` ${impl}: ${maxDelay}`);
       }
       console.log("  Interpretation: Just an information. Could be optimized, but not a bug in the implementation.");
     }
     if (this.raf_long_delays.size > 0) {
       console.log("Info: Some frameworks have a delay between raf and fire animation frame longer than 16 msecs. The correction was:");
-      for (let [impl, maxDelay] of this.raf_long_delays.entries()) {
+      for (const [impl, maxDelay] of this.raf_long_delays.entries()) {
         if (maxDelay > 0) console.log(` ${impl}: ${maxDelay}`);
       }
       console.log("  Interpretation: If the list contains more than just a few entries or large numbers the results should be checked");
     }
     if (this.maxDeltaBetweenCommits.size > 0) {
       console.log("Info: Implemenations with multiple commit events and max delay between both:");
-      for (let [impl, maxDelay] of this.maxDeltaBetweenCommits.entries()) {
+      for (const [impl, maxDelay] of this.maxDeltaBetweenCommits.entries()) {
         if (maxDelay > 0) console.log(` ${impl}: ${maxDelay}`);
       }
       console.log("  Interpretation: Those frameworks make measuring the duration of the benchmark difficult. The results should be checked occasionally for correctness.");
@@ -335,14 +335,14 @@ function isContained(testIv: Interval, otherIv: Interval) {
 }
 
 function newContainedInterval(outer: TimingResult, intervals: Array<Interval>) {
-  let outerIv = { start: outer.ts, end: outer.end, timingResult: outer };
-  let cleanedUp: Array<Interval> = [];
-  let isContainedRes = intervals.some((iv) => isContained(outerIv, iv));
+  const outerIv = { start: outer.ts, end: outer.end, timingResult: outer };
+  const cleanedUp: Array<Interval> = [];
+  const isContainedRes = intervals.some((iv) => isContained(outerIv, iv));
   if (!isContainedRes) {
     cleanedUp.push(outerIv);
   }
 
-  for (let iv of intervals) {
+  for (const iv of intervals) {
     if (iv.start < outer.ts || iv.end > outer.end) {
       cleanedUp.push(iv);
     }
@@ -363,13 +363,13 @@ export async function computeResultsJS(
     (e) => e.ts >= totalDuration.tsStart && e.ts <= totalDuration.tsEnd
   )(perfLogEvents);
 
-  for (let ev of eventsWithin) {
+  for (const ev of eventsWithin) {
     ev.ts -= totalDuration.tsStart;
     ev.end -= totalDuration.tsStart;
   }
     
   let intervals: Array<Interval> = [];
-  for (let ev of eventsWithin) {
+  for (const ev of eventsWithin) {
     intervals = newContainedInterval(ev, intervals);
   }
   if (intervals.length > 1) {
@@ -378,7 +378,7 @@ export async function computeResultsJS(
     console.log(`1 interval for ${fileName}`, intervals);
   }
   
-  let res = intervals.reduce((p, c) => p + (c.end - c.start), 0) / 1000.0;
+  const res = intervals.reduce((p, c) => p + (c.end - c.start), 0) / 1000.0;
   return res;
 }
   
@@ -390,13 +390,13 @@ export async function parseCPUTrace(
 ) {
   let results: CPUBenchmarkResult[] = [];
   for (let i = 0; i < benchmarkOptions.numIterationsForCPUBenchmarks; i++) {
-    let trace = `${fileNameTrace(framework, benchmarkInfo, i, benchmarkOptions)}`;
+    const trace = `${fileNameTrace(framework, benchmarkInfo, i, benchmarkOptions)}`;
     if (!fs.existsSync(trace)) {
       throw new Error(`Trace file ${trace} does not exist`);
     } else {
       console.log("analyzing trace ", trace);
       try {
-        let result = await computeResultsCPU(trace);
+        const result = await computeResultsCPU(trace);
         plausibilityCheck.check(result, trace, framework, benchmarkInfo);
         // let resultJS = await computeResultsJS(result, config, trace); 
         results.push({ total: result.duration, script: 0 });

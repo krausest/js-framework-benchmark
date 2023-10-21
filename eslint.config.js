@@ -8,19 +8,13 @@ import reactHooks from "eslint-plugin-react-hooks";
 export default [
   js.configs.recommended,
   {
-    ignores: [
-      "**/dist",
-      "**/results",
-      "**/node_modules",
-      "css",
-      "**/csv_export.js",
-    ],
+    ignores: ["**/dist", "**/results", "**/node_modules", "css", "**/csv_export.js"],
   },
   {
     files: ["**/*.{ts,tsx}"],
     plugins: { "@typescript-eslint": ts },
     languageOptions: { parser: tsParser },
-    rules: ts.configs["recommended"].rules,
+    rules: { ...ts.configs["recommended"].rules },
   },
   /**
    * Root
@@ -46,9 +40,8 @@ export default [
       globals: { ...globals.node },
     },
     rules: {
-      "no-unused-vars": "off",
+      "prefer-const": "error",
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
       "require-await": "error",
       "@typescript-eslint/no-floating-promises": "error",
     },

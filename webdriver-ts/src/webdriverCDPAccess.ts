@@ -29,11 +29,11 @@ export function setButtonsInShadowRoot(val: boolean) {
 }
 
 function convertPath(path: string): Array<PathPart> {
-  let parts = path.split(/\//).filter((v) => !!v);
-  let res: Array<PathPart> = [];
-  for (let part of parts) {
-    let components = part.split(/\[|]/).filter((v) => !!v);
-    let tagName = components[0];
+  const parts = path.split(/\//).filter((v) => !!v);
+  const res: Array<PathPart> = [];
+  for (const part of parts) {
+    const components = part.split(/\[|]/).filter((v) => !!v);
+    const tagName = components[0];
     let index = 0;
     if (components.length == 2) {
       index = Number(components[1]);
@@ -60,11 +60,11 @@ export async function findByXPath(
   path: string,
   isInButtonArea: boolean
 ): Promise<WebElement> {
-  let root = await mainRoot(driver, isInButtonArea);
-  let paths = convertPath(path);
+  const root = await mainRoot(driver, isInButtonArea);
+  const paths = convertPath(path);
   let n = root;
   try {
-    for (let p of paths) {
+    for (const p of paths) {
       let elem;
       if (useRowShadowRoot && p.tagName === "tr") {
         try {
@@ -77,7 +77,7 @@ export async function findByXPath(
           return null;
         }
       } else {
-        let elems = await n.findElements(By.css(p.tagName + ":nth-of-type(" + p.index + ")"));
+        const elems = await n.findElements(By.css(p.tagName + ":nth-of-type(" + p.index + ")"));
         if (elems == null || elems.length == 0) {
           return null;
         }
@@ -116,9 +116,9 @@ export async function testTextContains(
     `testTextContains ${xpath} ${text}`,
     async function (driver) {
       try {
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        const elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
-        let v = await elem.getText();
+        const v = await elem.getText();
         return v && v.indexOf(text) > -1;
       } catch (err) {
         console.log(
@@ -141,9 +141,9 @@ export function testTextNotContained(
     `testTextNotContained ${xpath} ${text}`,
     async function (driver) {
       try {
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        const elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
-        let v = await elem.getText();
+        const v = await elem.getText();
         return v && v.indexOf(text) == -1;
       } catch (err) {
         console.log(
@@ -167,9 +167,9 @@ export function testClassContains(
     `testClassContains ${xpath} ${text}`,
     async function (driver) {
       try {
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        const elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
-        let v = await elem.getAttribute("class");
+        const v = await elem.getAttribute("class");
         return v && v.indexOf(text) > -1;
       } catch (err) {
         console.log(
@@ -192,7 +192,7 @@ export function testElementLocatedByXpath(
     `testElementLocatedByXpath ${xpath}`,
     async function (driver) {
       try {
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        const elem = await findByXPath(driver, xpath, isInButtonArea);
         return elem ? true : false;
       } catch (err) {
         console.log(
@@ -215,7 +215,7 @@ export function testElementNotLocatedByXPath(
     `testElementNotLocatedByXPath ${xpath}`,
     async function (driver) {
       try {
-        let elem = await findByXPath(driver, xpath, isInButtonArea);
+        const elem = await findByXPath(driver, xpath, isInButtonArea);
         return elem ? false : true;
       } catch (err) {
         console.log(
@@ -238,7 +238,7 @@ export function testElementLocatedById(
     `testElementLocatedById ${id}`,
     async function (driver) {
       try {
-        let elem = await mainRoot(driver, isInButtonArea);
+        const elem = await mainRoot(driver, isInButtonArea);
         await elem.findElement(By.id(id));
         return true;
       } catch (err) {
@@ -277,7 +277,7 @@ export function clickElementById(driver: WebDriver, id: string, isInButtonArea: 
 export function clickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
   return retry(5, driver, async function (driver, count) {
     if (count > 1 && config.LOG_DETAILS) console.log("clickElementByXPath ", xpath, " attempt #", count);
-    let elem = await findByXPath(driver, xpath, isInButtonArea);
+    const elem = await findByXPath(driver, xpath, isInButtonArea);
     await elem.click();
   });
   // Stale element possible:
@@ -291,7 +291,7 @@ export async function getTextByXPath(
 ): Promise<string> {
   return await retry(5, driver, async function (driver, count) {
     if (count > 1 && config.LOG_DETAILS) console.log("getTextByXPath ", xpath, " attempt #", count);
-    let elem = await findByXPath(driver, xpath, isInButtonArea);
+    const elem = await findByXPath(driver, xpath, isInButtonArea);
     return await elem.getText();
   });
 }
@@ -311,10 +311,10 @@ export async function mainRoot(driver: WebDriver, isInButtonArea: boolean): Prom
 // node_modules\.bin\chromedriver.cmd --verbose --port=9998 --log-path=chromedriver.log
 // SELENIUM_REMOTE_URL=http://localhost:9998
 export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
-  let width = 1280;
-  let height = 800;
+  const width = 1280;
+  const height = 800;
 
-  let args = [
+  const args = [
     "--js-flags=--expose-gc",
     "--enable-precise-memory-info",
     // "--enable-gpu-rasterization",
@@ -341,7 +341,7 @@ export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
     args.push("--no-sandbox");
   }
 
-  let caps = new Capabilities({
+  const caps = new Capabilities({
     browserName: "chrome",
     platform: "ANY",
     version: "stable",
@@ -353,8 +353,8 @@ export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
   });
 
   // port probing fails sometimes on windows, the following driver construction avoids probing:
-  let service = new chrome.ServiceBuilder().setPort(benchmarkOptions.chromePort).build();
-  let driver = chrome.Driver.createSession(caps, service);
+  const service = new chrome.ServiceBuilder().setPort(benchmarkOptions.chromePort).build();
+  const driver = chrome.Driver.createSession(caps, service);
 
   return driver;
 }

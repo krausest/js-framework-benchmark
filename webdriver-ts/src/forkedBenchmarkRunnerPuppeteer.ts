@@ -77,8 +77,8 @@ async function runCPUBenchmark(
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
     let error: string = undefined;
-    let warnings: string[] = [];
-    let results: CPUBenchmarkResult[] = [];
+    const warnings: string[] = [];
+    const results: CPUBenchmarkResult[] = [];
 
     console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
   let browser: Browser = null;
@@ -119,7 +119,7 @@ async function runCPUBenchmark(
             console.log("initBenchmark");
             await initBenchmark(page, benchmark, framework);
 
-            let categories = [
+            const categories = [
                 "blink.user_timing",
                 "devtools.timeline",
         "disabled-by-default-devtools.timeline",
@@ -141,7 +141,7 @@ async function runCPUBenchmark(
 
             const client = await page.target().createCDPSession();
 
-      let throttleCPU = slowDownFactor(
+      const throttleCPU = slowDownFactor(
         benchmark.benchmarkInfo.id,
         benchmarkOptions.allowThrottling
       );
@@ -157,22 +157,22 @@ async function runCPUBenchmark(
           });
           await forceGC(page, client);
             console.log("runBenchmark");
-            let m1 = await page.metrics();
+            const m1 = await page.metrics();
             await runBenchmark(page, benchmark, framework);
 
             await wait(40);
             await page.tracing.stop();
-            let m2 = await page.metrics();
+            const m2 = await page.metrics();
             if (throttleCPU) {
               await page.emulateCPUThrottling(1);
           }
   
             // console.log("afterBenchmark", m1, m2);
             // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
-      let result = await computeResultsCPU(
+      const result = await computeResultsCPU(
         fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
       );
-      let resultScript = await computeResultsJS(
+      const resultScript = await computeResultsJS(
         result,
         config,
         fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
@@ -212,8 +212,8 @@ async function runMemBenchmark(
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number>> {
   let error: string = undefined;
-  let warnings: string[] = [];
-  let results: number[] = [];
+  const warnings: string[] = [];
+  const results: number[] = [];
 
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
   let browser: Browser = null;
@@ -249,7 +249,7 @@ async function runMemBenchmark(
       await runBenchmark(page, benchmark, framework);
       await forceGC(page, client);
       await wait(40);
-      let result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
+      const result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
       console.log("afterBenchmark");
 
       results.push(result);
@@ -286,14 +286,14 @@ export async function executeBenchmark(
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<any>> {
-  let runBenchmarks: Array<BenchmarkPuppeteer> = benchmarks.filter(
+  const runBenchmarks: Array<BenchmarkPuppeteer> = benchmarks.filter(
     (b) =>
       benchmarkId === b.benchmarkInfo.id &&
       (b instanceof CPUBenchmarkPuppeteer || b instanceof MemBenchmarkPuppeteer)
   ) as Array<BenchmarkPuppeteer>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (puppeteer)`;
 
-  let benchmark = runBenchmarks[0];
+  const benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning<any>;
   if (benchmark.type == BenchmarkType.CPU) {
@@ -318,7 +318,7 @@ process.on("message", (msg: any) => {
   console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
   // if (config.LOG_DEBUG) console.log("child process got message", msg);
 
-  let {
+  const {
     framework,
     benchmarkId,
     benchmarkOptions,

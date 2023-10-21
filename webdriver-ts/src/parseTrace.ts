@@ -19,7 +19,7 @@ async function debugSingle() {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function debugAll() {
-  let benchmarkOptions: BenchmarkOptions = {
+  const benchmarkOptions: BenchmarkOptions = {
     port: 8080,
     host: "localhost",
     browser: "chrome",
@@ -38,11 +38,11 @@ async function debugAll() {
     allowThrottling: false,
   };
 
-  let frameworks = await initializeFrameworks(benchmarkOptions);
-  let cpuCPUBenchmarks = Object.values(cpuBenchmarkInfos);
-  let plausibilityCheck = new PlausibilityCheck();
-  for (let framework of frameworks) {
-    for (let benchmarkInfo of cpuCPUBenchmarks) {
+  const frameworks = await initializeFrameworks(benchmarkOptions);
+  const cpuCPUBenchmarks = Object.values(cpuBenchmarkInfos);
+  const plausibilityCheck = new PlausibilityCheck();
+  for (const framework of frameworks) {
+    for (const benchmarkInfo of cpuCPUBenchmarks) {
       await parseCPUTrace(benchmarkOptions, framework, benchmarkInfo, plausibilityCheck);
     }
   }

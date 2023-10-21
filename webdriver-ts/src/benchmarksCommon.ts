@@ -261,17 +261,17 @@ export const startupBenchmarkInfosArray: Array<StartupMainBenchmarkInfo> = [
 ];
 
 export const cpuBenchmarkInfos: { [idx: string]: CPUBenchmarkInfo } = {};
-for (let bi of cpuBenchmarkInfosArray) {
+for (const bi of cpuBenchmarkInfosArray) {
   cpuBenchmarkInfos[bi.id] = bi;
 }
 
 export const memBenchmarkInfos: { [idx: string]: MemBenchmarkInfo } = {};
-for (let bi of memBenchmarkInfosArray) {
+for (const bi of memBenchmarkInfosArray) {
   memBenchmarkInfos[bi.id] = bi;
 }
 
 export const startupBenchmarkInfos: { [idx: string]: StartupMainBenchmarkInfo } = {};
-for (let bi of startupBenchmarkInfosArray) {
+for (const bi of startupBenchmarkInfosArray) {
   startupBenchmarkInfos[bi.id] = bi;
 }
 

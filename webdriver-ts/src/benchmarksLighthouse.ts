@@ -6,8 +6,8 @@ export interface StartupBenchmarkResult extends BenchmarkImpl {
   result: number;
 }
 
-let id = (x: number) => x;
-let toKb = (x: number) => x / 1024;
+const id = (x: number) => x;
+const toKb = (x: number) => x / 1024;
 
 export const benchStartupConsistentlyInteractive: StartupBenchmarkInfo = {
   id: "31_startup-ci",

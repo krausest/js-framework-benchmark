@@ -10,7 +10,7 @@ import {
 import { subbenchmarks } from "./benchmarksLighthouse.js";
 import { BenchmarkOptions, config, initializeFrameworks, JsonResult } from "./common.js";
 
-let args: any = yargs(process.argv)
+const args: any = yargs(process.argv)
   .usage(
     "$0 [--framework Framework1 Framework2 ...] [--benchmark Benchmark1 Benchmark2 ...] [--chromeBinary path] \n or: $0 [directory1] [directory2] .. [directory3]"
   )
@@ -21,7 +21,7 @@ let args: any = yargs(process.argv)
 
 console.log("args", args);
 
-let benchmarkOptions: BenchmarkOptions = {
+const benchmarkOptions: BenchmarkOptions = {
   port: 8080,
   host: "localhost",
   browser: args.browser,
@@ -40,15 +40,15 @@ let benchmarkOptions: BenchmarkOptions = {
   allowThrottling: !args.nothrottling,
 };
 
-let resultsDirectory = args.browser ? "./results_client_" + args.browser : "./results";
+const resultsDirectory = args.browser ? "./results_client_" + args.browser : "./results";
 
 async function main() {
-  let frameworks = await initializeFrameworks(benchmarkOptions);
+  const frameworks = await initializeFrameworks(benchmarkOptions);
 
   let resultJS = "import {RawResult} from './Common';\n\nexport const results: RawResult[]=[";
 
   let allBenchmarks: Array<BenchmarkInfo> = [];
-  let jsonResult: { framework: string; benchmark: string; values: { [key: string]: number[] } }[] =
+  const jsonResult: { framework: string; benchmark: string; values: { [key: string]: number[] } }[] =
     [];
 
   benchmarkInfos.forEach((benchmarkInfo) => {
@@ -68,18 +68,18 @@ async function main() {
   frameworks.forEach((framework) => {
     allBenchmarks.forEach((benchmarkInfo) => {
       if (!args.browser || framework.keyed) {
-        let name = `${fileName(framework, benchmarkInfo)}`;
-        let file = `${resultsDirectory}/${name}`;
+        const name = `${fileName(framework, benchmarkInfo)}`;
+        const file = `${resultsDirectory}/${name}`;
         if (fs.existsSync(file)) {
-          let data: JsonResult = JSON.parse(
+          const data: JsonResult = JSON.parse(
             fs.readFileSync(file, {
               encoding: "utf-8",
             })
           );
 
-          let values: { [k: string]: number[] } = {};
-          for (let key of Object.keys(data.values)) {
-            let vals = data.values[key].values.filter((v) => v != null);
+          const values: { [k: string]: number[] } = {};
+          for (const key of Object.keys(data.values)) {
+            const vals = data.values[key].values.filter((v) => v != null);
             values[key] = vals;
             if (vals.some((v) => v == null)) {
               console.log(`Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`);
@@ -106,12 +106,12 @@ async function main() {
               );
             }
           }
-          let result: any = {
+          const result: any = {
             f: data.framework,
             b: data.benchmark,
             v: values,
           };
-          let resultNice = {
+          const resultNice = {
             framework: data.framework,
             benchmark: data.benchmark,
             values: values,
@@ -139,7 +139,7 @@ async function main() {
       }))
     ) +
     ";\n";
-  let formattedBenchmarks = allBenchmarks.map((b) => ({
+  const formattedBenchmarks = allBenchmarks.map((b) => ({
     id: b.id,
     label: b.label,
     description: b.description(slowDownFactor(b.id, true)),

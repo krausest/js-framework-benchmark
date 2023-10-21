@@ -36,7 +36,7 @@ export abstract class MemBenchmarkPlaywright implements BenchmarkImpl {
 
 export type BenchmarkPlaywright = CPUBenchmarkPlaywright | MemBenchmarkPlaywright;
 
-export let benchRun = new (class extends CPUBenchmarkPlaywright {
+export const benchRun = new (class extends CPUBenchmarkPlaywright {
   constructor() {
     super(cpuBenchmarkInfos[Benchmark._01]);
   }
@@ -120,7 +120,7 @@ export const benchSwapRows = new (class extends CPUBenchmarkPlaywright {
       await clickElement(page, "#run");
       await checkElementExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
       for (let i = 0; i <= config.WARMUP_COUNT; i++) {
-      let text = i % 2 == 0 ? "2" : "999";
+      const text = i % 2 == 0 ? "2" : "999";
           await clickElement(page, "#swaprows");
           await checkElementContainsText(page, "tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text);
       }

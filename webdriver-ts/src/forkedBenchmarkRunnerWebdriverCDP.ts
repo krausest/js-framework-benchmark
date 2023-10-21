@@ -79,8 +79,8 @@ async function runCPUBenchmark(
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
   let error: string = undefined;
-  let warnings: string[] = [];
-  let results: CPUBenchmarkResult[] = [];
+  const warnings: string[] = [];
+  const results: CPUBenchmarkResult[] = [];
 
   console.log(
     "benchmarking ",
@@ -92,7 +92,7 @@ async function runCPUBenchmark(
   try {
     driver = buildDriver(benchmarkOptions);
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
-      let trace: any = { traceEvents: [] }; //await fs.open(fileNameTrace(framework, benchmark.benchmarkInfo, i), "w");
+      const trace: any = { traceEvents: [] }; //await fs.open(fileNameTrace(framework, benchmark.benchmarkInfo, i), "w");
       setUseShadowRoot(framework.useShadowRoot);
       setUseRowShadowRoot(framework.useRowShadowRoot);
       setShadowRootName(framework.shadowRootName);
@@ -109,7 +109,7 @@ async function runCPUBenchmark(
 
       await initBenchmark(driver, benchmark, framework);
       const cdpConnection = await (driver as any).createCDPConnection("page");
-      let throttleCPU = slowDownFactor(
+      const throttleCPU = slowDownFactor(
         benchmark.benchmarkInfo.id,
         benchmarkOptions.allowThrottling
       );
@@ -120,7 +120,7 @@ async function runCPUBenchmark(
         });
       }
 
-      let categories = [
+      const categories = [
         "blink.user_timing",
         "devtools.timeline",
         "disabled-by-default-devtools.timeline",
@@ -137,9 +137,9 @@ async function runCPUBenchmark(
         },
       });
 
-      let p = new Promise((resolve) => {
+      const p = new Promise((resolve) => {
         cdpConnection._wsConnection.on("message", async (msg: any) => {
-          let message: any = JSON.parse(msg);
+          const message: any = JSON.parse(msg);
           // console.log("####", typeof message, message.method, Object.keys(message), message);
           if (message.method === "Tracing.dataCollected") {
             // console.log("Tracing.dataCollected");
@@ -168,7 +168,7 @@ async function runCPUBenchmark(
       await cdpConnection.execute("Tracing.end", {});
       await p;
 
-      let result = await computeResultsCPU(
+      const result = await computeResultsCPU(
         fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
       );
       results.push({ total: result.duration, script: 0 });
@@ -198,12 +198,12 @@ export async function executeBenchmark(
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number | CPUBenchmarkResult>> {
-  let runBenchmarks: Array<CPUBenchmarkWebdriverCDP> = benchmarks.filter(
+  const runBenchmarks: Array<CPUBenchmarkWebdriverCDP> = benchmarks.filter(
     (b) => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriverCDP
   ) as Array<CPUBenchmarkWebdriverCDP>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
-  let benchmark = runBenchmarks[0];
+  const benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult>;
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
@@ -219,7 +219,7 @@ process.on("message", (msg: any) => {
   console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
   // if (config.LOG_DEBUG) console.log("child process got message", msg);
 
-  let {
+  const {
     framework,
     benchmarkId,
     benchmarkOptions,

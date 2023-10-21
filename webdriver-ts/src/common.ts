@@ -59,7 +59,7 @@ export enum BenchmarkRunner {
   WEBDRIVER_AFTERFRAME = "webdriver-afterframe",
 }
 
-export let config = {
+export const config = {
   NUM_ITERATIONS_FOR_BENCHMARK_CPU: 15,
   NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT: 0, // drop the # of slowest results
   NUM_ITERATIONS_FOR_BENCHMARK_MEM: 1,
@@ -142,10 +142,10 @@ export async function initializeFrameworks(
     throw new Error(error as string);
   }
 
-  let frameworks: FrameworkData[] = [];
-  for (let ls of lsResult) {
-    let frameworkVersionInformation: FrameworkInformation = ls;
-    let fullName = frameworkVersionInformation.type + "/" + frameworkVersionInformation.directory;
+  const frameworks: FrameworkData[] = [];
+  for (const ls of lsResult) {
+    const frameworkVersionInformation: FrameworkInformation = ls;
+    const fullName = frameworkVersionInformation.type + "/" + frameworkVersionInformation.directory;
     if (matchPredicate(fullName)) {
       frameworks.push({
         name: frameworkVersionInformation.directory,

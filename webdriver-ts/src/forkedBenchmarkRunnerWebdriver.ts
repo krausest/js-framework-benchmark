@@ -33,10 +33,10 @@ interface TimingResult {
 }
 
 function extractRelevantEvents(entries: logging.Entry[]) {
-  let filteredEvents: TimingResult[] = [];
-  let protocolEvents: any[] = [];
+  const filteredEvents: TimingResult[] = [];
+  const protocolEvents: any[] = [];
   entries.forEach((x) => {
-    let e = JSON.parse(x.message).message;
+    const e = JSON.parse(x.message).message;
     if (config.LOG_DETAILS) console.log(JSON.stringify(e));
     if (e.method === "Tracing.dataCollected") {
       protocolEvents.push(e);
@@ -141,30 +141,30 @@ async function computeResultsCPU(
   warnings: string[],
   expcectedResultCount: number
 ): Promise<CPUBenchmarkResult[]> {
-  let entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
+  const entriesBrowser = await driver.manage().logs().get(logging.Type.BROWSER);
   if (config.LOG_DEBUG) console.log("browser entries", entriesBrowser);
   const perfLogEvents = await fetchEventsFromPerformanceLog(driver);
-  let filteredEvents = perfLogEvents.timingResults;
+  const filteredEvents = perfLogEvents.timingResults;
 
   // if (config.LOG_DEBUG) console.log("filteredEvents ", asString(filteredEvents));
 
   let remaining = R.dropWhile(type_eq("initBenchmark"))(filteredEvents);
-  let results: CPUBenchmarkResult[] = [];
+  const results: CPUBenchmarkResult[] = [];
 
   while (remaining.length > 0) {
-    let evts = R.splitWhen(type_eq("finishedBenchmark"))(remaining);
+    const evts = R.splitWhen(type_eq("finishedBenchmark"))(remaining);
     if (R.find(type_neq("runBenchmark"))(evts[0]) && evts[1].length > 0) {
-      let eventsDuringBenchmark = R.dropWhile(type_neq("runBenchmark"))(evts[0]);
+      const eventsDuringBenchmark = R.dropWhile(type_neq("runBenchmark"))(evts[0]);
 
       if (config.LOG_DEBUG) console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
 
-      let clicks = R.filter(type_eq("click"))(eventsDuringBenchmark);
+      const clicks = R.filter(type_eq("click"))(eventsDuringBenchmark);
       if (clicks.length !== 1) {
         console.log("exactly one click event is expected", eventsDuringBenchmark);
         throw "exactly one click event is expected";
       }
 
-      let eventsAfterClick = R.dropWhile(type_neq("click"))(eventsDuringBenchmark);
+      const eventsAfterClick = R.dropWhile(type_neq("click"))(eventsDuringBenchmark);
 
       if (config.LOG_DEBUG) console.log("eventsAfterClick", eventsAfterClick);
 
@@ -196,8 +196,8 @@ async function computeResultsCPU(
         });
       }
 
-      let duration = (paintsP[paintsP.length - 1].end - clicks[0].ts) / 1000.0;
-      let upperBoundForSoundnessCheck =
+      const duration = (paintsP[paintsP.length - 1].end - clicks[0].ts) / 1000.0;
+      const upperBoundForSoundnessCheck =
         (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000.0;
 
       if (duration < 0) {
@@ -293,7 +293,7 @@ async function runCPUBenchmark(
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number | CPUBenchmarkResult>> {
   let error: string = undefined;
-  let warnings: string[] = [];
+  const warnings: string[] = [];
 
   console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
   let driver: WebDriver = null;
@@ -317,7 +317,7 @@ async function runCPUBenchmark(
       await driver.executeScript("console.timeStamp('initBenchmark')");
 
       await initBenchmark(driver, benchmark, framework);
-      let throttleCPU = slowDownFactor(
+      const throttleCPU = slowDownFactor(
         benchmark.benchmarkInfo.id,
         benchmarkOptions.allowThrottling
       );
@@ -335,7 +335,7 @@ async function runCPUBenchmark(
         }
         await driver.executeScript("console.timeStamp('finishedBenchmark')");
       }
-    let result = await computeResultsCPU(
+    const result = await computeResultsCPU(
       driver,
       benchmarkOptions,
       framework,
@@ -366,12 +366,12 @@ export async function executeBenchmark(
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number | CPUBenchmarkResult>> {
-  let runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(
+  const runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(
     (b) => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriver
   ) as Array<CPUBenchmarkWebdriver>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
-  let benchmark = runBenchmarks[0];
+  const benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult>;
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
@@ -387,7 +387,7 @@ process.on("message", (msg: any) => {
   console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
   // if (config.LOG_DEBUG) console.log("child process got message", msg);
 
-  let {
+  const {
     framework,
     benchmarkId,
     benchmarkOptions,
