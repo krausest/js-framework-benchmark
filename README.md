@@ -103,7 +103,7 @@ This will take some time (currently about 12 hours on my machine). Finally creat
 npm run results
 ```
 
-Open js-framework-benchmark/webdriver-ts-results/table.html in a browser and take a look at the results. You can open the result table with the link [http://localhost:8080/webdriver-ts-results/dist/index.html](http://localhost:8080/webdriver-ts-results/dist/index.html)
+Open js-framework-benchmark/webdriver-ts-results/table.html in a browser and take a look at the results. You can open the result table with the link [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html)
 
 
 Here's what you should do when the benchmark run was not successful. Let's assume the benchmark printed the following to the console:

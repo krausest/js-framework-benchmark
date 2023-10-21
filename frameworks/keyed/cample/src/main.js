@@ -106,27 +106,27 @@ const mainComponent = component(
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>cample-"keyed"</h1>
+              <h1>cample-"keyed"</h1>
             </div>
             <div class="col-md-6">
                 <div class="row">
                     <div class="col-sm-6 smallpad">
-                        <button type='button' class='btn btn-primary btn-block' id='run'>Create 1,000 rows</button>
+                        <button type='button' class='btn btn-primary btn-block' :click="{{run()}}" id='run'>Create 1,000 rows</button>
                     </div>
                     <div class="col-sm-6 smallpad">
-                        <button type='button' class='btn btn-primary btn-block' id='runlots'>Create 10,000 rows</button>
+                        <button type='button' class='btn btn-primary btn-block' :click="{{runLots()}}" id='runlots'>Create 10,000 rows</button>
                     </div>
                     <div class="col-sm-6 smallpad">
-                        <button type='button' class='btn btn-primary btn-block' id='add'>Append 1,000 rows</button>
+                        <button type='button' class='btn btn-primary btn-block' :click="{{add()}}" id='add'>Append 1,000 rows</button>
                     </div>
                     <div class="col-sm-6 smallpad">
-                        <button type='button' class='btn btn-primary btn-block' id='update'>Update every 10th row</button>
+                        <button type='button' class='btn btn-primary btn-block' :click="{{update()}}" id='update'>Update every 10th row</button>
                     </div>
                     <div class="col-sm-6 smallpad">
-                        <button type='button' class='btn btn-primary btn-block' id='clear'>Clear</button>
+                        <button type='button' class='btn btn-primary btn-block' :click="{{clear()}}" id='clear'>Clear</button>
                     </div>
                     <div class="col-sm-6 smallpad">
-                        <button type='button' class='btn btn-primary btn-block' id='swaprows'>Swap Rows</button>
+                        <button type='button' class='btn btn-primary btn-block' :click="{{swapRows()}}" id='swaprows'>Swap Rows</button>
                     </div>
                 </div>
             </div>
@@ -144,57 +144,61 @@ const mainComponent = component(
         selected: null,
       };
     },
-    functions: {
+    dataFunctions: {
       updateRows: "rows",
       updateSelected: "selected",
     },
-    script: [
-      ({ functions, elements }) => {
-        const addListener = (key, fn) => {
-          elements[key].addEventListener("click", () => {
-            functions.updateRows(fn);
-          });
-        };
-        addListener("run", () => {
-          return buildData(1000);
-        });
-        addListener("runLots", () => {
-          return buildData(10000);
-        });
-        addListener("add", (d) => {
-          return [...d, ...buildData(1000)];
-        });
-        addListener("update", (d) => {
-          const value = d.slice();
-          for (let i = 0; i < value.length; i += 10) {
-            const item = value[i];
-            value[i] = { ...item, label: item.label + " !!!" };
-          }
-          return value;
-        });
-        addListener("clear", () => {
-          return [];
-        });
-        addListener("swapRows", (d) => {
-          const value = d.slice();
-          const tmp = value[1];
-          value[1] = value[998];
-          value[998] = tmp;
-          return value;
-        });
-      },
-      {
-        start: "afterLoad",
-        elements: {
-          run: "#run",
-          runLots: "#runlots",
-          add: "#add",
-          update: "#update",
-          clear: "#clear",
-          swapRows: "#swaprows",
+    functions: {
+      run: [
+        (setData) => () => {
+          setData(() => buildData(1000));
         },
-      },
-    ],
+        "updateRows",
+      ],
+      runLots: [
+        (setData) => () => {
+          setData(() => buildData(10000));
+        },
+        "updateRows",
+      ],
+      add: [
+        (setData) => () => {
+          setData((d) => [...d, ...buildData(1000)]);
+        },
+        "updateRows",
+      ],
+      update: [
+        (setData) => () => {
+          setData((d) => {
+            const value = d.slice();
+            for (let i = 0; i < value.length; i += 10) {
+              const item = value[i];
+              value[i] = { ...item, label: item.label + " !!!" };
+            }
+            return value;
+          });
+        },
+        "updateRows",
+      ],
+      clear: [
+        (setData) => () => {
+          setData(() => []);
+        },
+        "updateRows",
+      ],
+      swapRows: [
+        (setData) => () => {
+          setData((d) => {
+            const value = d.slice();
+            const tmp = value[1];
+            value[1] = value[998];
+            value[998] = tmp;
+            return value;
+          });
+        },
+        "updateRows",
+      ],
+    },
     export: {
       tableData: {
         data: {
