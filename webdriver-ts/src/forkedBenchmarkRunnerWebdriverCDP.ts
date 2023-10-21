@@ -7,7 +7,7 @@ import {
   config as defaultConfig,
   ErrorAndWarning,
   FrameworkData,
-  TConfig,
+  Config,
 } from "./common.js";
 import { computeResultsCPU, fileNameTrace } from "./timeline.js";
 import {
@@ -18,7 +18,7 @@ import {
   setUseShadowRoot,
 } from "./webdriverCDPAccess.js";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 
 // necessary to launch without specifiying a path
 require("chromedriver");
@@ -137,7 +137,7 @@ async function runCPUBenchmark(
         },
       });
 
-      let p = new Promise((resolve, reject) => {
+      let p = new Promise((resolve) => {
         cdpConnection._wsConnection.on("message", async (msg: any) => {
           let message: any = JSON.parse(msg);
           // console.log("####", typeof message, message.method, Object.keys(message), message);

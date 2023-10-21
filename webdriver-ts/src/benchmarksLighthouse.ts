@@ -54,7 +54,7 @@ export const subbenchmarks = [
 
 export class BenchmarkLighthouse implements BenchmarkImpl {
   type = BenchmarkType.STARTUP_MAIN;
-  benchmarkInfo = benchmarksCommon.startupBenchmarkInfos[benchmarksCommon.BENCHMARK_30];
+  benchmarkInfo = benchmarksCommon.startupBenchmarkInfos[benchmarksCommon.Benchmark._30];
   subbenchmarks = subbenchmarks;
 }
 

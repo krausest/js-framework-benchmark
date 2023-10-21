@@ -261,7 +261,10 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
   return true;
 }
 
-async function runBench(frameworkNames: string[]) {
+async function runBench(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  frameworkNames: string[] // Not used in the function, but is used when calling the function in other files
+) {
   let runFrameworks;
   let matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);

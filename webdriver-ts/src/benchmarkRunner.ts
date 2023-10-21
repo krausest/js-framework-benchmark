@@ -1,7 +1,7 @@
 import yargs from "yargs";
 import {
   BenchmarkOptions,
-  BENCHMARK_RUNNER,
+  BenchmarkRunner,
   config,
   ErrorAndWarning,
   FrameworkData,
@@ -21,7 +21,7 @@ import {
 } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
 import { writeResults } from "./writeResults.js";
-import { PlausibilityCheck, parseCPUTrace } from "./timeline.js";
+import { PlausibilityCheck } from "./timeline.js";
 
 function forkAndCallBenchmark(
   framework: FrameworkData,
@@ -32,13 +32,13 @@ function forkAndCallBenchmark(
     let forkedRunner = null;
     if (benchmarkInfo.type === BenchmarkType.STARTUP_MAIN) {
       forkedRunner = "dist/forkedBenchmarkRunnerLighthouse.js";
-    } else if (config.BENCHMARK_RUNNER == BENCHMARK_RUNNER.WEBDRIVER_CDP) {
+    } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER_CDP) {
       forkedRunner = "dist/forkedBenchmarkRunnerWebdriverCDP.js";
-    } else if (config.BENCHMARK_RUNNER == BENCHMARK_RUNNER.PLAYWRIGHT) {
+    } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.PLAYWRIGHT) {
       forkedRunner = "dist/forkedBenchmarkRunnerPlaywright.js";
-    } else if (config.BENCHMARK_RUNNER == BENCHMARK_RUNNER.WEBDRIVER) {
+    } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER) {
       forkedRunner = "dist/forkedBenchmarkRunnerWebdriver.js";
-    } else if (config.BENCHMARK_RUNNER == BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME) {
+    } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER_AFTERFRAME) {
       forkedRunner = "dist/forkedBenchmarkRunnerWebdriverAfterframe.js";
     } else {
       forkedRunner = "dist/forkedBenchmarkRunnerPuppeteer.js";
@@ -126,6 +126,7 @@ async function runBenchmakLoop(
   framework: FrameworkData,
   benchmarkInfo: CPUBenchmarkInfo | MemBenchmarkInfo,
   benchmarkOptions: BenchmarkOptions,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   plausibilityCheck: PlausibilityCheck
 ): Promise<{ errors: string[]; warnings: string[] }> {
   let warnings: string[] = [];
@@ -240,7 +241,7 @@ async function runBench(
         warnings = warnings.concat(result.warnings);
       } catch (e) {
         console.log("UNHANDELED ERROR", e);
-        errors.push(e);
+        errors.push(e as string);
       }
     }
   }
@@ -300,21 +301,21 @@ console.log("args", args);
 let runner = args.runner;
   if (
     [
-      BENCHMARK_RUNNER.WEBDRIVER_CDP,
-      BENCHMARK_RUNNER.WEBDRIVER,
-      BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME,
-  BENCHMARK_RUNNER.PLAYWRIGHT,
-      BENCHMARK_RUNNER.PUPPETEER,
+      BenchmarkRunner.WEBDRIVER_CDP,
+      BenchmarkRunner.WEBDRIVER,
+      BenchmarkRunner.WEBDRIVER_AFTERFRAME,
+      BenchmarkRunner.PLAYWRIGHT,
+      BenchmarkRunner.PUPPETEER,
     ].includes(runner)
   ) {
     console.log(`INFO: Using ${runner} benchmark runner`);
   config.BENCHMARK_RUNNER = runner;
 } else {
     console.log("ERROR: argument driver has illegal value " + runner, [
-      BENCHMARK_RUNNER.WEBDRIVER_CDP,
-      BENCHMARK_RUNNER.WEBDRIVER,
-      BENCHMARK_RUNNER.PLAYWRIGHT,
-      BENCHMARK_RUNNER.PUPPETEER,
+      BenchmarkRunner.WEBDRIVER_CDP,
+      BenchmarkRunner.WEBDRIVER,
+      BenchmarkRunner.PLAYWRIGHT,
+      BenchmarkRunner.PUPPETEER,
     ]);
   process.exit(1);
 }
@@ -360,8 +361,8 @@ console.log("benchmarkOptions", benchmarkOptions);
     args.benchmark && args.benchmark.length > 0 ? args.benchmark : [""];
   let runBenchmarks: Array<BenchmarkInfo> = benchmarkInfos.filter(
     (b) =>
-    // afterframe currently only targets CPU benchmarks
-      (config.BENCHMARK_RUNNER !== BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME ||
+      // afterframe currently only targets CPU benchmarks
+      (config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME ||
         b.type == BenchmarkType.CPU) &&
     runBenchmarksArgs.some((name) => b.id.toLowerCase().indexOf(name) > -1)
   );
@@ -370,7 +371,7 @@ console.log("benchmarkOptions", benchmarkOptions);
   let matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
   runFrameworks = (await initializeFrameworks(benchmarkOptions, matchesDirectoryArg)).filter(
-    (f) => f.keyed || config.BENCHMARK_RUNNER !== BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME
+    (f) => f.keyed || config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME
   );
 
   console.log("ARGS.smotest", args.smoketest);
@@ -386,7 +387,7 @@ console.log("benchmarkOptions", benchmarkOptions);
     });
     console.log("Using smoketest config ", JSON.stringify(config));
   }
-  if (config.BENCHMARK_RUNNER == BENCHMARK_RUNNER.WEBDRIVER_AFTERFRAME) {
+  if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER_AFTERFRAME) {
     benchmarkOptions.resultsDirectory = "results_client_" + benchmarkOptions.browser;
   }    
   if (!fs.existsSync(benchmarkOptions.resultsDirectory))

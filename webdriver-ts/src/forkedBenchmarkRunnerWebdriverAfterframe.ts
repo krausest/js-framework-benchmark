@@ -8,7 +8,7 @@ import {
 } from "./webdriverAccess.js";
 
 import {
-  TConfig,
+  Config,
   config as defaultConfig,
   FrameworkData,
   ErrorAndWarning,
@@ -17,7 +17,7 @@ import {
 import { BenchmarkType, CPUBenchmarkResult } from "./benchmarksCommon.js";
 import { getAfterframeDurations, initMeasurement } from "./benchmarksWebdriverAfterframe.js";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 
 async function runBenchmark(
   driver: WebDriver,

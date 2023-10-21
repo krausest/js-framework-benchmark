@@ -3,7 +3,8 @@ import * as chrome from "selenium-webdriver/chrome.js";
 import { BenchmarkOptions, config } from "./common.js";
 
 let useShadowRoot = false;
-let useRowShadowRoot = false;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let useRowShadowRoot = false; // Not used, but setUseRowShadowRoot changes its value
 let shadowRootName = "";
 let buttonsInShadowRoot = false;
 
