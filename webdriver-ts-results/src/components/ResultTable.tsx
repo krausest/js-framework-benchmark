@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  DisplayMode,
-  BenchmarkType,
-  FrameworkType,
-  CpuDurationMode,
-} from "../Common";
+import { DisplayMode, BenchmarkType, FrameworkType, CpuDurationMode } from "../Common";
 import CpuResultsTable from "./tables/CpuResultsTable";
 import MemResultsTable from "./tables/MemResultsTable";
 import StartupResultsTable from "./tables/StartupResultsTable";
@@ -56,10 +51,7 @@ const ResultTable = ({ type }: Props) => {
         <p>{texts[type].description}</p>
 
         {cpuDurationMode === CpuDurationMode.Script && (
-          <h3>
-            Warning: This is an experimental view. Don&apos;t rely on those
-            values yet.
-          </h3>
+          <h3>Warning: This is an experimental view. Don&apos;t rely on those values yet.</h3>
         )}
         {displayMode === DisplayMode.BoxPlot ? (
           <>
@@ -77,23 +69,15 @@ const ResultTable = ({ type }: Props) => {
             )}
           </>
         ) : (
-          <>
-            <CpuResultsTable
-              currentSortKey={currentSortKey}
-              sortBy={sortBy}
-              data={data}
-            />
-            <StartupResultsTable
-              currentSortKey={currentSortKey}
-              sortBy={sortBy}
-              data={data}
-            />
-            <MemResultsTable
-              currentSortKey={currentSortKey}
-              sortBy={sortBy}
-              data={data}
-            />
-          </>
+          <div className="results">
+            <div className="results__table-container">
+              <table className="results__table">
+                <CpuResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
+                <StartupResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
+                <MemResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
+              </table>
+            </div>
+          </div>
         )}
       </div>
     </div>

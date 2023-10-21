@@ -24,13 +24,23 @@ const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
   };
 
   return resultsCPU.results.length === 0 ? null : (
-    <div className="results">
-      <h3>
-        Duration in milliseconds ± 95% confidence interval (Slowdown = Duration
-        / Fastest)
-      </h3>
-      <div className="results__table-container">
-        <table className="results__table">
+    <>
+    {/* Dummy row for fixed td width */}
+      <thead className="dummy">
+        <tr>
+          <th></th>
+          {data.frameworks.map((f, idx) => (
+            <th key={idx}></th>
+          ))}
+        </tr>
+      </thead>
+      <thead>
+        <tr>
+          <td className="description">
+            <h3>Duration in milliseconds ± 95% confidence interval (Slowdown = Duration / Fastest)</h3>
+          </td>
+        </tr>
+      </thead>
           <thead>
             <tr>
               <th className="benchname">
@@ -120,9 +130,7 @@ const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
               compareWith={data.compareWith}
             />
           </tbody>
-        </table>
-      </div>
-    </div>
+    </>
   );
 };
 

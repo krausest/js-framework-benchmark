@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  ResultTableData,
-  SORT_BY_NAME,
-  SORT_BY_GEOMMEAN_MEM,
-  BenchmarkType,
-} from "../../Common";
+import { ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_MEM, BenchmarkType } from "../../Common";
 import ValueResultRow from "./ValueResultRow";
 import GeomMeanRow from "./GeomMeanRow";
 
@@ -23,49 +18,40 @@ const MemResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
   };
 
   return resultsMEM.results.length === 0 ? null : (
-    <div className="results">
-      <h3>Memory allocation in MBs ± 95% confidence interval</h3>
-      <div className="results__table-container">
-        <table className="results__table">
-          <thead>
-            <tr>
-              <th className="benchname">
-                <button
-                  className={`button button__text ${
-                    currentSortKey === SORT_BY_NAME ? "sort-key" : ""
-                  }`}
-                  onClick={handleSortByName}
-                >
-                  Name
-                </button>
-              </th>
-              {data.frameworks.map((f) => (
-                <th key={f.displayname}>{f.displayname}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {resultsMEM.results.map((resultsForBenchmark, benchIdx) => (
-              <ValueResultRow
-                key={resultsMEM.benchmarks[benchIdx]?.id}
-                benchIdx={benchIdx}
-                resultsForBenchmark={resultsForBenchmark}
-                benchmarks={resultsMEM.benchmarks}
-                currentSortKey={currentSortKey}
-                sortBy={sortBy}
-              />
-            ))}
-            <GeomMeanRow
-              weighted={false}
-              currentSortKey={currentSortKey}
-              sortBy={sortBy}
-              geomMean={resultsMEM.geomMean}
-              sortbyGeommeanEnum={SORT_BY_GEOMMEAN_MEM}
-            />
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <>
+      <thead>
+        <tr>
+          <td className="description">
+            <h3>Memory allocation in MBs ± 95% confidence interval</h3>
+          </td>
+        </tr>
+      </thead>
+      <thead>
+        <tr>
+          <th className="benchname">
+            <button className={`button button__text ${currentSortKey === SORT_BY_NAME ? "sort-key" : ""}`} onClick={handleSortByName}>
+              Name
+            </button>
+          </th>
+          {data.frameworks.map((f) => (
+            <th key={f.displayname}>{f.displayname}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {resultsMEM.results.map((resultsForBenchmark, benchIdx) => (
+          <ValueResultRow
+            key={resultsMEM.benchmarks[benchIdx]?.id}
+            benchIdx={benchIdx}
+            resultsForBenchmark={resultsForBenchmark}
+            benchmarks={resultsMEM.benchmarks}
+            currentSortKey={currentSortKey}
+            sortBy={sortBy}
+          />
+        ))}
+        <GeomMeanRow weighted={false} currentSortKey={currentSortKey} sortBy={sortBy} geomMean={resultsMEM.geomMean} sortbyGeommeanEnum={SORT_BY_GEOMMEAN_MEM} />
+      </tbody>
+    </>
   );
 };
 
