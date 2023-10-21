@@ -27,7 +27,7 @@ The following operations are benchmarked for each framework:
 - startup time: Duration for loading and parsing the javascript code and rendering the page.
 - consistently interactive: The lighthouse metric TimeToConsistentlyInteractive: A pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)
 - script bootup time: The lighthouse metric ScriptBootUpTtime: The total ms required to parse/compile/evaluate all the page's scripts
-- main thread work cost: The lighthouse metric MainThreadWorkCost: Total amount of time spent doing work on the main thread. includes style/layout/etc.
+- main thread work cost: The lighthouse metric MainThreadWorkCost: Total amount of time spent doing work on the main thread includes style/layout/etc.
 - total byte weight: The lighthouse metric TotalByteWeight: Network transfer cost (post-compression) of all the resources loaded into the page.
 
 For all benchmarks the duration is measured including rendering time. You can read some details on this [article](http://www.stefankrause.net/wp/?p=218) and in the [wiki](https://github.com/krausest/js-framework-benchmark/wiki/How-the-duration-is-measured). Starting with chrome 118 the overall performance is computed as a [weighted geometric mean](https://github.com/krausest/js-framework-benchmark/wiki/Computation-of-the-weighted-geometric-mean).
