@@ -8,7 +8,7 @@ import {
   slowDownFactor,
 } from "./benchmarksCommon.js";
 import { subbenchmarks } from "./benchmarksLighthouse.js";
-import { BenchmarkOptions, config, initializeFrameworks, JSONResult } from "./common.js";
+import { BenchmarkOptions, config, initializeFrameworks, JsonResult } from "./common.js";
 
 let args: any = yargs(process.argv)
   .usage(
@@ -71,7 +71,7 @@ async function main() {
         let name = `${fileName(framework, benchmarkInfo)}`;
         let file = `${resultsDirectory}/${name}`;
         if (fs.existsSync(file)) {
-          let data: JSONResult = JSON.parse(
+          let data: JsonResult = JSON.parse(
             fs.readFileSync(file, {
               encoding: "utf-8",
             })

@@ -45,7 +45,10 @@ let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
 
 console.log("args.framework", args.framework, !args.framework);
 
-async function runBench(frameworkNames: string[]) {
+async function runBench(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  frameworkNames: string[] // Not used in the function, but is used when calling the function in other files
+) {
   let runFrameworks;
   let matchesDirectoryArg = (directoryName: string) =>
     allArgs.length == 0 || allArgs.some((arg: string) => arg == directoryName);
