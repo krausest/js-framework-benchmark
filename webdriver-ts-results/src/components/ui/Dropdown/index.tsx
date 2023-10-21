@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import "./Dropdown.css";
 
 interface Props {
   label: string;
-  children: JSX.Element | JSX.Element[];
+  children: ReactElement | ReactElement[];
   width: string;
 }
 
