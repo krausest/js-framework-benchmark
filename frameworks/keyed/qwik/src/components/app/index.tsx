@@ -74,6 +74,48 @@ export function buildData(count: number) {
   return data;
 }
 
+export const Row = component$(
+  ({
+    item,
+    state,
+    isSelected,
+  }: {
+    item: BenchState["data"][0];
+    state: BenchState;
+    isSelected: boolean;
+  }) => {
+    const { id, label } = item;
+    return (
+      <tr class={isSelected ? "danger" : ""}>
+        <td class="col-md-1">{item.id}</td>
+        <td class="col-md-4">
+          <a
+            onClick$={() => {
+              state.selected = id;
+            }}
+          >
+            {label}
+          </a>
+        </td>
+        <td class="col-md-1">
+          <a
+            onClick$={() => {
+              const d = state.data;
+              d.splice(
+                d.findIndex((d) => d.id === id),
+                1
+              );
+            }}
+          >
+            <span class="glyphicon glyphicon-remove" aria-hidden="true" />
+          </a>
+        </td>
+        <td class="col-md-6" />
+      </tr>
+    );
+  }
+);
+
 type BenchState = {
   data: Array<{ id: number; label: string }>;
   selected: number | null;
@@ -163,33 +205,14 @@ export const App = component$(() => {
       </div>
       <table class="table table-hover table-striped test-data">
         <tbody>
-          {state.data.map(({ id, label }) => {
-            return (
-              <tr key={id} class={id === state.selected ? "danger" : ""}>
-                <td class="col-md-1">{id}</td>
-                <td class="col-md-4">
-                  <a onClick$={() => (state.selected = id)}>{label}</a>
-                </td>
-                <td class="col-md-1">
-                  <a
-                    onClick$={() => {
-                      const d = state.data;
-                      d.splice(
-                        d.findIndex((d) => d.id === id),
-                        1
-                      );
-                    }}
-                  >
-                    <span
-                      class="glyphicon glyphicon-remove"
-                      aria-hidden="true"
-                    />
-                  </a>
-                </td>
-                <td class="col-md-6" />
-              </tr>
-            );
-          })}
+          {state.data.map((item) => (
+            <Row
+              key={item.id}
+              item={item}
+              state={state}
+              isSelected={item.id === state.selected}
+            />
+          ))}
         </tbody>
       </table>
       <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
