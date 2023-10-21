@@ -86,13 +86,13 @@ function extractRelevantEvents(entries: logging.Entry[]) {
       });
     } else if (e.params.name === "Layout" && e.params.ph == "X") {
       if (config.LOG_TIMELINE) console.log("LAYOUT ", JSON.stringify(e));
-      filteredEvents.push({
+        filteredEvents.push({
         type: "layout",
-        ts: +e.params.ts,
+          ts: +e.params.ts,
         dur: +e.params.dur,
         end: +e.params.ts + e.params.dur,
-        evt: JSON.stringify(e),
-      });
+          evt: JSON.stringify(e),
+        });
     } else if (e.params.name === "Paint" && e.params.ph == "X") {
       if (config.LOG_TIMELINE) console.log("PAINT ", JSON.stringify(e));
       filteredEvents.push({
@@ -173,22 +173,24 @@ async function computeResultsCPU(
       layouts = R.filter((e: TimingResult) => e.ts > clicks[0].end)(layouts);
       if (layouts.length > 1) {
         console.log("INFO: more than one layout event found");
+
         layouts.forEach((l) => {
           console.log("layout event", l.end - clicks[0].ts);
         });
       } else if (layouts.length == 0) {
-        console.log("WARNING: exactly one layout event is expected", eventsAfterClick);
-        lastLayoutEvent = clicks[0];
-      }
+      console.log("WARNING: exactly one layout event is expected", eventsAfterClick);
+      lastLayoutEvent = clicks[0];
+    }
 
       let paintsP = R.filter(type_eq("paint"))(eventsAfterClick);
+      
       paintsP = R.filter((e: TimingResult) => e.ts > lastLayoutEvent.end)(paintsP);
       if (paintsP.length == 0) {
         console.log("ERROR: No paint event found");
         throw "No paint event found";
-      }
-      if (paintsP.length > 1) {
-        console.log("more than one paint event found");
+    }
+    if (paintsP.length > 1) {
+      console.log("more than one paint event found");
         paintsP.forEach((l) => {
           console.log("paints event", (l.end - clicks[0].ts) / 1000.0);
         });
@@ -199,18 +201,12 @@ async function computeResultsCPU(
         (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000.0;
 
       if (duration < 0) {
-        console.log(
-          "soundness check failed. reported duration is less 0",
-          asString(eventsDuringBenchmark)
-        );
+        console.log("soundness check failed. reported duration is less 0", asString(eventsDuringBenchmark));
         throw "soundness check failed. reported duration is less 0";
       }
 
       if (duration > upperBoundForSoundnessCheck) {
-        console.log(
-          "soundness check failed. reported duration is bigger than whole benchmark duration",
-          asString(eventsDuringBenchmark)
-        );
+        console.log("soundness check failed. reported duration is bigger than whole benchmark duration", asString(eventsDuringBenchmark));
         throw "soundness check failed. reported duration is bigger than whole benchmark duration";
       }
       // script is currently not implemented
@@ -308,9 +304,7 @@ async function runCPUBenchmark(
       setUseRowShadowRoot(framework.useRowShadowRoot);
       setShadowRootName(framework.shadowRootName);
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
-      await driver.get(
-        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`
-      );
+      await driver.get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -336,11 +330,11 @@ async function runCPUBenchmark(
       await driver.executeScript("console.timeStamp('runBenchmark')");
       await runBenchmark(driver, benchmark, framework);
       if (throttleCPU) {
-        console.log("resetting CPU slowdown");
-        await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
+          console.log("resetting CPU slowdown");
+          await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
+        }
+        await driver.executeScript("console.timeStamp('finishedBenchmark')");
       }
-      await driver.executeScript("console.timeStamp('finishedBenchmark')");
-    }
     let result = await computeResultsCPU(
       driver,
       benchmarkOptions,

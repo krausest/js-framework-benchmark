@@ -1,5 +1,5 @@
 import React from "react";
-import { useRootStore } from "../../../reducer";
+import { useRootStore } from "@/reducer";
 import DisplayModeSelector from "./DisplayModeSelector";
 import DurationModeSelector from "./DurationModeSelector";
 import "./ModeSelectionPanel.css";

@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "s2 demo",
   "js-framework-benchmark": {
-    "frameworkVersion": "1.0.0",
-    "frameworkHomeURL": "",
-    "issues": [800]
+    "frameworkVersionFromPackage": "s2-engine",
+    "frameworkHomeURL": "https://gr0uch.github.io/s2",
+    "issues": [
+      800
+    ]
   },
   "scripts": {
     "build-dev": "echo 0",
@@ -20,5 +22,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "s2-engine": "^1.0.17"
   }
 }

@@ -1,7 +1,7 @@
 import React from "react";
-import { BenchmarkType } from "../../../Common";
-import { useRootStore } from "../../../reducer";
-import SelectorContentContainer from "../SelectorContentContainer";
+import { BenchmarkType } from "@/Common";
+import { useRootStore } from "@/reducer";
+import SelectorContentContainer from "@components/selection/SelectorContentContainer";
 import BenchmarkSelectorList from "./BenchmarkSelectorList";
 
 interface Props {

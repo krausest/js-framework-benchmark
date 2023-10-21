@@ -7,7 +7,9 @@
     "frameworkVersionFromPackage": "lit",
     "frameworkHomeURL": "https://lit.dev/",
     "useShadowRoot": true,
-    "issues": [801]
+    "issues": [
+      801
+    ]
   },
   "scripts": {
     "build-dev": "rollup -c -w",
@@ -27,7 +29,7 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lit": "2.6.1"
+    "lit": "^3.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "11.2.1",

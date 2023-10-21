@@ -66,9 +66,8 @@ export async function findByXPath(
   let paths = convertPath(path);
   let root = mainRoot(driver, isInButtonArea);
   try {
-    if (config.LOG_DEBUG)
-      console.log("findByXPath: selector = ", `return ${root}.querySelector('${paths}')`);
-    return await driver.executeScript(`return ${root}.querySelector('${paths}')`);
+    if (config.LOG_DEBUG) console.log("findByXPath: selector = ", `return ${root}.querySelector('${paths}')`);
+    return await driver.executeScript(`return ${root}.querySelector('${paths}')`); 
   } catch (e) {
     //can happen for StaleElementReferenceError
     return null;
@@ -104,10 +103,7 @@ export async function testTextContains(
         let v = await elem.getText();
         return v && v.indexOf(text) > -1;
       } catch (err) {
-        console.log(
-          "ignoring error in testTextContains for xpath = " + xpath + " text = " + text,
-          err.toString().split("\n")[0]
-        );
+        console.log("ignoring error in testTextContains for xpath = " + xpath + " text = " + text, err.toString().split("\n")[0]);
       }
     },
     timeout
@@ -130,10 +126,7 @@ export async function testTextNotContained(
         let v = await elem.getText();
         return v && v.indexOf(text) == -1;
       } catch (err) {
-        console.log(
-          "ignoring error in testTextNotContained for xpath = " + xpath + " text = " + text,
-          err.toString().split("\n")[0]
-        );
+        console.log("ignoring error in testTextNotContained for xpath = " + xpath + " text = " + text, err.toString().split("\n")[0]);
       }
     },
     timeout
@@ -156,10 +149,7 @@ export async function testClassContains(
         let v = await elem.getAttribute("class");
         return v && v.indexOf(text) > -1;
       } catch (err) {
-        console.log(
-          "ignoring error in testClassContains for xpath = " + xpath + " text = " + text,
-          err.toString().split("\n")[0]
-        );
+        console.log("ignoring error in testClassContains for xpath = " + xpath + " text = " + text, err.toString().split("\n")[0]);
       }
     },
     timeout
@@ -179,10 +169,7 @@ export async function testElementLocatedByXpath(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         return elem ? true : false;
       } catch (err) {
-        console.log(
-          "ignoring error in testElementLocatedByXpath for xpath = " + xpath,
-          err.toString()
-        );
+        console.log("ignoring error in testElementLocatedByXpath for xpath = " + xpath, err.toString());
       }
     },
     timeout
@@ -203,10 +190,7 @@ export async function testElementNotLocatedByXPath(
         if (config.LOG_DEBUG) console.log("testElementNotLocatedByXPath", xpath, elem);
         return elem ? false : true;
       } catch (err) {
-        console.log(
-          "ignoring error in testElementNotLocatedByXPath for xpath = " + xpath,
-          err.toString().split("\n")[0]
-        );
+        console.log("ignoring error in testElementNotLocatedByXPath for xpath = " + xpath, err.toString().split("\n")[0]);
       }
     },
     timeout
@@ -224,8 +208,7 @@ export async function testElementLocatedById(
     async function (driver) {
       try {
         let root = mainRoot(driver, isInButtonArea);
-        if (config.LOG_DEBUG)
-          console.log("testElementLocatedById selector ", `return ${root}.querySelector('#${id}')`);
+        if (config.LOG_DEBUG) console.log("testElementLocatedById selector ", `return ${root}.querySelector('#${id}')`);
         let elem = await driver.executeScript(`return ${root}.querySelector('#${id}')`);
         return !!elem;
       } catch (err) {
@@ -267,8 +250,7 @@ export async function clickElementByXPath(
   isInButtonArea: boolean
 ) {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS)
-      console.log("clickElementByXPath ", xpath, " attempt #", count);
+    if (count > 1 && config.LOG_DETAILS) console.log("clickElementByXPath ", xpath, " attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     await elem.click();
   });

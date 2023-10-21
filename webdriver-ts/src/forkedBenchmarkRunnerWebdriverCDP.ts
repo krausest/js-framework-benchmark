@@ -29,13 +29,7 @@ async function runBenchmark(
   framework: FrameworkData
 ): Promise<any> {
   await benchmark.run(driver, framework);
-  if (config.LOG_PROGRESS)
-    console.log(
-      "after run ",
-      benchmark.benchmarkInfo.id,
-      benchmark.benchmarkInfo.type,
-      framework.name
-    );
+  if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
 async function initBenchmark(
@@ -44,13 +38,7 @@ async function initBenchmark(
   framework: FrameworkData
 ): Promise<any> {
   await benchmark.init(driver, framework);
-  if (config.LOG_PROGRESS)
-    console.log(
-      "after initialized ",
-      benchmark.benchmarkInfo.id,
-      benchmark.benchmarkInfo.type,
-      framework.name
-    );
+  if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
 // async function registerError(driver: WebDriver, framework: FrameworkData, benchmark: Benchmark, error: string): Promise<BenchmarkError> {
@@ -109,9 +97,7 @@ async function runCPUBenchmark(
       setUseRowShadowRoot(framework.useRowShadowRoot);
       setShadowRootName(framework.shadowRootName);
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
-      await driver.get(
-        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`
-      );
+      await driver.get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -138,16 +124,16 @@ async function runCPUBenchmark(
         "blink.user_timing",
         "devtools.timeline",
         "disabled-by-default-devtools.timeline",
-      ];
+    ];
 
       console.log("**** Tracing start");
       await cdpConnection.execute("Tracing.start", {
         transferMode: "ReportEvents",
         traceConfig: {
-          enableSampling: false,
-          enableSystrace: false,
-          excludedCategories: [],
-          includedCategories: categories,
+            enableSampling: false,
+            enableSystrace: false,
+            excludedCategories: [],
+            includedCategories: categories,
         },
       });
 
@@ -170,7 +156,7 @@ async function runCPUBenchmark(
             );
             resolve({});
           }
-        });
+        });  
       });
 
       await runBenchmark(driver, benchmark, framework);

@@ -150,9 +150,7 @@ function isKeyedRemove(result: any, shouldBeKeyed: boolean): boolean {
   if (r && !shouldBeKeyed) {
     // console.log(`Note: Non-keyed test for remove is acutally keyed. Expected that the dom node for the 2nd row would NOT be removed, but it was.`);
   } else if (!r && shouldBeKeyed) {
-    console.log(
-      `Keyed test for remove failed. Expected that the dom node for the 2nd row would be removed, but it wasn't`
-    );
+    console.log(`Keyed test for remove failed. Expected that the dom node for the 2nd row would be removed, but it wasn't`);
   }
   return r;
 }
@@ -164,9 +162,7 @@ function isKeyedSwapRow(result: any, shouldBeKeyed: boolean): boolean {
     // );
   } else if (!r && shouldBeKeyed) {
     if (result.newNodes > 0) {
-      console.log(
-        `Keyed test for swap failed. Swap must add the TRs that it removed, but there were ${result.newNodes} new nodes`
-      );
+      console.log(`Keyed test for swap failed. Swap must add the TRs that it removed, but there were ${result.newNodes} new nodes`);
     } else {
       console.log(
         `Keyed test for swap failed. Expected at least 1 added and 1 removed TR, but there were ${result.tradded} added and ${result.trremoved} removed`
@@ -221,49 +217,31 @@ async function assertClassesContained(
 
 export async function checkTRcorrect(page: Page): Promise<boolean> {
   let tr = await page.$("tbody>tr:nth-of-type(1000)");
-  if (
-    !(await assertChildNodes(
-      tr as ElementHandle<HTMLElement>,
-      ["td", "td", "a", "td", "a", "span", "td"],
-      "tr"
-    ))
-  ) {
+  if (!(await assertChildNodes(tr as ElementHandle<HTMLElement>, ["td", "td", "a", "td", "a", "span", "td"], "tr"))) {
     return false;
   }
 
   // first td
   let td1 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
-  if (
-    !(await assertClassesContained(td1 as ElementHandle<HTMLElement>, ["col-md-1"], "first td"))
-  ) {
+  if (!(await assertClassesContained(td1 as ElementHandle<HTMLElement>, ["col-md-1"], "first td"))) {
     return false;
   }
 
   // second td
   let td2 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(2)");
-  if (
-    !(await assertClassesContained(td2 as ElementHandle<HTMLElement>, ["col-md-4"], "second td"))
-  ) {
+  if (!(await assertClassesContained(td2 as ElementHandle<HTMLElement>, ["col-md-4"], "second td"))) {
     return false;
   }
 
   // third td
   let td3 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(3)");
-  if (
-    !(await assertClassesContained(td3 as ElementHandle<HTMLElement>, ["col-md-1"], "third td"))
-  ) {
+  if (!(await assertClassesContained(td3 as ElementHandle<HTMLElement>, ["col-md-1"], "third td"))) {
     return false;
   }
 
   // span in third td
   let span = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(3)>a>span");
-  if (
-    !(await assertClassesContained(
-      span as ElementHandle<HTMLElement>,
-      ["glyphicon", "glyphicon-remove"],
-      "span in a in third td"
-    ))
-  ) {
+  if (!(await assertClassesContained(span as ElementHandle<HTMLElement>, ["glyphicon", "glyphicon-remove"], "span in a in third td"))) {
     return false;
   }
   // console.log("names", await span.evaluate(e => e.getAttributeNames()));
@@ -276,9 +254,7 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
 
   // // fourth td
   let td4 = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(4)");
-  if (
-    !(await assertClassesContained(td4 as ElementHandle<HTMLElement>, ["col-md-6"], "fourth td"))
-  ) {
+  if (!(await assertClassesContained(td4 as ElementHandle<HTMLElement>, ["col-md-6"], "fourth td"))) {
     return false;
   }
 
@@ -321,17 +297,13 @@ async function runBench(
       // check html for tr
       let htmlCorrect = await checkTRcorrect(page);
       if (!htmlCorrect) {
-        console.log(
-          "ERROR: Framework " + framework.fullNameWithKeyedAndVersion + " html is not correct"
-        );
+        console.log("ERROR: Framework " + framework.fullNameWithKeyedAndVersion + " html is not correct");
         allCorrect = false;
       }
       let str = init(framework.shadowRootName);
       await page.evaluate(str);
       if (framework.useShadowRoot) {
-        await page.evaluate(
-          `window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`
-        );
+        await page.evaluate(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`);
       } else {
         await page.evaluate(`window.nonKeyedDetector_setUseShadowDom(undefined);`);
       }
