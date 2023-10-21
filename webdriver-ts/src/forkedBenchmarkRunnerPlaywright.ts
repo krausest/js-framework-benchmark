@@ -4,24 +4,24 @@ import {
   benchmarks,
   CPUBenchmarkPlaywright,
   MemBenchmarkPlaywright,
-  TBenchmarkPlaywright,
+  BenchmarkPlaywright,
 } from "./benchmarksPlaywright.js";
 import {
   BenchmarkOptions,
   config as defaultConfig,
   ErrorAndWarning,
   FrameworkData,
-  TConfig,
+  Config,
 } from "./common.js";
 import { startBrowser } from "./playwrightAccess.js";
 import { computeResultsCPU, fileNameTrace } from "./timeline.js";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 
 async function runBenchmark(
   browser: Browser,
   page: Page,
-  benchmark: TBenchmarkPlaywright,
+  benchmark: BenchmarkPlaywright,
   framework: FrameworkData
 ): Promise<any> {
   await benchmark.run(browser, page, framework);
@@ -31,7 +31,7 @@ async function runBenchmark(
 async function initBenchmark(
   browser: Browser,
   page: Page,
-  benchmark: TBenchmarkPlaywright,
+  benchmark: BenchmarkPlaywright,
   framework: FrameworkData
 ): Promise<any> {
   await benchmark.init(browser, page, framework);
@@ -269,11 +269,11 @@ export async function executeBenchmark(
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number | CPUBenchmarkResult>> {
-  let runBenchmarks: Array<TBenchmarkPlaywright> = benchmarks.filter(
+  let runBenchmarks: Array<BenchmarkPlaywright> = benchmarks.filter(
     (b) =>
       benchmarkId === b.benchmarkInfo.id &&
       (b instanceof CPUBenchmarkPlaywright || b instanceof MemBenchmarkPlaywright)
-  ) as Array<TBenchmarkPlaywright>;
+  ) as Array<BenchmarkPlaywright>;
 
   let benchmark = runBenchmarks[0];
 

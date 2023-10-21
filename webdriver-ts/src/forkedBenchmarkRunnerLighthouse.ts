@@ -1,7 +1,7 @@
 import * as chromeLauncher from "chrome-launcher";
 
 import {
-  TConfig,
+  Config,
   config as defaultConfig,
   FrameworkData,
   ErrorAndWarning,
@@ -11,7 +11,7 @@ import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./bench
 import { StartupBenchmarkInfo } from "./benchmarksCommon.js";
 import lighthouse from "lighthouse";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 
 function extractRawValue(results: any, id: string) {
   let audits = results.audits;
