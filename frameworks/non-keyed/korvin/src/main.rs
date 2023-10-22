@@ -142,12 +142,12 @@ enum AppMessage {
 
 fn app(communicator: Communicator<AppMessage>, App { data, selected }: &App) -> ElementBuilder {
     let div = |class: &str| "div".attribute("class", class);
-    let mouseup_send = move |message| move |_: MouseEvent| communicator.send(message);
-    let element_mouseup_send =
-        |element: ElementBuilder, message| element.event(message, "mouseup", mouseup_send(message));
+    let click_send = move |message| move |_: MouseEvent| communicator.send(message);
+    let element_click_send =
+        |element: ElementBuilder, message| element.event(message, "click", click_send(message));
 
     let message_button =
-        |id, text, message| button(id, text, |button| element_mouseup_send(button, message));
+        |id, text, message| button(id, text, |button| element_click_send(button, message));
     let jumbotron = div("jumbotron")
         .child(div("col-md-6").child("h1".text("Korvin")))
         .child(div("col-md-6"))
@@ -193,7 +193,7 @@ fn app(communicator: Communicator<AppMessage>, App { data, selected }: &App) -> 
             }
             let td = |class: &str| "td".attribute("class", class);
             let row = {
-                td("col-md-4").child(element_mouseup_send(
+                td("col-md-4").child(element_click_send(
                     "a".text(label.as_str()),
                     AppMessage::SetSelected(*id),
                 ))
@@ -201,7 +201,7 @@ fn app(communicator: Communicator<AppMessage>, App { data, selected }: &App) -> 
             tr.child(td("col-md-1").text(id.to_string().as_str()))
                 .child(row)
                 .child(
-                    td("col-md-1").child(element_mouseup_send(
+                    td("col-md-1").child(element_click_send(
                         "a".child(
                             "span"
                                 .attribute("class", "glyphicon glyphicon-remove")
