@@ -563,6 +563,8 @@ The following frameworks were archived after chrome 118. Their last results are 
 - [x] resonatejs
 - [x] sledgehammer
 - [x] uhydro
+- [x] fullweb-helpers
+- [x] fullweb-template
 
 
 ## 2020-7-9
