@@ -550,9 +550,20 @@ Thanks to Baptiste Augrain for making the benchmarks more sophisticated and addi
 
 Frameworks without significant activity on github or npm for more than a year will be removed (_automatic commits like dependabot and minor updates, like docs editions, are ignored_).
 
-Will be removed in future:
+## 2023-10-22
+The following frameworks were archived after chrome 118. Their last results are included in [chrome 118 results](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_118.0.5993.70.html).
+- [x] 1more
+- [x] domdiff
+- [x] domvm
+- [x] endorphin
+- [x] etch
+- [x] heresy
+- [x] lighterhtml
+- [x] neverland
+- [x] resonatejs
+- [x] sledgehammer
+- [x] uhydro
 
-- [ ] crui Last significant commit Jul 28, 2019
 
 ## 2020-7-9
 
