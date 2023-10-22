@@ -316,6 +316,7 @@ TL;DR:
 1. Install all of the root-level dependencies
     1. `cd js-framework-benchmark/`
     1. `npm ci` or `npm i`
+    1. `npm run install-local`
 2. Make a new directory for your desired framework, for example Fast framework: `mkdir /frameworks/keyed/fast`
 3. Set up your new directory in whatever way is appropriate for that framework, for example:
     1. Set up prettier, eslint, dependencies (i.e. `@microsoft/fast-element`) etc
