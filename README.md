@@ -565,6 +565,7 @@ The following frameworks were archived after chrome 118. Their last results are 
 - [x] uhydro
 - [x] fullweb-helpers
 - [x] fullweb-template
+- [x] forgo
 
 
 ## 2020-7-9
