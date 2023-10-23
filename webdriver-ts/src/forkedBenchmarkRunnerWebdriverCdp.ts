@@ -1,7 +1,7 @@
 import * as fs from "fs/promises";
 import { WebDriver } from "selenium-webdriver";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
-import { benchmarks, CPUBenchmarkWebdriverCDP } from "./benchmarksWebdriverCDP.js";
+import { benchmarks, CPUBenchmarkWebdriverCDP } from "./benchmarksWebdriverCdp.js";
 import {
   BenchmarkOptions,
   config as defaultConfig,
@@ -16,7 +16,7 @@ import {
   setShadowRootName,
   setUseRowShadowRoot,
   setUseShadowRoot,
-} from "./webdriverCDPAccess.js";
+} from "./webdriverCdpAccess.js";
 
 let config: Config = defaultConfig;
 

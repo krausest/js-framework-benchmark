@@ -33,7 +33,7 @@ function forkAndCallBenchmark(
     if (benchmarkInfo.type === BenchmarkType.STARTUP_MAIN) {
       forkedRunner = "dist/forkedBenchmarkRunnerLighthouse.js";
     } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER_CDP) {
-      forkedRunner = "dist/forkedBenchmarkRunnerWebdriverCDP.js";
+      forkedRunner = "dist/forkedBenchmarkRunnerWebdriverCdp.js";
     } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.PLAYWRIGHT) {
       forkedRunner = "dist/forkedBenchmarkRunnerPlaywright.js";
     } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER) {

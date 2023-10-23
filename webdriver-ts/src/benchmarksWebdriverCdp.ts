@@ -15,7 +15,7 @@ import {
   testElementLocatedByXpath,
   testElementNotLocatedByXPath,
   testTextContains,
-} from "./webdriverCDPAccess.js";
+} from "./webdriverCdpAccess.js";
 
 const SHORT_TIMEOUT = 20 * 1000;
 
