@@ -1,12 +1,6 @@
 import * as fs from "node:fs";
 import yargs from "yargs";
-import {
-  BenchmarkInfo,
-  benchmarkInfos,
-  BenchmarkType,
-  fileName,
-  slowDownFactor,
-} from "./benchmarksCommon.js";
+import { BenchmarkInfo, benchmarkInfos, BenchmarkType, fileName, slowDownFactor } from "./benchmarksCommon.js";
 import { subbenchmarks } from "./benchmarksLighthouse.js";
 import { BenchmarkOptions, config, initializeFrameworks, JsonResult } from "./common.js";
 
@@ -30,8 +24,7 @@ let benchmarkOptions: BenchmarkOptions = {
   headless: args.headless,
   chromeBinaryPath: args.chromeBinary,
   numIterationsForCPUBenchmarks:
-    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU +
-    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
   numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
   numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
   batchSize: 1,
@@ -48,8 +41,7 @@ async function main() {
   let resultJS = "import {RawResult} from './Common';\n\nexport const results: RawResult[]=[";
 
   let allBenchmarks: Array<BenchmarkInfo> = [];
-  let jsonResult: { framework: string; benchmark: string; values: { [key: string]: number[] } }[] =
-    [];
+  let jsonResult: { framework: string; benchmark: string; values: { [key: string]: number[] } }[] = [];
 
   for (const benchmarkInfo of benchmarkInfos) {
     if (args.browser) {
@@ -82,14 +74,17 @@ async function main() {
             let vals = data.values[key].values.filter((v) => v != null);
             values[key] = vals;
             if (vals.some((v) => v == null)) {
-              console.log(`Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`);
+              console.log(
+                `Found null value for ${framework.fullNameWithKeyedAndVersion} and benchmark ${benchmarkInfo.id}`
+              );
             }
             if (
               benchmarkInfo.type === BenchmarkType.CPU &&
-              vals.length !=
-                config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + benchmarkInfo.additionalNumberOfRuns
+              vals.length != config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + benchmarkInfo.additionalNumberOfRuns
             ) {
-              console.log(`WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${vals.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_CPU}`);
+              console.log(
+                `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${vals.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_CPU}`
+              );
             } else if (
               benchmarkInfo.type === BenchmarkType.MEM &&
               vals.length != config.NUM_ITERATIONS_FOR_BENCHMARK_MEM

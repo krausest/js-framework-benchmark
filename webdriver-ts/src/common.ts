@@ -150,10 +150,7 @@ export async function initializeFrameworks(
       frameworks.push({
         name: frameworkVersionInformation.directory,
         fullNameWithKeyedAndVersion: frameworkVersionInformation.frameworkVersionString,
-        uri:
-          "frameworks/" +
-          fullName +
-          (frameworkVersionInformation.customURL || ""),
+        uri: "frameworks/" + fullName + (frameworkVersionInformation.customURL || ""),
         keyed: frameworkVersionInformation.type === "keyed",
         useShadowRoot: !!frameworkVersionInformation.useShadowRoot,
         useRowShadowRoot: !!frameworkVersionInformation.useRowShadowRoot,

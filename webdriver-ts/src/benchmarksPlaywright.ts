@@ -1,5 +1,3 @@
-// import { testTextContains, testTextContainsJS, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath } from './webdriverAccess'
-
 import { Browser, Page } from "playwright-core";
 import {
   Benchmark,

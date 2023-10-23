@@ -1,5 +1,3 @@
-// import { testTextContains, testTextContainsJS, testTextNotContained, testClassContains, testElementLocatedByXpath, testElementNotLocatedByXPath, testElementLocatedById, clickElementById, clickElementByXPath, getTextByXPath } from './webdriverAccess'
-
 import { Page } from "puppeteer-core";
 import {
   BenchmarkType,

@@ -8,13 +8,7 @@ import {
   setButtonsInShadowRoot,
 } from "./webdriverAccess.js";
 
-import {
-  Config,
-  config as defaultConfig,
-  FrameworkData,
-  ErrorAndWarning,
-  BenchmarkOptions,
-} from "./common.js";
+import { Config, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
 import * as R from "ramda";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
 
@@ -86,13 +80,13 @@ function extractRelevantEvents(entries: logging.Entry[]) {
       });
     } else if (e.params.name === "Layout" && e.params.ph == "X") {
       if (config.LOG_TIMELINE) console.log("LAYOUT", JSON.stringify(e));
-        filteredEvents.push({
+      filteredEvents.push({
         type: "layout",
-          ts: +e.params.ts,
+        ts: +e.params.ts,
         dur: +e.params.dur,
         end: +e.params.ts + e.params.dur,
-          evt: JSON.stringify(e),
-        });
+        evt: JSON.stringify(e),
+      });
     } else if (e.params.name === "Paint" && e.params.ph == "X") {
       if (config.LOG_TIMELINE) console.log("PAINT", JSON.stringify(e));
       filteredEvents.push({
@@ -178,27 +172,26 @@ async function computeResultsCPU(
           console.log("layout event", l.end - clicks[0].ts);
         }
       } else if (layouts.length === 0) {
-      console.log("WARNING: exactly one layout event is expected", eventsAfterClick);
-      lastLayoutEvent = clicks[0];
-    }
+        console.log("WARNING: exactly one layout event is expected", eventsAfterClick);
+        lastLayoutEvent = clicks[0];
+      }
 
       let paintsP = R.filter(type_eq("paint"))(eventsAfterClick);
-      
+
       paintsP = R.filter((e: TimingResult) => e.ts > lastLayoutEvent.end)(paintsP);
       if (paintsP.length === 0) {
         console.log("ERROR: No paint event found");
         throw "No paint event found";
-    }
-    if (paintsP.length > 1) {
-      console.log("more than one paint event found");
+      }
+      if (paintsP.length > 1) {
+        console.log("more than one paint event found");
         for (const l of paintsP) {
           console.log("paints event", (l.end - clicks[0].ts) / 1000);
         }
       }
 
       let duration = (paintsP.at(-1).end - clicks[0].ts) / 1000;
-      let upperBoundForSoundnessCheck =
-        (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000;
+      let upperBoundForSoundnessCheck = (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000;
 
       if (duration < 0) {
         console.log("soundness check failed. reported duration is less 0", asString(eventsDuringBenchmark));
@@ -206,7 +199,10 @@ async function computeResultsCPU(
       }
 
       if (duration > upperBoundForSoundnessCheck) {
-        console.log("soundness check failed. reported duration is bigger than whole benchmark duration", asString(eventsDuringBenchmark));
+        console.log(
+          "soundness check failed. reported duration is bigger than whole benchmark duration",
+          asString(eventsDuringBenchmark)
+        );
         throw "soundness check failed. reported duration is bigger than whole benchmark duration";
       }
       // script is currently not implemented
@@ -232,12 +228,7 @@ async function runBenchmark(
 ): Promise<any> {
   await benchmark.run(driver, framework);
   if (config.LOG_PROGRESS)
-    console.log(
-      "after run",
-      benchmark.benchmarkInfo.id,
-      benchmark.benchmarkInfo.type,
-      framework.name
-    );
+    console.log("after run", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
 async function initBenchmark(
@@ -247,12 +238,7 @@ async function initBenchmark(
 ): Promise<any> {
   await benchmark.init(driver, framework);
   if (config.LOG_PROGRESS)
-    console.log(
-      "after initialized",
-      benchmark.benchmarkInfo.id,
-      benchmark.benchmarkInfo.type,
-      framework.name
-    );
+    console.log("after initialized", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
 // async function registerError(driver: WebDriver, framework: FrameworkData, benchmark: Benchmark, error: string): Promise<BenchmarkError> {
@@ -317,10 +303,7 @@ async function runCPUBenchmark(
       await driver.executeScript("console.timeStamp('initBenchmark')");
 
       await initBenchmark(driver, benchmark, framework);
-      let throttleCPU = slowDownFactor(
-        benchmark.benchmarkInfo.id,
-        benchmarkOptions.allowThrottling
-      );
+      let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
       if (throttleCPU) {
         console.log("CPU slowdown", throttleCPU);
         await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", {
@@ -330,11 +313,11 @@ async function runCPUBenchmark(
       await driver.executeScript("console.timeStamp('runBenchmark')");
       await runBenchmark(driver, benchmark, framework);
       if (throttleCPU) {
-          console.log("resetting CPU slowdown");
-          await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
-        }
-        await driver.executeScript("console.timeStamp('finishedBenchmark')");
+        console.log("resetting CPU slowdown");
+        await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
       }
+      await driver.executeScript("console.timeStamp('finishedBenchmark')");
+    }
     let result = await computeResultsCPU(
       driver,
       benchmarkOptions,

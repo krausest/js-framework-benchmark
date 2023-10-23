@@ -1,19 +1,7 @@
 import { WebDriver, Builder } from "selenium-webdriver";
 import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriverAfterframe.js";
-import {
-  setUseShadowRoot,
-  setUseRowShadowRoot,
-  setShadowRootName,
-  setButtonsInShadowRoot,
-} from "./webdriverAccess.js";
-
-import {
-  Config,
-  config as defaultConfig,
-  FrameworkData,
-  ErrorAndWarning,
-  BenchmarkOptions,
-} from "./common.js";
+import { setUseShadowRoot, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess.js";
+import { Config, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
 import { BenchmarkType, CPUBenchmarkResult } from "./benchmarksCommon.js";
 import { getAfterframeDurations, initMeasurement } from "./benchmarksWebdriverAfterframe.js";
 
@@ -26,12 +14,7 @@ async function runBenchmark(
 ): Promise<any> {
   await benchmark.run(driver, framework);
   if (config.LOG_PROGRESS)
-    console.log(
-      "after run",
-      benchmark.benchmarkInfo.id,
-      benchmark.benchmarkInfo.type,
-      framework.name
-    );
+    console.log("after run", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
 async function initBenchmark(
@@ -41,12 +24,7 @@ async function initBenchmark(
 ): Promise<any> {
   await benchmark.init(driver, framework);
   if (config.LOG_PROGRESS)
-    console.log(
-      "after initialized",
-      benchmark.benchmarkInfo.id,
-      benchmark.benchmarkInfo.type,
-      framework.name
-    );
+    console.log("after initialized", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
   await initMeasurement(driver);
 }
 
@@ -98,9 +76,7 @@ async function runCPUBenchmark(
       console.log("runCPUBenchmark: before loading page");
       // must be run with an IP adress otherwise Safari crashes with an error.
       // Use the HOST env variable to set the HOST to an IP adress for safari!
-      await driver.get(
-        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`
-      );
+      await driver.get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`);
       // Needed for Firefox
       await driver.sleep(50);
       console.log("runCPUBenchmark: initBenchmark");

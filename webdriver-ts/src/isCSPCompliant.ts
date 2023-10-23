@@ -72,11 +72,10 @@ async function runBench(
 
   console.log("*** headless", benchmarkOptions.headless);
 
-  for (let framework: FrameworkData of runFrameworks) {
+  for (let framework of runFrameworks) {
     let browser = await startBrowser(benchmarkOptions);
     let page = await browser.newPage();
     try {
-
       await page.goto(
         `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
         {
