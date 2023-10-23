@@ -20,7 +20,7 @@ let args: any = yargs(process.argv)
 
 console.log("args", args);
 
-console.log("HEADLESS*** ", args.headless);
+console.log("HEADLESS***", args.headless);
 
 let benchmarkOptions: BenchmarkOptions = {
   port: 8080,
@@ -45,13 +45,14 @@ let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
 
 console.log("args.framework", args.framework, !args.framework);
 
+let matchesDirectoryArg = (directoryName: string) =>
+  allArgs.length === 0 || allArgs.some((arg: string) => arg == directoryName);
+
 async function runBench(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   frameworkNames: string[] // Not used in the function, but is used when calling the function in other files
 ) {
   let runFrameworks;
-  let matchesDirectoryArg = (directoryName: string) =>
-    allArgs.length == 0 || allArgs.some((arg: string) => arg == directoryName);
   runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
   console.log(
     "Frameworks that will be checked",
@@ -71,11 +72,10 @@ async function runBench(
 
   console.log("*** headless", benchmarkOptions.headless);
 
-  for (let i = 0; i < runFrameworks.length; i++) {
+  for (let framework: FrameworkData of runFrameworks) {
     let browser = await startBrowser(benchmarkOptions);
     let page = await browser.newPage();
     try {
-      let framework: FrameworkData = runFrameworks[i];
 
       await page.goto(
         `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
@@ -85,9 +85,9 @@ async function runBench(
       );
       try {
         await checkElementExists(page, "#add");
-      } catch (err) {
+      } catch {
         console.log(
-          `CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - during load`
+          `CSP test failed for ${framework.fullNameWithKeyedAndVersion} - during load`
         );
       }
       await clickElement(page, "#add");
@@ -97,19 +97,19 @@ async function runBench(
           "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
           "1000"
         );
-      } catch (err) {
+      } catch {
         console.log(
-          `CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - when clicking`
+          `CSP test failed for ${framework.fullNameWithKeyedAndVersion} - when clicking`
         );
       }
-    } catch (e) {
+    } catch {
       //console.log("ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion, e);
       allCorrect = false;
     } finally {
       try {
         await page.close();
         await browser.close();
-      } catch (e) {
+      } catch {
         console.log("error calling driver.quit - ignoring this exception");
       }
     }
@@ -143,6 +143,8 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.log("Error in isKeyed", err);
-});
+try {
+  await main()
+} catch (error) {
+  console.log("Error in isKeyed", error);
+}

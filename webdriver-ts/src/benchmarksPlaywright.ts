@@ -44,14 +44,14 @@ export let benchRun = new (class extends CPUBenchmarkPlaywright {
     await checkElementExists(page, "#run");
     for (let i = 0; i < config.WARMUP_COUNT; i++) {
       await clickElement(page, "#run");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed(0));
       await clickElement(page, "#clear");
       await checkElementNotExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }
   }
   async run(browser: Browser, page: Page) {
       await clickElement(page, "#run");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", ((config.WARMUP_COUNT+1)*1000).toFixed());
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", ((config.WARMUP_COUNT+1)*1000).toFixed(0));
   }  
 })();
 
@@ -63,7 +63,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkPlaywright {
       await checkElementExists(page, "#run");
       for (let i = 0; i < config.WARMUP_COUNT; i++) {
         await clickElement(page, "#run");
-        await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
+        await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed(0));
       }
   }
   async run(browser: Browser, page: Page) {
@@ -167,7 +167,7 @@ export const benchRunBig = new (class extends CPUBenchmarkPlaywright {
     await checkElementExists(page, "#run");
     for (let i = 0; i < config.WARMUP_COUNT; i++) {
       await clickElement(page, "#run");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed(0));
       await clickElement(page, "#clear");
       await checkElementNotExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }
@@ -201,12 +201,12 @@ export const benchClear = new (class extends CPUBenchmarkPlaywright {
     await checkElementExists(page, "#run");
     for (let i = 0; i < config.WARMUP_COUNT; i++) {
       await clickElement(page, "#run");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed(0));
       await clickElement(page, "#clear");
       await checkElementNotExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }
     await clickElement(page, "#run");
-    await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (config.WARMUP_COUNT*1000+1).toFixed());
+    await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (config.WARMUP_COUNT*1000+1).toFixed(0));
   }
   async run(browser: Browser, page: Page) {
       await clickElement(page, "#clear");
@@ -293,7 +293,7 @@ export const benchCreateClear5Memory = new (class extends MemBenchmarkPlaywright
   async run(browser: Browser, page: Page) {
     for (let i = 0; i < 5; i++) {
       await clickElement(page, "#run");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed());
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed(0));
       await clickElement(page, "#clear");
       await checkElementNotExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }

@@ -27,7 +27,7 @@ async function runBenchmark(
   await benchmark.run(driver, framework);
   if (config.LOG_PROGRESS)
     console.log(
-      "after run ",
+      "after run",
       benchmark.benchmarkInfo.id,
       benchmark.benchmarkInfo.type,
       framework.name
@@ -42,7 +42,7 @@ async function initBenchmark(
   await benchmark.init(driver, framework);
   if (config.LOG_PROGRESS)
     console.log(
-      "after initialized ",
+      "after initialized",
       benchmark.benchmarkInfo.id,
       benchmark.benchmarkInfo.type,
       framework.name
@@ -56,9 +56,9 @@ function convertError(error: any): string {
     error,
     "| type:",
     typeof error,
-    " instance of Error",
+    "instance of Error",
     error instanceof Error,
-    " Message: ",
+    "Message:",
     error.message
   );
   if (typeof error === "string") {
@@ -82,7 +82,7 @@ async function runCPUBenchmark(
   let warnings: string[] = [];
   let results: CPUBenchmarkResult[] = [];
 
-  console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
+  console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
   let driver: WebDriver = null;
   try {
     // let driver = buildDriver(benchmarkOptions);
@@ -115,7 +115,7 @@ async function runCPUBenchmark(
     await driver.quit();
     return { error, warnings, result: results };
   } catch (e) {
-    console.log("ERROR ", e);
+    console.log("ERROR", e);
     error = convertError(e);
     try {
       if (driver) {
@@ -152,7 +152,7 @@ export async function executeBenchmark(
 
 process.on("message", (msg: any) => {
   config = msg.config;
-  console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
+  console.log("START BENCHMARK. Write results?", config.WRITE_RESULTS);
   let {
     framework,
     benchmarkId,

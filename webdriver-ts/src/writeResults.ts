@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { BenchmarkInfo, BenchmarkType, CPUBenchmarkResult, fileName } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse.js";
 import { FrameworkData, JsonResult, JsonResultData } from "./common.js";
@@ -28,13 +28,14 @@ export type ResultMem = {
 
 export function writeResults(resultDir: string, res: ResultLightHouse | ResultCPU | ResultMem) {
   switch (res.type) {
-    case BenchmarkType.STARTUP:
+    case BenchmarkType.STARTUP: {
       for (let subbench of subbenchmarks) {
         let results = res.results.filter((r) => r.benchmark.id == subbench.id).map((r) => r.result);
         createResultFile(resultDir, results, res.framework, subbench);
       }
       break;
-    case BenchmarkType.CPU:
+    }
+    case BenchmarkType.CPU: {
       createResultFile(
         resultDir,
         { total: res.results.map((r) => r.total), script: res.results.map((r) => r.script) },
@@ -42,9 +43,11 @@ export function writeResults(resultDir: string, res: ResultLightHouse | ResultCP
         res.benchmark
       );
       break;
-    case BenchmarkType.MEM:
+    }
+    case BenchmarkType.MEM: {
       createResultFile(resultDir, res.results as any as number[], res.framework, res.benchmark);
       break;
+    }
   }
 }
 
@@ -56,15 +59,18 @@ function createResultFile(
 ) {
   let type = "";
   switch (benchmark.type) {
-    case BenchmarkType.CPU:
+    case BenchmarkType.CPU: {
       type = "cpu";
       break;
-    case BenchmarkType.MEM:
+    }
+    case BenchmarkType.MEM: {
       type = "memory";
       break;
-    case BenchmarkType.STARTUP:
+    }
+    case BenchmarkType.STARTUP: {
       type = "startup";
       break;
+    }
   }
   let convertResult = (label: string, data: number[]) => {
     let s = jStat(data);

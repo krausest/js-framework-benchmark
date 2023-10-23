@@ -73,12 +73,12 @@ export async function findByXPath(
           if (elem === null) {
             return null;
           }
-        } catch (err) {
+        } catch {
           return null;
         }
       } else {
         let elems = await n.findElements(By.css(p.tagName + ":nth-of-type(" + p.index + ")"));
-        if (elems == null || elems.length == 0) {
+        if (elems == null || elems.length === 0) {
           return null;
         }
         elem = elems[0];
@@ -86,7 +86,7 @@ export async function findByXPath(
 
       n = elem;
     }
-  } catch (e) {
+  } catch {
     //can happen for StaleElementReferenceError
     return null;
   }
@@ -119,7 +119,7 @@ export async function testTextContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && v.indexOf(text) > -1;
+        return v && v.includes(text);
       } catch (err) {
         console.log(
           "ignoring error in testTextContains for xpath = " + xpath + " text = " + text, 
@@ -144,7 +144,7 @@ export function testTextNotContained(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && v.indexOf(text) == -1;
+        return v && !v.includes(text);
       } catch (err) {
         console.log(
           "ignoring error in testTextNotContained for xpath = " + xpath + " text = " + text,
@@ -170,7 +170,7 @@ export function testClassContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getAttribute("class");
-        return v && v.indexOf(text) > -1;
+        return v && v.includes(text);
       } catch (err) {
         console.log(
           "ignoring error in testClassContains for xpath = " + xpath + " text = " + text,
@@ -241,7 +241,7 @@ export function testElementLocatedById(
         let elem = await mainRoot(driver, isInButtonArea);
         await elem.findElement(By.id(id));
         return true;
-      } catch (err) {
+      } catch {
         // console.log("ignoring error in testElementLocatedById for id = "+id,err.toString().split("\n")[0]);
       }
     },
@@ -257,7 +257,7 @@ async function retry<T>(
   for (let i = 0; i < retryCount; i++) {
     try {
       return await fun(driver, i);
-    } catch (err) {
+    } catch {
       console.log("comand failed. Retry #", i + 1);
       await driver.sleep(200);
     }
@@ -276,7 +276,7 @@ export function clickElementById(driver: WebDriver, id: string, isInButtonArea: 
 
 export function clickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
   return retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS) console.log("clickElementByXPath ", xpath, " attempt #", count);
+    if (count > 1 && config.LOG_DETAILS) console.log("clickElementByXPath", xpath, "attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     await elem.click();
   });
@@ -290,7 +290,7 @@ export async function getTextByXPath(
   isInButtonArea: boolean
 ): Promise<string> {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS) console.log("getTextByXPath ", xpath, " attempt #", count);
+    if (count > 1 && config.LOG_DETAILS) console.log("getTextByXPath", xpath, "attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     return await elem.getText();
   });
@@ -326,7 +326,7 @@ export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
     "--disable-sync",
     "--disable-extensions",
     "--disable-default-apps",
-    "--remote-debugging-port=" + benchmarkOptions.remoteDebuggingPort.toFixed(),
+    "--remote-debugging-port=" + benchmarkOptions.remoteDebuggingPort.toFixed(0),
     `--window-size=${width},${height}`,
   ];
 
@@ -336,9 +336,11 @@ export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
   }
 
   if (benchmarkOptions.headless) {
-    args.push("--headless");
-    args.push("--disable-gpu"); // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
-    args.push("--no-sandbox");
+    args.push(
+      "--headless",
+      "--disable-gpu", // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
+      "--no-sandbox"
+    );
   }
 
   let caps = new Capabilities({
