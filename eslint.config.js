@@ -49,7 +49,6 @@ export default [
 
       ...unicorn.configs.recommended.rules,
       "unicorn/prevent-abbreviations": "off",
-      "unicorn/prefer-ternary": "off",
       "unicorn/no-null": "off",
       "unicorn/no-negated-condition": "off",
       "unicorn/catch-error-name": "off",

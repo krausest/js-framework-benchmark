@@ -260,12 +260,9 @@ export async function executeBenchmark(
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult>;
-  if (benchmark.type == BenchmarkType.CPU) {
-    errorAndWarnings = await runCPUBenchmark(framework, benchmark as CPUBenchmarkPlaywright, benchmarkOptions);
-  } else {
-    errorAndWarnings = await runMemBenchmark(framework, benchmark as MemBenchmarkPlaywright, benchmarkOptions);
-  }
+  const errorAndWarnings = await (benchmark.type == BenchmarkType.CPU
+    ? runCPUBenchmark(framework, benchmark as CPUBenchmarkPlaywright, benchmarkOptions)
+    : runMemBenchmark(framework, benchmark as MemBenchmarkPlaywright, benchmarkOptions));
   if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }

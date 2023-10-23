@@ -292,11 +292,9 @@ async function runBench(
       }
       let str = init(framework.shadowRootName);
       await page.evaluate(str);
-      if (framework.useShadowRoot) {
-        await page.evaluate(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`);
-      } else {
-        await page.evaluate(`window.nonKeyedDetector_setUseShadowDom(undefined);`);
-      }
+      await (framework.useShadowRoot
+        ? page.evaluate(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`)
+        : page.evaluate(`window.nonKeyedDetector_setUseShadowDom(undefined);`));
       await page.evaluate("window.nonKeyedDetector_instrument()");
       // swap
       await page.evaluate("nonKeyedDetector_storeTr()");

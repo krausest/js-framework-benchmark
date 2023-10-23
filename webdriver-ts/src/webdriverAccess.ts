@@ -261,15 +261,13 @@ export async function getTextByXPath(driver: WebDriver, xpath: string, isInButto
 }
 
 export function mainRoot(driver: WebDriver, isInButtonArea: boolean): string {
-  if (useShadowRoot) {
-    if (!buttonsInShadowRoot && isInButtonArea) {
-      return "document.querySelector('body')";
-    } else {
-      return `document.querySelector('${shadowRootName}').shadowRoot`;
-    }
-  } else {
+  if (!useShadowRoot) {
     return "document.querySelector('body')";
   }
+
+  return !buttonsInShadowRoot && isInButtonArea
+    ? "document.querySelector('body')"
+    : `document.querySelector('${shadowRootName}').shadowRoot`;
 }
 
 // node_modules\.bin\chromedriver.cmd --verbose --port=9998 --log-path=chromedriver.log
