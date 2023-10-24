@@ -1,11 +1,17 @@
-import *  as chromeLauncher from "chrome-launcher";
+import * as chromeLauncher from "chrome-launcher";
 
-import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
+import {
+  Config,
+  config as defaultConfig,
+  FrameworkData,
+  ErrorAndWarning,
+  BenchmarkOptions,
+} from "./common.js";
 import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./benchmarksLighthouse.js";
 import { StartupBenchmarkInfo } from "./benchmarksCommon.js";
 import lighthouse from "lighthouse";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 
 function extractRawValue(results: any, id: string) {
   let audits = results.audits;
@@ -16,7 +22,11 @@ function extractRawValue(results: any, id: string) {
   return audit_with_id.numericValue;
 }
 
-async function runLighthouse(framework: FrameworkData, startupBenchmarks: StartupBenchmarkInfo[], benchmarkOptions: BenchmarkOptions): Promise<StartupBenchmarkResult[]> {
+async function runLighthouse(
+  framework: FrameworkData,
+  startupBenchmarks: StartupBenchmarkInfo[],
+  benchmarkOptions: BenchmarkOptions
+): Promise<StartupBenchmarkResult[]> {
   const opts: any = {
     chromeFlags: [
       "--headless",
@@ -44,7 +54,11 @@ async function runLighthouse(framework: FrameworkData, startupBenchmarks: Startu
     let chrome = await chromeLauncher.launch(opts);
     let results: any = null;
     try {
-      results = await (lighthouse as any)(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`, opts, null);
+      results = await (lighthouse as any)(
+        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
+        opts,
+        null
+      );
       await chrome.kill();
     } catch (error) {
       console.log("error running lighthouse", error);
@@ -53,8 +67,11 @@ async function runLighthouse(framework: FrameworkData, startupBenchmarks: Startu
     }
     if (config.LOG_DEBUG) console.log("lighthouse result", results);
 
-    return startupBenchmarks.map(bench => {
-      return {benchmark: bench, result: bench.fn(extractRawValue(results.lhr, bench.property))} as StartupBenchmarkResult;
+    return startupBenchmarks.map((bench) => {
+      return {
+        benchmark: bench,
+        result: bench.fn(extractRawValue(results.lhr, bench.property)),
+      } as StartupBenchmarkResult;
     });
   } catch (error) {
     console.log("error running lighthouse", error);
@@ -89,7 +106,7 @@ async function runStartupBenchmark(
   framework: FrameworkData,
   benchmark: BenchmarkLighthouse,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
+): Promise<ErrorAndWarning<StartupBenchmarkResult>> {
   console.log("benchmarking startup", framework, benchmark.benchmarkInfo.id);
 
   let error: string = undefined;
@@ -106,14 +123,16 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
-  let runBenchmarks: Array<BenchmarkLighthouse> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof BenchmarkLighthouse) as Array<BenchmarkLighthouse>;
+): Promise<ErrorAndWarning<StartupBenchmarkResult>> {
+  let runBenchmarks: Array<BenchmarkLighthouse> = benchmarks.filter(
+    (b) => benchmarkId === b.benchmarkInfo.id && b instanceof BenchmarkLighthouse
+  ) as Array<BenchmarkLighthouse>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (lighthouse)`;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning;
-    errorAndWarnings = await runStartupBenchmark(framework, benchmark, benchmarkOptions);
+  let errorAndWarnings: ErrorAndWarning<StartupBenchmarkResult>;
+  errorAndWarnings = await runStartupBenchmark(framework, benchmark, benchmarkOptions);
   if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }
@@ -132,7 +151,6 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
-  if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       process.send(result);

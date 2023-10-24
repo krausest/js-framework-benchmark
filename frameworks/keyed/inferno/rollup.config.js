@@ -1,12 +1,14 @@
-const commonjsPlugin = require('rollup-plugin-commonjs');
-const nodeResolvePlugin = require('rollup-plugin-node-resolve');
-const babelPlugin = require('rollup-plugin-babel');
-const path = require('path');
-const replace = require('rollup-plugin-replace');
-const terser = require('rollup-plugin-terser').terser;
-const alias = require('rollup-plugin-alias');
+import commonjsPlugin from "rollup-plugin-commonjs";
+import nodeResolvePlugin from "rollup-plugin-node-resolve";
+import babelPlugin from "@rollup/plugin-babel";
+import path from "path";
+import replace from "rollup-plugin-replace";
+import terser from "@rollup/plugin-terser";
+import alias from "@rollup/plugin-alias";
+import * as url from 'url';
 
-const isProduction = process.env.production;
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const isProduction = !!process.env.production;
 
 const extensions = ['.js', '.jsx'];
 
@@ -31,7 +33,19 @@ const plugins = [
 ];
 
 if (isProduction) {
-  plugins.push(terser());
+  plugins.push(terser({
+    compress: {
+      inline: 0,
+      reduce_vars: false,
+      passes: 5,
+      booleans: false,
+      comparisons: false,
+      keep_infinity: true,
+    },
+    toplevel: true,
+    mangle: true,
+    module: true,
+  }));
 }
 
 // When in development, we want to use dev build of inferno.

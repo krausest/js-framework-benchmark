@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-michijs",
-  "version": "1.0.4",
+  "version": "1.1.7",
   "description": "michijs",
   "main": "index.js",
   "js-framework-benchmark": {
@@ -28,10 +28,10 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "devDependencies": {
-    "@michijs/dev-server": "0.2.0",
-    "typescript": "4.9.5"
+    "@michijs/dev-server": "0.4.2",
+    "typescript": "5.0.4"
   },
   "dependencies": {
-    "@michijs/michijs": "1.0.4"
+    "@michijs/michijs": "1.1.7"
   }
 }

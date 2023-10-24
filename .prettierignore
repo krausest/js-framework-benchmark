@@ -1,0 +1,20 @@
+# Dependencies
+package-lock.json
+node_modules
+
+# Build
+dist/
+build/
+output/
+
+# Root
+/css/
+
+# Webdriver-ts
+webdriver-ts/results.json
+webdriver-ts/unittests/
+webdriver-ts/traces/
+
+# Webdriver-ts-results
+webdriver-ts-results/table.html
+webdriver-ts-results/src/results.ts

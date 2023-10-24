@@ -49,16 +49,6 @@ class Store {
     select(id) {
         this.selected = id;
     }
-    hideAll() {
-        this.backup = this.data;
-        this.data = [];
-        this.selected = null;
-    }
-    showAll() {
-        this.data = this.backup;
-        this.backup = null;
-        this.selected = null;
-    }
     runLots() {
         this.data = this.buildData(10000);
         this.selected = null;
@@ -114,16 +104,6 @@ class Main {
                 e.preventDefault();
                 //console.log("update");
                 this.update();
-            }
-            else if (e.target.matches('#hideall')) {
-                e.preventDefault();
-                //console.log("hideAll");
-                this.hideAll();
-            }
-            else if (e.target.matches('#showall')) {
-                e.preventDefault();
-                //console.log("showAll");
-                this.showAll();
             }
             else if (e.target.matches('#runlots')) {
                 e.preventDefault();

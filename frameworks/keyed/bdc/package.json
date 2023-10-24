@@ -1,6 +1,7 @@
 {
   "name": "js-framework-benchmark-bdc",
   "description": "Benchmark for BDC",
+  "type": "module",
   "author": "Ben Mather <bwhmather@bwhmather.com> (bwhmather.com)",
   "license": "Apache-2.0",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
@@ -16,14 +17,15 @@
     ]
   },
   "dependencies": {
-    "bdc": "1.0.0"
+    "bdc": "1.1.0"
   },
   "devDependencies": {
-    "rollup": "2.29.0",
-    "rollup-plugin-terser": "5.3.1",
-    "@rollup/plugin-node-resolve": "7.1.3"
+    "@rollup/plugin-node-resolve": "15.1.0",
+    "@rollup/plugin-terser": "0.4.3",
+    "rollup": "3.26.2"
   },
   "scripts": {
-    "build-prod": "rollup -c"
+    "build-dev": "rollup -c --watch",
+    "build-prod": "rollup -c --environment production"
   }
 }

@@ -1,0 +1,28 @@
+{
+  "name": "js-framework-benchmark-voby-unkeyed",
+  "version": "0.45.0",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "voby",
+    "frameworkHomeURL": "https://github.com/vobyjs/voby",
+    "issues": [
+      1139
+    ]
+  },
+  "scripts": {
+    "build-prod": "rm -rf dist && mkdir dist && esbuild --bundle --minify --target=es2020 --jsx-factory=createElement --jsx-fragment=Fragment --banner:js='\"use strict\";' ./src/main.tsx > ./dist/main.js"
+  },
+  "author": "Fabio Spampinato",
+  "license": "MIT",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "voby": "0.48.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.17.16"
+  }
+}

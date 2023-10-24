@@ -7,12 +7,13 @@
     "issues": [801]
   },
   "dependencies": {
-    "karyon": "1.6.0"
+    "karyon": "1.8.1"
   },
   "devDependencies": {
-    "esbuild": "0.15.15"
+    "esbuild": "0.19.2"
   },
   "scripts": {
-    "build-prod": "esbuild app.js --bundle --minify --outfile=app.bundle.js"
+    "build-dev":"esbuild src/app.js --outfile=dist/app.js --bundle --watch",
+    "build-prod": "esbuild src/app.js --outfile=dist/app.js --bundle --minify"
   }
 }

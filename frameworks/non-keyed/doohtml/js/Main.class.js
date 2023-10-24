@@ -14,7 +14,6 @@ Doo.define(
   	class Main extends Doo {
 		constructor() {
 			super(100)
-			this.scrollTarget = '.table'
 			this.defaultDataSet = 'rows'
 			this.ID = 1
 			this.data = {
@@ -34,7 +33,7 @@ Doo.define(
 
 		async dooAfterRender() {
 			this.tbody = this.shadow.querySelector('#tbody')
-			this.shadow.querySelector(this.scrollTarget).addEventListener('click', e => {
+			this.tbody.addEventListener('click', e => {
 				e.preventDefault()
 				if (e.target.parentElement.matches('.remove')) {
 					this.delete(e.target.parentElement)
@@ -53,9 +52,9 @@ Doo.define(
         }
 
 		buildData(count = DEFAULT_SIZE) {
-			const data = [];
+			const data = new Array(count)
 			for (let i = 0; i < count; i++) {
-				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
+				data[i] = {id: this.ID++,label: `${adjectives[_random(lenA)]} ${colours[_random(lenB)]}  ${nouns[_random(lenC)]}`}
 			}
 			return data	
 		}
@@ -64,7 +63,7 @@ Doo.define(
 			let row = this.getParentRow(elem)
 			if (row) {
 				this.tbody.removeChild(row)
-				this.data.rows[row.getAttribute('key')] = undefined
+				this.data.rows.splice(row.rowIndex,1)
 			}
 		}  
 
@@ -148,5 +147,7 @@ Doo.define(
 
 			document.getElementById("main").addEventListener('click', e => actions.runAction(e))    
     	}
-	}
-)
+		async connectedCallback() {
+			super.connectedCallback()
+		}
+	})

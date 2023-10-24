@@ -1,4 +1,4 @@
-import { mount, setDetectionStrategy } from '../node_modules/slingjs/sling.min.es5';
+import { mount, setDetectionStrategy } from '../node_modules/slingjs/sling.min';
 import ControllerComponent from './controller';
 
 setDetectionStrategy(s.CHANGE_STRATEGY_MANUAL);

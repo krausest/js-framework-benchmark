@@ -28,17 +28,17 @@
             </div>
         </div>
     </div>
-    <table class="table table-hover table-striped test-data" onclick={handleRowClick}>
+    <table class="table table-hover table-striped test-data">
         <tbody>
             <template for:each={rows} for:item="row">
-                <tr key={row.id} class={row.className} data-id={row.id}>
+                <tr key={row.id} class={row.className} data-id={row.id} onclick={handleRowClick}>
                     <td class="col-md-1">{row.id}</td>
                     <td class="col-md-4" data-interaction="select">
-                        <a data-id={row.id} data-interaction="select">{row.label}</a>
+                        <a data-interaction="select">{row.label}</a>
                     </td>
                     <td class="col-md-1">
-                        <a data-interaction="remove" data-id={row.id}>
-                            <span data-interaction="remove" data-id={row.id} class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <a data-interaction="remove">
+                            <span data-interaction="remove" class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                         </a>
                     </td>
                     <td class="col-md-6"></td>

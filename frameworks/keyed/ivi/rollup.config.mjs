@@ -5,7 +5,7 @@ import { ivi } from "@ivi/rollup-plugin";
 
 const TERSER_OPTIONS = {
   compress: {
-    inline: 2,
+    inline: 0,
     reduce_vars: false,
     passes: 5,
     booleans: false,
@@ -28,10 +28,5 @@ export default {
   watch: {
     clearScreen: false,
   },
-  plugins: [
-    nodeResolve(),
-    typescript(),
-    ivi(),
-    terser(TERSER_OPTIONS),
-  ],
+  plugins: [nodeResolve(), typescript(), ivi({}), terser(TERSER_OPTIONS)],
 };

@@ -1,23 +1,46 @@
-var _ = require('lodash');
-var exec = require('child_process').execSync;
-var fs = require('fs');
-var path = require('path');
-var yargs = require('yargs');
-const rimraf = require('rimraf');
+import { execSync } from "node:child_process";
+import * as fs from "node:fs";
+import path from "node:path";
+import yargs from "yargs";
 
-let args = process.argv.length <= 2 ? [] : process.argv.slice(2, process.argv.length);
+const args = yargs(process.argv.slice(2))
+  .usage("$0 [--ci keyed/framework1 ... non-keyed/frameworkN]")
+  .boolean("ci")
+  .default("ci", false)
+  .describe("ci", "Use npm ci or npm install ?")
+  .argv;
 
-// Use npm ci or npm install ?
-let ci = args.includes("--ci");
-// Copy package-lock back for docker build or build locally?
-let docker = args.includes("--docker");
+/**
+ * Use npm ci or npm install?
+ * @type {boolean}
+ */
+const useCi = args.ci;
 
-let frameworks = args.filter(a => !a.startsWith("--"));
+/**
+ * @type {string}
+ */
+const frameworks = args._.filter((arg) => !arg.startsWith("--"));
 
-console.log("rebuild-build-single.js started: args", args, "ci", ci, "docker", docker, "frameworks", frameworks);
+console.log(
+  "rebuild-build-single.js started: args",
+  args,
+  "useCi",
+  useCi,
+  "frameworks",
+  frameworks
+);
+
+const filesToDelete = [
+  "yarn-lock",
+  "dist",
+  "elm-stuff",
+  "bower_components",
+  "node_modules",
+  "output",
+].concat(useCi ? [] : ["package-lock.json"]);
 
 /*
-rebuild-single.js [--ci] [--docker] [keyed/framework1 ... non-keyed/frameworkN]
+rebuild-single.js [--ci] [keyed/framework1 ... non-keyed/frameworkN]
 
 This script rebuilds a single framework
 By default it rebuilds from scratch, deletes all package.json and package-lock.json files
@@ -29,48 +52,73 @@ it calls npm ci and npm run build-prod for the benchmark
 Pass list of frameworks
 */
 
+/**
+ * Run a command synchronously in the specified directory and log command
+ * @param {string} command - The command to run
+ * @param {string} cwd - The current working directory (optional)
+ */
+function runCommand(command, cwd = undefined) {
+  console.log(command);
+  if (cwd) {
+    if (!fs.existsSync(cwd)) {
+      throw `working directory ${cwd} doesn't exist.`;
+    }
+  }
+  execSync(command, { stdio: "inherit", cwd });
+}
 
-if (frameworks.length == 0) {
-    console.log("ERROR: Missing arguments. Command: docker-rebuild keyed/framework1 non-keyed/framework2 ...");
+/**
+ * Delete specified files in the framework directory
+ * @param {string} frameworkPath
+ * @param {string[]} filesToDelete
+ */
+function deleteFrameworkFiles(frameworkPath, filesToDelete) {
+  for (const file of filesToDelete) {
+    const filePath = path.join(frameworkPath, file);
+    fs.rmSync(filePath, { recursive: true, force: true });
+  }
+  console.log(`Deleted: ${filesToDelete}`);
+}
+
+/**
+ * @param {string} framework
+ */
+function rebuildFramework(framework) {
+  const components = framework.split("/");
+
+  if (components.length !== 2) {
+    console.log(
+      `ERROR: invalid name ${framework}. It must contain exactly one /.`
+    );
     process.exit(1);
+  }
+
+  const [keyed, name] = components;
+  const frameworkPath = path.join("frameworks", keyed, name);
+
+  deleteFrameworkFiles(frameworkPath, filesToDelete);
+
+  const installCmd = `npm ${useCi ? "ci" : "install"}`;
+  runCommand(installCmd, frameworkPath);
+
+  const buildCmd = "npm run build-prod";
+  runCommand(buildCmd, frameworkPath);
+
 }
 
-for (f of frameworks) {
-    let components = f.split("/");
-    if (components.length != 2) {
-        console.log(`ERROR: invalid name ${f}. It must contain exactly one /.`)
-        process.exit(1);
-    }
-    let [keyed, name] = components;
-    let path = `frameworks/${keyed}/${name}`
-    if (docker) {
-        if (fs.existsSync(path)) {
-            console.log("deleting folder ", path);
-            exec(`rm -r ${path}`);
-        }
-        let rsync_cmd = `rsync -avC --exclude elm-stuff --exclude dist --exclude output ${ci ? '' : '--exclude package-lock.json'} --exclude tmp --exclude node_modules --exclude bower_components /src/frameworks/${keyed}/${name} /build/frameworks/${keyed}/`;
-        console.log(rsync_cmd);
-        exec(rsync_cmd,
-        {
-            stdio: 'inherit'
-        });        
-    }
-    let rm_cmd = `rm -rf ${ci ? '' : 'package-lock.json'} yarn.lock dist elm-stuff bower_components node_modules output`;
-    console.log(rm_cmd);
-    exec(rm_cmd, {
-        cwd: path,
-        stdio: 'inherit'
-    });
-    let install_cmd = `npm ${ci ? 'ci' : 'install'} && npm run build-prod`;
-    console.log(install_cmd);
-    exec(install_cmd, {
-        cwd: path,
-        stdio: 'inherit'
-    });
-    if (docker) {
-        let packageLockPath = path + "/package-lock.json";
-        fs.copyFileSync(packageLockPath, "/src/" + packageLockPath)
-    }
+function rebuildFrameworks() {
+  if (!frameworks.length) {
+    console.log(
+      "ERROR: Missing arguments. Command: rebuild keyed/framework1 non-keyed/framework2 ..."
+    );
+    process.exit(1);
+  }
+
+  for (const framework of frameworks) {
+    rebuildFramework(framework);
+  }
+
+  console.log("rebuild-build-single.js finished: Build finsished sucessfully!");
 }
 
-console.log("rebuild-build-single.js finished: Build finsished sucessfully!");
+rebuildFrameworks();

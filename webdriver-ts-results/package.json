@@ -2,56 +2,29 @@
   "name": "webdriver-ts-results",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.4.3",
-    "@types/jest": "^29.4.0",
-    "@types/node": "^18.14.6",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
     "jstat": "^1.9.6",
     "plotly.js-cartesian-dist": "2.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.0.5",
-    "redux": "^4.2.1"
+    "zustand": "^4.4.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint './src/**/*.{ts,tsx}'",
-    "build-prod": "rimraf dist && cross-env NODE_ENV=\"production\" webpack --env prod -c webpack.config.js && rimraf table.html && rimraf \"BoxPlotTable*.js\" && cpx dist/table.html . && cpx \"dist/BoxPlotTable*.js\" . && cpx \"dist/plotly*.js\" ."
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build:prod": "tsc && SINGLEFILE=true vite build && mv dist/index.html table.html",
+    "lint": "eslint src/",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@types/react-redux": "^7.1.25",
-    "cpx": "1.5.0",
-    "cross-env": "7.0.3",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "html-webpack-plugin": "^5.5.0",
-    "inline-chunk-html-plugin": "^1.1.1",
-    "react-scripts": "^5.0.1",
-    "rimraf": "^4.3.1",
-    "ts-loader": "^9.4.2",
-    "typescript": "^4.9.5",
-    "webpack-bundle-analyzer": "^4.8.0",
-    "webpack-cli": "^5.0.1"
+    "@types/node": "^20.6.2",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.4",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vite-plugin-singlefile": "^0.13.5",
+    "vite-tsconfig-paths": "^4.2.1"
   }
 }

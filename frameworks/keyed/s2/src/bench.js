@@ -1,4 +1,4 @@
-import s2 from './main.min.js'
+import s2 from '../node_modules/s2-engine/dist/main.mjs';
 //s2.debug=true
 cleanupTemplates();
 
@@ -49,7 +49,7 @@ function select () {
   this.cls = 'danger';
 }
 
-const [node, proxy] = s2(state, document.querySelector('#main'))
+const [proxy, node] = s2(state, document.querySelector('#main'))
 document.body.appendChild(node)
 window.p = proxy
 
@@ -75,6 +75,15 @@ var id = 0
 function create (label, number) {
   return function () {
     bench(label, function () {
+      // Technical note: the keyed behavior for array replacement can be forced
+      // by resetting it first. Removing this would default to non-keyed behavior.
+      //
+      // This *could* be the default behavior in the library itself, but would be
+      // a de-optimization for the common use case of replacing an array with another.
+      // Even if the default behavior was keyed, non-keyed could still be forced by
+      // mutating objects in the array.
+      proxy.rows = null
+
       proxy.rows = buildData(number)
     })
   }

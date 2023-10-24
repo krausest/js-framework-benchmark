@@ -1,0 +1,30 @@
+.mode-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.mode-selector__select {
+  width: fit-content;
+}
+
+@media screen and (width>=425px) {
+  .mode-selector {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+@media screen and (width>=640px) {
+  .mode-selector {
+    align-items: unset;
+  }
+}
+@media screen and (640px <= width <= 768px) {
+  .mode-selector {
+    flex-direction: column;
+  }
+}
+@media screen and (width>= 768px) {
+  .mode-selector {
+    align-items: center;
+  }
+}

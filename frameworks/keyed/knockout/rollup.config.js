@@ -1,17 +1,8 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import terser from '@rollup/plugin-terser';
 
-const plugins = [
-	resolve(),
-	commonjs({
-    include: 'node_modules/**'
-	})
-];
-
-if (process.env.production) {
-	plugins.push(terser());
-}
+const isProd = process.env.production
 
 export default {
 	input: 'src/Main.js',
@@ -19,5 +10,5 @@ export default {
 		file: 'dist/main.js',
 		format: 'iife'
 	},
-	plugins
+	plugins: [resolve(),commonjs(), isProd && terser()]
 };

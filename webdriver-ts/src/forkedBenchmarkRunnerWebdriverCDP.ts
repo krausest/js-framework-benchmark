@@ -1,23 +1,42 @@
 import * as fs from "fs/promises";
 import { WebDriver } from "selenium-webdriver";
-import { BenchmarkType } from "./benchmarksCommon.js";
-import { benchmarks, CPUBenchmarkWebdriverCDP, fileNameTrace } from "./benchmarksWebdriverCDP.js";
-import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, TConfig } from "./common.js";
-import { computeResultsCPU } from "./timeline.js";
-import { buildDriver, setButtonsInShadowRoot, setShadowRootName, setUseRowShadowRoot, setUseShadowRoot } from "./webdriverCDPAccess.js";
+import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
+import { benchmarks, CPUBenchmarkWebdriverCDP } from "./benchmarksWebdriverCDP.js";
+import {
+  BenchmarkOptions,
+  config as defaultConfig,
+  ErrorAndWarning,
+  FrameworkData,
+  Config,
+} from "./common.js";
+import { computeResultsCPU, fileNameTrace } from "./timeline.js";
+import {
+  buildDriver,
+  setButtonsInShadowRoot,
+  setShadowRootName,
+  setUseRowShadowRoot,
+  setUseShadowRoot,
+} from "./webdriverCDPAccess.js";
 
-
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 
 // necessary to launch without specifiying a path
 require("chromedriver");
 
-async function runBenchmark(driver: WebDriver, benchmark: CPUBenchmarkWebdriverCDP, framework: FrameworkData): Promise<any> {
+async function runBenchmark(
+  driver: WebDriver,
+  benchmark: CPUBenchmarkWebdriverCDP,
+  framework: FrameworkData
+): Promise<any> {
   await benchmark.run(driver, framework);
   if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
-async function initBenchmark(driver: WebDriver, benchmark: CPUBenchmarkWebdriverCDP, framework: FrameworkData): Promise<any> {
+async function initBenchmark(
+  driver: WebDriver,
+  benchmark: CPUBenchmarkWebdriverCDP,
+  framework: FrameworkData
+): Promise<any> {
   await benchmark.init(driver, framework);
   if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
@@ -58,22 +77,27 @@ async function runCPUBenchmark(
   framework: FrameworkData,
   benchmark: CPUBenchmarkWebdriverCDP,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
+): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
   let error: string = undefined;
   let warnings: string[] = [];
-  let results: number[] = [];
+  let results: CPUBenchmarkResult[] = [];
 
-  console.log("benchmarking ", framework, benchmark.benchmarkInfo.id, "with webdriver (tracing via CDP Connection)");
+  console.log(
+    "benchmarking ",
+    framework,
+    benchmark.benchmarkInfo.id,
+    "with webdriver (tracing via CDP Connection)"
+  );
   let driver: WebDriver = null;
   try {
     driver = buildDriver(benchmarkOptions);
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
-      let trace: any = {"traceEvents":[]}; //await fs.open(fileNameTrace(framework, benchmark.benchmarkInfo, i), "w");
+      let trace: any = { traceEvents: [] }; //await fs.open(fileNameTrace(framework, benchmark.benchmarkInfo, i), "w");
       setUseShadowRoot(framework.useShadowRoot);
       setUseRowShadowRoot(framework.useRowShadowRoot);
       setShadowRootName(framework.shadowRootName);
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
-      await driver.get(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      await driver.get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -84,60 +108,72 @@ async function runCPUBenchmark(
       // });
 
       await initBenchmark(driver, benchmark, framework);
-      const cdpConnection = await (driver as any).createCDPConnection('page');
-      if (benchmark.benchmarkInfo.throttleCPU) {
-        console.log("CPU slowdown", benchmark.benchmarkInfo.throttleCPU);
-        await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: benchmark.benchmarkInfo.throttleCPU });
+      const cdpConnection = await (driver as any).createCDPConnection("page");
+      let throttleCPU = slowDownFactor(
+        benchmark.benchmarkInfo.id,
+        benchmarkOptions.allowThrottling
+      );
+      if (throttleCPU) {
+        console.log("CPU slowdown", throttleCPU);
+        await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", {
+          rate: throttleCPU,
+        });
       }
 
       let categories = [
         "blink.user_timing",
         "devtools.timeline",
-        'disabled-by-default-devtools.timeline',
+        "disabled-by-default-devtools.timeline",
     ];
 
       console.log("**** Tracing start");
-      await cdpConnection.execute("Tracing.start",
-      {
-        transferMode: 'ReportEvents',
+      await cdpConnection.execute("Tracing.start", {
+        transferMode: "ReportEvents",
         traceConfig: {
             enableSampling: false,
             enableSystrace: false,
-            excludedCategories : [],
+            excludedCategories: [],
             includedCategories: categories,
         },
-      })
+      });
 
-      let p = new Promise((resolve,reject) => {
-        cdpConnection._wsConnection.on('message', async (msg: any) => {
+      let p = new Promise((resolve) => {
+        cdpConnection._wsConnection.on("message", async (msg: any) => {
           let message: any = JSON.parse(msg);
           // console.log("####", typeof message, message.method, Object.keys(message), message);
-          if (message.method==="Tracing.dataCollected") {
+          if (message.method === "Tracing.dataCollected") {
             // console.log("Tracing.dataCollected");
             trace.traceEvents = trace.traceEvents.concat(message.params.value);
-          } else if (message.method==="Tracing.tracingComplete") {
-            console.log("---- Tracing.tracingComplete", fileNameTrace(framework, benchmark.benchmarkInfo, i));
-            await fs.writeFile(fileNameTrace(framework, benchmark.benchmarkInfo, i), JSON.stringify(trace), 'utf8');
+          } else if (message.method === "Tracing.tracingComplete") {
+            console.log(
+              "---- Tracing.tracingComplete",
+              fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
+            );
+            await fs.writeFile(
+              fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions),
+              JSON.stringify(trace),
+              "utf8"
+            );
             resolve({});
           }
         });  
-      })
+      });
 
       await runBenchmark(driver, benchmark, framework);
 
-      if (benchmark.benchmarkInfo.throttleCPU) {
+      if (throttleCPU) {
         console.log("resetting CPU slowdown");
         await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
       }
       await cdpConnection.execute("Tracing.end", {});
       await p;
 
-      let result = await computeResultsCPU(config, fileNameTrace(framework, benchmark.benchmarkInfo, i), benchmark.benchmarkInfo.durationMeasurementMode);
-      results.push(result);
+      let result = await computeResultsCPU(
+        fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
+      );
+      results.push({ total: result.duration, script: 0 });
       console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
-      if (result < 0)
-          throw new Error(`duration ${result} < 0`);                
-
+      if (result.duration < 0) throw new Error(`duration ${result} < 0`);
     }
     await driver.close();
     await driver.quit();
@@ -161,13 +197,15 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
-  let runBenchmarks: Array<CPUBenchmarkWebdriverCDP> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriverCDP) as Array<CPUBenchmarkWebdriverCDP>;
+): Promise<ErrorAndWarning<number | CPUBenchmarkResult>> {
+  let runBenchmarks: Array<CPUBenchmarkWebdriverCDP> = benchmarks.filter(
+    (b) => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriverCDP
+  ) as Array<CPUBenchmarkWebdriverCDP>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning;
+  let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult>;
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }
@@ -190,7 +228,6 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
-  if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       process.send(result);

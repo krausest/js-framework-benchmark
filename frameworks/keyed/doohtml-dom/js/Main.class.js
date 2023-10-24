@@ -129,7 +129,6 @@ Doo.define(
 				
 				this.data.rows[CHILD_1] = this.data.rows[CHILD_998];
 				this.data.rows[CHILD_998] = row1
-
 				this.tbody.insertBefore(node1.parentNode.replaceChild(swapRow, node1), node999)
 			}
 		}

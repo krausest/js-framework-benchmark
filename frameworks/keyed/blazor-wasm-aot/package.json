@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Blazor WebAssembly demo",
   "js-framework-benchmark": {
-    "frameworkVersion": "6.0.1",
+    "frameworkVersion": "7.0.1",
     "frameworkHomeURL": "https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor",
     "customURL": "/bundeled-dist/wwwroot/",
     "issues": [

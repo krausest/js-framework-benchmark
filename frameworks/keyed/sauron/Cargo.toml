@@ -1,0 +1,21 @@
+[package]
+name = "js-framework-benchmark-sauron"
+version = "0.1.0"
+authors = ["Markus Kohlhase <mail@markus-kohlhase.de>", "Jovansonlee Cesar <ivanceras@gmail.com>" ]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+rand = { version = "0.8.5", features = ["small_rng"] }
+getrandom = { version = "0.2.7", features = ["js"] }
+sauron = "0.57.4"
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ['-O4']
