@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "target": "es2019",
-    "moduleResolution": "node",
-    "jsx": "react",
-    "jsxFactory": "forgo.createElement",
-    "jsxFragmentFactory": "forgo.Fragment"
-  }
-}

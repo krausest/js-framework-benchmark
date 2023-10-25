@@ -29,6 +29,9 @@ export function extractRelevantEvents(entries: any[]) {
           click_start = +e.ts;
           click_end = +e.ts + e.dur;
           filteredEvents.push({ type: "click", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
+      } else if (e.args.data.type === "mousedown") {
+        if (config.LOG_DETAILS) console.log("MOUSEDOWN ", +e.ts);
+        filteredEvents.push({ type: "mousedown", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
       }
     } else if (e.name === "Layout" && e.ph === "X") {
       if (config.LOG_DETAILS) console.log("Layout", +e.ts, +e.ts + e.dur - click_start);
@@ -146,6 +149,18 @@ export async function computeResultsCPU(
 ): Promise<CPUDurationResult> {
   const perfLogEvents = await fetchEventsFromPerformanceLog(fileName);
   let events = R.sortBy((e: TimingResult) => e.end)(perfLogEvents);
+
+    // Find mousedown event. This is the start of the benchmark
+    let mousedowns = R.filter(type_eq("mousedown"))(events);
+    // Invariant: There must be exactly one click event
+    if (mousedowns.length == 0) {
+      console.log("no mousedown event", fileName);
+    } else if (mousedowns.length == 1) {
+      console.log("one mousedown event", fileName);
+    } else if (mousedowns.length > 1) {
+      console.log("more than one mousedown event", fileName, events);
+      throw "at most one mousedown event is expected";
+    }
   
   // Find click event. This is the start of the benchmark
   let clicks = R.filter(type_eq("click"))(events);
@@ -155,6 +170,19 @@ export async function computeResultsCPU(
     throw "exactly one click event is expected";
   }
   let click = clicks[0];
+
+  // check is delay from mousedown to click it unusually long
+  if (mousedowns.length>0) {
+    let mousedownToClick = click.ts - mousedowns[0].ts;
+    if (mousedownToClick>0) {
+      console.log("mousedownToClick", mousedownToClick, fileName);
+    }
+    if (mousedownToClick > 10000) {
+      console.log("difference between mousedown and click is unusually long", mousedownToClick, fileName);
+      throw "difference between mousedown and click is unusually long";
+    }
+  }
+
   // The PID for the click event. We"re dropping all events from other processes.
   let pid = click.pid;
   let eventsDuringBenchmark = R.filter((e: TimingResult) => e.ts > click.end || e.type === "click")(events);
