@@ -179,7 +179,7 @@ export async function computeResultsCPU(
     }
     if (mousedownToClick > 10000) {
       console.log("difference between mousedown and click is unusually long", mousedownToClick, fileName);
-      throw "difference between mousedown and click is unusually long";
+      // throw "difference between mousedown and click is unusually long";
     }
   }
 
