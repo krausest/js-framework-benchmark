@@ -89,7 +89,7 @@ async function main() {
               vals.length !=
                 config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + benchmarkInfo.additionalNumberOfRuns
             ) {
-              console.log(`WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${vals.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_CPU}`);
+              console.log(`WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${vals.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + benchmarkInfo.additionalNumberOfRuns}`);
             } else if (
               benchmarkInfo.type === BenchmarkType.MEM &&
               vals.length != config.NUM_ITERATIONS_FOR_BENCHMARK_MEM

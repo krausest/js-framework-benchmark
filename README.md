@@ -103,7 +103,7 @@ This will take some time (currently about 12 hours on my machine). Finally creat
 npm run results
 ```
 
-Open js-framework-benchmark/webdriver-ts-results/table.html in a browser and take a look at the results. You can open the result table with the link [http://localhost:8080/webdriver-ts-results/table.html](http://localhost:8080/webdriver-ts-results/table.html)
+Open js-framework-benchmark/webdriver-ts-results/table.html in a browser and take a look at the results. You can open the result table with the link [http://localhost:8080/webdriver-ts-results/dist/index.html](http://localhost:8080/webdriver-ts-results/dist/index.html)
 
 
 Here's what you should do when the benchmark run was not successful. Let's assume the benchmark printed the following to the console:
@@ -316,6 +316,7 @@ TL;DR:
 1. Install all of the root-level dependencies
     1. `cd js-framework-benchmark/`
     1. `npm ci` or `npm i`
+    1. `npm run install-local`
 2. Make a new directory for your desired framework, for example Fast framework: `mkdir /frameworks/keyed/fast`
 3. Set up your new directory in whatever way is appropriate for that framework, for example:
     1. Set up prettier, eslint, dependencies (i.e. `@microsoft/fast-element`) etc
@@ -550,9 +551,23 @@ Thanks to Baptiste Augrain for making the benchmarks more sophisticated and addi
 
 Frameworks without significant activity on github or npm for more than a year will be removed (_automatic commits like dependabot and minor updates, like docs editions, are ignored_).
 
-Will be removed in future:
+## 2023-10-22
+The following frameworks were archived after chrome 118. Their last results are included in [chrome 118 results](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_118.0.5993.70.html).
+- [x] 1more
+- [x] domdiff
+- [x] domvm
+- [x] endorphin
+- [x] etch
+- [x] heresy
+- [x] lighterhtml
+- [x] neverland
+- [x] resonatejs
+- [x] sledgehammer
+- [x] uhydro
+- [x] fullweb-helpers
+- [x] fullweb-template
+- [x] forgo
 
-- [ ] crui Last significant commit Jul 28, 2019
 
 ## 2020-7-9
 
