@@ -1,0 +1,32 @@
+<mvc:View controllerName="ui5.benchmark.controller.DataList"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core"
+	xmlns="sap.m"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:element="ui5.benchmark.element">
+
+	<element:MyTable items="{list>/elements}" class="table table-hover table-striped test-data">
+		<element:columns>
+			<Column width="12em">
+				<Text text="Product" />
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true">
+				<Text text="Supplier" />
+			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true">
+				<Text text="delete" />
+			</Column>
+		</element:columns>
+		<element:items>
+			<element:MyColumnListItem vAlign="Middle">
+				<element:cells>
+					<ObjectIdentifier text="{list>id}"/>
+					<Link href="#" text="{list>label}" press="selectRow" />
+
+					<element:MyLink text="delete" press="deleteRow"/>
+					<Text text='' />
+				</element:cells>
+			</element:MyColumnListItem>
+		</element:items>
+	</element:MyTable>
+</mvc:View>
