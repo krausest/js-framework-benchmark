@@ -2,7 +2,6 @@ import { rendr, useCallback, useState } from '@rendrjs/core';
 import Jumbotron from './Jumbotron';
 import Row from './Row';
 
-
 const random = (max) => Math.round(Math.random() * 1000) % max;
 
 const A = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome',
@@ -49,39 +48,28 @@ const App = () => {
     return { data: newData, selected: old.selected };
   }), []);
   const onSwap = useCallback(() => setState(old => {
-    if (old.data.length > 988) {
-      return {
-        data: [old.data[0], old.data[998], ...old.data.slice(2, 998), old.data[1], old.data[999]],
-        selected: old.selected,
-      };
+    if (old.data.length > 998) {
+      const d1 = old.data[1];
+      const d998 = old.data[998];
+      old.data[1] = d998;
+      old.data[998] = d1;
+      return { ...old };
     }
     return { data: old.data, selected: 0 };
   }), []);
   const onAppend = useCallback(() => setState(old => {
     return { data: old.data.concat(buildData(1000)), selected: old.selected };
   }), []);
-  const onDelete = useCallback((id) => {
-    setState(old => {
-      const idx = old.data.findIndex((d) => d.id === id);
-      return { data: [...old.data.slice(0, idx), ...old.data.slice(idx + 1)], selected: old.selected };
-    });
-  }, []);
-  const onSelect = useCallback((id) => {
-    setState(old => ({ ...old, selected: id }));
-  }, []);
+  const onDelete = useCallback((id) => setState(old => {
+    old.data.splice(old.data.findIndex((d) => d.id === id), 1);
+    return { ...old };
+  }), []);
+  const onSelect = useCallback((id) => setState(old => ({ ...old, selected: id })), []);
 
   return rendr('div', {
     className: 'container',
     slot: [
-      rendr(Jumbotron, {
-        onRun,
-        onRunlots,
-        onClear,
-        onUpdate,
-        onSwap,
-        onAppend,
-        memo: [],
-      }),
+      rendr(Jumbotron, { onRun, onRunlots, onClear, onUpdate, onSwap, onAppend, memo: [] }),
       rendr('table', {
         className: 'table table-hover table-striped test-data',
         slot: rendr('tbody', {
@@ -91,7 +79,7 @@ const App = () => {
             selected: state.selected === item.id,
             onSelect,
             onDelete,
-            memo: [item.label, item.id === state.selected],
+            memo: [item.id === state.selected, item.label],
           })),
         }),
       }),
