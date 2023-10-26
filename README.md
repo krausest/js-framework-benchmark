@@ -60,7 +60,7 @@ There are currently ~60 framework entries in this repository. Installing (and ma
 
 ## 1.1 Prerequisites
 
-Have _node.js (>=v20.8.0)_ installed. If you want to do yourself a favour use nvm for that. The benchmark has been tested with node v20.8.0.
+Have _node.js (>=v20.9.0)_ installed. If you want to do yourself a favour use nvm for that. The benchmark has been tested with node v20.9.0.
 Please make sure that the following command work before trying to build:
 
 ```
@@ -68,7 +68,7 @@ Please make sure that the following command work before trying to build:
 npm -version
 10.1.0
 > node --version
-v20.8.0
+v20.9.0
 ```
 
 ## 1.2 Downloading the pre-built binaries and starting the server
