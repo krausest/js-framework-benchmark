@@ -395,7 +395,7 @@ sap.ui.define(
      */
     MyTableRenderer.renderListHeadAttributes = function (rm, oControl) {
       oControl._aPopinHeaders = [];
-      this.renderColumns(rm, oControl, "Head");
+      // this.renderColumns(rm, oControl, "Head");
       rm.openStart("tbody", oControl.addNavSection(oControl.getId("tblBody")));
       rm.class("sapMListItems");
       rm.class("sapMTableTBody");
