@@ -16,15 +16,18 @@
 			<Column minScreenWidth="Tablet" demandPopin="true">
 				<Text text="delete" />
 			</Column>
+			<Column minScreenWidth="Tablet" demandPopin="true">
+				<Text text="dummy" />
+			</Column>
 		</element:columns>
 		<element:items>
 			<element:MyColumnListItem vAlign="Middle">
 				<element:cells>
-					<ObjectIdentifier text="{list>id}"/>
-					<Link href="#" text="{list>label}" press="selectRow" />
+					<element:MyObjectIdentifier text="{list>id}"/>
+					<Link href="#" text="{list>label}" press="selectRow"/>
 
 					<element:MyLink text="delete" press="deleteRow"/>
-					<Text text='' />
+					<element:MyText text="" />
 				</element:cells>
 			</element:MyColumnListItem>
 		</element:items>
