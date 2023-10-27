@@ -1,5 +1,5 @@
 sap.ui.define(
-  ["sap/m/table", "./MyTableRenderer"],
+  ["sap/m/Table", "./MyTableRenderer"],
   function (Table, MyTableRenderer) {
     return Table.extend("ui5.benchmark.element.MyTable", {
       metadata: {
