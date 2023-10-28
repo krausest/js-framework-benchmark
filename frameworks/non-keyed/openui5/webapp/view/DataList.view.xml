@@ -23,11 +23,10 @@
 		<element:items>
 			<element:MyColumnListItem vAlign="Middle">
 				<element:cells>
-					<element:MyObjectIdentifier text="{list>id}"/>
+					<element:MyText text="{list>id}" />
 					<Link href="#" text="{list>label}" press="selectRow"/>
-
 					<element:MyLink text="delete" press="deleteRow"/>
-					<element:MyText text="" />
+					<element:MyObjectIdentifier text="{list>id}"/>
 				</element:cells>
 			</element:MyColumnListItem>
 		</element:items>

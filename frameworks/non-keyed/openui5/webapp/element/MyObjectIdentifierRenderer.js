@@ -40,8 +40,6 @@ sap.ui.define(
       }
 
       // write the HTML into the render manager
-
-      oRm.renderControl(oOI._getTextControl());
     };
 
     /**
