@@ -1,4 +1,5 @@
 import { signal, batch } from "@preact/signals";
+import { memo } from "preact/compat";
 import { render, h } from "preact";
 
 let idCounter = 1;
@@ -146,19 +147,14 @@ const App = () => {
       </div>
       <table class="table table-hover table-striped test-data">
         <tbody>
-          {data.value.map((row) => (
-            <tr key={row.id} class={selected.value === row.id ? "danger" : ""}>
-              <td class="col-md-1" textContent={row.id} />
-              <td class="col-md-4">
-                <a onClick={() => select(row.id)} textContent={row.label} />
-              </td>
-              <td class="col-md-1">
-                <a onClick={() => remove(row.id)}>
-                  <span class="glyphicon glyphicon-remove" aria-hidden="true" />
-                </a>
-              </td>
-              <td class="col-md-6" />
-            </tr>
+          {data.value.map((item) => (
+            <Row
+              key={item.id}
+              item={item}
+              selected={selected.value === item.id}
+              setSelected={select}
+              remove={remove}
+            />
           ))}
         </tbody>
       </table>
@@ -166,5 +162,23 @@ const App = () => {
     </div>
   );
 };
+
+const Row = memo(
+  ({ item, selected, remove, setSelected }) => (
+    <tr className={selected ? "danger" : ""}>
+      <td className="col-md-1">{item.id}</td>
+      <td className="col-md-4">
+        <a onClick={() => setSelected(item.id)}>{item.label}</a>
+      </td>
+      <td className="col-md-1">
+        <a onClick={() => remove(item.id)}>
+          <span className="glyphicon glyphicon-remove" aria-hidden="true" />
+        </a>
+      </td>
+      <td className="col-md-6" />
+    </tr>
+  ),
+  (prevProps, nextProps) => prevProps.selected === nextProps.selected && prevProps.item === nextProps.item
+);
 
 render(<App />, document.getElementById("main"));

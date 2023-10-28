@@ -1,4 +1,5 @@
 import { useState } from "preact/hooks";
+import { memo } from "preact/compat";
 import { render, h } from "preact";
 
 let idCounter = 1;
@@ -156,31 +157,38 @@ const App = () => {
       </div>
       <table class="table table-hover table-striped test-data">
         <tbody>
-          {data.map((row) => {
-            let rowId = row.id;
-            return (
-              <tr key={rowId} class={selected === rowId ? "danger" : ""}>
-                <td class="col-md-1">{rowId}</td>
-                <td class="col-md-4">
-                  <a onClick={() => setSelected(rowId)}>{row.label}</a>
-                </td>
-                <td class="col-md-1">
-                  <a onClick={() => remove(rowId)}>
-                    <span
-                      class="glyphicon glyphicon-remove"
-                      aria-hidden="true"
-                    />
-                  </a>
-                </td>
-                <td class="col-md-6" />
-              </tr>
-            );
-          })}
+          {data.map((item) => (
+            <Row
+              key={item.id}
+              item={item}
+              selected={selected === item.id}
+              setSelected={setSelected}
+              remove={remove}
+            />
+          ))}
         </tbody>
       </table>
       <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
     </div>
   );
 };
+
+const Row = memo(
+  ({ item, selected, remove, setSelected }) => (
+    <tr className={selected ? "danger" : ""}>
+      <td className="col-md-1">{item.id}</td>
+      <td className="col-md-4">
+        <a onClick={() => setSelected(item.id)}>{item.label}</a>
+      </td>
+      <td className="col-md-1">
+        <a onClick={() => remove(item.id)}>
+          <span className="glyphicon glyphicon-remove" aria-hidden="true" />
+        </a>
+      </td>
+      <td className="col-md-6" />
+    </tr>
+  ),
+  (prevProps, nextProps) => prevProps.selected === nextProps.selected && prevProps.item === nextProps.item
+);
 
 render(<App />, document.getElementById("main"));
