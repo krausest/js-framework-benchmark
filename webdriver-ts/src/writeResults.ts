@@ -2,8 +2,7 @@ import * as fs from "fs";
 import { BenchmarkInfo, BenchmarkType, CPUBenchmarkResult, fileName } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse.js";
 import { FrameworkData, JsonResult, JsonResultData } from "./common.js";
-import pkg from "jstat";
-const { jStat } = pkg;
+import { stats } from "./stats.js";
 
 export type ResultLightHouse = {
   framework: FrameworkData;
@@ -67,15 +66,7 @@ function createResultFile(
       break;
   }
   let convertResult = (label: string, data: number[]) => {
-    let s = jStat(data);
-    let res = {
-      min: s.min(),
-      max: s.max(),
-      mean: s.mean(),
-      median: s.median(),
-      stddev: s.stdev(true),
-      values: data,
-    };
+    let res = stats(data);
     console.log(`result ${fileName(framework, benchmark)} ${label} ${JSON.stringify(res)}`);
     return res;
   };
