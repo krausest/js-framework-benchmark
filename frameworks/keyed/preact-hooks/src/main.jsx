@@ -141,7 +141,7 @@ const App = () => {
       <div class="jumbotron">
         <div class="row">
           <div class="col-md-6">
-            <h1>Preact Signals Keyed</h1>
+            <h1>Preact Hooks Keyed</h1>
           </div>
           <div class="col-md-6">
             <div class="row">
