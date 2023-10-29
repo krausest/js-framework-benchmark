@@ -395,7 +395,7 @@ sap.ui.define(
      */
     MyTableRenderer.renderListHeadAttributes = function (rm, oControl) {
       oControl._aPopinHeaders = [];
-      this.renderColumns(rm, oControl, "Head");
+      // this.renderColumns(rm, oControl, "Head");
       rm.openStart("tbody", oControl.addNavSection(oControl.getId("tblBody")));
       rm.class("sapMListItems");
       rm.class("sapMTableTBody");
@@ -443,48 +443,7 @@ sap.ui.define(
     /**
      * render no data
      */
-    MyTableRenderer.renderNoData = function (rm, oControl) {
-      rm.openStart("tr", oControl.getId("nodata"));
-      rm.class("sapMLIB").class("sapMListTblRow").class("sapMLIBTypeInactive");
-      if (Device.system.desktop) {
-        rm.attr("tabindex", "-1");
-        rm.class("sapMLIBFocusable").class("sapMTableRowCustomFocus");
-      }
-      if (
-        !oControl._headerHidden ||
-        (!oControl.getHeaderText() && !oControl.getHeaderToolbar())
-      ) {
-        rm.class("sapMLIBShowSeparator");
-      }
-      rm.openEnd();
-
-      var bRenderDummyColumn = oControl.shouldRenderDummyColumn();
-      rm.openStart("td", oControl.getId("nodata-text"));
-      rm.attr("colspan", oControl.getColCount() - bRenderDummyColumn);
-      rm.class("sapMListTblCell").class("sapMListTblCellNoData");
-      rm.openEnd();
-
-      if (!oControl.shouldRenderItems()) {
-        if (oControl.getAggregation("_noColumnsMessage")) {
-          // If _noColumnsMessage is set, there is for sure an IllustratedMessage used for no data visualization
-          rm.renderControl(oControl.getAggregation("_noColumnsMessage"));
-        } else {
-          rm.text(
-            Library.getResourceBundleFor("sap.m").getText("TABLE_NO_COLUMNS")
-          );
-        }
-      } else {
-        this.renderNoDataArea(rm, oControl);
-      }
-
-      rm.close("td");
-
-      if (bRenderDummyColumn) {
-        MyColumnListItemRenderer.renderDummyCell(rm, oControl);
-      }
-
-      rm.close("tr");
-    };
+    MyTableRenderer.renderNoData = function (rm, oControl) {};
 
     return MyTableRenderer;
   },
