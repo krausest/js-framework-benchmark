@@ -1,10 +1,5 @@
 import yargs from "yargs";
-import {
-  checkElementContainsText,
-  checkElementExists,
-  clickElement,
-  startBrowser,
-} from "./playwrightAccess.js";
+import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./playwrightAccess.js";
 import { config, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
 import * as R from "ramda";
@@ -34,8 +29,7 @@ let benchmarkOptions: BenchmarkOptions = {
   headless: args.headless,
   chromeBinaryPath: args.chromeBinary,
   numIterationsForCPUBenchmarks:
-    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU +
-    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
   numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
   numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
   batchSize: 1,
@@ -150,7 +144,9 @@ function isKeyedRemove(result: any, shouldBeKeyed: boolean): boolean {
   if (r && !shouldBeKeyed) {
     // console.log(`Note: Non-keyed test for remove is acutally keyed. Expected that the dom node for the 2nd row would NOT be removed, but it was.`);
   } else if (!r && shouldBeKeyed) {
-    console.log(`Keyed test for remove failed. Expected that the dom node for the 2nd row would be removed, but it wasn't`);
+    console.log(
+      `Keyed test for remove failed. Expected that the dom node for the 2nd row would be removed, but it wasn't`
+    );
   }
   return r;
 }
@@ -162,7 +158,9 @@ function isKeyedSwapRow(result: any, shouldBeKeyed: boolean): boolean {
     // );
   } else if (!r && shouldBeKeyed) {
     if (result.newNodes > 0) {
-      console.log(`Keyed test for swap failed. Swap must add the TRs that it removed, but there were ${result.newNodes} new nodes`);
+      console.log(
+        `Keyed test for swap failed. Swap must add the TRs that it removed, but there were ${result.newNodes} new nodes`
+      );
     } else {
       console.log(
         `Keyed test for swap failed. Expected at least 1 added and 1 removed TR, but there were ${result.tradded} added and ${result.trremoved} removed`
@@ -174,11 +172,7 @@ function isKeyedSwapRow(result: any, shouldBeKeyed: boolean): boolean {
 
 const toLower = (array: string[]) => array.map((s) => s.toLowerCase());
 
-async function assertChildNodes(
-  elem: ElementHandle<HTMLElement>,
-  expectedNodes: string[],
-  message: string
-) {
+async function assertChildNodes(elem: ElementHandle<HTMLElement>, expectedNodes: string[], message: string) {
   let elements = await elem.$$("*");
   let allNodes = await Promise.all(elements.map((e) => e.evaluate((e) => e.tagName)));
   if (!R.equals(toLower(allNodes), toLower(expectedNodes))) {
@@ -196,12 +190,8 @@ function niceEmptyString(val: string[]): string {
   return val.toString();
 }
 
-async function assertClassesContained(
-  elem: ElementHandle<HTMLElement>,
-  expectedClassNames: string[],
-  message: string
-) {
-  const classNames = await elem.evaluate((e) => e.className)
+async function assertClassesContained(elem: ElementHandle<HTMLElement>, expectedClassNames: string[], message: string) {
+  const classNames = await elem.evaluate((e) => e.className);
   let actualClassNames = classNames.split(" ");
   if (!expectedClassNames.every((expected) => actualClassNames.includes(expected))) {
     console.log(
@@ -243,7 +233,13 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
 
   // span in third td
   let span = await page.$("tbody>tr:nth-of-type(1000)>td:nth-of-type(3)>a>span");
-  if (!(await assertClassesContained(span as ElementHandle<HTMLElement>, ["glyphicon", "glyphicon-remove"], "span in a in third td"))) {
+  if (
+    !(await assertClassesContained(
+      span as ElementHandle<HTMLElement>,
+      ["glyphicon", "glyphicon-remove"],
+      "span in a in third td"
+    ))
+  ) {
     return false;
   }
   // console.log("names", await span.evaluate(e => e.getAttributeNames()));
@@ -263,9 +259,8 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
   return true;
 }
 
-
 const matchesDirectoryArg = (directoryName: string) =>
- frameworkArgument.length === 0 || frameworkArgument.some((arg: string) => arg == directoryName);
+  frameworkArgument.length === 0 || frameworkArgument.some((arg: string) => arg == directoryName);
 
 async function runBench(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -273,10 +268,7 @@ async function runBench(
 ) {
   let runFrameworks;
   runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
-  console.log(
-    "Frameworks that will be checked",
-    runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" ")
-  );
+  console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
 
   let allCorrect = true;
 
@@ -286,13 +278,9 @@ async function runBench(
     let browser = await startBrowser(benchmarkOptions);
     let page = await browser.newPage();
     try {
-
-      await page.goto(
-        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
-        {
-          waitUntil: "networkidle",
-        }
-      );
+      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
+        waitUntil: "networkidle",
+      });
       await checkElementExists(page, "#add");
       await clickElement(page, "#add");
       await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
@@ -305,7 +293,9 @@ async function runBench(
       }
       let str = init(framework.shadowRootName);
       await page.evaluate(str);
-      await (framework.useShadowRoot ? page.evaluate(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`) : page.evaluate(`window.nonKeyedDetector_setUseShadowDom(undefined);`));
+      await (framework.useShadowRoot
+        ? page.evaluate(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`)
+        : page.evaluate(`window.nonKeyedDetector_setUseShadowDom(undefined);`));
       await page.evaluate("window.nonKeyedDetector_instrument()");
       // swap
       await page.evaluate("nonKeyedDetector_storeTr()");
@@ -343,11 +333,7 @@ async function runBench(
           " in the results"
       );
       if (framework.keyed !== keyed) {
-        console.log(
-          "ERROR: Framework " +
-            framework.fullNameWithKeyedAndVersion +
-            " is not correctly categorized"
-        );
+        console.log("ERROR: Framework " + framework.fullNameWithKeyedAndVersion + " is not correctly categorized");
         allCorrect = false;
       }
     } catch (error) {
@@ -365,8 +351,8 @@ async function runBench(
   if (!allCorrect) process.exit(1);
 }
 
-let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(
-  (v: string) => v.toString()
+let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map((v: string) =>
+  v.toString()
 );
 
 async function main() {
@@ -378,8 +364,7 @@ async function main() {
 }
 
 try {
-  await main()
+  await main();
 } catch (error) {
   console.log("Error in isKeyed", error);
-  
 }

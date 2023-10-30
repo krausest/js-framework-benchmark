@@ -1,12 +1,5 @@
 import * as chromeLauncher from "chrome-launcher";
-
-import {
-  Config,
-  config as defaultConfig,
-  FrameworkData,
-  ErrorAndWarning,
-  BenchmarkOptions,
-} from "./common.js";
+import { Config, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
 import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./benchmarksLighthouse.js";
 import { StartupBenchmarkInfo } from "./benchmarksCommon.js";
 import lighthouse from "lighthouse";

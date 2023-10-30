@@ -1,41 +1,20 @@
 import { Browser, CDPSession, Page } from "puppeteer-core";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
-import {
-  CPUBenchmarkPuppeteer,
-  MemBenchmarkPuppeteer,
-  BenchmarkPuppeteer,
-  benchmarks,
-} from "./benchmarksPuppeteer.js";
-import {
-  BenchmarkOptions,
-  config as defaultConfig,
-  ErrorAndWarning,
-  FrameworkData,
-  Config,
-} from "./common.js";
+import { CPUBenchmarkPuppeteer, MemBenchmarkPuppeteer, BenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
+import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
 import { computeResultsCPU, computeResultsJS, fileNameTrace } from "./timeline.js";
 
 let config: Config = defaultConfig;
 
-async function runBenchmark(
-  page: Page,
-  benchmark: BenchmarkPuppeteer,
-  framework: FrameworkData
-): Promise<any> {
+async function runBenchmark(page: Page, benchmark: BenchmarkPuppeteer, framework: FrameworkData): Promise<any> {
   await benchmark.run(page, framework);
-  if (config.LOG_PROGRESS)
-    console.log("after run", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
+  if (config.LOG_PROGRESS) console.log("after run", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
 }
 
-async function initBenchmark(
-  page: Page,
-  benchmark: BenchmarkPuppeteer,
-  framework: FrameworkData
-): Promise<any> {
+async function initBenchmark(page: Page, benchmark: BenchmarkPuppeteer, framework: FrameworkData): Promise<any> {
   await benchmark.init(page, framework);
-  if (config.LOG_PROGRESS)
-    console.log("after initialized", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
+  if (config.LOG_PROGRESS) console.log("after initialized", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
 }
 
 const wait = (delay = 1000) => new Promise((res) => setTimeout(res, delay));
@@ -66,8 +45,8 @@ function convertError(error: any): string {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function forceGC(page: Page, client: CDPSession) {
   for (let i = 0; i < 7; i++) {
-      // await client.send('HeapProfiler.collectGarbage');
-      await page.evaluate("window.gc()");
+    // await client.send('HeapProfiler.collectGarbage');
+    await page.evaluate("window.gc()");
   }
 }
 
@@ -76,134 +55,115 @@ async function runCPUBenchmark(
   benchmark: CPUBenchmarkPuppeteer,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
-    let error: string = undefined;
-    let warnings: string[] = [];
-    let results: CPUBenchmarkResult[] = [];
+  let error: string = undefined;
+  let warnings: string[] = [];
+  let results: CPUBenchmarkResult[] = [];
 
-    console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
+  console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
   let browser: Browser = null;
   let page: Page = null;
-    try {
-        browser = await startBrowser(benchmarkOptions);
-        page = await browser.newPage();
-        // if (config.LOG_DETAILS) {
+  try {
+    browser = await startBrowser(benchmarkOptions);
+    page = await browser.newPage();
+    // if (config.LOG_DETAILS) {
     page.on("console", (msg) => {
       for (let i = 0; i < msg.args().length; ++i) console.log(`BROWSER: ${msg.args()[i]}`);
-            });
-        // }
+    });
+    // }
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
-            try {
-        await page.goto(
-          `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
-          {
-            waitUntil: "networkidle0",
-          }
-        );
-            } catch {
-              console.log("**** loading benchmark failed, retrying");
-        await page.goto(
-          `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
-          {
-            waitUntil: "networkidle0",
-          }
-        );
-            }
+      try {
+        await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
+          waitUntil: "networkidle0",
+        });
+      } catch {
+        console.log("**** loading benchmark failed, retrying");
+        await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
+          waitUntil: "networkidle0",
+        });
+      }
 
-            // await (driver as any).sendDevToolsCommand('Network.enable');
-            // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
-                //     offline: false,
-                //     latency: 200, // ms
-                //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
-                //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
-                // });
-            console.log("initBenchmark");
-            await initBenchmark(page, benchmark, framework);
+      // await (driver as any).sendDevToolsCommand('Network.enable');
+      // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
+      //     offline: false,
+      //     latency: 200, // ms
+      //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
+      //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
+      // });
+      console.log("initBenchmark");
+      await initBenchmark(page, benchmark, framework);
 
-            let categories = [
-                "blink.user_timing",
-                "devtools.timeline",
-        "disabled-by-default-devtools.timeline",
-            ];
-            // let categories = [
-            // "loading",
-            // 'devtools.timeline',
-            //   'disabled-by-default-devtools.timeline',
-            //   '-*',
-            //   'v8.execute',
-            //     'disabled-by-default-devtools.timeline.frame',
-            //     'toplevel',
-            //     'blink.console',
-            //     'blink.user_timing',
-            //     'latencyInfo',
-            //     'disabled-by-default-v8.cpu_profiler',                
-            //     'disabled-by-default-devtools.timeline.stack',
-            // ];
+      let categories = ["blink.user_timing", "devtools.timeline", "disabled-by-default-devtools.timeline"];
+      // let categories = [
+      // "loading",
+      // 'devtools.timeline',
+      //   'disabled-by-default-devtools.timeline',
+      //   '-*',
+      //   'v8.execute',
+      //     'disabled-by-default-devtools.timeline.frame',
+      //     'toplevel',
+      //     'blink.console',
+      //     'blink.user_timing',
+      //     'latencyInfo',
+      //     'disabled-by-default-v8.cpu_profiler',
+      //     'disabled-by-default-devtools.timeline.stack',
+      // ];
 
-            const client = await page.target().createCDPSession();
+      const client = await page.target().createCDPSession();
 
-      let throttleCPU = slowDownFactor(
-        benchmark.benchmarkInfo.id,
-        benchmarkOptions.allowThrottling
-      );
-            if (throttleCPU) {
-              console.log("CPU slowdown", throttleCPU);
-              await page.emulateCPUThrottling(throttleCPU);
-          }
-  
+      let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
+      if (throttleCPU) {
+        console.log("CPU slowdown", throttleCPU);
+        await page.emulateCPUThrottling(throttleCPU);
+      }
+
       await page.tracing.start({
         path: fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions),
-            screenshots: false,
+        screenshots: false,
         categories: categories,
-          });
-          await forceGC(page, client);
-            console.log("runBenchmark");
-            let m1 = await page.metrics();
-            await runBenchmark(page, benchmark, framework);
+      });
+      await forceGC(page, client);
+      console.log("runBenchmark");
+      let m1 = await page.metrics();
+      await runBenchmark(page, benchmark, framework);
 
-            await wait(40);
-            await page.tracing.stop();
-            let m2 = await page.metrics();
-            if (throttleCPU) {
-              await page.emulateCPUThrottling(1);
-          }
-  
-            // console.log("afterBenchmark", m1, m2);
-            // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
-      let result = await computeResultsCPU(
-        fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
-      );
+      await wait(40);
+      await page.tracing.stop();
+      let m2 = await page.metrics();
+      if (throttleCPU) {
+        await page.emulateCPUThrottling(1);
+      }
+
+      // console.log("afterBenchmark", m1, m2);
+      // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
+      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
       let resultScript = await computeResultsJS(
         result,
         config,
         fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
       );
-            console.log("**** resultScript =", resultScript);
-            if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
+      console.log("**** resultScript =", resultScript);
+      if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
       results.push({ total: result.duration, script: resultScript });
-      console.log(
-        `duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(
-          result
-        )}`
-      );
+      console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(result)}`);
       if (result.duration < 0) throw new Error(`duration ${result} < 0`);
-        }
-    return { error, warnings, result: results };
-    } catch (error_) {
-        console.log("ERROR", error_);
-        error = convertError(error_);
-    return { error, warnings };
-    } finally {
-        try {
-            if (browser) {
-        console.log("*** browser close");
-                await browser.close();
-        console.log("*** browser closed");
-            }
-        } catch (error_) {
-            console.log("ERROR cleaning up driver", error_);
-        }
-        console.log("*** browser has been shutting down");
     }
+    return { error, warnings, result: results };
+  } catch (error_) {
+    console.log("ERROR", error_);
+    error = convertError(error_);
+    return { error, warnings };
+  } finally {
+    try {
+      if (browser) {
+        console.log("*** browser close");
+        await browser.close();
+        console.log("*** browser closed");
+      }
+    } catch (error_) {
+      console.log("ERROR cleaning up driver", error_);
+    }
+    console.log("*** browser has been shutting down");
+  }
 }
 
 async function runMemBenchmark(
@@ -226,13 +186,10 @@ async function runMemBenchmark(
           for (let i = 0; i < msg.args().length; ++i) console.log(`BROWSER: ${msg.args()[i]}`);
         });
       }
-      
-      await page.goto(
-        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
-        {
-          waitUntil: "networkidle0",
-        }
-      );
+
+      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
+        waitUntil: "networkidle0",
+      });
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -249,7 +206,7 @@ async function runMemBenchmark(
       await runBenchmark(page, benchmark, framework);
       await forceGC(page, client);
       await wait(40);
-      let result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
+      let result = ((await page.evaluate("performance.measureUserAgentSpecificMemory()")) as any).bytes / 1024 / 1024;
       console.log("afterBenchmark");
 
       results.push(result);
@@ -288,23 +245,16 @@ export async function executeBenchmark(
 ): Promise<ErrorAndWarning<any>> {
   let runBenchmarks: Array<BenchmarkPuppeteer> = benchmarks.filter(
     (b) =>
-      benchmarkId === b.benchmarkInfo.id &&
-      (b instanceof CPUBenchmarkPuppeteer || b instanceof MemBenchmarkPuppeteer)
+      benchmarkId === b.benchmarkInfo.id && (b instanceof CPUBenchmarkPuppeteer || b instanceof MemBenchmarkPuppeteer)
   ) as Array<BenchmarkPuppeteer>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (puppeteer)`;
 
   let benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning<any>;
-  errorAndWarnings = await (benchmark.type == BenchmarkType.CPU ? runCPUBenchmark(
-      framework,
-      benchmark as CPUBenchmarkPuppeteer,
-      benchmarkOptions
-    ) : runMemBenchmark(
-      framework,
-      benchmark as MemBenchmarkPuppeteer,
-      benchmarkOptions
-    ));
+  errorAndWarnings = await (benchmark.type == BenchmarkType.CPU
+    ? runCPUBenchmark(framework, benchmark as CPUBenchmarkPuppeteer, benchmarkOptions)
+    : runMemBenchmark(framework, benchmark as MemBenchmarkPuppeteer, benchmarkOptions));
   if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }

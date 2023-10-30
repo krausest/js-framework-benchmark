@@ -28,8 +28,7 @@ async function debugAll() {
     headless: true,
     chromeBinaryPath: undefined,
     numIterationsForCPUBenchmarks:
-      config.NUM_ITERATIONS_FOR_BENCHMARK_CPU +
-      config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+      config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
     numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
     numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
     batchSize: 1,
@@ -49,8 +48,8 @@ async function debugAll() {
   plausibilityCheck.print();
 }
 try {
-  await debugSingle()
-  console.log("Done")
+  await debugSingle();
+  console.log("Done");
 } catch (error) {
-  console.log(error)
+  console.log(error);
 }

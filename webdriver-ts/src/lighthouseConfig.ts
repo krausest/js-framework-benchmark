@@ -22,8 +22,7 @@ export const lhConfig = {
   categories: {
     performance: {
       name: "Performance",
-      description:
-        "These encapsulate your app's current performance and opportunities to improve it.",
+      description: "These encapsulate your app's current performance and opportunities to improve it.",
       audits: [
         { id: "first-meaningful-paint", weight: 5 },
         { id: "first-interactive", weight: 5 },
