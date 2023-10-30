@@ -75,16 +75,16 @@ thead.dummy th {
   text-align: left;
   overflow: visible;
   height: 42px;
-  padding:0 !important;
-  border:0;
+  padding: 0 !important;
+  border: 0;
 }
 td > h3 {
-  position:absolute;
+  position: absolute;
   font-size: 16px;
   margin: 0px;
   padding: 10px;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
   width: 800px;
   height: 40px;
   background-color: #fff;
@@ -97,13 +97,12 @@ td {
   max-width: 100%;
 }
 .results__table-container {
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .results__table {
   font-size: 11px;
   width: 150px;
   table-layout: fixed;
-  border-spacing: 0;
   border-collapse: collapse;
 }
 .results__table th {
@@ -130,6 +129,25 @@ td {
   left: 0;
   width: 120px;
   background-color: white;
+}
+.results__table th:first-child::before,
+.results__table td:not(.description):first-child::before,
+.results__table th:first-child::after,
+.results__table td:not(.description):first-child::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #dddddd;
+}
+.results__table th:first-child::before,
+.results__table td:first-child::before {
+  left: -1px;
+}
+.results__table th:first-child::after,
+.results__table td:first-child::after {
+  right: -1px;
 }
 
 .rowCount {
