@@ -153,13 +153,13 @@ export async function initializeFrameworks(
         uri:
           "frameworks/" +
           fullName +
-          (frameworkVersionInformation.customURL ? frameworkVersionInformation.customURL : ""),
+          (frameworkVersionInformation.customURL || ""),
         keyed: frameworkVersionInformation.type === "keyed",
         useShadowRoot: !!frameworkVersionInformation.useShadowRoot,
         useRowShadowRoot: !!frameworkVersionInformation.useRowShadowRoot,
         shadowRootName: frameworkVersionInformation.shadowRootName,
         buttonsInShadowRoot: !!frameworkVersionInformation.buttonsInShadowRoot,
-        issues: (frameworkVersionInformation.issues ?? []).map((i) => Number(i)),
+        issues: (frameworkVersionInformation.issues ?? []).map(Number),
         frameworkHomeURL: frameworkVersionInformation.frameworkHomeURL ?? "",
       });
     }

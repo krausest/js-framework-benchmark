@@ -5,7 +5,7 @@ import {
   clickElement,
   startBrowser,
 } from "./playwrightAccess.js";
-import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common.js";
+import { config, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
 import * as R from "ramda";
 import { ElementHandle, Page } from "playwright";
@@ -23,7 +23,7 @@ let args: any = yargs(process.argv)
 
 console.log("args", args);
 
-console.log("HEADLESS*** ", args.headless);
+console.log("HEADLESS***", args.headless);
 
 let benchmarkOptions: BenchmarkOptions = {
   port: 8080,
@@ -45,7 +45,7 @@ let benchmarkOptions: BenchmarkOptions = {
 };
 
 let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
-let frameworkArgument = !args.framework ? allArgs : args.framework;
+let frameworkArgument = args.framework || allArgs;
 console.log("args", args, "allArgs", allArgs);
 
 let init = (shadowRootName: string) => `
@@ -172,6 +172,8 @@ function isKeyedSwapRow(result: any, shouldBeKeyed: boolean): boolean {
   return r;
 }
 
+const toLower = (array: string[]) => array.map((s) => s.toLowerCase());
+
 async function assertChildNodes(
   elem: ElementHandle<HTMLElement>,
   expectedNodes: string[],
@@ -179,7 +181,6 @@ async function assertChildNodes(
 ) {
   let elements = await elem.$$("*");
   let allNodes = await Promise.all(elements.map((e) => e.evaluate((e) => e.tagName)));
-  let toLower = (array: string[]) => array.map((s) => s.toLowerCase());
   if (!R.equals(toLower(allNodes), toLower(expectedNodes))) {
     console.log("ERROR in html structure for " + message);
     console.log("  expected:", expectedNodes);
@@ -200,7 +201,8 @@ async function assertClassesContained(
   expectedClassNames: string[],
   message: string
 ) {
-  let actualClassNames = (await elem.evaluate((e) => e.className)).split(" ");
+  const classNames = await elem.evaluate((e) => e.className)
+  let actualClassNames = classNames.split(" ");
   if (!expectedClassNames.every((expected) => actualClassNames.includes(expected))) {
     console.log(
       "css class not correct. Expected for " +
@@ -248,7 +250,7 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
   let spanAria = await span.evaluate((e) => e.getAttribute("aria-hidden"));
   // console.log("aria ", spanAria);
   if ("true" !== spanAria) {
-    console.log("Expected to find 'aria-hidden'=true on span in third td, but found ", spanAria);
+    console.log("Expected to find 'aria-hidden'=true on span in third td, but found", spanAria);
     return false;
   }
 
@@ -261,13 +263,15 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
   return true;
 }
 
+
+const matchesDirectoryArg = (directoryName: string) =>
+ frameworkArgument.length === 0 || frameworkArgument.some((arg: string) => arg == directoryName);
+
 async function runBench(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   frameworkNames: string[] // Not used in the function, but is used when calling the function in other files
 ) {
   let runFrameworks;
-  let matchesDirectoryArg = (directoryName: string) =>
-    frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
   runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
   console.log(
     "Frameworks that will be checked",
@@ -278,11 +282,10 @@ async function runBench(
 
   console.log("*** headless", benchmarkOptions.headless);
 
-  for (let i = 0; i < runFrameworks.length; i++) {
+  for (let framework of runFrameworks) {
     let browser = await startBrowser(benchmarkOptions);
     let page = await browser.newPage();
     try {
-      let framework: FrameworkData = runFrameworks[i];
 
       await page.goto(
         `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
@@ -302,11 +305,7 @@ async function runBench(
       }
       let str = init(framework.shadowRootName);
       await page.evaluate(str);
-      if (framework.useShadowRoot) {
-        await page.evaluate(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`);
-      } else {
-        await page.evaluate(`window.nonKeyedDetector_setUseShadowDom(undefined);`);
-      }
+      await (framework.useShadowRoot ? page.evaluate(`window.nonKeyedDetector_setUseShadowDom("${framework.shadowRootName}");`) : page.evaluate(`window.nonKeyedDetector_setUseShadowDom(undefined);`));
       await page.evaluate("window.nonKeyedDetector_instrument()");
       // swap
       await page.evaluate("nonKeyedDetector_storeTr()");
@@ -351,14 +350,14 @@ async function runBench(
         );
         allCorrect = false;
       }
-    } catch (e) {
-      console.log("ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion, e);
+    } catch (error) {
+      console.log("ERROR running " + framework.fullNameWithKeyedAndVersion, error);
       allCorrect = false;
     } finally {
       try {
         await page.close();
         await browser.close();
-      } catch (e) {
+      } catch {
         console.log("error calling driver.quit - ignoring this exception");
       }
     }
@@ -378,6 +377,9 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.log("Error in isKeyed", err);
-});
+try {
+  await main()
+} catch (error) {
+  console.log("Error in isKeyed", error);
+  
+}

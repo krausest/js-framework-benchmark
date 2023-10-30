@@ -44,13 +44,12 @@ export default [
     rules: {
       ...unicorn.configs.recommended.rules,
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
       "require-await": "error",
       "@typescript-eslint/no-floating-promises": "error",
       
       "unicorn/prevent-abbreviations": "off",
       "unicorn/no-null": "off",
-      "unicorn/no-negated-condition": "off",
+      "unicorn/prefer-spread":"off",
       "unicorn/prefer-dom-node-text-content": "off",
       "unicorn/no-process-exit": "off",
       "unicorn/filename-case": [

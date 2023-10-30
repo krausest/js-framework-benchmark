@@ -17,8 +17,8 @@ function extractRawValue(results: any, id: string) {
   let audits = results.audits;
   if (!audits) return null;
   let audit_with_id = audits[id];
-  if (typeof audit_with_id === "undefined") return null;
-  if (typeof audit_with_id.numericValue === "undefined") return null;
+  if (audit_with_id === undefined) return null;
+  if (audit_with_id.numericValue === undefined) return null;
   return audit_with_id.numericValue;
 }
 
@@ -42,10 +42,10 @@ async function runLighthouse(
       "--disable-extensions",
       "--disable-default-apps",
       "--window-size=1200,800",
-      "--remote-debugging-port=" + benchmarkOptions.remoteDebuggingPort.toFixed(),
+      "--remote-debugging-port=" + benchmarkOptions.remoteDebuggingPort.toFixed(0),
     ],
     onlyCategories: ["performance"],
-    port: benchmarkOptions.remoteDebuggingPort.toFixed(),
+    port: benchmarkOptions.remoteDebuggingPort.toFixed(0),
     logLevel: "info",
   };
 
@@ -85,9 +85,9 @@ function convertError(error: any): string {
     error,
     "| type:",
     typeof error,
-    " instance of Error",
+    "instance of Error",
     error instanceof Error,
-    " Message: ",
+    "Message:",
     error.message
   );
   if (typeof error === "string") {
@@ -113,8 +113,8 @@ async function runStartupBenchmark(
   try {
     let result = await runLighthouse(framework, benchmark.subbenchmarks, benchmarkOptions);
     return { error, warnings: [], result };
-  } catch (e) {
-    error = convertError(e);
+  } catch (error_) {
+    error = convertError(error_);
     return { error, warnings: [] };
   }
 }
@@ -139,7 +139,7 @@ export async function executeBenchmark(
 
 process.on("message", (msg: any) => {
   config = msg.config;
-  console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
+  console.log("START BENCHMARK. Write results?", config.WRITE_RESULTS);
   // if (config.LOG_DEBUG) console.log("child process got message", msg);
 
   let {
@@ -156,9 +156,9 @@ process.on("message", (msg: any) => {
       process.send(result);
       process.exit(0);
     })
-    .catch((err) => {
+    .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunnerLighthouse");
-      process.send({ failure: convertError(err) });
+      process.send({ failure: convertError(error) });
       process.exit(0);
     });
 });

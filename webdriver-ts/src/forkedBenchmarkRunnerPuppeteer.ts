@@ -25,7 +25,7 @@ async function runBenchmark(
 ): Promise<any> {
   await benchmark.run(page, framework);
   if (config.LOG_PROGRESS)
-    console.log("after run ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
+    console.log("after run", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
 }
 
 async function initBenchmark(
@@ -35,7 +35,7 @@ async function initBenchmark(
 ): Promise<any> {
   await benchmark.init(page, framework);
   if (config.LOG_PROGRESS)
-    console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
+    console.log("after initialized", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
 }
 
 const wait = (delay = 1000) => new Promise((res) => setTimeout(res, delay));
@@ -46,9 +46,9 @@ function convertError(error: any): string {
     error,
     "| type:",
     typeof error,
-    " instance of Error",
+    "instance of Error",
     error instanceof Error,
-    " Message: ",
+    "Message:",
     error.message
   );
   if (typeof error === "string") {
@@ -80,7 +80,7 @@ async function runCPUBenchmark(
     let warnings: string[] = [];
     let results: CPUBenchmarkResult[] = [];
 
-    console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
+    console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
   let browser: Browser = null;
   let page: Page = null;
     try {
@@ -99,7 +99,7 @@ async function runCPUBenchmark(
             waitUntil: "networkidle0",
           }
         );
-            } catch (ex) {
+            } catch {
               console.log("**** loading benchmark failed, retrying");
         await page.goto(
           `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
@@ -177,7 +177,7 @@ async function runCPUBenchmark(
         config,
         fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
       );
-            console.log("**** resultScript = ", resultScript);
+            console.log("**** resultScript =", resultScript);
             if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
       results.push({ total: result.duration, script: resultScript });
       console.log(
@@ -188,9 +188,9 @@ async function runCPUBenchmark(
       if (result.duration < 0) throw new Error(`duration ${result} < 0`);
         }
     return { error, warnings, result: results };
-    } catch (e) {
-        console.log("ERROR ", e);
-        error = convertError(e);
+    } catch (error_) {
+        console.log("ERROR", error_);
+        error = convertError(error_);
     return { error, warnings };
     } finally {
         try {
@@ -199,8 +199,8 @@ async function runCPUBenchmark(
                 await browser.close();
         console.log("*** browser closed");
             }
-        } catch (err) {
-            console.log("ERROR cleaning up driver", err);
+        } catch (error_) {
+            console.log("ERROR cleaning up driver", error_);
         }
         console.log("*** browser has been shutting down");
     }
@@ -215,7 +215,7 @@ async function runMemBenchmark(
   let warnings: string[] = [];
   let results: number[] = [];
 
-  console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
+  console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
   let browser: Browser = null;
   try {
     browser = await startBrowser(benchmarkOptions);
@@ -267,15 +267,15 @@ async function runMemBenchmark(
     await page.close();
     await browser.close();
     return { error, warnings, result: results };
-  } catch (e) {
-    console.log("ERROR ", e);
-    error = convertError(e);
+  } catch (error_) {
+    console.log("ERROR", error_);
+    error = convertError(error_);
     try {
       if (browser) {
         await browser.close();
       }
-    } catch (err) {
-      console.log("ERROR cleaning up driver", err);
+    } catch (error_) {
+      console.log("ERROR cleaning up driver", error_);
     }
     return { error, warnings };
   }
@@ -296,26 +296,22 @@ export async function executeBenchmark(
   let benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning<any>;
-  if (benchmark.type == BenchmarkType.CPU) {
-    errorAndWarnings = await runCPUBenchmark(
+  errorAndWarnings = await (benchmark.type == BenchmarkType.CPU ? runCPUBenchmark(
       framework,
       benchmark as CPUBenchmarkPuppeteer,
       benchmarkOptions
-    );
-  } else {
-    errorAndWarnings = await runMemBenchmark(
+    ) : runMemBenchmark(
       framework,
       benchmark as MemBenchmarkPuppeteer,
       benchmarkOptions
-    );
-  }
+    ));
   if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }
 
 process.on("message", (msg: any) => {
   config = msg.config;
-  console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
+  console.log("START BENCHMARK. Write results?", config.WRITE_RESULTS);
   // if (config.LOG_DEBUG) console.log("child process got message", msg);
 
   let {
@@ -332,9 +328,9 @@ process.on("message", (msg: any) => {
       process.send(result);
       process.exit(0);
     })
-    .catch((err) => {
+    .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunner");
-      process.send({ failure: convertError(err) });
+      process.send({ failure: convertError(error) });
       process.exit(0);
     });
 });

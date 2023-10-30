@@ -35,7 +35,7 @@ interface TimingResult {
 function extractRelevantEvents(entries: logging.Entry[]) {
   let filteredEvents: TimingResult[] = [];
   let protocolEvents: any[] = [];
-  entries.forEach((x) => {
+  for (const x of entries) {
     let e = JSON.parse(x.message).message;
     if (config.LOG_DETAILS) console.log(JSON.stringify(e));
     if (e.method === "Tracing.dataCollected") {
@@ -45,7 +45,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
       protocolEvents.push(e);
     } else if (e.params.name === "EventDispatch") {
       if (e.params.args.data.type === "click") {
-        if (config.LOG_TIMELINE) console.log("CLICK ", JSON.stringify(e));
+        if (config.LOG_TIMELINE) console.log("CLICK", JSON.stringify(e));
         filteredEvents.push({
           type: "click",
           ts: +e.params.ts,
@@ -66,7 +66,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         dur: 0,
         end: +e.params.ts,
       });
-      if (config.LOG_TIMELINE) console.log("TIMESTAMP ", JSON.stringify(e));
+      if (config.LOG_TIMELINE) console.log("TIMESTAMP", JSON.stringify(e));
     } else if (e.params.name === "navigationStart") {
       filteredEvents.push({
         type: "navigationStart",
@@ -74,9 +74,9 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         dur: 0,
         end: +e.params.ts,
       });
-      if (config.LOG_TIMELINE) console.log("NAVIGATION START ", JSON.stringify(e));
+      if (config.LOG_TIMELINE) console.log("NAVIGATION START", JSON.stringify(e));
     } else if (e.params.name === "CompositeLayers" && e.params.ph == "X") {
-      if (config.LOG_TIMELINE) console.log("COMPOSITELAYERS ", JSON.stringify(e));
+      if (config.LOG_TIMELINE) console.log("COMPOSITELAYERS", JSON.stringify(e));
       filteredEvents.push({
         type: "compositelayers",
         ts: +e.params.ts,
@@ -85,7 +85,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         evt: JSON.stringify(e),
       });
     } else if (e.params.name === "Layout" && e.params.ph == "X") {
-      if (config.LOG_TIMELINE) console.log("LAYOUT ", JSON.stringify(e));
+      if (config.LOG_TIMELINE) console.log("LAYOUT", JSON.stringify(e));
         filteredEvents.push({
         type: "layout",
           ts: +e.params.ts,
@@ -94,7 +94,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
           evt: JSON.stringify(e),
         });
     } else if (e.params.name === "Paint" && e.params.ph == "X") {
-      if (config.LOG_TIMELINE) console.log("PAINT ", JSON.stringify(e));
+      if (config.LOG_TIMELINE) console.log("PAINT", JSON.stringify(e));
       filteredEvents.push({
         type: "paint",
         ts: +e.params.ts,
@@ -103,7 +103,7 @@ function extractRelevantEvents(entries: logging.Entry[]) {
         evt: JSON.stringify(e),
       });
     }
-  });
+  }
   return { filteredEvents, protocolEvents };
 }
 
@@ -156,7 +156,7 @@ async function computeResultsCPU(
     if (R.find(type_neq("runBenchmark"))(evts[0]) && evts[1].length > 0) {
       let eventsDuringBenchmark = R.dropWhile(type_neq("runBenchmark"))(evts[0]);
 
-      if (config.LOG_DEBUG) console.log("eventsDuringBenchmark ", eventsDuringBenchmark);
+      if (config.LOG_DEBUG) console.log("eventsDuringBenchmark", eventsDuringBenchmark);
 
       let clicks = R.filter(type_eq("click"))(eventsDuringBenchmark);
       if (clicks.length !== 1) {
@@ -174,10 +174,10 @@ async function computeResultsCPU(
       if (layouts.length > 1) {
         console.log("INFO: more than one layout event found");
 
-        layouts.forEach((l) => {
+        for (const l of layouts) {
           console.log("layout event", l.end - clicks[0].ts);
-        });
-      } else if (layouts.length == 0) {
+        }
+      } else if (layouts.length === 0) {
       console.log("WARNING: exactly one layout event is expected", eventsAfterClick);
       lastLayoutEvent = clicks[0];
     }
@@ -185,20 +185,20 @@ async function computeResultsCPU(
       let paintsP = R.filter(type_eq("paint"))(eventsAfterClick);
       
       paintsP = R.filter((e: TimingResult) => e.ts > lastLayoutEvent.end)(paintsP);
-      if (paintsP.length == 0) {
+      if (paintsP.length === 0) {
         console.log("ERROR: No paint event found");
         throw "No paint event found";
     }
     if (paintsP.length > 1) {
       console.log("more than one paint event found");
-        paintsP.forEach((l) => {
-          console.log("paints event", (l.end - clicks[0].ts) / 1000.0);
-        });
+        for (const l of paintsP) {
+          console.log("paints event", (l.end - clicks[0].ts) / 1000);
+        }
       }
 
-      let duration = (paintsP[paintsP.length - 1].end - clicks[0].ts) / 1000.0;
+      let duration = (paintsP.at(-1).end - clicks[0].ts) / 1000;
       let upperBoundForSoundnessCheck =
-        (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000.0;
+        (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000;
 
       if (duration < 0) {
         console.log("soundness check failed. reported duration is less 0", asString(eventsDuringBenchmark));
@@ -233,7 +233,7 @@ async function runBenchmark(
   await benchmark.run(driver, framework);
   if (config.LOG_PROGRESS)
     console.log(
-      "after run ",
+      "after run",
       benchmark.benchmarkInfo.id,
       benchmark.benchmarkInfo.type,
       framework.name
@@ -248,7 +248,7 @@ async function initBenchmark(
   await benchmark.init(driver, framework);
   if (config.LOG_PROGRESS)
     console.log(
-      "after initialized ",
+      "after initialized",
       benchmark.benchmarkInfo.id,
       benchmark.benchmarkInfo.type,
       framework.name
@@ -270,9 +270,9 @@ function convertError(error: any): string {
     error,
     "| type:",
     typeof error,
-    " instance of Error",
+    "instance of Error",
     error instanceof Error,
-    " Message: ",
+    "Message:",
     error.message
   );
   if (typeof error === "string") {
@@ -295,7 +295,7 @@ async function runCPUBenchmark(
   let error: string = undefined;
   let warnings: string[] = [];
 
-  console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
+  console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
   let driver: WebDriver = null;
   try {
     driver = buildDriver(benchmarkOptions);
@@ -346,16 +346,16 @@ async function runCPUBenchmark(
     await driver.close();
     await driver.quit();
     return { error, warnings, result };
-  } catch (e) {
-    console.log("ERROR ", e);
-    error = convertError(e);
+  } catch (error_) {
+    console.log("ERROR", error_);
+    error = convertError(error_);
     try {
       if (driver) {
         await driver.close();
         await driver.quit();
       }
-    } catch (err) {
-      console.log("ERROR cleaning up driver", err);
+    } catch (error_) {
+      console.log("ERROR cleaning up driver", error_);
     }
     return { error, warnings };
   }
@@ -384,7 +384,7 @@ export async function executeBenchmark(
 
 process.on("message", (msg: any) => {
   config = msg.config;
-  console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
+  console.log("START BENCHMARK. Write results?", config.WRITE_RESULTS);
   // if (config.LOG_DEBUG) console.log("child process got message", msg);
 
   let {
@@ -401,9 +401,9 @@ process.on("message", (msg: any) => {
       process.send(result);
       process.exit(0);
     })
-    .catch((err) => {
+    .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunner");
-      process.send({ failure: convertError(err) });
+      process.send({ failure: convertError(error) });
       process.exit(0);
     });
 });

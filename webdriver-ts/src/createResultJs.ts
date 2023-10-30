@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 import yargs from "yargs";
 import {
   BenchmarkInfo,
@@ -51,7 +51,7 @@ async function main() {
   let jsonResult: { framework: string; benchmark: string; values: { [key: string]: number[] } }[] =
     [];
 
-  benchmarkInfos.forEach((benchmarkInfo) => {
+  for (const benchmarkInfo of benchmarkInfos) {
     if (args.browser) {
       if (benchmarkInfo.type == BenchmarkType.CPU) {
         allBenchmarks.push(benchmarkInfo);
@@ -63,17 +63,17 @@ async function main() {
         allBenchmarks.push(benchmarkInfo);
       }
     }
-  });
+  }
 
-  frameworks.forEach((framework) => {
-    allBenchmarks.forEach((benchmarkInfo) => {
+  for (const framework of frameworks) {
+    for (const benchmarkInfo of allBenchmarks) {
       if (!args.browser || framework.keyed) {
         let name = `${fileName(framework, benchmarkInfo)}`;
         let file = `${resultsDirectory}/${name}`;
         if (fs.existsSync(file)) {
           let data: JsonResult = JSON.parse(
             fs.readFileSync(file, {
-              encoding: "utf-8",
+              encoding: "utf8",
             })
           );
 
@@ -123,8 +123,8 @@ async function main() {
           console.log("MISSING FILE", file);
         }
       }
-    });
-  });
+    }
+  }
 
   resultJS += "];\n";
   resultJS +=
@@ -148,14 +148,17 @@ async function main() {
   resultJS += "export const benchmarks = " + JSON.stringify(formattedBenchmarks) + ";\n";
 
   fs.writeFileSync("../webdriver-ts-results/src/results.ts", resultJS, {
-    encoding: "utf-8",
+    encoding: "utf8",
   });
   fs.writeFileSync("./results.json", JSON.stringify(jsonResult), {
-    encoding: "utf-8",
+    encoding: "utf8",
   });
 }
 
-main().catch((e) => {
-  console.log("error processing results", e);
+try {
+  await main()
+} catch (error) {
+  console.log("error processing results", error);
   process.exit(1);
-});
+  
+}

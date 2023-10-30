@@ -1,5 +1,5 @@
-import { readFile } from "fs/promises";
-import * as fs from "fs";
+import { readFile } from "node:fs/promises";
+import * as fs from "node:fs";
 import * as R from "ramda";
 import { BenchmarkType, CPUBenchmarkInfo, CPUBenchmarkResult } from "./benchmarksCommon.js";
 import { BenchmarkOptions, FrameworkData, Config, config } from "./common.js";
@@ -20,17 +20,17 @@ export function extractRelevantEvents(entries: any[]) {
   let click_start = 0;
   let click_end = 0;
 
-  entries.forEach((x) => {
+  for (const x of entries) {
     let e = x;
     if (config.LOG_DEBUG) console.log(JSON.stringify(e));
     if (e.name === "EventDispatch") {
       if (e.args.data.type === "click") {
-        if (config.LOG_DETAILS) console.log("CLICK ", +e.ts);
+        if (config.LOG_DETAILS) console.log("CLICK", +e.ts);
           click_start = +e.ts;
           click_end = +e.ts + e.dur;
           filteredEvents.push({ type: "click", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
-      } else if (e.args.data.type === "mousedown") {
-        if (config.LOG_DETAILS) console.log("MOUSEDOWN ", +e.ts);
+      } else if (e.args.data.type === "mousedown") {
+        if (config.LOG_DETAILS) console.log("MOUSEDOWN", +e.ts);
         filteredEvents.push({ type: "mousedown", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
       }
     } else if (e.name === "Layout" && e.ph === "X") {
@@ -58,7 +58,7 @@ export function extractRelevantEvents(entries: any[]) {
       if (config.LOG_DETAILS) console.log("RequestAnimationFrame", +e.ts, +e.ts - click_start, +e.ts - click_end);
       filteredEvents.push({ type: "requestAnimationFrame", ts: +e.ts, dur: 0, end: +e.ts, pid: e.pid, evt: JSON.stringify(e) });
     }
-    });
+    }
     return filteredEvents;
   }
   
@@ -75,7 +75,7 @@ async function fetchEventsFromPerformanceLog(fileName: string): Promise<TimingRe
     return timingResults;
   }
   
-const traceJSEventNames = [
+const traceJSEventNames = new Set([
   "EventDispatch",
   "EvaluateScript",
   "v8.evaluateModule",
@@ -85,23 +85,23 @@ const traceJSEventNames = [
   "FireAnimationFrame",
   "RunMicrotasks",
   "V8.Execute",
-];
+]);
 
 export function extractRelevantJSEvents(config: Config, entries: any[]) {
   let filteredEvents: any[] = [];
   
-  entries.forEach((x) => {
+  for (const x of entries) {
     let e = x;
     if (config.LOG_DEBUG) console.log(JSON.stringify(e));
     if (e.name === "EventDispatch") {
       if (e.args.data.type === "click") {
-        if (config.LOG_DETAILS) console.log("CLICK ", +e.ts);
+        if (config.LOG_DETAILS) console.log("CLICK", +e.ts);
         filteredEvents.push({ type: "click", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur });
       }
-    } else if (traceJSEventNames.includes(e.name) && e.ph === "X") {
+    } else if (traceJSEventNames.has(e.name) && e.ph === "X") {
       filteredEvents.push({ type: e.name, ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, orig: JSON.stringify(e) });
     }
-  });
+  }
   return filteredEvents;
 }
   
@@ -116,7 +116,7 @@ async function fetchJSEventsFromPerformanceLog(
     let json = JSON.parse(contents);
     let entries = json["traceEvents"];
     const filteredEvents = extractRelevantJSEvents(config, entries);
-    timingResults = timingResults.concat(filteredEvents);
+    timingResults = [...timingResults, ...filteredEvents];
   } while (entries.length > 0);
   return timingResults;
 }
@@ -139,9 +139,9 @@ export interface CPUDurationResult {
 
 
 function logEvents(events: TimingResult[], click: TimingResult) {
-  events.forEach((e) => {
+  for (const e of events) {
     console.log("event", e.type, `${e.ts - click.ts} - ${e.end - click.ts}`, e.evt);
-  });
+  }
 }
   
 export async function computeResultsCPU(
@@ -153,7 +153,7 @@ export async function computeResultsCPU(
     // Find mousedown event. This is the start of the benchmark
     let mousedowns = R.filter(type_eq("mousedown"))(events);
     // Invariant: There must be exactly one click event
-    if (mousedowns.length == 0) {
+    if (mousedowns.length === 0) {
       console.log("no mousedown event", fileName);
     } else if (mousedowns.length == 1) {
       console.log("one mousedown event", fileName);
@@ -177,7 +177,7 @@ export async function computeResultsCPU(
     if (mousedownToClick>0) {
       console.log("mousedownToClick", mousedownToClick, fileName);
     }
-    if (mousedownToClick > 10000) {
+    if (mousedownToClick > 10_000) {
       console.log("difference between mousedown and click is unusually long", mousedownToClick, fileName);
       // throw "difference between mousedown and click is unusually long";
     }
@@ -208,24 +208,24 @@ export async function computeResultsCPU(
 
   let startFrom = R.filter(type_eq("click", "fireAnimationFrame", "timerFire", "layout", "functioncall"))(eventsOnMainThreadDuringBenchmark);
   // we're looking for the commit after this event
-  let startFromEvent = startFrom[startFrom.length - 1];
+  let startFromEvent = startFrom.at(-1);
   if (config.LOG_DETAILS) console.log("DEBUG: searching for commit event after", startFromEvent, "for", fileName);
   let commit = R.find((e: TimingResult) => e.ts > startFromEvent.end)(R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark));
   let allCommitsAfterClick = R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark);
 
   let numberCommits = allCommitsAfterClick.length;
   if (!commit) {
-    console.log("INFO: No commit event found according to filter ", fileName);
-    if (allCommitsAfterClick.length == 0) {
-      console.log("ERROR: No commit event found for ", fileName);
+    console.log("INFO: No commit event found according to filter", fileName);
+    if (allCommitsAfterClick.length === 0) {
+      console.log("ERROR: No commit event found for", fileName);
       throw "No commit event found for " + fileName;
     } else {
-      commit = allCommitsAfterClick[allCommitsAfterClick.length - 1];
+      commit = allCommitsAfterClick.at(-1);
     }
   } 
-  let maxDeltaBetweenCommits = (allCommitsAfterClick[allCommitsAfterClick.length-1].ts - allCommitsAfterClick[0].ts)/1000.0;
+  let maxDeltaBetweenCommits = (allCommitsAfterClick.at(-1).ts - allCommitsAfterClick[0].ts)/1000;
 
-  let duration = (commit.end - clicks[0].ts) / 1000.0;
+  let duration = (commit.end - clicks[0].ts) / 1000;
   if (config.LOG_DEBUG) console.log("duration", duration);
   
   let layouts = R.filter(type_eq("layout"))(eventsOnMainThreadDuringBenchmark);
@@ -240,7 +240,7 @@ export async function computeResultsCPU(
   
   let raf_long_delay = 0;
   if (rafs_withinClick.length > 0 && fafs.length > 0) {
-    let waitDelay = (fafs[0].ts - click.end) / 1000.0;
+    let waitDelay = (fafs[0].ts - click.end) / 1000;
     if (rafs_withinClick.length == 1 && fafs.length == 1) {
       if (waitDelay > 16) {
         let ignored = false;
@@ -257,7 +257,7 @@ export async function computeResultsCPU(
           console.log("FOUND delay for 1 raf, 1 faf, but layout before raf", waitDelay, fileName);
         }
       } else {
-        console.log("IGNORING delay < 16 msecs 1 raf, 1 faf ", waitDelay, fileName);
+        console.log("IGNORING delay < 16 msecs 1 raf, 1 faf", waitDelay, fileName);
       }
     } else if (fafs.length == 1) {
       throw (
@@ -406,7 +406,7 @@ export async function computeResultsJS(
     console.log(`1 interval for ${fileName}`, intervals);
   }
   
-  let res = intervals.reduce((p, c) => p + (c.end - c.start), 0) / 1000.0;
+  let res = intervals.reduce((p, c) => p + (c.end - c.start), 0) / 1000;
   return res;
 }
   
@@ -421,18 +421,19 @@ export async function parseCPUTrace(
     let trace = `${fileNameTrace(framework, benchmarkInfo, i, benchmarkOptions)}`;
     if (!fs.existsSync(trace)) {
       throw new Error(`Trace file ${trace} does not exist`);
-    } else {
-      console.log("analyzing trace ", trace);
-      try {
-        let result = await computeResultsCPU(trace);
-        plausibilityCheck.check(result, trace, framework, benchmarkInfo);
-        // let resultJS = await computeResultsJS(result, config, trace); 
-        results.push({ total: result.duration, script: 0 });
-        console.log(result);
-      } catch (e) {
-        console.log(e);
-      }
     }
+    
+    console.log("analyzing trace", trace);
+    try {
+      let result = await computeResultsCPU(trace);
+      plausibilityCheck.check(result, trace, framework, benchmarkInfo);
+      // let resultJS = await computeResultsJS(result, config, trace); 
+      results.push({ total: result.duration, script: 0 });
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+    
   }
   
   results.sort((a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total);

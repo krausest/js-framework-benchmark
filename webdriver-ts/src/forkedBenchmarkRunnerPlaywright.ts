@@ -25,7 +25,7 @@ async function runBenchmark(
   framework: FrameworkData
 ): Promise<any> {
   await benchmark.run(browser, page, framework);
-  if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
+  if (config.LOG_PROGRESS) console.log("after run", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
 }
 
 async function initBenchmark(
@@ -35,7 +35,7 @@ async function initBenchmark(
   framework: FrameworkData
 ): Promise<any> {
   await benchmark.init(browser, page, framework);
-  if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
+  if (config.LOG_PROGRESS) console.log("after initialized", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
   // if (benchmark.type === BenchmarkType.MEM) {
   //   await forceGC(page);
   // }
@@ -49,9 +49,9 @@ function convertError(error: any): string {
     error,
     "| type:",
     typeof error,
-    " instance of Error",
+    "instance of Error",
     error instanceof Error,
-    " Message: ",
+    "Message:",
     error.message
   );
   if (typeof error === "string") {
@@ -83,7 +83,7 @@ async function runCPUBenchmark(
     let warnings: string[] = [];
     let results: CPUBenchmarkResult[] = [];
 
-    console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
+    console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
   let browser: Browser = null;
   let page: Page = null;
     try {
@@ -145,7 +145,8 @@ async function runCPUBenchmark(
                 screenshots: false,
         categories: categories,
             });
-      let m1 = (await client.send("Performance.getMetrics")).metrics;
+            
+      const { metrics: m1 } = await client.send("Performance.getMetrics")
       let m1_val = m1.find((m) => m.name === "ScriptDuration").value;
       let m1_Timestamp = m1.find((m) => m.name === "Timestamp").value;
             console.log("m1", m1, m1_val);
@@ -154,7 +155,8 @@ async function runCPUBenchmark(
 
             await wait(40);
             await browser.stopTracing();
-      let m2 = (await client.send("Performance.getMetrics")).metrics;
+
+      const { metrics: m2 } = await client.send("Performance.getMetrics")
       let m2_val = m2.find((m) => m.name === "ScriptDuration").value;
       let m2_Timestamp = m2.find((m) => m.name === "Timestamp").value;
             console.log("m2", m2, m2_val);
@@ -164,8 +166,8 @@ async function runCPUBenchmark(
       let result = await computeResultsCPU(
         fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
       );
-      let resultScript = (m2_val - m1_val) * 1000.0;
-            console.log("**** resultScript = ", resultScript);
+      let resultScript = (m2_val - m1_val) * 1000;
+            console.log("**** resultScript =", resultScript);
             if (m2_Timestamp == m1_Timestamp) throw new Error("Page metrics timestamp didn't change");
 
       results.push({ total: result.duration, script: resultScript });
@@ -173,24 +175,24 @@ async function runCPUBenchmark(
       if (result.duration < 0) throw new Error(`duration ${result} < 0`);
         }
     return { error, warnings, result: results };
-    } catch (e) {
-        console.log("ERROR ", e);
-        error = convertError(e);
+    } catch (error_) {
+        console.log("ERROR", error_);
+        error = convertError(error_);
     return { error, warnings };
     } finally {
         try {
             if (page) {
                 await page.close();
             }
-        } catch (err) {
-            console.log("ERROR closing page", err);
+        } catch (error_) {
+            console.log("ERROR closing page", error_);
         }
         try {
             if (browser) {
                 await browser.close();
             }
-        } catch (err) {
-            console.log("ERROR cleaning up driver", err);
+        } catch (error_) {
+            console.log("ERROR cleaning up driver", error_);
         }
     }
 }
@@ -204,7 +206,7 @@ async function runMemBenchmark(
   let warnings: string[] = [];
   let results: number[] = [];
 
-  console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
+  console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
   let browser: Browser = null;
   try {
     browser = await startBrowser(benchmarkOptions);
@@ -250,15 +252,15 @@ async function runMemBenchmark(
     await page.close();
     await browser.close();
     return { error, warnings, result: results };
-  } catch (e) {
-    console.log("ERROR ", e);
-    error = convertError(e);
+  } catch (error_) {
+    console.log("ERROR", error_);
+    error = convertError(error_);
     try {
       if (browser) {
         await browser.close();
       }
-    } catch (err) {
-      console.log("ERROR cleaning up driver", err);
+    } catch (error_) {
+      console.log("ERROR cleaning up driver", error_);
     }
     return { error, warnings };
   }
@@ -278,19 +280,15 @@ export async function executeBenchmark(
   let benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult>;
-  if (benchmark.type == BenchmarkType.CPU) {
-    errorAndWarnings = await runCPUBenchmark(
+  errorAndWarnings = await (benchmark.type == BenchmarkType.CPU ? runCPUBenchmark(
       framework,
       benchmark as CPUBenchmarkPlaywright,
       benchmarkOptions
-    );
-  } else {
-    errorAndWarnings = await runMemBenchmark(
+    ) : runMemBenchmark(
       framework,
       benchmark as MemBenchmarkPlaywright,
       benchmarkOptions
-    );
-  }
+    ));
   if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;
 }
@@ -313,9 +311,9 @@ process.on("message", (msg: any) => {
       process.send(result);
       process.exit(0);
     })
-    .catch((err) => {
-      console.log("CATCH: Error in forkedBenchmarkRunner", err);
-      process.send({ failure: convertError(err) });
+    .catch((error) => {
+      console.log("CATCH: Error in forkedBenchmarkRunner", error);
+      process.send({ failure: convertError(error) });
       process.exit(0);
     });
 });
