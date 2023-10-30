@@ -35,7 +35,6 @@
   "dependencies": {
     "chromedriver": "112.0.0",
     "cross-env": "7.0.3",
-    "jstat": "1.9.6",
     "lighthouse": "10.1.1",
     "playwright": "1.33.0",
     "playwright-firefox": "1.33.0",

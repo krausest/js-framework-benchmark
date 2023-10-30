@@ -26,7 +26,7 @@ Doo.define(
 			this.runLots = this.runLots.bind(this)
 			this.update = this.update.bind(this)
 			this.clear = this.clear.bind(this)
-			this.swaprows = this.swapRows.bind(this)
+			this.swapRows = this.swapRows.bind(this)
 			this.addEventListeners()
 			this.selectedRow = undefined
 			document.querySelector(".ver").innerHTML += ` ${Doo.version} (keyed)`
@@ -143,23 +143,23 @@ Doo.define(
 		}
 
 		addEventListeners() {
-			document.getElementById("main").addEventListener('click', e => {
-				e.preventDefault()
-				if (e.target.matches('#runlots')) {
-					this.runLots()
-				} else if (e.target.matches('#run')) {
-					this.run()
-				} else if (e.target.matches('#add')) {
-					this.add()
-				} else if (e.target.matches('#update')) {
-					this.update()
-				} else if (e.target.matches('#clear')) {
-					this.clear()
-				} else if (e.target.matches('#swaprows')) {
-					this.swapRows()
+			const actions = {
+				'run': this.run,
+				'runlots': this.runLots,
+				'add': this.add,
+				'update': this.update,
+				'clear': this.clear,
+				'swaprows': this.swapRows,
+				runAction: (e) => {
+					e.preventDefault()
+					if (actions[e.target.id]) {
+						actions[e.target.id]()
+					}	
 				}
-			})    
+			}	
+			document.getElementById("main").addEventListener('click', e => actions.runAction(e))    
     	}
+
 		async connectedCallback() {
 			super.connectedCallback()
 		}

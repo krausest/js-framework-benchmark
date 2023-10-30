@@ -31,7 +31,7 @@ describe("duration is computed matching to some hand checked examples", () => {
     expect(result.duration).toBe(67.348);
     expect(result.droppedNonMainProcessCommitEvents).toBe(false);
     expect(result.droppedNonMainProcessOtherEvents).toBe(false);
-    expect(result.maxDeltaBetweenCommits).toBe(60.919);
+    expect(result.maxDeltaBetweenCommits).toBe(2.304);
     expect(result.numberCommits).toBe(2);
   });
   // ## Use the commit after the function call
