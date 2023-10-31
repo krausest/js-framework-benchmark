@@ -98,7 +98,15 @@ const Main = () => (
                             selected(0);
                         }}/>
                         <Button id="swaprows" title="Swap Rows"
-                                cb={() => data((curr) => curr.length > 998 ? [curr[0], curr[998], ...curr.slice(2, 998), curr[1], curr[999]] : curr)}/>
+                                cb={() => data((cur) => {
+                                    const newData = cur.slice();
+                                    if (cur.length>998) {
+                                      const tmp = newData[1];
+                                      newData[1] = newData[998];
+                                      newData[998] = tmp;
+                                    }
+                                    return newData;
+                                })}/>
                     </div>
                 </div>
             </div>

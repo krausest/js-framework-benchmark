@@ -143,9 +143,13 @@ class Main extends Component {
           return this.setState({ data: [], selected: 0 });
         case 'SWAP_ROWS': {
           if (data.length > 998) {
-            return this.setState({ data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]] });
+            const newdata = [...data];
+            const d1 = newdata[1];
+            const d998 = newdata[998];
+            newdata[1] = d998;
+            newdata[998] = d1;
+            return this.setState({ data: newdata });
           }
-
           return;
         }
         case 'REMOVE': {

@@ -51,7 +51,14 @@ const listReducer = (state, action) => {
     case 'CLEAR':
       return { data: [], selected: 0 };
     case 'SWAP_ROWS':
-      return data.length > 998 ? { data: [data[0], data[998], ...data.slice(2, 998), data[1], data[999]], selected } : state;
+      const newdata = [...data];
+      if (data.length > 998) {
+        const d1 = newdata[1];
+        const d998 = newdata[998];
+        newdata[1] = d998;
+        newdata[998] = d1;
+      }
+      return { data: newdata, selected };
     case 'REMOVE': {
       const idx = data.findIndex((d) => d.id === action.id);
 

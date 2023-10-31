@@ -134,19 +134,16 @@ const Jumbotron = memo(
     ]);
 
     const swapRows = useCallback(() => {
-      setAppState(({ data, selected }) =>
-        data.length > 998
-          ? {
-            data: [
-              data[0],
-              data[998],
-              ...data.slice(2, 998),
-              data[1],
-              data[999],
-            ],
-            selected,
-          }
-          : state
+      setAppState(({ data, selected }) => {
+        const newdata = [...data];
+        if (data.length > 998) {
+          const d1 = newdata[1];
+          const d998 = newdata[998];
+          newdata[1] = d998;
+          newdata[998] = d1;
+        }
+        return { data: newdata, selected };
+      }
       );
     }, [setAppState]);
 
