@@ -567,6 +567,7 @@ The following frameworks were archived after chrome 118. Their last results are 
 - [x] fullweb-helpers
 - [x] fullweb-template
 - [x] forgo
+- [x] choo
 
 
 ## 2020-7-9
