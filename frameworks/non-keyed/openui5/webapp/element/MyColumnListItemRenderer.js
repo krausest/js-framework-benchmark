@@ -58,12 +58,7 @@ sap.ui.define(
       }
     };
 
-    MyColumnListItemRenderer.makeFocusable = function (rm) {
-      if (Device.system.desktop) {
-        rm.attr("tabindex", "-1");
-        rm.class("sapMTblCellFocusable");
-      }
-    };
+    MyColumnListItemRenderer.makeFocusable = function (rm) {};
 
     MyColumnListItemRenderer.openStartGridCell = function (
       rm,
@@ -72,10 +67,17 @@ sap.ui.define(
       sId,
       sClass
     ) {
+      const benchmarkClass = {
+        1: "col-md-1",
+        2: "col-md-4",
+        3: "col-md-1",
+        4: "col-md-6",
+      };
+      const aria = oLI.aAriaOwns.push(sId);
       rm.openStart(sTag, sId);
-      rm.class(sClass);
+      rm.class(benchmarkClass[aria]);
       rm.attr("role", "gridcell");
-      rm.attr("aria-colindex", oLI.aAriaOwns.push(sId));
+      rm.attr("aria-colindex", aria);
       this.makeFocusable(rm);
       if (oLI.isSelectable()) {
         rm.attr("aria-selected", oLI.getSelected());
@@ -190,7 +192,7 @@ sap.ui.define(
           vAlign = oColumn.getVAlign(),
           bRenderCell = true;
 
-        this.openStartGridCell(rm, oLI, "td", sCellId, "sapMListTblCell");
+        this.openStartGridCell(rm, oLI, "td", sCellId, "");
         rm.attr("data-sap-ui-column", oColumn.getId());
         rm.style("text-align", oColumn.getCssAlign());
         aStyleClass.forEach(function (sClassName) {

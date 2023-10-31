@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "UI5 Benchmark",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "openui5",
+    "frameworkVersion": "1.119.1",
     "frameworkHomeURL": "https://openui5.org/"
   },
   "scripts": {
