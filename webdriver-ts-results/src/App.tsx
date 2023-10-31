@@ -30,30 +30,22 @@ const App = () => {
     <div>
       <h2>Results for js web frameworks benchmark - official run</h2>
       <p>
-        A description of the benchmark and the source code and can be found in
-        the github{" "}
-        <a href="https://github.com/krausest/js-framework-benchmark">
-          repository
-        </a>
-        .
+        A description of the benchmark and the source code and can be found in the github{" "}
+        <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.
       </p>
     </div>
   ) : (
     <p>
-      Warning: These results are preliminary - use with caution (they may e.g.
-      be from different browser versions). Official results are published on the{" "}
-      <a href="https://krausest.github.io/js-framework-benchmark/index.html">
-        results page
-      </a>
-      .
+      Warning: These results are preliminary - use with caution (they may e.g. be from different browser versions).
+      Official results are published on the{" "}
+      <a href="https://krausest.github.io/js-framework-benchmark/index.html">results page</a>.
     </p>
   );
 
   const testEnvironmentInfo = (
     <p>
-      The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX
-      14.0), Chrome 118.0.5993.70 (arm64) using the puppeteer benchmark driver
-      with reduced tracing.
+      The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 14.0), Chrome 118.0.5993.70 (arm64) using
+      the puppeteer benchmark driver with reduced tracing.
     </p>
   );
 
@@ -61,6 +53,9 @@ const App = () => {
     <>
       {disclaimer}
       {testEnvironmentInfo}
+      <p>
+        Starting with chrome 118 the benchmark uses a <a href="https://github.com/krausest/js-framework-benchmark/wiki/Computation-of-the-weighted-geometric-mean">weighted geometric mean </a> to compute the overall result.
+      </p>
 
       <main>
         <SelectionBar showDurationSelection={false} />
