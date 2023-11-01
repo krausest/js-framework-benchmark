@@ -327,14 +327,14 @@ async function runBench(
         console.log("ERROR: Framework " + framework.fullNameWithKeyedAndVersion + " is not correctly categorized");
         allCorrect = false;
       }
-    } catch (e) {
-      console.log("ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion, e);
+    } catch (error) {
+      console.log("ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion, error);
       allCorrect = false;
     } finally {
       try {
         await page.close();
         await browser.close();
-      } catch (e) {
+      } catch (error) {
         console.log("error calling driver.quit - ignoring this exception");
       }
     }
@@ -354,6 +354,6 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.log("Error in isKeyed", err);
+main().catch((error) => {
+  console.log("Error in isKeyed", error);
 });

@@ -250,9 +250,9 @@ async function runBench(
         }
         errors = errors.concat(result.errors);
         warnings = warnings.concat(result.warnings);
-      } catch (e) {
-        console.log("UNHANDELED ERROR", e);
-        errors.push(e as string);
+      } catch (error) {
+        console.log("UNHANDELED ERROR", error);
+        errors.push(error as string);
       }
     }
   }

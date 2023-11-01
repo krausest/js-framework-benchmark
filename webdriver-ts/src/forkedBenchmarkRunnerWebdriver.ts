@@ -329,18 +329,17 @@ async function runCPUBenchmark(
     await driver.close();
     await driver.quit();
     return { error, warnings, result };
-  } catch (e) {
-    console.log("ERROR", e);
-    error = convertError(e);
+  } catch (error) {
+    console.log("ERROR", error);
     try {
       if (driver) {
         await driver.close();
         await driver.quit();
       }
-    } catch (err) {
-      console.log("ERROR cleaning up driver", err);
+    } catch (error) {
+      console.log("ERROR cleaning up driver", error);
     }
-    return { error, warnings };
+    return { error: convertError(error), warnings };
   }
 }
 
@@ -384,9 +383,9 @@ process.on("message", (msg: any) => {
       process.send(result);
       process.exit(0);
     })
-    .catch((err) => {
+    .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunner");
-      process.send({ failure: convertError(err) });
+      process.send({ failure: convertError(error) });
       process.exit(0);
     });
 });

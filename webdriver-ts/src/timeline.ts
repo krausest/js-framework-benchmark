@@ -429,8 +429,8 @@ export async function parseCPUTrace(
         // let resultJS = await computeResultsJS(result, config, trace); 
         results.push({ total: result.duration, script: 0 });
         console.log(result);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
       }
     }
   }

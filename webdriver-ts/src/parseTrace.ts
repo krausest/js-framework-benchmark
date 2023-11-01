@@ -54,4 +54,4 @@ async function debugAll() {
 
 debugSingle()
   .then(() => console.log("done"))
-  .catch((err) => console.log(err));
+  .catch((error) => console.log(error));

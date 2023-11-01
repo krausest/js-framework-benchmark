@@ -159,24 +159,23 @@ async function runCPUBenchmark(
       if (result.duration < 0) throw new Error(`duration ${result} < 0`);
         }
     return { error, warnings, result: results };
-    } catch (e) {
-        console.log("ERROR", e);
-        error = convertError(e);
-    return { error, warnings };
+    } catch (error) {
+        console.log("ERROR", error);
+    return { error: convertError(error), warnings };
     } finally {
         try {
             if (page) {
                 await page.close();
             }
-        } catch (err) {
-            console.log("ERROR closing page", err);
+        } catch (error) {
+            console.log("ERROR closing page", error);
         }
         try {
             if (browser) {
                 await browser.close();
             }
-        } catch (err) {
-            console.log("ERROR cleaning up driver", err);
+        } catch (error) {
+            console.log("ERROR cleaning up driver", error);
         }
     }
 }
@@ -233,17 +232,16 @@ async function runMemBenchmark(
     await page.close();
     await browser.close();
     return { error, warnings, result: results };
-  } catch (e) {
-    console.log("ERROR", e);
-    error = convertError(e);
+  } catch (error) {
+    console.log("ERROR", error);
     try {
       if (browser) {
         await browser.close();
       }
-    } catch (err) {
-      console.log("ERROR cleaning up driver", err);
+    } catch (error) {
+      console.log("ERROR cleaning up driver", error);
     }
-    return { error, warnings };
+    return { error: convertError(error), warnings };
   }
 }
 
@@ -287,9 +285,9 @@ process.on("message", (msg: any) => {
       process.send(result);
       process.exit(0);
     })
-    .catch((err) => {
-      console.log("CATCH: Error in forkedBenchmarkRunner", err);
-      process.send({ failure: convertError(err) });
+    .catch((error) => {
+      console.log("CATCH: Error in forkedBenchmarkRunner", error);
+      process.send({ failure: convertError(error) });
       process.exit(0);
     });
 });

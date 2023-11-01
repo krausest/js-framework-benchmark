@@ -58,7 +58,7 @@ export async function findByXPath(driver: WebDriver, path: string, isInButtonAre
   try {
     if (config.LOG_DEBUG) console.log("findByXPath: selector =", `return ${root}.querySelector('${paths}')`);
     return await driver.executeScript(`return ${root}.querySelector('${paths}')`); 
-  } catch (e) {
+  } catch (error) {
     //can happen for StaleElementReferenceError
     return null;
   }
@@ -88,10 +88,10 @@ export async function testTextContains(
         if (elem == null) return false;
         let v = await elem.getText();
         return v && v.indexOf(text) > -1;
-      } catch (err) {
+      } catch (error) {
         console.log(
           "ignoring error in testTextContains for xpath = " + xpath + " text = " + text,
-          err.toString().split("\n")[0]
+          error.toString().split("\n")[0]
         );
       }
     },
@@ -114,8 +114,8 @@ export async function testTextNotContained(
         if (elem == null) return false;
         let v = await elem.getText();
         return v && v.indexOf(text) == -1;
-      } catch (err) {
-        console.log("ignoring error in testTextNotContained for xpath = " + xpath + " text = " + text, err.toString().split("\n")[0]);
+      } catch (error) {
+        console.log("ignoring error in testTextNotContained for xpath = " + xpath + " text = " + text, error.toString().split("\n")[0]);
       }
     },
     timeout
@@ -137,8 +137,8 @@ export async function testClassContains(
         if (elem == null) return false;
         let v = await elem.getAttribute("class");
         return v && v.indexOf(text) > -1;
-      } catch (err) {
-        console.log("ignoring error in testClassContains for xpath = " + xpath + " text = " + text, err.toString().split("\n")[0]);
+      } catch (error) {
+        console.log("ignoring error in testClassContains for xpath = " + xpath + " text = " + text, error.toString().split("\n")[0]);
       }
     },
     timeout
@@ -157,8 +157,8 @@ export async function testElementLocatedByXpath(
       try {
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         return elem ? true : false;
-      } catch (err) {
-        console.log("ignoring error in testElementLocatedByXpath for xpath = " + xpath, err.toString());
+      } catch (error) {
+        console.log("ignoring error in testElementLocatedByXpath for xpath = " + xpath, error.toString());
       }
     },
     timeout
@@ -178,8 +178,8 @@ export async function testElementNotLocatedByXPath(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (config.LOG_DEBUG) console.log("testElementNotLocatedByXPath", xpath, elem);
         return elem ? false : true;
-      } catch (err) {
-        console.log("ignoring error in testElementNotLocatedByXPath for xpath = " + xpath, err.toString().split("\n")[0]);
+      } catch (error) {
+        console.log("ignoring error in testElementNotLocatedByXPath for xpath = " + xpath, error.toString().split("\n")[0]);
       }
     },
     timeout
@@ -200,7 +200,7 @@ export async function testElementLocatedById(
         if (config.LOG_DEBUG) console.log("testElementLocatedById selector", `return ${root}.querySelector('#${id}')`);
         let elem = await driver.executeScript(`return ${root}.querySelector('#${id}')`);
         return !!elem;
-      } catch (err) {
+      } catch (error) {
         // console.log("ignoring error in testElementLocatedById for id = "+id,err.toString().split("\n")[0]);
       }
     },
@@ -216,7 +216,7 @@ export async function retry<T>(
   for (let i = 0; i < retryCount; i++) {
     try {
       return await fun(driver, i);
-    } catch (err) {
+    } catch (error) {
       console.log("comand failed. Retry #", i + 1);
       await driver.sleep(200);
     }

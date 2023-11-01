@@ -73,23 +73,23 @@ async function runBench(
       });
       try {
         await checkElementExists(page, "#add");
-      } catch (err) {
+      } catch (error) {
         console.log(`CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - during load`);
       }
       await clickElement(page, "#add");
       try {
         await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
-      } catch (err) {
+      } catch (error) {
         console.log(`CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - when clicking`);
       }
-    } catch (e) {
+    } catch (error) {
       //console.log("ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion, e);
       allCorrect = false;
     } finally {
       try {
         await page.close();
         await browser.close();
-      } catch (e) {
+      } catch (error) {
         console.log("error calling driver.quit - ignoring this exception");
       }
     }
@@ -123,6 +123,6 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.log("Error in isKeyed", err);
+main().catch((error) => {
+  console.log("Error in isKeyed", error);
 });

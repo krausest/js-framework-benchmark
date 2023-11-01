@@ -155,7 +155,7 @@ async function main() {
   });
 }
 
-main().catch((e) => {
-  console.log("error processing results", e);
+main().catch((error) => {
+  console.log("error processing results", error);
   process.exit(1);
 });

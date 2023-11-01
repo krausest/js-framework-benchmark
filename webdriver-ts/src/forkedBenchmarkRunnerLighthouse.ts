@@ -107,9 +107,8 @@ async function runStartupBenchmark(
   try {
     let result = await runLighthouse(framework, benchmark.subbenchmarks, benchmarkOptions);
     return { error, warnings: [], result };
-  } catch (e) {
-    error = convertError(e);
-    return { error, warnings: [] };
+  } catch (error) {
+    return { error: convertError(error), warnings: [] };
   }
 }
 
@@ -150,9 +149,9 @@ process.on("message", (msg: any) => {
       process.send(result);
       process.exit(0);
     })
-    .catch((err) => {
+    .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunnerLighthouse");
-      process.send({ failure: convertError(err) });
+      process.send({ failure: convertError(error) });
       process.exit(0);
     });
 });
