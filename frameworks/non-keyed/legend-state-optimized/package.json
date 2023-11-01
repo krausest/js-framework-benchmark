@@ -9,7 +9,7 @@
     "frameworkHomeURL": "https://github.com/LegendApp/legend-state"
   },
   "scripts": {
-    "build-dev": "webpack --watch --mode=development",
+    "dev": "webpack --watch --mode=development",
     "build-prod": "webpack --mode=production"
   },
   "keywords": [

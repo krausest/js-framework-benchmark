@@ -13,7 +13,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "build-prod": "ng build --configuration production",
-    "build-dev": "ng serve"
+    "dev": "ng serve"
   },
   "private": true,
   "dependencies": {

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build-prod": "webpack --mode=production",
-    "build-dev": "webpack --mode=development"
+    "dev": "webpack --mode=development"
   },
   "keywords": [
     "cample"

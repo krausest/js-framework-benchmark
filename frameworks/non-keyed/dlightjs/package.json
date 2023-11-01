@@ -7,7 +7,7 @@
     "frameworkHomeURL": "https://github.com/dlight-js/dlight"
   },
   "scripts": {
-    "build-dev": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build-prod": "rollup -c --environment production"
   },
   "author": "Ian Duan",

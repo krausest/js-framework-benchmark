@@ -19,7 +19,7 @@
     "start": "ember server",
     "test": "ember test",
     "lint:ts": "tslint -c tslint.json 'src/**/*.ts' -t codeFrame",
-    "build-dev": "ember build",
+    "dev": "ember build",
     "build-prod": "ember build --environment=production"
   },
   "devDependencies": {

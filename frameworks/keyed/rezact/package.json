@@ -8,7 +8,7 @@
     "frameworkHomeURL": "https://rezact.io/"
   },
   "scripts": {
-    "build-dev": "vite",
+    "dev": "vite",
     "build-prod": "tsc && vite build"
   },
   "keywords": [

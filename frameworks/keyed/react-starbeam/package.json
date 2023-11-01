@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "npx live-server",
-    "build-dev": "webpack --watch",
+    "dev": "webpack --watch",
     "build-prod": "webpack"
   },
   "keywords": [

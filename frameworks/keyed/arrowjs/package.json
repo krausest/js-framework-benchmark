@@ -7,7 +7,7 @@
     "frameworkHomeURL": "https://www.arrow-js.com/"
   },
   "scripts": {
-    "build-dev": "exit 0",
+    "dev": "exit 0",
     "build-prod": "exit 0"
   },
   "keywords": [

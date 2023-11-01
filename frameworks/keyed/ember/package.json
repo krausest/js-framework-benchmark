@@ -19,7 +19,7 @@
     "ember": "node_modules/.bin/ember",
     "ember-cli-update": "node_modules/.bin/ember-cli-update",
     "build": "ember build",
-    "build-dev": "ember build --environment=production",
+    "dev": "ember build --environment=production",
     "build-prod": "ember build --environment=production",
     "lint:fix": "concurrently \"npm:lint:*:fix\" --names \"fix:\"",
     "lint:hbs": "ember-template-lint .",

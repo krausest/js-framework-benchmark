@@ -9,7 +9,7 @@
     ]
   },
   "scripts": {
-    "build-dev": "bash bundle.sh && cp dist/bundle.js dist/bundle.out.js",
+    "dev": "bash bundle.sh && cp dist/bundle.js dist/bundle.out.js",
     "build-prod": "bash bundle.sh && bash minify.sh"
   },
   "keywords": [

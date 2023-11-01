@@ -8,7 +8,7 @@
     "frameworkHomeURL": "https://github.com/Krutsch/hydro-js"
   },
   "scripts": {
-    "build-dev": "html-bundle --hmr",
+    "dev": "html-bundle --hmr",
     "build-prod": "html-bundle",
     "postbuild-prod": "node utils/moveFiles.js"
   },

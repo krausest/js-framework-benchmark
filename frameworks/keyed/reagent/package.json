@@ -6,7 +6,7 @@
     "frameworkHomeURL": "https://reagent-project.github.io/"
   },
   "scripts": {
-    "build-dev": "LEIN_VERSION=2.9.3 lein cljsbuild auto",
+    "dev": "LEIN_VERSION=2.9.3 lein cljsbuild auto",
     "build-prod": "LEIN_VERSION=2.9.3 lein cljsbuild once prod"
   },
   "dependencies": {

@@ -10,7 +10,7 @@
     "alins"
   ],
   "scripts": {
-    "build-dev": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build-prod": "rollup -c --environment production"
   },
   "devDependencies": {

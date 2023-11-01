@@ -7,7 +7,7 @@
     "frameworkHomeURL": "https://github.com/atellmer/dark"
   },
   "scripts": {
-    "build-dev": "npx webpack --watch",
+    "dev": "npx webpack --watch",
     "build-prod": "npx webpack"
   },
   "keywords": [

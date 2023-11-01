@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build-dev": "esbuild src/main.tsx --bundle --outfile=dist/main.js --watch",
+    "dev": "esbuild src/main.tsx --bundle --outfile=dist/main.js --watch",
     "build-prod": "esbuild src/main.tsx --bundle --outfile=dist/main.js --minify"
   },
   "type": "module",

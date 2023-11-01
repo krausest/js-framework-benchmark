@@ -6,7 +6,7 @@
     "frameworkVersionFromPackage": "@cycle/dom"
   },
   "scripts": {
-    "build-dev": "webpack --watch --mode=development",
+    "dev": "webpack --watch --mode=development",
     "build-prod": "webpack --mode=production"
   },
   "devDependencies": {

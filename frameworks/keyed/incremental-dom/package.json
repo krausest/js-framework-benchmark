@@ -9,7 +9,7 @@
     "frameworkHomeURL": "http://google.github.io/incremental-dom/"
   },
   "scripts": {
-    "build-dev": "esbuild src/main.ts --bundle --outfile=dist/main.js --watch",
+    "dev": "esbuild src/main.ts --bundle --outfile=dist/main.js --watch",
     "build-prod": "esbuild src/main.ts --bundle --minify --outfile=dist/main.js"
   },
   "keywords": [

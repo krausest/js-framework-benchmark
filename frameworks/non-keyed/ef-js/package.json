@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "rollup -c ./config/rollup.config.mjs",
-    "build-dev": "rollup -c ./config/rollup.config.mjs -w",
+    "dev": "rollup -c ./config/rollup.config.mjs -w",
     "build-prod": "cross-env NODE_ENV=production rollup -c ./config/rollup.config.mjs"
   },
   "keywords": [

@@ -7,7 +7,7 @@
   },
   "scripts": {
     "watch": "shadow-cljs watch :app",
-    "build-dev": "shadow-cljs compile :app",
+    "dev": "shadow-cljs compile :app",
     "build-prod": "shadow-cljs release :app"
   },
   "devDependencies": {

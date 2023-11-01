@@ -8,7 +8,7 @@
     "frameworkHomeURL": "https://github.com/oleggrishechkin/react-tagged-state"
   },
   "scripts": {
-    "build-dev": "webpack --watch",
+    "dev": "webpack --watch",
     "build-prod": "webpack"
   },
   "keywords": [

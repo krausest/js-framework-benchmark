@@ -7,7 +7,7 @@
     "frameworkHomeURL": "https://www.npmjs.com/package/malinajs"
   },
   "scripts": {
-    "build-dev": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build-prod": "rollup -c"
   },
   "keywords": [

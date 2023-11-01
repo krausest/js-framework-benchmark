@@ -8,7 +8,7 @@
     "frameworkHomeURL": "https://hullo.dev/hullo-dom/intro"
   },
   "scripts": {
-    "build-dev": "NODE_ENV=development webpack -w",
+    "dev": "NODE_ENV=development webpack -w",
     "build-prod": "NODE_ENV=production webpack"
   },
   "keywords": [
