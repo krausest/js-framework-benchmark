@@ -5,17 +5,20 @@
   },
   "type": "module",
   "dependencies": {
-    "plaited": "3.0.0"
+    "plaited": "5.0.1"
   },
   "devDependencies": {
-    "esbuild": "0.17.15"
+    "esbuild": "0.19.5"
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "plaited",
     "frameworkHomeURL": "https://github.com/plaited/plaited",
     "useShadowRoot": true,
-    "shadowRootName": "benchmark-island",
+    "shadowRootName": "js-benchmark",
     "buttonsInShadowRoot": true,
-    "issues": [800, 772]
+    "issues": [
+      800,
+      772
+    ]
   }
 }
