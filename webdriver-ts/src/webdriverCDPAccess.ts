@@ -266,7 +266,7 @@ export function clickElementById(driver: WebDriver, id: string, isInButtonArea: 
 
 export function clickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
   return retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS) console.log("clickElementByXPath ", xpath, " attempt #", count);
+    if (count > 1 && config.LOG_DETAILS) console.log("clickElementByXPath", xpath, "attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     await elem.click();
   });
@@ -276,7 +276,7 @@ export function clickElementByXPath(driver: WebDriver, xpath: string, isInButton
 
 export async function getTextByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean): Promise<string> {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS) console.log("getTextByXPath ", xpath, " attempt #", count);
+    if (count > 1 && config.LOG_DETAILS) console.log("getTextByXPath", xpath, "attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     return await elem.getText();
   });

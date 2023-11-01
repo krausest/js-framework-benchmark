@@ -15,7 +15,7 @@ let args: any = yargs(process.argv)
 
 console.log("args", args);
 
-console.log("HEADLESS*** ", args.headless);
+console.log("HEADLESS***", args.headless);
 
 let benchmarkOptions: BenchmarkOptions = {
   port: 8080,

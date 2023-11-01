@@ -24,7 +24,7 @@ async function runBenchmark(
 ): Promise<any> {
   await benchmark.run(driver, framework);
   if (config.LOG_PROGRESS)
-    console.log("after run ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
+    console.log("after run", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
 async function initBenchmark(
@@ -33,7 +33,7 @@ async function initBenchmark(
   framework: FrameworkData
 ): Promise<any> {
   await benchmark.init(driver, framework);
-  if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
+  if (config.LOG_PROGRESS) console.log("after initialized", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
 // async function registerError(driver: WebDriver, framework: FrameworkData, benchmark: Benchmark, error: string): Promise<BenchmarkError> {
@@ -51,9 +51,9 @@ function convertError(error: any): string {
     error,
     "| type:",
     typeof error,
-    " instance of Error",
+    "instance of Error",
     error instanceof Error,
-    " Message: ",
+    "Message:",
     error.message
   );
   if (typeof error === "string") {
@@ -77,7 +77,7 @@ async function runCPUBenchmark(
   let warnings: string[] = [];
   let results: CPUBenchmarkResult[] = [];
 
-  console.log("benchmarking ", framework, benchmark.benchmarkInfo.id, "with webdriver (tracing via CDP Connection)");
+  console.log("benchmarking", framework, benchmark.benchmarkInfo.id, "with webdriver (tracing via CDP Connection)");
   let driver: WebDriver = null;
   try {
     driver = buildDriver(benchmarkOptions);
@@ -164,7 +164,7 @@ async function runCPUBenchmark(
     await driver.quit();
     return { error, warnings, result: results };
   } catch (e) {
-    console.log("ERROR ", e);
+    console.log("ERROR", e);
     error = convertError(e);
     try {
       if (driver) {
@@ -201,7 +201,7 @@ export async function executeBenchmark(
 
 process.on("message", (msg: any) => {
   config = msg.config;
-  console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
+  console.log("START BENCHMARK. Write results?", config.WRITE_RESULTS);
   // if (config.LOG_DEBUG) console.log("child process got message", msg);
 
   let {

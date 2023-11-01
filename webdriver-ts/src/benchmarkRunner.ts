@@ -43,7 +43,7 @@ function forkAndCallBenchmark(
     } else {
       forkedRunner = "dist/forkedBenchmarkRunnerPuppeteer.js";
     }
-    console.log("forking ", forkedRunner);
+    console.log("forking", forkedRunner);
     const forked = fork(forkedRunner);
     if (config.LOG_DETAILS) console.log("FORKING:  forked child process");
     forked.send({
@@ -87,7 +87,7 @@ async function runBenchmakLoopStartup(
   console.log("runBenchmakLoopStartup", framework, benchmarkInfo);
 
   while (done < count) {
-    console.log("FORKING: ", benchmarkInfo.id, " BatchSize ", benchmarkOptions.batchSize);
+    console.log("FORKING:", benchmarkInfo.id, "BatchSize", benchmarkOptions.batchSize);
     let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
     if (Array.isArray(res.result)) {
       results = results.concat(res.result as StartupBenchmarkResult[]);
@@ -105,7 +105,7 @@ async function runBenchmakLoopStartup(
     }
     done++;
   }
-  console.log("******* result ", results);
+  console.log("******* result", results);
   if (config.WRITE_RESULTS) {
     await writeResults(benchmarkOptions.resultsDirectory, {
       framework: framework,
@@ -146,7 +146,7 @@ async function runBenchmakLoop(
 
   while (results.length < count) {
     benchmarkOptions.batchSize = Math.min(benchmarkOptions.batchSize, count - results.length);
-    console.log("FORKING: ", benchmarkInfo.id, " BatchSize ", benchmarkOptions.batchSize);
+    console.log("FORKING:", benchmarkInfo.id, "BatchSize", benchmarkOptions.batchSize);
     let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
     if (Array.isArray(res.result)) {
       results = results.concat(res.result as number[] | CPUBenchmarkResult[]);
@@ -166,7 +166,7 @@ async function runBenchmakLoop(
     }
   }
   if (benchmarkInfo.type == BenchmarkType.CPU) {
-    console.log("CPU results before: ", results);
+    console.log("CPU results before:", results);
     // (results as CPUBenchmarkResult[]).sort(
     //   (a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total
     // );
@@ -174,7 +174,7 @@ async function runBenchmakLoop(
     // console.log("CPU results after: ", results)
   }
 
-  console.log("******* result ", results);
+  console.log("******* result", results);
   if (config.WRITE_RESULTS) {
     if (benchmarkInfo.type == BenchmarkType.CPU) {
       await writeResults(benchmarkOptions.resultsDirectory, {
@@ -330,7 +330,7 @@ async function main() {
     ]);
     process.exit(1);
   }
-  console.log("HEADLESS*** ", args.headless);
+  console.log("HEADLESS***", args.headless);
 
   let benchmarkOptions: BenchmarkOptions = {
     port: 8080,
@@ -393,7 +393,7 @@ async function main() {
     cpuBenchmarkInfosArray.forEach((b) => {
       b.additionalNumberOfRuns = 0;
     });
-    console.log("Using smoketest config ", JSON.stringify(config));
+    console.log("Using smoketest config", JSON.stringify(config));
   }
   if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER_AFTERFRAME) {
     benchmarkOptions.resultsDirectory = "results_client_" + benchmarkOptions.browser;

@@ -79,9 +79,9 @@ function convertError(error: any): string {
     error,
     "| type:",
     typeof error,
-    " instance of Error",
+    "instance of Error",
     error instanceof Error,
-    " Message: ",
+    "Message:",
     error.message
   );
   if (typeof error === "string") {
@@ -133,7 +133,7 @@ export async function executeBenchmark(
 
 process.on("message", (msg: any) => {
   config = msg.config;
-  console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
+  console.log("START BENCHMARK. Write results?", config.WRITE_RESULTS);
   // if (config.LOG_DEBUG) console.log("child process got message", msg);
 
   let {

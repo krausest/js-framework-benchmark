@@ -18,7 +18,7 @@ let args: any = yargs(process.argv)
 
 console.log("args", args);
 
-console.log("HEADLESS*** ", args.headless);
+console.log("HEADLESS***", args.headless);
 
 let benchmarkOptions: BenchmarkOptions = {
   port: 8080,
@@ -234,7 +234,7 @@ export async function checkTRcorrect(page: Page): Promise<boolean> {
   let spanAria = await span.evaluate((e) => e.getAttribute("aria-hidden"));
   // console.log("aria ", spanAria);
   if ("true" !== spanAria) {
-    console.log("Expected to find 'aria-hidden'=true on span in third td, but found ", spanAria);
+    console.log("Expected to find 'aria-hidden'=true on span in third td, but found", spanAria);
     return false;
   }
 

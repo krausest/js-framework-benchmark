@@ -47,7 +47,7 @@ function convertPath(path: string): string {
 
 export async function findById(driver: WebDriver, id: string, isInButtonArea: boolean): Promise<WebElement> {
   let root = mainRoot(driver, isInButtonArea);
-  if (config.LOG_DEBUG) console.log("findById selector ", `${root}.querySelector('#${id}')`);
+  if (config.LOG_DEBUG) console.log("findById selector", `${root}.querySelector('#${id}')`);
   return await (driver.executeScript(`return ${root}.querySelector('#${id}')`) as Promise<WebElement>);
 }
 
@@ -56,7 +56,7 @@ export async function findByXPath(driver: WebDriver, path: string, isInButtonAre
   let paths = convertPath(path);
   let root = mainRoot(driver, isInButtonArea);
   try {
-    if (config.LOG_DEBUG) console.log("findByXPath: selector = ", `return ${root}.querySelector('${paths}')`);
+    if (config.LOG_DEBUG) console.log("findByXPath: selector =", `return ${root}.querySelector('${paths}')`);
     return await driver.executeScript(`return ${root}.querySelector('${paths}')`); 
   } catch (e) {
     //can happen for StaleElementReferenceError
@@ -197,7 +197,7 @@ export async function testElementLocatedById(
     async function (driver) {
       try {
         let root = mainRoot(driver, isInButtonArea);
-        if (config.LOG_DEBUG) console.log("testElementLocatedById selector ", `return ${root}.querySelector('#${id}')`);
+        if (config.LOG_DEBUG) console.log("testElementLocatedById selector", `return ${root}.querySelector('#${id}')`);
         let elem = await driver.executeScript(`return ${root}.querySelector('#${id}')`);
         return !!elem;
       } catch (err) {
@@ -228,14 +228,14 @@ export async function retry<T>(
 export async function clickElementById(driver: WebDriver, id: string, isInButtonArea: boolean) {
   return await retry(5, driver, async function (driver) {
     let elem = await findById(driver, id, isInButtonArea);
-    if (config.LOG_DEBUG) console.log("clickElementById: ", elem);
+    if (config.LOG_DEBUG) console.log("clickElementById:", elem);
     await elem.click();
   });
 }
 
 export async function clickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS) console.log("clickElementByXPath ", xpath, " attempt #", count);
+    if (count > 1 && config.LOG_DETAILS) console.log("clickElementByXPath", xpath, "attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     await elem.click();
   });
@@ -245,7 +245,7 @@ export async function clickElementByXPath(driver: WebDriver, xpath: string, isIn
 
 export async function getTextByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean): Promise<string> {
   return await retry(5, driver, async function (driver, count) {
-    if (count > 1 && config.LOG_DETAILS) console.log("getTextByXPath ", xpath, " attempt #", count);
+    if (count > 1 && config.LOG_DETAILS) console.log("getTextByXPath", xpath, "attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
     return await elem.getText();
   });
