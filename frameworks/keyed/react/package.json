@@ -9,7 +9,7 @@
     "frameworkHomeURL": "https://www.reactjs.org"
   },
   "scripts": {
-    "build-dev": "node esbuild.config.js --watch",
+    "dev": "node esbuild.config.js --watch",
     "build-prod": "node esbuild.config.js"
   },
   "keywords": [

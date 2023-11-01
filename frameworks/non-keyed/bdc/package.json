@@ -25,7 +25,7 @@
     "rollup": "3.26.2"
   },
   "scripts": {
-    "build-dev": "rollup -c --watch",
+    "dev": "rollup -c --watch",
     "build-prod": "rollup -c --environment production"
   }
 }

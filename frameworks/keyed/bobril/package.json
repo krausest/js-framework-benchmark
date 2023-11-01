@@ -8,7 +8,7 @@
     "frameworkHomeURL": "https://bobril.com/"
   },
   "scripts": {
-    "build-dev": "bb",
+    "dev": "bb",
     "build-prod": "bb b --verbose"
   },
   "keywords": [

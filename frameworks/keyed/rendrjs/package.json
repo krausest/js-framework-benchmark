@@ -2,7 +2,7 @@
   "name": "js-framework-benchmark-rendrjs",
   "version": "0.0.1",
   "scripts": {
-    "build-dev": "webpack --mode development --watch",
+    "dev": "webpack --mode development --watch",
     "build-prod": "webpack --mode production"
   },
   "devDependencies": {

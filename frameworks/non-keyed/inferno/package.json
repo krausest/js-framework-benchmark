@@ -7,7 +7,7 @@
     "frameworkHomeURL": "https://github.com/infernojs/inferno"
   },
   "scripts": {
-    "build-dev": "rollup -c",
+    "dev": "rollup -c",
     "build-prod": "rollup -c --environment production"
   },
   "keywords": [

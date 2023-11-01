@@ -14,7 +14,7 @@
     "frameworkHomeURL": "https://github.com/localvoid/ivi"
   },
   "scripts": {
-    "build-dev": "rollup -c rollup.config.mjs",
+    "dev": "rollup -c rollup.config.mjs",
     "build-prod": "rollup -c rollup.config.mjs"
   },
   "dependencies": {

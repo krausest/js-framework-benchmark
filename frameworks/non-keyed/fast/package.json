@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build-prod": "rimraf dist && webpack --config webpack.config.js --mode=production",
-    "build-dev": "rimraf dist && webpack --config webpack.config.js --watch --mode=development"
+    "dev": "rimraf dist && webpack --config webpack.config.js --watch --mode=development"
   },
   "author": "Dan Svorcan",
   "license": "Apache-2.0",

@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build-prod": "stencil build",
-    "build-dev": "stencil build --dev --watch"
+    "dev": "stencil build --dev --watch"
   },
   "dependencies": {
     "@stencil/core": "^4.4.1"

@@ -8,7 +8,7 @@
     "frameworkHomeURL": "https://rescript-lang.org/"
   },
   "scripts": {
-    "build-dev": "webpack --watch",
+    "dev": "webpack --watch",
     "prebuild-prod": "bsb -clean -make-world",
     "build-prod": "webpack",
     "clean": "bsb -clean-world"

@@ -7,7 +7,7 @@
     "frameworkHomeURL": "https://github.com/puckowski/Sling.js"
   },
   "scripts": {
-    "build-dev": "webpack --watch --mode=development",
+    "dev": "webpack --watch --mode=development",
     "build-prod": "webpack --mode=production"
   },
   "devDependencies": {

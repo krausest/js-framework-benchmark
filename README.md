@@ -433,7 +433,7 @@ TL;DR:
 8. Manually testing your app - do this before you run the benchmarks
    1. Open your page and click on the buttons, make sure your app adds 1000 rows, then removes them, or swaps them, or adds/removes 10,000 rows. 
    2. To do this, you'll probably need to watch your local files and compile them into some sort of a bundle, like `frameworks\keyed\fast\dist\bundle.js` which will be loaded through a script tag in your HTML file
-   3. For example, in Fast folder we have webpack watching our files: ` "build-dev": "rimraf dist && webpack --config webpack.config.js --watch --mode=development",` 
+   3. For example, in Fast folder we have webpack watching our files: ` "dev": "rimraf dist && webpack --config webpack.config.js --watch --mode=development",` 
    4. That means we have two terminal tabs running
       1. One for the server from the root folder `npm start`
       2. And another in our local folder where webpack is watching the files
@@ -515,7 +515,7 @@ Contributions are very welcome. Please use the following rules:
 
 - Name your directory frameworks/[keyed|non-keyed]/[FrameworkName]
 - The package.json in your directory must contain some important information see section 4.2 above.
-- Each contribution must be buildable by `npm install` and `npm run build-prod` command in the directory. What build-prod does is up to you. Often there's an `npm run build-dev` that creates a development build
+- Each contribution must be buildable by `npm install` and `npm run build-prod` command in the directory. What build-prod does is up to you. Often there's an `npm run dev` that creates a development build
 - Every implementation must use bootstrap provided in the root css directory.
 - All npm dependencies should be installed locally (i.e. listed in your package.json). Http-server or other local web servers should not be local dependencies. It is installed from the root directory to allow access to bootstrap.
 - Please use _fixed version_ numbers, no ranges, in package.json. Otherwise the build will break sooner or later - believe me. Updating works IMO best with npm-check-updates, which keeps the version format.

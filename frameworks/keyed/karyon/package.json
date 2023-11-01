@@ -13,7 +13,7 @@
     "esbuild": "0.19.2"
   },
   "scripts": {
-    "build-dev":"esbuild src/app.js --outfile=dist/app.js --bundle --watch",
+    "dev":"esbuild src/app.js --outfile=dist/app.js --bundle --watch",
     "build-prod": "esbuild src/app.js --outfile=dist/app.js --bundle --minify"
   }
 }

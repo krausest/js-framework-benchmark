@@ -12,7 +12,7 @@
     ]
   },
   "scripts": {
-    "build-dev": "esbuild src/index.js --outfile=dist/main.js --bundle --watch",
+    "dev": "esbuild src/index.js --outfile=dist/main.js --bundle --watch",
     "build-prod": "esbuild src/index.js --outfile=dist/main.js --bundle --minify"
   },
   "repository": {

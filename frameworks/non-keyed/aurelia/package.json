@@ -16,7 +16,7 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "scripts": {
-    "build-dev": "aurelia build --env dev",
+    "dev": "aurelia build --env dev",
     "build-prod": "aurelia build --env prod"
   },
   "dependencies": {

@@ -7,7 +7,7 @@
     "frameworkHomeURL": "https://preactjs.com/"
   },
   "scripts": {
-    "build-dev": "webpack -w -d",
+    "dev": "webpack -w -d",
     "build-prod": "webpack"
   },
   "keywords": [

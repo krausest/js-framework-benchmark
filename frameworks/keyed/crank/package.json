@@ -8,7 +8,7 @@
     "frameworkHomeURL": "https://crank.js.org/"
   },
   "scripts": {
-    "build-dev": "CRANK_ENV=development rollup -c",
+    "dev": "CRANK_ENV=development rollup -c",
     "build-prod": "rollup -c"
   },
   "keywords": [

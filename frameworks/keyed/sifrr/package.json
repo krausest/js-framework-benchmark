@@ -4,7 +4,7 @@
   "description": "sifrr demo",
   "main": "dist/app.min.js",
   "scripts": {
-    "build-dev": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build-prod": "rollup -c",
     "start": "ws"
   },

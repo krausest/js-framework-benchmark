@@ -13,7 +13,7 @@
         "url": "https://github.com/krausest/js-framework-benchmark.git"
     },
     "scripts": {
-        "build-dev": "webpack -w --mode development",
+        "dev": "webpack -w --mode development",
         "build-prod": "webpack --mode production"
     },
     "dependencies": {

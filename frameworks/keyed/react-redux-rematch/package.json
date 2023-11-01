@@ -8,7 +8,7 @@
     "frameworkHomeURL": "https://rematchjs.org/"
   },
   "scripts": {
-    "build-dev": "webpack --watch",
+    "dev": "webpack --watch",
     "build-prod": "webpack"
   },
   "keywords": [

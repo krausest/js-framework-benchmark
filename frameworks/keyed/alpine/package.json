@@ -10,7 +10,7 @@
     ]
   },
   "scripts": {
-    "build-dev": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build-prod": "rollup -c --environment production"
   },
   "license": "Apache-2.0",
