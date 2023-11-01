@@ -11,8 +11,7 @@ const args = yargs(process.argv.slice(2))
   .boolean("ci")
   .default("ci", false)
   .default("restartWith", "")
-  .describe("ci", "Use npm ci or npm install?")
-  .argv;
+  .describe("ci", "Use npm ci or npm install?").argv;
 
 /*
 This script rebuilds all frameworks from scratch,
@@ -31,23 +30,11 @@ const useCi = args.ci;
 
 const restartWithFramework = args.restartWith;
 
-console.log(
-  "ARGS",
-  args,
-  "ci",
-  useCi,
-  "restartWith",
-  restartWithFramework,
-);
+console.log("ARGS", args, "ci", useCi, "restartWith", restartWithFramework);
 
-const filesToDelete = [
-  "yarn-lock",
-  "dist",
-  "elm-stuff",
-  "bower_components",
-  "node_modules",
-  "output",
-].concat(useCi ? [] : ["package-lock.json"]);
+const filesToDelete = ["yarn-lock", "dist", "elm-stuff", "bower_components", "node_modules", "output"].concat(
+  useCi ? [] : ["package-lock.json"]
+);
 
 /**
  * @typedef {Object} Framework

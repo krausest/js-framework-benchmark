@@ -13,15 +13,12 @@ import path from "node:path";
  * @param {Array<string>} frameworksTypes
  * @returns {Framework[]}
  */
-export function getFrameworks(
-  frameworksDirPath = "frameworks",
-  frameworksTypes = ["keyed", "non-keyed"],
-) {
+export function getFrameworks(frameworksDirPath = "frameworks", frameworksTypes = ["keyed", "non-keyed"]) {
   const frameworks = frameworksTypes.flatMap((type) =>
     fs.readdirSync(path.join(frameworksDirPath, type)).map((framework) => ({
       name: framework,
       type,
-    })),
+    }))
   );
 
   return frameworks;

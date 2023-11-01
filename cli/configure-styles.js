@@ -12,10 +12,7 @@ async function copyAndGenerateSharedStyles(sourceCss, mainCss) {
   const sharedStylesContent = `<dom-module id="shared-styles"><template><style>${mainCssContent}</style></template></dom-module>`;
 
   // Write shared-styles.html
-  await fs.promises.writeFile(
-    path.join("polymer-v2.0.0-non-keyed", "src", "shared-styles.html"),
-    sharedStylesContent,
-  );
+  await fs.promises.writeFile(path.join("polymer-v2.0.0-non-keyed", "src", "shared-styles.html"), sharedStylesContent);
 }
 
 /**
@@ -37,13 +34,10 @@ async function configureStyles(options) {
     if (bootstrap) {
       await copyAndGenerateSharedStyles(
         path.join("css", "useOriginalBootstrap.css"),
-        path.join("css", "bootstrap", "dist", "css", "bootstrap.min.css"),
+        path.join("css", "bootstrap", "dist", "css", "bootstrap.min.css")
       );
     } else {
-      await copyAndGenerateSharedStyles(
-        path.join("css", "useMinimalCss.css"),
-        path.join("css", "useMinimalCss.css"),
-      );
+      await copyAndGenerateSharedStyles(path.join("css", "useMinimalCss.css"), path.join("css", "useMinimalCss.css"));
     }
   } catch (error) {
     console.error("An error occurred:", error.message);

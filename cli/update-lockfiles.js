@@ -49,11 +49,7 @@ function getPackageLockJSONVersion(packageLockJSONPath) {
  * @param {number} latestLockfileVersion
  * @param {string} frameworkDirPath
  */
-function updateFrameworkLockfile(
-  framework,
-  latestLockfileVersion,
-  frameworkDirPath,
-) {
+function updateFrameworkLockfile(framework, latestLockfileVersion, frameworkDirPath) {
   const { name, type } = framework;
 
   console.log(`Checking ${type} ${name} lockfile`);
@@ -85,11 +81,7 @@ function updateLockfilesOfAllFrameworks(options) {
   const frameworks = getFrameworks(frameworksDirPath, frameworksTypes);
 
   for (const framework of frameworks) {
-    updateFrameworkLockfile(
-      framework,
-      latestLockfileVersion,
-      frameworksDirPath,
-    );
+    updateFrameworkLockfile(framework, latestLockfileVersion, frameworksDirPath);
   }
 }
 

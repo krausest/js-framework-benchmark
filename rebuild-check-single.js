@@ -1,19 +1,12 @@
 import { execSync } from "node:child_process";
 import yargs from "yargs";
 
-const args = yargs(process.argv.slice(2))
-  .usage("$0 [keyed/framework1 ... non-keyed/frameworkN]")
-  .help().argv;
+const args = yargs(process.argv.slice(2)).usage("$0 [keyed/framework1 ... non-keyed/frameworkN]").help().argv;
 
 const frameworks = args._.filter((a) => !a.startsWith("--"));
 const frameworkNames = frameworks.join(" ");
 
-console.log(
-  "rebuild-check-single.js started: args",
-  args,
-  "frameworks",
-  frameworks
-);
+console.log("rebuild-check-single.js started: args", args, "frameworks", frameworks);
 
 /*
 rebuild-check-single.js [keyed/framework1 ... non-keyed/frameworkN]
@@ -46,9 +39,7 @@ try {
 
   console.log("rebuild-check-single.js finished");
   console.log("All checks are fine!");
-  console.log(
-    `======> Please rerun the benchmark: npm run bench ${frameworkNames}`
-  );
+  console.log(`======> Please rerun the benchmark: npm run bench ${frameworkNames}`);
 } catch (e) {
   console.log(`rebuild-check-single failed for ${frameworks.join(" ")}`);
   process.exit(-1);

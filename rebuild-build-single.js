@@ -7,8 +7,7 @@ const args = yargs(process.argv.slice(2))
   .usage("$0 [--ci keyed/framework1 ... non-keyed/frameworkN]")
   .boolean("ci")
   .default("ci", false)
-  .describe("ci", "Use npm ci or npm install ?")
-  .argv;
+  .describe("ci", "Use npm ci or npm install ?").argv;
 
 /**
  * Use npm ci or npm install?
@@ -21,23 +20,11 @@ const useCi = args.ci;
  */
 const frameworks = args._.filter((arg) => !arg.startsWith("--"));
 
-console.log(
-  "rebuild-build-single.js started: args",
-  args,
-  "useCi",
-  useCi,
-  "frameworks",
-  frameworks
-);
+console.log("rebuild-build-single.js started: args", args, "useCi", useCi, "frameworks", frameworks);
 
-const filesToDelete = [
-  "yarn-lock",
-  "dist",
-  "elm-stuff",
-  "bower_components",
-  "node_modules",
-  "output",
-].concat(useCi ? [] : ["package-lock.json"]);
+const filesToDelete = ["yarn-lock", "dist", "elm-stuff", "bower_components", "node_modules", "output"].concat(
+  useCi ? [] : ["package-lock.json"]
+);
 
 /*
 rebuild-single.js [--ci] [keyed/framework1 ... non-keyed/frameworkN]
@@ -87,9 +74,7 @@ function rebuildFramework(framework) {
   const components = framework.split("/");
 
   if (components.length !== 2) {
-    console.log(
-      `ERROR: invalid name ${framework}. It must contain exactly one /.`
-    );
+    console.log(`ERROR: invalid name ${framework}. It must contain exactly one /.`);
     process.exit(1);
   }
 
@@ -103,14 +88,11 @@ function rebuildFramework(framework) {
 
   const buildCmd = "npm run build-prod";
   runCommand(buildCmd, frameworkPath);
-
 }
 
 function rebuildFrameworks() {
   if (!frameworks.length) {
-    console.log(
-      "ERROR: Missing arguments. Command: rebuild keyed/framework1 non-keyed/framework2 ..."
-    );
+    console.log("ERROR: Missing arguments. Command: rebuild keyed/framework1 non-keyed/framework2 ...");
     process.exit(1);
   }
 
