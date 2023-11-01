@@ -380,7 +380,10 @@ sap.ui.define(
         "aria-roledescription",
         Library.getResourceBundleFor("sap.m").getText("TABLE_ROLE_DESCRIPTION")
       );
-      rm.class("sapMListTbl");
+      rm.class("table");
+      rm.class("table-hover");
+      rm.class("table-striped");
+      rm.class("test-data");
 
       if (oControl.getFixedLayout() === false) {
         rm.style("table-layout", "auto");
