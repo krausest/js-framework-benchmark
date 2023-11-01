@@ -29,7 +29,7 @@ export function extractRelevantEvents(entries: any[]) {
           click_start = +e.ts;
           click_end = +e.ts + e.dur;
           filteredEvents.push({ type: "click", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
-      } else if (e.args.data.type === "mousedown") {
+      } else if (e.args.data.type === "mousedown") {
         if (config.LOG_DETAILS) console.log("MOUSEDOWN ", +e.ts);
         filteredEvents.push({ type: "mousedown", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
       }
