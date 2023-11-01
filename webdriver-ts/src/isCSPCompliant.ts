@@ -45,7 +45,7 @@ async function runBench(
 ) {
   let runFrameworks;
   let matchesDirectoryArg = (directoryName: string) =>
-    allArgs.length == 0 || allArgs.some((arg: string) => arg == directoryName);
+    allArgs.length === 0 || allArgs.some((arg: string) => arg == directoryName);
   runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
   console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
 

@@ -74,7 +74,7 @@ export async function findByXPath(driver: WebDriver, path: string, isInButtonAre
         }
       } else {
         let elems = await n.findElements(By.css(p.tagName + ":nth-of-type(" + p.index + ")"));
-        if (elems == null || elems.length == 0) {
+        if (elems == null || elems.length === 0) {
           return null;
         }
         elem = elems[0];

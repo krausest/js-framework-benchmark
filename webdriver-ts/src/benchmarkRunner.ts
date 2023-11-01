@@ -377,7 +377,7 @@ async function main() {
 
   let runFrameworks: FrameworkData[];
   let matchesDirectoryArg = (directoryName: string) =>
-    frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
+    frameworkArgument.length === 0 || frameworkArgument.some((arg: string) => arg == directoryName);
   runFrameworks = (await initializeFrameworks(benchmarkOptions, matchesDirectoryArg)).filter(
     (f) => f.keyed || config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME
   );

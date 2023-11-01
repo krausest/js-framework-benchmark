@@ -153,7 +153,7 @@ export async function computeResultsCPU(
     // Find mousedown event. This is the start of the benchmark
     let mousedowns = R.filter(type_eq("mousedown"))(events);
     // Invariant: There must be exactly one click event
-    if (mousedowns.length == 0) {
+    if (mousedowns.length === 0) {
       console.log("no mousedown event", fileName);
     } else if (mousedowns.length == 1) {
       console.log("one mousedown event", fileName);
@@ -216,7 +216,7 @@ export async function computeResultsCPU(
   let numberCommits = allCommitsAfterClick.length;
   if (!commit) {
     console.log("INFO: No commit event found according to filter", fileName);
-    if (allCommitsAfterClick.length == 0) {
+    if (allCommitsAfterClick.length === 0) {
       console.log("ERROR: No commit event found for", fileName);
       throw "No commit event found for " + fileName;
     } else {
