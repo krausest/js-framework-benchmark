@@ -554,21 +554,22 @@ Frameworks without significant activity on github or npm for more than a year wi
 ## 2023-10-22
 The following frameworks were archived after chrome 118. Their last results are included in [chrome 118 results](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_118.0.5993.70.html).
 - [x] 1more
-- [x] hullo
+- [x] bdc
+- [x] choo
 - [x] domdiff
 - [x] domvm
 - [x] endorphin
 - [x] etch
+- [x] forgo
+- [x] fullweb-helpers
+- [x] fullweb-template
 - [x] heresy
+- [x] hullo
 - [x] lighterhtml
 - [x] neverland
 - [x] resonatejs
 - [x] sledgehammer
 - [x] uhydro
-- [x] fullweb-helpers
-- [x] fullweb-template
-- [x] forgo
-- [x] choo
 
 
 ## 2020-7-9
