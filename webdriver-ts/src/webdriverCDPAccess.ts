@@ -322,9 +322,9 @@ export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
   }
 
   if (benchmarkOptions.headless) {
-    args.push("--headless");
-    args.push("--disable-gpu"); // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
-    args.push("--no-sandbox");
+    args.push("--headless", 
+              "--disable-gpu", 
+              "--no-sandbox");
   }
 
   let caps = new Capabilities({

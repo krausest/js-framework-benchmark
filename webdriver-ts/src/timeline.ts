@@ -419,9 +419,7 @@ export async function parseCPUTrace(
   let results: CPUBenchmarkResult[] = [];
   for (let i = 0; i < benchmarkOptions.numIterationsForCPUBenchmarks; i++) {
     let trace = `${fileNameTrace(framework, benchmarkInfo, i, benchmarkOptions)}`;
-    if (!fs.existsSync(trace)) {
-      throw new Error(`Trace file ${trace} does not exist`);
-    } else {
+    if (fs.existsSync(trace)) {
       console.log("analyzing trace", trace);
       try {
         let result = await computeResultsCPU(trace);
@@ -432,6 +430,8 @@ export async function parseCPUTrace(
       } catch (error) {
         console.log(error);
       }
+    } else {
+      throw new Error(`Trace file ${trace} does not exist`);
     }
   }
   

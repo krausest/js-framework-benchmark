@@ -358,7 +358,7 @@ async function main() {
   }
 
   let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
-  let frameworkArgument = !args.framework ? allArgs : args.framework;
+  let frameworkArgument = args.framework ? args.framework : allArgs;
   console.log("args", args, "allArgs", allArgs);
 
   if (process.env.HOST) {
@@ -378,7 +378,8 @@ async function main() {
   let runFrameworks: FrameworkData[];
   let matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length === 0 || frameworkArgument.some((arg: string) => arg == directoryName);
-  runFrameworks = (await initializeFrameworks(benchmarkOptions, matchesDirectoryArg)).filter(
+  let frameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
+  runFrameworks = frameworks.filter(
     (f) => f.keyed || config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME
   );
 

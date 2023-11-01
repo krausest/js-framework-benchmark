@@ -39,7 +39,7 @@ let benchmarkOptions: BenchmarkOptions = {
 };
 
 let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
-let frameworkArgument = !args.framework ? allArgs : args.framework;
+let frameworkArgument = args.framework ? args.framework : allArgs;
 console.log("args", args, "allArgs", allArgs);
 
 let init = (shadowRootName: string) => `
