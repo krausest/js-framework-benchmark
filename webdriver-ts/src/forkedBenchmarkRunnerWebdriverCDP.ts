@@ -2,13 +2,7 @@ import * as fs from "fs/promises";
 import { WebDriver } from "selenium-webdriver";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
 import { benchmarks, CPUBenchmarkWebdriverCDP } from "./benchmarksWebdriverCDP.js";
-import {
-  BenchmarkOptions,
-  config as defaultConfig,
-  ErrorAndWarning,
-  FrameworkData,
-  Config,
-} from "./common.js";
+import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
 import { computeResultsCPU, fileNameTrace } from "./timeline.js";
 import {
   buildDriver,
@@ -29,7 +23,8 @@ async function runBenchmark(
   framework: FrameworkData
 ): Promise<any> {
   await benchmark.run(driver, framework);
-  if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
+  if (config.LOG_PROGRESS)
+    console.log("after run ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
 async function initBenchmark(
@@ -82,12 +77,7 @@ async function runCPUBenchmark(
   let warnings: string[] = [];
   let results: CPUBenchmarkResult[] = [];
 
-  console.log(
-    "benchmarking ",
-    framework,
-    benchmark.benchmarkInfo.id,
-    "with webdriver (tracing via CDP Connection)"
-  );
+  console.log("benchmarking ", framework, benchmark.benchmarkInfo.id, "with webdriver (tracing via CDP Connection)");
   let driver: WebDriver = null;
   try {
     driver = buildDriver(benchmarkOptions);
@@ -109,10 +99,7 @@ async function runCPUBenchmark(
 
       await initBenchmark(driver, benchmark, framework);
       const cdpConnection = await (driver as any).createCDPConnection("page");
-      let throttleCPU = slowDownFactor(
-        benchmark.benchmarkInfo.id,
-        benchmarkOptions.allowThrottling
-      );
+      let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
       if (throttleCPU) {
         console.log("CPU slowdown", throttleCPU);
         await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", {
@@ -168,9 +155,7 @@ async function runCPUBenchmark(
       await cdpConnection.execute("Tracing.end", {});
       await p;
 
-      let result = await computeResultsCPU(
-        fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
-      );
+      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
       results.push({ total: result.duration, script: 0 });
       console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
       if (result.duration < 0) throw new Error(`duration ${result} < 0`);

@@ -1,10 +1,5 @@
 import yargs from "yargs";
-import {
-  checkElementContainsText,
-  checkElementExists,
-  clickElement,
-  startBrowser,
-} from "./playwrightAccess.js";
+import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./playwrightAccess.js";
 import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
 let args: any = yargs(process.argv)
@@ -31,8 +26,7 @@ let benchmarkOptions: BenchmarkOptions = {
   headless: args.headless,
   chromeBinaryPath: args.chromeBinary,
   numIterationsForCPUBenchmarks:
-    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU +
-    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
   numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
   numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
   batchSize: 1,
@@ -53,10 +47,7 @@ async function runBench(
   let matchesDirectoryArg = (directoryName: string) =>
     allArgs.length == 0 || allArgs.some((arg: string) => arg == directoryName);
   runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
-  console.log(
-    "Frameworks that will be checked",
-    runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" ")
-  );
+  console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
 
   let allCorrect = true;
 
@@ -77,30 +68,19 @@ async function runBench(
     try {
       let framework: FrameworkData = runFrameworks[i];
 
-      await page.goto(
-        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
-        {
-          waitUntil: "networkidle",
-        }
-      );
+      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
+        waitUntil: "networkidle",
+      });
       try {
         await checkElementExists(page, "#add");
       } catch (err) {
-        console.log(
-          `CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - during load`
-        );
+        console.log(`CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - during load`);
       }
       await clickElement(page, "#add");
       try {
-        await checkElementContainsText(
-          page,
-          "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
-          "1000"
-        );
+        await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
       } catch (err) {
-        console.log(
-          `CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - when clicking`
-        );
+        console.log(`CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - when clicking`);
       }
     } catch (e) {
       //console.log("ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion, e);
@@ -131,8 +111,8 @@ async function runBench(
   if (!allCorrect) process.exit(1);
 }
 
-let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(
-  (v: string) => v.toString()
+let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map((v: string) =>
+  v.toString()
 );
 
 async function main() {

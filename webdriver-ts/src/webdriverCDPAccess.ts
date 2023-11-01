@@ -55,11 +55,7 @@ async function shadowRoot(driver: WebDriver, selector: string): Promise<WebEleme
 }
 
 // Fake findByXPath for simple XPath expressions to allow usage with shadow dom
-export async function findByXPath(
-  driver: WebDriver,
-  path: string,
-  isInButtonArea: boolean
-): Promise<WebElement> {
+export async function findByXPath(driver: WebDriver, path: string, isInButtonArea: boolean): Promise<WebElement> {
   let root = await mainRoot(driver, isInButtonArea);
   let paths = convertPath(path);
   let n = root;
@@ -94,11 +90,7 @@ export async function findByXPath(
 }
 
 function waitForCondition(driver: WebDriver) {
-  return async function (
-    text: string,
-    fn: (driver: WebDriver) => Promise<boolean>,
-    timeout: number
-  ): Promise<boolean> {
+  return async function (text: string, fn: (driver: WebDriver) => Promise<boolean>, timeout: number): Promise<boolean> {
     return await driver.wait(new Condition<Promise<boolean>>(text, fn), timeout);
   };
 }
@@ -122,8 +114,9 @@ export async function testTextContains(
         return v && v.indexOf(text) > -1;
       } catch (err) {
         console.log(
-          "ignoring error in testTextContains for xpath = " + xpath + " text = " + text, 
-          err.toString().split("\n")[0]);
+          "ignoring error in testTextContains for xpath = " + xpath + " text = " + text,
+          err.toString().split("\n")[0]
+        );
       }
     },
     timeout
@@ -195,10 +188,7 @@ export function testElementLocatedByXpath(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         return elem ? true : false;
       } catch (err) {
-        console.log(
-          "ignoring error in testElementLocatedByXpath for xpath = " + xpath,
-          err.toString()
-        );
+        console.log("ignoring error in testElementLocatedByXpath for xpath = " + xpath, err.toString());
       }
     },
     timeout
@@ -284,11 +274,7 @@ export function clickElementByXPath(driver: WebDriver, xpath: string, isInButton
   // return to(driver.findElement(By.xpath(xpath)).click());
 }
 
-export async function getTextByXPath(
-  driver: WebDriver,
-  xpath: string,
-  isInButtonArea: boolean
-): Promise<string> {
+export async function getTextByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean): Promise<string> {
   return await retry(5, driver, async function (driver, count) {
     if (count > 1 && config.LOG_DETAILS) console.log("getTextByXPath ", xpath, " attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);

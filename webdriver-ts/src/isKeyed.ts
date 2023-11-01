@@ -1,10 +1,5 @@
 import yargs from "yargs";
-import {
-  checkElementContainsText,
-  checkElementExists,
-  clickElement,
-  startBrowser,
-} from "./playwrightAccess.js";
+import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./playwrightAccess.js";
 import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
 import * as R from "ramda";
@@ -34,8 +29,7 @@ let benchmarkOptions: BenchmarkOptions = {
   headless: args.headless,
   chromeBinaryPath: args.chromeBinary,
   numIterationsForCPUBenchmarks:
-    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU +
-    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
+    config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
   numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
   numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
   batchSize: 1,
@@ -172,11 +166,7 @@ function isKeyedSwapRow(result: any, shouldBeKeyed: boolean): boolean {
   return r;
 }
 
-async function assertChildNodes(
-  elem: ElementHandle<HTMLElement>,
-  expectedNodes: string[],
-  message: string
-) {
+async function assertChildNodes(elem: ElementHandle<HTMLElement>, expectedNodes: string[], message: string) {
   let elements = await elem.$$("*");
   let allNodes = await Promise.all(elements.map((e) => e.evaluate((e) => e.tagName)));
   let toLower = (array: string[]) => array.map((s) => s.toLowerCase());
@@ -195,11 +185,7 @@ function niceEmptyString(val: string[]): string {
   return val.toString();
 }
 
-async function assertClassesContained(
-  elem: ElementHandle<HTMLElement>,
-  expectedClassNames: string[],
-  message: string
-) {
+async function assertClassesContained(elem: ElementHandle<HTMLElement>, expectedClassNames: string[], message: string) {
   let actualClassNames = (await elem.evaluate((e) => e.className)).split(" ");
   if (!expectedClassNames.every((expected) => actualClassNames.includes(expected))) {
     console.log(
@@ -269,10 +255,7 @@ async function runBench(
   let matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
   runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
-  console.log(
-    "Frameworks that will be checked",
-    runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" ")
-  );
+  console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
 
   let allCorrect = true;
 
@@ -284,12 +267,9 @@ async function runBench(
     try {
       let framework: FrameworkData = runFrameworks[i];
 
-      await page.goto(
-        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
-        {
+      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
           waitUntil: "networkidle",
-        }
-      );
+      });
       await checkElementExists(page, "#add");
       await clickElement(page, "#add");
       await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
@@ -344,11 +324,7 @@ async function runBench(
           " in the results"
       );
       if (framework.keyed !== keyed) {
-        console.log(
-          "ERROR: Framework " +
-            framework.fullNameWithKeyedAndVersion +
-            " is not correctly categorized"
-        );
+        console.log("ERROR: Framework " + framework.fullNameWithKeyedAndVersion + " is not correctly categorized");
         allCorrect = false;
       }
     } catch (e) {
@@ -366,8 +342,8 @@ async function runBench(
   if (!allCorrect) process.exit(1);
 }
 
-let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map(
-  (v: string) => v.toString()
+let runFrameworks = (args.framework && args.framework.length > 0 ? args.framework : [""]).map((v: string) =>
+  v.toString()
 );
 
 async function main() {

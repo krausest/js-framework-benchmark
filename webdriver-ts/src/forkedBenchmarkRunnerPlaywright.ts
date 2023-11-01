@@ -6,13 +6,7 @@ import {
   MemBenchmarkPlaywright,
   BenchmarkPlaywright,
 } from "./benchmarksPlaywright.js";
-import {
-  BenchmarkOptions,
-  config as defaultConfig,
-  ErrorAndWarning,
-  FrameworkData,
-  Config,
-} from "./common.js";
+import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
 import { startBrowser } from "./playwrightAccess.js";
 import { computeResultsCPU, fileNameTrace } from "./timeline.js";
 
@@ -97,12 +91,9 @@ async function runCPUBenchmark(
         let client = await page.context().newCDPSession(page);
     await client.send("Performance.enable");
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
-      await page.goto(
-        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
-        {
+      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
           waitUntil: "networkidle",
-        }
-      );
+      });
 
             console.log("initBenchmark Playwright");
             await initBenchmark(browser, page, benchmark, framework);
@@ -131,10 +122,7 @@ async function runCPUBenchmark(
             // ];
 
             await forceGC(page, client);
-            let throttleCPU = slowDownFactor(
-              benchmark.benchmarkInfo.id,
-              benchmarkOptions.allowThrottling
-            );
+      let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
             if (throttleCPU) {
               console.log("CPU slowdown", throttleCPU);
               await client.send("Emulation.setCPUThrottlingRate", { rate: throttleCPU });
@@ -161,9 +149,7 @@ async function runCPUBenchmark(
             if (throttleCPU) {
         await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
           }  
-      let result = await computeResultsCPU(
-        fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
-      );
+      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
       let resultScript = (m2_val - m1_val) * 1000.0;
             console.log("**** resultScript = ", resultScript);
             if (m2_Timestamp == m1_Timestamp) throw new Error("Page metrics timestamp didn't change");
@@ -216,12 +202,9 @@ async function runMemBenchmark(
         });
       }
 
-      await page.goto(
-        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`,
-        {
+      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
           waitUntil: "networkidle",
-        }
-      );
+      });
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
       // await (driver as any).sendDevToolsCommand('Network.emulateNetworkConditions', {
@@ -241,7 +224,7 @@ async function runMemBenchmark(
       await wait(40);
       // let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
 
-      let result = (await page.evaluate("performance.measureUserAgentSpecificMemory()") as any).bytes / 1024 / 1024;
+      let result = ((await page.evaluate("performance.measureUserAgentSpecificMemory()")) as any).bytes / 1024 / 1024;
       console.log("afterBenchmark ");
       results.push(result);
       console.log(`memory result for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
@@ -271,25 +254,16 @@ export async function executeBenchmark(
 ): Promise<ErrorAndWarning<number | CPUBenchmarkResult>> {
   let runBenchmarks: Array<BenchmarkPlaywright> = benchmarks.filter(
     (b) =>
-      benchmarkId === b.benchmarkInfo.id &&
-      (b instanceof CPUBenchmarkPlaywright || b instanceof MemBenchmarkPlaywright)
+      benchmarkId === b.benchmarkInfo.id && (b instanceof CPUBenchmarkPlaywright || b instanceof MemBenchmarkPlaywright)
   ) as Array<BenchmarkPlaywright>;
 
   let benchmark = runBenchmarks[0];
 
   let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult>;
   if (benchmark.type == BenchmarkType.CPU) {
-    errorAndWarnings = await runCPUBenchmark(
-      framework,
-      benchmark as CPUBenchmarkPlaywright,
-      benchmarkOptions
-    );
+    errorAndWarnings = await runCPUBenchmark(framework, benchmark as CPUBenchmarkPlaywright, benchmarkOptions);
   } else {
-    errorAndWarnings = await runMemBenchmark(
-      framework,
-      benchmark as MemBenchmarkPlaywright,
-      benchmarkOptions
-    );
+    errorAndWarnings = await runMemBenchmark(framework, benchmark as MemBenchmarkPlaywright, benchmarkOptions);
   }
   if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorAndWarnings);
   return errorAndWarnings;

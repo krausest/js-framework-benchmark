@@ -8,8 +8,6 @@ import minifier from "html-minifier";
 import { Stream } from "stream";
 import toArray from "stream-to-array";
 import zlib from "node:zlib";
-import { pipeline } from "node:stream";
-import { promisify } from "node:util";
 import { getSizeRouter } from "./src/responseSize/responseSizeRouter.js";
 
 /**
@@ -64,7 +62,7 @@ function buildServer(options = {}) {
         reply.header("Content-Length", compressed.length);
         reply.header("Content-Encoding", "br");
       }
-      let headers = Object.entries(reply.getHeaders()).reduce((p, [e, v]) => p + `${e}: ${v} \n`, "");
+      // let headers = Object.entries(reply.getHeaders()).reduce((p, [e, v]) => p + `${e}: ${v} \n`, "");
       // console.log(request.url, reply.statusCode, "\n", headers);
       return {
         compressed: compressed.length, // + headers.length + MISSING_HEADERS_AND_HTTP,
