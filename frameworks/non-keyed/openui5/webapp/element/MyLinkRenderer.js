@@ -161,8 +161,10 @@ sap.ui.define(
       // opening <a> tag
       oRm.openEnd();
       oRm.openStart("span");
+      oRm.class("remove");
       oRm.class("glyphicon");
       oRm.class("glyphicon-remove");
+      oRm.attr("aria-hidden", "true");
       oRm.openEnd();
       oRm.close("span");
 

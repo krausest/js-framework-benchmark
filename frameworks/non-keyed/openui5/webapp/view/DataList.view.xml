@@ -5,7 +5,7 @@
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:element="ui5.benchmark.element">
 
-	<element:MyTable items="{list>/elements}" class="table table-hover table-striped test-data">
+	<element:MyTable items="{list>/elements}">
 		<element:columns>
 			<Column width="12em">
 				<Text text="Product" />
@@ -24,8 +24,8 @@
 			<element:MyColumnListItem vAlign="Middle">
 				<element:cells>
 					<element:MyText text="{list>id}" />
-					<Link href="#" text="{list>label}" press="selectRow"/>
-					<element:MyLink text="delete" press="deleteRow"/>
+					<Link class="lbl" href="#" text="{list>label}" press="selectRow"/>
+					<element:MyLink class="remove" text="delete" press="deleteRow"/>
 					<element:MyObjectIdentifier text="{list>id}"/>
 				</element:cells>
 			</element:MyColumnListItem>
