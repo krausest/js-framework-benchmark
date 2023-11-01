@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 import yargs from "yargs";
 import {
   BenchmarkInfo,
@@ -73,7 +73,7 @@ async function main() {
         if (fs.existsSync(file)) {
           let data: JsonResult = JSON.parse(
             fs.readFileSync(file, {
-              encoding: "utf-8",
+              encoding: "utf8",
             })
           );
 
@@ -148,10 +148,10 @@ async function main() {
   resultJS += "export const benchmarks = " + JSON.stringify(formattedBenchmarks) + ";\n";
 
   fs.writeFileSync("../webdriver-ts-results/src/results.ts", resultJS, {
-    encoding: "utf-8",
+    encoding: "utf8",
   });
   fs.writeFileSync("./results.json", JSON.stringify(jsonResult), {
-    encoding: "utf-8",
+    encoding: "utf8",
   });
 }
 

@@ -11,8 +11,8 @@ function extractRawValue(results: any, id: string) {
   let audits = results.audits;
   if (!audits) return null;
   let audit_with_id = audits[id];
-  if (typeof audit_with_id === "undefined") return null;
-  if (typeof audit_with_id.numericValue === "undefined") return null;
+  if (audit_with_id === undefined) return null;
+  if (audit_with_id.numericValue === undefined) return null;
   return audit_with_id.numericValue;
 }
 

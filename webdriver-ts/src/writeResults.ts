@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { BenchmarkInfo, BenchmarkType, CPUBenchmarkResult, fileName } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse.js";
 import { FrameworkData, JsonResult, JsonResultData } from "./common.js";

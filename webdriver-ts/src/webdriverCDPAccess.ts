@@ -111,7 +111,7 @@ export async function testTextContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && v.indexOf(text) > -1;
+        return v && v.includes(text);
       } catch (error) {
         console.log(
           "ignoring error in testTextContains for xpath = " + xpath + " text = " + text,
@@ -137,7 +137,7 @@ export function testTextNotContained(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && v.indexOf(text) == -1;
+        return v && !v.includes(text);
       } catch (error) {
         console.log(
           "ignoring error in testTextNotContained for xpath = " + xpath + " text = " + text,
@@ -163,7 +163,7 @@ export function testClassContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getAttribute("class");
-        return v && v.indexOf(text) > -1;
+        return v && v.includes(text);
       } catch (error) {
         console.log(
           "ignoring error in testClassContains for xpath = " + xpath + " text = " + text,

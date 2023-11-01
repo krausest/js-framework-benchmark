@@ -190,7 +190,7 @@ async function computeResultsCPU(
         });
       }
 
-      let duration = (paintsP[paintsP.length - 1].end - clicks[0].ts) / 1000.0;
+      let duration = (paintsP.at(-1).end - clicks[0].ts) / 1000.0;
       let upperBoundForSoundnessCheck = (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000.0;
 
       if (duration < 0) {

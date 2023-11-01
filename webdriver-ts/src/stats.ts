@@ -5,7 +5,7 @@ export function stats(values: number[]) {
     let h = sorted.length / 2;
     median = 0.5 * (sorted[h - 1] + sorted[h]);
   } else {
-    median = sorted[(sorted.length / 2) | 0];
+    median = sorted[Math.trunc(sorted.length / 2)];
   }
 
   let mean = sorted.reduce((p, c) => p + c, 0) / sorted.length;
@@ -15,7 +15,7 @@ export function stats(values: number[]) {
 
   return {
     min: sorted[0],
-    max: sorted[sorted.length - 1],
+    max: sorted.at(-1),
     median,
     mean,
     stddev,

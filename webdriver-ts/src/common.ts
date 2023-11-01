@@ -159,7 +159,7 @@ export async function initializeFrameworks(
         useRowShadowRoot: !!frameworkVersionInformation.useRowShadowRoot,
         shadowRootName: frameworkVersionInformation.shadowRootName,
         buttonsInShadowRoot: !!frameworkVersionInformation.buttonsInShadowRoot,
-        issues: (frameworkVersionInformation.issues ?? []).map((i) => Number(i)),
+        issues: (frameworkVersionInformation.issues ?? []).map(Number),
         frameworkHomeURL: frameworkVersionInformation.frameworkHomeURL ?? "",
       });
     }

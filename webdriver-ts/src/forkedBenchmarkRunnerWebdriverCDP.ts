@@ -1,4 +1,4 @@
-import * as fs from "fs/promises";
+import * as fs from "node:fs/promises";
 import { WebDriver } from "selenium-webdriver";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
 import { benchmarks, CPUBenchmarkWebdriverCDP } from "./benchmarksWebdriverCDP.js";

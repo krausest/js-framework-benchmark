@@ -7,8 +7,8 @@ import {
   FrameworkData,
   initializeFrameworks,
 } from "./common.js";
-import { fork } from "child_process";
-import * as fs from "fs";
+import { fork } from "node:child_process";
+import * as fs from "node:fs";
 import {
   BenchmarkInfo,
   benchmarkInfos,
@@ -94,7 +94,7 @@ async function runBenchmakLoopStartup(
     } else results.push(res.result);
     warnings = warnings.concat(res.warnings);
     if (res.error) {
-      if (res.error.indexOf("Server terminated early with status 1") > -1) {
+      if (res.error.includes("Server terminated early with status 1")) {
         console.log("******* STRANGE selenium error found - retry #", retries + 1);
         retries++;
         if (retries == 3) break;
@@ -155,7 +155,7 @@ async function runBenchmakLoop(
     }
     warnings = warnings.concat(res.warnings);
     if (res.error) {
-      if (res.error.indexOf("Server terminated early with status 1") > -1) {
+      if (res.error.includes("Server terminated early with status 1")) {
         console.log("******* STRANGE selenium error found - retry #", retries + 1);
         retries++;
         if (retries == 3) break;
@@ -205,7 +205,7 @@ async function runBench(
   let errors: string[] = [];
   let warnings: string[] = [];
 
-  let restart: string = undefined;
+  let restart: string;
   let index = runFrameworks.findIndex((f) => f.fullNameWithKeyedAndVersion === restart);
   if (index > -1) {
     runFrameworks = runFrameworks.slice(index);
@@ -372,7 +372,7 @@ async function main() {
     (b) =>
       // afterframe currently only targets CPU benchmarks
       (config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME || b.type == BenchmarkType.CPU) &&
-      runBenchmarksArgs.some((name) => b.id.toLowerCase().indexOf(name) > -1)
+      runBenchmarksArgs.some((name) => b.id.toLowerCase().includes(name))
   );
 
   let runFrameworks: FrameworkData[];
