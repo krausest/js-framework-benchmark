@@ -98,12 +98,12 @@ async function measureClickForElement(driver: WebDriver, elem: WebElement) {
     elem
   )) as number;
   durations.push(duration);
-  console.log("computed duration ", duration);
+  console.log("computed duration", duration);
 }
 
 async function measureClickElementById(driver: WebDriver, id: string, isInButtonArea: boolean) {
   let elem = await findById(driver, id, isInButtonArea);
-  console.log("measureClickElementById: ", elem);
+  console.log("measureClickElementById:", elem);
   await measureClickForElement(driver, elem);
 }
 

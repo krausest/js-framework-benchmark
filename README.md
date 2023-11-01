@@ -554,6 +554,7 @@ Frameworks without significant activity on github or npm for more than a year wi
 ## 2023-10-22
 The following frameworks were archived after chrome 118. Their last results are included in [chrome 118 results](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_118.0.5993.70.html).
 - [x] 1more
+- [x] hullo
 - [x] domdiff
 - [x] domvm
 - [x] endorphin

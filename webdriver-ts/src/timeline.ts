@@ -25,12 +25,12 @@ export function extractRelevantEvents(entries: any[]) {
     if (config.LOG_DEBUG) console.log(JSON.stringify(e));
     if (e.name === "EventDispatch") {
       if (e.args.data.type === "click") {
-        if (config.LOG_DETAILS) console.log("CLICK ", +e.ts);
+        if (config.LOG_DETAILS) console.log("CLICK", +e.ts);
           click_start = +e.ts;
           click_end = +e.ts + e.dur;
           filteredEvents.push({ type: "click", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
-      } else if (e.args.data.type === "mousedown") {
-        if (config.LOG_DETAILS) console.log("MOUSEDOWN ", +e.ts);
+      } else if (e.args.data.type === "mousedown") {
+        if (config.LOG_DETAILS) console.log("MOUSEDOWN", +e.ts);
         filteredEvents.push({ type: "mousedown", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
       }
     } else if (e.name === "Layout" && e.ph === "X") {
@@ -95,7 +95,7 @@ export function extractRelevantJSEvents(config: Config, entries: any[]) {
     if (config.LOG_DEBUG) console.log(JSON.stringify(e));
     if (e.name === "EventDispatch") {
       if (e.args.data.type === "click") {
-        if (config.LOG_DETAILS) console.log("CLICK ", +e.ts);
+        if (config.LOG_DETAILS) console.log("CLICK", +e.ts);
         filteredEvents.push({ type: "click", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur });
       }
     } else if (traceJSEventNames.includes(e.name) && e.ph === "X") {
@@ -215,9 +215,9 @@ export async function computeResultsCPU(
 
   let numberCommits = allCommitsAfterClick.length;
   if (!commit) {
-    console.log("INFO: No commit event found according to filter ", fileName);
+    console.log("INFO: No commit event found according to filter", fileName);
     if (allCommitsAfterClick.length == 0) {
-      console.log("ERROR: No commit event found for ", fileName);
+      console.log("ERROR: No commit event found for", fileName);
       throw "No commit event found for " + fileName;
     } else {
       commit = allCommitsAfterClick[allCommitsAfterClick.length - 1];
@@ -257,7 +257,7 @@ export async function computeResultsCPU(
           console.log("FOUND delay for 1 raf, 1 faf, but layout before raf", waitDelay, fileName);
         }
       } else {
-        console.log("IGNORING delay < 16 msecs 1 raf, 1 faf ", waitDelay, fileName);
+        console.log("IGNORING delay < 16 msecs 1 raf, 1 faf", waitDelay, fileName);
       }
     } else if (fafs.length == 1) {
       throw (
@@ -422,15 +422,15 @@ export async function parseCPUTrace(
     if (!fs.existsSync(trace)) {
       throw new Error(`Trace file ${trace} does not exist`);
     } else {
-      console.log("analyzing trace ", trace);
+      console.log("analyzing trace", trace);
       try {
         let result = await computeResultsCPU(trace);
         plausibilityCheck.check(result, trace, framework, benchmarkInfo);
         // let resultJS = await computeResultsJS(result, config, trace); 
         results.push({ total: result.duration, script: 0 });
         console.log(result);
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log(error);
       }
     }
   }

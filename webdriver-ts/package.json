@@ -16,8 +16,7 @@
     "isKeyed": "cross-env LANG=\"en_US.UTF-8\" node dist/isKeyed.js",
     "test": "vitest --run",
     "test:watch": "vitest",
-    "coverage": "vitest --run --coverage",
-    "lint": "eslint src/ --ext .ts"
+    "coverage": "vitest --run --coverage"
   },
   "author": "",
   "license": "Apache-2.0",

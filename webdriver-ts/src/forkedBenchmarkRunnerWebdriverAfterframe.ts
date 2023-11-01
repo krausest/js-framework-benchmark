@@ -1,19 +1,8 @@
 import { WebDriver, Builder } from "selenium-webdriver";
 import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriverAfterframe.js";
-import {
-  setUseShadowRoot,
-  setUseRowShadowRoot,
-  setShadowRootName,
-  setButtonsInShadowRoot,
-} from "./webdriverAccess.js";
+import { setUseShadowRoot, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess.js";
 
-import {
-  Config,
-  config as defaultConfig,
-  FrameworkData,
-  ErrorAndWarning,
-  BenchmarkOptions,
-} from "./common.js";
+import { Config, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
 import { BenchmarkType, CPUBenchmarkResult } from "./benchmarksCommon.js";
 import { getAfterframeDurations, initMeasurement } from "./benchmarksWebdriverAfterframe.js";
 
@@ -26,12 +15,7 @@ async function runBenchmark(
 ): Promise<any> {
   await benchmark.run(driver, framework);
   if (config.LOG_PROGRESS)
-    console.log(
-      "after run ",
-      benchmark.benchmarkInfo.id,
-      benchmark.benchmarkInfo.type,
-      framework.name
-    );
+    console.log("after run", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
 async function initBenchmark(
@@ -41,12 +25,7 @@ async function initBenchmark(
 ): Promise<any> {
   await benchmark.init(driver, framework);
   if (config.LOG_PROGRESS)
-    console.log(
-      "after initialized ",
-      benchmark.benchmarkInfo.id,
-      benchmark.benchmarkInfo.type,
-      framework.name
-    );
+    console.log("after initialized", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
   await initMeasurement(driver);
 }
 
@@ -56,9 +35,9 @@ function convertError(error: any): string {
     error,
     "| type:",
     typeof error,
-    " instance of Error",
+    "instance of Error",
     error instanceof Error,
-    " Message: ",
+    "Message:",
     error.message
   );
   if (typeof error === "string") {
@@ -82,7 +61,7 @@ async function runCPUBenchmark(
   let warnings: string[] = [];
   let results: CPUBenchmarkResult[] = [];
 
-  console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
+  console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
   let driver: WebDriver = null;
   try {
     // let driver = buildDriver(benchmarkOptions);
@@ -98,9 +77,7 @@ async function runCPUBenchmark(
       console.log("runCPUBenchmark: before loading page");
       // must be run with an IP adress otherwise Safari crashes with an error.
       // Use the HOST env variable to set the HOST to an IP adress for safari!
-      await driver.get(
-        `http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`
-      );
+      await driver.get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`);
       // Needed for Firefox
       await driver.sleep(50);
       console.log("runCPUBenchmark: initBenchmark");
@@ -114,18 +91,17 @@ async function runCPUBenchmark(
     console.log("runCPUBenchmark: driver.quit");
     await driver.quit();
     return { error, warnings, result: results };
-  } catch (e) {
-    console.log("ERROR ", e);
-    error = convertError(e);
+  } catch (error) {
+    console.log("ERROR", error);
     try {
       if (driver) {
         await driver.close();
         await driver.quit();
       }
-    } catch (err) {
-      console.log("ERROR cleaning up driver", err);
+    } catch (error) {
+      console.log("ERROR cleaning up driver", error);
     }
-    return { error, warnings };
+    return { error: convertError(error), warnings };
   }
 }
 
@@ -152,7 +128,7 @@ export async function executeBenchmark(
 
 process.on("message", (msg: any) => {
   config = msg.config;
-  console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
+  console.log("START BENCHMARK. Write results?", config.WRITE_RESULTS);
   let {
     framework,
     benchmarkId,
@@ -167,9 +143,9 @@ process.on("message", (msg: any) => {
       process.send(result);
       process.exit(0);
     })
-    .catch((err) => {
+    .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunner");
-      process.send({ failure: convertError(err) });
+      process.send({ failure: convertError(error) });
       process.exit(0);
     });
 });

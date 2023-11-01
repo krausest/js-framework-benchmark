@@ -1,0 +1,11 @@
+specVersion: "3.0"
+metadata:
+  name: ui5.benchmark
+type: application
+framework:
+  name: OpenUI5
+  version: "1.119.1"
+  libraries:
+    - name: sap.m
+    - name: sap.ui.core
+    - name: sap.ui.table

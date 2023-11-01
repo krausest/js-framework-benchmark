@@ -19,9 +19,7 @@ describe("duration is computed matching to some hand checked examples", () => {
     expect(result.numberCommits).toBe(2);
   });
   test("Use the commit event after the functioncall event", async () => {
-    let result = await computeResultsCPU(
-      "unittests/arrowjs-v1.0.0-alpha.9-keyed_04_select1k_2.json"
-    );
+    let result = await computeResultsCPU("unittests/arrowjs-v1.0.0-alpha.9-keyed_04_select1k_2.json");
     expect(result.duration).toBe(79.117);
     expect(result.droppedNonMainProcessCommitEvents).toBe(false);
     expect(result.droppedNonMainProcessOtherEvents).toBe(false);
@@ -47,9 +45,7 @@ describe("duration is computed matching to some hand checked examples", () => {
     expect(result.numberCommits).toBe(1);
   });
   test("Ignore second commit after hit test", async () => {
-    let result = await computeResultsCPU(
-      "unittests/arrowjs-v1.0.0-alpha.9-keyed_07_create10k_0.json"
-    );
+    let result = await computeResultsCPU("unittests/arrowjs-v1.0.0-alpha.9-keyed_07_create10k_0.json");
     expect(result.duration).toBe(814.889);
     expect(result.droppedNonMainProcessCommitEvents).toBe(false);
     expect(result.droppedNonMainProcessOtherEvents).toBe(false);
