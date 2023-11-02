@@ -59,7 +59,7 @@ function swapRows () {
     }
 }
 
-document.body.appendChild(<div>
+document.body.appendChild(<div class="container">
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
