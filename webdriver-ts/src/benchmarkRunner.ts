@@ -296,6 +296,7 @@ async function main() {
     .boolean("headless")
     .default("headless", false)
     .boolean("smoketest")
+    .string("type")
     .boolean("nothrottling")
     .default("nothrottling", false)
     .string("runner")
@@ -382,6 +383,14 @@ async function main() {
   runFrameworks = frameworks.filter(
     (f) => f.keyed || config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME
   );
+
+  if (args.type=='keyed') {
+    runFrameworks = runFrameworks.filter((f) => f.keyed);
+    console.log("run only keyed frameworks");
+  } else if (args.type=='non-keyed') {
+    runFrameworks = runFrameworks.filter((f) => !f.keyed);
+    console.log("run only non-keyed frameworks");
+  }
 
   console.log("ARGS.smotest", args.smoketest);
   if (args.smoketest) {
