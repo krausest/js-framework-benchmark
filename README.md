@@ -5,6 +5,14 @@ This is a simple benchmark for several javascript frameworks. The benchmarks cre
 
 ![Screenshot](images/screenshot.png?raw=true "Screenshot")
 
+## Security advice
+
+Currently there are 186 implemenations in this repository. It's of course impossible for me to make a security assessment
+for all those implementations. `npm ci` and `npm install` can execute arbitraty commands, so they should be executed only for packages you trust. Consequently I build on a dedicated virtual private linux server such that I don't have to install the packages for all those implemenations on my laptop. There's a prebuild build.zip for each chrome release you can download such that you can avoid installing the packages from all implementations. 
+(I don't know of any (attempted) case for malicious packages in this repository, so please take it just as a general warning.)
+
+The server implemenation in this repository should only be started on your local machine and access should be restricted to your local machine. I recommend against starting the server such that it can be publically accessed from the internet.
+
 ## About the benchmarks
 
 The following operations are benchmarked for each framework:
@@ -54,9 +62,9 @@ Depending on your requirements, the “non-keyed” mode can be a performance ga
 
 Read more here: [https://www.stefankrause.net/wp/?p=342](https://www.stefankrause.net/wp/?p=342)
 
-# 1 NEW: Run pre-built binaries for all frameworks
+# 1 Run pre-built binaries for all frameworks
 
-There are currently ~60 framework entries in this repository. Installing (and maintaining) those can be challenging, but here are simplified instructions how to get started.
+There are currently 186 implementations in this repository. Installing (and maintaining) those can be challenging, but here are simplified instructions how to get started. See the security advice above to read why that might be a good idea.
 
 ## 1.1 Prerequisites
 
@@ -275,7 +283,8 @@ npm run index
 
 ## 2.7 [Optional] Building and running the benchmarks for all frameworks
 
-This is not for the faint at heart. You can build all frameworks simply by issuing:
+This is not for the faint at heart. **Please read the security advice before running this command.**
+You can build all frameworks by issuing:
 
 ```
 cd ..
