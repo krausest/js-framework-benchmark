@@ -61,12 +61,10 @@ async function runLighthouse(
     }
     if (config.LOG_DEBUG) console.log("lighthouse result", results);
 
-    return startupBenchmarks.map((bench) => {
-      return {
+    return startupBenchmarks.map((bench) => ({
         benchmark: bench,
         result: bench.fn(extractRawValue(results.lhr, bench.property)),
-      } as StartupBenchmarkResult;
-    });
+    }));
   } catch (error) {
     console.log("error running lighthouse", error);
     throw error;
