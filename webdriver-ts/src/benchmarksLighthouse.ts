@@ -1,7 +1,7 @@
 import * as benchmarksCommon from "./benchmarksCommon.js";
 import { BenchmarkImpl, BenchmarkType, StartupBenchmarkInfo } from "./benchmarksCommon.js";
 
-export interface StartupBenchmarkResult extends BenchmarkImpl {
+export interface StartupBenchmarkResult {
   benchmark: StartupBenchmarkInfo;
   result: number;
 }

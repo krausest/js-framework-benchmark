@@ -5,6 +5,8 @@ export enum BenchmarkType {
   MEM,
   STARTUP_MAIN,
   STARTUP,
+  SIZE_MAIN,
+  SIZE,
 }
 
 export interface BenchmarkInfoBase {
@@ -25,6 +27,19 @@ export interface MemBenchmarkInfo extends BenchmarkInfoBase {
   type: BenchmarkType.MEM;
 }
 
+export interface SizeInfoJSON {
+  size_uncompressed: number,
+  size_compressed: number,
+}
+
+export interface SizeBenchmarkInfo extends BenchmarkInfoBase {
+  type: BenchmarkType.SIZE;
+  fn(sizeInfo: SizeInfoJSON): number;
+}
+
+export interface SizeMainBenchmarkInfo extends BenchmarkInfoBase {
+  type: BenchmarkType.SIZE_MAIN;
+}
 export interface StartupMainBenchmarkInfo extends BenchmarkInfoBase {
   type: BenchmarkType.STARTUP_MAIN;
 }
@@ -35,7 +50,7 @@ export interface StartupBenchmarkInfo extends BenchmarkInfoBase {
   fn: (x: number) => number;
 }
 
-export type BenchmarkInfo = CPUBenchmarkInfo | MemBenchmarkInfo | StartupMainBenchmarkInfo | StartupBenchmarkInfo;
+export type BenchmarkInfo = CPUBenchmarkInfo | MemBenchmarkInfo | StartupMainBenchmarkInfo | StartupBenchmarkInfo | SizeBenchmarkInfo | SizeMainBenchmarkInfo;
 
 export interface BenchmarkImpl {
   benchmarkInfo: BenchmarkInfo;
@@ -68,6 +83,7 @@ export enum Benchmark {
   _25 = "25_run-clear-memory",
   _26 = "26_run-10k-memory",
   _30 = "30_startup",
+  _40 = "40_sizes",
 }
 
 export type BenchmarkId =
@@ -80,7 +96,8 @@ export type BenchmarkId =
   | typeof Benchmark._07
   | typeof Benchmark._08
   | typeof Benchmark._09
-  | typeof Benchmark._30;
+  | typeof Benchmark._30
+  | typeof Benchmark._40;
 
 const throttlingFactors: { [idx: string]: number } = {
   [Benchmark._03]: 4,
@@ -237,6 +254,15 @@ export const startupBenchmarkInfosArray: Array<StartupMainBenchmarkInfo> = [
     type: BenchmarkType.STARTUP_MAIN,
     label: "",
     description: () => "",
+  }
+];
+
+export const sizesBenchmarkInfosArray: Array<SizeMainBenchmarkInfo> = [
+  {
+    id: Benchmark._40,
+    type: BenchmarkType.SIZE_MAIN,
+    label: "",
+    description: () => "",
   },
 ];
 
@@ -255,4 +281,9 @@ for (let bi of startupBenchmarkInfosArray) {
   startupBenchmarkInfos[bi.id] = bi;
 }
 
-export const benchmarkInfos = [...cpuBenchmarkInfosArray, ...memBenchmarkInfosArray, ...startupBenchmarkInfosArray];
+export const sizeBenchmarkInfos: { [idx: string]: SizeMainBenchmarkInfo } = {};
+for (let bi of sizesBenchmarkInfosArray) {
+  sizeBenchmarkInfos[bi.id] = bi;
+}
+
+export const benchmarkInfos = [...cpuBenchmarkInfosArray, ...memBenchmarkInfosArray, ...startupBenchmarkInfosArray, ...sizesBenchmarkInfosArray];

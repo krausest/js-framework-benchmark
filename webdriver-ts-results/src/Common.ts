@@ -94,9 +94,16 @@ export function findIssue(issueNumber: number): Issue | undefined {
 export enum BenchmarkType {
   CPU,
   MEM,
-  DUMMY,
-  STARTUP,
+  STARTUP=3,
+  SIZE=5,
 }
+
+const benchmarkTypes = [
+  BenchmarkType.CPU,
+  BenchmarkType.MEM,
+  BenchmarkType.STARTUP,
+  BenchmarkType.SIZE,
+];
 
 export interface Benchmark {
   id: string;
@@ -133,10 +140,12 @@ interface ResultData {
 export const SORT_BY_NAME = "SORT_BY_NAME";
 export const SORT_BY_GEOMMEAN_CPU = "SORT_BY_GEOMMEAN_CPU";
 export const SORT_BY_GEOMMEAN_MEM = "SORT_BY_GEOMMEAN_MEM";
+export const SORT_BY_GEOMMEAN_SIZE = "SORT_BY_GEOMMEAN_SIZE";
 export const SORT_BY_GEOMMEAN_STARTUP = "SORT_BY_GEOMMEAN_STARTUP";
 export type T_SORT_BY_GEOMMEAN =
   | typeof SORT_BY_GEOMMEAN_CPU
   | typeof SORT_BY_GEOMMEAN_MEM
+  | typeof SORT_BY_GEOMMEAN_SIZE
   | typeof SORT_BY_GEOMMEAN_STARTUP;
 
 const computeColor = function (factor: number): string {
@@ -270,21 +279,9 @@ const formatEn = new Intl.NumberFormat("en-US", {
 
 export class ResultTableData {
   resultsMap = new Map<BenchmarkType, ResultData>();
-  // // Rows
-  // benchmarksCPU: Array<Benchmark>;
-  // benchmarksStartup: Array<Benchmark>;
-  // benchmarksMEM: Array<Benchmark>;
-  // Columns
   frameworks: Array<Framework>;
   frameworksForFactors: Array<Framework>;
   selectedFameworks: Set<Framework>;
-  // Cell data
-  // resultsCPU: Array<Array<TableResultValueEntry|null>>;   // [benchmark][framework]
-  // geomMeanCPU: Array<TableResultGeommeanEntry|null>;
-  // geomMeanStartup: Array<TableResultGeommeanEntry|null>;
-  // geomMeanMEM: Array<TableResultGeommeanEntry|null>;
-  // resultsStartup: Array<Array<TableResultValueEntry|null>>;
-  // resultsMEM: Array<Array<TableResultValueEntry|null>>;
 
   constructor(
     public allFrameworks: Array<Framework>,
@@ -378,11 +375,6 @@ export class ResultTableData {
       return { benchmarks, results, geomMean, comparison };
     };
 
-    const benchmarkTypes = [
-      BenchmarkType.CPU,
-      BenchmarkType.MEM,
-      BenchmarkType.STARTUP,
-    ];
     for (const type of benchmarkTypes) {
       this.resultsMap.set(type, createResult(type));
     }
@@ -405,6 +397,10 @@ export class ResultTableData {
         sortValue =
           this.getResult(BenchmarkType.MEM).geomMean[frameworkIndex]!.mean ||
           Number.POSITIVE_INFINITY;
+      else if (sortKey === SORT_BY_GEOMMEAN_SIZE)
+        sortValue =
+          this.getResult(BenchmarkType.SIZE).geomMean[frameworkIndex]!.mean ||
+          Number.POSITIVE_INFINITY;
       else if (sortKey === SORT_BY_GEOMMEAN_STARTUP)
         sortValue =
           this.getResult(BenchmarkType.STARTUP).geomMean[frameworkIndex]!
@@ -414,6 +410,9 @@ export class ResultTableData {
           (b) => b.id === sortKey,
         );
         const memIdx = this.getResult(BenchmarkType.MEM).benchmarks.findIndex(
+          (b) => b.id === sortKey,
+        );
+        const sizeIdx = this.getResult(BenchmarkType.SIZE).benchmarks.findIndex(
           (b) => b.id === sortKey,
         );
         const startupIdx = this.getResult(
@@ -432,6 +431,10 @@ export class ResultTableData {
           sortValue =
             this.getResult(BenchmarkType.MEM).results[memIdx][frameworkIndex]
               ?.value ?? Number.POSITIVE_INFINITY;
+        else if (sizeIdx > -1)
+          sortValue =
+            this.getResult(BenchmarkType.SIZE).results[sizeIdx][frameworkIndex]
+              ?.value ?? Number.POSITIVE_INFINITY;
         else throw Error(`sortKey ${sortKey} not found`);
       }
       return {
@@ -446,12 +449,6 @@ export class ResultTableData {
       .map((z) => z.origIndex);
 
     this.frameworks = this.remap(remappedIdx, this.frameworks);
-
-    const benchmarkTypes = [
-      BenchmarkType.CPU,
-      BenchmarkType.MEM,
-      BenchmarkType.STARTUP,
-    ];
 
     for (const type of benchmarkTypes) {
       const result = this.getResult(type);
@@ -588,9 +585,9 @@ export class ResultTableData {
         (1.959964 * (resultValues.standardDeviation || 0)) /
         Math.sqrt(resultValues.values.length);
       const conficenceIntervalStr =
-        benchmark.type === BenchmarkType.MEM
-          ? null
-          : conficenceInterval.toFixed(1);
+        benchmark.type === BenchmarkType.CPU
+          ? conficenceInterval.toFixed(1)
+          : null;
       const formattedValue = formatEn.format(value);
 
       if (!this.compareWith) {

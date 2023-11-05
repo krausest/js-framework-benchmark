@@ -7,7 +7,8 @@ import {
   fileName,
   slowDownFactor,
 } from "./benchmarksCommon.js";
-import { subbenchmarks } from "./benchmarksLighthouse.js";
+import * as benchmarksLighthouse from "./benchmarksLighthouse.js";
+import * as benchmarksSize from "./benchmarksSize.js";
 import { BenchmarkOptions, config, initializeFrameworks, JsonResult } from "./common.js";
 
 let args: any = yargs(process.argv)
@@ -34,6 +35,7 @@ let benchmarkOptions: BenchmarkOptions = {
     config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
   numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
   numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
+  numIterationsForSizeBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_SIZE,
   batchSize: 1,
   resultsDirectory: "results",
   tracesDirectory: "traces",
@@ -58,7 +60,9 @@ async function main() {
       }
     } else {
       if (benchmarkInfo.type == BenchmarkType.STARTUP_MAIN) {
-        allBenchmarks = allBenchmarks.concat(subbenchmarks);
+        allBenchmarks = allBenchmarks.concat(benchmarksLighthouse.subbenchmarks);
+      } else if (benchmarkInfo.type == BenchmarkType.SIZE_MAIN) {
+        allBenchmarks = allBenchmarks.concat(benchmarksSize.subbenchmarks);
       } else {
         allBenchmarks.push(benchmarkInfo);
       }
@@ -103,6 +107,13 @@ async function main() {
             ) {
               console.log(
                 `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${vals.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP}`
+              );
+            } else if (
+              benchmarkInfo.type === BenchmarkType.SIZE &&
+              vals.length != config.NUM_ITERATIONS_FOR_BENCHMARK_SIZE
+            ) {
+              console.log(
+                `WARNING: for ${framework.uri} and benchmark ${benchmarkInfo.id} count was ${vals.length}. We expected ${config.NUM_ITERATIONS_FOR_BENCHMARK_SIZE}`
               );
             }
           }

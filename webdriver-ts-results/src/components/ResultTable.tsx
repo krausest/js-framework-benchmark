@@ -5,6 +5,7 @@ import MemResultsTable from "./tables/MemResultsTable";
 import StartupResultsTable from "./tables/StartupResultsTable";
 import { benchmarks } from "../results";
 import { useRootStore } from "../reducer";
+import SizeResultsTable from "./tables/SizeResultsTable";
 
 const BoxPlotTable = React.lazy(() => import("./BoxPlotTable/BoxPlotTable"));
 
@@ -75,6 +76,7 @@ const ResultTable = ({ type }: Props) => {
                 <CpuResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
                 <StartupResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
                 <MemResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
+                <SizeResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
               </table>
             </div>
           </div>

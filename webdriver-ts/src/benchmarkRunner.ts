@@ -17,21 +17,25 @@ import {
   cpuBenchmarkInfosArray,
   CPUBenchmarkResult,
   MemBenchmarkInfo,
+  SizeBenchmarkInfo,
   StartupBenchmarkInfo,
 } from "./benchmarksCommon.js";
 import { StartupBenchmarkResult } from "./benchmarksLighthouse.js";
 import { writeResults } from "./writeResults.js";
 import { PlausibilityCheck } from "./timeline.js";
+import { SizeBenchmarkResult } from "./benchmarksSize.js";
 
 function forkAndCallBenchmark(
   framework: FrameworkData,
   benchmarkInfo: BenchmarkInfo,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning<number | CPUBenchmarkResult | StartupBenchmarkResult>> {
+): Promise<ErrorAndWarning<number | CPUBenchmarkResult | StartupBenchmarkResult | SizeBenchmarkResult>> {
   return new Promise((resolve, reject) => {
     let forkedRunner = null;
     if (benchmarkInfo.type === BenchmarkType.STARTUP_MAIN) {
       forkedRunner = "dist/forkedBenchmarkRunnerLighthouse.js";
+    } else if (benchmarkInfo.type === BenchmarkType.SIZE_MAIN) {
+      forkedRunner = "dist/forkedBenchmarkRunnerSize.js";
     } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER_CDP) {
       forkedRunner = "dist/forkedBenchmarkRunnerWebdriverCDP.js";
     } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.PLAYWRIGHT) {
@@ -112,6 +116,51 @@ async function runBenchmakLoopStartup(
       benchmark: benchmarkInfo,
       results: results,
       type: BenchmarkType.STARTUP,
+    });
+  }
+  return { errors, warnings };
+  // } else {
+  //     return executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
+}
+
+async function runBenchmakLoopSize(
+  framework: FrameworkData,
+  benchmarkInfo: SizeBenchmarkInfo,
+  benchmarkOptions: BenchmarkOptions
+): Promise<{ errors: string[]; warnings: string[] }> {
+  let warnings: string[] = [];
+  let errors: string[] = [];
+
+  let results: Array<SizeBenchmarkResult> = [];
+  let count = benchmarkOptions.numIterationsForSizeBenchmark;
+  benchmarkOptions.batchSize = 1;
+
+  let retries = 0;
+  let done = 0;
+
+  console.log("runBenchmakLoopSize", framework, benchmarkInfo);
+
+  while (done < count) {
+    console.log("FORKING:", benchmarkInfo.id, "BatchSize", benchmarkOptions.batchSize);
+    let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
+    if (Array.isArray(res.result)) {
+      results = results.concat(res.result as SizeBenchmarkResult[]);
+    } else {
+      results.push(res.result);
+    }
+    warnings = warnings.concat(res.warnings);
+    if (res.error) {
+      errors.push(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + res.error);
+    }
+    done++;
+  }
+  console.log("******* result", results);
+  if (config.WRITE_RESULTS) {
+    await writeResults(benchmarkOptions.resultsDirectory, {
+      framework: framework,
+      benchmark: benchmarkInfo,
+      results: results,
+      type: BenchmarkType.SIZE,
     });
   }
   return { errors, warnings };
@@ -233,6 +282,12 @@ async function runBench(
             benchmarkInfos[j] as StartupBenchmarkInfo,
             benchmarkOptions
           );
+        } else if (benchmarkInfos[j].type == BenchmarkType.SIZE_MAIN) {
+          result = await runBenchmakLoopSize(
+            runFrameworks[i],
+            benchmarkInfos[j] as SizeBenchmarkInfo,
+            benchmarkOptions
+          );
         } else if (benchmarkInfos[j].type == BenchmarkType.CPU) {
           result = await runBenchmakLoop(
             runFrameworks[i],
@@ -345,6 +400,7 @@ async function main() {
       config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
     numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
     numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
+    numIterationsForSizeBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_SIZE,
     batchSize: 1,
     resultsDirectory: "results",
     tracesDirectory: "traces",

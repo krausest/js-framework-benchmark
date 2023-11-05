@@ -3,5 +3,5 @@ import { disableCompression, enableCompression, getSize } from "./responseSizeCo
 export async function getSizeRouter(fastify) {
   fastify.get("/enableCompression", enableCompression);
   fastify.get("/disableCompression", disableCompression);
-  fastify.get("/getSize", getSize);
+  fastify.get("/sizeInfo", getSize);
 }
