@@ -5,10 +5,11 @@
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "blockdom",
-    "frameworkHomeURL": "https://github.com/ged-odoo/blockdom"
+    "frameworkHomeURL": "https://github.com/ged-odoo/blockdom",
+    "issues": [1261]
   },
   "scripts": {
-    "build-dev": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build-prod": "rollup -c"
   },
   "keywords": [

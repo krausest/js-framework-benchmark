@@ -1,5 +1,4 @@
-import { block, fragment } from 'million';
-import { h } from 'million/jsx-runtime';
+import { block, mapArray } from 'million';
 
 // prettier-ignore
 const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
@@ -17,7 +16,7 @@ let main;
 
 const clear = () => {
   list = [];
-  main.remove();
+  main.x();
 };
 
 const buildData = (count) => {
@@ -73,44 +72,16 @@ const swapRows = () => {
   return false;
 };
 
-let prevBlock;
-
 const select = (id) => {
-  if (prevBlock) {
-    if (prevBlock.props.id === id) return;
-    const { id: prevId, label } = prevBlock.props;
-    prevBlock.patch(
-      Row(
-        {
-          id: prevId,
-          label,
-          className: '',
-        },
-        String(id)
-      )
-    );
-  }
-  const block = main.children.find((block) => block.props.id === id);
-  const { label } = block.props;
-  block.patch(
-    Row(
-      {
-        id,
-        label,
-        className: 'danger',
-      },
-      String(id)
-    )
-  );
-
-  prevBlock = block;
+  selected = id;
+  update();
 };
 
 const remove = (id) => {
   const index = list.findIndex((item) => item.id === id);
   list.splice(index, 1);
-  main.children[index].remove();
-  main.children.splice(index, 1);
+  main.b[index].x();
+  main.b.splice(index, 1);
 };
 
 const Main = block(({ rows }) => (
@@ -228,7 +199,7 @@ const Row = block(({ className, id, label }) => (
   </tr>
 ));
 
-Main({ rows: (main = fragment([])) }, undefined, undefined).mount(
+Main({ rows: (main = mapArray([])) }, null, null).m(
   document.getElementById('main')
 );
 
@@ -240,8 +211,8 @@ const shouldUpdate = (oldProps, newProps) => {
 };
 
 function update() {
-  main.patch(
-    fragment(
+  main.p(
+    mapArray(
       list.map((item) =>
         Row(
           {

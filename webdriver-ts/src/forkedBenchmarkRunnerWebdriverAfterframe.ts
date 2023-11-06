@@ -1,21 +1,31 @@
-import { WebDriver, logging, Builder } from "selenium-webdriver";
+import { WebDriver, Builder } from "selenium-webdriver";
 import { CPUBenchmarkWebdriver, benchmarks } from "./benchmarksWebdriverAfterframe.js";
-import { setUseShadowRoot, buildDriver, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess.js";
+import { setUseShadowRoot, setUseRowShadowRoot, setShadowRootName, setButtonsInShadowRoot } from "./webdriverAccess.js";
 
-import { TConfig, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
-import { BenchmarkType } from "./benchmarksCommon.js";
+import { Config, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
+import { BenchmarkType, CPUBenchmarkResult } from "./benchmarksCommon.js";
 import { getAfterframeDurations, initMeasurement } from "./benchmarksWebdriverAfterframe.js";
 
-let config: TConfig = defaultConfig;
+let config: Config = defaultConfig;
 
-async function runBenchmark(driver: WebDriver, benchmark: CPUBenchmarkWebdriver, framework: FrameworkData): Promise<any> {
+async function runBenchmark(
+  driver: WebDriver,
+  benchmark: CPUBenchmarkWebdriver,
+  framework: FrameworkData
+): Promise<any> {
   await benchmark.run(driver, framework);
-  if (config.LOG_PROGRESS) console.log("after run ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
+  if (config.LOG_PROGRESS)
+    console.log("after run", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
 }
 
-async function initBenchmark(driver: WebDriver, benchmark: CPUBenchmarkWebdriver, framework: FrameworkData): Promise<any> {
+async function initBenchmark(
+  driver: WebDriver,
+  benchmark: CPUBenchmarkWebdriver,
+  framework: FrameworkData
+): Promise<any> {
   await benchmark.init(driver, framework);
-  if (config.LOG_PROGRESS) console.log("after initialized ", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
+  if (config.LOG_PROGRESS)
+    console.log("after initialized", benchmark.benchmarkInfo.id, benchmark.benchmarkInfo.type, framework.name);
   await initMeasurement(driver);
 }
 
@@ -25,9 +35,9 @@ function convertError(error: any): string {
     error,
     "| type:",
     typeof error,
-    " instance of Error",
+    "instance of Error",
     error instanceof Error,
-    " Message: ",
+    "Message:",
     error.message
   );
   if (typeof error === "string") {
@@ -46,17 +56,17 @@ async function runCPUBenchmark(
   framework: FrameworkData,
   benchmark: CPUBenchmarkWebdriver,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
+): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
   let error: string = undefined;
   let warnings: string[] = [];
-  let results: number[] = [];
+  let results: CPUBenchmarkResult[] = [];
 
-  console.log("benchmarking ", framework, benchmark.benchmarkInfo.id);
+  console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
   let driver: WebDriver = null;
   try {
-    let driver = await new Builder()
-      .forBrowser(benchmarkOptions.browser)
-      .build(); 
+    // let driver = buildDriver(benchmarkOptions);
+    let driver = await new Builder().forBrowser(benchmarkOptions.browser).build();
+    console.log(`using afterframe measurement with ${benchmarkOptions.browser}`);
     await driver.manage().window().maximize();
 
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
@@ -64,28 +74,34 @@ async function runCPUBenchmark(
       setUseRowShadowRoot(framework.useRowShadowRoot);
       setShadowRootName(framework.shadowRootName);
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
-      // must be run with an IP adress otherwise Safari crashes with an error. 
+      console.log("runCPUBenchmark: before loading page");
+      // must be run with an IP adress otherwise Safari crashes with an error.
       // Use the HOST env variable to set the HOST to an IP adress for safari!
-      await driver.get(`http://${benchmarkOptions.HOST}:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      await driver.get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`);
+      // Needed for Firefox
+      await driver.sleep(50);
+      console.log("runCPUBenchmark: initBenchmark");
       await initBenchmark(driver, benchmark, framework);
+      console.log("runCPUBenchmark: runBenchmark");
       await runBenchmark(driver, benchmark, framework);
-      results.push(...getAfterframeDurations());              
+      console.log("runCPUBenchmark: getAfterframeDurations");
+      results.push(...getAfterframeDurations());
+      console.log("runCPUBenchmark: loop end");
     }
-    console.log("quit");
+    console.log("runCPUBenchmark: driver.quit");
     await driver.quit();
     return { error, warnings, result: results };
-  } catch (e) {
-    console.log("ERROR ", e);
-    error = convertError(e);
+  } catch (error) {
+    console.log("ERROR", error);
     try {
       if (driver) {
         await driver.close();
         await driver.quit();
       }
-    } catch (err) {
-      console.log("ERROR cleaning up driver", err);
+    } catch (error) {
+      console.log("ERROR cleaning up driver", error);
     }
-    return { error, warnings };
+    return { error: convertError(error), warnings };
   }
 }
 
@@ -93,13 +109,15 @@ export async function executeBenchmark(
   framework: FrameworkData,
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
-): Promise<ErrorAndWarning> {
-  let runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(b => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriver) as Array<CPUBenchmarkWebdriver>;
+): Promise<ErrorAndWarning<number | CPUBenchmarkResult>> {
+  let runBenchmarks: Array<CPUBenchmarkWebdriver> = benchmarks.filter(
+    (b) => benchmarkId === b.benchmarkInfo.id && b instanceof CPUBenchmarkWebdriver
+  ) as Array<CPUBenchmarkWebdriver>;
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (webdriver)`;
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning;
+  let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult>;
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }
@@ -110,7 +128,7 @@ export async function executeBenchmark(
 
 process.on("message", (msg: any) => {
   config = msg.config;
-  console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
+  console.log("START BENCHMARK. Write results?", config.WRITE_RESULTS);
   let {
     framework,
     benchmarkId,
@@ -120,15 +138,14 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
-  if (!benchmarkOptions.port) benchmarkOptions.port = config.PORT.toFixed();
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       process.send(result);
       process.exit(0);
     })
-    .catch((err) => {
+    .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunner");
-      process.send({ failure: convertError(err) });
+      process.send({ failure: convertError(error) });
       process.exit(0);
     });
 });

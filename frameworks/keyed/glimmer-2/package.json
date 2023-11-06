@@ -10,7 +10,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack serve",
-    "build-dev": "webpack-dev-server",
+    "dev": "webpack-dev-server",
     "build-prod": "webpack"
   },
   "browserslist": {

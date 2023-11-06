@@ -1,0 +1,34 @@
+{
+  "name": "js-framework-benchmark-solid",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "preact:@preact/signals",
+    "frameworkHomeURL": "https://preactjs.com/guide/v10/signals"
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "author": "Ryan Carniato",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@preact/signals": "^1.2.1",
+    "preact": "^10.18.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/plugin-transform-react-jsx": "^7.22.15",
+    "@rollup/plugin-babel": "6.0.3",
+    "@rollup/plugin-node-resolve": "15.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
+    "babel-preset-preact": "^2.0.0",
+    "rollup": "3.26.2"
+  }
+}

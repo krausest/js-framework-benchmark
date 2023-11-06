@@ -4,15 +4,75 @@ function _random(max: number) {
   return Math.round(Math.random() * 1000) % max;
 }
 
-const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
-const colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
-const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
+const adjectives = [
+  "pretty",
+  "large",
+  "big",
+  "small",
+  "tall",
+  "short",
+  "long",
+  "handsome",
+  "plain",
+  "quaint",
+  "clean",
+  "elegant",
+  "easy",
+  "angry",
+  "crazy",
+  "helpful",
+  "mushy",
+  "odd",
+  "unsightly",
+  "adorable",
+  "important",
+  "inexpensive",
+  "cheap",
+  "expensive",
+  "fancy",
+];
+const colours = [
+  "red",
+  "yellow",
+  "blue",
+  "green",
+  "pink",
+  "brown",
+  "purple",
+  "brown",
+  "white",
+  "black",
+  "orange",
+];
+const nouns = [
+  "table",
+  "chair",
+  "house",
+  "bbq",
+  "desk",
+  "car",
+  "pony",
+  "cookie",
+  "sandwich",
+  "burger",
+  "pizza",
+  "mouse",
+  "keyboard",
+];
+const adjectivesLength = adjectives.length;
+const coloursLength = colours.length;
+const nounsLength = nouns.length;
 
-type Row = { label: string, id: number };
+type Row = { label: string; id: number };
 function buildData(count = 1000) {
-  const data = new Array<Row>();
+  const data = new Array<Row>(count);
   for (let i = 0; i < count; i++)
-    data.push({ id: state.nextId++, label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}` });
+    data[i] = {
+      id: state.nextId++,
+      label: `${adjectives[_random(adjectivesLength)]} ${
+        colours[_random(coloursLength)]
+      } ${nouns[_random(nounsLength)]}`,
+    };
   return data;
 }
 
@@ -20,18 +80,18 @@ const { state, transactions, ...storeSubscribable } = store({
   state: {
     data: new Array<Row>(),
     selected: null as number | null,
-    nextId: 1
+    nextId: 1,
   },
   transactions: {
     updateData(mod = 10) {
       for (let i = 0; i < state.data.length; i += mod) {
-        state.data[i].label += ' !!!';
+        state.data[i].label += " !!!";
         // this.data[i] = Object.assign({}, this.data[i], {label: this.data[i].label +' !!!'});
       }
     },
     delete(id: number) {
       // state.data = state.data.filter(x => x.id !== id);
-      const index = state.data.findIndex(x => x.id === id);
+      const index = state.data.findIndex((x) => x.id === id);
       state.data.splice(index, 1);
 
       // const idx = this.data.findIndex(d => d.id == id);
@@ -68,81 +128,131 @@ const { state, transactions, ...storeSubscribable } = store({
         state.data[1] = state.data[998];
         state.data[998] = a;
       }
-    }
-  }
+    },
+  },
 });
 
-export const Table = createCustomElement('michi-table',
-  {
-    extends: {
-      tag: 'table',
-      class: HTMLTableElement
-    },
-    subscribeTo: {
-      storeSubscribable
-    },
-    fakeRoot: false,
-    render() {
-      return <List data={state.data} as="tbody" _id="tbody" renderItem={({ label, id }) => (
-        <tr key={id} class={id === state.selected ? 'danger' : undefined}>
-          <td _className="col-md-1">{id}</td>
-          <td _className="col-md-4">
-            <a _onclick={() => transactions.select(id)}>{label}</a>
-          </td>
-          <td _className="col-md-1">
-            <a _onclick={() => transactions.delete(id)}>
-              <span _className="glyphicon glyphicon-remove" aria-hidden="true" />
-            </a>
-          </td>
-          <td _className="col-md-6" />
-        </tr>
-      )} />
-    }
-  }
-);
+export const Table = createCustomElement("michi-table", {
+  extends: {
+    tag: "table",
+    class: HTMLTableElement,
+  },
+  subscribeTo: {
+    storeSubscribable,
+  },
+  fakeRoot: false,
+  render() {
+    return (
+      <List
+        data={state.data}
+        as="tbody"
+        _={{ id: "tbody" }}
+        renderItem={({ label, id }) => (
+          <tr key={id} class={id === state.selected ? "danger" : undefined}>
+            <td _={{ className: "col-md-1" }}>{id}</td>
+            <td _={{ className: "col-md-4" }}>
+              <a _={{ onclick: () => transactions.select(id) }}>{label}</a>
+            </td>
+            <td _={{ className: "col-md-1" }}>
+              <a onclick={() => transactions.delete(id)}>
+                <span
+                  _={{
+                    className: "glyphicon glyphicon-remove",
+                    ariaHidden: "true",
+                  }}
+                />
+              </a>
+            </td>
+            <td _={{ className: "col-md-6" }} />
+          </tr>
+        )}
+      />
+    );
+  },
+});
 
-export const TableManager = createCustomElement('michi-table-manager',
-  {
-    extends: {
-      tag: 'div',
-      class: HTMLDivElement
-    },
-    fakeRoot: false,
-    render() {
-      return (
-        <div _className="row">
-          <div _className="col-sm-6 smallpad">
-            <button _type="button" _className="btn btn-primary btn-block" id="run" onclick={transactions.run}>
-              Create 1,000 rows
-            </button>
-          </div>
-          <div _className="col-sm-6 smallpad">
-            <button _type="button" _className="btn btn-primary btn-block" id="runlots" onclick={transactions.runLots}>
-              Create 10,000 rows
-            </button>
-          </div>
-          <div _className="col-sm-6 smallpad">
-            <button _type="button" _className="btn btn-primary btn-block" id="add" onclick={transactions.add}>
-              Append 1,000 rows
-            </button>
-          </div>
-          <div _className="col-sm-6 smallpad">
-            <button _type="button" _className="btn btn-primary btn-block" id="update" onclick={transactions.update}>
-              Update every 10th row
-            </button>
-          </div>
-          <div _className="col-sm-6 smallpad">
-            <button _type="button" _className="btn btn-primary btn-block" id="clear" onclick={transactions.clear}>
-              Clear
-            </button>
-          </div>
-          <div _className="col-sm-6 smallpad">
-            <button _type="button" _className="btn btn-primary btn-block" id="swaprows" onclick={transactions.swapRows}>
-              Swap Rows
-            </button>
-          </div>
+export const TableManager = createCustomElement("michi-table-manager", {
+  extends: {
+    tag: "div",
+    class: HTMLDivElement,
+  },
+  fakeRoot: false,
+  render() {
+    return (
+      <div _={{ className: "row" }}>
+        <div _={{ className: "col-sm-6 smallpad" }}>
+          <button
+            _={{
+              type: "button",
+              className: "btn btn-primary btn-block",
+              id: "run",
+              onclick: transactions.run,
+            }}
+          >
+            Create 1,000 rows
+          </button>
         </div>
-      );
-    }
-  }
-);
+        <div _={{ className: "col-sm-6 smallpad" }}>
+          <button
+            _={{
+              type: "button",
+              className: "btn btn-primary btn-block",
+              id: "runlots",
+              onclick: transactions.runLots,
+            }}
+          >
+            Create 10,000 rows
+          </button>
+        </div>
+        <div _={{ className: "col-sm-6 smallpad" }}>
+          <button
+            _={{
+              type: "button",
+              className: "btn btn-primary btn-block",
+              id: "add",
+              onclick: transactions.add,
+            }}
+          >
+            Append 1,000 rows
+          </button>
+        </div>
+        <div _={{ className: "col-sm-6 smallpad" }}>
+          <button
+            _={{
+              type: "button",
+              className: "btn btn-primary btn-block",
+              id: "update",
+              onclick: transactions.update,
+            }}
+          >
+            Update every 10th row
+          </button>
+        </div>
+        <div _={{ className: "col-sm-6 smallpad" }}>
+          <button
+            _={{
+              type: "button",
+              className: "btn btn-primary btn-block",
+              id: "clear",
+              onclick: transactions.clear,
+            }}
+          >
+            Clear
+          </button>
+        </div>
+        <div _={{ className: "col-sm-6 smallpad" }}>
+          <button
+            _={{
+              type: "button",
+              className: "btn btn-primary btn-block",
+              id: "swaprows",
+              onclick: transactions.swapRows,
+            }}
+          >
+            Swap Rows
+          </button>
+        </div>
+      </div>
+    );
+  },
+});

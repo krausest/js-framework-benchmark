@@ -11,12 +11,12 @@
     ]
   },
   "scripts": {
-    "build-dev": "esbuild src/main.tsx --bundle --outfile=dist/main.js --serve=8080 --servedir=.",
+    "dev": "esbuild src/main.tsx --bundle --outfile=dist/main.js --serve=8080 --servedir=.",
     "build-prod": "esbuild src/main.tsx --bundle --outfile=dist/main.js --minify"
   },
   "keywords": [
     "apprun",
-    "js benmarks"
+    "js benchmarks"
   ],
   "author": "Yiyi Sun <yiyisun@gmail.com",
   "license": "Apache-2.0",
@@ -26,9 +26,9 @@
     "url": "https://github.com/yysun/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "esbuild": "^0.8.54"
+    "esbuild": "^0.18.13"
   },
   "dependencies": {
-    "apprun": "^2.27.7"
+    "apprun": "^3.30.2"
   }
 }

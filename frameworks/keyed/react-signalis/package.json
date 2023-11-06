@@ -7,7 +7,7 @@
     "frameworkHomeURL": "https://github.com/cafreeman/signalis"
   },
   "scripts": {
-    "build-dev": "vite",
+    "dev": "vite",
     "build-prod": "vite build",
     "preview": "vite preview"
   },

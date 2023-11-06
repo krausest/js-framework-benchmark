@@ -1,1 +1,3 @@
-*.marko.js
+node_modules
+dist
+*.log

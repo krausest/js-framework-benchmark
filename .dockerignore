@@ -3,7 +3,7 @@
 .git/                 
 .gitignore            
 cleanup.js            
-configureStyles.js    
+configure-styles.js    
 copy.js               
 favicon.ico           
 frameworks/           

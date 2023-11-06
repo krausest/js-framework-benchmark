@@ -1,0 +1,26 @@
+[package]
+authors = ["Wojciech Niedźwiedź"]
+edition = "2021"
+name = "js-framework-benchmark-korvin"
+version = "1.0.0"
+
+[dependencies]
+wasm-bindgen = { version = "0.2", features = ["enable-interning"] }
+console_error_panic_hook = "0.1"
+getrandom = { version = "0.2.7", features = ["js"] }
+rand = { version = "0.8.5", features = ["small_rng"] }
+korvin = { version = "0.2.1" }
+web-sys = "0.3"
+futures = "0.3.28"
+futures-util = "0.3.28"
+wasm-bindgen-futures = "0.4.37"
+
+
+[profile.release]
+opt-level = "z"
+codegen-units = 1
+lto = true
+panic = "abort"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ['-O4']

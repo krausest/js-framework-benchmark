@@ -10,7 +10,7 @@
     ]
   },
   "scripts": {
-    "build-dev": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build-prod": "rollup -c --environment production"
   },
   "license": "Apache-2.0",
@@ -20,7 +20,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "alpinejs": "3.10.2"
+    "alpinejs": "3.12.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "13.0.0",

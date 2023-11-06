@@ -56,8 +56,12 @@ const store = createStore((state = initialState, action) => {
       return initialState;
     case 'SWAP_ROWS': {
       return state.updateIn(['data'], data => {
-        const tmp = data.get(1);
-        return data.set(1, data.get(998)).set(998, tmp);
+        if (data.size>998) {
+          const tmp = data.get(1);
+          return data.set(1, data.get(998)).set(998, tmp);
+        } else {
+          return data;
+        }
       });
     }
   }

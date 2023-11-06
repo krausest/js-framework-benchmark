@@ -51,9 +51,11 @@ const reducer = (state, action) => {
       return { data: [], selected: 0 };
     case "SWAP_ROWS": {
       const newData = data.slice();
-      const tmp = newData[1];
-      newData[1] = newData[998];
-      newData[998] = tmp;
+      if (data.length>998) {
+        const tmp = newData[1];
+        newData[1] = newData[998];
+        newData[998] = tmp;
+      }
       return { data: newData, selected };
     }
   }

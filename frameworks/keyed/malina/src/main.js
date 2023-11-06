@@ -1,3 +1,5 @@
+
+import {mountStatic} from 'malinajs';
 import App from './App.xht';
 
-document.querySelector('#main').appendChild(App().$dom);
+mountStatic(document.querySelector('#main'), App);

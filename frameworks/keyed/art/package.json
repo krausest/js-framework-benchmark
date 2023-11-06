@@ -16,6 +16,6 @@
     "vite": "2.7.2"
   },
   "dependencies": {
-    "js-art": "0.1.7"
+    "js-art": "^1.1.0"
   }
 }

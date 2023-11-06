@@ -7,7 +7,7 @@
     "frameworkHomeURL": "https://github.com/ryansolid/mobx-jsx"
   },
   "scripts": {
-    "build-dev": "rollup -c",
+    "dev": "rollup -c",
     "build-prod": "rollup -c --environment production"
   },
   "author": "Ryan Carniato",

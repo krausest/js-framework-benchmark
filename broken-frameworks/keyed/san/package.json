@@ -1,0 +1,34 @@
+{
+  "name": "js-framework-benchmark-san",
+  "version": "3.9.0",
+  "description": "Benchmark for san framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "san",
+    "frameworkHomeURL": "https://baidu.github.io/san/",
+    "issues": [800, 1139]
+  },
+  "scripts": {
+    "dev": "webpack --watch",
+    "build-prod": "webpack --mode production"
+  },
+  "keywords": [
+    "san"
+  ],
+  "author": "zhangsiyuan",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.21.0",
+    "@babel/preset-env": "7.20.2",
+    "babel-loader": "9.1.2",    
+    "webpack": "5.76.1",
+    "webpack-cli": "5.0.1"
+  },
+  "dependencies": {
+    "san": "^3.12.2"
+  }
+}

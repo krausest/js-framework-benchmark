@@ -16,10 +16,10 @@
   },
   "scripts": {
     "build-prod": "stencil build",
-    "build-dev": "stencil build --dev --watch"
+    "dev": "stencil build --dev --watch"
   },
   "dependencies": {
-    "@stencil/core": "^2.6.0"
+    "@stencil/core": "^4.4.1"
   },
   "license": "Apache-2.0"
 }

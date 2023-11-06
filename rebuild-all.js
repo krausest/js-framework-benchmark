@@ -1,10 +1,18 @@
-var _ = require('lodash');
-var exec = require('child_process').execSync;
-var fs = require('fs');
-var path = require('path');
-const rimraf = require('rimraf');
+import { execSync } from "node:child_process";
+import * as fs from "node:fs";
+import path from "node:path";
+import yargs from "yargs";
+import { takeWhile } from "./utils/common/index.js";
+import { getFrameworks } from "./utils/frameworks/index.js";
 
-let args = process.argv.length <= 2 ? [] : process.argv.slice(2, process.argv.length);
+const args = yargs(process.argv.slice(2))
+  .usage("$0 [--ci keyed/framework1 ... non-keyed/frameworkN]")
+  .help()
+  .boolean("ci")
+  .default("ci", false)
+  .default("restartWith", "")
+  .describe("ci", "Use npm ci or npm install?")
+  .argv;
 
 /*
 This script rebuilds all frameworks from scratch,
@@ -15,66 +23,118 @@ If building a framework fails you can resume building like
 npm run rebuild-frameworks --restartWith keyed/react
 */
 
-// Use npm ci or npm install ?
-let ci = args.includes("--ci");
-// Copy package-lock back for docker build or build locally?
-let docker = args.includes("--docker");
-let restartBuildingWith = args.find(a => !a.startsWith("--"));
+/**
+ * Use npm ci or npm install?
+ * @type {boolean}
+ */
+const useCi = args.ci;
 
+const restartWithFramework = args.restartWith;
 
-var restartWithFramework = restartBuildingWith || '';
-console.log("ARGS", "ci", ci, "docker", docker, "restartWith", restartWithFramework);
+console.log(
+  "ARGS",
+  args,
+  "ci",
+  useCi,
+  "restartWith",
+  restartWithFramework,
+);
 
-var frameworks = [].concat(
-  fs.readdirSync('./frameworks/keyed').map(f => ['keyed', f]),
-  fs.readdirSync('./frameworks/non-keyed').map(f => ['non-keyed', f]));
+const filesToDelete = [
+  "yarn-lock",
+  "dist",
+  "elm-stuff",
+  "bower_components",
+  "node_modules",
+  "output",
+].concat(useCi ? [] : ["package-lock.json"]);
 
-var notRestarter = ([dir, name]) => {
+/**
+ * @typedef {Object} Framework
+ * @property {string} name - Name of the framework (e.g., "vue", "qwik", "svelte")
+ * @property {string} type - Type of the framework (e.g., "keyed" or "non-keyed")
+ */
+
+/**
+ * @param {Framework}
+ * @returns {boolean}
+ */
+function shouldSkipFramework({ type, name }) {
   if (!restartWithFramework) return false;
-  if (restartWithFramework.indexOf("/")>-1) {
-    return !(dir+"/"+name).startsWith(restartWithFramework);
+  if (restartWithFramework.indexOf("/") > -1) {
+    return !`${type}/${name}`.startsWith(restartWithFramework);
   } else {
     return !name.startsWith(restartWithFramework);
   }
-};
-
-let skippable = _.takeWhile(frameworks, notRestarter);
-let buildable = _.slice(frameworks, skippable.length);
-
-console.log("Building ", buildable);
-
-
-for (f of buildable) {
-    console.log("BUILDING ", f);
-    let [keyed,name] = f;
-    let path = `frameworks/${keyed}/${name}`;
-    if (!fs.existsSync(path+"/package.json")) {
-      console.log("WARN: skipping ", f, " since there's no package.json");    
-    } else {
-      // if (fs.existsSync(path)) {
-      //     console.log("deleting folder ",path);
-      //     exec(`rm -r ${path}`);
-      // }
-      // rsync(keyed,name);
-      let rm_cmd = `rm -rf ${ci ? '' : 'package-lock.json'} yarn.lock dist elm-stuff bower_components node_modules output`
-      console.log(rm_cmd);
-      exec(rm_cmd, {
-        cwd: path,
-        stdio: 'inherit'
-      });
-
-      let install_cmd = `npm ${ci ? 'ci' : 'install'} && npm run build-prod`;
-      console.log(install_cmd);
-      exec(install_cmd, {
-        cwd: path,
-        stdio: 'inherit'
-      });
-
-      if (docker) {
-        let packageLockPath = path+"/package-lock.json";
-        fs.copyFileSync(packageLockPath, "/src/"+packageLockPath);
-      }
-    }
 }
 
-console.log("All frameworks were built!");
+/**
+ * Run a command synchronously in the specified directory and log command
+ * @param {string} command - The command to run
+ * @param {string} [cwd] - The current working directory (optional)
+ */
+function runCommand(command, cwd = undefined) {
+  console.log(command);
+  execSync(command, { stdio: "inherit", cwd });
+}
+
+/**
+ * Delete specified files in the framework directory
+ * @param {string} frameworkPath
+ * @param {string[]} filesToDelete
+ */
+function deleteFrameworkFiles(frameworkPath, filesToDelete) {
+  for (const file of filesToDelete) {
+    const filePath = path.join(frameworkPath, file);
+    fs.rmSync(filePath, { recursive: true, force: true });
+  }
+  console.log(`Deleted: ${filesToDelete}`);
+}
+
+/**
+ * Build single framework
+ * @param {Framework} framework
+ * @returns
+ */
+function buildFramework(framework) {
+  console.log("Building framework:", framework);
+
+  const { type, name } = framework;
+  const frameworkPath = path.join("frameworks", type, name);
+  const packageJSONPath = path.join(frameworkPath, "package.json");
+
+  if (!fs.existsSync(packageJSONPath)) {
+    console.log(`WARN: skipping ${framework} since there's no package.json`);
+    return;
+  }
+  // if (fs.existsSync(path)) {
+  //     console.log("deleting folder ",path);
+  //     execSync(`rm -r ${path}`);
+  // }
+  // rsync(keyed,name);
+
+  deleteFrameworkFiles(frameworkPath, filesToDelete);
+
+  const installCmd = `npm ${useCi ? "ci" : "install"}`;
+  runCommand(installCmd, frameworkPath);
+
+  const buildCmd = "npm run build-prod";
+  runCommand(buildCmd, frameworkPath);
+}
+
+function buildFrameworks() {
+  const frameworks = getFrameworks();
+
+  const skippableFrameworks = takeWhile(frameworks, shouldSkipFramework);
+  const buildableFrameworks = frameworks.slice(skippableFrameworks.length);
+
+  // console.log("Building frameworks:", buildableFrameworks);
+
+  for (const framework of buildableFrameworks) {
+    buildFramework(framework);
+  }
+
+  console.log("All frameworks were built!");
+}
+
+buildFrameworks();

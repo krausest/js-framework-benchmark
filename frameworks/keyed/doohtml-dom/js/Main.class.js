@@ -7,8 +7,8 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 const DEFAULT_SIZE = 1000
-const SWAP_ROW = 998
-const EMPTY = String('')
+const CHILD_1 = 1
+const CHILD_998 = 998
 Doo.define(
   	class Main extends Doo {
 		constructor() {
@@ -23,7 +23,7 @@ Doo.define(
 			this.runLots = this.runLots.bind(this)
 			this.update = this.update.bind(this)
 			this.clear = this.clear.bind(this)
-			this.swaprows = this.swapRows.bind(this)
+			this.swapRows = this.swapRows.bind(this)
 			this.addEventListeners()
 			this.selectedRow = undefined
 			document.querySelector(".ver").innerHTML += ` ${Doo.version} (keyed)`
@@ -51,19 +51,14 @@ Doo.define(
         }
 
 		buildData(count = DEFAULT_SIZE) {
-			const data = []
+			const data = new Array(count)
 			for (let i = 0; i < count; i++) {
-				data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
+				data[i] = {id: this.ID++,label: `${adjectives[_random(lenA)]} ${colours[_random(lenB)]}  ${nouns[_random(lenC)]}`}
 			}
 			return data	
 		}
 		getIndex(row) {
-			let idx =  this.data.rows.findIndex((item, i) => {
-				if (item.id === row.key) {
-					return i
-				}
-			}) 
-			return idx
+			return this.data.rows.findIndex((item, i) => item.id === row.key) 
 		}
 
 		delete(elem) {
@@ -71,7 +66,7 @@ Doo.define(
 			if (row) {
 				let idx = this.getIndex(row)
 				this.tbody.removeChild(row)
-				if (idx !== undefined) {
+				if (idx !== undefined && idx !== -1) {
 					this.data.rows.splice(idx,1)
 				}
 			}
@@ -126,37 +121,36 @@ Doo.define(
 		}
 
 		swapRows() {
-			if (this.data.rows.length > SWAP_ROW) {
-				let node1 = this.tbody.firstChild.nextSibling, 
-					swapRow = this.tbody.childNodes[SWAP_ROW],
+			if (this.data.rows.length > CHILD_998) {
+				let node1 = this.tbody.childNodes[CHILD_1], 
+					swapRow = this.tbody.childNodes[CHILD_998],
 					node999 = swapRow.nextSibling,
-					row1 = this.data.rows[1]
+					row1 = this.data.rows[CHILD_1]
 				
-				this.data.rows[1] = this.data.rows[SWAP_ROW];
-				this.data.rows[SWAP_ROW] = row1
-				
- 				this.tbody.insertBefore(node1.parentNode.replaceChild(swapRow, node1), node999)
+				this.data.rows[CHILD_1] = this.data.rows[CHILD_998];
+				this.data.rows[CHILD_998] = row1
+				this.tbody.insertBefore(node1.parentNode.replaceChild(swapRow, node1), node999)
 			}
 		}
 
 		addEventListeners() {
-			document.getElementById("main").addEventListener('click', e => {
-				e.preventDefault()
-				if (e.target.matches('#runlots')) {
-					this.runLots()
-				} else if (e.target.matches('#run')) {
-					this.run()
-				} else if (e.target.matches('#add')) {
-					this.add()
-				} else if (e.target.matches('#update')) {
-					this.update()
-				} else if (e.target.matches('#clear')) {
-					this.clear()
-				} else if (e.target.matches('#swaprows')) {
-					this.swapRows()
+			const actions = {
+				'run': this.run,
+				'runlots': this.runLots,
+				'add': this.add,
+				'update': this.update,
+				'clear': this.clear,
+				'swaprows': this.swapRows,
+				runAction: (e) => {
+					e.preventDefault()
+					if (actions[e.target.id]) {
+						actions[e.target.id]()
+					}	
 				}
-			})    
+			}	
+			document.getElementById("main").addEventListener('click', e => actions.runAction(e))    
     	}
+
 		async connectedCallback() {
 			super.connectedCallback()
 		}

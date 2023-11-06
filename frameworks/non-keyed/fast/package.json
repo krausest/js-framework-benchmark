@@ -1,0 +1,33 @@
+{
+  "name": "js-framework-benchmark-fast",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Fast Framework Benchmark",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@microsoft/fast-element",
+    "frameworkHomeURL": "https://www.fast.design/"
+  },
+  "scripts": {
+    "build-prod": "rimraf dist && webpack --config webpack.config.js --mode=production",
+    "dev": "rimraf dist && webpack --config webpack.config.js --watch --mode=development"
+  },
+  "author": "Dan Svorcan",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/dsvorc41/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dsvorc41/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@microsoft/fast-element": "2.0.0-beta.26",
+    "tslib": "2.6.2"
+  },
+  "devDependencies": {
+    "rimraf": "5.0.1",
+    "ts-loader": "9.4.4",
+    "typescript": "5.2.2",
+    "webpack": "5.88.2",
+    "webpack-cli": "5.1.4"
+  }
+}

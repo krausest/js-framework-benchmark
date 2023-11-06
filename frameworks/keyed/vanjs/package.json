@@ -1,0 +1,43 @@
+{
+  "name": "js-framework-benchmark-vanjs",
+  "version": "0.1.0",
+  "description": "VanJS demo",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "vanjs-core",
+    "issues": [
+      772
+    ]
+  },
+  "scripts": {
+    "dev": "bash bundle.sh && cp dist/bundle.js dist/bundle.out.js",
+    "build-prod": "bash bundle.sh && bash minify.sh"
+  },
+  "keywords": [
+    "Van",
+    "Vanilla",
+    "UI",
+    "UI Framework",
+    "React",
+    "Reactive",
+    "DOM",
+    "DOM Manipulation",
+    "Zero-Dependency",
+    "lightweight",
+    "Ultra-lightweight",
+    "Minimalist"
+  ],
+  "author": "Tao Xin",
+  "license": "MIT",
+  "homepage": "https://vanjs.org/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vanjs-org/van.git"
+  },
+  "dependencies": {
+    "vanjs-core": "1.1.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.2",
+    "terser": "^5.19.2"
+  }
+}

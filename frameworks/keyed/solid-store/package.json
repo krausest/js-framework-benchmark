@@ -7,7 +7,7 @@
     "frameworkHomeURL": "https://www.solidjs.com/"
   },
   "scripts": {
-    "build-dev": "rollup -c -w",
+    "dev": "rollup -c -w",
     "build-prod": "rollup -c --environment production"
   },
   "author": "Ryan Carniato",

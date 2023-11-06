@@ -1,0 +1,29 @@
+{
+  "author": "Ahmed Elzeiny",
+  "license": "Apache-2.0",
+  "name": "js-framework-benchmark-incremental-dom",
+  "version": "1.0.0",
+  "description": "Benchmark for Google's incremental-dom framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "incremental-dom",
+    "frameworkHomeURL": "http://google.github.io/incremental-dom/"
+  },
+  "scripts": {
+    "dev": "esbuild src/main.ts --bundle --outfile=dist/main.js --watch",
+    "build-prod": "esbuild src/main.ts --bundle --minify --outfile=dist/main.js"
+  },
+  "keywords": [
+    "ractive"
+  ],
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "incremental-dom": "0.7.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.15"
+  }
+}

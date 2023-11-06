@@ -1,91 +1,100 @@
+import ko from "knockout";
 
-import ko from 'knockout';
+const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
-var HomeViewModel = function () {
-    var self = this;
-    self.id = 1;
+class HomeViewModel {
+  constructor() {
+    this.id = 1;
+    this.selected = ko.observable(null);
+    this.data = ko.observableArray();
+  }
 
-    function _random(max) {
-        return Math.round(Math.random() * 1000) % max;
+  #random(max) {
+    return Math.round(Math.random() * 1000) % max;
+  }
+
+  buildData(count) {
+    const data = [];
+    for (let i = 0; i < count; i++) {
+      data.push(
+        new ItemViewModel(
+          {
+            id: this.id++,
+            label: adjectives[this.#random(adjectives.length)] + " " + colours[this.#random(colours.length)] + " " + nouns[this.#random(nouns.length)],
+          },
+          this,
+        ),
+      );
     }
+    return data;
+  }
 
-    function buildData(count) {
-        var adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-        var colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-        var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-        var data = [];
-        for (var i = 0; i < count; i++) {
-            data.push(new ItemViewModel({
-                id: self.id++,
-                label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)]
-            }, self));
-        }
-        return data;
+  run() {
+    this.data(this.buildData(1000));
+    this.selected(null);
+  }
+
+  runLots() {
+    this.data(this.buildData(10000));
+    this.selected(null);
+  }
+
+  add() {
+    this.data.push.apply(this.data, this.buildData(1000));
+  }
+
+  update() {
+    const tmp = this.data();
+    for (let i = 0; i < tmp.length; i += 10) {
+      tmp[i].label(tmp[i].label() + " !!!");
     }
+  }
 
-    self.selected = ko.observable(null);
-    self.data = ko.observableArray();
+  clear() {
+    this.data.removeAll();
+    this.selected(null);
+  }
 
-    self.run = function () {
-        self.data(buildData(1000));
-        self.selected(null);
-    };
+  swapRows() {
+    const tmp = this.data();
+    if (tmp.length > 998) {
+      const a = tmp[1];
+      tmp[1] = tmp[998];
+      tmp[998] = a;
+      this.data(tmp);
+    }
+  }
 
-    self.runLots = function () {
-        self.data(buildData(10000));
-        self.selected(null);
-    };
+  select(id) {
+    this.selected(id);
+  }
 
-    self.add = function () {
-        self.data.push.apply(self.data, buildData(1000));
-    };
+  del(item) {
+    const tmp = this.data();
+    const idx = tmp.findIndex((d) => d.id === item.id);
+    this.data.splice(idx, 1);
+  }
+}
 
-    self.update = function () {
-        var tmp = self.data();
-        for (let i = 0; i < tmp.length; i += 10) {
-            tmp[i].label(tmp[i].label() + ' !!!');
-        }
-    };
+class ItemViewModel {
+  constructor(data, parent) {
+    this.id = ko.observable(data.id);
+    this.label = ko.observable(data.label);
+    this.parent = parent;
+  }
 
-    self.clear = function () {
-        self.data.removeAll();
-        self.selected(null);
-    };
+  del() {
+    this.parent.del(this);
+  }
 
-    self.swapRows = function () {
-        var tmp = self.data();
-        if (tmp.length > 998) {
-            var a = tmp[1];
-            tmp[1] = tmp[998];
-            tmp[998] = a;
-            self.data(tmp);
-        }
-    };
+  select() {
+    this.parent.select(this.id());
+  }
+}
 
-    self.select = function (id) {
-        self.selected(id);
-    };
+const main = document.getElementById("main");
+const homeView = new HomeViewModel();
 
-    self.del = function (item) {
-        var tmp = self.data();
-        const idx = tmp.findIndex(d => d.id === item.id);
-        self.data.splice(idx, 1);
-    };
-};
-
-var ItemViewModel = function (data, parent) {
-    var self = this;
-
-    self.id = ko.observable(data.id);
-    self.label = ko.observable(data.label);
-
-    self.del = function () {
-        parent.del(self);
-    };
-
-    self.select = function () {
-        parent.select(self.id());
-    };
-};
-
-ko.applyBindings(new HomeViewModel(), document.getElementById('main'));
+ko.applyBindings(homeView, main);

@@ -11,7 +11,7 @@
     ]
   },
   "scripts": {
-    "build-dev": "echo 0",
+    "dev": "echo 0",
     "build-prod": "echo 0"
   },
   "keywords": [

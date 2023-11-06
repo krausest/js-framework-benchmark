@@ -1,0 +1,31 @@
+export function __e0_f543312a9dbfd6ab(a,b,c,d,e,f,g) {
+let e0=document.createElement("div");
+e0.className="container";
+let e1=document.createElement("div");
+e1.className="jumbotron";
+let e2=document.createElement("div");
+e2.className="row";
+let e3=document.createElement("div");
+e3.className="col-md-6";
+let e4=document.createElement("h1");
+e4.append("Kobold");
+e3.append(e4);
+let e5=document.createElement("div");
+e5.className="col-md-6";
+let e6=document.createElement("div");
+e6.className="row";
+e6.append(a,b,c,d,e,f);
+e5.append(e6);
+e2.append(e3,e5);
+e1.append(e2);
+let e7=document.createElement("table");
+e7.className="table table-hover table-striped test-data";
+let e8=document.createElement("tbody");
+e8.append(g);
+e7.append(e8);
+let e9=document.createElement("span");
+e9.className="preloadicon glyphicon glyphicon-remove";
+e9.setAttribute("aria-hidden","true");
+e0.append(e1,e7,e9);
+return e0;
+}

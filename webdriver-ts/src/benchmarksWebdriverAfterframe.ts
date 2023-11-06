@@ -1,26 +1,33 @@
-import { By, WebDriver, WebElement } from "selenium-webdriver";
-import * as benchmarksCommon from "./benchmarksCommon.js";
-import { BenchmarkType } from "./benchmarksCommon.js";
+import { WebDriver, WebElement } from "selenium-webdriver";
+import {
+  BenchmarkType,
+  Benchmark,
+  cpuBenchmarkInfos,
+  CPUBenchmarkInfo,
+} from "./benchmarksCommon.js";
 import { config, FrameworkData } from "./common.js";
 import {
   clickElementById,
   clickElementByXPath,
+  findById,
   findByXPath,
-  getTextByXPath, mainRoot, retry, testClassContains, testElementLocatedById, testElementLocatedByXpath,
-  testElementNotLocatedByXPath, testTextContains
+  getTextByXPath,
+  testClassContains,
+  testElementLocatedById,
+  testElementLocatedByXpath,
+  testElementNotLocatedByXPath,
+  testTextContains,
 } from "./webdriverAccess.js";
 
-
 const SHORT_TIMEOUT = 20 * 1000;
-
 
 let durations: Array<number> = [];
 
 export function getAfterframeDurations() {
-  return durations;
+  return durations.map((d) => ({ total: d, script: 0 }));
 }
 
-export async  function initMeasurement(driver: WebDriver) {
+export async function initMeasurement(driver: WebDriver) {
   // From https://github.com/andrewiggins/afterframe, MIT licensed
   const afterFrame = `
   /**
@@ -73,7 +80,8 @@ export async  function initMeasurement(driver: WebDriver) {
 
 async function measureClickForElement(driver: WebDriver, elem: WebElement) {
   if (!elem) throw `measureClickForElement failed. Element was not found.`;
-  let duration = await driver.executeAsyncScript(`
+  let duration = (await driver.executeAsyncScript(
+    `
       let callback = arguments[arguments.length - 1];
       let elem = arguments[0];
       let base = document;
@@ -86,36 +94,40 @@ async function measureClickForElement(driver: WebDriver, elem: WebElement) {
         window.lastDuration = t;
         callback(t);
       })
-    `, elem) as number;
+    `,
+    elem
+  )) as number;
   durations.push(duration);
-  console.log("computed duration ", duration);
+  console.log("computed duration", duration);
 }
 
 async function measureClickElementById(driver: WebDriver, id: string, isInButtonArea: boolean) {
-  let elem = await mainRoot(driver, isInButtonArea);
-  elem = await elem.findElement(By.id(id));
-  measureClickForElement(driver, elem);
+  let elem = await findById(driver, id, isInButtonArea);
+  console.log("measureClickElementById:", elem);
+  await measureClickForElement(driver, elem);
 }
 
-async function measureClickElementByXPath(driver: WebDriver, xpath: string, isInButtonArea: boolean) {
+async function measureClickElementByXPath(
+  driver: WebDriver,
+  xpath: string,
+  isInButtonArea: boolean
+) {
   let elem = await findByXPath(driver, xpath, isInButtonArea);
   if (!elem) throw `measureClickElementById ${xpath} failed. Element was not found.`;
-  measureClickForElement(driver, elem);
+  await measureClickForElement(driver, elem);
 }
-
 
 export abstract class CPUBenchmarkWebdriver {
   type = BenchmarkType.CPU;
-  constructor(public benchmarkInfo: benchmarksCommon.CPUBenchmarkInfo) {
-  }
+  constructor(public benchmarkInfo: CPUBenchmarkInfo) {}
   abstract init(driver: WebDriver, framework: FrameworkData): Promise<any>;
   abstract run(driver: WebDriver, framework: FrameworkData): Promise<any>;
 }
 
 export const benchRun = new (class extends CPUBenchmarkWebdriver {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_01]);
-  } 
+    super(cpuBenchmarkInfos[Benchmark._01]);
+  }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     for (let i = 0; i < config.WARMUP_COUNT; i++) {
@@ -133,7 +145,7 @@ export const benchRun = new (class extends CPUBenchmarkWebdriver {
 
 export const benchReplaceAll = new (class extends CPUBenchmarkWebdriver {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_02]);
+    super(cpuBenchmarkInfos[Benchmark._02]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -150,7 +162,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkWebdriver {
 
 export const benchUpdate = new (class extends CPUBenchmarkWebdriver {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_03]);
+    super(cpuBenchmarkInfos[Benchmark._03]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -169,7 +181,7 @@ export const benchUpdate = new (class extends CPUBenchmarkWebdriver {
 
 export const benchSelect = new (class extends CPUBenchmarkWebdriver {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_04]);
+    super(cpuBenchmarkInfos[Benchmark._04]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -184,7 +196,7 @@ export const benchSelect = new (class extends CPUBenchmarkWebdriver {
 
 export const benchSwapRows = new (class extends CPUBenchmarkWebdriver {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_05]);
+    super(cpuBenchmarkInfos[Benchmark._05]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -205,7 +217,7 @@ export const benchSwapRows = new (class extends CPUBenchmarkWebdriver {
 
 export const benchRemove = new (class extends CPUBenchmarkWebdriver {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_06]);
+    super(cpuBenchmarkInfos[Benchmark._06]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -238,7 +250,7 @@ export const benchRemove = new (class extends CPUBenchmarkWebdriver {
 
 export const benchRunBig = new (class extends CPUBenchmarkWebdriver {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_07]);
+    super(cpuBenchmarkInfos[Benchmark._07]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -257,7 +269,7 @@ export const benchRunBig = new (class extends CPUBenchmarkWebdriver {
 
 export const benchAppendToManyRows = new (class extends CPUBenchmarkWebdriver {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_08]);
+    super(cpuBenchmarkInfos[Benchmark._08]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
@@ -272,7 +284,7 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkWebdriver {
 
 export const benchClear = new (class extends CPUBenchmarkWebdriver {
   constructor() {
-    super(benchmarksCommon.cpuBenchmarkInfos[benchmarksCommon.BENCHMARK_09]);
+    super(cpuBenchmarkInfos[Benchmark._09]);
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);

@@ -57,20 +57,18 @@ const nouns = [
 ]
 
 let id = 1
+const adjectivesLength = adjectives.length
+const colorsLength = colors.length
+const nounsLength = nouns.length
 
 const random = (max) => Math.round(Math.random() * 1000) % max
 
-export const buildData = (count) => {
-  let data = []
+export const buildData = (count = 1000) => {
+  let data = new Array(count)
   for (let i = 0; i < count; i++)
-    data.push({
+    data[i] = {
       id: id++,
-      label:
-        adjectives[random(adjectives.length)] +
-        " " +
-        colors[random(colors.length)] +
-        " " +
-        nouns[random(nouns.length)],
-    })
+      label: `${adjectives[random(adjectivesLength)]} ${colors[random(colorsLength)]} ${nouns[random(nounsLength)]}`
+    }
   return data
 }

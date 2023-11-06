@@ -1,35 +1,23 @@
-'use strict';
+import { observer } from 'mobx-react-lite';
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var {observer} = require("mobx-react");
-var {observable, computed} = require ("mobx");
+const _Row = ({ data, isSelected, onDelete, onSelect }) => {
+  return (
+    <tr className={isSelected ? 'danger' : ''}>
+      <td className="col-md-1">{data.id}</td>
+      <td className="col-md-4">
+        <a onClick={() => onSelect(data.id)}>{data.label}</a>
+      </td>
+      <td className="col-md-1">
+        <a onClick={() => onDelete(data.id)}>
+          <span
+            className="glyphicon glyphicon-remove"
+            aria-hidden="true"
+          ></span>
+        </a>
+      </td>
+      <td className="col-md-6"></td>
+    </tr>
+  );
+};
 
-@observer
-export class Row extends React.Component {
-	constructor(props) {
-		super(props);
-		this.onDelete = this.onDelete.bind(this);
-		this.onClick = this.onClick.bind(this);
-	}
-
-	onDelete() {
-		this.props.onDelete(this.props.data);
-	}
-	onClick() {
-		this.props.onClick(this.props.data);
-	}
-
-	render() {
-		let {onClick, onDelete, data} = this.props;
-		return (<tr className={data.isSelected ? 'danger' : ''}>
-			<td className="col-md-1">{data.id}</td>
-			<td className="col-md-4">
-				<a onClick={this.onClick}>{data.label}</a>
-			</td>
-			<td className="col-md-1"><a onClick={this.onDelete}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-			<td className="col-md-6"></td>
-		</tr>);
-	}
-}
-
+export const Row = observer(_Row);

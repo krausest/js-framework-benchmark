@@ -1,47 +1,72 @@
-import * as fs from "fs";
-import { result } from "lodash";
-import { BenchmarkInfo, BenchmarkType, fileName } from "./benchmarksCommon.js";
-import { BenchmarkLighthouse, StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse.js";
-import { TBenchmarkPuppeteer } from "./benchmarksPuppeteer.js";
-import { CPUBenchmarkWebdriver } from "./benchmarksWebdriver.js";
-import { config as defaultConfig, FrameworkData, JSONResult } from "./common.js";
-import pkg from 'jstat';
-const { jStat } = pkg;
+import * as fs from "node:fs";
+import { BenchmarkInfo, BenchmarkType, CPUBenchmarkResult, fileName } from "./benchmarksCommon.js";
+import * as benchmarksLighthouse from "./benchmarksLighthouse.js";
+import * as benchmarksSize from "./benchmarksSize.js";
+import { FrameworkData, JsonResult, JsonResultData } from "./common.js";
+import { stats } from "./stats.js";
 
 export type ResultLightHouse = {
   framework: FrameworkData;
   benchmark: BenchmarkInfo;
-  results: StartupBenchmarkResult[];
-  type: BenchmarkType.STARTUP; 
-}
+  results: benchmarksLighthouse.StartupBenchmarkResult[];
+  type: BenchmarkType.STARTUP;
+};
 
-export type ResultCPUOrMem = {
+export type ResultCPU = {
+  framework: FrameworkData;
+  benchmark: BenchmarkInfo;
+  results: CPUBenchmarkResult[];
+  type: BenchmarkType.CPU;
+};
+
+export type ResultMem = {
   framework: FrameworkData;
   benchmark: BenchmarkInfo;
   results: number[];
-  type: BenchmarkType.MEM | BenchmarkType.CPU; 
-}
+  type: BenchmarkType.MEM;
+};
 
-export function writeResults(config: typeof defaultConfig, res: ResultLightHouse|ResultCPUOrMem) {
-  if (!config.WRITE_RESULTS) return;
+export type ResultSize = {
+  framework: FrameworkData;
+  benchmark: BenchmarkInfo;
+  results: benchmarksSize.SizeBenchmarkResult[];
+  type: BenchmarkType.SIZE;
+};
 
-  if (res.type==BenchmarkType.STARTUP) {
-    for (let subbench of subbenchmarks) {
-      let results = res.results.filter(r => r.benchmark.id == subbench.id).map(r => r.result);
-      createResultFile(config, results, res.framework, subbench);
-    }
-  } else {
-    createResultFile(config, (res.results as any) as number[], res.framework, res.benchmark);
+export function writeResults(resultDir: string, res: ResultLightHouse | ResultCPU | ResultMem | ResultSize) {
+  switch (res.type) {
+    case BenchmarkType.STARTUP:
+      for (let subbench of benchmarksLighthouse.subbenchmarks) {
+        let results = res.results.filter((r) => r.benchmark.id == subbench.id).map((r) => r.result);
+        createResultFile(resultDir, results, res.framework, subbench);
+      }
+      break;
+    case BenchmarkType.SIZE:
+      for (let subbench of benchmarksSize.subbenchmarks) {
+        let results = res.results.filter((r) => r.benchmark.id == subbench.id).map((r) => r.result);
+        createResultFile(resultDir, results, res.framework, subbench);
+      }
+      break;
+    case BenchmarkType.CPU:
+      createResultFile(
+        resultDir,
+        { total: res.results.map((r) => r.total), script: res.results.map((r) => r.script) },
+        res.framework,
+        res.benchmark
+      );
+      break;
+    case BenchmarkType.MEM:
+      createResultFile(resultDir, res.results as any as number[], res.framework, res.benchmark);
+      break;
   }
 }
 
-function createResultFile(config: typeof defaultConfig, data: number[], framework: FrameworkData, benchmark: BenchmarkInfo) {
-  let s = jStat(data);
-  console.log(
-    `result ${fileName(framework, benchmark)} min ${s.min()} max ${s.max()} mean ${s.mean()} median ${s.median()} stddev ${s.stdev(
-      true
-    )}`
-  );
+function createResultFile(
+  resultDir: string,
+  data: number[] | { [key: string]: number[] },
+  framework: FrameworkData,
+  benchmark: BenchmarkInfo
+) {
   let type = "";
   switch (benchmark.type) {
     case BenchmarkType.CPU:
@@ -53,19 +78,40 @@ function createResultFile(config: typeof defaultConfig, data: number[], framewor
     case BenchmarkType.STARTUP:
       type = "startup";
       break;
+    case BenchmarkType.SIZE:
+      type = "size";
+      break;
   }
-  let result: JSONResult = {
-    framework: framework.fullNameWithKeyedAndVersion,
-    keyed: framework.keyed,
-    benchmark: benchmark.id,
-    type: type,
-    min: s.min(),
-    max: s.max(),
-    mean: s.mean(),
-    median: s.median(),
-    geometricMean: s.geomean(),
-    standardDeviation: s.stdev(true),
-    values: data,
+  let convertResult = (label: string, data: number[]) => {
+    let res = stats(data);
+    console.log(`result ${fileName(framework, benchmark)} ${label} ${JSON.stringify(res)}`);
+    return res;
   };
-  fs.writeFileSync(`${config.RESULTS_DIRECTORY}/${fileName(framework, benchmark)}`, JSON.stringify(result), { encoding: "utf8" });
+  if (Array.isArray(data)) {
+    let result: JsonResult = {
+      framework: framework.fullNameWithKeyedAndVersion,
+      keyed: framework.keyed,
+      benchmark: benchmark.id,
+      type: type,
+      values: { DEFAULT: convertResult("", data as number[]) },
+    };
+    fs.writeFileSync(`${resultDir}/${fileName(framework, benchmark)}`, JSON.stringify(result), {
+      encoding: "utf8",
+    });
+  } else {
+    let values: { [k: string]: JsonResultData } = {};
+    for (let key of Object.keys(data)) {
+      values[key] = convertResult(key, data[key]);
+    }
+    let result: JsonResult = {
+      framework: framework.fullNameWithKeyedAndVersion,
+      keyed: framework.keyed,
+      benchmark: benchmark.id,
+      type: type,
+      values,
+    };
+    fs.writeFileSync(`${resultDir}/${fileName(framework, benchmark)}`, JSON.stringify(result), {
+      encoding: "utf8",
+    });
+  }
 }

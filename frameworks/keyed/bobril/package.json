@@ -8,8 +8,8 @@
     "frameworkHomeURL": "https://bobril.com/"
   },
   "scripts": {
-    "build-dev": "bb",
-    "build-prod": "bb b -v dist"
+    "dev": "bb",
+    "build-prod": "bb b --verbose"
   },
   "keywords": [
     "bobril",
@@ -26,6 +26,6 @@
     "bobril-build": "*"
   },
   "dependencies": {
-    "bobril": "20.4.1"
+    "bobril": "20.6.0"
   }
 }

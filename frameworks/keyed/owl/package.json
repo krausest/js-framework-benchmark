@@ -1,0 +1,31 @@
+{
+  "name": "js-framework-benchmark-owl-next",
+  "version": "0.0.1",
+  "description": "Benchmark for owl framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@odoo/owl",
+    "frameworkHomeURL": "https://odoo.github.io/owl/"
+  },
+  "scripts": {
+    "dev": "webpack --mode development --watch",
+    "build-prod": "webpack --mode production"
+  },
+  "keywords": [
+    "owl"
+  ],
+  "author": "Odoo",
+  "license": "LGPLv3",
+  "homepage": "https://github.com/odoo/owl",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/odoo/owl.git"
+  },
+  "devDependencies": {
+    "webpack": "5.88.1",
+    "webpack-cli": "5.1.4"
+  },
+  "dependencies": {
+    "@odoo/owl": "^2.2.6",
+    "babel-loader": "^9.1.3"
+  }
+}
