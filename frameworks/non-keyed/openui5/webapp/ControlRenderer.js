@@ -9,7 +9,6 @@ sap.ui.define([], function () {
     };
 
     ControlRenderer.render = function (oRM, oControl) {
-        console.debug(`[${oControl.getMetadata().getName()}] > rendering`)
         oRM.openStart("div", oControl)
         oRM.openEnd()
         
@@ -158,20 +157,6 @@ sap.ui.define([], function () {
             oRM.close("tbody");
 
         oRM.close("table");
-
-            // <tr id={{this.id}} class={{this._class}}>
-            //     <td class="col-md-1">{{this.id}}</td>
-            //     <td class="col-md-4">
-            //         <a data-action="select" data-id={{this.id}}>{{this.label}}</a>
-            //     </td>
-            //     <td class="col-md-1">
-            //     <a>
-            //         <span class="glyphicon glyphicon-remove" aria-hidden="true"
-            //             data-action="remove" data-id={{this.id}}></span>
-            //     </a>
-            //     </td>
-            //     <td class="col-md-6"></td>
-            // </tr>
     }
 
     return ControlRenderer;
