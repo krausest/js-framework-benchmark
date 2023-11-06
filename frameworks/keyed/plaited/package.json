@@ -5,7 +5,7 @@
   },
   "type": "module",
   "dependencies": {
-    "plaited": "5.0.1"
+    "plaited": "5.0.3"
   },
   "devDependencies": {
     "esbuild": "0.19.5"
