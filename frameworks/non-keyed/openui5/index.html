@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8">
-	<title>UI5 Benchmark</title>
-	<script
-		id="sap-ui-bootstrap"
-		src="./dist/resources/sap-ui-core.js"
-		data-sap-ui-libs="sap.m"
-		data-sap-ui-compatVersion="edge"
-		data-sap-ui-async="true"
-		data-sap-ui-onInit="module:sap/ui/core/ComponentSupport"
-		data-sap-ui-resourceroots='{
-			"ui5.benchmark": "./dist/"
-		}'>
 
+<head>
+  <meta charset="utf-8" />
+  <title>OpenUI5</title>
+  <script id="sap-ui-bootstrap"
+			src="./dist/resources/sap-ui-boot.js"
+			data-sap-ui-language="en"
+			data-sap-ui-compat-version="edge"
+			data-sap-ui-modules="[ui5/benchmark/Component-bundle]"
+			data-sap-ui-on-init="ui5/benchmark/startUp@./dist/"
+      data-sap-ui-preload-lib-css="sap.ui.core"
+			data-sap-ui-async="true" async>
 	</script>
-	<link href="/css/currentStyle.css" rel="stylesheet" />
+  <style>
+    .danger {
+      background-color: red;
+    }
+  </style>
 </head>
+
 <body class="container" id="content">
-	<div data-sap-ui-component data-name="ui5.benchmark" data-id="container" data-settings='{"id" : "benchmark"}'></div>
+  <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
 </body>
+<link href="/css/currentStyle.css" rel="stylesheet"/>
+
 </html>
