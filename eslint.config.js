@@ -71,9 +71,7 @@ export default [
       "unicorn/prefer-optional-catch-binding": "off",
       "unicorn/prefer-logical-operator-over-ternary": "off",
 
-      "no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
       "require-await": "error",
       "@typescript-eslint/no-floating-promises": "error",
     },

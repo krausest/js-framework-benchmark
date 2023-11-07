@@ -6,7 +6,6 @@ export interface SizeBenchmarkResult {
   result: number;
 }
 
-let id = (x: number) => x;
 let toKb = (x: number) => x / 1024;
 
 export const benchUncompressedSize: benchmarksCommon.SizeBenchmarkInfo = {

@@ -135,7 +135,6 @@ async function runBenchmakLoopSize(
   let count = benchmarkOptions.numIterationsForSizeBenchmark;
   benchmarkOptions.batchSize = 1;
 
-  let retries = 0;
   let done = 0;
 
   console.log("runBenchmakLoopSize", framework, benchmarkInfo);

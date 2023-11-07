@@ -1,13 +1,10 @@
 import { Browser, Page } from "puppeteer-core";
-import { CPUBenchmarkResult, SizeInfoJSON, sizeBenchmarkInfos, slowDownFactor } from "./benchmarksCommon.js";
-import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
-import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./puppeteerAccess.js";
-import { fileNameTrace } from "./timeline.js";
+import { SizeInfoJSON } from "./benchmarksCommon.js";
 import { BenchmarkSize, SizeBenchmarkResult, benchmarks } from "./benchmarksSize.js";
+import { BenchmarkOptions, Config, ErrorAndWarning, FrameworkData, config as defaultConfig } from "./common.js";
+import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./puppeteerAccess.js";
 
 let config: Config = defaultConfig;
-
-const wait = (delay = 1000) => new Promise((res) => setTimeout(res, delay));
 
 function convertError(error: any): string {
   console.log(
