@@ -22,7 +22,7 @@ const SizeResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
       <thead>
         <tr>
           <td className="description">
-            <h3>Transferred Size (in kBs)</h3>
+            <h3>Transferred Size (in kBs) [Experimental, please post <a href="https://github.com/krausest/js-framework-benchmark/issues/1340#issuecomment-1793802128">feedback</a>]</h3>
           </td>
         </tr>
       </thead>
