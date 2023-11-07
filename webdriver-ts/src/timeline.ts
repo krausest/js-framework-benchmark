@@ -1,5 +1,5 @@
-import { readFile } from "fs/promises";
-import * as fs from "fs";
+import { readFile } from "node:fs/promises";
+import * as fs from "node:fs";
 import * as R from "ramda";
 import { BenchmarkType, CPUBenchmarkInfo, CPUBenchmarkResult } from "./benchmarksCommon.js";
 import { BenchmarkOptions, FrameworkData, Config, config } from "./common.js";
@@ -153,7 +153,7 @@ export async function computeResultsCPU(
     // Find mousedown event. This is the start of the benchmark
     let mousedowns = R.filter(type_eq("mousedown"))(events);
     // Invariant: There must be exactly one click event
-    if (mousedowns.length == 0) {
+    if (mousedowns.length === 0) {
       console.log("no mousedown event", fileName);
     } else if (mousedowns.length == 1) {
       console.log("one mousedown event", fileName);
@@ -208,7 +208,7 @@ export async function computeResultsCPU(
 
   let startFrom = R.filter(type_eq("click", "fireAnimationFrame", "timerFire", "layout", "functioncall"))(eventsOnMainThreadDuringBenchmark);
   // we're looking for the commit after this event
-  let startFromEvent = startFrom[startFrom.length - 1];
+  let startFromEvent = startFrom.at(-1);
   if (config.LOG_DETAILS) console.log("DEBUG: searching for commit event after", startFromEvent, "for", fileName);
   let commit = R.find((e: TimingResult) => e.ts > startFromEvent.end)(R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark));
   let allCommitsAfterClick = R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark);
@@ -216,14 +216,14 @@ export async function computeResultsCPU(
   let numberCommits = allCommitsAfterClick.length;
   if (!commit) {
     console.log("INFO: No commit event found according to filter", fileName);
-    if (allCommitsAfterClick.length == 0) {
+    if (allCommitsAfterClick.length === 0) {
       console.log("ERROR: No commit event found for", fileName);
       throw "No commit event found for " + fileName;
     } else {
-      commit = allCommitsAfterClick[allCommitsAfterClick.length - 1];
+      commit = allCommitsAfterClick.at(-1);
     }
   } 
-  let maxDeltaBetweenCommits = (allCommitsAfterClick[allCommitsAfterClick.length-1].ts - allCommitsAfterClick[0].ts)/1000.0;
+  let maxDeltaBetweenCommits = (allCommitsAfterClick.at(-1).ts - allCommitsAfterClick[0].ts)/1000.0;
 
   let duration = (commit.end - clicks[0].ts) / 1000.0;
   if (config.LOG_DEBUG) console.log("duration", duration);
@@ -419,9 +419,7 @@ export async function parseCPUTrace(
   let results: CPUBenchmarkResult[] = [];
   for (let i = 0; i < benchmarkOptions.numIterationsForCPUBenchmarks; i++) {
     let trace = `${fileNameTrace(framework, benchmarkInfo, i, benchmarkOptions)}`;
-    if (!fs.existsSync(trace)) {
-      throw new Error(`Trace file ${trace} does not exist`);
-    } else {
+    if (fs.existsSync(trace)) {
       console.log("analyzing trace", trace);
       try {
         let result = await computeResultsCPU(trace);
@@ -432,6 +430,8 @@ export async function parseCPUTrace(
       } catch (error) {
         console.log(error);
       }
+    } else {
+      throw new Error(`Trace file ${trace} does not exist`);
     }
   }
   

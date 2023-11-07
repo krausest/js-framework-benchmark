@@ -32,6 +32,7 @@ let benchmarkOptions: BenchmarkOptions = {
     config.NUM_ITERATIONS_FOR_BENCHMARK_CPU + config.NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT,
   numIterationsForMemBenchmarks: config.NUM_ITERATIONS_FOR_BENCHMARK_MEM,
   numIterationsForStartupBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_STARTUP,
+  numIterationsForSizeBenchmark: config.NUM_ITERATIONS_FOR_BENCHMARK_SIZE,
   batchSize: 1,
   resultsDirectory: "results",
   tracesDirectory: "traces",
@@ -39,7 +40,7 @@ let benchmarkOptions: BenchmarkOptions = {
 };
 
 let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
-let frameworkArgument = !args.framework ? allArgs : args.framework;
+let frameworkArgument = args.framework ? args.framework : allArgs;
 console.log("args", args, "allArgs", allArgs);
 
 let init = (shadowRootName: string) => `
@@ -253,7 +254,7 @@ async function runBench(
 ) {
   let runFrameworks;
   let matchesDirectoryArg = (directoryName: string) =>
-    frameworkArgument.length == 0 || frameworkArgument.some((arg: string) => arg == directoryName);
+    frameworkArgument.length === 0 || frameworkArgument.some((arg: string) => arg == directoryName);
   runFrameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
   console.log("Frameworks that will be checked", runFrameworks.map((f) => f.fullNameWithKeyedAndVersion).join(" "));
 

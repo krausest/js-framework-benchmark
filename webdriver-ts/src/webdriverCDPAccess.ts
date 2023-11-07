@@ -74,7 +74,7 @@ export async function findByXPath(driver: WebDriver, path: string, isInButtonAre
         }
       } else {
         let elems = await n.findElements(By.css(p.tagName + ":nth-of-type(" + p.index + ")"));
-        if (elems == null || elems.length == 0) {
+        if (elems == null || elems.length === 0) {
           return null;
         }
         elem = elems[0];
@@ -111,7 +111,7 @@ export async function testTextContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && v.indexOf(text) > -1;
+        return v && v.includes(text);
       } catch (error) {
         console.log(
           "ignoring error in testTextContains for xpath = " + xpath + " text = " + text,
@@ -137,7 +137,7 @@ export function testTextNotContained(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && v.indexOf(text) == -1;
+        return v && !v.includes(text);
       } catch (error) {
         console.log(
           "ignoring error in testTextNotContained for xpath = " + xpath + " text = " + text,
@@ -163,7 +163,7 @@ export function testClassContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getAttribute("class");
-        return v && v.indexOf(text) > -1;
+        return v && v.includes(text);
       } catch (error) {
         console.log(
           "ignoring error in testClassContains for xpath = " + xpath + " text = " + text,
@@ -322,9 +322,9 @@ export function buildDriver(benchmarkOptions: BenchmarkOptions): WebDriver {
   }
 
   if (benchmarkOptions.headless) {
-    args.push("--headless");
-    args.push("--disable-gpu"); // https://bugs.chromium.org/p/chromium/issues/detail?id=737678
-    args.push("--no-sandbox");
+    args.push("--headless", 
+              "--disable-gpu", 
+              "--no-sandbox");
   }
 
   let caps = new Capabilities({

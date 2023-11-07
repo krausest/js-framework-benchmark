@@ -171,7 +171,7 @@ async function computeResultsCPU(
         layouts.forEach((l) => {
           console.log("layout event", l.end - clicks[0].ts);
         });
-      } else if (layouts.length == 0) {
+      } else if (layouts.length === 0) {
         console.log("WARNING: exactly one layout event is expected", eventsAfterClick);
         lastLayoutEvent = clicks[0];
       }
@@ -179,7 +179,7 @@ async function computeResultsCPU(
       let paintsP = R.filter(type_eq("paint"))(eventsAfterClick);
 
       paintsP = R.filter((e: TimingResult) => e.ts > lastLayoutEvent.end)(paintsP);
-      if (paintsP.length == 0) {
+      if (paintsP.length === 0) {
         console.log("ERROR: No paint event found");
         throw "No paint event found";
       }
@@ -190,7 +190,7 @@ async function computeResultsCPU(
         });
       }
 
-      let duration = (paintsP[paintsP.length - 1].end - clicks[0].ts) / 1000.0;
+      let duration = (paintsP.at(-1).end - clicks[0].ts) / 1000.0;
       let upperBoundForSoundnessCheck = (R.last(eventsDuringBenchmark).end - eventsDuringBenchmark[0].ts) / 1000.0;
 
       if (duration < 0) {

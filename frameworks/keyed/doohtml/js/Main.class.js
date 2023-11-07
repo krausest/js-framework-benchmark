@@ -60,22 +60,13 @@ Doo.define(
 			}
 			return data	
 		}
-		getIndex(row) {
-			let idx =  this.data.rows.findIndex((item, i) => {
-				if (item.id === row.key) {
-					return i
-				}
-			}) 
-			return idx
-		}
 
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
-				let idx = this.getIndex(row)
 				this.tbody.removeChild(row)
-				if (idx !== undefined) {
-					this.data.rows.splice(idx,1)
+				if (row.key !== undefined) {
+					this.data.rows.splice(row.key,1)
 				}
 			}
 		}  
