@@ -24,9 +24,9 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.2.14",
-    "@builder.io/qwik-city": "^1.2.14",
-    "vite": "4.4.7",
+    "@builder.io/qwik": "^1.2.17",
+    "@builder.io/qwik-city": "^1.2.17",
+    "vite": "^4.5.0",
     "vite-tsconfig-paths": "^4.2.1"
   }
 }
