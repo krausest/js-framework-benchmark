@@ -2,12 +2,11 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
-
-import BsButton from './bs-button';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
-import eq from '../helpers/eq';
 
+import BsButton from 'ember-temp/components/bs-button';
+import eq from 'ember-temp/helpers/eq';
 import {
   run, runLots, add, update, swapRows, deleteRow,
 } from 'ember-temp/utils/benchmark-helpers';
