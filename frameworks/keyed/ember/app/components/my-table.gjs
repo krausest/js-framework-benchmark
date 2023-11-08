@@ -6,6 +6,7 @@ import { inject as service } from '@ember/service';
 import BsButton from './bs-button';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
+import eq from '../helpers/eq';
 
 import {
   run, runLots, add, update, swapRows, deleteRow,
