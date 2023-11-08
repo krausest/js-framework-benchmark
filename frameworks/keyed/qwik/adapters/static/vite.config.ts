@@ -12,7 +12,8 @@ export default extendConfig(baseConfig, () => {
     },
     plugins: [
       staticAdapter({
-        origin: "https://yoursite.qwik.dev",
+        origin:
+          "https://github.com/krausest/js-framework-benchmark/tree/master/frameworks/qwik",
       }),
     ],
   };

@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build-dev": "vite --mode ssr",
-    "build-prod": "qwik build",
+    "build-prod": "rm -rf dist; qwik build && mv dist/frameworks/keyed/qwik/dist/* dist/ && rm -rf dist/frameworks",
     "build": "qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
