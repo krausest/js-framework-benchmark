@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 
-import BsButton from 'ember/components/bs-button';
+import BsButton from './bs-button';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 
