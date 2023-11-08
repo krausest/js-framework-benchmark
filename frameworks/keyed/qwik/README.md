@@ -1,6 +1,6 @@
 # Qwik
 
-Please note that this benchmark does not test the true power of Qwik, namely resumability. So the expected result is that Qwik is average in this benchmark, but it is much faster in real world applications than other frameworks.
+Please note that this benchmark does not test the true power of Qwik, namely resumability. So the expected result is that Qwik is average in this benchmark, but it is much faster in real world applications.
 
 See https://qwik.builder.io/docs/concepts/think-qwik/
 

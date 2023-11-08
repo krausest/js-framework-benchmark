@@ -2,7 +2,7 @@ import { component$ } from "@builder.io/qwik";
 import {
   QwikCityProvider,
   RouterOutlet,
-  ServiceWorkerRegister,
+  // ServiceWorkerRegister,
 } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
 
@@ -20,9 +20,10 @@ export default component$(() => {
         <meta charSet="utf-8" />
         <RouterHead />
       </head>
-      <body lang="en">
+      <body>
         <RouterOutlet />
-        <ServiceWorkerRegister />
+        {/* We don't need it for this benchmark */}
+        {/* <ServiceWorkerRegister /> */}
       </body>
     </QwikCityProvider>
   );
