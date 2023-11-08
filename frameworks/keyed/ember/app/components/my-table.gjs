@@ -6,10 +6,13 @@ import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 
 import BsButton from 'ember-temp/components/bs-button';
-import eq from 'ember-temp/helpers/eq';
 import {
   run, runLots, add, update, swapRows, deleteRow,
 } from 'ember-temp/utils/benchmark-helpers';
+
+function eq(a, b) {
+  return a === b;
+}
 
 export default class MyTable extends Component {
   @tracked
@@ -18,18 +21,7 @@ export default class MyTable extends Component {
   @tracked
   data = [];
 
-  @tracked
-  _selected = undefined;
-
-  @service('state') state;
-
-  get selected() {
-    return this._selected;
-  }
-  set selected(value) {
-    this.state.updateSelection(value);
-    this._selected = value;
-  }
+  @tracked selected = undefined;
 
   @action create() {
     const result = run(this.id);
@@ -122,7 +114,7 @@ export default class MyTable extends Component {
       <table class="table table-hover table-striped test-data">
         <tbody>
           {{#each this.data key="id" as |item|}}
-            <tr class={{if (eq item) 'danger'}}>
+            <tr class={{if (eq item.id this.selected) 'danger'}}>
               <td class="col-md-1">{{item.id}}</td>
               <td class="col-md-4"><a {{on 'click' (fn this.select item)}}>{{item.label}}</a></td>
               <td class="col-md-1"><a {{on 'click' (fn this.remove item)}}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
