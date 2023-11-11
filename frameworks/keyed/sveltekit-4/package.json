@@ -2,9 +2,14 @@
 	"name": "sveltekit",
 	"version": "0.0.1",
 	"private": true,
+	"js-framework-benchmark": {
+    "frameworkVersionFromPackage": "svelte",
+    "frameworkHomeURL": "https://svelte.dev/",
+		"customURL": "/build"
+  },
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build-prod": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
