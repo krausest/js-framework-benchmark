@@ -35,7 +35,7 @@ export async function checkElementExists(page: Page, selector: string) {
 export async function clickElement(page: Page, selector: string) {
   let elem = await page.$(selector);
   if (!elem.asElement()) throw `clickElementByXPath ${selector} failed. Element was not found.`;
-  await elem.asElement().click();
+  await elem.click();
   await elem.dispose();
 }
 

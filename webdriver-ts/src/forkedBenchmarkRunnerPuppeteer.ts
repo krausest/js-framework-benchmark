@@ -3,7 +3,8 @@ import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksC
 import { CPUBenchmarkPuppeteer, MemBenchmarkPuppeteer, BenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
-import { computeResultsCPU, computeResultsJS, fileNameTrace } from "./timeline.js";
+import { CPUDurationResult, computeResultsCPU, computeResultsJS, fileNameTrace } from "./timeline.js";
+import * as fs from "node:fs"
 
 let config: Config = defaultConfig;
 
@@ -137,18 +138,34 @@ async function runCPUBenchmark(
 
       // console.log("afterBenchmark", m1, m2);
       // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
-      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
-      let resultScript = await computeResultsJS(
-        result,
-        config,
-        fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
-      );
-      console.log("**** resultScript =", resultScript);
-      if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
-      await page.close();
-      results.push({ total: result.duration, script: resultScript });
-      console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(result)}`);
-      if (result.duration < 0) throw new Error(`duration ${result} < 0`);
+      try {
+        let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
+        let resultScript = await computeResultsJS(
+          result,
+          config,
+          fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
+        );
+        console.log("**** resultScript =", resultScript);
+        if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
+        results.push({ total: result.duration, script: resultScript });
+        console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(result)}`);
+        if (result.duration < 0) throw new Error(`duration ${result} < 0`);
+        } catch (error) {
+        if (error === "exactly one click event is expected") {
+          let fileName = fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions);
+          let errorFileName = fileName.replace(/\//, "/error-");
+          fs.copyFileSync(fileName, errorFileName);
+          console.log("*** Repeating run because of 'exactly one click event is expected' error", fileName, "saved in", errorFileName);
+          i--;
+          
+          continue;
+        } else {
+          console.log("*** Unhandled error:", error);
+          throw error;
+        }
+      } finally {
+        await page.close();
+      }
     }
     return { error: undefined, warnings, result: results };
   } catch (error) {
