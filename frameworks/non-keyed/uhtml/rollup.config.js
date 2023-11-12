@@ -1,7 +1,6 @@
-import minifyHTML from 'rollup-plugin-minify-html-literals';
+import minifyHTML from 'rollup-plugin-minify-html-literals-v3';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
-import {terser} from 'rollup-plugin-terser';
-import includePaths from 'rollup-plugin-includepaths';
+import terser from '@rollup/plugin-terser';
 
 export default {
   input: 'src/index.js',
@@ -13,21 +12,11 @@ export default {
         }
       }
     }),
-    includePaths({
-      include: {
-        '@ungap/create-content': 'node_modules/@ungap/degap/create-content.js'
-      },
-    }),
     nodeResolve(),
     terser()
   ],
   output: {
-    esModule: false,
+    esModule: true,
     file: 'dist/index.js',
-    exports: 'named',
-    format: 'iife',
-    name: 'app'
   }
 };
-
-
