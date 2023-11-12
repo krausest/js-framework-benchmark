@@ -89,7 +89,7 @@
 			if (data.length > 998) {
 				const clone = data.slice();
 				const tmp = clone[1];
-				clone[1] = data[998];
+				clone[1] = clone[998];
 				clone[998] = tmp;
 				data = clone;
 			}
