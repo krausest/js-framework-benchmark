@@ -76,6 +76,7 @@ export enum Benchmark {
   _07 = "07_create10k",
   _08 = "08_create1k-after1k_x2",
   _09 = "09_clear1k_x8",
+  _10 = "10_update10th10k",
   _21 = "21_ready-memory",
   _22 = "22_run-memory",
   _23 = "23_update5-memory",
@@ -96,6 +97,7 @@ export type BenchmarkId =
   | typeof Benchmark._07
   | typeof Benchmark._08
   | typeof Benchmark._09
+  | typeof Benchmark._10
   | typeof Benchmark._30
   | typeof Benchmark._40;
 
@@ -105,6 +107,7 @@ const throttlingFactors: { [idx: string]: number } = {
   [Benchmark._05]: 4,
   [Benchmark._06]: 2,
   [Benchmark._09]: 4,
+  [Benchmark._10]: 2,
 };
 
 export function slowDownNote(throttleCPU: number | undefined): string {
@@ -141,7 +144,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     id: Benchmark._03,
     label: "partial update",
     description: (throttleCPU: number | undefined) =>
-      "updating every 10th row for 1,000 rows (3 warmup runs)." + slowDownNote(throttleCPU),
+      "updating every 10th row for 1,000 rows (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -202,6 +205,16 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     label: "clear rows",
     description: (throttleCPU: number | undefined) =>
       "clearing a table with 1,000 rows." + slowDownNote(throttleCPU) + " (" + config.WARMUP_COUNT + " warmup runs).",
+    type: BenchmarkType.CPU,
+    allowBatching: true,
+    layoutEventRequired: true,
+    additionalNumberOfRuns: 0,
+  },
+  {
+    id: Benchmark._10,
+    label: "partial update to large table",
+    description: (throttleCPU: number | undefined) =>
+      "updating every 10th row for 10,000 rows. (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,

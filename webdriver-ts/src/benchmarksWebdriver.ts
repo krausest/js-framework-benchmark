@@ -81,6 +81,25 @@ export const benchUpdate = new (class extends CPUBenchmarkWebdriver {
   }
 })();
 
+export const benchUpdateLots = new (class extends CPUBenchmarkWebdriver {
+  constructor() {
+    super(cpuBenchmarkInfos[Benchmark._10]);
+  }
+  async init(driver: WebDriver) {
+    await testElementLocatedById(driver, "runlots", SHORT_TIMEOUT, true);
+    await clickElementById(driver, "runlots", true);
+    await testElementLocatedByXpath(driver, "//tbody/tr[10000]/td[2]/a", config.TIMEOUT, false);
+    for (let i = 0; i < 3; i++) {
+      await clickElementById(driver, "update", true);
+      await testTextContains(driver, "//tbody/tr[9991]/td[2]/a", " !!!".repeat(i + 1), config.TIMEOUT, false);
+    }
+  }
+  async run(driver: WebDriver) {
+    await clickElementById(driver, "update", true);
+    await testTextContains(driver, "//tbody/tr[9991]/td[2]/a", " !!!".repeat(3 + 1), config.TIMEOUT, false);
+  }
+})();
+
 export const benchSelect = new (class extends CPUBenchmarkWebdriver {
   constructor() {
     super(cpuBenchmarkInfos[Benchmark._04]);
@@ -208,11 +227,12 @@ export const benchClear = new (class extends CPUBenchmarkWebdriver {
 export const benchmarks = [
   benchRun, 
   benchReplaceAll,
-  benchUpdate, 
+  benchUpdate,
   benchSelect, 
   benchSwapRows, 
   benchRemove, 
   benchRunBig, 
   benchAppendToManyRows, 
   benchClear, 
+  benchUpdateLots,
 ];

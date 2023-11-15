@@ -91,6 +91,25 @@ export const benchUpdate = new (class extends CPUBenchmarkPlaywright {
   }
 })();
 
+export const benchUpdateLots = new (class extends CPUBenchmarkPlaywright {
+  constructor() {
+    super(cpuBenchmarkInfos[Benchmark._10]);
+  }
+  async init(browser: Browser, page: Page) {
+    await checkElementExists(page, "#runlots");
+    await clickElement(page, "#runlots");
+    await checkElementExists(page, "tbody>tr:nth-of-type(10000)>td:nth-of-type(1)");
+      for (let i = 0; i < 3; i++) {
+        await clickElement(page, "#update");
+        await checkElementContainsText(page, "tbody>tr:nth-of-type(9991)>td:nth-of-type(2)>a", ' !!!'.repeat(i + 1));
+      }
+  }
+  async run(browser: Browser, page: Page) {
+    await clickElement(page, "#update");
+    await checkElementContainsText(page, "tbody>tr:nth-of-type(9991)>td:nth-of-type(2)>a", ' !!!'.repeat(3 + 1));
+  }
+})();
+
 export const benchSelect = new (class extends CPUBenchmarkPlaywright {
   constructor() {
     super(cpuBenchmarkInfos[Benchmark._04]);
@@ -303,13 +322,14 @@ export const benchCreateClear5Memory = new (class extends MemBenchmarkPlaywright
 export const benchmarks = [
    benchRun, 
    benchReplaceAll,
-   benchUpdate, 
+   benchUpdate,
    benchSelect, 
    benchSwapRows, 
    benchRemove, 
    benchRunBig, 
    benchAppendToManyRows, 
    benchClear, 
+   benchUpdateLots,
    benchReadyMemory, 
    benchRunMemory, 
    benchRun10KMemory,

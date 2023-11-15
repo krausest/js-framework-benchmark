@@ -91,6 +91,26 @@ export const benchUpdate = new (class extends CPUBenchmarkPuppeteer {
   }
 })();
 
+export const benchUpdateLots = new (class extends CPUBenchmarkPuppeteer {
+  constructor() {
+    super(cpuBenchmarkInfos[Benchmark._10]);
+  }
+  async init(page: Page) {
+    await checkElementExists(page, "pierce/#runlots");
+    await clickElement(page, "pierce/#runlots");
+    await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
+      for (let i = 0; i < 3; i++) {
+        await clickElement(page, "pierce/#update");
+        await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(9991)>td:nth-of-type(2)>a", ' !!!'.repeat(i + 1));
+      }
+  }
+  async run(page: Page) {
+    await clickElement(page, "pierce/#update");
+    await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(9991)>td:nth-of-type(2)>a", ' !!!'.repeat(3 + 1));
+  }
+})();
+
+
 export const benchSelect = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
     super(cpuBenchmarkInfos[Benchmark._04]);
@@ -310,6 +330,7 @@ export const benchmarks = [
   benchRunBig, 
   benchAppendToManyRows, 
   benchClear, 
+  benchUpdateLots, 
   benchReadyMemory, 
   benchRunMemory, 
   benchUpdate5Memory,
