@@ -1,0 +1,31 @@
+{
+  "name": "js-framework-benchmark-svelte",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Boilerplate for Svelte",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "svelte",
+    "frameworkHomeURL": "https://svelte.dev/"
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "keywords": [
+    "svelte"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "15.1.0",
+    "@rollup/plugin-terser": "0.4.3",
+    "rollup": "^3.26.2",
+    "rollup-plugin-svelte": "7.1.6",
+    "svelte": "^5.0.0-next.5"
+  }
+}
