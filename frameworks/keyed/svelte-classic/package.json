@@ -26,6 +26,6 @@
     "@rollup/plugin-terser": "0.4.3",
     "rollup": "^3.26.2",
     "rollup-plugin-svelte": "7.1.6",
-    "svelte": "^5.0.0-next.5"
+    "svelte": "^5.0.0-next.6"
   }
 }
