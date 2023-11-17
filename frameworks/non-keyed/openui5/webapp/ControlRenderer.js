@@ -101,7 +101,7 @@ sap.ui.define([], function () {
                 //rows
                 oControl.getRows().forEach(row => {
                     // <tr id={{this.id}} class={{this._class}}></tr>
-                    oRM.openStart("tr", row.id);
+                    oRM.openStart("tr", row.id + "");
                     if (row.id === selected) {
                         oRM.class("danger");
                     }
