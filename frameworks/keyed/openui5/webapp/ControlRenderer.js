@@ -37,7 +37,7 @@ sap.ui.define([], function () {
                     // <h1>OpenUI5 non-keyed</h1>
                     oRM.openStart("h1");
                     oRM.openEnd();
-                    oRM.text("OpenUI5 non-keyed");
+                    oRM.text("OpenUI5 keyed");
                     oRM.close("h1");
 
                 oRM.close("div");
