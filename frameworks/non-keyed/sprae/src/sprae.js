@@ -453,8 +453,7 @@ function createState(values, parent) {
         return s2.value;
       if (parent)
         return parent[key];
-      if (sandbox.hasOwnProperty(key))
-        return sandbox[key];
+      return sandbox[key];
     },
     set(values2, key, v2) {
       if (_len) {
@@ -462,8 +461,6 @@ function createState(values, parent) {
           n(() => {
             for (let i2 = v2, l2 = signals.length; i2 < l2; i2++)
               delete state[i2];
-            for (let i2 = signals.length; i2 < v2; i2++)
-              state[i2] = null;
             _len.value = signals.length = values2.length = v2;
           });
           return true;
@@ -477,15 +474,12 @@ function createState(values, parent) {
         s2._set(v2);
       else if (Array.isArray(v2) && Array.isArray(cur)) {
         s(() => n(() => {
-          let i2 = 0, l2 = v2.length;
+          let i2 = 0, l2 = v2.length, vals = values2[key];
           for (; i2 < l2; i2++)
-            cur[i2] = values2[key][i2] = v2[i2];
+            cur[i2] = vals[i2] = v2[i2];
           cur.length = l2;
-          s2.value = null, s2.value = cur;
         }));
       } else {
-        if (Array.isArray(cur))
-          cur.length = 0;
         s2.value = createState(values2[key] = v2);
       }
       if (_len && key >= _len.peek())
@@ -493,13 +487,12 @@ function createState(values, parent) {
       return true;
     },
     deleteProperty(values2, key) {
-      if (key in signals)
-        signals[key]._del?.(), delete signals[key], delete values2[key];
+      signals[key]?._del?.(), delete signals[key], delete values2[key];
       return true;
     }
   });
   for (let key in values)
-    values[key], signals[key] = initSignals?.[key] ?? null;
+    signals[key] = initSignals?.[key] ?? initSignal(key);
   function initSignal(key) {
     if (values.hasOwnProperty(key)) {
       const desc = Object.getOwnPropertyDescriptor(values, key);
