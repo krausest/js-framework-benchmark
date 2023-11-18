@@ -1,12 +1,9 @@
 <svelte:options immutable />
 
 <script>
-	import { selector } from 'svelte';
-
 	let rowId = 1;
 	let data = $state([]);
-
-	const selected = selector();
+	let selected = $state();
 
 	const adjectives = [
 		'pretty',
@@ -166,11 +163,11 @@
 	<table class="table table-hover table-striped test-data">
 		<tbody>
 			{#each data as row (row)}
-				<tr class={selected.is(row.id) ? 'danger' : ''}
+				<tr class={selected === row.id ? 'danger' : ''}
 					><td class="col-md-1">{row.id}</td><td class="col-md-4"
 						><a
 							on:click={() => {
-								selected.set(row.id);
+								selected = row.id;
 							}}>{row.label}</a
 						></td
 					><td class="col-md-1"
