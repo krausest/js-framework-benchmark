@@ -44,7 +44,7 @@
 				</div>
 			</div>
 			<table class="table table-hover table-striped test-data">
-				<tr :each="item in rows" :class="{danger: selected && item.id == selected.id ? 'danger' : ''}">
+				<tr :each="item in rows" :class="selected && item.id == selected.id ? 'danger' : ''">
 					<td class="col-md-1" :text="item.id"></td>
 					<td class="col-md-4">
 						<a role="select" @click="select(item)" :text="item.label"></a>
