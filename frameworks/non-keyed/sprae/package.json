@@ -15,6 +15,6 @@
   },
   "type": "module",
   "dependencies": {
-    "sprae": "^8.0.0"
+    "sprae": "8.0.1"
   }
 }
