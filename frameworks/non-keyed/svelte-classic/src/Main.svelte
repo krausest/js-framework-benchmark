@@ -1,7 +1,7 @@
 <div class="jumbotron">
 	<div class="row">
 		<div class="col-md-6">
-			<h1>Svelte (non-keyed)</h1>
+			<h1>Svelte Classic (non-keyed)</h1>
 		</div>
 		<div class="col-md-6">
       <div class="row">
@@ -57,7 +57,8 @@
     },
     partialUpdate = () => {
       for (let i = 0; i < data.length; i += 10) {
-        data[i].label += ' !!!';
+        // data[i].label += " !!!"; (see https://github.com/sveltejs/svelte/issues/9521)
+				data[i] = {...data[i], label: data[i].label + ` !!!`}
       }
     },
     remove = (num) => {
