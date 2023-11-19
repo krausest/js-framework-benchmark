@@ -2,7 +2,9 @@ import svelte from 'rollup-plugin-svelte';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 
-const plugins = [resolve(), svelte()];
+const plugins = [resolve(), svelte({
+  emitCss: false,
+})];
 
 if (process.env.production) {
   plugins.push(terser());
