@@ -117,7 +117,7 @@ const Main = () => {
     <table className="table table-hover table-striped test-data">
       <tbody>
         {data.map(item => (
-          <Row key={item.id} item={item} selected={selected === item.id} dispatch={dispatch} />
+          <Row item={item} selected={selected === item.id} dispatch={dispatch} />
         ))}
       </tbody>
     </table>
