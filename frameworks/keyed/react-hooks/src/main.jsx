@@ -38,11 +38,10 @@ const listReducer = (state, action) => {
     case 'ADD':
       return { data: data.concat(buildData(1000)), selected };
     case 'UPDATE': {
-      const newData = data.slice(0);
+      const newData = data.slice();
 
       for (let i = 0; i < newData.length; i += 10) {
         const r = newData[i];
-
         newData[i] = { id: r.id, label: r.label + " !!!" };
       }
 
@@ -51,7 +50,7 @@ const listReducer = (state, action) => {
     case 'CLEAR':
       return { data: [], selected: 0 };
     case 'SWAP_ROWS':
-      const newdata = [...data];
+      const newdata = data.slice();
       if (data.length > 998) {
         const d1 = newdata[1];
         const d998 = newdata[998];
@@ -61,8 +60,9 @@ const listReducer = (state, action) => {
       return { data: newdata, selected };
     case 'REMOVE': {
       const idx = data.findIndex((d) => d.id === action.id);
-
-      return { data: [...data.slice(0, idx), ...data.slice(idx + 1)], selected };
+      const newData = data.slice();
+      newData.splice(idx, 1);
+      return { data: newData, selected };
     }
     case 'SELECT':
       return { data, selected: action.id };
