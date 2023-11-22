@@ -1,0 +1,39 @@
+{
+  "name": "js-framework-benchmark-frei-hooks",
+  "version": "1.2.0",
+  "description": "Frei Hooks demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@aimwhy/frei",
+    "frameworkHomeURL": "https://github.com/aimwhy/frei"
+  },
+  "scripts": {
+    "dev": "webpack --watch",
+    "build-prod": "webpack"
+  },
+  "keywords": [
+    "@aimwhy/frei",
+    "hooks",
+    "react",
+    "webpack"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.21.0",
+    "@babel/preset-env": "7.20.2",
+    "@babel/preset-react": "7.18.6",
+    "babel-loader": "9.1.2",
+    "terser-webpack-plugin": "5.3.7",
+    "webpack": "5.76.1",
+    "webpack-cli": "5.0.1"
+  },
+  "dependencies": {
+    "@aimwhy/frei": "^1.0.16"
+  }
+}

@@ -56,7 +56,15 @@ function addFrameworksToZip(frameworkType, frameworkDir, frameworkName) {
   if (frameworkName === "halogen") {
     addLocalFileIfExists(`${frameworkDir}/output/bundle.js`, `${zipFrameworkPath}/output`);
   } else if (frameworkName === "dojo") {
-    addLocalFolderIfExists(`${frameworkDir}/output/dist`, `${zipFrameworkPath}/output/dist`);
+    addLocalFolderIfExists(
+      `${frameworkDir}/output/dist`,
+      `${zipFrameworkPath}/output/dist`,
+    );
+  } else if (frameworkName === "s2") {
+    addLocalFolderIfExists(
+      `${frameworkDir}/node_modules/s2-engine/dist`,
+      `${zipFrameworkPath}/node_modules/s2-engine/dist`,
+    );
   } else if (frameworkName === "stem") {
     addLocalFolderIfExists(
       `${frameworkDir}/node_modules/babel-polyfill/dist`,
