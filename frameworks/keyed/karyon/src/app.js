@@ -17,6 +17,13 @@ const remove = (filter => function () {
     rows(rows().filter(filter, this.ID));
 })(function (row) { return row?.ID !== this; });
 
+const track = (ref, value, resolve) => {
+    const tracker = State(resolve(State.peek(ref) === value));
+    return State.on(ref, (i, o) =>
+        i === value ? tracker(resolve(true)) :
+        o === value && tracker(resolve(false))), tracker;
+};
+
 const Row = (selected => (ID, text) =>
     ({is: 'tr', content: [
         {is: 'td', class: 'col-md-1', content: ID},
@@ -25,7 +32,7 @@ const Row = (selected => (ID, text) =>
         {is: 'td', class: 'col-md-1', content:
             {is: 'a', action: remove, content: Icon('')}},
         {is: 'td', class: 'col-md-6'}
-    ], class: State.track(selection, ID, selected), ID, text})
+    ], class: track(selection, ID, selected), ID, text})
 )(on => on && 'danger');
 
 const Icon = name =>
