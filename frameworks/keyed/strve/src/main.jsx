@@ -1,105 +1,167 @@
-import { setData, createApp } from "strve-js";
-import { buildData } from "./data.js";
+import { setData, createApp, registerComponent } from 'strve-js';
 
-let selected;
-let rows = [];
+const adjectives = [
+  'pretty',
+  'large',
+  'big',
+  'small',
+  'tall',
+  'short',
+  'long',
+  'handsome',
+  'plain',
+  'quaint',
+  'clean',
+  'elegant',
+  'easy',
+  'angry',
+  'crazy',
+  'helpful',
+  'mushy',
+  'odd',
+  'unsightly',
+  'adorable',
+  'important',
+  'inexpensive',
+  'cheap',
+  'expensive',
+  'fancy',
+];
+const colours = [
+  'red',
+  'yellow',
+  'blue',
+  'green',
+  'pink',
+  'brown',
+  'purple',
+  'brown',
+  'white',
+  'black',
+  'orange',
+];
+const nouns = [
+  'table',
+  'chair',
+  'house',
+  'bbq',
+  'desk',
+  'car',
+  'pony',
+  'cookie',
+  'sandwich',
+  'burger',
+  'pizza',
+  'mouse',
+  'keyboard',
+];
 
-function setRows(update = rows.slice()) {
-  setData(
-    () => {
-      rows = update;
-    },
-    {
-      name: TbodyComponent,
-    }
-  );
-}
+let data = [];
+let did = 1;
+let selected = -1;
+const TbodyComponentName = registerComponent('TbodyComponentName');
 
-function add() {
-  const data = rows.concat(buildData(1000));
-  setData(
-    () => {
-      rows = data;
-    },
-    {
-      name: TbodyComponent,
-    }
-  );
-}
+const add = () => {
+  setData(() => {
+    data = data.concat(buildData(1000));
+  }, [TbodyComponentName, TbodyComponent]);
+};
 
-function remove(id) {
-  rows.splice(
-    rows.findIndex((d) => d.id === id),
-    1
-  );
-  setRows();
-}
+const run = () => {
+  setData(() => {
+    data = buildData(1000);
+  }, [TbodyComponentName, TbodyComponent]);
+};
 
-function select(id) {
-  setData(
-    () => {
-      selected = id;
-    },
-    {
-      name: TbodyComponent,
-    }
-  );
-}
+const runLots = () => {
+  setData(() => {
+    data = buildData(10000);
+  }, [TbodyComponentName, TbodyComponent]);
+};
 
-function run() {
-  setRows(buildData());
-  selected = undefined;
-}
+const clear = () => {
+  setData(() => {
+    data = [];
+  }, [TbodyComponentName, TbodyComponent]);
+};
 
-function update() {
-  for (let i = 0; i < rows.length; i += 10) {
-    rows[i].label += " !!!";
+const interact = (event) => {
+  const el = event.target;
+  const tr = el.closest('tr');
+  const id = Number(tr.firstChild.textContent);
+  if (el.matches('.glyphicon-remove')) {
+    remove(id);
+  } else {
+    select(id);
   }
-  setRows();
-}
+};
 
-function runLots() {
-  setRows(buildData(10000));
-  selected = undefined;
-}
+const remove = (id) => {
+  const idx = data.findIndex((d) => d.id === id);
+  setData(() => {
+    data = [...data.slice(0, idx), ...data.slice(idx + 1)];
+  }, [TbodyComponentName, TbodyComponent]);
+};
 
-function clear() {
-  setRows([]);
-  selected = undefined;
-}
+const select = (id) => {
+  setData(() => {
+    if (selected > -1) {
+      data[selected].selected = false;
+    }
+    selected = data.findIndex((d) => d.id === id);
+    data[selected].selected = true;
+  }, [TbodyComponentName, TbodyComponent]);
+};
 
-function swapRows() {
-  if (rows.length > 998) {
-    const d1 = rows[1];
-    const d998 = rows[998];
-    rows[1] = d998;
-    rows[998] = d1;
-    setRows();
+const swapRows = () => {
+  setData(() => {
+    if (data.length > 998) {
+      const tmp = data[1];
+      data[1] = data[998];
+      data[998] = tmp;
+    }
+  }, [TbodyComponentName, TbodyComponent]);
+};
+
+const update = () => {
+  setData(() => {
+    for (let i = 0; i < data.length; i += 10) {
+      data[i].label += ' !!!';
+    }
+  }, [TbodyComponentName, TbodyComponent]);
+};
+
+const _random = (max) => Math.round(Math.random() * 1000) % max;
+
+const buildData = (count) => {
+  const data = new Array(count);
+  for (let i = 0; i < count; i++) {
+    data[i] = {
+      id: did++,
+      label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${
+        nouns[_random(nouns.length)]
+      }`,
+      selected: false,
+    };
   }
-}
+  return data;
+};
 
 function TbodyComponent() {
   return (
-    <tbody>
-      {rows.map((item) => (
-        <tr
-          class={item.id === selected ? "danger" : ""}
-          data-label={item.label}
-          key={item.id}
-        >
-          <td class="col-md-1">{item.id}</td>
-          <td class="col-md-4">
-            <a onClick={() => select(item.id)}>{item.label}</a>
+    <tbody onClick={interact}>
+      {data.map((item) => (
+        <tr key={item.id} class={item.selected ? 'danger' : ''}>
+          <td class='col-md-1'>{item.id}</td>
+          <td class='col-md-4'>
+            <a>{item.label}</a>
           </td>
-          <td class="col-md-1">
-            <a onClick={() => remove(item.id)}>
-              <span
-                class="glyphicon glyphicon-remove"
-                aria-hidden="true"
-              ></span>
+          <td class='col-md-1'>
+            <a>
+              <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
             </a>
           </td>
-          <td class="col-md-6"></td>
+          <td class='col-md-6'></td>
         </tr>
       ))}
     </tbody>
@@ -109,68 +171,53 @@ function TbodyComponent() {
 function MainBody() {
   return (
     <fragment>
-      <div class="jumbotron">
-        <div class="row">
-          <div class="col-md-6">
+      <div class='jumbotron'>
+        <div class='row'>
+          <div class='col-md-6'>
             <h1>Strve-keyed</h1>
           </div>
-          <div class="col-md-6">
-            <div class="row">
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="run"
-                  onClick={run}
-                >
+          <div class='col-md-6'>
+            <div class='row'>
+              <div class='col-sm-6 smallpad'>
+                <button type='button' class='btn btn-primary btn-block' id='run' onClick={run}>
                   Create 1,000 rows
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div class='col-sm-6 smallpad'>
                 <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="runlots"
+                  type='button'
+                  class='btn btn-primary btn-block'
+                  id='runlots'
                   onClick={runLots}
                 >
                   Create 10,000 rows
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="add"
-                  onClick={add}
-                >
+              <div class='col-sm-6 smallpad'>
+                <button type='button' class='btn btn-primary btn-block' id='add' onClick={add}>
                   Append 1,000 rows
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div class='col-sm-6 smallpad'>
                 <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="update"
+                  type='button'
+                  class='btn btn-primary btn-block'
+                  id='update'
                   onClick={update}
                 >
                   Update every 10th row
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
-                <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="clear"
-                  onClick={clear}
-                >
+              <div class='col-sm-6 smallpad'>
+                <button type='button' class='btn btn-primary btn-block' id='clear' onClick={clear}>
                   Clear
                 </button>
               </div>
-              <div class="col-sm-6 smallpad">
+              <div class='col-sm-6 smallpad'>
                 <button
-                  type="button"
-                  class="btn btn-primary btn-block"
-                  id="swaprows"
+                  type='button'
+                  class='btn btn-primary btn-block'
+                  id='swaprows'
                   onClick={swapRows}
                 >
                   Swap Rows
@@ -180,15 +227,12 @@ function MainBody() {
           </div>
         </div>
       </div>
-      <table class="table table-hover table-striped test-data">
-        <component $name={TbodyComponent.name}>{TbodyComponent()}</component>
+      <table class='table table-hover table-striped test-data'>
+        <component $name={TbodyComponentName}>{TbodyComponent()}</component>
       </table>
-      <span
-        class="preloadicon glyphicon glyphicon-remove"
-        aria-hidden="true"
-      ></span>
+      <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
     </fragment>
   );
 }
 
-createApp(() => MainBody()).mount("#main");
+createApp(() => MainBody()).mount('#main');
