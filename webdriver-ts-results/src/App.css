@@ -29,12 +29,11 @@ select {
   background-color: #fafafa;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
-  padding: 20px 0;
-  flex-direction: column;
-  display: flex;
-  gap: 10px;
+  padding: 10px 0;
+  line-height: 0;
 }
 .select-bar__dropdowns {
+  padding: 5px 0;
   display: flex;
   flex-direction: row;
   gap: 1rem;

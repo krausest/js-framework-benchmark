@@ -52,7 +52,19 @@ const ResultTable = ({ type }: Props) => {
         <p>{texts[type].description}</p>
 
         {cpuDurationMode === CpuDurationMode.Script && (
-          <h3>Warning: This is an experimental view. Don&apos;t rely on those values yet.</h3>
+          <h3>Warning: This is an experimental view that includes script duration only. Don&apos;t rely on those values yet and don&apos;t report them until they are official.
+            Report bugs in issue <a href="https://github.com/krausest/js-framework-benchmark/issues/1233">1233</a>.
+          </h3>
+        )}
+        {cpuDurationMode === CpuDurationMode.BrowserOnly && (
+          <h3>Warning: This is an experimental view that shows the difference between total duration and script duration. Don&apos;t rely on those values yet and don&apos;t report them until they are official.
+            I guess this view mode just makes no sense.
+          </h3>
+        )}
+        {cpuDurationMode === CpuDurationMode.Render && (
+          <h3>Warning: This is an experimental view that shows the difference between total duration and script duration. Don&apos;t rely on those values yet and don&apos;t report them until they are official.
+            Report bugs in issue <a href="https://github.com/krausest/js-framework-benchmark/issues/1233">1233</a>.
+          </h3>
         )}
         {displayMode === DisplayMode.BoxPlot ? (
           <>

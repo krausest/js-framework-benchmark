@@ -62,7 +62,7 @@ const App = () => {
       </p>
 
       <main>
-        <SelectionBar showDurationSelection={false} />
+        <SelectionBar showDurationSelection={true} />
         <ResultTable type={FrameworkType.KEYED} />
         <ResultTable type={FrameworkType.NON_KEYED} />
         <KnownIssuesList></KnownIssuesList>

@@ -74,6 +74,7 @@ export default [
       "@typescript-eslint/no-explicit-any": "off",
       "require-await": "error",
       "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-unused-vars": "off",
     },
   },
   /**
@@ -97,6 +98,7 @@ export default [
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
     rules: {
       "@typescript-eslint/no-loss-of-precision": "off",
+      "no-debugger":"off"
     },
   },
 ];

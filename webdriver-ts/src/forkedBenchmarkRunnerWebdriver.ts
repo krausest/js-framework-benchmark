@@ -206,7 +206,7 @@ async function computeResultsCPU(
         throw "soundness check failed. reported duration is bigger than whole benchmark duration";
       }
       // script is currently not implemented
-      results.push({ total: duration, script: 0 });
+      results.push({ total: duration, script: 0, paint: 0 });
     }
     remaining = R.drop(1, evts[1]);
   }

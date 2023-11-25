@@ -3,7 +3,7 @@ import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksC
 import { CPUBenchmarkPuppeteer, MemBenchmarkPuppeteer, BenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
-import { CPUDurationResult, computeResultsCPU, computeResultsJS, fileNameTrace } from "./timeline.js";
+import { computeResultsCPU, computeResultsJS, computeResultsPaint, fileNameTrace } from "./timeline.js";
 import * as fs from "node:fs"
 
 let config: Config = defaultConfig;
@@ -145,9 +145,14 @@ async function runCPUBenchmark(
           config,
           fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
         );
+        let resultPaint = await computeResultsPaint(
+          result,
+          config,
+          fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
+        );
         console.log("**** resultScript =", resultScript);
         if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
-        results.push({ total: result.duration, script: resultScript });
+        results.push({ total: result.duration, script: resultScript, paint: resultPaint });
         console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(result)}`);
         if (result.duration < 0) throw new Error(`duration ${result} < 0`);
         } catch (error) {
