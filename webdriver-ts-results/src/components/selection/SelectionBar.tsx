@@ -12,13 +12,17 @@ export const SelectionBar = ({ showDurationSelection }: Props) => {
   console.log("SelectionBar");
 
   return (
-    <div className="select-bar">
-      <div className="select-bar__dropdowns">
-        <FrameworkSelector />
-        <BenchmarkSelector />
+    <>
+      <div className="select-bar">
+        <div className="select-bar__dropdowns">
+          <FrameworkSelector />
+          <BenchmarkSelector />
+          <CopyPasteSelection />
+        </div>
+        <div className="select-bar__dropdowns">
+          <ModeSelecionPanel showDurationSelection={showDurationSelection} />
+        </div>
       </div>
-      <ModeSelecionPanel showDurationSelection={showDurationSelection} />
-      <CopyPasteSelection />
-    </div>
+    </>
   );
 };

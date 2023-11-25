@@ -8,7 +8,7 @@ import {
 } from "./benchmarksPlaywright.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
 import { startBrowser } from "./playwrightAccess.js";
-import { computeResultsCPU, computeResultsJS, fileNameTrace } from "./timeline.js";
+import { computeResultsCPU, computeResultsJS, computeResultsPaint, fileNameTrace } from "./timeline.js";
 
 let config: Config = defaultConfig;
 
@@ -123,8 +123,13 @@ async function runCPUBenchmark(
         config,
         fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
       );
+      let resultPaint = await computeResultsPaint(
+        result,
+        config,
+        fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
+      );
       
-      let res = { total: result.duration, script: resultScript };
+      let res = { total: result.duration, script: resultScript, paint: resultPaint };
       results.push(res);
       console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(res)}`);
       if (result.duration < 0) throw new Error(`duration ${result} < 0`);

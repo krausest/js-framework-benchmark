@@ -24,7 +24,7 @@ const SHORT_TIMEOUT = 20 * 1000;
 let durations: Array<number> = [];
 
 export function getAfterframeDurations() {
-  return durations.map((d) => ({ total: d, script: 0 }));
+  return durations.map((d) => ({ total: d, script: 0, paint: 0 }));
 }
 
 export async function initMeasurement(driver: WebDriver) {

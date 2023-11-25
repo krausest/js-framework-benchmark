@@ -60,6 +60,7 @@ export interface BenchmarkImpl {
 export interface CPUBenchmarkResult {
   total: number;
   script: number;
+  paint: number;
 }
 
 export function fileName(framework: FrameworkData, benchmark: BenchmarkInfo) {

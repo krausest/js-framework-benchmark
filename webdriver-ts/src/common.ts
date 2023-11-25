@@ -69,7 +69,7 @@ export let config = {
   WARMUP_COUNT: 5,
   TIMEOUT: 60 * 1000,
   LOG_PROGRESS: true,
-  LOG_DETAILS: true,
+  LOG_DETAILS: false,
   LOG_DEBUG: false,
   LOG_TIMELINE: false,
   EXIT_ON_ERROR: null as boolean, // set from command line
