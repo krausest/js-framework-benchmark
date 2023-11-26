@@ -184,6 +184,12 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkPlaywright {
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
+    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+      await clickElement(page, "#run");
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
+      await clickElement(page, "#clear");
+      await checkElementNotExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
+    }
     await clickElement(page, "#run");
     await checkElementExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
   }

@@ -192,7 +192,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     id: Benchmark._08,
     label: "append rows to large table",
     description: (throttleCPU: number | undefined) =>
-      "appending 1,000 to a table of 10,000 rows." + slowDownNote(throttleCPU),
+      "appending 1,000 to a table of 1,000 rows." + slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,

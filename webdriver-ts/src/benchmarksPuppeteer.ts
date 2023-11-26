@@ -183,6 +183,12 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkPuppeteer {
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
+    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+      await clickElement(page, "pierce/#run");
+      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
+      await clickElement(page, "pierce/#clear");
+      await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
+    }    
     await clickElement(page, "pierce/#run");
     await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
   }
