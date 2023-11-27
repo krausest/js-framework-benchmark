@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<title>quel-"non-keyed"</title>
+	<link href="/css/currentStyle.css" rel="stylesheet"/>
+</head>
+<body>
+	<myapp-main></myapp-main>
+
+<script type="module">
+import { registComponentModules } from "./src/quel.min.js";
+import myappMain from "./src/myappMain.js";
+
+registComponentModules({ myappMain });
+</script>
+
+</body>
+</html>
