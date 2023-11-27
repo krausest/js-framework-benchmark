@@ -26,9 +26,29 @@ export const benchCompressedSize: benchmarksCommon.SizeBenchmarkInfo = {
   fn: (sizeInfo) => toKb(sizeInfo.size_compressed),
 };
 
+export const benchFP: benchmarksCommon.SizeBenchmarkInfo = {
+  id: "43_first-paint",
+  label: "first paint",
+  description: () =>
+    "first paint",
+  type: BenchmarkType.SIZE,
+  fn: (sizeInfo) => Number(sizeInfo.fp.toFixed(1)),
+};
+
+export const benchFCP: benchmarksCommon.SizeBenchmarkInfo = {
+  id: "44_first-contentful-paint",
+  label: "first contentful paint",
+  description: () =>
+    "first contentful paint",
+  type: BenchmarkType.SIZE,
+  fn: (sizeInfo) => Number(sizeInfo.fcp.toFixed(1)),
+};
+
 export const subbenchmarks = [
   benchUncompressedSize,
   benchCompressedSize,
+  benchFP,
+  benchFCP,
 ];
 
 export class BenchmarkSize implements BenchmarkImpl {

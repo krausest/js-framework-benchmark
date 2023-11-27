@@ -62,10 +62,16 @@ async function runSizeBenchmark(
       await clickElement(page, "pierce/#run");
       await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
 
+      let paintEvents = JSON.parse(await page.evaluate(`JSON.stringify(performance.getEntriesByType("paint"))`) as string);
+      console.log("paintEvents", paintEvents);
+
+
       let sizeInfoResponse = await fetch(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/sizeInfo`);
       if (sizeInfoResponse.status !== 200) throw new Error("Could not enable compression");
       let sizeInfo = (await sizeInfoResponse.json()) as SizeInfoJSON;
       console.log("sizeInfo", sizeInfo);
+      sizeInfo.fp = paintEvents.find((e: any) => e.name === "first-paint").startTime;
+      sizeInfo.fcp = paintEvents.find((e: any) => e.name === "first-contentful-paint").startTime;
 
       results = benchmarks.subbenchmarks.map((b) => ({
           benchmark: b,
