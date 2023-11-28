@@ -32,19 +32,7 @@ export function buildData(count = 1000) {
     "expensive",
     "fancy",
   ];
-  const colours = [
-    "red",
-    "yellow",
-    "blue",
-    "green",
-    "pink",
-    "brown",
-    "purple",
-    "brown",
-    "white",
-    "black",
-    "orange",
-  ];
+  const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
   const nouns = [
     "table",
     "chair",
