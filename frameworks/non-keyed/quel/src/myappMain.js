@@ -49,7 +49,7 @@ const html = `
 
 class ViewModel {
   data = [];
-  selectedIndex = null;
+  selectedIndex;
 
   get "data.*.selected"() {
     return this.$1 === this.selectedIndex;
@@ -60,7 +60,7 @@ class ViewModel {
     }
   }
   select(e, $1) {
-    if (this.selectedIndex !== null) {
+    if (typeof this.selectedIndex !== "undefined") {
       this[`data.${this.selectedIndex}.selected`] = false;
     }
     this[`data.${$1}.selected`] = true;
@@ -70,11 +70,11 @@ class ViewModel {
   }
   run() {
     this.data = buildData(1000);
-    this.selectedIndex = null;
+    this.selectedIndex = undefined;
   }
   runLots() {
     this.data = buildData(10000);
-    this.selectedIndex = null;
+    this.selectedIndex = undefined;
   }
   add() {
     this.data = this.data.concat(buildData(1000));
