@@ -288,7 +288,7 @@ You can build all frameworks by issuing:
 
 ```
 cd ..
-npm run build-prod
+npm run rebuild-all
 ```
 
 After downloading the whole internet it starts building it. Basically there should be no errors during the build, but I can't guarantee that the dependencies won't break. 

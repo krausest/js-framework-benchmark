@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "clean": "node cleanup.js",
-    "build": "node rebuild-all.js --ci",
-    "build-prod": "node rebuild-all.js --ci",
+    "rebuild-all": "node rebuild-all.js --ci",
+    "build": "echo \"Please use 'npm run rebuild-all' instead\" && exit 1",
+    "build-prod": "echo \"Please use 'npm run rebuild-all' instead\" && exit 1",
     "compile": "node rebuild-all.js --ci",
     "start": "cd server && node index.js",
     "bench": "cd webdriver-ts && cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
