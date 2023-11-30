@@ -1,14 +1,14 @@
 import { rendr } from '@rendrjs/core';
 
-const Button = (props) => {
+let Button = (props) => {
   return rendr('div', {
-    className: 'col-sm-6 smallpad',
+    class: 'col-sm-6 smallpad',
     slot: rendr('button', {
       id: props.id,
       onclick: props.cb,
       type: 'button',
-      className: 'btn btn-primary btn-block',
-      slot: props.title,
+      class: 'btn btn-primary btn-block',
+      slot: props.text,
     }),
   });
 };

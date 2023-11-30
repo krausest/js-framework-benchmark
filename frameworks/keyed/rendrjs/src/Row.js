@@ -1,32 +1,32 @@
 import { rendr } from '@rendrjs/core';
 
-const Row = (props) => {
+let Row = props => {
   return rendr('tr', {
-    className: props.selected ? 'danger' : undefined,
+    class: props.sel ? 'danger' : undefined,
     slot: [
       rendr('td', {
-        className: 'col-md-1',
+        class: 'col-md-1',
         slot: `${props.item.id}`,
       }),
       rendr('td', {
-        className: 'col-md-4',
+        class: 'col-md-4',
         slot: rendr('a', {
-          onclick: () => props.onSelect(props.item.id),
+          onclick: () => props.select(props.item.id),
           slot: props.item.label,
         }),
       }),
       rendr('td', {
-        className: 'col-md-1',
+        class: 'col-md-1',
         slot: rendr('a', {
-          onclick: () => props.onDelete(props.item.id),
+          onclick: () => props.del(props.item.id),
           slot: rendr('span', {
-            className: 'glyphicon glyphicon-remove',
+            class: 'glyphicon glyphicon-remove',
             'aria-hidden': true,
           }),
         }),
       }),
       rendr('td', {
-        className: 'col-md-6',
+        class: 'col-md-6',
       }),
     ],
   });
