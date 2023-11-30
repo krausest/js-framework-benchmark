@@ -1,37 +1,8 @@
-import { execSync } from "node:child_process";
+import { rebuildCheckSingle } from "./cli/rebuild-check-single.js";
 import yargs from "yargs";
-
-const args = yargs(process.argv.slice(2))
-  .usage("$0 [--ci  keyed/framework1 ... non-keyed/frameworkN]")
-  .boolean("ci")
-  .default("ci", false)
-  .describe("ci", "Use npm ci or npm install ?")
-  .argv;
-
-/**
- * Use npm ci or npm install ?
- * @type {boolean}
- */
-const useCi = args.ci;
-
-/**
- * @type {string}
- */
-const frameworks = args._.filter((arg) => !arg.startsWith("--"));
-
-/**
- * @type {string}
- */
-const frameworksNames = frameworks.join(" ");
-
-console.log(
-  "rebuild-single.js args",
-  args,
-  "ci",
-  useCi,
-  "frameworks",
-  frameworks
-);
+import { hideBin } from "yargs/helpers";
+import { rebuildFrameworks } from "./cli/rebuild-build-single.js";
+import esMain from "es-main";
 
 /*
 rebuild-single.js [--ci] [keyed/framework1 ... non-keyed/frameworkN]
@@ -47,28 +18,39 @@ Pass list of frameworks
 */
 
 /**
- * Run a command synchronously in the specified directory and log command
- * @param {string} command - The command to run
- * @param {string} cwd - The current working directory (optional)
+ * @param {string[]} frameworks
+ * @param {boolean} useCi
  */
-function runCommand(command, cwd = undefined) {
-  console.log(command);
-  execSync(command, { stdio: "inherit", cwd });
+function rebuildSingle(frameworks, useCi) {
+  console.log("rebuild-single.js: ci", useCi, "frameworks", frameworks);
+
+  const frameworkNames = frameworks.join(" ");
+
+  try {
+    if (frameworks.length == 0) {
+      console.log("ERROR: Missing arguments. Command: rebuild-single keyed/framework1 non-keyed/framework2 ...");
+      process.exit(1);
+    }
+
+    rebuildFrameworks(frameworks, useCi);
+
+    rebuildCheckSingle(frameworks);
+  } catch (e) {
+    console.log(`ERROR: Rebuilding  ${frameworkNames} was not successful`);
+  }
 }
 
-try {
-  if (frameworks.length == 0) {
-    console.log(
-      "ERROR: Missing arguments. Command: rebuild-single keyed/framework1 non-keyed/framework2 ..."
-    );
-    process.exit(1);
-  }
+if (esMain(import.meta)) {
+  const args = yargs(hideBin(process.argv))
+    .usage("$0 [--ci  keyed/framework1 ... non-keyed/frameworkN]")
+    .boolean("ci")
+    .default("ci", false)
+    .describe("ci", "Use npm ci or npm install ?")
+    .parseSync();
 
-  const buildCmd = `node rebuild-build-single.js ${useCi ? '--ci' : ''} ${frameworksNames}`;
-  runCommand(buildCmd);
+  const useCi = args.ci;
+  const frameworks = args._.filter((arg) => !arg.startsWith("--"));
 
-  const checkCmd = `node rebuild-check-single.js ${frameworksNames}`;
-  runCommand(checkCmd);
-} catch (e) {
-  console.log(`ERROR: Rebuilding  ${frameworksNames} was not successful`);
+  console.log("args", args);
+  rebuildSingle(frameworks, useCi);
 }

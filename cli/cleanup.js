@@ -1,14 +1,7 @@
 import * as fs from "node:fs";
 import path from "node:path";
 
-const filesToDelete = [
-  "package-lock.json",
-  "yarn-lock",
-  "dist",
-  "elm-stuff",
-  "bower_components",
-  "node_modules",
-];
+const filesToDelete = ["package-lock.json", "yarn-lock", "dist", "elm-stuff", "bower_components", "node_modules"];
 
 /**
  * Delete specified files in the framework directory

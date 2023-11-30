@@ -1,43 +1,6 @@
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
 import path from "node:path";
-import yargs from "yargs";
-
-const args = yargs(process.argv.slice(2))
-  .usage("$0 [--ci keyed/framework1 ... non-keyed/frameworkN]")
-  .boolean("ci")
-  .default("ci", false)
-  .describe("ci", "Use npm ci or npm install ?")
-  .argv;
-
-/**
- * Use npm ci or npm install?
- * @type {boolean}
- */
-const useCi = args.ci;
-
-/**
- * @type {string}
- */
-const frameworks = args._.filter((arg) => !arg.startsWith("--"));
-
-console.log(
-  "rebuild-build-single.js started: args",
-  args,
-  "useCi",
-  useCi,
-  "frameworks",
-  frameworks
-);
-
-const filesToDelete = [
-  "yarn-lock",
-  "dist",
-  "elm-stuff",
-  "bower_components",
-  "node_modules",
-  "output",
-].concat(useCi ? [] : ["package-lock.json"]);
 
 /*
 rebuild-single.js [--ci] [keyed/framework1 ... non-keyed/frameworkN]
@@ -55,7 +18,7 @@ Pass list of frameworks
 /**
  * Run a command synchronously in the specified directory and log command
  * @param {string} command - The command to run
- * @param {string} cwd - The current working directory (optional)
+ * @param {string|undefined} cwd - The current working directory (optional)
  */
 function runCommand(command, cwd = undefined) {
   console.log(command);
@@ -82,19 +45,27 @@ function deleteFrameworkFiles(frameworkPath, filesToDelete) {
 
 /**
  * @param {string} framework
+ * @param {boolean} useCi
  */
-function rebuildFramework(framework) {
+function rebuildFramework(framework, useCi) {
   const components = framework.split("/");
 
   if (components.length !== 2) {
-    console.log(
-      `ERROR: invalid name ${framework}. It must contain exactly one /.`
-    );
+    console.log(`ERROR: invalid name ${framework}. It must contain exactly one /.`);
     process.exit(1);
   }
 
   const [keyed, name] = components;
   const frameworkPath = path.join("frameworks", keyed, name);
+
+  const filesToDelete = [
+    "yarn-lock",
+    "dist",
+    "elm-stuff",
+    "bower_components",
+    "node_modules",
+    "output",
+  ].concat(useCi ? [] : ["package-lock.json"]);
 
   deleteFrameworkFiles(frameworkPath, filesToDelete);
 
@@ -103,22 +74,24 @@ function rebuildFramework(framework) {
 
   const buildCmd = "npm run build-prod";
   runCommand(buildCmd, frameworkPath);
-
 }
 
-function rebuildFrameworks() {
+/**
+ * @param {string[]} frameworks
+ * @param {boolean} useCi
+ */
+export function rebuildFrameworks(frameworks, useCi) {
+  console.log("rebuild-build-single.js started: useCi", useCi, "frameworks", frameworks);
+
   if (!frameworks.length) {
-    console.log(
-      "ERROR: Missing arguments. Command: rebuild keyed/framework1 non-keyed/framework2 ..."
-    );
+    console.log("ERROR: Missing arguments. Command: rebuild keyed/framework1 non-keyed/framework2 ...");
     process.exit(1);
   }
 
   for (const framework of frameworks) {
-    rebuildFramework(framework);
+    rebuildFramework(framework, useCi);
   }
 
   console.log("rebuild-build-single.js finished: Build finsished sucessfully!");
 }
 
-rebuildFrameworks();
