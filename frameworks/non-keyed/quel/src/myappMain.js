@@ -49,24 +49,32 @@ const html = `
 
 class ViewModel {
   data = [];
-  selected = null;
+  selectedIndex;
 
   get "data.*.selected"() {
-    return this["data.*"] === this.selected;
+    return this.$1 === this.selectedIndex;
+  }
+  set "data.*.selected"(value) {
+    if (value) {
+      this.selectedIndex = this.$1;
+    }
   }
   select(e, $1) {
-    this.selected = this["data.*"];
+    if (typeof this.selectedIndex !== "undefined") {
+      this[`data.${this.selectedIndex}.selected`] = false;
+    }
+    this[`data.${$1}.selected`] = true;
   }
   remove(e, $1) {
     this.data = this.data.toSpliced($1, 1);
   }
   run() {
     this.data = buildData(1000);
-    this.selected = null;
+    this.selectedIndex = undefined;
   }
   runLots() {
     this.data = buildData(10000);
-    this.selected = null;
+    this.selectedIndex = undefined;
   }
   add() {
     this.data = this.data.concat(buildData(1000));
@@ -84,9 +92,6 @@ class ViewModel {
       [this["data.1"], this["data.998"]] = [this["data.998"], this["data.1"]];
     }
   }
-  $dependentProps = {
-    "data.*.selected": ["data.*", "selected"]
-  };
 }
 
 export default { ViewModel, html };
