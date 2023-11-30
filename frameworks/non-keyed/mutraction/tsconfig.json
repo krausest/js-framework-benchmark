@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "jsx": "preserve",
+    "jsxImportSource": "mutraction-dom",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "outDir": "./out/",
+    "strict": true,
+    "noImplicitAny": true,
+  },
+  "include": ["src"]
+}
