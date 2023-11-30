@@ -43,8 +43,9 @@
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "dependencies": {
     "adm-zip": "^0.5.10",
-    "commander": "^11.0.0",
+    "commander": "^11.1.0",
     "cross-env": "^7.0.3",
+    "es-main": "^1.3.0",
     "eslint-plugin-unicorn": "^49.0.0",
     "json5": "^2.2.3",
     "rimraf": "^5.0.5",

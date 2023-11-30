@@ -20,9 +20,7 @@ const frameworks = getFrameworks();
  */
 function findDuplicateFrameworks(frameworks) {
   const names = frameworks.map((framework) => framework.name); // Creates an array with framework names only
-  const duplicateNames = names.filter(
-    (name, index) => names.indexOf(name) !== index,
-  ); // Filters out repetitive framework names
+  const duplicateNames = names.filter((name, index) => names.indexOf(name) !== index); // Filters out repetitive framework names
 
   return duplicateNames;
 }
@@ -59,11 +57,7 @@ function maybeObsolete(packageName) {
     }
 
     const now = new Date();
-    const obsoleteDate = new Date(
-      now.getFullYear() - 1,
-      now.getMonth(),
-      now.getDay(),
-    );
+    const obsoleteDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDay());
 
     const modifiedDate = new Date(timeData.modified);
     const isObsolete = modifiedDate < obsoleteDate;
@@ -72,7 +66,7 @@ function maybeObsolete(packageName) {
     return { isObsolete, lastUpdate: formattedDate, packageName };
   } catch (error) {
     console.error(
-      `Failed to execute npm view for ${packageName}. Error Code ${error.status} and message: ${error.message}`,
+      `Failed to execute npm view for ${packageName}. Error Code ${error.status} and message: ${error.message}`
     );
     return { isObsolete: false, lastUpdate: null, packageName };
   }
@@ -95,15 +89,12 @@ function checkObsoleteFrameworks(options) {
     const packageJSONPath = path.join(frameworkPath, "package.json");
 
     if (!fs.existsSync(packageJSONPath)) {
-      missingPackageWarnings.push(
-        `WARN: skipping ${type}/${name} since there's no package.json`,
-      );
+      missingPackageWarnings.push(`WARN: skipping ${type}/${name} since there's no package.json`);
       continue;
     }
 
     const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf-8"));
-    const mainPackages =
-      packageJSON?.["js-framework-benchmark"]?.frameworkVersionFromPackage;
+    const mainPackages = packageJSON?.["js-framework-benchmark"]?.frameworkVersionFromPackage;
 
     if (!mainPackages) {
       manualChecks.push(`${type}/${name} has no frameworkVersionFromPackage`);
@@ -121,35 +112,25 @@ function checkObsoleteFrameworks(options) {
       console.log(`Results for ${type}/${name} ${isPackageObsolete}`);
     }
 
-    const anyPackageObsolete = isPackageObsolete.some(
-      (packageFramework) => packageFramework.isObsolete,
-    );
+    const anyPackageObsolete = isPackageObsolete.some((packageFramework) => packageFramework.isObsolete);
 
     if (anyPackageObsolete) {
       const formattedPackages = isPackageObsolete
         .map((result) => `${result.packageName}:${result.lastUpdate}`)
         .join(", ");
 
-      console.log(
-        `Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`,
-      );
+      console.log(`Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`);
       continue;
     }
 
     if (DEBUG) {
-      console.log(
-        `Last npm update for ${type}/${name} ${mainPackages} is newer than a year`,
-      );
+      console.log(`Last npm update for ${type}/${name} ${mainPackages} is newer than a year`);
     }
   }
 
-  if (missingPackageWarnings.length > 0)
-    console.warn("\nWarnings:\n" + missingPackageWarnings.join("\n"));
+  if (missingPackageWarnings.length > 0) console.warn("\nWarnings:\n" + missingPackageWarnings.join("\n"));
   if (manualChecks.length > 0)
-    console.warn(
-      "\nThe following frameworks must be checked manually\n" +
-        manualChecks.join("\n"),
-    );
+    console.warn("\nThe following frameworks must be checked manually\n" + manualChecks.join("\n"));
 }
 
 export { checkObsoleteFrameworks };
