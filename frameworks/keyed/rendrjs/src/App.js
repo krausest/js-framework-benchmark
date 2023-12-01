@@ -1,4 +1,4 @@
-import { rendr, useCallback, useState } from '@rendrjs/core';
+import { rendr, useState } from '@rendrjs/core';
 import Jumbotron from './Jumbotron';
 import Row from './Row';
 
@@ -36,29 +36,29 @@ let preloadIcon = rendr('span', {
 let App = () => {
   let [state, setState] = useState({ arr: [], sel: 0 });
 
-  let run = useCallback(() => setState({ arr: buildData(1000), sel: 0 }), []);
-  let lots = useCallback(() => setState({ arr: buildData(10000), sel: 0 }), []);
-  let clear = useCallback(() => setState({ arr: [], sel: 0 }), []);
-  let update = useCallback(() => setState(old => {
+  let run = () => setState({ arr: buildData(1000), sel: 0 });
+  let lots = () => setState({ arr: buildData(10000), sel: 0 });
+  let clear = () => setState({ arr: [], sel: 0 });
+  let update = () => setState(old => {
     for (let i = 0; i < old.arr.length; i += 10) {
       old.arr[i].label += ' !!!';
     }
     return { ...old };
-  }), []);
-  let swap = useCallback(() => setState(old => {
+  });
+  let swap = () => setState(old => {
     if (old.arr.length > 998) {
       let one = old.arr[1];
       old.arr[1] = old.arr[998];
       old.arr[998] = one;
     }
     return { ...old, sel: 0 };
-  }), []);
-  let push = useCallback(() => setState(old => ({ arr: old.arr.concat(buildData(1000)), sel: old.sel })), []);
-  let del = useCallback((id) => setState(old => {
+  });
+  let push = () => setState(old => ({ arr: old.arr.concat(buildData(1000)), sel: old.sel }));
+  let del = (id) => setState(old => {
     old.arr.splice(old.arr.findIndex((d) => d.id === id), 1);
     return { ...old };
-  }), []);
-  let select = useCallback((id) => setState(old => ({ ...old, sel: id })), []);
+  });
+  let select = id => setState(old => ({ ...old, sel: id }));
 
   return rendr('div', {
     class: 'container',
