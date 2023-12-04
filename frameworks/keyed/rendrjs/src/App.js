@@ -1,7 +1,7 @@
 import { rendr, useState } from '@rendrjs/core';
 import { Jumbotron } from './Jumbotron';
 import { Row } from './Row';
-import { RemoveIcon } from './RemoveIcon';
+import { makeIcon } from './RemoveIcon';
 
 let random = (max) => Math.round(Math.random() * 1000) % max;
 
@@ -29,7 +29,7 @@ let buildData = (count) => {
   return data;
 };
 
-export let preloadIcon = rendr(RemoveIcon, { pre: true });
+export let preloadIcon = makeIcon(true);
 
 export let App = () => {
   let [state, setState] = useState({ arr: [], sel: 0 });

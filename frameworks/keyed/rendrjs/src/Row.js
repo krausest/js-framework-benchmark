@@ -1,6 +1,8 @@
 import { rendr } from '@rendrjs/core';
 import { colMd1, colMd4, colMd6 } from './classes';
-import { RemoveIcon } from './RemoveIcon';
+import { makeIcon } from './RemoveIcon';
+
+let icon = makeIcon();
 
 export let Row = ({ hi, sel, item, del }) => {
   return rendr('tr', {
@@ -21,7 +23,7 @@ export let Row = ({ hi, sel, item, del }) => {
         class: colMd1,
         slot: rendr('a', {
           onclick: () => del(item.id),
-          slot: rendr(RemoveIcon, {}),
+          slot: icon,
         }),
       }),
       rendr('td', { class: colMd6 }),
