@@ -1,6 +1,7 @@
 import { rendr, useState } from '@rendrjs/core';
-import Jumbotron from './Jumbotron';
-import Row from './Row';
+import { Jumbotron } from './Jumbotron';
+import { Row } from './Row';
+import { RemoveIcon } from './RemoveIcon';
 
 let random = (max) => Math.round(Math.random() * 1000) % max;
 
@@ -28,12 +29,9 @@ let buildData = (count) => {
   return data;
 };
 
-let preloadIcon = rendr('span', {
-  class: 'preloadicon glyphicon glyphicon-remove',
-  'aria-hidden': true,
-});
+export let preloadIcon = rendr(RemoveIcon, { pre: true });
 
-let App = () => {
+export let App = () => {
   let [state, setState] = useState({ arr: [], sel: 0 });
 
   let run = () => setState({ arr: buildData(1000), sel: 0 });
@@ -58,7 +56,7 @@ let App = () => {
     old.arr.splice(old.arr.findIndex((d) => d.id === id), 1);
     return { ...old };
   });
-  let select = id => setState(old => ({ ...old, sel: id }));
+  let sel = id => setState(old => ({ ...old, sel: id }));
 
   return rendr('div', {
     class: 'container',
@@ -70,8 +68,8 @@ let App = () => {
           slot: state.arr.map(item => rendr(Row, {
             key: `${item.id}`,
             item,
-            sel: state.sel === item.id,
-            select,
+            hi: state.sel === item.id,
+            sel,
             del,
             memo: [item.id === state.sel, item.label],
           })),
@@ -81,5 +79,3 @@ let App = () => {
     ],
   });
 };
-
-export default App;

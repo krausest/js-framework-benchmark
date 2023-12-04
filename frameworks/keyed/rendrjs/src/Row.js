@@ -1,35 +1,30 @@
 import { rendr } from '@rendrjs/core';
+import { colMd1, colMd4, colMd6 } from './classes';
+import { RemoveIcon } from './RemoveIcon';
 
-let Row = props => {
+export let Row = ({ hi, sel, item, del }) => {
   return rendr('tr', {
-    class: props.sel ? 'danger' : undefined,
+    class: hi ? 'danger' : undefined,
     slot: [
       rendr('td', {
-        class: 'col-md-1',
-        slot: `${props.item.id}`,
+        class: colMd1,
+        slot: `${item.id}`,
       }),
       rendr('td', {
-        class: 'col-md-4',
+        class: colMd4,
         slot: rendr('a', {
-          onclick: () => props.select(props.item.id),
-          slot: props.item.label,
+          onclick: () => sel(item.id),
+          slot: item.label,
         }),
       }),
       rendr('td', {
-        class: 'col-md-1',
+        class: colMd1,
         slot: rendr('a', {
-          onclick: () => props.del(props.item.id),
-          slot: rendr('span', {
-            class: 'glyphicon glyphicon-remove',
-            'aria-hidden': true,
-          }),
+          onclick: () => del(item.id),
+          slot: rendr(RemoveIcon, {}),
         }),
       }),
-      rendr('td', {
-        class: 'col-md-6',
-      }),
+      rendr('td', { class: colMd6 }),
     ],
   });
 };
-
-export default Row;

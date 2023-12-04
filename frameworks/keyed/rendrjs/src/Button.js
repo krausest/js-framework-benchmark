@@ -1,8 +1,9 @@
 import { rendr } from '@rendrjs/core';
+import { colSm6 } from './classes';
 
-let Button = (props) => {
+export let Button = (props) => {
   return rendr('div', {
-    class: 'col-sm-6 smallpad',
+    class: `${colSm6} smallpad`,
     slot: rendr('button', {
       id: props.id,
       onclick: props.cb,
@@ -12,5 +13,3 @@ let Button = (props) => {
     }),
   });
 };
-
-export default Button;
