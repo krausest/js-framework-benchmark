@@ -24,7 +24,7 @@ const SHORT_TIMEOUT = 20 * 1000;
 let durations: Array<number> = [];
 
 export function getAfterframeDurations() {
-  return durations.map((d) => ({ total: d, script: 0 }));
+  return durations.map((d) => ({ total: d, script: 0, paint: 0 }));
 }
 
 export async function initMeasurement(driver: WebDriver) {
@@ -98,12 +98,12 @@ async function measureClickForElement(driver: WebDriver, elem: WebElement) {
     elem
   )) as number;
   durations.push(duration);
-  console.log("computed duration ", duration);
+  console.log("computed duration", duration);
 }
 
 async function measureClickElementById(driver: WebDriver, id: string, isInButtonArea: boolean) {
   let elem = await findById(driver, id, isInButtonArea);
-  console.log("measureClickElementById: ", elem);
+  console.log("measureClickElementById:", elem);
   await measureClickForElement(driver, elem);
 }
 
@@ -273,12 +273,18 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkWebdriver {
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
+    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+      await clickElementById(driver, "run", true);
+      await testTextContains(driver, "//tbody/tr[1]/td[1]", (i * 1000 + 1).toFixed(), config.TIMEOUT, false);
+      await clickElementById(driver, "clear", true);
+      await testElementNotLocatedByXPath(driver, "//tbody/tr[1]", config.TIMEOUT, false);
+    }
     await clickElementById(driver, "run", true);
     await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
   }
   async run(driver: WebDriver) {
     await measureClickElementById(driver, "add", true);
-    await testElementLocatedByXpath(driver, "//tbody/tr[1100]/td[2]/a", config.TIMEOUT, false);
+    await testElementLocatedByXpath(driver, "//tbody/tr[2000]/td[2]/a", config.TIMEOUT, false);
   }
 })();
 

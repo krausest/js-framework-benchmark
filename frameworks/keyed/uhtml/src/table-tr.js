@@ -1,4 +1,4 @@
-import {html} from 'uhtml';
+import {htmlFor} from 'uhtml/keyed';
 
 const stateHandler = new WeakMap;
 
@@ -15,13 +15,13 @@ export default (state) => {
   
   const handler = stateHandler.get(state);
   const {data, selected} = state;
-  return html.for(state)`
+  return htmlFor(state)`
     <table class="table table-hover table-striped test-data">
       <tbody>${
       data.map(item => {
         const {id, label} = item;
-        return html.for(data, id)`
-        <tr @click=${handler} id=${id} class=${id === selected ? 'danger' : ''}>
+        return htmlFor(data, id)`
+        <tr onclick=${handler} id=${id} class=${id === selected ? 'danger' : ''}>
           <td class="col-md-1">${id}</td>
           <td class="col-md-4">
             <a data-action="select">${label}</a>

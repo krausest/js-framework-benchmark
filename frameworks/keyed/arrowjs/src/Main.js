@@ -45,7 +45,7 @@ function buildData(count = 1000) {
     data[i] = { id: rowId++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] };
   return data;
 }
-html`<div>
+html`<div class="container">
   <div class="jumbotron">
   <div class="row">
     <div class="col-md-6">

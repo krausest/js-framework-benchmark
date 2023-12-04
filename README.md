@@ -5,6 +5,14 @@ This is a simple benchmark for several javascript frameworks. The benchmarks cre
 
 ![Screenshot](images/screenshot.png?raw=true "Screenshot")
 
+## Security advice
+
+Currently there are 186 implemenations in this repository. It's of course impossible for me to make a security assessment
+for all those implementations. `npm ci` and `npm install` can execute arbitraty commands, so they should be executed only for packages you trust. Consequently I build on a dedicated virtual private linux server such that I don't have to install the packages for all those implemenations on my laptop. There's a prebuild build.zip for each chrome release you can download such that you can avoid installing the packages from all implementations. 
+(I don't know of any (attempted) case for malicious packages in this repository, so please take it just as a general warning.)
+
+The server implemenation in this repository should only be started on your local machine and access should be restricted to your local machine. I recommend against starting the server such that it can be publically accessed from the internet.
+
 ## About the benchmarks
 
 The following operations are benchmarked for each framework:
@@ -54,9 +62,9 @@ Depending on your requirements, the “non-keyed” mode can be a performance ga
 
 Read more here: [https://www.stefankrause.net/wp/?p=342](https://www.stefankrause.net/wp/?p=342)
 
-# 1 NEW: Run pre-built binaries for all frameworks
+# 1 Run pre-built binaries for all frameworks
 
-There are currently ~60 framework entries in this repository. Installing (and maintaining) those can be challenging, but here are simplified instructions how to get started.
+There are currently 186 implementations in this repository. Installing (and maintaining) those can be challenging, but here are simplified instructions how to get started. See the security advice above to read why that might be a good idea.
 
 ## 1.1 Prerequisites
 
@@ -275,11 +283,12 @@ npm run index
 
 ## 2.7 [Optional] Building and running the benchmarks for all frameworks
 
-This is not for the faint at heart. You can build all frameworks simply by issuing:
+This is not for the faint at heart. **Please read the security advice before running this command.**
+You can build all frameworks by issuing:
 
 ```
 cd ..
-npm run build-prod
+npm run rebuild-all
 ```
 
 After downloading the whole internet it starts building it. Basically there should be no errors during the build, but I can't guarantee that the dependencies won't break. 
@@ -511,6 +520,10 @@ You can set an optional different URL if needed or specify that your DOM uses a 
 
 ## 4.4 Submitting your implementation
 
+Please take a look at https://github.com/krausest/js-framework-benchmark/wiki/Process-for-merging-a-pull-request for informations how pull requests are merged.
+
+
+
 Contributions are very welcome. Please use the following rules:
 
 - Name your directory frameworks/[keyed|non-keyed]/[FrameworkName]
@@ -522,7 +535,7 @@ Contributions are very welcome. Please use the following rules:
 - Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
 - Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
 - Please push only files in your framework folder (not index.html or results.json)
-- **Please make sure your implementation is validated by the test tool.** cd to webdriver-ts and invoke it with `npm run isKeyed [keyed|non-keyed]/[FrameworkName]`. It'll print an error if your framework behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation. Some common errors include:
+- **Please make sure your implementation is validated by the test tool.** cd to the root directory and perform a check  `npm run rebuild-ci [keyed|non-keyed]/[FrameworkName]`. It'll print an error if your framework doesn't build, the benchmark can't be run or behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation. Some common errors include:
   - Your package.json is missing some required fields
   - Incorrect classification (Keyed/NonKeyed)
   - You have gzipped files in /dist (unfortunately the web server prefers these when they exist)
@@ -551,23 +564,30 @@ Thanks to Baptiste Augrain for making the benchmarks more sophisticated and addi
 
 Frameworks without significant activity on github or npm for more than a year will be removed (_automatic commits like dependabot and minor updates, like docs editions, are ignored_).
 
+## 2023-11-07
+The following frameworks were archived after chrome 119. Their last results are included in [chrome 119 results](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_119.0.6045.105.html).
+- [x] sifrr
+
+
 ## 2023-10-22
 The following frameworks were archived after chrome 118. Their last results are included in [chrome 118 results](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_118.0.5993.70.html).
 - [x] 1more
+- [x] bdc
+- [x] choo
 - [x] domdiff
 - [x] domvm
 - [x] endorphin
 - [x] etch
+- [x] forgo
+- [x] fullweb-helpers
+- [x] fullweb-template
 - [x] heresy
+- [x] hullo
 - [x] lighterhtml
 - [x] neverland
 - [x] resonatejs
 - [x] sledgehammer
 - [x] uhydro
-- [x] fullweb-helpers
-- [x] fullweb-template
-- [x] forgo
-- [x] choo
 
 
 ## 2020-7-9

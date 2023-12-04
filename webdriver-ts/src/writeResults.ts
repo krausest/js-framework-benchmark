@@ -1,13 +1,14 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { BenchmarkInfo, BenchmarkType, CPUBenchmarkResult, fileName } from "./benchmarksCommon.js";
-import { StartupBenchmarkResult, subbenchmarks } from "./benchmarksLighthouse.js";
+import * as benchmarksLighthouse from "./benchmarksLighthouse.js";
+import * as benchmarksSize from "./benchmarksSize.js";
 import { FrameworkData, JsonResult, JsonResultData } from "./common.js";
 import { stats } from "./stats.js";
 
 export type ResultLightHouse = {
   framework: FrameworkData;
   benchmark: BenchmarkInfo;
-  results: StartupBenchmarkResult[];
+  results: benchmarksLighthouse.StartupBenchmarkResult[];
   type: BenchmarkType.STARTUP;
 };
 
@@ -25,10 +26,23 @@ export type ResultMem = {
   type: BenchmarkType.MEM;
 };
 
-export function writeResults(resultDir: string, res: ResultLightHouse | ResultCPU | ResultMem) {
+export type ResultSize = {
+  framework: FrameworkData;
+  benchmark: BenchmarkInfo;
+  results: benchmarksSize.SizeBenchmarkResult[];
+  type: BenchmarkType.SIZE;
+};
+
+export function writeResults(resultDir: string, res: ResultLightHouse | ResultCPU | ResultMem | ResultSize) {
   switch (res.type) {
     case BenchmarkType.STARTUP:
-      for (let subbench of subbenchmarks) {
+      for (let subbench of benchmarksLighthouse.subbenchmarks) {
+        let results = res.results.filter((r) => r.benchmark.id == subbench.id).map((r) => r.result);
+        createResultFile(resultDir, results, res.framework, subbench);
+      }
+      break;
+    case BenchmarkType.SIZE:
+      for (let subbench of benchmarksSize.subbenchmarks) {
         let results = res.results.filter((r) => r.benchmark.id == subbench.id).map((r) => r.result);
         createResultFile(resultDir, results, res.framework, subbench);
       }
@@ -36,7 +50,10 @@ export function writeResults(resultDir: string, res: ResultLightHouse | ResultCP
     case BenchmarkType.CPU:
       createResultFile(
         resultDir,
-        { total: res.results.map((r) => r.total), script: res.results.map((r) => r.script) },
+        { total: res.results.map((r) => r.total), 
+          script: res.results.map((r) => r.script),
+          paint: res.results.map((r) => r.paint),
+         },
         res.framework,
         res.benchmark
       );
@@ -63,6 +80,9 @@ function createResultFile(
       break;
     case BenchmarkType.STARTUP:
       type = "startup";
+      break;
+    case BenchmarkType.SIZE:
+      type = "size";
       break;
   }
   let convertResult = (label: string, data: number[]) => {

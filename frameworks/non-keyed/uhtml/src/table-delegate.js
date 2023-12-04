@@ -10,7 +10,7 @@ export default (state) => {
   const {data, selected} = state;
   return html`
     <table class="table table-hover table-striped test-data"
-      @click=${handler} .state=${state}>
+      onclick=${handler} .state=${state}>
       <tbody>${
       data.map(({id, label}) => html`
         <tr id=${id} class=${id === selected ? 'danger' : ''}>

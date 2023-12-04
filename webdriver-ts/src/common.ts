@@ -38,6 +38,7 @@ export interface BenchmarkOptions {
   numIterationsForCPUBenchmarks: number;
   numIterationsForMemBenchmarks: number;
   numIterationsForStartupBenchmark: number;
+  numIterationsForSizeBenchmark: number;
 
   allowThrottling: boolean;
   resultsDirectory: string;
@@ -64,10 +65,11 @@ export let config = {
   NUM_ITERATIONS_FOR_BENCHMARK_CPU_DROP_SLOWEST_COUNT: 0, // drop the # of slowest results
   NUM_ITERATIONS_FOR_BENCHMARK_MEM: 1,
   NUM_ITERATIONS_FOR_BENCHMARK_STARTUP: 1,
+  NUM_ITERATIONS_FOR_BENCHMARK_SIZE: 1,
   WARMUP_COUNT: 5,
   TIMEOUT: 60 * 1000,
   LOG_PROGRESS: true,
-  LOG_DETAILS: true,
+  LOG_DETAILS: false,
   LOG_DEBUG: false,
   LOG_TIMELINE: false,
   EXIT_ON_ERROR: null as boolean, // set from command line
@@ -159,7 +161,7 @@ export async function initializeFrameworks(
         useRowShadowRoot: !!frameworkVersionInformation.useRowShadowRoot,
         shadowRootName: frameworkVersionInformation.shadowRootName,
         buttonsInShadowRoot: !!frameworkVersionInformation.buttonsInShadowRoot,
-        issues: (frameworkVersionInformation.issues ?? []).map((i) => Number(i)),
+        issues: (frameworkVersionInformation.issues ?? []).map(Number),
         frameworkHomeURL: frameworkVersionInformation.frameworkHomeURL ?? "",
       });
     }

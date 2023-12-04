@@ -1,7 +1,7 @@
 import * as benchmarksCommon from "./benchmarksCommon.js";
 import { BenchmarkImpl, BenchmarkType, StartupBenchmarkInfo } from "./benchmarksCommon.js";
 
-export interface StartupBenchmarkResult extends BenchmarkImpl {
+export interface StartupBenchmarkResult {
   benchmark: StartupBenchmarkInfo;
   result: number;
 }
@@ -12,7 +12,8 @@ let toKb = (x: number) => x / 1024;
 export const benchStartupConsistentlyInteractive: StartupBenchmarkInfo = {
   id: "31_startup-ci",
   label: "consistently interactive",
-  description: () => "a pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)",
+  description: () =>
+    "a pessimistic TTI - when the CPU and network are both definitely very idle. (no more CPU tasks over 50ms)",
   property: "interactive",
   fn: id,
   type: BenchmarkType.STARTUP,

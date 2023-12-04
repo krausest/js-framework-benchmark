@@ -5,6 +5,8 @@ export enum BenchmarkType {
   MEM,
   STARTUP_MAIN,
   STARTUP,
+  SIZE_MAIN,
+  SIZE,
 }
 
 export interface BenchmarkInfoBase {
@@ -25,6 +27,21 @@ export interface MemBenchmarkInfo extends BenchmarkInfoBase {
   type: BenchmarkType.MEM;
 }
 
+export interface SizeInfoJSON {
+  size_uncompressed: number,
+  size_compressed: number,
+  fp: number,
+  fcp: number,
+}
+
+export interface SizeBenchmarkInfo extends BenchmarkInfoBase {
+  type: BenchmarkType.SIZE;
+  fn(sizeInfo: SizeInfoJSON): number;
+}
+
+export interface SizeMainBenchmarkInfo extends BenchmarkInfoBase {
+  type: BenchmarkType.SIZE_MAIN;
+}
 export interface StartupMainBenchmarkInfo extends BenchmarkInfoBase {
   type: BenchmarkType.STARTUP_MAIN;
 }
@@ -35,11 +52,7 @@ export interface StartupBenchmarkInfo extends BenchmarkInfoBase {
   fn: (x: number) => number;
 }
 
-export type BenchmarkInfo =
-  | CPUBenchmarkInfo
-  | MemBenchmarkInfo
-  | StartupMainBenchmarkInfo
-  | StartupBenchmarkInfo;
+export type BenchmarkInfo = CPUBenchmarkInfo | MemBenchmarkInfo | StartupMainBenchmarkInfo | StartupBenchmarkInfo | SizeBenchmarkInfo | SizeMainBenchmarkInfo;
 
 export interface BenchmarkImpl {
   benchmarkInfo: BenchmarkInfo;
@@ -49,6 +62,7 @@ export interface BenchmarkImpl {
 export interface CPUBenchmarkResult {
   total: number;
   script: number;
+  paint: number;
 }
 
 export function fileName(framework: FrameworkData, benchmark: BenchmarkInfo) {
@@ -72,6 +86,7 @@ export enum Benchmark {
   _25 = "25_run-clear-memory",
   _26 = "26_run-10k-memory",
   _30 = "30_startup",
+  _40 = "40_sizes",
 }
 
 export type BenchmarkId =
@@ -84,7 +99,8 @@ export type BenchmarkId =
   | typeof Benchmark._07
   | typeof Benchmark._08
   | typeof Benchmark._09
-  | typeof Benchmark._30;
+  | typeof Benchmark._30
+  | typeof Benchmark._40;
 
 const throttlingFactors: { [idx: string]: number } = {
   [Benchmark._03]: 4,
@@ -118,10 +134,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     id: Benchmark._02,
     label: "replace all rows",
     description: (throttleCPU: number | undefined) =>
-      "updating all 1,000 rows (" +
-      config.WARMUP_COUNT +
-      " warmup runs)." +
-      slowDownNote(throttleCPU),
+      "updating all 1,000 rows (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -141,10 +154,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     id: Benchmark._04,
     label: "select row",
     description: (throttleCPU: number | undefined) =>
-      "highlighting a selected row. (" +
-      config.WARMUP_COUNT +
-      " warmup runs)." +
-      slowDownNote(throttleCPU),
+      "highlighting a selected row. (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: false,
@@ -154,10 +164,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     id: Benchmark._05,
     label: "swap rows",
     description: (throttleCPU: number | undefined) =>
-      "swap 2 rows for table with 1,000 rows. (" +
-      config.WARMUP_COUNT +
-      " warmup runs)." +
-      slowDownNote(throttleCPU),
+      "swap 2 rows for table with 1,000 rows. (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -177,10 +184,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     id: Benchmark._07,
     label: "create many rows",
     description: (throttleCPU: number | undefined) =>
-      "creating 10,000 rows. (" +
-      config.WARMUP_COUNT +
-      " warmup runs with 1k rows)." +
-      slowDownNote(throttleCPU),
+      "creating 10,000 rows. (" + config.WARMUP_COUNT + " warmup runs with 1k rows)." + slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -190,7 +194,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     id: Benchmark._08,
     label: "append rows to large table",
     description: (throttleCPU: number | undefined) =>
-      "appending 1,000 to a table of 10,000 rows." + slowDownNote(throttleCPU),
+      "appending 1,000 to a table of 1,000 rows." + slowDownNote(throttleCPU),
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -200,11 +204,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     id: Benchmark._09,
     label: "clear rows",
     description: (throttleCPU: number | undefined) =>
-      "clearing a table with 1,000 rows." +
-      slowDownNote(throttleCPU) +
-      " (" +
-      config.WARMUP_COUNT +
-      " warmup runs).",
+      "clearing a table with 1,000 rows." + slowDownNote(throttleCPU) + " (" + config.WARMUP_COUNT + " warmup runs).",
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -257,6 +257,15 @@ export const startupBenchmarkInfosArray: Array<StartupMainBenchmarkInfo> = [
     type: BenchmarkType.STARTUP_MAIN,
     label: "",
     description: () => "",
+  }
+];
+
+export const sizesBenchmarkInfosArray: Array<SizeMainBenchmarkInfo> = [
+  {
+    id: Benchmark._40,
+    type: BenchmarkType.SIZE_MAIN,
+    label: "",
+    description: () => "",
   },
 ];
 
@@ -275,8 +284,9 @@ for (let bi of startupBenchmarkInfosArray) {
   startupBenchmarkInfos[bi.id] = bi;
 }
 
-export const benchmarkInfos = [
-  ...cpuBenchmarkInfosArray,
-  ...memBenchmarkInfosArray,
-  ...startupBenchmarkInfosArray,
-];
+export const sizeBenchmarkInfos: { [idx: string]: SizeMainBenchmarkInfo } = {};
+for (let bi of sizesBenchmarkInfosArray) {
+  sizeBenchmarkInfos[bi.id] = bi;
+}
+
+export const benchmarkInfos = [...cpuBenchmarkInfosArray, ...memBenchmarkInfosArray, ...startupBenchmarkInfosArray, ...sizesBenchmarkInfosArray];

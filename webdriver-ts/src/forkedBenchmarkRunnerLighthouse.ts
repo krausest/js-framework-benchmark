@@ -1,12 +1,6 @@
 import * as chromeLauncher from "chrome-launcher";
 
-import {
-  Config,
-  config as defaultConfig,
-  FrameworkData,
-  ErrorAndWarning,
-  BenchmarkOptions,
-} from "./common.js";
+import { Config, config as defaultConfig, FrameworkData, ErrorAndWarning, BenchmarkOptions } from "./common.js";
 import { BenchmarkLighthouse, StartupBenchmarkResult, benchmarks } from "./benchmarksLighthouse.js";
 import { StartupBenchmarkInfo } from "./benchmarksCommon.js";
 import lighthouse from "lighthouse";
@@ -17,8 +11,8 @@ function extractRawValue(results: any, id: string) {
   let audits = results.audits;
   if (!audits) return null;
   let audit_with_id = audits[id];
-  if (typeof audit_with_id === "undefined") return null;
-  if (typeof audit_with_id.numericValue === "undefined") return null;
+  if (audit_with_id === undefined) return null;
+  if (audit_with_id.numericValue === undefined) return null;
   return audit_with_id.numericValue;
 }
 
@@ -67,12 +61,10 @@ async function runLighthouse(
     }
     if (config.LOG_DEBUG) console.log("lighthouse result", results);
 
-    return startupBenchmarks.map((bench) => {
-      return {
+    return startupBenchmarks.map((bench) => ({
         benchmark: bench,
         result: bench.fn(extractRawValue(results.lhr, bench.property)),
-      } as StartupBenchmarkResult;
-    });
+    }));
   } catch (error) {
     console.log("error running lighthouse", error);
     throw error;
@@ -85,9 +77,9 @@ function convertError(error: any): string {
     error,
     "| type:",
     typeof error,
-    " instance of Error",
+    "instance of Error",
     error instanceof Error,
-    " Message: ",
+    "Message:",
     error.message
   );
   if (typeof error === "string") {
@@ -113,9 +105,8 @@ async function runStartupBenchmark(
   try {
     let result = await runLighthouse(framework, benchmark.subbenchmarks, benchmarkOptions);
     return { error, warnings: [], result };
-  } catch (e) {
-    error = convertError(e);
-    return { error, warnings: [] };
+  } catch (error) {
+    return { error: convertError(error), warnings: [] };
   }
 }
 
@@ -139,7 +130,7 @@ export async function executeBenchmark(
 
 process.on("message", (msg: any) => {
   config = msg.config;
-  console.log("START BENCHMARK. Write results? ", config.WRITE_RESULTS);
+  console.log("START BENCHMARK. Write results?", config.WRITE_RESULTS);
   // if (config.LOG_DEBUG) console.log("child process got message", msg);
 
   let {
@@ -156,9 +147,9 @@ process.on("message", (msg: any) => {
       process.send(result);
       process.exit(0);
     })
-    .catch((err) => {
+    .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunnerLighthouse");
-      process.send({ failure: convertError(err) });
+      process.send({ failure: convertError(error) });
       process.exit(0);
     });
 });

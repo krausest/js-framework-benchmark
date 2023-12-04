@@ -35,15 +35,11 @@ export async function checkElementExists(page: Page, selector: string) {
 export async function clickElement(page: Page, selector: string) {
   let elem = await page.$(selector);
   if (!elem.asElement()) throw `clickElementByXPath ${selector} failed. Element was not found.`;
-  await elem.asElement().click();
+  await elem.click();
   await elem.dispose();
 }
 
-export async function checkElementContainsText(
-  page: Page,
-  selector: string,
-  expectedText: string
-): Promise<void> {
+export async function checkElementContainsText(page: Page, selector: string, expectedText: string): Promise<void> {
   let start = Date.now();
   let txt;
   for (let k = 0; k < 10; k++) {
@@ -63,11 +59,7 @@ export async function checkElementContainsText(
   throw `checkElementContainsText ${selector} failed. expected ${expectedText}, but was ${txt}`;
 }
 
-export async function checkElementHasClass(
-  page: Page,
-  selector: string,
-  className: string
-): Promise<void> {
+export async function checkElementHasClass(page: Page, selector: string, className: string): Promise<void> {
   let clazzes;
   for (let k = 0; k < 10; k++) {
     let elem = await page.$(selector);
@@ -85,11 +77,7 @@ export async function checkElementHasClass(
   throw `checkElementHasClass ${selector} failed. expected ${className}, but was ${clazzes}`;
 }
 
-export async function checkCountForSelector(
-  page: Page,
-  selector: string,
-  expectedCount: number
-): Promise<void> {
+export async function checkCountForSelector(page: Page, selector: string, expectedCount: number): Promise<void> {
   let elems = await page.$$(selector);
   if (elems) {
     if (expectedCount !== elems.length) {
