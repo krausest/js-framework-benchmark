@@ -10,7 +10,7 @@
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "@rendrjs/core": "0.1.217"
+    "@rendrjs/core": "0.1.218"
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@rendrjs/core",
