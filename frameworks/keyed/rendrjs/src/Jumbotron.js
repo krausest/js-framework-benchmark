@@ -2,16 +2,18 @@ import { rendr } from '@rendrjs/core';
 import { Button } from './Button';
 import { colMd6 } from './classes';
 
+let h1 = rendr('div', {
+  class: colMd6,
+  slot: rendr('h1', { slot: 'Rendrjs keyed' }),
+});
+
 export let Jumbotron = (props) => {
   return rendr('div', {
     class: 'jumbotron',
     slot: rendr('div', {
       class: 'row',
       slot: [
-        rendr('div', {
-          class: colMd6,
-          slot: rendr('h1', { slot: 'Rendrjs keyed' }),
-        }),
+        h1,
         rendr('div', {
           class: colMd6,
           slot: rendr('div', {

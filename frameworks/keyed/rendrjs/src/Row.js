@@ -3,6 +3,7 @@ import { colMd1, colMd4, colMd6 } from './classes';
 import { makeIcon } from './RemoveIcon';
 
 let icon = makeIcon();
+let emptyTd = rendr('td', { class: colMd6 });
 
 export let Row = ({ hi, sel, item, del }) => {
   return rendr('tr', {
@@ -26,7 +27,7 @@ export let Row = ({ hi, sel, item, del }) => {
           slot: icon,
         }),
       }),
-      rendr('td', { class: colMd6 }),
+      emptyTd,
     ],
   });
 };

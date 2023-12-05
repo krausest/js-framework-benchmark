@@ -66,7 +66,7 @@ export let App = () => {
         class: 'table table-hover table-striped test-data',
         slot: rendr('tbody', {
           slot: state.arr.map(item => rendr(Row, {
-            key: `${item.id}`,
+            key: item.id,
             item,
             hi: state.sel === item.id,
             sel,
