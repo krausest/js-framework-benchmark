@@ -1,22 +1,22 @@
-import { rendr } from '@rendrjs/core';
+import { div, h1, rendr } from '@rendrjs/core';
 import { Button } from './Button';
 import { colMd6 } from './classes';
 
-let h1 = rendr('div', {
+let header = div({
   class: colMd6,
-  slot: rendr('h1', { slot: 'Rendrjs keyed' }),
+  slot: h1({ slot: 'Rendrjs keyed' }),
 });
 
 export let Jumbotron = (props) => {
-  return rendr('div', {
+  return div({
     class: 'jumbotron',
-    slot: rendr('div', {
+    slot: div({
       class: 'row',
       slot: [
-        h1,
-        rendr('div', {
+        header,
+        div({
           class: colMd6,
-          slot: rendr('div', {
+          slot: div({
             class: 'row',
             slot: [
               rendr(Button, { id: 'run', text: 'Create 1,000 rows', cb: props.run }),

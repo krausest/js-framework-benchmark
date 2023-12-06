@@ -1,6 +1,6 @@
-import { rendr } from '@rendrjs/core';
+import { span } from '@rendrjs/core';
 
-export let makeIcon = preload => rendr('span', {
+export let makeIcon = preload => span({
     class: `${preload ? 'preloadicon ' : ''}glyphicon glyphicon-remove`,
     ariaHidden: true,
 });

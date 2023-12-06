@@ -1,4 +1,4 @@
-import { rendr, useState } from '@rendrjs/core';
+import { div, rendr, table, tbody, useState } from '@rendrjs/core';
 import { Jumbotron } from './Jumbotron';
 import { Row } from './Row';
 import { makeIcon } from './RemoveIcon';
@@ -58,13 +58,13 @@ export let App = () => {
   });
   let sel = id => setState(old => ({ ...old, sel: id }));
 
-  return rendr('div', {
+  return div({
     class: 'container',
     slot: [
       rendr(Jumbotron, { run, lots, clear, update, swap, push, memo: [] }),
-      rendr('table', {
+      table({
         class: 'table table-hover table-striped test-data',
-        slot: rendr('tbody', {
+        slot: tbody({
           slot: state.arr.map(item => rendr(Row, {
             key: item.id,
             item,
