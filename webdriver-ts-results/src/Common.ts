@@ -13,8 +13,7 @@ export enum DisplayMode {
 export enum CpuDurationMode {
   Total = "total",
   Script = "script",
-  Render = "paint",
-  BrowserOnly = "browser only",
+  Render = "paint"
 }
 
 export enum FrameworkType {

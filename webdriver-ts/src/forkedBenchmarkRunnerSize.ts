@@ -71,7 +71,7 @@ async function runSizeBenchmark(
       let sizeInfo = (await sizeInfoResponse.json()) as SizeInfoJSON;
       console.log("sizeInfo", sizeInfo);
       sizeInfo.fp = paintEvents.find((e: any) => e.name === "first-paint").startTime;
-      sizeInfo.fcp = paintEvents.find((e: any) => e.name === "first-contentful-paint").startTime;
+      // sizeInfo.fcp = paintEvents.find((e: any) => e.name === "first-contentful-paint").startTime;
 
       results = benchmarks.subbenchmarks.map((b) => ({
           benchmark: b,
