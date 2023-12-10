@@ -1,9 +1,10 @@
 import { button, div } from '@rendrjs/core';
 import { colSm6 } from './classes';
 
+let className = colSm6 + ' smallpad';
 export let Button = (props) => {
   return div({
-    class: `${colSm6} smallpad`,
+    class: className,
     slot: button({
       id: props.id,
       onclick: props.cb,
