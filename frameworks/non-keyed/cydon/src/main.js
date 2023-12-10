@@ -11,16 +11,14 @@ function buildData(count) {
 	for (let i = 0; i < count; i++) {
 		data.push({
 			id: nextId++,
-			label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
+			label: `${adjectives[random(adjectives.length)]} ${colours[random(colours.length)]} ${nouns[random(nouns.length)]}`,
 		})
 	}
 
 	return data
 }
 
-function _random(max) {
-	return Math.round(Math.random() * 1000) % max
-}
+const random = max => Math.round(Math.random() * 1000) % max;
 
 class MainApp extends CydonElement {
 	rows = []
