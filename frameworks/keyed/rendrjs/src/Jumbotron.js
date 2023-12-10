@@ -1,27 +1,30 @@
-import { rendr } from '@rendrjs/core';
-import Button from './Button';
+import { div, h1, rendr } from '@rendrjs/core';
+import { Button } from './Button';
+import { colMd6 } from './classes';
 
-const Jumbotron = (props) => {
-  return rendr('div', {
-    className: 'jumbotron',
-    slot: rendr('div', {
-      className: 'row',
+let header = div({
+  class: colMd6,
+  slot: h1({ slot: 'Rendrjs keyed' }),
+});
+
+export let Jumbotron = (props) => {
+  return div({
+    class: 'jumbotron',
+    slot: div({
+      class: 'row',
       slot: [
-        rendr('div', {
-          className: 'col-md-6',
-          slot: rendr('h1', { slot: 'Rendrjs keyed' }),
-        }),
-        rendr('div', {
-          className: 'col-md-6',
-          slot: rendr('div', {
-            className: 'row',
+        header,
+        div({
+          class: colMd6,
+          slot: div({
+            class: 'row',
             slot: [
-              rendr(Button, { id: 'run', title: 'Create 1,000 rows', cb: props.onRun }),
-              rendr(Button, { id: 'runlots', title: 'Create 10,000 rows', cb: props.onRunlots }),
-              rendr(Button, { id: 'add', title: 'Append 1,000 rows', cb: props.onAppend }),
-              rendr(Button, { id: 'update', title: 'Update every 10th row', cb: props.onUpdate }),
-              rendr(Button, { id: 'clear', title: 'Clear', cb: props.onClear }),
-              rendr(Button, { id: 'swaprows', title: 'Swap rows', cb: props.onSwap }),
+              rendr(Button, { id: 'run', text: 'Create 1,000 rows', cb: props.run }),
+              rendr(Button, { id: 'runlots', text: 'Create 10,000 rows', cb: props.lots }),
+              rendr(Button, { id: 'add', text: 'Append 1,000 rows', cb: props.push }),
+              rendr(Button, { id: 'update', text: 'Update every 10th row', cb: props.update }),
+              rendr(Button, { id: 'clear', text: 'Clear', cb: props.clear }),
+              rendr(Button, { id: 'swaprows', text: 'Swap rows', cb: props.swap }),
             ],
           }),
         }),
@@ -29,5 +32,3 @@ const Jumbotron = (props) => {
     }),
   });
 };
-
-export default Jumbotron;

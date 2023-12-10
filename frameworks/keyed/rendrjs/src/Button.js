@@ -1,16 +1,16 @@
-import { rendr } from '@rendrjs/core';
+import { button, div } from '@rendrjs/core';
+import { colSm6 } from './classes';
 
-const Button = (props) => {
-  return rendr('div', {
-    className: 'col-sm-6 smallpad',
-    slot: rendr('button', {
+let className = colSm6 + ' smallpad';
+export let Button = (props) => {
+  return div({
+    class: className,
+    slot: button({
       id: props.id,
       onclick: props.cb,
       type: 'button',
-      className: 'btn btn-primary btn-block',
-      slot: props.title,
+      class: 'btn btn-primary btn-block',
+      slot: props.text,
     }),
   });
 };
-
-export default Button;

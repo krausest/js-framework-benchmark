@@ -1,22 +1,23 @@
-import { rendr, useCallback, useState } from '@rendrjs/core';
-import Jumbotron from './Jumbotron';
-import Row from './Row';
+import { div, rendr, table, tbody, useState } from '@rendrjs/core';
+import { Jumbotron } from './Jumbotron';
+import { Row } from './Row';
+import { makeIcon } from './RemoveIcon';
 
-const random = (max) => Math.round(Math.random() * 1000) % max;
+let random = (max) => Math.round(Math.random() * 1000) % max;
 
-const A = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome',
+let A = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome',
   'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy',
   'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive',
   'fancy'];
-const C = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown',
+let C = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown',
   'white', 'black', 'orange'];
-const N = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie',
+let N = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie',
   'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
 
 let nextId = 1;
 
-const buildData = (count) => {
-  const data = new Array(count);
+let buildData = (count) => {
+  let data = new Array(count);
 
   for (let i = 0; i < count; i++) {
     data[i] = {
@@ -28,58 +29,49 @@ const buildData = (count) => {
   return data;
 };
 
-const preloadIcon = rendr('span', {
-  className: 'preloadicon glyphicon glyphicon-remove',
-  'aria-hidden': true,
-});
+export let preloadIcon = makeIcon(true);
 
-const App = () => {
-  const [state, setState] = useState({ data: [], selected: 0 });
+export let App = () => {
+  let [state, setState] = useState({ arr: [], sel: 0 });
 
-  const onRun = useCallback(() => setState({ data: buildData(1000), selected: 0 }), []);
-  const onRunlots = useCallback(() => setState({ data: buildData(10000), selected: 0 }), []);
-  const onClear = useCallback(() => setState({ data: [], selected: 0 }), []);
-  const onUpdate = useCallback(() => setState(old => {
-    const newData = old.data.slice(0);
-    for (let i = 0; i < newData.length; i += 10) {
-      const r = newData[i];
-      newData[i] = { id: r.id, label: r.label + ' !!!' };
+  let run = () => setState({ arr: buildData(1000), sel: 0 });
+  let lots = () => setState({ arr: buildData(10000), sel: 0 });
+  let clear = () => setState({ arr: [], sel: 0 });
+  let update = () => setState(old => {
+    for (let i = 0; i < old.arr.length; i += 10) {
+      old.arr[i].label += ' !!!';
     }
-    return { data: newData, selected: old.selected };
-  }), []);
-  const onSwap = useCallback(() => setState(old => {
-    if (old.data.length > 998) {
-      const d1 = old.data[1];
-      const d998 = old.data[998];
-      old.data[1] = d998;
-      old.data[998] = d1;
-      return { ...old };
-    }
-    return { data: old.data, selected: 0 };
-  }), []);
-  const onAppend = useCallback(() => setState(old => {
-    return { data: old.data.concat(buildData(1000)), selected: old.selected };
-  }), []);
-  const onDelete = useCallback((id) => setState(old => {
-    old.data.splice(old.data.findIndex((d) => d.id === id), 1);
     return { ...old };
-  }), []);
-  const onSelect = useCallback((id) => setState(old => ({ ...old, selected: id })), []);
+  });
+  let swap = () => setState(old => {
+    if (old.arr.length > 998) {
+      let one = old.arr[1];
+      old.arr[1] = old.arr[998];
+      old.arr[998] = one;
+    }
+    return { ...old, sel: 0 };
+  });
+  let push = () => setState(old => ({ arr: old.arr.concat(buildData(1000)), sel: old.sel }));
+  let del = (id) => setState(old => {
+    old.arr.splice(old.arr.findIndex((d) => d.id === id), 1);
+    return { ...old };
+  });
+  let sel = id => setState(old => ({ ...old, sel: id }));
 
-  return rendr('div', {
-    className: 'container',
+  return div({
+    class: 'container',
     slot: [
-      rendr(Jumbotron, { onRun, onRunlots, onClear, onUpdate, onSwap, onAppend, memo: [] }),
-      rendr('table', {
-        className: 'table table-hover table-striped test-data',
-        slot: rendr('tbody', {
-          slot: state.data.map(item => rendr(Row, {
-            key: `${item.id}`,
-            item: item,
-            selected: state.selected === item.id,
-            onSelect,
-            onDelete,
-            memo: [item.id === state.selected, item.label],
+      rendr(Jumbotron, { run, lots, clear, update, swap, push, memo: [] }),
+      table({
+        class: 'table table-hover table-striped test-data',
+        slot: tbody({
+          slot: state.arr.map(item => rendr(Row, {
+            key: item.id,
+            item,
+            hi: state.sel === item.id,
+            sel,
+            del,
+            memo: [item.id === state.sel, item.label],
           })),
         }),
       }),
@@ -87,5 +79,3 @@ const App = () => {
     ],
   });
 };
-
-export default App;
