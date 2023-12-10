@@ -23,9 +23,7 @@ if (process.env.production) {
 export default {
   input: 'src/main.js',
   output: {
-    file: 'dist/main.js',
-    format: 'iife',
-    name: 'main'
+    file: 'dist/main.js'
   },
   plugins
 };
