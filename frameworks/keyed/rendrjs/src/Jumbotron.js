@@ -1,9 +1,8 @@
 import { div, h1, rendr } from '@rendrjs/core';
 import { Button } from './Button';
-import { colMd6 } from './classes';
 
 let header = div({
-  class: colMd6,
+  class: 'col-md-6',
   slot: h1({ slot: 'Rendrjs keyed' }),
 });
 
@@ -15,7 +14,7 @@ export let Jumbotron = (props) => {
       slot: [
         header,
         div({
-          class: colMd6,
+          class: 'col-md-6',
           slot: div({
             class: 'row',
             slot: [
