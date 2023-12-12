@@ -1,10 +1,9 @@
 import { a, td, tr, useAtomSelector, useAtomSetter } from '@rendrjs/core';
-import { colMd1, colMd4, colMd6 } from './classes';
 import { makeIcon } from './RemoveIcon';
 import { dataAtom, selectedAtom } from './store';
  
 let icon = makeIcon();
-let emptyTd = td({ class: colMd6 });
+let emptyTd = td({ class: 'col-md-6' });
 
 export let Row = ({ item }) => {
   let setData = useAtomSetter(dataAtom);
@@ -19,16 +18,16 @@ export let Row = ({ item }) => {
   return tr({
     class: selected ? 'danger' : undefined,
     slot: [
-      td({ class: colMd1, slot: `${item.id}` }),
+      td({ class: 'col-md-1', slot: `${item.id}` }),
       td({
-        class: colMd4,
+        class: 'col-md-4',
         slot: a({
           onclick: () => setSelected(item.id),
           slot: item.label,
         }),
       }),
       td({
-        class: colMd1,
+        class: 'col-md-1',
         slot: a({
           onclick: () => del(item.id),
           slot: icon,

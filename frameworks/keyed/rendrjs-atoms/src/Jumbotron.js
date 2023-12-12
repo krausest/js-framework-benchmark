@@ -1,10 +1,9 @@
 import { div, h1, rendr, useAtomSetter } from '@rendrjs/core';
 import { Button } from './Button';
-import { colMd6 } from './classes';
 import { dataAtom, selectedAtom } from './store';
 
 let header = div({
-  class: colMd6,
+  class: 'col-md-6',
   slot: h1({ slot: 'Rendrjs atoms keyed' }),
 });
 
@@ -78,7 +77,7 @@ export let Jumbotron = () => {
       slot: [
         header,
         div({
-          class: colMd6,
+          class: 'col-md-6',
           slot: div({
             class: 'row',
             slot: [
