@@ -5,7 +5,7 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "fre",
-    "frameworkHomeURL": "https:/fre.deno.dev"
+    "frameworkHomeURL": "https://fre.deno.dev"
   },
   "scripts": {
     "dev": "webpack --watch",
