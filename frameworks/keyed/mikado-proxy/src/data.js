@@ -8,20 +8,29 @@ const len_NOUNS = NOUNS.length;
 
 let nextId = 1;
 
-export default function(count){
+export default function(store, count, append){
 
-    const data = [];
+    let i = store.length;
 
-    for(let i = 0; i < count; i++){
+    if(append){
 
-        data[i] = {
+        count += i;
+    }
+    else if(i){
 
-            "id": nextId++,
-            "label": ADJECTIVES[random(len_ADJECTIVES)] + " " + COLOURS[random(len_COLOURS)] + " " + NOUNS[random(len_NOUNS)]
-        };
+        store.splice(0);
+        i = 0;
     }
 
-    return data;
+    for(; i < count; i++){
+
+        store[i] = {
+
+            "id": nextId++,
+            "label": ADJECTIVES[random(len_ADJECTIVES)] + " " + COLOURS[random(len_COLOURS)] + " " + NOUNS[random(len_NOUNS)],
+            "class": false
+        };
+    }
 }
 
 function random(max){
