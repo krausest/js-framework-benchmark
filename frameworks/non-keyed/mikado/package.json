@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mikado",
+    "frameworkVersion": "0.8.1",
     "frameworkHomeURL": "https://github.com/nextapps-de/mikado/",
     "issues": []
   },
