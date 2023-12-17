@@ -10,9 +10,9 @@ Mikado.once(document.body, tpl_app).eventCache = true;
 // This implementation is using a full reactive paradigm.
 // It just applies changes to the store like an Array.
 
-let selected;
+const state = {};
 const store = new Array();
-const view = new Mikado(tpl_item, { mount: document.getElementById("tbody"), observe: store });
+const view = new Mikado(tpl_item, { mount: document.getElementById("tbody"), observe: store, state });
 const event = { stop: true };
 
 route("run", () => assignData(store, 1000), event);
@@ -30,8 +30,8 @@ route("swaprows", () => {
 }, event);
 route("remove", target => store.splice(view.index(target), 1), event);
 route("select", target => {
-    selected >= 0 && (store[selected].class = "");
-    selected = view.index(target);
-    /** @export */
-    store[selected].class = "danger";
+    const current = state.selected;
+    state.selected = view.index(target);
+    current >= 0 && view.update(current, store[current]);
+    view.update(state.selected, store[state.selected]);
 }, event);

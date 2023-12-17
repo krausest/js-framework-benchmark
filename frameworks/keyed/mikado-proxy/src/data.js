@@ -27,8 +27,7 @@ export default function(store, count, append){
         store[i] = {
 
             "id": nextId++,
-            "label": ADJECTIVES[random(len_ADJECTIVES)] + " " + COLOURS[random(len_COLOURS)] + " " + NOUNS[random(len_NOUNS)],
-            "class": false
+            "label": ADJECTIVES[random(len_ADJECTIVES)] + " " + COLOURS[random(len_COLOURS)] + " " + NOUNS[random(len_NOUNS)]
         };
     }
 }

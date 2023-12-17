@@ -34,5 +34,5 @@ route("select", target => {
     const current = state.selected;
     state.selected = view.index(target);
     current >= 0 && view.update(current, data[current]);
-    view.update(target, data[state.selected]);
+    view.update(state.selected, data[state.selected]);
 }, event);

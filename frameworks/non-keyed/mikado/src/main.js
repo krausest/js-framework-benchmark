@@ -16,7 +16,7 @@ const event = { stop: true };
 
 route("run", () => view.render(data = buildData(1000)), event);
 route("runlots", () => view.render(buildData(10000)), event);
-route("add", () => view.append(buildData(1000)), event);
+route("add", () => view.append(data = buildData(1000)), event);
 route("update", () => {
     for(let i = 0; i < data.length; i += 10){
         data[i].label += " !!!";
@@ -34,5 +34,5 @@ route("select", target => {
     let current = state.selected;
     state.selected = view.index(target);
     current >= 0 && view.update(current, data[current]);
-    view.update(target, data[state.selected]);
+    view.update(state.selected, data[state.selected]);
 }, event);
