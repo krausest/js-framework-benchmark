@@ -29,7 +29,7 @@ let buildData = (count) => {
   return data;
 };
 
-export let preloadIcon = makeIcon(true);
+let preloadIcon = makeIcon(true);
 
 export let App = () => {
   let [state, setState] = useState({ arr: [], sel: 0 });
