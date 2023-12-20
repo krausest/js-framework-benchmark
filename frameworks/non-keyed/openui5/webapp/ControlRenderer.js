@@ -37,7 +37,7 @@ sap.ui.define([], function () {
                     // <h1>OpenUI5 non-keyed</h1>
                     oRM.openStart("h1");
                     oRM.openEnd();
-                    oRM.text("OpenUI5 keyed");
+                    oRM.text("OpenUI5 non-keyed");
                     oRM.close("h1");
 
                 oRM.close("div");
@@ -101,8 +101,8 @@ sap.ui.define([], function () {
                 //rows
                 oControl.getRows().forEach(row => {
                     // <tr id={{this.id}} class={{this._class}}></tr>
-                    // difference to non-keyed - each row has an `id`
-                    oRM.openStart("tr", row.id + "");
+                    // difference to keyed - no `id` per row
+                    oRM.openStart("tr");
                     if (row.id === selected) {
                         oRM.class("danger");
                     }
