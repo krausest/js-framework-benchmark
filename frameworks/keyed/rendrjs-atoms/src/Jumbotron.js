@@ -1,4 +1,4 @@
-import { div, h1, useAtomSetter, button } from '@rendrjs/core';
+import { element, useAtomSetter, text } from '@rendrjs/core';
 import { dataAtom, selectedAtom } from './store';
 
 let random = arr => arr[Math.round(Math.random() * 1000) % arr.length];
@@ -25,14 +25,14 @@ let buildData = (count = 1000) => {
   return data;
 };
 
-let btn = (id, slot, onclick) => div({
+let btn = (id, txt, onclick) => element('div', {
   class: 'col-sm-6 smallpad',
-  slot: button({
+  slot: element('button', {
     id,
     onclick,
     type: 'button',
     class: 'btn btn-primary btn-block',
-    slot,
+    slot: text(txt),
   }),
 })
 
@@ -40,18 +40,18 @@ export let Jumbotron = () => {
   let setData = useAtomSetter(dataAtom);
   let setSelected = useAtomSetter(selectedAtom);
 
-  return div({
+  return element('div', {
     class: 'jumbotron',
-    slot: div({
+    slot: element('div', {
       class: 'row',
       slot: [
-        div({
+        element('div', {
           class: 'col-md-6',
-          slot: h1('Rendrjs atoms'),
+          slot: element('h1', { slot: text('Rendrjs atoms') }),
         }),
-        div({
+        element('div', {
           class: 'col-md-6',
-          slot: div({
+          slot: element('div', {
             class: 'row',
             slot: [
               btn('run', 'Create 1,000 rows', () => {

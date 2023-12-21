@@ -1,9 +1,9 @@
-import { div } from '@rendrjs/core';
+import { component, element } from '@rendrjs/core';
 import { Jumbotron } from './Jumbotron';
 import { makeIcon } from './RemoveIcon';
 import { Table } from './Table';
 
-export let App = () => div({
+export let App = () => element('div', {
   class: 'container',
-  slot: [Jumbotron, Table, makeIcon(true)],
+  slot: [component(Jumbotron), component(Table), makeIcon(true)],
 });

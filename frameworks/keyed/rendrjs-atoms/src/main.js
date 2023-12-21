@@ -1,4 +1,4 @@
-import { mount } from '@rendrjs/core';
+import { mount, component } from '@rendrjs/core';
 import { App } from './App';
 
-mount(document.body, App);
+mount(document.body, component(App));
