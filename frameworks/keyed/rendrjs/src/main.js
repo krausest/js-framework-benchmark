@@ -117,12 +117,12 @@ let App = () => {
       element('table', {
         class: 'table table-hover table-striped test-data',
         slot: element('tbody', {
-          slot: state.arr.map(item => component(Row, {
-            key: `${item.id}`,
+          slot: state.arr.map(({ id, label }) => component(Row, {
+            key: `${id}`,
             item,
-            hi: state.sel === item.id,
+            hi: state.sel === id,
             set: setState,
-            memo: [item.id === state.sel, item.label],
+            memo: [id === state.sel, label],
           })),
         }),
       }),
