@@ -6,7 +6,7 @@ const plugins = [
   babel({
     babelHelpers: "bundled",
     exclude: "node_modules/**",
-    presets: ["dlight"]
+    presets: [["dlight", { files: "**/*.js" }]]
   }),
   babel({
     babelHelpers: "bundled",
