@@ -1,9 +1,6 @@
 import { defineConfig } from "vite";
-import { viteSingleFile } from "vite-plugin-singlefile";
 import tsconfigPaths from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react";
-
-const needSinglefile = !!process.env.SINGLEFILE;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,13 +9,11 @@ export default defineConfig({
     assetsDir: "",
     rollupOptions: {
       output: {
-        manualChunks: !needSinglefile
-          ? {
-              plotly: ["plotly.js-cartesian-dist"],
-            }
-          : undefined,
+        manualChunks: {
+          plotly: ["plotly.js-cartesian-dist"],
+        },
       },
     },
   },
-  plugins: [react(), tsconfigPaths(), needSinglefile && viteSingleFile()],
+  plugins: [react(), tsconfigPaths()],
 });
