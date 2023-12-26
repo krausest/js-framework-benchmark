@@ -1,4 +1,3 @@
-import React from "react";
 import BenchmarkSelector from "./BenchmarkSelector";
 import FrameworkSelector from "./FrameworkSelector";
 import ModeSelecionPanel from "./ModeSelectionPanel";

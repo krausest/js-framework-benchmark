@@ -1,4 +1,3 @@
-import React from "react";
 import "./App.css";
 import { FrameworkType, knownIssues } from "./Common";
 import ResultTable from "./components/ResultTable";

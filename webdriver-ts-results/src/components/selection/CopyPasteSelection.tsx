@@ -1,4 +1,3 @@
-import React from "react";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { useRootStore } from "@/reducer";
