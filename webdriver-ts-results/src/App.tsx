@@ -1,25 +1,23 @@
 import "./App.css";
 import { FrameworkType, knownIssues } from "./Common";
 import ResultTable from "./components/ResultTable";
-import { SelectionBar } from "./components/selection/SelectionBar";
+import SelectionBar from "./components/selection/SelectionBar";
 
 const KnownIssuesList = () => {
   return (
-    <>
-      <section>
-        <h3>Known issues and notes</h3>
-        {knownIssues.map((issue) => (
-          <dl key={issue.issue.toFixed()} id={issue.issue.toFixed()}>
-            <dt>
-              <a target="_blank" rel="noopener noreferrer" href={issue.link}>
-                {issue.issue.toFixed()}
-              </a>
-            </dt>
-            <dd>{issue.text}</dd>
-          </dl>
-        ))}
-      </section>
-    </>
+    <section>
+      <h3>Known issues and notes</h3>
+      {knownIssues.map((issue) => (
+        <dl key={issue.issue.toFixed()} id={issue.issue.toFixed()}>
+          <dt>
+            <a target="_blank" rel="noopener noreferrer" href={issue.link}>
+              {issue.issue.toFixed()}
+            </a>
+          </dt>
+          <dd>{issue.text}</dd>
+        </dl>
+      ))}
+    </section>
   );
 };
 

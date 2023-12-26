@@ -88,7 +88,10 @@ export default [
     },
     rules: {
       ...react.configs.recommended.rules,
+      ...react.configs["jsx-runtime"].rules,
       ...reactHooks.configs.recommended.rules,
+
+      "react/jsx-no-useless-fragment": "warn",
     },
     settings: { react: { version: "detect" } },
     languageOptions: { globals: { ...globals.browser } },

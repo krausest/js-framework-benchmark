@@ -1,0 +1,25 @@
+.select-bar {
+  background-color: #fafafa;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px 0;
+  line-height: 0;
+}
+.select-bar__dropdowns {
+  padding: 5px 0;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+@media screen and (width>=640px) {
+  .select-bar {
+    flex-direction: unset;
+    align-items: center;
+  }
+}
+@media screen and (width>=768px) {
+  .select-bar {
+    align-items: center;
+  }
+}

@@ -1,8 +1,6 @@
-import { useCallback } from "react";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRootStore } from "@/reducer";
-import PasteIcon from "@/assets/icons/PasteIcon";
-import CopyIcon from "@/assets/icons/CopyIcon";
+import { CopyIcon, PasteIcon} from "@/assets/icons";
 import "./CopyPasteSelection.css";
 
 const CopyPasteSelection = () => {
@@ -79,27 +77,25 @@ const CopyPasteSelection = () => {
   }, [handlePaste]);
 
   return (
-    <>
-      <div className="copy-paste-panel">
-        <p>Copy/paste current selection</p>
-        <div>
-          <button
-            className="button__icon"
-            onClick={copy}
-            aria-label="Copy selected frameworks and benchmarks"
-          >
-            <CopyIcon></CopyIcon>
-          </button>
-          <button
-            className="button__icon"
-            onClick={handlePasteFromClipboard}
-            aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
-          >
-            <PasteIcon></PasteIcon>
-          </button>
-        </div>
+    <div className="copy-paste-panel">
+      <p>Copy/paste current selection</p>
+      <div>
+        <button
+          className="button__icon"
+          onClick={copy}
+          aria-label="Copy selected frameworks and benchmarks"
+        >
+          <CopyIcon></CopyIcon>
+        </button>
+        <button
+          className="button__icon"
+          onClick={handlePasteFromClipboard}
+          aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
+        >
+          <PasteIcon></PasteIcon>
+        </button>
       </div>
-    </>
+    </div>
   );
 };
 

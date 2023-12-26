@@ -59,8 +59,8 @@ const mappedFrameworks = frameworks.map((f) => ({
   frameworkHomeURL: f.frameworkHomeURL,
 }));
 
-const allBenchmarks = new Set([...benchmarks]);
-const allFrameworks = new Set([...mappedFrameworks]);
+const allBenchmarks = new Set(benchmarks);
+const allFrameworks = new Set(mappedFrameworks);
 
 const resultLookup = convertToMap(results);
 
