@@ -3,6 +3,7 @@ import js from "@eslint/js";
 import ts from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import react from "eslint-plugin-react";
+import reactRefresh from "eslint-plugin-react-refresh";
 import reactHooks from "eslint-plugin-react-hooks";
 import unicorn from "eslint-plugin-unicorn";
 
@@ -84,6 +85,7 @@ export default [
     files: ["webdriver-ts-results/**/*.tsx"],
     plugins: {
       react,
+      "react-refresh": reactRefresh,
       "react-hooks": reactHooks,
     },
     rules: {
@@ -92,6 +94,7 @@ export default [
       ...reactHooks.configs.recommended.rules,
 
       "react/jsx-no-useless-fragment": "warn",
+      "react-refresh/only-export-components": "warn",
     },
     settings: { react: { version: "detect" } },
     languageOptions: { globals: { ...globals.browser } },
@@ -101,7 +104,7 @@ export default [
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
     rules: {
       "@typescript-eslint/no-loss-of-precision": "off",
-      "no-debugger":"off"
+      "no-debugger": "off",
     },
   },
 ];
