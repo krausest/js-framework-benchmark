@@ -1,5 +1,23 @@
 import { View, render } from "@dlightjs/dlight"
-import { buildData } from "./data"
+
+let idCounter = 1
+
+const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"]
+const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"]
+const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"]
+
+function _random(max) { return Math.round(Math.random() * 1000) % max };
+
+function buildData(count) {
+  const data = new Array(count)
+  for (let i = 0; i < count; i++) {
+    data[i] = {
+      id: idCounter++,
+      label: `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`
+    }
+  }
+  return data
+}
 
 @View
 class Main {
@@ -11,9 +29,7 @@ class Main {
 
   swapRows() {
     if (this.rows.length > 998) {
-      const tmp = this.rows[1]
-      this.rows[1] = this.rows[998]
-      this.rows[998] = tmp
+      [this.rows[1], this.rows[998]] = [this.rows[998], this.rows[1]]
       this.rows = [...this.rows]
     }
   }
@@ -27,7 +43,7 @@ class Main {
   }
 
   deleteRow(id) {
-    this.rows = [...this.rows.filter(row => row.id !== id)]
+    this.rows = this.rows.filter(row => row.id !== id)
   }
 
   addBig() {
@@ -35,12 +51,12 @@ class Main {
   }
 
   append() {
-    this.rows = [...this.rows, ...buildData(1000)]
+    this.rows = this.rows.concat(buildData(1000))
   }
 
   update() {
     for (let i = 0; i < this.rows.length; i += 10) {
-      this.rows[i] = { ...this.rows[i], label: this.rows[i].label + " !!!" }
+      this.rows[i].label += " !!!"
     }
     this.rows = [...this.rows]
   }
@@ -64,24 +80,12 @@ class Main {
         }
         div().class("col-md-6"); {
           div().class("row"); {
-            this.Button("Create 1,000 rows")
-              .onClick(this.addRows)
-              .id("run")
-            this.Button("Create 10,000 rows")
-              .onClick(this.addBig)
-              .id("runlots")
-            this.Button("Append 1,000 rows")
-              .onClick(this.append)
-              .id("add")
-            this.Button("Update every 10th rows")
-              .onClick(this.update)
-              .id("update")
-            this.Button("Clear")
-              .onClick(this.clearRows)
-              .id("clear")
-            this.Button("Swap Rows")
-              .onClick(this.swapRows)
-              .id("swaprows")
+            this.Button("Create 1,000 rows").onClick(this.addRows).id("run")
+            this.Button("Create 10,000 rows").onClick(this.addBig).id("runlots")
+            this.Button("Append 1,000 rows").onClick(this.append).id("add")
+            this.Button("Update every 10th rows").onClick(this.update).id("update")
+            this.Button("Clear").onClick(this.clearRows).id("clear")
+            this.Button("Swap Rows").onClick(this.swapRows).id("swaprows")
           }
         }
       }
@@ -93,8 +97,7 @@ class Main {
     tr().class(this.selectIdx === id ? "danger" : ""); {
       td(id).class("col-md-1")
       td().class("col-md-4"); {
-        a(label)
-          .onClick(this.selectRow.bind(this, id))
+        a(label).onClick(this.selectRow.bind(this, id))
       }
       td().class("col-md-1"); {
         a().onClick(this.deleteRow.bind(this, id)); {
