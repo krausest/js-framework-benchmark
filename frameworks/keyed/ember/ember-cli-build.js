@@ -36,6 +36,8 @@ module.exports = function (defaults) {
     staticAddonTrees: true,
     staticHelpers: true,
     staticComponents: true,
+    staticModifiers: true,
+    staticEmberSource: true,
     packagerOptions: {
       webpackConfig: {
         mode: 'production'

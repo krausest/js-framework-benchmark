@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "clean": "node cleanup.js",
-    "build": "node rebuild-all.js --ci",
-    "build-prod": "node rebuild-all.js --ci",
+    "rebuild-all": "node rebuild-all.js --ci",
+    "build": "echo \"Please use 'npm run rebuild-all' instead\" && exit 1",
+    "build-prod": "echo \"Please use 'npm run rebuild-all' instead\" && exit 1",
     "compile": "node rebuild-all.js --ci",
     "start": "cd server && node index.js",
     "bench": "cd webdriver-ts && cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
@@ -43,8 +44,9 @@
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "dependencies": {
     "adm-zip": "^0.5.10",
-    "commander": "^11.0.0",
+    "commander": "^11.1.0",
     "cross-env": "^7.0.3",
+    "es-main": "^1.3.0",
     "eslint-plugin-unicorn": "^49.0.0",
     "json5": "^2.2.3",
     "rimraf": "^5.0.5",

@@ -30,6 +30,7 @@ export interface MemBenchmarkInfo extends BenchmarkInfoBase {
 export interface SizeInfoJSON {
   size_uncompressed: number,
   size_compressed: number,
+  fp: number,
 }
 
 export interface SizeBenchmarkInfo extends BenchmarkInfoBase {

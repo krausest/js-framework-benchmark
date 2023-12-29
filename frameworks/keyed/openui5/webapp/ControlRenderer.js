@@ -3,7 +3,7 @@
  */
 
 sap.ui.define([], function () {
- 
+
     var ControlRenderer = {
       apiVersion: 4
     };
@@ -11,7 +11,7 @@ sap.ui.define([], function () {
     ControlRenderer.render = function (oRM, oControl) {
         oRM.openStart("div", oControl)
         oRM.openEnd()
-        
+
         this.renderJumbotron(oRM, oControl);
         this.renderTable(oRM, oControl);
 
@@ -50,7 +50,7 @@ sap.ui.define([], function () {
                     oRM.openStart("div")
                     oRM.class("row");
                     oRM.openEnd();
-    
+
                     // action buttons
                     [
                         {id: "run", text: "Create 1,000 rows"},
@@ -68,13 +68,13 @@ sap.ui.define([], function () {
 
         oRM.close("div");
     }
-    
+
     ControlRenderer.renderButton = function (oRM, id, text) {
         // <div class="col-sm-6 smallpad">
         oRM.openStart("div");
         oRM.class("col-sm-6").class("smallpad");
         oRM.openEnd();
-        
+
             // <button type="button" class="btn btn-primary btn-block" id="run" @click={{run}}>
             oRM.openStart("button", id);
             oRM.class("btn").class("btn-primary").class("btn-block");
@@ -82,7 +82,7 @@ sap.ui.define([], function () {
 
                 // Create 1,000 rows
                 oRM.text(text);
-            
+
             oRM.close("button");
 
         oRM.close("div");
@@ -101,6 +101,7 @@ sap.ui.define([], function () {
                 //rows
                 oControl.getRows().forEach(row => {
                     // <tr id={{this.id}} class={{this._class}}></tr>
+                    // difference to non-keyed - each row has an `id`
                     oRM.openStart("tr", row.id + "");
                     if (row.id === selected) {
                         oRM.class("danger");

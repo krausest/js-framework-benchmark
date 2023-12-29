@@ -38,31 +38,6 @@ const results: Result[] = rawResults.map((result) => {
     };
     values[key] = vals;
   }
-  if (result.v[CpuDurationMode.Total] && result.v[CpuDurationMode.Script] && result.v[CpuDurationMode.Render]) {
-    if (result.v[CpuDurationMode.Total].length !== result.v[CpuDurationMode.Script].length) {
-      const vals = {
-        mean: NaN,
-        median: NaN,
-        standardDeviation: NaN,
-        values: [NaN],
-      };
-      debugger;
-      values[CpuDurationMode.BrowserOnly] = vals;
-    } else {
-      let r = [];
-      for (let i = 0; i < result.v[CpuDurationMode.Total].length; i++) {
-        r.push(result.v[CpuDurationMode.Total][i] - result.v[CpuDurationMode.Script][i]);
-      }
-      const vals = {
-        mean: jStat.mean(r),
-        median: jStat.median(r),
-        standardDeviation: jStat.stdev(r, true),
-        values: r,
-      };
-      values[CpuDurationMode.BrowserOnly] = vals;
-    }
-    // if (result.f==='miso-v1.4.0-keyed' || result.f==='vanillajs-keyed') debugger;
-  }
 
   return { framework: result.f, benchmark: result.b, results: values };
 });

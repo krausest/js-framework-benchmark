@@ -11,7 +11,7 @@ const DurationModeSelector = ({ cpuDurationMode, onChange }: Props) => {
     <>
       <div className="mode-selector">
         <label htmlFor="durationMode">
-          (Experimental) Duration measurement mode:
+          Duration measurement mode:
         </label>
         <select
           id="durationMode"
@@ -23,7 +23,6 @@ const DurationModeSelector = ({ cpuDurationMode, onChange }: Props) => {
           <option value={CpuDurationMode.Total}>total duration</option>
           <option value={CpuDurationMode.Script}>only JS duration</option>
           <option value={CpuDurationMode.Render}>only render duration</option>
-          <option value={CpuDurationMode.BrowserOnly}>Browser only duration</option>
         </select>
       </div>
     </>
