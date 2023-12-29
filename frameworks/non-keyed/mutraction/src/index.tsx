@@ -21,8 +21,9 @@ function append(n: number) {
 
 function update() {
     defaultTracker.startTransaction();
-    for (let i = 0; i < items.length; i += 10) {
-        items[i].label += " !!!";
+    for (let i = 0, found = 0; i < items.length; i++) {
+        if (!(i in items)) continue;
+        if (found++ % 10 === 0) items[i].label += " !!!";
     }
     defaultTracker.commit();
 }
