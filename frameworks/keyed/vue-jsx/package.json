@@ -1,8 +1,12 @@
 {
-  "name": "my-vue-app2",
-  "version": "0.0.0",
+  "name": "js-framework-benchmark-vue-jsx",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "vue",
+    "frameworkHomeURL": "https://vue.js.org/"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
