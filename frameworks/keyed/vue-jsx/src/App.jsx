@@ -1,10 +1,7 @@
 import { defineComponent, ref, shallowRef } from "vue";
 import { buildData } from "./data";
-import useMemo from "./useMemo";
 export default defineComponent({
   setup() {
-    const memo = useMemo();
-    const a = 1;
     const selected = ref();
     const rows = shallowRef([]);
 
@@ -114,7 +111,7 @@ export default defineComponent({
         <table class="table table-hover table-striped test-data">
           <tbody>
             {rows.value.map(({ id, label }) => {
-              return memo(() => [label, id === selected])(
+              return (
                 <tr key={id} class={{ danger: id === selected }} data-label={label}>
                   <td class="col-md-1">{id}</td>
                   <td class="col-md-4">
