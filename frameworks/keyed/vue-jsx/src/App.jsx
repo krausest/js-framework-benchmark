@@ -1,7 +1,10 @@
 import { defineComponent, ref, shallowRef } from "vue";
 import { buildData } from "./data";
+import useMemo from "./useMemo";
 export default defineComponent({
   setup() {
+    const memo = useMemo();
+    const a = 1;
     const selected = ref();
     const rows = shallowRef([]);
 
@@ -58,6 +61,7 @@ export default defineComponent({
         setRows();
       }
     }
+
     return () => (
       <div>
         <div class="jumbotron">
@@ -109,20 +113,22 @@ export default defineComponent({
 
         <table class="table table-hover table-striped test-data">
           <tbody>
-            {rows.value.map(({ id, label }) => (
-              <tr key={id} class={{ danger: id === selected }} data-label={label}>
-                <td class="col-md-1">{id}</td>
-                <td class="col-md-4">
-                  <a onClick={() => select(id)}>{label}</a>
-                </td>
-                <td class="col-md-1">
-                  <a onClick={() => remove(id)}>
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                  </a>
-                </td>
-                <td class="col-md-6"></td>
-              </tr>
-            ))}
+            {rows.value.map(({ id, label }) => {
+              return memo(() => [label, id === selected])(
+                <tr key={id} class={{ danger: id === selected }} data-label={label}>
+                  <td class="col-md-1">{id}</td>
+                  <td class="col-md-4">
+                    <a onClick={() => select(id)}>{label}</a>
+                  </td>
+                  <td class="col-md-1">
+                    <a onClick={() => remove(id)}>
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                  </td>
+                  <td class="col-md-6"></td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
