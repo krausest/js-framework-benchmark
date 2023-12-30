@@ -10,7 +10,7 @@ let nextId = 1;
 
 export default function(count){
 
-    const data = [];
+    const data = new Array(count);
 
     for(let i = 0; i < count; i++){
 
