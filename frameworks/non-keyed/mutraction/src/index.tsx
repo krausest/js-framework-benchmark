@@ -1,46 +1,46 @@
 import { track, defaultTracker, ForEach } from "mutraction-dom";
 import { buildData, type RowItem } from "./build-dummy-data.js";
-
-defaultTracker.setOptions({ trackHistory: false });
+defaultTracker.setOptions({ trackHistory: false, compactOnCommit: false });
 
 const model = track({
-    items: [] as RowItem[],
     selected: undefined as RowItem | undefined,
 });
+const items = track([] as RowItem[]);
 
 function select(item: RowItem) {
     model.selected = item;
 }
 
 function create(n: number) {
-    model.items.splice(0, model.items.length, ...buildData(n));
+    items.splice(0, items.length, ...buildData(n));
 }
 
 function append(n: number) {
-    model.items.push(...buildData(n));
+    items.push(...buildData(n));
 }
 
 function update() {
     defaultTracker.startTransaction();
-    for (let i = 0; i < model.items.length; i += 10) {
-        model.items[i].label += " !!!";
+    for (let i = 0, found = 0; i < items.length; i++) {
+        if (!(i in items)) continue;
+        if (found++ % 10 === 0) items[i].label += " !!!";
     }
     defaultTracker.commit();
 }
 
 function clear() {
-    model.items.length = 0;
+    items.length = 0;
 }
 
 function swapRows() {
-    if (model.items.length > 998) {
+    if (items.length > 998) {
         const i1 = 1, i2 = 998;
-        [model.items[i1], model.items[i2]] = [model.items[i2], model.items[i1]];
+        [items[i1], items[i2]] = [items[i2], items[i1]];
     }
 }
 
 function remove(i: number) {
-    model.items.splice(i, 1);
+    delete items[i];
 }
 
 const app =
@@ -76,7 +76,7 @@ const app =
         </div>
         <table className="table table-hover table-striped test-data">
             <tbody id="tbody">
-                { ForEach(model.items, (item, i) =>
+                { ForEach(items, (item, i) =>
                     <tr classList={{ danger: item === model.selected }}>
                         <td className="col-md-1">{ item.id }</td>
                         <td className="col-md-4">

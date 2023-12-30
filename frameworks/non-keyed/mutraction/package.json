@@ -13,7 +13,7 @@
     "build-prod": "npm run build",
     "build": "npx tsc && npm run transform && npm run bundle",
     "transform": "npx babel out -d out2",
-    "bundle": "npx esbuild out2/index.js --bundle --format=esm --outfile=dist/index.js"
+    "bundle": "npx esbuild out2/index.js --bundle --format=esm --outfile=dist/index.js --minify"
   },
   "author": "Tom Theisen",
   "license": "MIT",
@@ -25,6 +25,6 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "mutraction-dom": "0.24.0"
+    "mutraction-dom": "0.25.0"
   }
 }
