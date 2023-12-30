@@ -60,7 +60,7 @@ export default defineComponent({
     }
 
     return () => (
-      <div>
+      <div class="container">
         <div class="jumbotron">
           <div class="row">
             <div class="col-md-6">
@@ -112,7 +112,7 @@ export default defineComponent({
           <tbody>
             {rows.value.map(({ id, label }) => {
               return (
-                <tr key={id} class={{ danger: id === selected }} data-label={label}>
+                <tr key={id} class={{ danger: id === selected.value }} data-label={label}>
                   <td class="col-md-1">{id}</td>
                   <td class="col-md-4">
                     <a onClick={() => select(id)}>{label}</a>
