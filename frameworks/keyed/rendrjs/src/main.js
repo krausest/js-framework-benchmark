@@ -13,13 +13,6 @@ let rand = arr => arr[Math.floor(Math.random() * arr.length)];
 
 let nextId = 1;
 
-// Executing frameworks/keyed/hyperapp and benchmark 04_select1k failed: Failed to launch the browser process! undefined
-
-
-// TROUBLESHOOTING: https://pptr.dev/troubleshooting
-
-// Executing frameworks/keyed/rendrjs and benchmark 06_remove-one-1k failed: Failed to launch the browser process! undefined
-
 let buildData = (count = 1000) => {
   let data = new Array(count);
   for (let i = 0; i < count; i++) {
