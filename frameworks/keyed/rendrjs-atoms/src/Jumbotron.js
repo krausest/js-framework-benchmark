@@ -1,29 +1,29 @@
 import { element, useAtomSetter, text } from '@rendrjs/core';
 import { dataAtom, selectedAtom } from './store';
 
-let random = arr => arr[Math.round(Math.random() * 1000) % arr.length];
-
-let A = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome',
+let adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome',
   'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy',
   'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive',
   'fancy'];
-let C = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown',
+let colors = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown',
   'white', 'black', 'orange'];
-let N = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie',
+let nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie',
   'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
 
-let nextId = 1;
+  let rand = arr => arr[Math.floor(Math.random() * arr.length)];
 
-let buildData = (count = 1000) => {
-  let data = new Array(count);
-  for (let i = 0; i < count; i++) {
-    data[i] = {
-      id: nextId++,
-      label: `${random(A)} ${random(C)} ${random(N)}`,
-    };
-  }
-  return data;
-};
+  let nextId = 1;
+  
+  let buildData = (count = 1000) => {
+    let data = new Array(count);
+    for (let i = 0; i < count; i++) {
+      data[i] = {
+        id: nextId++,
+        label: rand(adjectives) + ' ' + rand(colors) + ' ' + rand(nouns),
+      };
+    }
+    return data;
+  };
 
 let btn = (id, txt, onclick) => element('div', {
   class: 'col-sm-6 smallpad',
