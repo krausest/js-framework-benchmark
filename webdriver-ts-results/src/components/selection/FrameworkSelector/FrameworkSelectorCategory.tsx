@@ -1,4 +1,3 @@
-import React from "react";
 import SelectorContentContainer from "@components/selection/SelectorContentContainer";
 import { FrameworkType } from "@/Common";
 import { useRootStore } from "@/reducer";

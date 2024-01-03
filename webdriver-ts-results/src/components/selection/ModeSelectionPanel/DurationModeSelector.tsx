@@ -1,4 +1,3 @@
-import React from "react";
 import { CpuDurationMode } from "@/Common";
 
 interface Props {
@@ -8,24 +7,22 @@ interface Props {
 
 const DurationModeSelector = ({ cpuDurationMode, onChange }: Props) => {
   return (
-    <>
-      <div className="mode-selector">
-        <label htmlFor="durationMode">
-          Duration measurement mode:
-        </label>
-        <select
-          id="durationMode"
-          className="mode-selector__select"
-          value={cpuDurationMode}
-          aria-label="Select CPU duration mode"
-          onChange={(evt) => onChange(evt.target.value as CpuDurationMode)}
-        >
-          <option value={CpuDurationMode.Total}>total duration</option>
-          <option value={CpuDurationMode.Script}>only JS duration</option>
-          <option value={CpuDurationMode.Render}>only render duration</option>
-        </select>
-      </div>
-    </>
+    <div className="mode-selector">
+      <label htmlFor="durationMode">
+        Duration measurement mode:
+      </label>
+      <select
+        id="durationMode"
+        className="mode-selector__select"
+        value={cpuDurationMode}
+        aria-label="Select CPU duration mode"
+        onChange={(evt) => onChange(evt.target.value as CpuDurationMode)}
+      >
+        <option value={CpuDurationMode.Total}>total duration</option>
+        <option value={CpuDurationMode.Script}>only JS duration</option>
+        <option value={CpuDurationMode.Render}>only render duration</option>
+      </select>
+    </div>
   );
 };
 

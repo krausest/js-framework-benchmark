@@ -1,4 +1,3 @@
-import React from "react";
 import { FrameworkType } from "@/Common";
 import Dropdown from "@components/ui/Dropdown";
 import FrameworkSelectorCategory from "./FrameworkSelectorCategory";

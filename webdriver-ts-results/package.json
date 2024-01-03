@@ -13,7 +13,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:prod": "tsc && SINGLEFILE=true vite build && mv dist/index.html table.html",
     "lint": "eslint src/",
     "preview": "vite preview"
   },
@@ -24,7 +23,6 @@
     "@vitejs/plugin-react": "^4.2.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.2",
-    "vite-plugin-singlefile": "^0.13.5",
     "vite-tsconfig-paths": "^4.2.1"
   }
 }
