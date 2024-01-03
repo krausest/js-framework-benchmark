@@ -1,15 +1,15 @@
 import { mount, element, component, useState, text } from '@rendrjs/core';
 
-let A = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome',
+let adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome',
   'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy',
   'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive',
   'fancy'];
-let C = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown',
+let colors = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown',
   'white', 'black', 'orange'];
-let N = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie',
+let nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie',
   'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
 
-let rand = arr => arr[Math.round(Math.random() * 1000) % arr.length];
+let rand = arr => arr[Math.floor(Math.random() * arr.length)];
 
 let nextId = 1;
 
@@ -18,7 +18,7 @@ let buildData = (count = 1000) => {
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: nextId++,
-      label: `${rand(A)} ${rand(C)} ${rand(N)}`,
+      label: rand(adjectives) + ' ' + rand(colors) + ' ' + rand(nouns),
     };
   }
   return data;
@@ -122,7 +122,7 @@ let App = () => {
             item,
             hi: state.sel === item.id,
             set: setState,
-            memo: [item.id === state.sel, item.label],
+            memo: [item.label, item.id === state.sel],
           })),
         }),
       }),
