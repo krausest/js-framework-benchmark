@@ -1,4 +1,3 @@
-import React from "react";
 import { Framework, TableResultComparisonEntry } from "../../Common";
 import { useRootStore } from "../../reducer";
 

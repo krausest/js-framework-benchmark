@@ -62,20 +62,18 @@ const ResultTable = ({ type }: Props) => {
           </h3>
         )}
         {displayMode === DisplayMode.BoxPlot ? (
-          <>
-            {benchmarks.length && (
-              <React.Suspense fallback={<div>Loading...</div>}>
-                <BoxPlotTable
-                  results={data.results}
-                  frameworks={data.frameworks}
-                  benchmarks={data.getResult(BenchmarkType.CPU).benchmarks}
-                  currentSortKey={currentSortKey}
-                  sortBy={sortBy}
-                  cpuDurationMode={cpuDurationMode}
-                />
-              </React.Suspense>
-            )}
-          </>
+          benchmarks.length && (
+            <React.Suspense fallback={<div>Loading...</div>}>
+              <BoxPlotTable
+                results={data.results}
+                frameworks={data.frameworks}
+                benchmarks={data.getResult(BenchmarkType.CPU).benchmarks}
+                currentSortKey={currentSortKey}
+                sortBy={sortBy}
+                cpuDurationMode={cpuDurationMode}
+              />
+            </React.Suspense>
+          )
         ) : (
           <div className="results">
             <div className="results__table-container">
