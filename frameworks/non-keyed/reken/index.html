@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link href="/css/currentStyle.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="main">
+    <div class="container">
+      <div class="jumbotron">
+        <div class="row">
+          <div class="col-md-6">
+            <h1>Reken</h1>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="run"
+                  data-action="store.run()">
+                  Create 1,000 rows
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="runlots"
+                  data-action="store.runLots()">
+                  Create 10,000 rows
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="add"
+                  data-action="store.add()">
+                  Append 1,000 rows
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="update"
+                  data-action="store.update()">
+                  Update every 10th row
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="clear"
+                  data-action="store.clear()">
+                  Clear
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="swaprows"
+                  data-action="store.swapRows()">
+                  Swap Rows
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="table table-hover table-striped test-data">
+        <tbody id="tbody" data-for="row:store.data">
+          <tr data-class="danger:store.selected===row.item.id">
+            <td class="col-md-1" data-text="${row.item.id}"></td>
+            <td class="col-md-4">
+              <a class="lbl" data-text="${row.item.label}" data-action="store.select(row.item.id)"></a>
+            </td>
+            <td class="col-md-1">
+              <a class="remove" data-action="store.delete(row.item.id)">
+                <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
+              </a>
+            </td>
+            <td class="col-md-6"></td>
+          </tr>
+        </tbody>
+      </table>
+      <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+    </div>
+  </div>
+  <script src="js/Main.js"></script>
+  <script src="js/reken.js"></script>
+</body>
+
+</html>
