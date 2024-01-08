@@ -1,0 +1,35 @@
+{
+  "name": "js-framework-benchmark-reken",
+  "version": "0.9.6",
+  "description": "Benchmark for Reken framework",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.9.6",
+    "frameworkHomeURL": "https://reken.dev",
+    "issues": [
+      1139
+    ]
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "keywords": [
+    "Reken",
+    "HTML first",
+    "UI",
+    "UI Framework",
+    "Reactive",
+    "DOM",
+    "DOM Manipulation",
+    "Zero-Dependency",
+    "React"
+  ],
+  "author": "Henry van den Broek",
+  "license": "MIT",
+  "homepage": "https://reken.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hbroek/reken.git"
+  }
+}
