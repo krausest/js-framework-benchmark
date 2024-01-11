@@ -121,6 +121,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
       "--disable-background-networking",
       "--enable-features=NetworkService,NetworkServiceInProcess",
       "--disable-background-timer-throttling",
+      "--disable-extensions",
       // "--disable-backgrounding-occluded-windows",
       // "--disable-breakpad",
       // "--disable-client-side-phishing-detection",

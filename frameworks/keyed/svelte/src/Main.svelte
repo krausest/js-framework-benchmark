@@ -2,7 +2,7 @@
 
 <script>
 	let rowId = 1;
-	let data = $state([]);
+	let data = $state.frozen([]);
 	let selected = $state();
 
 	const adjectives = [

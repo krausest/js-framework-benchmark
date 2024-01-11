@@ -1,4 +1,3 @@
-import React from "react";
 import { BenchmarkType } from "@/Common";
 import { useRootStore } from "@/reducer";
 import SelectorContentContainer from "@components/selection/SelectorContentContainer";

@@ -504,7 +504,7 @@ export class ResultTableData {
   }
   computeComparison(
     framework: Framework,
-    benchmarksCPU: Array<Benchmark>, // Remove cause unused
+    _benchmarksCPU: Array<Benchmark>, // Remove cause unused
     resultsCPUForFramework: Array<TableResultValueEntry | null>,
   ): TableResultComparisonEntry {
     if (!this.compareWith) {

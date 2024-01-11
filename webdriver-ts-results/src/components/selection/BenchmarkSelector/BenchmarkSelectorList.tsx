@@ -1,4 +1,3 @@
-import React from "react";
 import type { Benchmark } from "@/Common";
 
 interface Props {

@@ -1,4 +1,3 @@
-import React from "react";
 import { Framework } from "@/Common";
 
 interface Props {

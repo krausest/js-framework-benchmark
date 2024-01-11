@@ -29,7 +29,7 @@ const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
       <thead className="dummy">
         <tr>
           <th></th>
-          {data.frameworks.map((f, idx) => (
+          {data.frameworks.map((_f, idx) => (
             <th key={idx}></th>
           ))}
         </tr>

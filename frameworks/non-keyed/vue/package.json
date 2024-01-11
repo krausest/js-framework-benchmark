@@ -21,12 +21,12 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@vue/compiler-sfc": "3.3.6",
-    "vue-loader": "17.2.2",
+    "@vue/compiler-sfc": "3.4.3",
+    "vue-loader": "17.4.2",
     "webpack": "5.89.0",
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "vue": "3.3.6"
+    "vue": "3.4.3"
   }
 }

@@ -1,5 +1,6 @@
 const path = require('path')
 const { VueLoaderPlugin } = require('vue-loader')
+const webpack = require('webpack')
 
 module.exports = (env = {}) => ({
 	mode: 'production',
@@ -27,5 +28,8 @@ module.exports = (env = {}) => ({
 	},
 	plugins: [
 		new VueLoaderPlugin(),
+		new webpack.DefinePlugin({
+			__VUE_PROD_DEVTOOLS__: JSON.stringify(false)
+		})			
 	],
 })
