@@ -1,5 +1,4 @@
-import { NgFor } from '@angular/common';
-import { ChangeDetectorRef, Component, VERSION, inject } from '@angular/core';
+import { Component, VERSION, signal } from '@angular/core';
 
 interface Data {
     id: number;
@@ -13,15 +12,12 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [NgFor],
     templateUrl: './app.component.html',
 })
 export class AppComponent {
-    private cdr = inject(ChangeDetectorRef);
-
-    data: Array<Data> = [];
-    selected?: number = undefined;
-    id: number = 1;
+    data = signal<Data[]>([]);
+    selected = signal<number | undefined>(undefined);
+    id = 1;
     backup?: Array<Data> = undefined;
     version = VERSION.full;
 
@@ -34,63 +30,58 @@ export class AppComponent {
         return data;
     }
 
-    _random(max: number) {
-        return Math.round(Math.random() * 1000) % max;
-    }
-
-    itemById(index: number, item: Data) {
-        return item.id;
-    }
 
     select(item: Data, event: Event) {
         event.preventDefault();
-        this.selected = item.id;
-        this.cdr.detectChanges();
+        this.selected.set(item.id);
     }
 
     delete(item: Data, event: Event) {
         event.preventDefault();
+        let data = this.data();
         for (let i = 0, l = this.data.length; i < l; i++) {
-            if (this.data[i].id === item.id) {
-                this.data.splice(i, 1);
+            if (data[i].id === item.id) {
+                data.splice(i, 1);
                 break;
             }
         }
-        this.cdr.detectChanges();
+        this.data.set(data);
     }
 
     run() {
-        this.data = this.buildData();
-        this.cdr.detectChanges();
+        this.data.set(this.buildData());
     }
 
     add() {
-        this.data = this.data.concat(this.buildData(1000));
-        this.cdr.detectChanges();
+        this.data.set(this.data().concat(this.buildData(1000)));
     }
 
     update() {
+        let data = this.data();
         for (let i = 0; i < this.data.length; i += 10) {
-            this.data[i].label += ' !!!';
+            data[i].label += ' !!!';
         }
-        this.cdr.detectChanges();
+        this.data.set(data);
     }
     runLots() {
-        this.data = this.buildData(10000);
-        this.selected = undefined;
-        this.cdr.detectChanges();
+        this.data.set(this.buildData(10000));
+        this.selected.set(undefined);
     }
     clear() {
-        this.data = [];
-        this.selected = undefined;
-        this.cdr.detectChanges();
+        this.data.set([]);
+        this.selected.set(undefined);
     }
     swapRows() {
-        if (this.data.length > 998) {
-            var a = this.data[1];
-            this.data[1] = this.data[998];
-            this.data[998] = a;
+        let data = this.data();
+        if (data.length > 998) {
+            var a = data[1];
+            data[1] = data[998];
+            data[998] = a;
         }
-        this.cdr.detectChanges();
+        this.data.set(data);
+    }
+
+    _random(max: number) {
+        return Math.round(Math.random() * 1000) % max;
     }
 }
