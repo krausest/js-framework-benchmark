@@ -68,7 +68,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkPuppeteer {
   }
   async run(page: Page) {
     await clickElement(page, "pierce/#run");
-    await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", "5001");
+    await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", `${config.WARMUP_COUNT * 1000 + 1}`);
   }
 })();
 
@@ -127,8 +127,10 @@ export const benchSwapRows = new (class extends CPUBenchmarkPuppeteer {
   }
   async run(page: Page) {
       await clickElement(page, "pierce/#swaprows");
-      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(999)>td:nth-of-type(1)", "2");
-      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(2)>td:nth-of-type(1)", "999");
+      let text999 = config.WARMUP_COUNT % 2 == 0 ? "999" : "2";
+      let text2 = config.WARMUP_COUNT % 2 == 0 ? "2" : "999";
+      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text999);
+      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(2)>td:nth-of-type(1)", text2);
   }
 })();
 
@@ -136,26 +138,28 @@ export const benchRemove = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
     super(cpuBenchmarkInfos[Benchmark._06]);
   }
+  rowsToSkip = 4;
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
     await clickElement(page, "pierce/#run");
     await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
       for (let i = 0; i < config.WARMUP_COUNT; i++) {
-          await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${config.WARMUP_COUNT - i + 4})>td:nth-of-type(1)`, (config.WARMUP_COUNT - i + 4).toString());
-          await clickElement(page, `pierce/tbody>tr:nth-of-type(${config.WARMUP_COUNT - i + 4})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-          await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${config.WARMUP_COUNT - i + 4})>td:nth-of-type(1)`, "10");
+          const rowToClick = config.WARMUP_COUNT - i + this.rowsToSkip;
+          await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(1)`, rowToClick.toString());
+          await clickElement(page, `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
+          await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(1)`, `${this.rowsToSkip + config.WARMUP_COUNT + 1}`);
       }
-      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(5)>td:nth-of-type(1)`, "10");
-      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(4)>td:nth-of-type(1)`, "4");
+      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${this.rowsToSkip + 1})>td:nth-of-type(1)`, `${this.rowsToSkip + config.WARMUP_COUNT + 1}`);
+      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${this.rowsToSkip})>td:nth-of-type(1)`, `${this.rowsToSkip}`);
 
       // Click on a row the second time
-      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(6)>td:nth-of-type(1)`, "11");
-      await clickElement(page, `pierce/tbody>tr:nth-of-type(6)>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(6)>td:nth-of-type(1)`, "12");
+      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${this.rowsToSkip + 2})>td:nth-of-type(1)`, `${this.rowsToSkip + config.WARMUP_COUNT + 2}`);
+      await clickElement(page, `pierce/tbody>tr:nth-of-type(${this.rowsToSkip + 2})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
+      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${this.rowsToSkip + 2})>td:nth-of-type(1)`, `${this.rowsToSkip + config.WARMUP_COUNT + 3}`);
   }
   async run(page: Page) {
-    await clickElement(page, `pierce/tbody>tr:nth-of-type(4)>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-    await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(4)>td:nth-of-type(1)`, "10");
+    await clickElement(page, `pierce/tbody>tr:nth-of-type(${this.rowsToSkip})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
+    await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${this.rowsToSkip})>td:nth-of-type(1)`, `${this.rowsToSkip + config.WARMUP_COUNT + 1}`);
   }
 })();
 export const benchRunBig = new (class extends CPUBenchmarkPuppeteer {
