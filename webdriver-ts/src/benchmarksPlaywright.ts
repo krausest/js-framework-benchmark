@@ -42,7 +42,7 @@ export let benchRun = new (class extends CPUBenchmarkPlaywright {
   }
   async init(browser: Browser, page: Page) { 
     await checkElementExists(page, "#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, "#run");
       await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
       await clickElement(page, "#clear");
@@ -51,7 +51,7 @@ export let benchRun = new (class extends CPUBenchmarkPlaywright {
   }
   async run(browser: Browser, page: Page) {
       await clickElement(page, "#run");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", ((config.WARMUP_COUNT+1)*1000).toFixed());
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", ((this.benchmarkInfo.warmupCount+1)*1000).toFixed());
   }  
 })();
 
@@ -61,7 +61,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkPlaywright {
   }
   async init(browser: Browser, page: Page) {
       await checkElementExists(page, "#run");
-      for (let i = 0; i < config.WARMUP_COUNT; i++) {
+      for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
         await clickElement(page, "#run");
         await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
       }
@@ -99,7 +99,7 @@ export const benchSelect = new (class extends CPUBenchmarkPlaywright {
     await checkElementExists(page, "#run");
     await clickElement(page, "#run");
     await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
-    for (let i = 0; i <= config.WARMUP_COUNT; i++) {
+    for (let i = 0; i <= this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, `tbody>tr:nth-of-type(${i + 5})>td:nth-of-type(2)>a`);
       await checkElementHasClass(page, `tbody>tr:nth-of-type(${i + 5})`, "danger");
       await checkCountForSelector(page, "tbody>tr.danger", 1);
@@ -119,7 +119,7 @@ export const benchSwapRows = new (class extends CPUBenchmarkPlaywright {
       await checkElementExists(page, "#run");
       await clickElement(page, "#run");
       await checkElementExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
-      for (let i = 0; i <= config.WARMUP_COUNT; i++) {
+      for (let i = 0; i <= this.benchmarkInfo.warmupCount; i++) {
       let text = i % 2 == 0 ? "2" : "999";
           await clickElement(page, "#swaprows");
           await checkElementContainsText(page, "tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text);
@@ -140,10 +140,10 @@ export const benchRemove = new (class extends CPUBenchmarkPlaywright {
     await checkElementExists(page, "#run");
     await clickElement(page, "#run");
     await checkElementExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
-      for (let i = 0; i < config.WARMUP_COUNT; i++) {
-          await checkElementContainsText(page, `tbody>tr:nth-of-type(${config.WARMUP_COUNT - i + 4})>td:nth-of-type(1)`, (config.WARMUP_COUNT - i + 4).toString());
-          await clickElement(page, `tbody>tr:nth-of-type(${config.WARMUP_COUNT - i + 4})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-          await checkElementContainsText(page, `tbody>tr:nth-of-type(${config.WARMUP_COUNT - i + 4})>td:nth-of-type(1)`, "10");
+      for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
+          await checkElementContainsText(page, `tbody>tr:nth-of-type(${this.benchmarkInfo.warmupCount - i + 4})>td:nth-of-type(1)`, (this.benchmarkInfo.warmupCount - i + 4).toString());
+          await clickElement(page, `tbody>tr:nth-of-type(${this.benchmarkInfo.warmupCount - i + 4})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
+          await checkElementContainsText(page, `tbody>tr:nth-of-type(${this.benchmarkInfo.warmupCount - i + 4})>td:nth-of-type(1)`, "10");
       }
       await checkElementContainsText(page, `tbody>tr:nth-of-type(5)>td:nth-of-type(1)`, "10");
       await checkElementContainsText(page, `tbody>tr:nth-of-type(4)>td:nth-of-type(1)`, "4");
@@ -165,7 +165,7 @@ export const benchRunBig = new (class extends CPUBenchmarkPlaywright {
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, "#run");
       await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
       await clickElement(page, "#clear");
@@ -184,7 +184,7 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkPlaywright {
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, "#run");
       await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
       await clickElement(page, "#clear");
@@ -205,14 +205,14 @@ export const benchClear = new (class extends CPUBenchmarkPlaywright {
   }
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, "#run");
       await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
       await clickElement(page, "#clear");
       await checkElementNotExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }
     await clickElement(page, "#run");
-    await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (config.WARMUP_COUNT*1000+1).toFixed());
+    await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (this.benchmarkInfo.warmupCount*1000+1).toFixed());
   }
   async run(browser: Browser, page: Page) {
       await clickElement(page, "#clear");

@@ -32,7 +32,7 @@ export const benchRun = new (class extends CPUBenchmarkWebdriverCDP {
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElementById(driver, "run", true);
       await testTextContains(driver, "//tbody/tr[1]/td[1]", (i * 1000 + 1).toFixed(), config.TIMEOUT, false);
       await clickElementById(driver, "clear", true);
@@ -41,7 +41,7 @@ export const benchRun = new (class extends CPUBenchmarkWebdriverCDP {
   }
   async run(driver: WebDriver) {
     await clickElementById(driver, "run", true);
-    await testTextContains(driver, "//tbody/tr[1]/td[1]", (config.WARMUP_COUNT * 1000 + 1).toFixed(), config.TIMEOUT, false);
+    await testTextContains(driver, "//tbody/tr[1]/td[1]", (this.benchmarkInfo.warmupCount * 1000 + 1).toFixed(), config.TIMEOUT, false);
   }
 })();
 
@@ -51,7 +51,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkWebdriverCDP {
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElementById(driver, "run", true);
       await testTextContains(driver, "//tbody/tr[1]/td[1]", (i * 1000 + 1).toFixed(), config.TIMEOUT, false);
     }
@@ -104,7 +104,7 @@ export const benchSwapRows = new (class extends CPUBenchmarkWebdriverCDP {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     await clickElementById(driver, "run", true);
     await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
-    for (let i = 0; i <= config.WARMUP_COUNT; i++) {
+    for (let i = 0; i <= this.benchmarkInfo.warmupCount; i++) {
       let text = await getTextByXPath(driver, "//tbody/tr[2]/td[2]/a", false);
       await clickElementById(driver, "swaprows", true);
       await testTextContains(driver, "//tbody/tr[999]/td[2]/a", text, config.TIMEOUT, false);
@@ -125,16 +125,16 @@ export const benchRemove = new (class extends CPUBenchmarkWebdriverCDP {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
     await clickElementById(driver, "run", true);
     await testElementLocatedByXpath(driver, "//tbody/tr[1]/td[2]/a", config.TIMEOUT, false);
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await testTextContains(
         driver,
-        `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`,
-        (config.WARMUP_COUNT - i + 4).toString(),
+        `//tbody/tr[${this.benchmarkInfo.warmupCount - i + 4}]/td[1]`,
+        (this.benchmarkInfo.warmupCount - i + 4).toString(),
         config.TIMEOUT,
         false
       );
-      await clickElementByXPath(driver, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[3]/a/span[1]`, false);
-      await testTextContains(driver, `//tbody/tr[${config.WARMUP_COUNT - i + 4}]/td[1]`, "10", config.TIMEOUT, false);
+      await clickElementByXPath(driver, `//tbody/tr[${this.benchmarkInfo.warmupCount - i + 4}]/td[3]/a/span[1]`, false);
+      await testTextContains(driver, `//tbody/tr[${this.benchmarkInfo.warmupCount - i + 4}]/td[1]`, "10", config.TIMEOUT, false);
     }
     await testTextContains(driver, "//tbody/tr[5]/td[1]", "10", config.TIMEOUT, false);
     await testTextContains(driver, "//tbody/tr[4]/td[1]", "4", config.TIMEOUT, false);
@@ -156,7 +156,7 @@ export const benchRunBig = new (class extends CPUBenchmarkWebdriverCDP {
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElementById(driver, "run", true);
       await testTextContains(driver, "//tbody/tr[1]/td[1]", (i * 1000 + 1).toFixed(), config.TIMEOUT, false);
       await clickElementById(driver, "clear", true);
@@ -175,7 +175,7 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkWebdriverCDP
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElementById(driver, "run", true);
       await testTextContains(driver, "//tbody/tr[1]/td[1]", (i * 1000 + 1).toFixed(), config.TIMEOUT, false);
       await clickElementById(driver, "clear", true);
@@ -196,7 +196,7 @@ export const benchClear = new (class extends CPUBenchmarkWebdriverCDP {
   }
   async init(driver: WebDriver) {
     await testElementLocatedById(driver, "run", SHORT_TIMEOUT, true);
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElementById(driver, "run", true);
       await testElementLocatedByXpath(driver, "//tbody/tr[1000]/td[2]/a", config.TIMEOUT, false);
       await clickElementById(driver, "clear", true);
