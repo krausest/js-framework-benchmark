@@ -127,7 +127,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._01,
     label: "create rows",
-    warmupCount: 2,
+    warmupCount: 5,
     description: "creating 1,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
@@ -137,7 +137,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._02,
     label: "replace all rows",
-    warmupCount: 2,
+    warmupCount: 5,
     description: "updating all 1,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
@@ -157,7 +157,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._04,
     label: "select row",
-    warmupCount: 2,
+    warmupCount: 5,
     description: "highlighting a selected row.",
     type: BenchmarkType.CPU,
     allowBatching: true,
@@ -167,7 +167,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._05,
     label: "swap rows",
-    warmupCount: 2,
+    warmupCount: 5,
     description: "swap 2 rows for table with 1,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
@@ -177,7 +177,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._06,
     label: "remove row",
-    warmupCount: 2,
+    warmupCount: 5,
     description: "removing one row.",
     type: BenchmarkType.CPU,
     allowBatching: true,
@@ -187,7 +187,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._07,
     label: "create many rows",
-    warmupCount: 2,
+    warmupCount: 5,
     description: "creating 10,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
@@ -197,7 +197,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._08,
     label: "append rows to large table",
-    warmupCount: 2,
+    warmupCount: 5,
     description: "appending 1,000 to a table of 1,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
@@ -207,7 +207,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._09,
     label: "clear rows",
-    warmupCount: 2,
+    warmupCount: 5,
     description: "clearing a table with 1,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
