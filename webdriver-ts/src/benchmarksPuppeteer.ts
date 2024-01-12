@@ -120,9 +120,9 @@ export const benchSwapRows = new (class extends CPUBenchmarkPuppeteer {
       await clickElement(page, "pierce/#run");
       await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
       for (let i = 0; i <= config.WARMUP_COUNT; i++) {
-      let text = i % 2 == 0 ? "2" : "999";
-          await clickElement(page, "pierce/#swaprows");
-          await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text);
+        let text = i % 2 == 0 ? "2" : "999";
+        await clickElement(page, "pierce/#swaprows");
+        await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text);
       }
   }
   async run(page: Page) {
