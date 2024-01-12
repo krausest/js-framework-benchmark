@@ -144,10 +144,10 @@ export const benchRemove = new (class extends CPUBenchmarkPuppeteer {
     await clickElement(page, "pierce/#run");
     await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
       for (let i = 0; i < config.WARMUP_COUNT; i++) {
-          const rowToClick = config.WARMUP_COUNT - i + this.rowsToSkip;
-          await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(1)`, rowToClick.toString());
-          await clickElement(page, `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-          await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(1)`, `${this.rowsToSkip + config.WARMUP_COUNT + 1}`);
+        const rowToClick = config.WARMUP_COUNT - i + this.rowsToSkip;
+        await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(1)`, rowToClick.toString());
+        await clickElement(page, `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
+        await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(1)`, `${this.rowsToSkip + config.WARMUP_COUNT + 1}`);
       }
       await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${this.rowsToSkip + 1})>td:nth-of-type(1)`, `${this.rowsToSkip + config.WARMUP_COUNT + 1}`);
       await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${this.rowsToSkip})>td:nth-of-type(1)`, `${this.rowsToSkip}`);
