@@ -39,7 +39,7 @@ export class AppComponent {
     delete(item: Data, event: Event) {
         event.preventDefault();
         let data = this.data();
-        for (let i = 0, l = this.data.length; i < l; i++) {
+        for (let i = 0, l = data.length; i < l; i++) {
             if (data[i].id === item.id) {
                 data.splice(i, 1);
                 break;
@@ -58,7 +58,7 @@ export class AppComponent {
 
     update() {
         let data = this.data();
-        for (let i = 0; i < this.data.length; i += 10) {
+        for (let i = 0; i < data.length; i += 10) {
             data[i].label += ' !!!';
         }
         this.data.set(data);
