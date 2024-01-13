@@ -75,7 +75,7 @@ let Jumbotron = ({ set }) => element('div', {
 });
 
 let makeIcon = preload => element('span', {
-  class: preload ? 'preloadicon ' : '' + 'glyphicon glyphicon-remove',
+  class: (preload ? 'preloadicon ' : '') + 'glyphicon glyphicon-remove',
   'aria-hidden': true,
 });
 let preloadIcon = makeIcon(true);
