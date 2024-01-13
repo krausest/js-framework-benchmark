@@ -28,16 +28,19 @@
     </div>
     <table class="table table-hover table-striped test-data">
         <tbody>
-            @for (item of data; track item.id) 
-            {
-            <tr [class.danger]="item.id === selected">
-                <td class="col-md-1">{{item.id}}</td>
-                <td class="col-md-4">
-                    <a href="#" (click)="select(item, $event)">{{item.label}}</a>
-                </td>
-                <td class="col-md-1"><a href="#" (click)="delete(item, $event)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-                <td class="col-md-6"></td>
-            </tr>
+            @for (item of data(); track item.id) {
+                <tr [class.danger]="item.id === selected()">
+                    <td class="col-md-1">{{item.id}}</td>
+                    <td class="col-md-4">
+                        <a href="#" (click)="select(item, $event)">{{item.label}}</a>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="#" (click)="delete(item, $event)">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                    <td class="col-md-6"></td>
+                </tr>
             }
         </tbody>
     </table>
