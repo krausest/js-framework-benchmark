@@ -21,8 +21,8 @@ export interface JsonResult {
 export type BenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
 
 export interface ErrorAndWarning<T> {
-  error: string;
-  warnings: string[];
+  error?: string;
+  warnings?: string[];
   result?: T[];
 }
 
@@ -56,7 +56,6 @@ export enum BenchmarkRunner {
   PUPPETEER = "puppeteer",
   PLAYWRIGHT = "playwright",
   WEBDRIVER_CDP = "webdrivercdp",
-  WEBDRIVER = "webdriver",
   WEBDRIVER_AFTERFRAME = "webdriver-afterframe",
 }
 

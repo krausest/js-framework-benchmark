@@ -149,7 +149,7 @@ process.on("message", (msg: any) => {
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunnerLighthouse");
-      process.send({ failure: convertError(error) });
+      process.send({ error: convertError(error) });
       process.exit(0);
     });
 });
