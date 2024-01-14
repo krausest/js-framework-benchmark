@@ -20,11 +20,7 @@ import {
   knownIssues,
 } from "./Common";
 
-const benchmarks = rawBenchmarks.filter(
-  (benchmark) =>
-    benchmark.id !== "32_startup-bt" &&
-    benchmark.id !== "33_startup-mainthreadcost",
-);
+const benchmarks = rawBenchmarks;
 
 const results: Result[] = rawResults.map((result) => {
   const values: { [k: string]: ResultValues } = {};

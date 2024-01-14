@@ -59,7 +59,7 @@ async function runLighthouse(
       await chrome.kill();
       throw error;
     }
-    if (config.LOG_DEBUG) console.log("lighthouse result", results);
+    if (config.LOG_DEBUG) console.log("lighthouse result", JSON.stringify(results));
 
     return startupBenchmarks.map((bench) => ({
         benchmark: bench,
