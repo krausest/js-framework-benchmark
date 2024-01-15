@@ -68,7 +68,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkPlaywright {
   }
   async run(browser: Browser, page: Page) {
     await clickElement(page, "#run");
-    await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", "5001");
+    await checkElementContainsText(page, "tbody>tr:nth-of-type(1)>td:nth-of-type(1)", `${this.benchmarkInfo.warmupCount * 1000 + 1}`);
   }
 })();
 
@@ -120,15 +120,17 @@ export const benchSwapRows = new (class extends CPUBenchmarkPlaywright {
       await clickElement(page, "#run");
       await checkElementExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
       for (let i = 0; i <= this.benchmarkInfo.warmupCount; i++) {
-      let text = i % 2 == 0 ? "2" : "999";
-          await clickElement(page, "#swaprows");
-          await checkElementContainsText(page, "tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text);
+        let text = i % 2 == 0 ? "2" : "999";
+        await clickElement(page, "#swaprows");
+        await checkElementContainsText(page, "tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text);
       }
   }
   async run(browser: Browser, page: Page) {
       await clickElement(page, "#swaprows");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(999)>td:nth-of-type(1)", "2");
-      await checkElementContainsText(page, "tbody>tr:nth-of-type(2)>td:nth-of-type(1)", "999");
+      let text999 = this.benchmarkInfo.warmupCount % 2 == 0 ? "999" : "2";
+      let text2 = this.benchmarkInfo.warmupCount % 2 == 0 ? "2" : "999";
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text999);
+      await checkElementContainsText(page, "tbody>tr:nth-of-type(2)>td:nth-of-type(1)", text2);
   }
 })();
 
@@ -136,28 +138,31 @@ export const benchRemove = new (class extends CPUBenchmarkPlaywright {
   constructor() {
     super(cpuBenchmarkInfos[Benchmark._06]);
   }
+  rowsToSkip = 4;
   async init(browser: Browser, page: Page) {
     await checkElementExists(page, "#run");
     await clickElement(page, "#run");
     await checkElementExists(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
       for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
-          await checkElementContainsText(page, `tbody>tr:nth-of-type(${this.benchmarkInfo.warmupCount - i + 4})>td:nth-of-type(1)`, (this.benchmarkInfo.warmupCount - i + 4).toString());
-          await clickElement(page, `tbody>tr:nth-of-type(${this.benchmarkInfo.warmupCount - i + 4})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-          await checkElementContainsText(page, `tbody>tr:nth-of-type(${this.benchmarkInfo.warmupCount - i + 4})>td:nth-of-type(1)`, "10");
+        const rowToClick = this.benchmarkInfo.warmupCount - i + this.rowsToSkip;
+        await checkElementContainsText(page, `tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(1)`, rowToClick.toString());
+        await clickElement(page, `tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
+        await checkElementContainsText(page, `tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(1)`, `${this.rowsToSkip + this.benchmarkInfo.warmupCount + 1}`);
       }
-      await checkElementContainsText(page, `tbody>tr:nth-of-type(5)>td:nth-of-type(1)`, "10");
-      await checkElementContainsText(page, `tbody>tr:nth-of-type(4)>td:nth-of-type(1)`, "4");
+      await checkElementContainsText(page, `tbody>tr:nth-of-type(${this.rowsToSkip + 1})>td:nth-of-type(1)`, `${this.rowsToSkip + this.benchmarkInfo.warmupCount + 1}`);
+      await checkElementContainsText(page, `tbody>tr:nth-of-type(${this.rowsToSkip})>td:nth-of-type(1)`, `${this.rowsToSkip}`);
 
       // Click on a row the second time
-      await checkElementContainsText(page, `tbody>tr:nth-of-type(6)>td:nth-of-type(1)`, "11");
-      await clickElement(page, `tbody>tr:nth-of-type(6)>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-      await checkElementContainsText(page, `tbody>tr:nth-of-type(6)>td:nth-of-type(1)`, "12");
+      await checkElementContainsText(page, `tbody>tr:nth-of-type(${this.rowsToSkip + 2})>td:nth-of-type(1)`, `${this.rowsToSkip + this.benchmarkInfo.warmupCount + 2}`);
+      await clickElement(page, `tbody>tr:nth-of-type(${this.rowsToSkip + 2})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
+      await checkElementContainsText(page, `tbody>tr:nth-of-type(${this.rowsToSkip + 2})>td:nth-of-type(1)`, `${this.rowsToSkip + this.benchmarkInfo.warmupCount + 3}`);
   }
   async run(browser: Browser, page: Page) {
-    await clickElement(page, `tbody>tr:nth-of-type(4)>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-    await checkElementContainsText(page, `tbody>tr:nth-of-type(4)>td:nth-of-type(1)`, "10");
+    await clickElement(page, `tbody>tr:nth-of-type(${this.rowsToSkip})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
+    await checkElementContainsText(page, `tbody>tr:nth-of-type(${this.rowsToSkip})>td:nth-of-type(1)`, `${this.rowsToSkip + this.benchmarkInfo.warmupCount + 1}`);
   }
 })();
+
 
 export const benchRunBig = new (class extends CPUBenchmarkPlaywright {
   constructor() {

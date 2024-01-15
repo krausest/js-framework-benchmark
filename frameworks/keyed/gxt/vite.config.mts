@@ -27,9 +27,7 @@ export default defineConfig(({ mode }) => ({
       mangle: {
         module: true,
         toplevel: true,
-        properties: {
-          builtins: false,
-        },
+        properties: false,
       },
     },
   },
