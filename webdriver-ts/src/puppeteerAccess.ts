@@ -104,12 +104,12 @@ function browserPath(benchmarkOptions: BenchmarkOptions) {
 }
 
 export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<puppeteer.Browser> {
-  let width = 1280;
-  let height = 800;
-  let window_width = width,
+  const width = 1280;
+  const height = 800;
+  const window_width = width,
     window_height = height;
 
-  let args = [`--window-size=${window_width},${window_height}`, "--js-flags=--expose-gc"];
+  const args = [`--window-size=${window_width},${window_height}`, "--js-flags=--expose-gc", "--no-default-browser-check"];
   if (benchmarkOptions.headless) args.push("--headless=new");
   args.push("--enable-benchmarking");
 

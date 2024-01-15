@@ -37,20 +37,21 @@ export const benchStartupMainThreadWorkCost: StartupBenchmarkInfo = {
   type: BenchmarkType.STARTUP,
 };
 
-export const benchStartupTotalBytes: StartupBenchmarkInfo = {
-  id: "34_startup-totalbytes",
-  label: "total kilobyte weight",
-  description: () => "network transfer cost (post-compression) of all the resources loaded into the page.",
-  property: "total-byte-weight",
-  fn: toKb,
+export const benchStartupMainInteractive: StartupBenchmarkInfo = {
+  id: "34_startup-interactive",
+  label: "interactive",
+  description: () => "Time to Interactive is the amount of time it takes for the page to become fully interactive.",
+  property: "interactive",
+  fn: id,
   type: BenchmarkType.STARTUP,
 };
+
 
 export const subbenchmarks = [
   benchStartupConsistentlyInteractive,
   benchStartupBootup,
   benchStartupMainThreadWorkCost,
-  benchStartupTotalBytes,
+  benchStartupMainInteractive,
 ];
 
 export class BenchmarkLighthouse implements BenchmarkImpl {
