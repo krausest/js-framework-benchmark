@@ -121,17 +121,17 @@
 			<div class="col-md-6">
 				<div class="row">
 					<div class="col-sm-6 smallpad">
-						<button type="button" class="btn btn-primary btn-block" id="run" on:click={run}
+						<button type="button" class="btn btn-primary btn-block" id="run" onclick={run}
 							>Create 1,000 rows</button
 						>
 					</div>
 					<div class="col-sm-6 smallpad">
-						<button type="button" class="btn btn-primary btn-block" id="runlots" on:click={runLots}
+						<button type="button" class="btn btn-primary btn-block" id="runlots" onclick={runLots}
 							>Create 10,000 rows</button
 						>
 					</div>
 					<div class="col-sm-6 smallpad">
-						<button type="button" class="btn btn-primary btn-block" id="add" on:click={add}
+						<button type="button" class="btn btn-primary btn-block" id="add" onclick={add}
 							>Append 1,000 rows</button
 						>
 					</div>
@@ -140,11 +140,11 @@
 							type="button"
 							class="btn btn-primary btn-block"
 							id="update"
-							on:click={partialUpdate}>Update every 10th row</button
+							onclick={partialUpdate}>Update every 10th row</button
 						>
 					</div>
 					<div class="col-sm-6 smallpad">
-						<button type="button" class="btn btn-primary btn-block" id="clear" on:click={clear}
+						<button type="button" class="btn btn-primary btn-block" id="clear" onclick={clear}
 							>Clear</button
 						>
 					</div>
@@ -153,7 +153,7 @@
 							type="button"
 							class="btn btn-primary btn-block"
 							id="swaprows"
-							on:click={swapRows}>Swap Rows</button
+							onclick={swapRows}>Swap Rows</button
 						>
 					</div>
 				</div>
@@ -166,12 +166,12 @@
 				<tr class={selected === row.id ? 'danger' : ''}
 					><td class="col-md-1">{row.id}</td><td class="col-md-4"
 						><a
-							on:click={() => {
+							onclick={() => {
 								selected = row.id;
 							}}>{row.label}</a
 						></td
 					><td class="col-md-1"
-						><a on:click={() => remove(row)}
+						><a onclick={() => remove(row)}
 							><span class="glyphicon glyphicon-remove" aria-hidden="true" /></a
 						></td
 					><td class="col-md-6" /></tr
