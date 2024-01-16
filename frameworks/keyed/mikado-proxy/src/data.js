@@ -8,6 +8,12 @@ const len_NOUNS = NOUNS.length;
 
 let nextId = 1;
 
+/**
+ * @param store
+ * @param {number} count
+ * @param {boolean=} append
+ */
+
 export default function(store, count, append){
 
     let i = store.length;
