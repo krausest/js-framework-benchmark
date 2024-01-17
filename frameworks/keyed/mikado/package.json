@@ -17,11 +17,11 @@
   },
   "scripts": {
     "compile": "npx mikado-compile --src src/template --module --inline --force && echo Compile Complete. && exit 0",
-    "build": "npm run compile && node task/build RELEASE=custom DEBUG=false POLYFILL=false SUPPORT_CACHE=true SUPPORT_EVENTS=true SUPPORT_DOM_HELPERS=false SUPPORT_ASYNC=false SUPPORT_REACTIVE=false SUPPORT_CACHE_HELPERS=false SUPPORT_KEYED=true SUPPORT_POOLS=false SUPPORT_CALLBACKS=false SUPPORT_COMPILE=false SUPPORT_WEB_COMPONENTS=false && exit 0",
+    "build": "npm run compile && node task/build RELEASE=custom DEBUG=false POLYFILL=false SUPPORT_CACHE=true SUPPORT_EVENTS=true SUPPORT_DOM_HELPERS=false SUPPORT_ASYNC=false SUPPORT_REACTIVE=false SUPPORT_CACHE_HELPERS=false SUPPORT_KEYED=true SUPPORT_POOLS=false SUPPORT_CALLBACKS=false SUPPORT_COMPILE=false SUPPORT_WEB_COMPONENTS=false SUPPORT_COMPACT_TEMPLATE=false && exit 0",
     "build-prod": "npm run build"
   },
   "dependencies": {
-    "mikado": "^0.8.222"
+    "mikado": "^0.8.227"
   },
   "devDependencies": {
     "google-closure-compiler": "^20230802.0.0"
