@@ -16,10 +16,10 @@ go get ./src
 
 Run the development server:
 ```
-gouix -tinygo -proxy=http://localhost:8080 serve
+gouix serve
 ```
 
 Build for production:
 ```
-gouix -tinygo build
+gouix build
 ```
