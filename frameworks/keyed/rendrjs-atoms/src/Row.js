@@ -3,7 +3,7 @@ import { makeIcon } from './RemoveIcon';
 import { dataAtom, selectedAtom } from './store';
  
 let icon = makeIcon();
-
+let emptyTd = element('td', { class: 'col-md-6' });
 export let Row = ({ item: { id, label } }) => {
   let setData = useAtomSetter(dataAtom);
   let setSelected = useAtomSetter(selectedAtom);
@@ -30,7 +30,7 @@ export let Row = ({ item: { id, label } }) => {
           slot: icon,
         }),
       }),
-      element('td', { class: 'col-md-6' }),
+      emptyTd,
     ],
   });
 };
