@@ -8,7 +8,7 @@ export let Table = () => {
   return element('table', {
     class: 'table table-hover table-striped test-data',
     slot: element('tbody', {
-      slot: data.map(item => component(Row, { key: `${item.id}`, item, memo: [item.label] })),
+      slot: data.map(item => component(Row, { key: item.id, item, memo: [item.label] })),
     }),
   });
 };
