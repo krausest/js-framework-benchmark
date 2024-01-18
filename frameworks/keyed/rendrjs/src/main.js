@@ -118,7 +118,7 @@ let App = () => {
         class: 'table table-hover table-striped test-data',
         slot: element('tbody', {
           slot: state.arr.map(item => component(Row, {
-            key: `${item.id}`,
+            key: item.id,
             item,
             hi: state.sel === item.id,
             set: setState,
