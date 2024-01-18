@@ -30,12 +30,12 @@
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
     "js-framework-benchmark-utils": "^0.3.2",
-    "uhtml": "^4.0.0"
+    "uhtml": "^4.4.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
-    "rollup": "^4.4.0",
-    "rollup-plugin-minify-html-literals-v3": "^1.3.3"
+    "rollup": "^4.9.5",
+    "rollup-plugin-minify-html-literals-v3": "^1.3.4"
   }
 }
