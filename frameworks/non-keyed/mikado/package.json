@@ -21,7 +21,7 @@
     "build-prod": "npm run build"
   },
   "dependencies": {
-    "mikado": "^0.8.227"
+    "mikado": "^0.8.309"
   },
   "devDependencies": {
     "google-closure-compiler": "^20230802.0.0"
