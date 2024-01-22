@@ -13,20 +13,12 @@ type RowProps struct {
 	Item     *data.Item
 }
 
-func (rp RowProps) Key() any {
-	return rp.Item.ID
+func (rp RowProps) Key() string {
+	return strconv.Itoa(rp.Item.ID)
 }
 
 func (rp RowProps) Memo() goui.Deps {
 	return goui.Deps{rp.Selected, rp.Item.Label}
-}
-
-var emptyTD = goui.Element("td", &goui.Attributes{Class: "col-md-6"})
-var deleteIcon = goui.Children{
-	goui.Element("span", &goui.Attributes{
-		Class:      "glyphicon glyphicon-remove",
-		AriaHidden: true,
-	}),
 }
 
 func Row(props RowProps) *goui.Node {
@@ -82,11 +74,19 @@ func Row(props RowProps) *goui.Node {
 				Children: goui.Children{
 					goui.Element("a", &goui.Attributes{
 						OnClick:  handleDelete,
-						Children: deleteIcon,
+						Children: trashIcon,
 					}),
 				},
 			}),
-			emptyTD,
+			emptyTd,
 		},
 	})
+}
+
+var emptyTd = goui.Element("td", &goui.Attributes{Class: "col-md-6"})
+var trashIcon = goui.Children{
+	goui.Element("span", &goui.Attributes{
+		Class:      "glyphicon glyphicon-remove",
+		AriaHidden: true,
+	}),
 }
