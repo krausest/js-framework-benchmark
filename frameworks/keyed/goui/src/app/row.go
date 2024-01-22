@@ -73,17 +73,20 @@ func Row(props RowProps) *goui.Node {
 				Class: "col-md-1",
 				Children: goui.Children{
 					goui.Element("a", &goui.Attributes{
-						OnClick: handleDelete,
-						Children: goui.Children{
-							goui.Element("span", &goui.Attributes{
-								Class:      "glyphicon glyphicon-remove",
-								AriaHidden: true,
-							}),
-						},
+						OnClick:  handleDelete,
+						Children: trashIcon,
 					}),
 				},
 			}),
-			goui.Element("td", &goui.Attributes{Class: "col-md-6"}),
+			emptyTd,
 		},
 	})
+}
+
+var emptyTd = goui.Element("td", &goui.Attributes{Class: "col-md-6"})
+var trashIcon = goui.Children{
+	goui.Element("span", &goui.Attributes{
+		Class:      "glyphicon glyphicon-remove",
+		AriaHidden: true,
+	}),
 }

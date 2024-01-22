@@ -93,12 +93,7 @@ func Jumbotron(props JumbotronProps) *goui.Node {
 			goui.Element("div", &goui.Attributes{
 				Class: "row",
 				Children: goui.Children{
-					goui.Element("div", &goui.Attributes{
-						Class: "col-md-6",
-						Children: goui.Children{
-							goui.Element("h1", &goui.Attributes{Children: goui.Children{goui.Text("GoUI")}}),
-						},
-					}),
+					heading,
 					goui.Element("div", &goui.Attributes{
 						Class: "col-md-6",
 						Children: goui.Children{
@@ -120,3 +115,10 @@ func Jumbotron(props JumbotronProps) *goui.Node {
 		},
 	})
 }
+
+var heading = goui.Element("div", &goui.Attributes{
+	Class: "col-md-6",
+	Children: goui.Children{
+		goui.Element("h1", &goui.Attributes{Children: goui.Children{goui.Text("GoUI")}}),
+	},
+})

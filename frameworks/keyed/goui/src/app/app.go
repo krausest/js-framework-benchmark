@@ -30,10 +30,12 @@ func App(goui.NoProps) *goui.Node {
 					}),
 				})},
 			}),
-			goui.Element("span", &goui.Attributes{
-				Class:      "preloadicon glyphicon glyphicon-remove",
-				AriaHidden: true,
-			}),
+			preloadIcon,
 		},
 	})
 }
+
+var preloadIcon = goui.Element("span", &goui.Attributes{
+	Class:      "preloadicon glyphicon glyphicon-remove",
+	AriaHidden: true,
+})

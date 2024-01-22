@@ -157,7 +157,7 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: false,
-    additionalNumberOfRuns: 10,
+    additionalNumberOfRuns: 5,
   },
   {
     id: Benchmark._05,
