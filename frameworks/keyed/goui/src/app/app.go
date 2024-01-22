@@ -11,11 +11,6 @@ type AppState struct {
 	Selected int
 }
 
-var preload = goui.Element("span", &goui.Attributes{
-	Class:      "preloadicon glyphicon glyphicon-remove",
-	AriaHidden: true,
-})
-
 func App(goui.NoProps) *goui.Node {
 	state, setState := goui.UseState(&AppState{})
 
@@ -35,7 +30,12 @@ func App(goui.NoProps) *goui.Node {
 					}),
 				})},
 			}),
-			preload,
+			preloadIcon,
 		},
 	})
 }
+
+var preloadIcon = goui.Element("span", &goui.Attributes{
+	Class:      "preloadicon glyphicon glyphicon-remove",
+	AriaHidden: true,
+})

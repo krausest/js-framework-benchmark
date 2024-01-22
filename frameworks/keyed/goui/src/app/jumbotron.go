@@ -14,13 +14,6 @@ func (jp JumbotronProps) Memo() goui.Deps {
 	return goui.Deps{}
 }
 
-var heading = goui.Element("div", &goui.Attributes{
-	Class: "col-md-6",
-	Children: goui.Children{
-		goui.Element("h1", &goui.Attributes{Children: goui.Children{goui.Text("GoUI")}}),
-	},
-})
-
 func button(id string, txt string, onclick *goui.Callback[func(*goui.MouseEvent)]) *goui.Node {
 	return goui.Element("div", &goui.Attributes{
 		Class: "col-sm-6 smallpad",
@@ -122,3 +115,10 @@ func Jumbotron(props JumbotronProps) *goui.Node {
 		},
 	})
 }
+
+var heading = goui.Element("div", &goui.Attributes{
+	Class: "col-md-6",
+	Children: goui.Children{
+		goui.Element("h1", &goui.Attributes{Children: goui.Children{goui.Text("GoUI")}}),
+	},
+})
