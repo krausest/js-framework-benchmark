@@ -2,6 +2,5 @@ server:
   port: 5000
   proxy: http://localhost:8080
 build:
-  compiler: tinygo
   wasm_opt: true
   no_traps: true
