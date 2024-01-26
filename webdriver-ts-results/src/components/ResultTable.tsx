@@ -2,7 +2,7 @@ import React from "react";
 import { DisplayMode, BenchmarkType, FrameworkType, CpuDurationMode } from "../Common";
 import CpuResultsTable from "./tables/CpuResultsTable";
 import MemResultsTable from "./tables/MemResultsTable";
-import StartupResultsTable from "./tables/StartupResultsTable";
+// import StartupResultsTable from "./tables/StartupResultsTable";
 import { benchmarks } from "../results";
 import { useRootStore } from "../reducer";
 import SizeResultsTable from "./tables/SizeResultsTable";
@@ -79,7 +79,6 @@ const ResultTable = ({ type }: Props) => {
             <div className="results__table-container">
               <table className="results__table">
                 <CpuResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
-                <StartupResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
                 <MemResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
                 <SizeResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
               </table>
