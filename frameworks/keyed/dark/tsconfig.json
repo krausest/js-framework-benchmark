@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "moduleResolution": "node"
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
   }
 }
