@@ -1,4 +1,4 @@
-import { createRoot, useReducer } from '@aimwhy/frei';
+import { createRoot, useReducer, useCallback } from '@aimwhy/frei';
 
 const random = (max) => Math.round(Math.random() * 1000) % max;
 
@@ -69,8 +69,8 @@ const listReducer = (state, action) => {
 };
 
 const Row = ({ selected, item, dispatch }) => {
-  const selectFn = () => dispatch({ type: "SELECT", id: item.id });
-  const deleteFn = () => dispatch({ type: "REMOVE", id: item.id })
+  const selectFn = useCallback(() => dispatch({ type: "SELECT", id: item.id }), [item.id]);
+  const deleteFn = useCallback(() => dispatch({ type: "REMOVE", id: item.id }), [item.id]);
 
   return (
     <tr className={selected ? "danger" : ""}>
