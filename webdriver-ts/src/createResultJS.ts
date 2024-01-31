@@ -6,6 +6,8 @@ import {
   BenchmarkType,
   fileName,
   slowDownFactor,
+  slowDownNote,
+  warmupNote,
 } from "./benchmarksCommon.js";
 import * as benchmarksLighthouse from "./benchmarksLighthouse.js";
 import * as benchmarksSize from "./benchmarksSize.js";
@@ -153,7 +155,7 @@ async function main() {
   let formattedBenchmarks = allBenchmarks.map((b) => ({
     id: b.id,
     label: b.label,
-    description: b.description(slowDownFactor(b.id, true)),
+    description: b.description + warmupNote(b) + slowDownNote(slowDownFactor(b.id, true)),
     type: b.type,
   }));
   resultJS += "export const benchmarks = " + JSON.stringify(formattedBenchmarks) + ";\n";
