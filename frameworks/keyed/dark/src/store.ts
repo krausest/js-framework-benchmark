@@ -1,6 +1,6 @@
-import { type Atom, atom } from "@dark-engine/core";
+import { type WritableAtom, atom } from "@dark-engine/core";
 
-function random(max) {
+function random(max: number) {
   return Math.round(Math.random() * 1000) % max;
 }
 
@@ -63,7 +63,7 @@ const nouns = [
 
 export type Item = {
   id: number;
-  label$: Atom<string>;
+  label$: WritableAtom<string>;
 };
 
 function buildData(count: number) {
@@ -86,8 +86,8 @@ function buildData(count: number) {
 }
 
 type State = {
-  data$: Atom<Array<Item>>;
-  selected$: Atom<number>;
+  data$: WritableAtom<Array<Item>>;
+  selected$: WritableAtom<number>;
 };
 
 class Store {
