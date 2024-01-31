@@ -22,10 +22,7 @@
   },
   "glint": {
     "environment": {
-      "glimmerx": {},
-      "ember-template-imports": {
-        "additionalGlobals": ["on"]
-      }
+      "glint-environment-gxt": {},
     }
   },
   "include": ["src"]
