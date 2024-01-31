@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-hydro-js",
-  "version": "1.5.10",
+  "version": "1.5.14",
   "description": "hydro-js demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
@@ -23,12 +23,12 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@types/glob": "^7.2.0",
-    "glob": "^7.2.0",
-    "html-bundle": "^6.0.7",
-    "typescript": "^4.5.5"
+    "@types/glob": "^8.1.0",
+    "glob": "^10.3.10",
+    "html-bundle": "^6.0.22",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
-    "hydro-js": "^1.5.10"
+    "hydro-js": "^1.5.14"
   }
 }
