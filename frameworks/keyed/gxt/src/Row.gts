@@ -13,14 +13,8 @@ type RowArgs = {
 };
 
 export class Row extends Component<RowArgs> {
-  get id() {
-    return this.args.item.id;
-  }
-  get label() {
-    return this.args.item.label;
-  }
   get isSelected() {
-    return this.args.selected === this.id;
+    return this.args.selected === this.args.item.id;
   }
   get className() {
     return this.isSelected ? 'danger' : '';
@@ -33,9 +27,9 @@ export class Row extends Component<RowArgs> {
   };
   <template>
     <tr class={{this.className}}>
-      <td class='col-md-1'>{{this.id}}</td>
+      <td class='col-md-1'>{{@item.id}}</td>
       <td class='col-md-4'>
-        <a {{on 'click' this.onClick}}>{{this.label}}</a>
+        <a {{on 'click' this.onClick}}>{{@item.label}}</a>
       </td>
       <td class='col-md-1'>
         <a {{on 'click' this.onClickRemove}}>
