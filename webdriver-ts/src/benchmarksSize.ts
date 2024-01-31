@@ -11,8 +11,7 @@ let toKb = (x: number) => x / 1024;
 export const benchUncompressedSize: benchmarksCommon.SizeBenchmarkInfo = {
   id: "41_size-uncompressed",
   label: "uncompressed size",
-  description: () =>
-    "uncompressed size of all implementation files (excluding /css and http headers)",
+  description: "uncompressed size of all implementation files (excluding /css and http headers)",
   type: BenchmarkType.SIZE,
   fn: (sizeInfo) => toKb(sizeInfo.size_uncompressed),
 };
@@ -20,8 +19,7 @@ export const benchUncompressedSize: benchmarksCommon.SizeBenchmarkInfo = {
 export const benchCompressedSize: benchmarksCommon.SizeBenchmarkInfo = {
   id: "42_size-compressed",
   label: "compressed size",
-  description: () =>
-    "brotli compressed size of all implementation files (excluding /css and http headers)",
+  description: "brotli compressed size of all implementation files (excluding /css and http headers)",
   type: BenchmarkType.SIZE,
   fn: (sizeInfo) => toKb(sizeInfo.size_compressed),
 };
@@ -29,8 +27,7 @@ export const benchCompressedSize: benchmarksCommon.SizeBenchmarkInfo = {
 export const benchFP: benchmarksCommon.SizeBenchmarkInfo = {
   id: "43_first-paint",
   label: "first paint",
-  description: () =>
-    "first paint",
+  description: "first paint",
   type: BenchmarkType.SIZE,
   fn: (sizeInfo) => Number(sizeInfo.fp.toFixed(1)),
 };
