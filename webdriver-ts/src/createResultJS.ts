@@ -61,9 +61,10 @@ async function main() {
         allBenchmarks.push(benchmarkInfo);
       }
     } else {
-      if (benchmarkInfo.type == BenchmarkType.STARTUP_MAIN) {
-        allBenchmarks = allBenchmarks.concat(benchmarksLighthouse.subbenchmarks);
-      } else if (benchmarkInfo.type == BenchmarkType.SIZE_MAIN) {
+      // if (benchmarkInfo.type == BenchmarkType.STARTUP_MAIN) {
+      //   allBenchmarks = allBenchmarks.concat(benchmarksLighthouse.subbenchmarks);
+      // } else 
+      if (benchmarkInfo.type == BenchmarkType.SIZE_MAIN) {
         allBenchmarks = allBenchmarks.concat(benchmarksSize.subbenchmarks);
       } else {
         allBenchmarks.push(benchmarkInfo);
