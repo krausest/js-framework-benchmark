@@ -5,7 +5,7 @@
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "pota",
-    "frameworkHomeURL": "https://github.com/potahtml/pota",
+    "frameworkHomeURL": "https://pota.quack.uy/",
     "issues": [
       801
     ]
