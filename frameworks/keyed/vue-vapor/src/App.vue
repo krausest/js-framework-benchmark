@@ -64,7 +64,7 @@ function swapRows() {
   <div class="jumbotron">
     <div class="row">
       <div class="col-md-6">
-        <h1>Vue.js Vapor (non-keyed)</h1>
+        <h1>Vue.js Vapor (keyed)</h1>
       </div>
       <div class="col-md-6">
         <div class="row">
@@ -98,6 +98,7 @@ function swapRows() {
     <tbody>
       <tr
         v-for="row of rows"
+        :key="row.id"
         :class="{ danger: row.id === selected }"
         :data-label="row.label"
         v-memo="[row.label, row.id === selected]"
