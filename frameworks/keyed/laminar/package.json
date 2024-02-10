@@ -23,7 +23,7 @@
     "preview":          "vite preview",
     "sourcemap-report": "node sourcemap-report.js"
   },
-  "devDependencies"        : {
+  "devDependencies":        {
     "@raquo/vite-plugin-glob-resolver":      "^0.1.0",
     "@raquo/vite-plugin-import-side-effect": "^0.2.0",
     "@scala-js/vite-plugin-scalajs":         "^1.0.0",
@@ -36,8 +36,8 @@
     "typescript":                            "^5.2.2",
     "vite":                                  "^4.1.0"
   },
-  "dependencies":                            {},
-  "repository":                              {
+  "dependencies":           {},
+  "repository":             {
     "type": "git",
     "url":  "https://github.com/krausest/js-framework-benchmark.git"
   }

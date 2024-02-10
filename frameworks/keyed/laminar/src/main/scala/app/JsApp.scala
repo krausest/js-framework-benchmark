@@ -3,9 +3,9 @@ package app
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
 
-import scala.scalajs.js
-
 object JsApp:
+  
+  import com.raquo.airstream.split.DuplicateKeysConfig
   
   def main(args: Array[String]): Unit =
     lazy val container = dom.document.getElementById("main")
@@ -34,7 +34,7 @@ object JsApp:
       ),
       table(cls := "table table-hover table-striped test-data",
         tbody(idAttr := "tbody",
-          children <-- State.currentItems.split(_.id)(renderRow),
+          children <-- State.currentItems.split(_.id, duplicateKeys = DuplicateKeysConfig.noWarnings)(renderRow),
         ),
       ),
     )
@@ -49,18 +49,18 @@ object JsApp:
   
   private def renderRow(id: Int, item: Item, currentItem: Signal[Item]): HtmlElement =
     tr(cls.toggle("danger") <-- State.currentSelection.map(_.contains(id)),
-      td(cls := "col-md-1", idAttr := id.text,
+      td(cls := "col-md-1",
         id.text,
       ),
       td(cls := "col-md-4",
         a(cls := "lbl",
-          onClick.preventDefault.mapTo(Command.SelectRow(id)) --> State.commandObserver,
+          onClick.mapTo(Command.SelectRow(id)) --> State.commandObserver,
           child.text <-- currentItem.map(_.label),
         ),
       ),
       td(cls := "col-md-1",
         a(cls := "remove",
-          onClick.preventDefault.mapTo(Command.DeleteRow(id)) --> State.commandObserver,
+          onClick.mapTo(Command.DeleteRow(id)) --> State.commandObserver,
           span(cls := "remove glyphicon glyphicon-remove", dataAttr("aria-hidden") := "true"),
         ),
       ),

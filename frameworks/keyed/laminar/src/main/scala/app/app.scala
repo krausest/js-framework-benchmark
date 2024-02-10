@@ -33,15 +33,16 @@ object State:
     case Set1kRows          => items.set(Vector.fill(1000)(generateItem()))
     case Set10kRows         => items.set(Vector.fill(10000)(generateItem()))
     case Add1kRows          => items.update(_ ++ Vector.fill(1000)(generateItem()))
-    case UpdateEvery10thRow => items.update(_.zipWithIndex.map:
-      case (item, index) if index % 10 == 0 => item.copy(label = item.label + " !!!")
-      case (item, _)                        => item
-    )
+    case UpdateEvery10thRow => items.update: items =>
+      (items.indices by 10).foldLeft(items): (items, i) =>
+        val item = items(i)
+        items.updated(i, item.copy(label = item.label + " !!!"))
     case DeleteAllRows      => items.set(Vector.empty)
-    case SwapTwoRows        => items.update:
-      case items if items.length > 998 => items.updated(1, items(998)).updated(998, items(1))
-      case items                       => items
-    case DeleteRow(id)      => items.update(_.filterNot(_.id == id))
+    case SwapTwoRows        => items.update: items =>
+      if items.length >= 999 then items.updated(1, items(998)).updated(998, items(1)) else items
+    case DeleteRow(id)      => items.update: items =>
+      val index = items.indexWhere(_.id == id)
+      if index != -1 then items.patch(index, Nil, 1) else items
     case SelectRow(id)      => selection.set(Some(id))
   
 end State
@@ -49,13 +50,12 @@ end State
 object Data:
   
   import scala.collection.immutable.ArraySeq
+  import scala.util.Random
   
   def generateLabel(): String =
-    import scala.util.Random
-    
-    val adjective = adjectives(Random.nextInt(adjectives.length))
-    val colour    = colours(Random.nextInt(colours.length))
-    val noun      = nouns(Random.nextInt(nouns.length))
+    inline def adjective = adjectives(Random.nextInt(adjectives.length))
+    inline def colour    = colours(Random.nextInt(colours.length))
+    inline def noun      = nouns(Random.nextInt(nouns.length))
     
     s"$adjective $colour $noun"
   
