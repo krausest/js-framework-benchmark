@@ -17,6 +17,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "npm:@vue-vapor/vite-plugin-vue@latest",
-    "vite": "^5.0.12"
+    "vite": "^5.1.1"
   }
 }
