@@ -1,7 +1,7 @@
 {
-  "name": "js-framework-benchmark-slingjs-18.1.0",
-  "version": "18.1.0",
-  "description": "Benchmark for Sling.js 18.1.0 framework",
+  "name": "js-framework-benchmark-slingjs-21.0.1",
+  "version": "21.0.1",
+  "description": "Benchmark for Sling.js 21.0.1 framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "slingjs",
     "frameworkHomeURL": "https://github.com/puckowski/Sling.js"
@@ -11,7 +11,7 @@
     "build-prod": "webpack --mode=production"
   },
   "devDependencies": {
-    "@babel/cli": "^7.21.0",
+    "@babel/cli": "7.21.0",
     "@babel/core": "7.20.2",
     "@babel/preset-env": "7.20.2",
     "@babel/register": "7.4.0",
@@ -21,6 +21,6 @@
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
-    "slingjs": "18.1.0"
+    "slingjs": "21.0.1"
   }
 }

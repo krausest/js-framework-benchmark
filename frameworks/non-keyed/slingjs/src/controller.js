@@ -4,7 +4,6 @@ var { Store } = require('./store.es6');
 export class ControllerComponent {
     constructor() {
         this.data = function () { return Store.data; };
-        this.selected = function () { return Store.selected; };
         this.run = function () {
             Store.run();
             detectChanges();
@@ -54,7 +53,7 @@ export class ControllerComponent {
             this.$id.append(d.id);
         }
 
-        const className = (d.id === context.selected()) ? 'danger' : '';
+        const className = (d.id === Store.selected) ? 'danger' : '';
 
         if (this.className !== className) {
             this.className = className;
@@ -63,7 +62,7 @@ export class ControllerComponent {
 
     makeTableRow(d) {
         const rootNode = renderElementWithoutClass('tr', {
-                ...d.id === this.selected() && { class: 'danger' },
+                ...d.id === Store.selected && { class: 'danger' },
                 onclick: this.select.bind(this, d.id),
             }, [
                 renderElementWithoutClass('td', {
@@ -139,7 +138,7 @@ export class ControllerComponent {
                                     children: [
                                         markup('h1', {
                                             children: [
-                                                textNode('Sling.js 18.1.0')
+                                                textNode('Sling.js 21.0.1')
                                             ]
                                         })
                                     ]
