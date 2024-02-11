@@ -1,9 +1,9 @@
 <script setup>
-import { useLocalStorage } from '@vueuse/core';
+import { ref, shallowRef } from 'vue'
 import { buildData } from './data'
 
-const selected = useLocalStorage('selected', null)
-const rows = useLocalStorage('rows', [])
+const selected = ref()
+const rows = shallowRef([])
 
 function setRows(update = rows.value.slice()) {
   rows.value = update
@@ -14,7 +14,6 @@ function add() {
 }
 
 function remove(id) {
-  console.log("REMOVE", id)
   rows.value.splice(
     rows.value.findIndex((d) => d.id === id),
     1
@@ -23,7 +22,6 @@ function remove(id) {
 }
 
 function select(id) {
-  console.log("SELECT", id)
   selected.value = id
 }
 
