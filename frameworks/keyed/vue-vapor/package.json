@@ -1,0 +1,28 @@
+{
+  "name": "js-framework-benchmark-vue-vapor",
+  "private": true,
+  "version": "0.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@vue-vapor/vue",
+    "frameworkHomeURL": "https://vue.js.org/",
+    "customURL": "/dist"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.7.2",
+    "@vue-vapor/vue": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "@vue-vapor/vite-plugin-vue": "latest",
+    "terser": "^5.27.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.1",
+    "vue-tsc": "^1.8.27"
+  }
+}
