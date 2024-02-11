@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@vue-vapor/vue",
-    "frameworkHomeURL": "https://vue.js.org/",
+    "frameworkHomeURL": "https://github.com/vuejs/core-vapor",
     "customURL": "/dist"
   },
   "type": "module",
