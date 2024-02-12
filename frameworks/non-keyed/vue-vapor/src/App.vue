@@ -96,12 +96,7 @@ function swapRows() {
   </div>
   <table class="table table-hover table-striped test-data">
     <tbody>
-      <tr
-        v-for="row of rows"
-        :class="{ danger: row.id === selected }"
-        :data-label="row.label"
-        v-memo="[row.label, row.id === selected]"
-      >
+      <tr v-for="row of rows" :class="{ danger: row.id === selected }" :data-label="row.label">
         <td class="col-md-1">{{ row.id }}</td>
         <td class="col-md-4">
           <a @click="select(row.id)">{{ row.label }}</a>
