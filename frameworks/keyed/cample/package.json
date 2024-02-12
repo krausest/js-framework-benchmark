@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-cample",
-  "version": "3.2.0-alpha.8",
+  "version": "3.2.0-alpha.10",
   "description": "cample demo",
   "main": "dist/main.js",
   "js-framework-benchmark": {
@@ -22,13 +22,13 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@babel/core": "7.21.3",
-    "@babel/preset-env": "7.20.2",
-    "babel-loader": "9.1.2",
-    "webpack": "5.75.0",
-    "webpack-cli": "5.0.1"
+    "@babel/core": "7.23.9",
+    "@babel/preset-env": "7.23.9",
+    "babel-loader": "9.1.3",
+    "webpack": "5.90.1",
+    "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "cample": "3.2.0-alpha.8"
+    "cample": "3.2.0-alpha.10"
   }
 }
