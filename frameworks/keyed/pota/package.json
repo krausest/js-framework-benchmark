@@ -1,11 +1,14 @@
 {
   "name": "js-framework-benchmark-pota",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "pota",
-    "frameworkHomeURL": "https://github.com/potahtml/pota"
+    "frameworkHomeURL": "https://pota.quack.uy/",
+    "issues": [
+      801
+    ]
   },
   "scripts": {
     "build-dev": "rollup -c -w",
@@ -19,7 +22,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "pota": "^0.7.79"
+    "pota": "^0.9.94"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
