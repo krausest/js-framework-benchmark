@@ -12,7 +12,7 @@ export default defineConfig(
     ssrBuild,
   }) => {
     return {
-      base:      "/frameworks/keyed/laminar/dist/",
+      base:      "/frameworks/keyed/laminar/bundled-dist/",
       publicDir: "public",
       plugins:   [
         scalaJSPlugin({
@@ -37,7 +37,7 @@ export default defineConfig(
         }),
       ],
       build: {
-        outDir:        "dist",
+        outDir:        "bundled-dist",
         assetsDir:     "assets",  // path relative to outDir
         cssCodeSplit:  false,     // false = Load all CSS upfront
         rollupOptions: {

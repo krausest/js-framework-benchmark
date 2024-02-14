@@ -8,7 +8,7 @@
     "npm":  ">=10.2.4"
   },
   "js-framework-benchmark": {
-    "customURL":        "/dist",
+    "customURL":        "/bundled-dist",
     "frameworkVersion": "16.0.0",
     "frameworkHomeURL": "https://laminar.dev"
   },
