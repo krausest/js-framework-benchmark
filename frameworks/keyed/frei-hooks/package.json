@@ -34,6 +34,6 @@
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
-    "@aimwhy/frei": "^1.1.8"
+    "@aimwhy/frei": "^1.1.9"
   }
 }
