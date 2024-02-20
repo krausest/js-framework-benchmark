@@ -66,8 +66,7 @@
     partialUpdate = () => {
       const clone = data.slice();
       for (let i = 0; i < data.length; i += 10) {
-        // clone[i].label += " !!!"; (see https://github.com/sveltejs/svelte/issues/9521)
-				clone[i] = {...clone[i], label: clone[i].label + ` !!!`}
+        clone[i].label += " !!!";
       }
       data = clone;
     },
