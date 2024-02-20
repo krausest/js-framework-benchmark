@@ -1,0 +1,14 @@
+project/*
+!project/build.properties
+!project/plugins.sbt
+
+target/
+node_modules/
+
+.bloop/
+.bsp/
+.metals/
+.vscode/
+.idea/
+
+.DS_Store
