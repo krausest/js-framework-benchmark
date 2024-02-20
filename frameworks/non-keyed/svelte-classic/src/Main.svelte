@@ -57,8 +57,7 @@
     },
     partialUpdate = () => {
       for (let i = 0; i < data.length; i += 10) {
-        // data[i].label += " !!!"; (see https://github.com/sveltejs/svelte/issues/9521)
-				data[i] = {...data[i], label: data[i].label + ` !!!`}
+        data[i].label += " !!!";
       }
     },
     remove = (num) => {
