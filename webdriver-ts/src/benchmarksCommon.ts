@@ -293,4 +293,4 @@ for (let bi of sizesBenchmarkInfosArray) {
   sizeBenchmarkInfos[bi.id] = bi;
 }
 
-export const benchmarkInfos = [...cpuBenchmarkInfosArray, ...memBenchmarkInfosArray, ...startupBenchmarkInfosArray, ...sizesBenchmarkInfosArray];
+export const benchmarkInfos = [...cpuBenchmarkInfosArray, ...memBenchmarkInfosArray, ...sizesBenchmarkInfosArray];
