@@ -18,8 +18,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "@vue/reactivity": "3.0.7",
-    "vuerx-jsx": "0.2.0"
+    "@vue/reactivity": "^3.4.21",
+    "vuerx-jsx": "^0.3.0"
   },
   "devDependencies": {
     "@babel/core": "7.11.6",
