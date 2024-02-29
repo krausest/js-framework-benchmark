@@ -1,14 +1,14 @@
 import { useRootStore } from "@/reducer";
 import DisplayModeSelector from "./DisplayModeSelector";
 import DurationModeSelector from "./DurationModeSelector";
-import "./ModeSelectionPanel.css";
+import "./ModeSelectors.css";
 
 interface Props {
   showDurationSelection: boolean;
 }
 
-const ModeSelectionPanel = ({ showDurationSelection }: Props) => {
-  console.log("ModeSelector");
+const ModeSelectors = ({ showDurationSelection }: Props) => {
+  console.log("ModeSelectors");
 
   const displayMode = useRootStore((state) => state.displayMode);
   const cpuDurationMode = useRootStore((state) => state.cpuDurationMode);
@@ -27,4 +27,4 @@ const ModeSelectionPanel = ({ showDurationSelection }: Props) => {
   );
 };
 
-export default ModeSelectionPanel;
+export default ModeSelectors;

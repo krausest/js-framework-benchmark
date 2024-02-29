@@ -1,3 +1,3 @@
-import ModeSelectionPanel from "./ModeSelectionPanel";
+import ModeSelectors from "./ModeSelectors";
 
-export default ModeSelectionPanel;
+export default ModeSelectors;

@@ -1,6 +1,6 @@
 import BenchmarkSelector from "./BenchmarkSelector";
 import FrameworkSelector from "./FrameworkSelector";
-import ModeSelectionPanel from "./ModeSelectors";
+import ModeSelectors from "./ModeSelectors";
 import CopyPasteControls from "./CopyPasteControls";
 import "./SelectionToolbar.css";
 
@@ -19,7 +19,7 @@ const SelectionToolbar = ({ showDurationSelection }: Props) => {
       </div>
       <CopyPasteControls />
       <div className="select-toolbar__actions">
-        <ModeSelectionPanel showDurationSelection={showDurationSelection} />
+        <ModeSelectors showDurationSelection={showDurationSelection} />
       </div>
     </div>
   );
