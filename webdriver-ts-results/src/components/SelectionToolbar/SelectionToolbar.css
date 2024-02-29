@@ -1,4 +1,4 @@
-.select-bar {
+.select-toolbar {
   background-color: #fafafa;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
@@ -8,13 +8,13 @@
   grid-template-rows: auto auto auto;
 }
 
-.select-bar__actions {
+.select-toolbar__actions {
   display: flex;
   gap: 1rem;
 }
 
 @media screen and (width>=1024px) {
-  .select-bar {
+  .select-toolbar {
     display: flex;
   }
 }

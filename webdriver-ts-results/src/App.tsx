@@ -1,7 +1,7 @@
 import "./App.css";
-import { FrameworkType, knownIssues } from "./Common";
-import ResultTable from "./components/ResultTable";
-import SelectionBar from "./components/selection/SelectionBar";
+import { FrameworkType, knownIssues } from "@/Common";
+import ResultTable from "@/components/ResultTable";
+import SelectionToolbar from "@/components/SelectionToolbar";
 import { List, Typography } from "antd";
 
 const KnownIssuesList = () => {
@@ -65,7 +65,7 @@ const App = () => {
         to compute the overall result.
       </p>
       <main>
-        <SelectionBar showDurationSelection={true} />
+        <SelectionToolbar showDurationSelection={true} />
         <ResultTable type={FrameworkType.KEYED} />
         <ResultTable type={FrameworkType.NON_KEYED} />
         <KnownIssuesList />

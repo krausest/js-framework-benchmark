@@ -1,11 +1,11 @@
 import { useCallback, useEffect } from "react";
 import { useRootStore } from "@/reducer";
-import "./CopyPasteSelection.css";
+import "./CopyPasteControls.css";
 import { CopyOutlined, SnippetsOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 
-const CopyPasteSelection = () => {
-  console.log("CopyPasteSelection");
+const CopyPasteControls = () => {
+  console.log("CopyPasteControls");
 
   const state = useRootStore((state) => state);
   const setStateFromClipboard = useRootStore((state) => state.setStateFromClipboard);
@@ -86,4 +86,4 @@ const CopyPasteSelection = () => {
   );
 };
 
-export default CopyPasteSelection;
+export default CopyPasteControls;

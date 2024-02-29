@@ -1,6 +1,6 @@
 import { BenchmarkType } from "@/Common";
 import { useRootStore } from "@/reducer";
-import SelectorContentContainer from "@components/selection/SelectorContentContainer";
+import SelectorContentContainer from "@/components/SelectionToolbar/SelectorContentContainer";
 import BenchmarkSelectorList from "./BenchmarkSelectorList";
 import { Flex } from "antd";
 interface Props {

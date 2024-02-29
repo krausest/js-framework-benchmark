@@ -7,7 +7,7 @@ interface Props {
   showDurationSelection: boolean;
 }
 
-const ModeSelecionPanel = ({ showDurationSelection }: Props) => {
+const ModeSelectionPanel = ({ showDurationSelection }: Props) => {
   console.log("ModeSelector");
 
   const displayMode = useRootStore((state) => state.displayMode);
@@ -27,4 +27,4 @@ const ModeSelecionPanel = ({ showDurationSelection }: Props) => {
   );
 };
 
-export default ModeSelecionPanel;
+export default ModeSelectionPanel;

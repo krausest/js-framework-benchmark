@@ -14,7 +14,7 @@ import {
   ResultValues,
   CpuDurationMode,
   knownIssues,
-} from "./Common";
+} from "@/Common";
 
 const benchmarks = rawBenchmarks;
 

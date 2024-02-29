@@ -1,13 +1,13 @@
 import React from "react";
-import { DisplayMode, BenchmarkType, FrameworkType, CpuDurationMode } from "../Common";
-import CpuResultsTable from "./tables/CpuResultsTable";
-import MemResultsTable from "./tables/MemResultsTable";
+import { DisplayMode, BenchmarkType, FrameworkType, CpuDurationMode } from "../../Common";
+import CpuResultsTable from "@/components/tables/CpuResultsTable";
+import MemResultsTable from "@/components/tables/MemResultsTable";
 // import StartupResultsTable from "./tables/StartupResultsTable";
-import { benchmarks } from "../results";
-import { useRootStore } from "../reducer";
-import SizeResultsTable from "./tables/SizeResultsTable";
+import { benchmarks } from "@/results";
+import { useRootStore } from "@/reducer";
+import SizeResultsTable from "@/components/tables/SizeResultsTable";
 
-const BoxPlotTable = React.lazy(() => import("./BoxPlotTable/BoxPlotTable"));
+const BoxPlotTable = React.lazy(() => import("@/components/BoxPlotTable"));
 
 interface Props {
   type: FrameworkType;

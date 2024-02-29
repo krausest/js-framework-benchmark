@@ -1,4 +1,4 @@
-import SelectorContentContainer from "@components/selection/SelectorContentContainer";
+import SelectorContentContainer from "@/components/SelectionToolbar/SelectorContentContainer";
 import { FrameworkType } from "@/Common";
 import { useRootStore } from "@/reducer";
 import FrameworkSelectorList from "./FrameworkSelectorList";
