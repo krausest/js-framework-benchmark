@@ -1,5 +1,6 @@
 import React from "react";
 import "./SelectorContentContainer.css";
+import { Button, Flex } from "antd";
 
 interface Props {
   children: React.ReactElement;
@@ -30,29 +31,19 @@ const SelectorContentContainer = ({
 
   return (
     <div className="selector-content-container">
-      <h3>{label}</h3>
-      <div className="selector-content-container__actions">
-        <button
-          className="button button__text"
-          onClick={handleSelectNone}
-          disabled={isNoneSelected}
-          aria-label="Select none"
-        >
-          None
-        </button>
-        <button
-          className="button button__text"
-          onClick={handleSelectAll}
-          disabled={areAllSelected}
-          aria-label="Select all"
-        >
-          All
-        </button>
-      </div>
-      <div
-        className={`selector-content-container__content ${grid ? "grid" : ""}`}
-      >
-        {children}
+      <Flex justify="space-between" align="center">
+        <h3>{label}</h3>
+        <div className="selector-content-container__actions">
+          <Button type="text" onClick={handleSelectNone} disabled={isNoneSelected} aria-label="Select none">
+            None
+          </Button>
+          <Button type="text" onClick={handleSelectAll} disabled={areAllSelected} aria-label="Select all">
+            All
+          </Button>
+        </div>
+      </Flex>
+      <div className={`selector-content-container__content ${grid ? "grid" : ""}`}>
+        <div className="selector-content-container__content-wrapper">{children}</div>
       </div>
     </div>
   );

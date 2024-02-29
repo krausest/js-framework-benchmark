@@ -12,18 +12,12 @@ const FrameworkSelectorCategory = ({ label, frameworkType }: Props) => {
   console.log("FrameworkSelectorCategory");
 
   const selectedFrameworks = useRootStore((state) => state.selectedFrameworks);
-  const frameworks = useRootStore(
-    (state) => state.frameworkLists[frameworkType],
-  );
+  const frameworks = useRootStore((state) => state.frameworkLists[frameworkType]);
   const isNoneSelected = useRootStore((state) => state.isNoneFrameworkSelected);
-  const areAllSelected = useRootStore(
-    (state) => state.areAllFrameworksSelected,
-  );
+  const areAllSelected = useRootStore((state) => state.areAllFrameworksSelected);
 
   const selectFramework = useRootStore((state) => state.selectFramework);
-  const selectAllFrameworks = useRootStore(
-    (state) => state.selectAllFrameworks,
-  );
+  const selectAllFrameworks = useRootStore((state) => state.selectAllFrameworks);
 
   return (
     <SelectorContentContainer

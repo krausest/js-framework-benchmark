@@ -2,7 +2,7 @@ import { BenchmarkType } from "@/Common";
 import { useRootStore } from "@/reducer";
 import SelectorContentContainer from "@components/selection/SelectorContentContainer";
 import BenchmarkSelectorList from "./BenchmarkSelectorList";
-
+import { Flex } from "antd";
 interface Props {
   label: string;
   benchmarkType: BenchmarkType;
@@ -11,17 +11,11 @@ interface Props {
 const BenchmarkSelectorCategory = ({ label, benchmarkType }: Props) => {
   console.log("BenchmarkSelectorCategory");
 
-  const benchmarks = useRootStore(
-    (state) => state.benchmarkLists[benchmarkType],
-  );
+  const benchmarks = useRootStore((state) => state.benchmarkLists[benchmarkType]);
   const selectedBenchmarks = useRootStore((state) => state.selectedBenchmarks);
   const isNoneSelected = useRootStore((state) => state.isNoneBenchmarkSelected);
-  const areAllSelected = useRootStore(
-    (state) => state.areAllBenchmarksSelected,
-  );
-  const selectAllBenchmarks = useRootStore(
-    (state) => state.selectAllBenchmarks,
-  );
+  const areAllSelected = useRootStore((state) => state.areAllBenchmarksSelected);
+  const selectAllBenchmarks = useRootStore((state) => state.selectAllBenchmarks);
   const selectBenchmark = useRootStore((state) => state.selectBenchmark);
 
   return (
@@ -32,11 +26,13 @@ const BenchmarkSelectorCategory = ({ label, benchmarkType }: Props) => {
       selectAll={() => selectAllBenchmarks(benchmarkType, true)}
       label={label}
     >
-      <BenchmarkSelectorList
-        isSelected={(benchmark) => selectedBenchmarks.has(benchmark)}
-        select={(benchmark, add) => selectBenchmark(benchmark, add)}
-        benchmarks={benchmarks}
-      />
+      <Flex vertical>
+        <BenchmarkSelectorList
+          isSelected={(benchmark) => selectedBenchmarks.has(benchmark)}
+          select={(benchmark, add) => selectBenchmark(benchmark, add)}
+          benchmarks={benchmarks}
+        />
+      </Flex>
     </SelectorContentContainer>
   );
 };

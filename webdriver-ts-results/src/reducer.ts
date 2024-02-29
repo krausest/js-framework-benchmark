@@ -1,10 +1,6 @@
 import { create } from "zustand";
 import { jStat } from "jstat";
-import {
-  frameworks,
-  benchmarks as rawBenchmarks,
-  results as rawResults,
-} from "./results";
+import { frameworks, benchmarks as rawBenchmarks, results as rawResults } from "./results";
 import {
   Benchmark,
   BenchmarkType,
@@ -39,10 +35,8 @@ const results: Result[] = rawResults.map((result) => {
 });
 
 const removeKeyedSuffix = (value: string) => {
-  if (value.endsWith("-non-keyed"))
-    return value.substring(0, value.length - 10);
-  else if (value.endsWith("-keyed"))
-    return value.substring(0, value.length - 6);
+  if (value.endsWith("-non-keyed")) return value.substring(0, value.length - 10);
+  else if (value.endsWith("-keyed")) return value.substring(0, value.length - 6);
   return value;
 };
 
@@ -129,7 +123,7 @@ function updateResultTable({
       displayMode,
       compareWith[FrameworkType.KEYED],
       categories,
-      cpuDurationMode,
+      cpuDurationMode
     ),
     [FrameworkType.NON_KEYED]: new ResultTableData(
       frameworks,
@@ -142,7 +136,7 @@ function updateResultTable({
       displayMode,
       compareWith[FrameworkType.NON_KEYED],
       categories,
-      cpuDurationMode,
+      cpuDurationMode
     ),
   };
 }
@@ -180,18 +174,12 @@ const preInitialState: State = {
   benchmarkLists: {
     [BenchmarkType.CPU]: benchmarks.filter((b) => b.type === BenchmarkType.CPU),
     [BenchmarkType.MEM]: benchmarks.filter((b) => b.type === BenchmarkType.MEM),
-    [BenchmarkType.STARTUP]: benchmarks.filter(
-      (b) => b.type === BenchmarkType.STARTUP,
-    ),
+    [BenchmarkType.STARTUP]: benchmarks.filter((b) => b.type === BenchmarkType.STARTUP),
   },
   frameworks: mappedFrameworks,
   frameworkLists: {
-    [FrameworkType.KEYED]: mappedFrameworks.filter(
-      (f) => f.type === FrameworkType.KEYED,
-    ),
-    [FrameworkType.NON_KEYED]: mappedFrameworks.filter(
-      (f) => f.type === FrameworkType.NON_KEYED,
-    ),
+    [FrameworkType.KEYED]: mappedFrameworks.filter((f) => f.type === FrameworkType.KEYED),
+    [FrameworkType.NON_KEYED]: mappedFrameworks.filter((f) => f.type === FrameworkType.NON_KEYED),
   },
   // dynamic
   selectedBenchmarks: allBenchmarks,
@@ -219,32 +207,22 @@ export const useRootStore = create<State & Actions>((set, get) => ({
   ...initialState,
   // Getters
   areAllBenchmarksSelected: (type) => {
-    return get().benchmarkLists[type].every((benchmark) =>
-      get().selectedBenchmarks.has(benchmark),
-    );
+    return get().benchmarkLists[type].every((benchmark) => get().selectedBenchmarks.has(benchmark));
   },
   isNoneBenchmarkSelected: (type) => {
-    return get().benchmarkLists[type].every(
-      (benchmark) => !get().selectedBenchmarks.has(benchmark),
-    );
+    return get().benchmarkLists[type].every((benchmark) => !get().selectedBenchmarks.has(benchmark));
   },
   areAllFrameworksSelected: (type) => {
-    return get().frameworkLists[type].every((framework) =>
-      get().selectedFrameworks.has(framework),
-    );
+    return get().frameworkLists[type].every((framework) => get().selectedFrameworks.has(framework));
   },
   isNoneFrameworkSelected: (type) => {
-    return get().frameworkLists[type].every(
-      (framework) => !get().selectedFrameworks.has(framework),
-    );
+    return get().frameworkLists[type].every((framework) => !get().selectedFrameworks.has(framework));
   },
   // Actions
   selectFramework: (framework: Framework, add: boolean) => {
     const newSelectedFramework = new Set(get().selectedFrameworks);
 
-    add
-      ? newSelectedFramework.add(framework)
-      : newSelectedFramework.delete(framework);
+    add ? newSelectedFramework.add(framework) : newSelectedFramework.delete(framework);
 
     const t = { ...get(), selectedFrameworks: newSelectedFramework };
     return set(() => ({ ...t, resultTables: updateResultTable(t) }));
@@ -257,9 +235,7 @@ export const useRootStore = create<State & Actions>((set, get) => ({
         : get().frameworkLists[FrameworkType.NON_KEYED];
 
     for (const framework of frameworks) {
-      add
-        ? newSelectedFramework.add(framework)
-        : newSelectedFramework.delete(framework);
+      add ? newSelectedFramework.add(framework) : newSelectedFramework.delete(framework);
     }
 
     const t = { ...get(), selectedFrameworks: newSelectedFramework };
@@ -282,9 +258,7 @@ export const useRootStore = create<State & Actions>((set, get) => ({
   selectBenchmark: (benchmark: Benchmark, add: boolean) => {
     const newSelectedBenchmark = new Set(get().selectedBenchmarks);
 
-    add
-      ? newSelectedBenchmark.add(benchmark)
-      : newSelectedBenchmark.delete(benchmark);
+    add ? newSelectedBenchmark.add(benchmark) : newSelectedBenchmark.delete(benchmark);
 
     const t = { ...get(), selectedBenchmarks: newSelectedBenchmark };
     return set(() => ({
@@ -297,9 +271,7 @@ export const useRootStore = create<State & Actions>((set, get) => ({
     const benchmarks = get().benchmarkLists[benchmarkType];
 
     for (const benchmark of benchmarks) {
-      add
-        ? newSelectedBenchmark.add(benchmark)
-        : newSelectedBenchmark.delete(benchmark);
+      add ? newSelectedBenchmark.add(benchmark) : newSelectedBenchmark.delete(benchmark);
     }
 
     const t = { ...get(), selectedBenchmarks: newSelectedBenchmark };

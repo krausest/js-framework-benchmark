@@ -1,4 +1,5 @@
 import type { Benchmark } from "@/Common";
+import { Checkbox } from "antd";
 
 interface Props {
   benchmarks: Array<Benchmark>;
@@ -12,20 +13,9 @@ const BenchmarkSelectorList = ({ benchmarks, isSelected, select }: Props) => {
   return (
     <>
       {benchmarks.map((item) => (
-        <div key={item.id} className="col-md-12">
-          <div className="form-check">
-            <input
-              id={`inp-${item.id}`}
-              className="form-check-input"
-              type="checkbox"
-              onChange={(evt) => select(item, evt.target.checked)}
-              checked={isSelected(item)}
-            />
-            <label htmlFor={`inp-${item.id}`} className="form-check-label">
-              {item.label}
-            </label>
-          </div>
-        </div>
+        <Checkbox key={item.id} onChange={(evt) => select(item, evt.target.checked)} checked={isSelected(item)}>
+          {item.label}
+        </Checkbox>
       ))}
     </>
   );

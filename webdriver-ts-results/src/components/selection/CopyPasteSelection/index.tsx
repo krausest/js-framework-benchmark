@@ -1,15 +1,14 @@
 import { useCallback, useEffect } from "react";
 import { useRootStore } from "@/reducer";
-import { CopyIcon, PasteIcon} from "@/assets/icons";
 import "./CopyPasteSelection.css";
+import { CopyOutlined, SnippetsOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 
 const CopyPasteSelection = () => {
   console.log("CopyPasteSelection");
 
   const state = useRootStore((state) => state);
-  const setStateFromClipboard = useRootStore(
-    (state) => state.setStateFromClipboard,
-  );
+  const setStateFromClipboard = useRootStore((state) => state.setStateFromClipboard);
 
   const handlePasteError = (error: Error) => {
     alert("Sorry - couldn't parse pasted selection");
@@ -25,7 +24,7 @@ const CopyPasteSelection = () => {
         handlePasteError(error as Error);
       }
     },
-    [setStateFromClipboard],
+    [setStateFromClipboard]
   );
 
   const handleClipboardPaste = useCallback(
@@ -36,7 +35,7 @@ const CopyPasteSelection = () => {
         handlePaste(text);
       }
     },
-    [handlePaste],
+    [handlePaste]
   );
 
   useEffect(() => {
@@ -48,12 +47,8 @@ const CopyPasteSelection = () => {
 
   const copy = () => {
     const serializedState = {
-      frameworks: state.frameworks
-        .filter((f) => state.selectedFrameworks.has(f))
-        .map((f) => f.dir),
-      benchmarks: state.benchmarks
-        .filter((f) => state.selectedBenchmarks.has(f))
-        .map((f) => f.id),
+      frameworks: state.frameworks.filter((f) => state.selectedFrameworks.has(f)).map((f) => f.dir),
+      benchmarks: state.benchmarks.filter((f) => state.selectedBenchmarks.has(f)).map((f) => f.id),
       displayMode: state.displayMode,
     };
 
@@ -78,22 +73,14 @@ const CopyPasteSelection = () => {
 
   return (
     <div className="copy-paste-panel">
-      <p>Copy/paste current selection</p>
-      <div>
-        <button
-          className="button__icon"
-          onClick={copy}
-          aria-label="Copy selected frameworks and benchmarks"
-        >
-          <CopyIcon></CopyIcon>
-        </button>
-        <button
-          className="button__icon"
+      <div>Copy/paste current selection</div>
+      <div className="copy-paste-panel__buttons">
+        <Button onClick={copy} icon={<CopyOutlined />} aria-label="Copy selected frameworks and benchmarks" />
+        <Button
           onClick={handlePasteFromClipboard}
+          icon={<SnippetsOutlined />}
           aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
-        >
-          <PasteIcon></PasteIcon>
-        </button>
+        />
       </div>
     </div>
   );

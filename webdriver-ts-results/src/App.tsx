@@ -2,22 +2,25 @@ import "./App.css";
 import { FrameworkType, knownIssues } from "./Common";
 import ResultTable from "./components/ResultTable";
 import SelectionBar from "./components/selection/SelectionBar";
+import { List, Typography } from "antd";
 
 const KnownIssuesList = () => {
+  const data = knownIssues;
+
   return (
-    <section>
-      <h3>Known issues and notes</h3>
-      {knownIssues.map((issue) => (
-        <dl key={issue.issue.toFixed()} id={issue.issue.toFixed()}>
-          <dt>
-            <a target="_blank" rel="noopener noreferrer" href={issue.link}>
-              {issue.issue.toFixed()}
-            </a>
-          </dt>
-          <dd>{issue.text}</dd>
-        </dl>
-      ))}
-    </section>
+    <List
+      header={<div>Known issues and notes</div>}
+      bordered
+      dataSource={data}
+      renderItem={(issue) => (
+        <List.Item>
+          <Typography.Text className="dt">
+            <a href={issue.link}>{issue.issue}</a>
+          </Typography.Text>{" "}
+          {issue.text}
+        </List.Item>
+      )}
+    />
   );
 };
 
@@ -51,18 +54,21 @@ const App = () => {
       {disclaimer}
       {testEnvironmentInfo}
       <p>
-        After chrome 119 official results we&apos;ve changed a detail for the benchmark: 
-        We now open a new tab for each benchmark iteration, earlier runs reused the tab per benchmark and implementation. 
+        After chrome 119 official results we&apos;ve changed a detail for the benchmark: We now open a new tab for each
+        benchmark iteration, earlier runs reused the tab per benchmark and implementation.
       </p>
       <p>
-        Starting with chrome 118 the benchmark uses a <a href="https://github.com/krausest/js-framework-benchmark/wiki/Computation-of-the-weighted-geometric-mean">weighted geometric mean </a> to compute the overall result.
+        Starting with chrome 118 the benchmark uses a{" "}
+        <a href="https://github.com/krausest/js-framework-benchmark/wiki/Computation-of-the-weighted-geometric-mean">
+          weighted geometric mean{" "}
+        </a>{" "}
+        to compute the overall result.
       </p>
-
       <main>
         <SelectionBar showDurationSelection={true} />
         <ResultTable type={FrameworkType.KEYED} />
         <ResultTable type={FrameworkType.NON_KEYED} />
-        <KnownIssuesList></KnownIssuesList>
+        <KnownIssuesList />
       </main>
     </>
   );

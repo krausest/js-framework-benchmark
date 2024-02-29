@@ -11,29 +11,14 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 14px;
-  margin: 10px;
+  margin: 0;
+  padding: 0.5rem;
 }
 
 a,
 a:active,
 a:hover {
   text-decoration: none;
-}
-
-button,
-select {
-  font-size: 14px;
-}
-
-select {
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  height: 29px;
-  background: white;
-}
-
-input + label {
-  margin-left: 5px;
 }
 
 thead.dummy th {
@@ -145,7 +130,8 @@ dl {
   padding: 0;
   margin-bottom: 16px;
 }
-dt {
+dt,
+.dt {
   float: left;
   width: 50px;
   padding: 0;
@@ -197,4 +183,8 @@ dd {
 
 .check-full-width::after {
   display: inline-block;
+}
+
+.page-container {
+  padding: 0.5rem;
 }

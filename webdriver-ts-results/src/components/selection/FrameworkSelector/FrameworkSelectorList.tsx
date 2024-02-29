@@ -1,4 +1,5 @@
 import { Framework } from "@/Common";
+import { Checkbox, Flex } from "antd";
 
 interface Props {
   frameworks: Array<Framework>;
@@ -12,21 +13,11 @@ const FrameworkSelectorList = ({ frameworks, isSelected, select }: Props) => {
   return (
     <>
       {frameworks.map((item) => (
-        <div key={item.name}>
-          <input
-            className="form-check-input"
-            id={`inp-${item.name}-${item.type}`}
-            type="checkbox"
-            onChange={(evt) => select(item, evt.target.checked)}
-            checked={isSelected(item)}
-          />
-          <label
-            htmlFor={`inp-${item.name}-${item.type}`}
-            className="form-check-label"
-          >
+        <Flex key={item.name} align="center">
+          <Checkbox key={item.name} onChange={(evt) => select(item, evt.target.checked)} checked={isSelected(item)}>
             {item.displayname}
-          </label>
-        </div>
+          </Checkbox>
+        </Flex>
       ))}
     </>
   );

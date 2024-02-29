@@ -1,5 +1,10 @@
 .copy-paste-panel {
+  gap: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+}
+
+.copy-paste-panel__buttons {
+  display: flex;
+  gap: 0.5rem;
 }
