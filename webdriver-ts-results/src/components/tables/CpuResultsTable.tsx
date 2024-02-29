@@ -4,7 +4,7 @@ import {
   SORT_BY_NAME,
   SORT_BY_GEOMMEAN_CPU,
   BenchmarkType,
-} from "../../Common";
+} from "@/Common";
 import GeomMeanRow from "./GeomMeanRow";
 import CompareRow from "./CompareRow";
 import ValueResultRow from "./ValueResultRow";
