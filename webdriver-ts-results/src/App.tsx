@@ -9,12 +9,13 @@ const KnownIssuesList = () => {
 
   return (
     <List
-      header={<div>Known issues and notes</div>}
+      header={<h2>Known issues and notes</h2>}
       bordered
+      className="known-issues"
       dataSource={data}
       renderItem={(issue) => (
         <List.Item>
-          <Typography.Text className="dt">
+          <Typography.Text className="known-issues__issue-code">
             <a href={issue.link}>{issue.issue}</a>
           </Typography.Text>{" "}
           {issue.text}
@@ -66,8 +67,10 @@ const App = () => {
       </p>
       <main>
         <SelectionToolbar showDurationSelection={true} />
-        <ResultTable type={FrameworkType.KEYED} />
-        <ResultTable type={FrameworkType.NON_KEYED} />
+        <div>
+          <ResultTable type={FrameworkType.KEYED} />
+          <ResultTable type={FrameworkType.NON_KEYED} />
+        </div>
         <KnownIssuesList />
       </main>
     </>
