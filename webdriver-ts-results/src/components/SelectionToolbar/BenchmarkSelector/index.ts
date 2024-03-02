@@ -1,3 +1,1 @@
-import BenchmarkSelector from "./BenchmarkSelector";
-
-export default BenchmarkSelector;
+export { default } from "./BenchmarkSelector";

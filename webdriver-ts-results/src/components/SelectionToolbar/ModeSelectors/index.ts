@@ -1,3 +1,1 @@
-import ModeSelectors from "./ModeSelectors";
-
-export default ModeSelectors;
+export { default } from "./ModeSelectors";

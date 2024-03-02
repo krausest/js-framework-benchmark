@@ -1,3 +1,1 @@
-import BoxPlotTable from "./BoxPlotTable";
-
-export default BoxPlotTable;
+export { default } from "./BoxPlotTable";

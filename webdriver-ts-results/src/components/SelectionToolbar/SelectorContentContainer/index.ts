@@ -1,3 +1,1 @@
-import SelectorContentContainer from "./SelectionContentContainer";
-
-export default SelectorContentContainer;
+export { default } from "./SelectionContentContainer";

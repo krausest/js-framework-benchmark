@@ -1,3 +1,1 @@
-import ResultTable from "./ResultTable";
-
-export default ResultTable;
+export { default } from "./ResultTable";

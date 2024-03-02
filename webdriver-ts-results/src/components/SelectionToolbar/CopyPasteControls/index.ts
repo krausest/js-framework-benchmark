@@ -1,3 +1,1 @@
-import CopyPasteControls from "./CopyPasteControls";
-
-export default CopyPasteControls;
+export { default } from "./CopyPasteControls";
