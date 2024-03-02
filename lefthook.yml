@@ -1,0 +1,16 @@
+# EXAMPLE USAGE:
+#
+#   Refer for explanation to following link:
+#   https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+#
+pre-commit:
+  parallel: true
+  commands:
+    format-code:
+      glob: "*.{js,ts,jsx,tsx}"
+      exclude: "^(?:frameworks|broken-frameworks).*$"
+      run: npx eslint --fix {staged_files} && npx prettier -w {staged_files} && git update-index --again
+
+    format-docs:
+      glob: "*.{json,yml,yaml,html}"
+      run: npx prettier -w {staged_files} && git update-index --again
