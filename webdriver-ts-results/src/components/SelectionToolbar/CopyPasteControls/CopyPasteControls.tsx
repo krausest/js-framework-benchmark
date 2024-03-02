@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useRootStore } from "@/reducer";
 import "./CopyPasteControls.css";
-import { CopyOutlined, SnippetsOutlined } from "@ant-design/icons";
+import { CopyIcon, ClipboardPasteIcon } from "lucide-react";
 import { Button } from "antd";
 
 const CopyPasteControls = () => {
@@ -75,10 +75,10 @@ const CopyPasteControls = () => {
     <div className="copy-paste-panel">
       <div>Copy/paste current selection</div>
       <div className="copy-paste-panel__buttons">
-        <Button onClick={copy} icon={<CopyOutlined />} aria-label="Copy selected frameworks and benchmarks" />
+        <Button onClick={copy} icon={<CopyIcon size={20} />} aria-label="Copy selected frameworks and benchmarks" />
         <Button
           onClick={handlePasteFromClipboard}
-          icon={<SnippetsOutlined />}
+          icon={<ClipboardPasteIcon size={20} />}
           aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
         />
       </div>
