@@ -13,10 +13,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "npm:@vue-vapor/vue@3.2024.0-66cea4b"
+    "vue": "npm:@vue-vapor/vue@3.2024.0-83641f7"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "npm:@vue-vapor/vite-plugin-vue@latest",
+    "@vitejs/plugin-vue": "npm:@vue-vapor/vite-plugin-vue@0.0.0-alpha.4",
     "vite": "^5.1.1"
   }
 }
