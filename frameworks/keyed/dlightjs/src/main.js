@@ -1,4 +1,4 @@
-import { View, render } from "@dlightjs/dlight"
+import { View } from "@dlightjs/dlight"
 
 let idCounter = 1
 
@@ -19,8 +19,9 @@ function buildData(count) {
   return data
 }
 
+@Main
 @View
-class Main {
+class Entry {
   rows = []
   selectIdx = -1
 
@@ -30,8 +31,7 @@ class Main {
 
   swapRows() {
     if (this.rows.length > 998) {
-      [this.rows[1], this.rows[998]] = [this.rows[998], this.rows[1]]
-      this.rows = [...this.rows]
+      ;[this.rows[1], this.rows[998]] = [this.rows[998], this.rows[1]]
     }
   }
 
@@ -52,17 +52,16 @@ class Main {
   }
 
   append() {
-    this.rows = this.rows.concat(buildData(1000))
+    this.rows.push(...buildData(1000))
   }
 
   update() {
     for (let i = 0; i < this.rows.length; i += 10) {
       this.rows[i].label += " !!!"
     }
-    this.rows = [...this.rows]
   }
 
-  View() {
+  Body() {
     div().class("container"); {
       div().class("jumbotron"); {
         div().class("row"); {
@@ -72,22 +71,40 @@ class Main {
           div().class("col-md-6"); {
             div().class("row"); {
               div().class("col-sm-6 smallpad"); {
-                button("Create 1,000 rows").onClick(this.addRows).id("run").class("btn btn-primary btn-block")
+                button("Create 1,000 rows")
+                  .onClick(this.addRows)
+                  .id("run")
+                  .class("btn btn-primary btn-block")
               }
               div().class("col-sm-6 smallpad"); {
-                button("Create 10,000 rows").onClick(this.addBig).id("runlots").class("btn btn-primary btn-block")
+                button("Create 10,000 rows")
+                  .onClick(this.addBig)
+                  .id("runlots")
+                  .class("btn btn-primary btn-block")
               }
               div().class("col-sm-6 smallpad"); {
-                button("Append 1,000 rows").onClick(this.append).id("add").class("btn btn-primary btn-block")
+                button("Append 1,000 rows")
+                  .onClick(this.append)
+                  .id("add")
+                  .class("btn btn-primary btn-block")
               }
               div().class("col-sm-6 smallpad"); {
-                button("Update every 10th row").onClick(this.update).id("update").class("btn btn-primary btn-block")
+                button("Update every 10th row")
+                  .onClick(this.update)
+                  .id("update")
+                  .class("btn btn-primary btn-block")
               }
               div().class("col-sm-6 smallpad"); {
-                button("Clear").onClick(this.clearRows).id("clear").class("btn btn-primary btn-block")
+                button("Clear")
+                  .onClick(this.clearRows)
+                  .id("clear")
+                  .class("btn btn-primary btn-block")
               }
               div().class("col-sm-6 smallpad"); {
-                button("Swap Rows").onClick(this.swapRows).id("swaprows").class("btn btn-primary btn-block")
+                button("Swap Rows")
+                  .onClick(this.swapRows)
+                  .id("swaprows")
+                  .class("btn btn-primary btn-block")
               }
             }
           }
@@ -122,5 +139,3 @@ class Main {
     }
   }
 }
-
-render("main", Main)
