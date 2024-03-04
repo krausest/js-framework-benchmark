@@ -2,21 +2,14 @@
   position: relative;
 }
 
-.selector-content-container__content {
-  max-height: 24rem;
-  overflow-y: scroll;
-}
-
 @media screen and (width>= 640px) {
   .selector-content-container__content.grid .selector-content-container__content-wrapper {
     column-count: 2;
-    max-height: auto;
   }
 }
 
 @media screen and (width>= 1024px) {
   .selector-content-container__content.grid .selector-content-container__content-wrapper {
     column-count: 3;
-    max-height: auto;
   }
 }
