@@ -6,7 +6,6 @@
     "frameworkVersionFromPackage": "riot",
     "frameworkHomeURL": "https://riot.js.org/",
     "issues": [
-      1139
     ]
   },
   "scripts": {
