@@ -1,3 +1,4 @@
+// @ts-check
 import { execSync } from "node:child_process";
 
 /*
@@ -23,10 +24,11 @@ function runCommand(command, cwd = undefined) {
 }
 
 /**
- * @param {string[]} frameworks
+ * @param {Object} options
+ * @param {Array<string>} options.frameworks
  */
-export function rebuildCheckSingle(frameworks) {
-  console.log("rebuild-check-single.js started: frameworks", frameworks);
+export function rebuildCheckSingle({ frameworks }) {
+  console.log("Rebuild check single:", "frameworks", frameworks);
 
   const frameworkNames = frameworks.join(" ");
 

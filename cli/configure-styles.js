@@ -1,3 +1,4 @@
+// @ts-check
 import * as fs from "node:fs";
 import path from "node:path";
 
@@ -19,12 +20,12 @@ async function copyAndGenerateSharedStyles(sourceCss, mainCss) {
  * @param {Object} options
  * @param {boolean} options.bootstrap
  * @param {boolean} options.minimal
- * @returns
  */
-async function configureStyles(options) {
-  const { bootstrap, minimal } = options;
+export async function configureStyles({ bootstrap, minimal }) {
+  console.log("Configure styles", "bootstrap", bootstrap, "minimal", minimal);
 
   try {
+    // @ts-ignore
     if (bootstrap ^ minimal) {
       console.log("ERROR: You must either choose bootstrap or minimal");
       return;
@@ -43,5 +44,3 @@ async function configureStyles(options) {
     console.error("An error occurred:", error.message);
   }
 }
-
-export { configureStyles };

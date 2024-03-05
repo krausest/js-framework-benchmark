@@ -1,3 +1,4 @@
+// @ts-check
 import AdmZip from "adm-zip";
 import * as fs from "node:fs";
 import path from "node:path";
@@ -56,14 +57,11 @@ function addFrameworksToZip(frameworkType, frameworkDir, frameworkName) {
   if (frameworkName === "halogen") {
     addLocalFileIfExists(`${frameworkDir}/output/bundle.js`, `${zipFrameworkPath}/output`);
   } else if (frameworkName === "dojo") {
-    addLocalFolderIfExists(
-      `${frameworkDir}/output/dist`,
-      `${zipFrameworkPath}/output/dist`,
-    );
+    addLocalFolderIfExists(`${frameworkDir}/output/dist`, `${zipFrameworkPath}/output/dist`);
   } else if (frameworkName === "s2") {
     addLocalFolderIfExists(
       `${frameworkDir}/node_modules/s2-engine/dist`,
-      `${zipFrameworkPath}/node_modules/s2-engine/dist`,
+      `${zipFrameworkPath}/node_modules/s2-engine/dist`
     );
   } else if (frameworkName === "stem") {
     addLocalFolderIfExists(
@@ -76,7 +74,9 @@ function addFrameworksToZip(frameworkType, frameworkDir, frameworkName) {
   }
 }
 
-function createFrameworkZipArchive() {
+export function createFrameworkZipArchive() {
+  console.log("Create a zip archive of frameworks");
+
   for (const frameworkType of frameworksTypes) {
     const frameworkTypeDirPath = path.resolve("frameworks", frameworkType);
     const frameworkNames = fs.readdirSync(frameworkTypeDirPath);
@@ -91,5 +91,3 @@ function createFrameworkZipArchive() {
 
   zip.writeZip(outputFile);
 }
-
-export { createFrameworkZipArchive };
