@@ -1,7 +1,7 @@
 import { FrameworkType } from "@/Common";
 import FrameworkSelectorCategory from "./FrameworkSelectorCategory";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Modal } from "antd";
 
 const content = (
@@ -15,6 +15,10 @@ const FrameworkSelector = () => {
   console.log("FrameworkSelector");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    isModalOpen ? (document.body.style.overflow = "hidden") : document.body.style.removeProperty("overflow");
+  }, [isModalOpen]);
 
   const showModal = () => {
     setIsModalOpen(true);

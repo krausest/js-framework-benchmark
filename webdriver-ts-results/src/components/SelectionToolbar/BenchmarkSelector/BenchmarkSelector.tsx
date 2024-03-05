@@ -1,7 +1,7 @@
 import { BenchmarkType } from "@/Common";
 import BenchmarkSelectorCategory from "./BenchmarkSelectorCategory";
 import { Button, Modal } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const content = (
   <>
@@ -15,6 +15,10 @@ const BenchmarkSelector = () => {
   console.log("BenchmarkSelector");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    isModalOpen ? (document.body.style.overflow = "hidden") : document.body.style.removeProperty("overflow");
+  }, [isModalOpen]);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -33,7 +37,7 @@ const BenchmarkSelector = () => {
       <Button type="primary" onClick={showModal}>
         Which benchmarks?
       </Button>
-      <Modal title="Benchmarks selector" onOk={handleOk} onCancel={handleCancel} open={isModalOpen} footer={null}>
+      <Modal title="Benchmarks selector" footer={null} onOk={handleOk} onCancel={handleCancel} open={isModalOpen}>
         {content}
       </Modal>
     </>
