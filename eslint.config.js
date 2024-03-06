@@ -26,7 +26,7 @@ export default [
       "unicorn/prefer-ternary": "off",
       "unicorn/require-number-to-fixed-digits-argument": "off",
       "unicorn/prefer-set-has": "off",
-      "unicorn/unicorn/no-array-reduce": "off",
+      "unicorn/no-array-reduce": "off",
       // maybe not:
       "unicorn/consistent-function-scoping": "off",
       "unicorn/no-array-for-each": "off",

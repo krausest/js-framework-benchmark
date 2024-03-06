@@ -35,8 +35,8 @@ const results: Result[] = rawResults.map((result) => {
 });
 
 const removeKeyedSuffix = (value: string) => {
-  if (value.endsWith("-non-keyed")) return value.substring(0, value.length - 10);
-  else if (value.endsWith("-keyed")) return value.substring(0, value.length - 6);
+  if (value.endsWith("-non-keyed")) return value.slice(0, -10);
+  else if (value.endsWith("-keyed")) return value.slice(0, -6);
   return value;
 };
 
