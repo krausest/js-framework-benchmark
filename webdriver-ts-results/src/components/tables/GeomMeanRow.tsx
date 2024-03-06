@@ -1,5 +1,5 @@
 import React from "react";
-import { TableResultGeommeanEntry, T_SORT_BY_GEOMMEAN } from "../../Common";
+import { TableResultGeommeanEntry, T_SORT_BY_GEOMMEAN } from "@/Common";
 
 interface Props {
   weighted: boolean;
