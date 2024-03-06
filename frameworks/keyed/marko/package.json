@@ -4,7 +4,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "marko",
     "frameworkHomeURL": "https://markojs.com/",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "issues": [1139]
   },
   "version": "1.0.0",
   "type": "module",

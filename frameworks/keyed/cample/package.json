@@ -5,7 +5,8 @@
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "cample",
-    "frameworkHomeURL": "https://camplejs.github.io"
+    "frameworkHomeURL": "https://camplejs.github.io",
+    "issues": [1139]
   },
   "scripts": {
     "build-prod": "webpack --mode=production",

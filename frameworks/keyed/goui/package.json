@@ -8,6 +8,7 @@
   "js-framework-benchmark": {
     "customURL": "/build",
     "frameworkVersion": "0.1.2",
-    "frameworkHomeURL": "https://github.com/twharmon/goui"
+    "frameworkHomeURL": "https://github.com/twharmon/goui",
+    "issues": [1139]
   }
 }

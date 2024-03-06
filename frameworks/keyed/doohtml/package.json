@@ -9,7 +9,7 @@
       "useShadowRoot": true,
       "shadowRootName": "doo-main",
       "buttonsInShadowRoot": false,
-      "issues": [772, 1139]
+      "issues": [772]
     },
     "scripts": {
       "dev": "exit 0",

@@ -26,7 +26,8 @@ export function addCSP(request, reply) {
 
   const uri = body["csp-report"]["document-uri"];
   const frameworkRegEx = /((non-)?keyed\/.*?\/)/;
-  const framework = uri.match(frameworkRegEx)[0];
+  let framework = uri.match(frameworkRegEx)[0];
+  framework = framework.substring(0, framework.length - 1);
 
   if (!violations.includes(framework)) {
     violations.push(framework);

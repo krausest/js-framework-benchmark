@@ -9,7 +9,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@builder.io/qwik",
     "frameworkHomeURL": "https://qwik.builder.io/",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "issues": [1139]
   },
   "scripts": {
     "build-dev": "vite --mode ssr",

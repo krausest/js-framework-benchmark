@@ -37,6 +37,9 @@ export function rebuildCheckSingle(frameworks) {
     const keyedCmd = `npm run isKeyed -- --headless true ${frameworkNames}`;
     runCommand(keyedCmd, "webdriver-ts");
 
+    const cspCmd = `npm run checkCSP -- --headless true ${frameworkNames}`;
+    runCommand(cspCmd, "webdriver-ts");
+
     console.log("rebuild-check-single.js finished");
     console.log("All checks are fine!");
     console.log(`======> Please rerun the benchmark: npm run bench ${frameworkNames}`);
