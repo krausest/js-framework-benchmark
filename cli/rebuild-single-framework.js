@@ -33,7 +33,7 @@ export function rebuildSingleFramework({ frameworks, useCi }) {
     rebuildFrameworks(frameworks, useCi);
 
     rebuildCheckSingle({ frameworks });
-  } catch (e) {
+  } catch (error) {
     console.log(`ERROR: Rebuilding  ${frameworks} was not successful`);
   }
 }

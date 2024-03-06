@@ -62,7 +62,7 @@ function maybeObsolete(packageName) {
 
     const modifiedDate = new Date(timeData.modified);
     const isObsolete = modifiedDate < obsoleteDate;
-    const formattedDate = modifiedDate.toISOString().substring(0, 10);
+    const formattedDate = modifiedDate.toISOString().slice(0, 10);
 
     return { isObsolete, lastUpdate: formattedDate, packageName };
   } catch (error) {
@@ -96,7 +96,7 @@ export function checkObsoleteFrameworks({ debug }) {
       continue;
     }
 
-    const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf-8"));
+    const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
     const mainPackages = packageJSON?.["js-framework-benchmark"]?.frameworkVersionFromPackage;
 
     if (!mainPackages) {
@@ -109,7 +109,7 @@ export function checkObsoleteFrameworks({ debug }) {
     }
 
     const packages = mainPackages.split(":");
-    const isPackageObsolete = packages.map(maybeObsolete);
+    const isPackageObsolete = packages.map((element) => maybeObsolete(element));
 
     if (DEBUG) {
       console.log(`Results for ${type}/${name} ${isPackageObsolete}`);

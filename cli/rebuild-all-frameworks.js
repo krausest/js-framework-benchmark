@@ -2,7 +2,7 @@
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
 import path from "node:path";
-import { takeWhile } from "./utils/common/index.js";
+import { takeWhile } from "./utils/index.js";
 import { getFrameworks } from "./helpers/frameworks.js";
 
 /*
@@ -27,7 +27,7 @@ npm run rebuild-frameworks --restartWith keyed/react
  */
 function shouldSkipFramework({ type, name }, restartWithFramework) {
   if (!restartWithFramework) return false;
-  if (restartWithFramework.indexOf("/") > -1) {
+  if (restartWithFramework.includes("/")) {
     return !`${type}/${name}`.startsWith(restartWithFramework);
   } else {
     return !name.startsWith(restartWithFramework);
@@ -39,7 +39,7 @@ function shouldSkipFramework({ type, name }, restartWithFramework) {
  * @param {string} command - The command to run
  * @param {string} [cwd] - The current working directory (optional)
  */
-function runCommand(command, cwd = undefined) {
+function runCommand(command, cwd) {
   console.log(command);
   execSync(command, { stdio: "inherit", cwd });
 }

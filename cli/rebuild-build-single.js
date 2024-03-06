@@ -21,12 +21,10 @@ Pass list of frameworks
  * @param {string} command - The command to run
  * @param {string|undefined} cwd - The current working directory (optional)
  */
-function runCommand(command, cwd = undefined) {
+function runCommand(command, cwd) {
   console.log(command);
-  if (cwd) {
-    if (!fs.existsSync(cwd)) {
-      throw `working directory ${cwd} doesn't exist.`;
-    }
+  if (cwd && !fs.existsSync(cwd)) {
+    throw `working directory ${cwd} doesn't exist.`;
   }
 
   execSync(command, { stdio: "inherit", cwd });

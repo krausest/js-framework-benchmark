@@ -18,7 +18,7 @@ Pass list of frameworks
  * @param {string} command - The command to run
  * @param {string|undefined} cwd - The current working directory (optional)
  */
-function runCommand(command, cwd = undefined) {
+function runCommand(command, cwd) {
   console.log(command);
   execSync(command, { stdio: "inherit", cwd });
 }
@@ -42,7 +42,7 @@ export function rebuildCheckSingle({ frameworks }) {
     console.log("rebuild-check-single.js finished");
     console.log("All checks are fine!");
     console.log(`======> Please rerun the benchmark: npm run bench ${frameworkNames}`);
-  } catch (e) {
+  } catch (error) {
     console.log(`rebuild-check-single failed for ${frameworks.join(" ")}`);
     process.exit(-1);
   }

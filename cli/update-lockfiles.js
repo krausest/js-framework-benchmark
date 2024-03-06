@@ -31,7 +31,7 @@ function runNpmInstall(frameworkPath) {
  */
 function getPackageLockJSONVersion(packageLockJSONPath) {
   try {
-    const packageLockJSON = fs.readFileSync(packageLockJSONPath, "utf-8");
+    const packageLockJSON = fs.readFileSync(packageLockJSONPath, "utf8");
     const parsedPackageLockJSON = JSON.parse(packageLockJSON);
     return parsedPackageLockJSON.lockfileVersion;
   } catch (error) {
