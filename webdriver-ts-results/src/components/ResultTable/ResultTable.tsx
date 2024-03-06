@@ -7,7 +7,7 @@ import { benchmarks } from "@/results";
 import { useRootStore } from "@/reducer";
 import SizeResultsTable from "@/components/tables/SizeResultsTable";
 
-const BoxPlotTable = React.lazy(() => import("@/components/BoxPlotTable"));
+const BoxPlotTable = React.lazy(() => import("@/components/BoxPlotTable/BoxPlotTable"));
 
 interface Props {
   type: FrameworkType;
