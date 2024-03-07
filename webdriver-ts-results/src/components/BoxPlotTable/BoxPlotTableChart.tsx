@@ -49,13 +49,16 @@ const BoxPlotTableChart = ({ traces }: Props) => {
         ],
       },
       options: {
+        animation: false,
         scales: {
           x: {
+            type: "category",
             grid: {
               display: false,
             },
           },
           y: {
+            type: "linear",
             beginAtZero: false,
           },
         },
