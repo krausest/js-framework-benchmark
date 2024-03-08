@@ -7,7 +7,7 @@ import { benchmarks } from "@/results";
 import { useRootStore } from "@/reducer";
 import SizeResultsTable from "@/components/tables/SizeResultsTable";
 
-const BoxPlotTable = React.lazy(() => import("@/components/BoxPlotTable"));
+const BoxPlotTable = React.lazy(() => import("@/components/BoxPlotTable/BoxPlotTable"));
 
 interface Props {
   type: FrameworkType;
@@ -37,10 +37,10 @@ const ResultTable = ({ type }: Props) => {
 
   if (
     !data ||
-    !data.frameworks.length ||
-    (!data.getResult(BenchmarkType.CPU).benchmarks.length &&
-      !data.getResult(BenchmarkType.STARTUP).benchmarks.length &&
-      !data.getResult(BenchmarkType.MEM).benchmarks.length)
+    data.frameworks.length === 0 ||
+    (data.getResult(BenchmarkType.CPU).benchmarks.length === 0 &&
+      data.getResult(BenchmarkType.STARTUP).benchmarks.length === 0 &&
+      data.getResult(BenchmarkType.MEM).benchmarks.length === 0)
   ) {
     return null;
   }
@@ -66,7 +66,7 @@ const ResultTable = ({ type }: Props) => {
           </h3>
         )}
         {displayMode === DisplayMode.BoxPlot ? (
-          benchmarks.length && (
+          benchmarks.length > 0 && (
             <React.Suspense fallback={<div>Loading...</div>}>
               <BoxPlotTable
                 results={data.results}

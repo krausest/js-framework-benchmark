@@ -10,14 +10,7 @@ interface Props {
   cpuDurationMode: CpuDurationMode;
 }
 
-const BoxPlotTableRows = ({
-  frameworks,
-  benchmarks,
-  results,
-  currentSortKey,
-  sortBy,
-  cpuDurationMode,
-}: Props) => {
+const BoxPlotTableRows = ({ frameworks, benchmarks, results, currentSortKey, sortBy, cpuDurationMode }: Props) => {
   return (
     <>
       {benchmarks.map((benchmark) => (
