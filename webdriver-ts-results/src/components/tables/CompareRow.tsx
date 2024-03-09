@@ -1,5 +1,5 @@
 import { Framework, TableResultComparisonEntry } from "@/Common";
-import { useRootStore } from "@/reducer";
+import { useRootStore } from "@/store";
 
 interface Props {
   comparison: Array<TableResultComparisonEntry | null>;

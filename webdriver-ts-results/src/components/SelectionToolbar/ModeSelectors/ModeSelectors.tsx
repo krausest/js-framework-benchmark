@@ -1,4 +1,4 @@
-import { useRootStore } from "@/reducer";
+import { useRootStore } from "@/store";
 import DisplayModeSelector from "./DisplayModeSelector";
 import DurationModeSelector from "./DurationModeSelector";
 import "./ModeSelectors.css";

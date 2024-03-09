@@ -4,7 +4,7 @@ import CpuResultsTable from "@/components/tables/CpuResultsTable";
 import MemResultsTable from "@/components/tables/MemResultsTable";
 // import StartupResultsTable from "./tables/StartupResultsTable";
 import { benchmarks } from "@/results";
-import { useRootStore } from "@/reducer";
+import { useRootStore } from "@/store";
 import SizeResultsTable from "@/components/tables/SizeResultsTable";
 
 const BoxPlotTable = React.lazy(() => import("@/components/BoxPlotTable/BoxPlotTable"));

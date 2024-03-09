@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { useRootStore } from "@/reducer";
+import { useRootStore } from "@/store";
 import "./CopyPasteControls.css";
 import { CopyIcon, ClipboardPasteIcon } from "lucide-react";
 import { Button } from "antd";
