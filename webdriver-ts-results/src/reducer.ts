@@ -100,6 +100,7 @@ interface Actions {
   compare: (framework: Framework) => void;
   stopCompare: (framework: Framework) => void;
   sort: (sortKey: string) => void;
+  copyStateToClipboard: () => void;
   setStateFromClipboard: (arg: unknown) => void;
 }
 
@@ -308,6 +309,24 @@ export const useRootStore = create<State & Actions>((set, get) => ({
   sort: (sortKey: string) => {
     const t = { ...get(), sortKey };
     return set(() => ({ ...t, resultTables: updateResultTable(t) }));
+  },
+  copyStateToClipboard: () => {
+    const currentState = get();
+
+    const serializedState = {
+      frameworks: currentState.frameworks.filter((f) => currentState.selectedFrameworks.has(f)).map((f) => f.dir),
+      benchmarks: currentState.benchmarks.filter((f) => currentState.selectedBenchmarks.has(f)).map((f) => f.id),
+      displayMode: currentState.displayMode,
+    };
+
+    const json = JSON.stringify(serializedState);
+
+    try {
+      navigator.clipboard.writeText(json);
+      window.location.hash = btoa(json);
+    } catch (error) {
+      console.error("Copying state failed", error);
+    }
   },
   setStateFromClipboard: (arg) => {
     if (!arg) {
