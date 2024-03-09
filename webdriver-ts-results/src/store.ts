@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { jStat } from "jstat";
-import { frameworks, benchmarks as rawBenchmarks, results as rawResults } from "./results";
+import { frameworks as rawFrameworks, benchmarks as rawBenchmarks, results as rawResults } from "./results";
 import {
   Benchmark,
   BenchmarkType,
@@ -16,7 +16,21 @@ import {
   knownIssues,
 } from "@/Common";
 
-const benchmarks = rawBenchmarks;
+const removeKeyedSuffix = (value: string) => {
+  return value.replace(/-keyed|-non-keyed$/, "");
+};
+
+const mappedFrameworks = rawFrameworks.map((f) => ({
+  name: f.name,
+  dir: f.dir,
+  displayname: removeKeyedSuffix(f.name),
+  issues: f.issues ?? [],
+  type: f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED,
+  frameworkHomeURL: f.frameworkHomeURL,
+}));
+
+const allBenchmarks = new Set(rawBenchmarks);
+const allFrameworks = new Set(mappedFrameworks);
 
 const results: Result[] = [];
 for (let result of rawResults) {
@@ -32,28 +46,10 @@ for (let result of rawResults) {
       };
       values[key] = vals;
     }
-    results.push({ framework: frameworks[result.f].name, benchmark: benchmarks[b.b].id, results: values });
+    results.push({ framework: rawFrameworks[result.f].name, benchmark: rawBenchmarks[b.b].id, results: values });
   }
 }
-console.log(results)
-
-const removeKeyedSuffix = (value: string) => {
-  if (value.endsWith("-non-keyed")) return value.slice(0, -10);
-  else if (value.endsWith("-keyed")) return value.slice(0, -6);
-  return value;
-};
-
-const mappedFrameworks = frameworks.map((f) => ({
-  name: f.name,
-  dir: f.dir,
-  displayname: removeKeyedSuffix(f.name),
-  issues: f.issues ?? [],
-  type: f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED,
-  frameworkHomeURL: f.frameworkHomeURL,
-}));
-
-const allBenchmarks = new Set(benchmarks);
-const allFrameworks = new Set(mappedFrameworks);
+console.log(results);
 
 const resultLookup = convertToMap(results);
 
@@ -145,40 +141,49 @@ function updateResultTable({
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractState(state: any): Partial<State> {
-  let t = {};
-  if (state.benchmarks !== undefined) {
+interface ClipboardState {
+  benchmarks: string[];
+  frameworks: string[];
+  displayMode: DisplayMode;
+}
+
+function extractClipboardState(state: ClipboardState): Partial<State> {
+  const newState: Partial<State> = {};
+
+  if (state.benchmarks) {
     const newSelectedBenchmarks = new Set<Benchmark>();
-    for (const b of state.benchmarks) {
-      for (const sb of benchmarks) {
-        if (b === sb.id) newSelectedBenchmarks.add(sb);
+    for (const benchmark of state.benchmarks) {
+      for (const sb of rawBenchmarks) {
+        if (benchmark === sb.id) newSelectedBenchmarks.add(sb);
       }
     }
-    t = { ...t, selectedBenchmarks: newSelectedBenchmarks };
+    newState.selectedBenchmarks = newSelectedBenchmarks;
   }
-  if (state.frameworks !== undefined) {
+
+  if (state.frameworks) {
     const newSelectedFramework = new Set<Framework>();
-    for (const f of state.frameworks) {
+    for (const framework of state.frameworks) {
       for (const sf of mappedFrameworks) {
-        if (f === sf.dir) newSelectedFramework.add(sf);
+        if (framework === sf.dir) newSelectedFramework.add(sf);
       }
     }
-    t = { ...t, selectedFrameworks: newSelectedFramework };
+    newState.selectedFrameworks = newSelectedFramework;
   }
-  if (state.displayMode !== undefined) {
-    t = { ...t, displayMode: state.displayMode };
+
+  if (state.displayMode) {
+    newState.displayMode = state.displayMode;
   }
-  return t;
+
+  return newState;
 }
 
 const preInitialState: State = {
   // State
-  benchmarks: benchmarks,
+  benchmarks: rawBenchmarks,
   benchmarkLists: {
-    [BenchmarkType.CPU]: benchmarks.filter((b) => b.type === BenchmarkType.CPU),
-    [BenchmarkType.MEM]: benchmarks.filter((b) => b.type === BenchmarkType.MEM),
-    [BenchmarkType.STARTUP]: benchmarks.filter((b) => b.type === BenchmarkType.STARTUP),
+    [BenchmarkType.CPU]: rawBenchmarks.filter((b) => b.type === BenchmarkType.CPU),
+    [BenchmarkType.MEM]: rawBenchmarks.filter((b) => b.type === BenchmarkType.MEM),
+    [BenchmarkType.STARTUP]: rawBenchmarks.filter((b) => b.type === BenchmarkType.STARTUP),
   },
   frameworks: mappedFrameworks,
   frameworkLists: {
@@ -313,7 +318,7 @@ export const useRootStore = create<State & Actions>((set, get) => ({
   copyStateToClipboard: () => {
     const currentState = get();
 
-    const serializedState = {
+    const serializedState: ClipboardState = {
       frameworks: currentState.frameworks.filter((f) => currentState.selectedFrameworks.has(f)).map((f) => f.dir),
       benchmarks: currentState.benchmarks.filter((f) => currentState.selectedBenchmarks.has(f)).map((f) => f.id),
       displayMode: currentState.displayMode,
@@ -334,7 +339,12 @@ export const useRootStore = create<State & Actions>((set, get) => ({
       return;
     }
 
-    const t = { ...get(), ...extractState(arg) };
+    console.log(arg);
+
+    performance.mark("m1");
+    const t = { ...get(), ...extractClipboardState(arg as ClipboardState) };
+    performance.mark("m2");
+    console.log(performance.measure("State extraction", "m1", "m2"));
     return set(() => ({ ...t, resultTables: updateResultTable(t) }));
   },
 }));
