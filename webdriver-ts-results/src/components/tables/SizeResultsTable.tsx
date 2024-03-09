@@ -29,7 +29,10 @@ const SizeResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
       <thead>
         <tr>
           <th className="benchname">
-            <button className={`button button__text ${currentSortKey === SORT_BY_NAME ? "sort-key" : ""}`} onClick={handleSortByName}>
+            <button
+              className={`button button__text ${currentSortKey === SORT_BY_NAME ? "sort-key" : ""}`}
+              onClick={handleSortByName}
+            >
               Name
             </button>
           </th>
@@ -49,7 +52,13 @@ const SizeResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
             sortBy={sortBy}
           />
         ))}
-        <GeomMeanRow weighted={false} currentSortKey={currentSortKey} sortBy={sortBy} geomMean={resultsSize.geomMean} sortbyGeommeanEnum={SORT_BY_GEOMMEAN_SIZE} />
+        <GeomMeanRow
+          weighted={false}
+          currentSortKey={currentSortKey}
+          sortBy={sortBy}
+          geomMean={resultsSize.geomMean}
+          sortbyGeommeanEnum={SORT_BY_GEOMMEAN_SIZE}
+        />
       </tbody>
     </>
   );

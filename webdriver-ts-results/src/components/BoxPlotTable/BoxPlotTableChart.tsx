@@ -1,5 +1,20 @@
 import { useRef, useEffect } from "react";
-import Plotly from "plotly.js-cartesian-dist";
+import { BoxPlotChart } from "@sgratzl/chartjs-chart-boxplot";
+import { Chart, ChartConfiguration } from "chart.js";
+
+Chart.register(BoxPlotChart);
+
+const backgroundColor = [
+  "hsl(0 80% 50%)", // Red
+  "hsl(40 80% 50%)", // Orange
+  "hsl(80 80% 50%)", // Yellow
+  "hsl(120 80% 50%)", // Green
+  "hsl(160 80% 50%)", // Cyan
+  "hsl(200 80% 50%)", // Blue
+  "hsl(240 80% 50%)", // Purple
+  "hsl(280 80% 50%)", // Magenta
+  "hsl(320 80% 50%)", // Pink
+];
 
 interface BoxPlotData {
   framework: string;
@@ -11,34 +26,57 @@ interface Props {
 }
 
 const BoxPlotTableChart = ({ traces }: Props) => {
-  const elemRef = useRef(null);
+  const chartRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const plotlTtraces = traces.map((t) => ({
-      type: "box",
-      y: t.values,
-      boxpoints: false,
-      jitter: 0.5,
-      name: t.framework,
-      boxmean: "sd",
-    }));
+    const labels: string[] = [];
+    const data: number[][] = [];
 
-    const layout = {
-      showlegend: false,
-      margin: {
-        l: 40,
-        r: 0,
-        b: 120,
-        t: 0,
-        pad: 0,
+    for (const trace of traces) {
+      labels.push(trace.framework);
+      data.push(trace.values);
+    }
+
+    const config: ChartConfiguration<"boxplot"> = {
+      type: "boxplot",
+      data: {
+        labels,
+        datasets: [
+          {
+            backgroundColor,
+            data,
+          },
+        ],
+      },
+      options: {
+        animation: false,
+        scales: {
+          x: {
+            type: "category",
+            grid: {
+              display: false,
+            },
+          },
+          y: {
+            type: "linear",
+            beginAtZero: false,
+          },
+        },
       },
     };
-    Plotly.newPlot(elemRef.current, plotlTtraces, layout, {
-      staticPlot: true,
-      editable: false,
-    });
+
+    const chart = new BoxPlotChart(chartRef.current!, config);
+
+    return () => {
+      chart.destroy();
+    };
   }, [traces]);
-  return <div ref={elemRef} style={{ height: "100%", width: "100%" }}></div>;
+
+  return (
+    <div style={{ height: "28rem" }}>
+      <canvas style={{ maxHeight: "100%" }} ref={chartRef}></canvas>
+    </div>
+  );
 };
 
 export default BoxPlotTableChart;

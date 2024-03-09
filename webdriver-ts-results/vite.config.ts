@@ -10,7 +10,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          plotly: ["plotly.js-cartesian-dist"],
+          chartjs: ["chart.js", "@sgratzl/chartjs-chart-boxplot"],
         },
       },
     },

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  SORT_BY_NAME,
-  Benchmark,
-  Framework,
-  ResultLookup,
-  CpuDurationMode,
-} from "@/Common";
+import { SORT_BY_NAME, Benchmark, Framework, ResultLookup, CpuDurationMode } from "@/Common";
 import BoxPlotTableRows from "./BoxPlotTableRows";
 
 interface Props {
@@ -17,14 +11,7 @@ interface Props {
   cpuDurationMode: CpuDurationMode;
 }
 
-const BoxPlotTable = ({
-  frameworks,
-  benchmarks,
-  results,
-  currentSortKey,
-  sortBy,
-  cpuDurationMode,
-}: Props) => {
+const BoxPlotTable = ({ frameworks, benchmarks, results, currentSortKey, sortBy, cpuDurationMode }: Props) => {
   const handleSortByName = (event: React.MouseEvent) => {
     event.preventDefault();
     sortBy(SORT_BY_NAME);
@@ -39,9 +26,7 @@ const BoxPlotTable = ({
             <tr>
               <th className="benchname">
                 <button
-                  className={`button button__text ${
-                    currentSortKey === SORT_BY_NAME ? "sort-key" : ""
-                  }`}
+                  className={`button button__text ${currentSortKey === SORT_BY_NAME ? "sort-key" : ""}`}
                   aria-label="Sort frameworks in ascending order (asc)"
                   onClick={handleSortByName}
                 >

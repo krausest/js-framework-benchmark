@@ -171,6 +171,7 @@ export class TableResultValueEntry {
     public bgColor: string,
     public textColor: string,
     public statisticResult: StatisticResult,
+    // eslint-disable-next-line unicorn/no-useless-undefined
     public statisticallySignificantFactor: string | number | undefined = undefined
   ) {}
 }
@@ -331,6 +332,7 @@ export class ResultTableData {
   sortBy(sortKey: string): void {
     const zipped = this.frameworks.map((f, frameworkIndex) => {
       let sortValue;
+      // eslint-disable-next-line unicorn/prefer-switch
       if (sortKey === SORT_BY_NAME) sortValue = f.name;
       else if (sortKey === SORT_BY_GEOMMEAN_CPU)
         sortValue = this.getResult(BenchmarkType.CPU).geomMean[frameworkIndex]!.mean || Number.POSITIVE_INFINITY;
@@ -358,7 +360,7 @@ export class ResultTableData {
         else if (sizeIdx > -1)
           sortValue =
             this.getResult(BenchmarkType.SIZE).results[sizeIdx][frameworkIndex]?.value ?? Number.POSITIVE_INFINITY;
-        else throw Error(`sortKey ${sortKey} not found`);
+        else throw new Error(`sortKey ${sortKey} not found`);
       }
       return {
         framework: f,
@@ -396,12 +398,12 @@ export class ResultTableData {
         0.5277091212292658, 0.5644449600965534, 0.5508359820582848, 0.4225836631419211,
       ];
     } else {
-      benchmarkWeights = new Array(benchmarks.length).fill(1);
+      benchmarkWeights = Array.from<number>({ length: benchmarks.length }).fill(1);
     }
 
     let gMean = 0.0;
     resultsForFramework.forEach((r, idx) => {
-      if (r !== null && !isNaN(r.factor)) {
+      if (r !== null && !Number.isNaN(r.factor)) {
         gMean += benchmarkWeights[idx] * Math.log(r.factor);
       }
     });
@@ -460,6 +462,7 @@ export class ResultTableData {
         return result.results[resultsKey].mean;
       }
     };
+
     const min = Math.max(
       benchmarkResults.reduce(
         (min, result) => (result === null ? min : Math.min(min, selectFn(result))),
@@ -504,8 +507,8 @@ export class ResultTableData {
 
       // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
       // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
-      let statisticalResult = undefined;
-      let statisticalCol = undefined;
+      let statisticalResult;
+      let statisticalCol;
       const compareWithMean = compareWithResultsValues.mean;
       const stdDev = resultValues.standardDeviation || 0;
       const compareWithResultsStdDev = compareWithResultsValues.standardDeviation || 0;
