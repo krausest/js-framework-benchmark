@@ -1,5 +1,5 @@
 import React from "react";
-import { TableResultGeommeanEntry, T_SORT_BY_GEOMMEAN } from "../../Common";
+import { TableResultGeommeanEntry, T_SORT_BY_GEOMMEAN } from "@/Common";
 
 interface Props {
   weighted: boolean;
@@ -9,13 +9,7 @@ interface Props {
   sortbyGeommeanEnum: T_SORT_BY_GEOMMEAN;
 }
 
-const GeomMeanRow = ({
-  weighted,
-  geomMean,
-  currentSortKey,
-  sortBy,
-  sortbyGeommeanEnum,
-}: Props) => {
+const GeomMeanRow = ({ weighted, geomMean, currentSortKey, sortBy, sortbyGeommeanEnum }: Props) => {
   const handleSort = (sortValue: string) => (event: React.SyntheticEvent) => {
     event.preventDefault();
     sortBy(sortValue);
@@ -25,12 +19,10 @@ const GeomMeanRow = ({
     <tr>
       <th>
         <button
-          className={`button button__text ${
-            currentSortKey === sortbyGeommeanEnum ? "sort-key" : ""
-          }`}
+          className={`button button__text ${currentSortKey === sortbyGeommeanEnum ? "sort-key" : ""}`}
           onClick={handleSort(sortbyGeommeanEnum)}
         >
-          {weighted ? 'weighted ' : ''} geometric mean
+          {weighted ? "weighted " : ""} geometric mean
         </button>
         of all factors in the table
       </th>
@@ -38,13 +30,10 @@ const GeomMeanRow = ({
         result == null ? (
           <th key={idx}></th>
         ) : (
-          <th
-            key={result.key}
-            style={{ backgroundColor: result.bgColor, color: result.textColor }}
-          >
+          <th key={result.key} style={{ backgroundColor: result.bgColor, color: result.textColor }}>
             {result.mean.toFixed(2)}
           </th>
-        ),
+        )
       )}
     </tr>
   );

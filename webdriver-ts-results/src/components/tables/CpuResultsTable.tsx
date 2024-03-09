@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  ResultTableData,
-  SORT_BY_NAME,
-  SORT_BY_GEOMMEAN_CPU,
-  BenchmarkType,
-} from "../../Common";
+import { ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, BenchmarkType } from "@/Common";
 import GeomMeanRow from "./GeomMeanRow";
 import CompareRow from "./CompareRow";
 import ValueResultRow from "./ValueResultRow";
@@ -25,7 +20,7 @@ const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
 
   return resultsCPU.results.length === 0 ? null : (
     <>
-    {/* Dummy row for fixed td width */}
+      {/* Dummy row for fixed td width */}
       <thead className="dummy">
         <tr>
           <th></th>
@@ -41,95 +36,83 @@ const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
           </td>
         </tr>
       </thead>
-          <thead>
-            <tr>
-              <th className="benchname">
-                <button
-                  className={`button button__text ${
-                    currentSortKey === SORT_BY_NAME ? "sort-key" : ""
-                  }`}
-                  onClick={handleSortByName}
-                >
-                  Name
-                </button>
-                <br />
-                Duration for...
-              </th>
-              {data.frameworks.map((f, idx) => (
-                <th key={idx}>
-                  {f.frameworkHomeURL ? (
-                    <a
-                      target="_blank"
-                      rel="noreferrer"
-                      href={f.frameworkHomeURL}
-                    >
-                      {f.displayname}
-                    </a>
-                  ) : (
-                    f.displayname
-                  )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <thead>
-            <tr>
-              <th>Implementation notes</th>
-              {data.frameworks.map((f) => (
-                <th key={f.name}>
-                  {f.issues &&
-                    f.issues.map((i) => (
-                      <React.Fragment key={i.toFixed()}>
-                        <a href={"#" + i.toFixed()}>{i.toFixed()}</a>
-                        <span> </span>
-                      </React.Fragment>
-                    ))}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <thead>
-            <tr>
-              <th>Implementation link</th>
-              {data.frameworks.map((f) => (
-                <th key={f.name}>
-                  <a
-                    target="_blank"
-                    rel="noreferrer"
-                    href={
-                      "https://github.com/krausest/js-framework-benchmark/tree/master/frameworks/" +
-                      f.dir
-                    }
-                  >
-                    code
-                  </a>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {resultsCPU.results.map((resultsForBenchmark, benchIdx) => (
-              <ValueResultRow
-                key={resultsCPU.benchmarks[benchIdx]?.id}
-                benchIdx={benchIdx}
-                resultsForBenchmark={resultsForBenchmark}
-                benchmarks={resultsCPU.benchmarks}
-                currentSortKey={currentSortKey}
-                sortBy={sortBy}
-              />
-            ))}
-            <GeomMeanRow
-              weighted={true}
-              currentSortKey={currentSortKey}
-              sortBy={sortBy}
-              geomMean={resultsCPU.geomMean}
-              sortbyGeommeanEnum={SORT_BY_GEOMMEAN_CPU}
-            />
-            <CompareRow
-              comparison={resultsCPU.comparison}
-              compareWith={data.compareWith}
-            />
-          </tbody>
+      <thead>
+        <tr>
+          <th className="benchname">
+            <button
+              className={`button button__text ${currentSortKey === SORT_BY_NAME ? "sort-key" : ""}`}
+              onClick={handleSortByName}
+            >
+              Name
+            </button>
+            <br />
+            Duration for...
+          </th>
+          {data.frameworks.map((f, idx) => (
+            <th key={idx}>
+              {f.frameworkHomeURL ? (
+                <a target="_blank" rel="noreferrer" href={f.frameworkHomeURL}>
+                  {f.displayname}
+                </a>
+              ) : (
+                f.displayname
+              )}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <thead>
+        <tr>
+          <th>Implementation notes</th>
+          {data.frameworks.map((f) => (
+            <th key={f.name}>
+              {f.issues &&
+                f.issues.map((i) => (
+                  <React.Fragment key={i.toFixed()}>
+                    <a href={"#" + i.toFixed()}>{i.toFixed()}</a>
+                    <span> </span>
+                  </React.Fragment>
+                ))}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <thead>
+        <tr>
+          <th>Implementation link</th>
+          {data.frameworks.map((f) => (
+            <th key={f.name}>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={"https://github.com/krausest/js-framework-benchmark/tree/master/frameworks/" + f.dir}
+              >
+                code
+              </a>
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {resultsCPU.results.map((resultsForBenchmark, benchIdx) => (
+          <ValueResultRow
+            key={resultsCPU.benchmarks[benchIdx]?.id}
+            benchIdx={benchIdx}
+            resultsForBenchmark={resultsForBenchmark}
+            benchmarks={resultsCPU.benchmarks}
+            currentSortKey={currentSortKey}
+            sortBy={sortBy}
+          />
+        ))}
+        <GeomMeanRow
+          weighted={true}
+          currentSortKey={currentSortKey}
+          sortBy={sortBy}
+          geomMean={resultsCPU.geomMean}
+          sortbyGeommeanEnum={SORT_BY_GEOMMEAN_CPU}
+        />
+        <CompareRow comparison={resultsCPU.comparison} compareWith={data.compareWith} />
+      </tbody>
     </>
   );
 };

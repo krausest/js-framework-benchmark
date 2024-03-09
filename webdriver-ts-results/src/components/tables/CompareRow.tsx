@@ -1,5 +1,5 @@
-import { Framework, TableResultComparisonEntry } from "../../Common";
-import { useRootStore } from "../../reducer";
+import { Framework, TableResultComparisonEntry } from "@/Common";
+import { useRootStore } from "@/reducer";
 
 interface Props {
   comparison: Array<TableResultComparisonEntry | null>;
@@ -10,10 +10,7 @@ const CompareRow = ({ comparison, compareWith }: Props) => {
   const compare = useRootStore((state) => state.compare);
   const stopCompare = useRootStore((state) => state.stopCompare);
 
-  const renderComparisonCell = (
-    result: TableResultComparisonEntry | null,
-    idx: number,
-  ) => {
+  const renderComparisonCell = (result: TableResultComparisonEntry | null, idx: number) => {
     if (!result) {
       return <th key={idx}></th>;
     }
@@ -37,9 +34,7 @@ const CompareRow = ({ comparison, compareWith }: Props) => {
         <button
           className="button button__text sortKey"
           onClick={handleToggleComparing}
-          aria-label={
-            isComparing ? "Stop comparing" : "Compare with other frameworks"
-          }
+          aria-label={isComparing ? "Stop comparing" : "Compare with other frameworks"}
         >
           {isComparing ? "stop compare" : "compare"}
         </button>
@@ -49,9 +44,7 @@ const CompareRow = ({ comparison, compareWith }: Props) => {
 
   return (
     <tr>
-      <th>
-        compare: Green means significantly faster, red significantly slower
-      </th>
+      <th>compare: Green means significantly faster, red significantly slower</th>
       {comparison.map((result, idx) => renderComparisonCell(result, idx))}
     </tr>
   );

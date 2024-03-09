@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@sgratzl/chartjs-chart-boxplot": "^4.2.8",
+    "antd": "^5.14.2",
+    "chart.js": "^4.4.2",
     "jstat": "^1.9.6",
-    "plotly.js-cartesian-dist": "2.18.2",
+    "lucide-react": "^0.344.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zustand": "^4.4.1"

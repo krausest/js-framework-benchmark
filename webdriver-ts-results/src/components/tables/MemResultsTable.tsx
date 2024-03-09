@@ -1,5 +1,5 @@
 import React from "react";
-import { ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_MEM, BenchmarkType } from "../../Common";
+import { ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_MEM, BenchmarkType } from "@/Common";
 import ValueResultRow from "./ValueResultRow";
 import GeomMeanRow from "./GeomMeanRow";
 
@@ -29,7 +29,10 @@ const MemResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
       <thead>
         <tr>
           <th className="benchname">
-            <button className={`button button__text ${currentSortKey === SORT_BY_NAME ? "sort-key" : ""}`} onClick={handleSortByName}>
+            <button
+              className={`button button__text ${currentSortKey === SORT_BY_NAME ? "sort-key" : ""}`}
+              onClick={handleSortByName}
+            >
               Name
             </button>
           </th>
@@ -49,7 +52,13 @@ const MemResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
             sortBy={sortBy}
           />
         ))}
-        <GeomMeanRow weighted={false} currentSortKey={currentSortKey} sortBy={sortBy} geomMean={resultsMEM.geomMean} sortbyGeommeanEnum={SORT_BY_GEOMMEAN_MEM} />
+        <GeomMeanRow
+          weighted={false}
+          currentSortKey={currentSortKey}
+          sortBy={sortBy}
+          geomMean={resultsMEM.geomMean}
+          sortbyGeommeanEnum={SORT_BY_GEOMMEAN_MEM}
+        />
       </tbody>
     </>
   );

@@ -13,38 +13,7 @@ export default [
     ignores: ["**/dist", "**/results", "**/node_modules", "css", "**/csv_export.js"],
   },
   {
-    files: ["**/*.{ts,tsx}"],
-    plugins: { "@typescript-eslint": ts },
-    languageOptions: { parser: tsParser },
-    rules: ts.configs["recommended"].rules,
-  },
-  /**
-   * Root
-   */
-  {
-    files: ["*.js", "utils/**/*", "cli/**/*.js"],
-    languageOptions: { globals: { ...globals.node } },
-    rules: {
-      "no-unused-vars": "warn",
-    },
-  },
-  /**
-   * Server
-   */
-  {
-    files: ["server/**/*"],
-    languageOptions: { globals: { ...globals.node } },
-  },
-  /**
-   * Webdriver
-   */
-  {
-    files: ["webdriver-ts/**/*.ts"],
     plugins: { unicorn },
-    languageOptions: {
-      parserOptions: { project: ["./webdriver-ts/tsconfig.eslint.json"] },
-      globals: { ...globals.node },
-    },
     rules: {
       ...unicorn.configs.recommended.rules,
       // no:
@@ -57,7 +26,7 @@ export default [
       "unicorn/prefer-ternary": "off",
       "unicorn/require-number-to-fixed-digits-argument": "off",
       "unicorn/prefer-set-has": "off",
-      "unicorn/unicorn/no-array-reduce": "off",
+      "unicorn/no-array-reduce": "off",
       // maybe not:
       "unicorn/consistent-function-scoping": "off",
       "unicorn/no-array-for-each": "off",
@@ -71,7 +40,24 @@ export default [
       "unicorn/prefer-dom-node-text-content": "off",
       "unicorn/prefer-optional-catch-binding": "off",
       "unicorn/prefer-logical-operator-over-ternary": "off",
-
+    },
+    languageOptions: { globals: { ...globals.node } },
+  },
+  {
+    files: ["**/*.{ts,tsx}"],
+    plugins: { "@typescript-eslint": ts },
+    languageOptions: { parser: tsParser },
+    rules: ts.configs["recommended"].rules,
+  },
+  /**
+   * Webdriver
+   */
+  {
+    files: ["webdriver-ts/**/*.ts"],
+    languageOptions: {
+      parserOptions: { project: ["./webdriver-ts/tsconfig.eslint.json"] },
+    },
+    rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "require-await": "error",
       "@typescript-eslint/no-floating-promises": "error",
@@ -82,7 +68,13 @@ export default [
    * Web
    */
   {
-    files: ["webdriver-ts-results/**/*.tsx"],
+    files: ["webdriver-ts-results/**/*"],
+    rules: {
+      "@typescript-eslint/no-loss-of-precision": "off",
+    },
+  },
+  {
+    files: ["webdriver-ts-results/src/**/*.{js,ts,jsx,tsx}"],
     plugins: {
       react,
       "react-refresh": reactRefresh,
@@ -98,13 +90,5 @@ export default [
     },
     settings: { react: { version: "detect" } },
     languageOptions: { globals: { ...globals.browser } },
-  },
-  {
-    files: ["webdriver-ts-results/**/*"],
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
-    rules: {
-      "@typescript-eslint/no-loss-of-precision": "off",
-      "no-debugger": "off",
-    },
   },
 ];

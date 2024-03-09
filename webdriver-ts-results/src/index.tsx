@@ -2,8 +2,11 @@ import React from "react";
 import App from "./App.tsx";
 import { createRoot } from "react-dom/client";
 
-createRoot(document.getElementById("root")!).render(
+import "./index.css";
+import "./assets/styles/global.css";
+
+createRoot(document.querySelector("#root")!).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  </React.StrictMode>
 );

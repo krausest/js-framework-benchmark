@@ -1,0 +1,20 @@
+.select-toolbar {
+  background-color: #fafafa;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.5rem 0;
+  gap: 1rem;
+  display: grid;
+  grid-template-rows: auto auto auto;
+}
+
+.select-toolbar__actions {
+  display: flex;
+  gap: 1rem;
+}
+
+@media screen and (width>=1024px) {
+  .select-toolbar {
+    display: flex;
+  }
+}
