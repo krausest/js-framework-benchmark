@@ -50,9 +50,9 @@ export function writeResults(resultDir: string, res: ResultLightHouse | ResultCP
     case BenchmarkType.CPU:
       createResultFile(
         resultDir,
-        { total: res.results.map((r) => r.total), 
-          script: res.results.map((r) => r.script),
-          paint: res.results.map((r) => r.paint),
+        { total: res.results.map((r) => Number(r.total.toFixed(1))), 
+          script: res.results.map((r) => Number(r.script.toFixed(1))),
+          paint: res.results.map((r) => Number(r.paint.toFixed(1))),
          },
         res.framework,
         res.benchmark

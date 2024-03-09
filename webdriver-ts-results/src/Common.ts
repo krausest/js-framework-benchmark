@@ -109,9 +109,11 @@ export interface Benchmark {
 }
 
 export interface RawResult {
-  f: string;
-  b: string;
-  v: { [k: string]: number[] };
+  f: number;
+  b: {
+    b: number;
+    v: { [k: string]: number[] };
+  }[];
 }
 
 export interface ResultValues {

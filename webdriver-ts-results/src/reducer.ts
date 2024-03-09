@@ -18,21 +18,24 @@ import {
 
 const benchmarks = rawBenchmarks;
 
-const results: Result[] = rawResults.map((result) => {
-  const values: { [k: string]: ResultValues } = {};
-  for (const key of Object.keys(result.v)) {
-    const r = result.v[key];
-    const vals = {
-      mean: r ? jStat.mean(r) : Number.NaN,
-      median: r ? jStat.median(r) : Number.NaN,
-      standardDeviation: r ? jStat.stdev(r, true) : Number.NaN,
-      values: r,
-    };
-    values[key] = vals;
+const results: Result[] = [];
+for (let result of rawResults) {
+  for (let b of result.b) {
+    const values: { [k: string]: ResultValues } = {};
+    for (const key of Object.keys(b.v)) {
+      const r = b.v[key];
+      const vals = {
+        mean: r ? jStat.mean(r) : Number.NaN,
+        median: r ? jStat.median(r) : Number.NaN,
+        standardDeviation: r ? jStat.stdev(r, true) : Number.NaN,
+        values: r,
+      };
+      values[key] = vals;
+    }
+    results.push({ framework: frameworks[result.f].name, benchmark: benchmarks[b.b].id, results: values });
   }
-
-  return { framework: result.f, benchmark: result.b, results: values };
-});
+}
+console.log(results)
 
 const removeKeyedSuffix = (value: string) => {
   if (value.endsWith("-non-keyed")) return value.slice(0, -10);
