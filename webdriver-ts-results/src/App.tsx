@@ -1,5 +1,6 @@
 import "./App.css";
-import { FrameworkType, knownIssues } from "@/Common";
+import { FrameworkType } from "@/Common";
+import { knownIssues } from "@/helpers/issues";
 import ResultTable from "@/components/ResultTable";
 import SelectionToolbar from "@/components/SelectionToolbar";
 import { List, Typography } from "antd";
@@ -16,7 +17,7 @@ const KnownIssuesList = () => {
       renderItem={(issue) => (
         <List.Item>
           <Typography.Text className="known-issues__issue-code">
-            <a href={issue.link}>{issue.issue}</a>
+            <a href={issue.link}>{issue.number}</a>
           </Typography.Text>{" "}
           {issue.text}
         </List.Item>

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { jStat } from "jstat";
+import { knownIssues } from "@/helpers/issues";
 import { frameworks as rawFrameworks, benchmarks as rawBenchmarks, results as rawResults } from "./results";
 import {
   Benchmark,
@@ -13,7 +14,6 @@ import {
   SORT_BY_GEOMMEAN_CPU,
   ResultValues,
   CpuDurationMode,
-  knownIssues,
 } from "@/Common";
 
 const removeKeyedSuffix = (value: string) => {
@@ -194,7 +194,7 @@ const preInitialState: State = {
   selectedBenchmarks: allBenchmarks,
   selectedFrameworks: allFrameworks,
   sortKey: SORT_BY_GEOMMEAN_CPU,
-  displayMode: DisplayMode.DisplayMedian,
+  displayMode: DisplayMode.DISPLAY_MEDIAN,
   resultTables: {
     [FrameworkType.KEYED]: undefined,
     [FrameworkType.NON_KEYED]: undefined,
@@ -203,8 +203,8 @@ const preInitialState: State = {
     [FrameworkType.KEYED]: undefined,
     [FrameworkType.NON_KEYED]: undefined,
   },
-  categories: new Set(knownIssues.map((ki) => ki.issue)),
-  cpuDurationMode: CpuDurationMode.Total,
+  categories: new Set(knownIssues.map((issue) => issue.number)),
+  cpuDurationMode: CpuDurationMode.TOTAL,
 };
 
 const initialState: State = {

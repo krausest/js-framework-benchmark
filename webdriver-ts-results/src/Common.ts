@@ -1,20 +1,22 @@
 import { jStat } from "jstat";
+import { formatEn } from "@/utils";
+import { knownIssues } from "@/helpers/issues";
 
 export enum StatisticResult {
-  Slower,
-  Undecided,
-  Faster,
+  SLOWER,
+  UNDECIDED,
+  FASTER,
 }
 export enum DisplayMode {
-  DisplayMean,
-  DisplayMedian,
-  BoxPlot,
+  DISPLAY_MEAN,
+  DISPLAY_MEDIAN,
+  BOX_PLOT,
 }
 export enum CpuDurationMode {
-  Total = "total",
-  Script = "script",
-  Render = "paint",
-}
+  TOTAL = "total",
+  SCRIPT = "script",
+  RENDER = "paint",
+} // Do not change the case of the values. They match the case of the `results` keys from `results.ts`.
 
 export enum FrameworkType {
   KEYED,
@@ -30,68 +32,8 @@ export interface Framework {
   displayname: string;
 }
 
-export enum Severity {
-  Note,
-  Error,
-}
-
 const DEFAULT_RESULTS_KEY = "DEFAULT";
 
-interface Issue {
-  issue: number;
-  severity: Severity;
-  text: string;
-  link: string;
-}
-
-export const knownIssues: Issue[] = [
-  {
-    issue: 634,
-    severity: Severity.Error,
-    text: "[Issue]: The HTML structure for the implementation is not fully correct.",
-    link: "https://github.com/krausest/js-framework-benchmark/issues/634",
-  },
-  {
-    issue: 772,
-    severity: Severity.Note,
-    text: "[Note]: Implementation uses manual DOM manipulations",
-    link: "https://github.com/krausest/js-framework-benchmark/issues/772",
-  },
-  {
-    issue: 796,
-    severity: Severity.Note,
-    text: "[Note]: Implementation uses explicit requestAnimationFrame calls",
-    link: "https://github.com/krausest/js-framework-benchmark/issues/796",
-  },
-  {
-    issue: 800,
-    severity: Severity.Note,
-    text: "[Note]: View state on the model",
-    link: "https://github.com/krausest/js-framework-benchmark/issues/800",
-  },
-  {
-    issue: 801,
-    severity: Severity.Note,
-    text: "[Note]: Implementation uses manual event delegation",
-    link: "https://github.com/krausest/js-framework-benchmark/issues/801",
-  },
-  {
-    issue: 1139,
-    severity: Severity.Note,
-    text: "[Note]: Implementation uses runtime code generation",
-    link: "https://github.com/krausest/js-framework-benchmark/issues/1139",
-  },
-  {
-    issue: 1261,
-    severity: Severity.Note,
-    text: "[Note]: Manual caching of (v)dom nodes",
-    link: "https://github.com/krausest/js-framework-benchmark/issues/1261",
-  },
-];
-
-export function findIssue(issueNumber: number): Issue | undefined {
-  return knownIssues.find((i) => i.issue === issueNumber);
-}
 export enum BenchmarkType {
   CPU,
   MEM,
@@ -203,28 +145,34 @@ export interface ResultLookup {
 }
 export function convertToMap(results: Array<Result>): ResultLookup {
   const resultMap = new Map<string, Map<string, Result>>();
+
   results.forEach((r) => {
     if (!resultMap.has(r.benchmark)) resultMap.set(r.benchmark, new Map<string, Result>());
     resultMap.get(r.benchmark)!.set(r.framework, r);
   });
-  return (benchmark: Benchmark, framework: Framework) => {
+
+  const resultLookup = (benchmark: Benchmark, framework: Framework) => {
     const m = resultMap.get(benchmark.id);
     if (!m) return null;
     const v = m.get(framework.name);
     if (!v) return null;
     return v;
   };
+
+  return resultLookup;
 }
 
-const undecided: [string, string, StatisticResult] = ["#fff", "#000", StatisticResult.Undecided];
-const faster: [string, string, StatisticResult] = ["#00b300", "#fff", StatisticResult.Faster];
-const slower: [string, string, StatisticResult] = ["#b30000", "#fff", StatisticResult.Slower];
+type StatisticTuple = [string, string, StatisticResult];
+
+const undecided: StatisticTuple = ["#fff", "#000", StatisticResult.UNDECIDED];
+const faster: StatisticTuple = ["#00b300", "#fff", StatisticResult.FASTER];
+const slower: StatisticTuple = ["#b30000", "#fff", StatisticResult.SLOWER];
 
 function colorsForStatisticResult(statisticResult: StatisticResult) {
   switch (statisticResult) {
-    case StatisticResult.Faster:
+    case StatisticResult.FASTER:
       return faster;
-    case StatisticResult.Slower:
+    case StatisticResult.SLOWER:
       return slower;
     default:
       return undecided;
@@ -251,12 +199,6 @@ const statisticComputeColor = function (sign: number, pValue: number): [string, 
   }
 };
 
-const formatEn = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-  useGrouping: true,
-});
-
 export class ResultTableData {
   resultsMap = new Map<BenchmarkType, ResultData>();
   frameworks: Array<Framework>;
@@ -276,7 +218,7 @@ export class ResultTableData {
     public selectedCategories: Set<number>,
     public cpuDurationMode: string
   ) {
-    const allowedIssues = new Set(knownIssues.map((issue) => issue.issue));
+    const allowedIssues = new Set(knownIssues.map((issue) => issue.number));
     const defaultFrameworks = ["vanillajs-keyed", "vanillajs-1-keyed", "vanillajs-non-keyed", "vanillajs-1-non-keyed"];
 
     console.log("ResultTableData", allowedIssues, selectedCategories);
@@ -301,28 +243,28 @@ export class ResultTableData {
   private filterFrameworksByType(selectedFrameworks: Set<Framework>, type: FrameworkType) {
     return this.allFrameworks.filter((framework) => framework.type === type && selectedFrameworks.has(framework));
   }
+  private createResult(type: BenchmarkType): ResultData {
+    const benchmarks = this.allBenchmarks.filter(
+      (benchmark) => benchmark.type === type && this.selectedBenchmarks.has(benchmark)
+    );
+    const results = benchmarks.map((benchmark) => this.computeFactors(benchmark));
+    const geomMean = this.frameworks.map((framework, idx) => {
+      const resultsForFramework = results.map((arr) => arr[idx]);
+      return this.computeGeometricMean(type, framework, benchmarks, resultsForFramework);
+    });
+    const comparison = this.frameworks.map((framework, idx) => {
+      const resultsForFramework = results.map((arr) => arr[idx]);
+      return this.computeComparison(framework, resultsForFramework);
+    });
+
+    return { benchmarks, results, geomMean, comparison };
+  }
+
   private update(sortKey: string) {
     console.time("update");
 
-    const createResult = (type: BenchmarkType): ResultData => {
-      const benchmarks = this.allBenchmarks.filter(
-        (benchmark) => benchmark.type === type && this.selectedBenchmarks.has(benchmark)
-      );
-      const results = benchmarks.map((benchmark) => this.computeFactors(benchmark));
-      const geomMean = this.frameworks.map((framework, idx) => {
-        const resultsForFramework = results.map((arr) => arr[idx]);
-        return this.computeGeometricMean(type, framework, benchmarks, resultsForFramework);
-      });
-      const comparison = this.frameworks.map((framework, idx) => {
-        const resultsForFramework = results.map((arr) => arr[idx]);
-        return this.computeComparison(framework, benchmarks, resultsForFramework);
-      });
-
-      return { benchmarks, results, geomMean, comparison };
-    };
-
     for (const type of benchmarkTypes) {
-      this.resultsMap.set(type, createResult(type));
+      this.resultsMap.set(type, this.createResult(type));
     }
 
     this.sortBy(sortKey);
@@ -331,24 +273,36 @@ export class ResultTableData {
   public getResult(type: BenchmarkType): ResultData {
     return this.resultsMap.get(type)!;
   }
-  sortBy(sortKey: string): void {
-    const zipped = this.frameworks.map((f, frameworkIndex) => {
-      let sortValue;
-      // eslint-disable-next-line unicorn/prefer-switch
-      if (sortKey === SORT_BY_NAME) sortValue = f.name;
-      else if (sortKey === SORT_BY_GEOMMEAN_CPU)
+
+  private getSortableValue(framework: Framework, frameworkIndex: number, sortKey: string) {
+    let sortValue;
+    switch (sortKey) {
+      case SORT_BY_NAME: {
+        sortValue = framework.name;
+        break;
+      }
+      case SORT_BY_GEOMMEAN_CPU: {
         sortValue = this.getResult(BenchmarkType.CPU).geomMean[frameworkIndex]!.mean || Number.POSITIVE_INFINITY;
-      else if (sortKey === SORT_BY_GEOMMEAN_MEM)
+        break;
+      }
+      case SORT_BY_GEOMMEAN_MEM: {
         sortValue = this.getResult(BenchmarkType.MEM).geomMean[frameworkIndex]!.mean || Number.POSITIVE_INFINITY;
-      else if (sortKey === SORT_BY_GEOMMEAN_SIZE)
+        break;
+      }
+      case SORT_BY_GEOMMEAN_SIZE: {
         sortValue = this.getResult(BenchmarkType.SIZE).geomMean[frameworkIndex]!.mean || Number.POSITIVE_INFINITY;
-      else if (sortKey === SORT_BY_GEOMMEAN_STARTUP)
+        break;
+      }
+      case SORT_BY_GEOMMEAN_STARTUP: {
         sortValue = this.getResult(BenchmarkType.STARTUP).geomMean[frameworkIndex]!.mean || Number.POSITIVE_INFINITY;
-      else {
+        break;
+      }
+      default: {
         const cpuIdx = this.getResult(BenchmarkType.CPU).benchmarks.findIndex((b) => b.id === sortKey);
         const memIdx = this.getResult(BenchmarkType.MEM).benchmarks.findIndex((b) => b.id === sortKey);
         const sizeIdx = this.getResult(BenchmarkType.SIZE).benchmarks.findIndex((b) => b.id === sortKey);
         const startupIdx = this.getResult(BenchmarkType.STARTUP).benchmarks.findIndex((b) => b.id === sortKey);
+
         if (cpuIdx > -1)
           sortValue =
             this.getResult(BenchmarkType.CPU).results[cpuIdx][frameworkIndex]?.value ?? Number.POSITIVE_INFINITY;
@@ -364,14 +318,21 @@ export class ResultTableData {
             this.getResult(BenchmarkType.SIZE).results[sizeIdx][frameworkIndex]?.value ?? Number.POSITIVE_INFINITY;
         else throw new Error(`sortKey ${sortKey} not found`);
       }
-      return {
-        framework: f,
-        origIndex: frameworkIndex,
-        sortValue: sortValue,
-      };
-    });
+    }
 
-    const remappedIdx = zipped.sort((a, b) => Number(a.sortValue) - Number(b.sortValue)).map((z) => z.origIndex);
+    return {
+      framework,
+      frameworkIndex,
+      sortValue,
+    };
+  }
+
+  sortBy(sortKey: string): void {
+    const zipped = this.frameworks.map((framework, frameworkIndex) =>
+      this.getSortableValue(framework, frameworkIndex, sortKey)
+    );
+
+    const remappedIdx = zipped.sort((a, b) => Number(a.sortValue) - Number(b.sortValue)).map((z) => z.frameworkIndex);
 
     this.frameworks = this.remap(remappedIdx, this.frameworks);
 
@@ -383,7 +344,7 @@ export class ResultTableData {
       result.comparison = this.remap(remappedIdx, result.comparison);
     }
   }
-  remap<T>(remappedIdx: Array<number>, array: Array<T>): Array<T> {
+  private remap<T>(remappedIdx: Array<number>, array: Array<T>): Array<T> {
     return remappedIdx.map((idx) => array[idx]);
   }
 
@@ -394,7 +355,7 @@ export class ResultTableData {
     resultsForFramework: Array<TableResultValueEntry | null>
   ): TableResultGeommeanEntry {
     let benchmarkWeights: Array<number>;
-    if (type == BenchmarkType.CPU) {
+    if (type === BenchmarkType.CPU) {
       benchmarkWeights = [
         0.64280248137063, 0.5607178150466176, 0.5643800750716564, 0.1925635870170522, 0.13200612879341714,
         0.5277091212292658, 0.5644449600965534, 0.5508359820582848, 0.4225836631419211,
@@ -417,32 +378,32 @@ export class ResultTableData {
   }
   computeComparison(
     framework: Framework,
-    _benchmarksCPU: Array<Benchmark>, // Remove cause unused
     resultsCPUForFramework: Array<TableResultValueEntry | null>
   ): TableResultComparisonEntry {
     if (!this.compareWith) {
       return new TableResultComparisonEntry(framework.name, framework, "", "#fff", "#000");
     }
 
-    let statisticResult: StatisticResult | undefined = undefined;
+    let statisticResult: StatisticResult | undefined;
 
     for (const r of resultsCPUForFramework) {
-      if (r?.statisticResult !== StatisticResult.Undecided) {
+      if (r?.statisticResult !== StatisticResult.UNDECIDED) {
         if (!statisticResult) {
           statisticResult = r?.statisticResult;
         } else if (statisticResult !== r?.statisticResult) {
-          statisticResult = StatisticResult.Undecided;
+          statisticResult = StatisticResult.UNDECIDED;
         }
       }
     }
 
     let label = "";
-    statisticResult ??= StatisticResult.Undecided;
-    if (statisticResult === StatisticResult.Faster) {
+    statisticResult ??= StatisticResult.UNDECIDED;
+    if (statisticResult === StatisticResult.FASTER) {
       label = "faster!";
-    } else if (statisticResult === StatisticResult.Slower) {
+    } else if (statisticResult === StatisticResult.SLOWER) {
       label = "slower!";
     }
+
     return new TableResultComparisonEntry(
       framework.name,
       framework,
@@ -452,96 +413,106 @@ export class ResultTableData {
     );
   }
 
-  computeFactors(benchmark: Benchmark): Array<TableResultValueEntry | null> {
-    const resultsKey = benchmark.type == BenchmarkType.CPU ? this.cpuDurationMode : DEFAULT_RESULTS_KEY;
+  private getBenchmarkStatistic(result: Result | null, resultsKey: string): number {
+    if (result === null) return 0;
+
+    return this.displayMode === DisplayMode.DISPLAY_MEDIAN
+      ? result.results[resultsKey].median
+      : result.results[resultsKey].mean;
+  }
+
+  private computeFactors(benchmark: Benchmark): Array<TableResultValueEntry | null> {
+    const resultsKey = benchmark.type === BenchmarkType.CPU ? this.cpuDurationMode : DEFAULT_RESULTS_KEY;
 
     const benchmarkResults = this.frameworksForFactors.map((f) => this.results(benchmark, f));
-    const selectFn = (result: Result | null) => {
-      if (result === null) return 0;
-      if (this.displayMode === DisplayMode.DisplayMedian) {
-        return result.results[resultsKey].median;
-      } else {
-        return result.results[resultsKey].mean;
-      }
-    };
 
     const min = Math.max(
       benchmarkResults.reduce(
-        (min, result) => (result === null ? min : Math.min(min, selectFn(result))),
+        (min, result) => (result === null ? min : Math.min(min, this.getBenchmarkStatistic(result, resultsKey))),
         Number.POSITIVE_INFINITY
       )
     );
     // if (benchmark.type === BenchmarkType.CPU) {
     //     min = Math.max(1000/60, min);
     // }
-    return this.frameworks.map((f) => {
-      const result = this.results(benchmark, f);
-      if (result === null) return null;
-      const resultValues = result.results[resultsKey];
 
-      const value = selectFn(result);
-      const factor = value / min;
-      // if (benchmark.type === BenchmarkType.CPU) {
-      //     factor = Math.max(1, factor);
-      // }
-      const conficenceInterval =
-        (1.959964 * (resultValues.standardDeviation || 0)) / Math.sqrt(resultValues.values.length);
-      const conficenceIntervalStr = benchmark.type === BenchmarkType.CPU ? conficenceInterval.toFixed(1) : null;
-      const formattedValue = formatEn.format(value);
+    const some = this.frameworks.map((framework) =>
+      this.calculateTableResultValues(benchmark, framework, resultsKey, min)
+    );
 
-      if (!this.compareWith) {
-        return new TableResultValueEntry(
-          f.name,
-          value,
-          formattedValue,
-          conficenceIntervalStr,
-          factor,
-          factor.toFixed(2),
-          computeColor(factor),
-          "#000",
-          StatisticResult.Undecided
-        );
-      }
+    return some;
+  }
 
-      const compareWithResults = this.results(benchmark, this.compareWith)!;
-      const compareWithResultsValues = compareWithResults.results[resultsKey];
-      // let meanStr = 'x'; //mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true});
+  private calculateTableResultValues(
+    benchmark: Benchmark,
+    framework: Framework,
+    resultsKey: string,
+    min: number
+  ): TableResultValueEntry | null {
+    const result = this.results(benchmark, framework);
+    if (result === null) return null;
+    const resultValues = result.results[resultsKey];
 
-      // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
-      // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
-      let statisticalResult;
-      let statisticalCol;
-      const compareWithMean = compareWithResultsValues.mean;
-      const stdDev = resultValues.standardDeviation || 0;
-      const compareWithResultsStdDev = compareWithResultsValues.standardDeviation || 0;
+    const value = this.getBenchmarkStatistic(result, resultsKey);
+    const factor = value / min;
+    // if (benchmark.type === BenchmarkType.CPU) {
+    //     factor = Math.max(1, factor);
+    // }
+    const conficenceInterval =
+      (1.959964 * (resultValues.standardDeviation || 0)) / Math.sqrt(resultValues.values.length);
+    const conficenceIntervalStr = benchmark.type === BenchmarkType.CPU ? conficenceInterval.toFixed(1) : null;
+    const formattedValue = formatEn.format(value);
 
-      const x1 = resultValues.mean;
-      const x2 = compareWithMean;
-      const s1_2 = stdDev * stdDev;
-      const s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
-      const n1 = compareWithResultsValues.values.length;
-      const n2 = resultValues.values.length;
-      const ny =
-        Math.pow(s1_2 / n1 + s2_2 / n2, 2) /
-        ((s1_2 * s1_2) / (n1 * n1 * (n1 - 1)) + (s2_2 * s2_2) / (n2 * n2 * (n2 - 1)));
-      const t = (x1 - x2) / Math.sqrt(s1_2 / n1 + s2_2 / n2);
-      const p = (1.0 - jStat.studentt.cdf(Math.abs(t), ny)) * 2;
-
-      statisticalCol = statisticComputeColor(t, p);
-      statisticalResult = (p * 100).toFixed(3) + "%";
-
+    if (!this.compareWith) {
       return new TableResultValueEntry(
-        f.name,
+        framework.name,
         value,
         formattedValue,
         conficenceIntervalStr,
         factor,
         factor.toFixed(2),
-        statisticalCol[0],
-        statisticalCol[1],
-        statisticalCol[2],
-        statisticalResult
+        computeColor(factor),
+        "#000",
+        StatisticResult.UNDECIDED
       );
-    });
+    }
+
+    const compareWithResults = this.results(benchmark, this.compareWith)!;
+    const compareWithResultsValues = compareWithResults.results[resultsKey];
+    // let meanStr = 'x'; //mean.toLocaleString('en-US', {minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: true});
+
+    // X1,..,Xn: this Framework, Y1, ..., Ym: selected Framework
+    // https://de.wikipedia.org/wiki/Zweistichproben-t-Test
+    const compareWithMean = compareWithResultsValues.mean;
+    const stdDev = resultValues.standardDeviation || 0;
+    const compareWithResultsStdDev = compareWithResultsValues.standardDeviation || 0;
+
+    const x1 = resultValues.mean;
+    const x2 = compareWithMean;
+    const s1_2 = stdDev * stdDev;
+    const s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
+    const n1 = compareWithResultsValues.values.length;
+    const n2 = resultValues.values.length;
+    const ny =
+      Math.pow(s1_2 / n1 + s2_2 / n2, 2) /
+      ((s1_2 * s1_2) / (n1 * n1 * (n1 - 1)) + (s2_2 * s2_2) / (n2 * n2 * (n2 - 1)));
+    const t = (x1 - x2) / Math.sqrt(s1_2 / n1 + s2_2 / n2);
+    const p = (1.0 - jStat.studentt.cdf(Math.abs(t), ny)) * 2;
+
+    const statisticalCol = statisticComputeColor(t, p);
+    const statisticalResult = (p * 100).toFixed(3) + "%";
+
+    return new TableResultValueEntry(
+      framework.name,
+      value,
+      formattedValue,
+      conficenceIntervalStr,
+      factor,
+      factor.toFixed(2),
+      statisticalCol[0],
+      statisticalCol[1],
+      statisticalCol[2],
+      statisticalResult
+    );
   }
 }
