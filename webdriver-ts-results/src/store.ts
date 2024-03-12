@@ -339,12 +339,7 @@ export const useRootStore = create<State & Actions>((set, get) => ({
       return;
     }
 
-    console.log(arg);
-
-    performance.mark("m1");
     const t = { ...get(), ...extractClipboardState(arg as ClipboardState) };
-    performance.mark("m2");
-    console.log(performance.measure("State extraction", "m1", "m2"));
     return set(() => ({ ...t, resultTables: updateResultTable(t) }));
   },
 }));
