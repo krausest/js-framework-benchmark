@@ -14,8 +14,16 @@ const _buildContext = await esbuild.context({
 	//target: [ 'chrome58', 'edge18', 'firefox57', 'safari11' ],
 	platform: "browser",
 	format: "iife",
-	minify: !isDev,
+	// minify: !isDev,
+	// Mangle all properties starting with an underscore
 	mangleProps: isDev ? undefined : /^_/,
+	// Important to keep perfs
+	// and disable compressing "if ( a ) b()" in "a && b()"
+	minifyWhitespace: !isDev,
+	minifyIdentifiers: !isDev,
+	minifySyntax: false,
+	keepNames: true,
+
 	bundle: true,
 	loader: {
 		'.ts' : 'ts',

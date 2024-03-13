@@ -1,5 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { h, render, state } from "reflex-dom"
-// import { h, render, state, shouldUpdate } from "../node_modules/reflex-dom/dist/index.es2020.mjs"
+import { For } from "reflex-dom/dist/performance-helpers"
+// import { h, render, state } from "../node_modules/reflex-dom/dist/index.es2020.mjs"
+// import { For } from "../node_modules/reflex-dom/dist/performance-helpers.es2020.mjs"
+
 
 // ----------------------------------------------------------------------------- DATA HELPERS
 
@@ -64,7 +68,7 @@ const toggleSelection = ( id:number ) => {
 let _counter = 1;
 const buildData = (count:number) => {
 	const data = new Array(count);
-	for ( let i = 0; i < count; i++ ) {
+	for ( let i = 0; i < count; ++i ) {
 		data[i] = {
 			id: _counter++,
 			label: `${_pick(A)} ${_pick(C)} ${_pick(N)}`,
@@ -139,14 +143,14 @@ function App () {
 	return () => <div class="container">
 		<Jumbotron />
 		<table class="table table-hover table-striped test-data">
-			<tbody>
-				{$data.value.map(item => <Row
+			<For as="tbody" each={ $data }>
+				{item => <Row
 					key={ item.id }
 					id={ item.id }
 					label={ item.label }
 					selected={ $selected.value === item.id }
-				/>)}
-			</tbody>
+				/>}
+			</For>
 		</table>
 		<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
 	</div>
