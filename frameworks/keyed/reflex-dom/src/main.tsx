@@ -1,6 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { h, render, state } from "reflex-dom"
-import { For } from "reflex-dom/dist/performance-helpers"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { For } from "reflex-dom/performance-helpers"
 // import { h, render, state } from "../node_modules/reflex-dom/dist/index.es2020.mjs"
 // import { For } from "../node_modules/reflex-dom/dist/performance-helpers.es2020.mjs"
 
@@ -67,6 +69,7 @@ const toggleSelection = ( id:number ) => {
 
 let _counter = 1;
 const buildData = (count:number) => {
+	// eslint-disable-next-line unicorn/no-new-array
 	const data = new Array(count);
 	for ( let i = 0; i < count; ++i ) {
 		data[i] = {
@@ -156,4 +159,5 @@ function App () {
 	</div>
 }
 
+// eslint-disable-next-line no-undef,unicorn/prefer-query-selector
 render(<App />, document.getElementById("main"))
