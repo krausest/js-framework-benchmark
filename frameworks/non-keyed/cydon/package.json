@@ -16,9 +16,9 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-terser": "^0.4.4",
-    "cydon": "^0.1.8",
-    "rollup": "^4.7.0",
-    "terser": "^5.26.0"
+    "cydon": "^0.1.9",
+    "rollup": "^4.12.1",
+    "terser": "^5.29.1"
   },
   "scripts": {
     "dev": "rollup -c -w",
