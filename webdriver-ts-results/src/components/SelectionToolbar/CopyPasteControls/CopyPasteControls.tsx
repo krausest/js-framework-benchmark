@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { useRootStore } from "@/reducer";
+import { useRootStore } from "@/store";
 import "./CopyPasteControls.css";
 import { CopyIcon, ClipboardPasteIcon } from "lucide-react";
 import { Button } from "antd";
@@ -7,15 +7,15 @@ import { Button } from "antd";
 const CopyPasteControls = () => {
   console.log("CopyPasteControls");
 
-  const state = useRootStore((state) => state);
   const setStateFromClipboard = useRootStore((state) => state.setStateFromClipboard);
+  const copyStateToClipboard = useRootStore((state) => state.copyStateToClipboard);
 
   const handlePasteError = (error: Error) => {
     alert("Sorry - couldn't parse pasted selection");
     console.error("Pasting state failed", error);
   };
 
-  const handlePaste = useCallback(
+  const pasteStateFromText = useCallback(
     (text: string) => {
       try {
         const parsedState = JSON.parse(text);
@@ -32,10 +32,10 @@ const CopyPasteControls = () => {
       event.preventDefault();
       const text = event.clipboardData?.getData("text/plain");
       if (text) {
-        handlePaste(text);
+        pasteStateFromText(text);
       }
     },
-    [handlePaste]
+    [pasteStateFromText]
   );
 
   useEffect(() => {
@@ -45,37 +45,24 @@ const CopyPasteControls = () => {
     };
   }, [handleClipboardPaste]);
 
-  const copy = () => {
-    const serializedState = {
-      frameworks: state.frameworks.filter((f) => state.selectedFrameworks.has(f)).map((f) => f.dir),
-      benchmarks: state.benchmarks.filter((f) => state.selectedBenchmarks.has(f)).map((f) => f.id),
-      displayMode: state.displayMode,
-    };
-
-    const json = JSON.stringify(serializedState);
-
-    try {
-      navigator.clipboard.writeText(json);
-      window.location.hash = btoa(json);
-    } catch (error) {
-      console.error("Copying state failed", error);
-    }
-  };
-
   const handlePasteFromClipboard = useCallback(async () => {
     try {
       const text = await navigator.clipboard.readText();
-      handlePaste(text);
+      pasteStateFromText(text);
     } catch (error) {
       handlePasteError(error as Error);
     }
-  }, [handlePaste]);
+  }, [pasteStateFromText]);
 
   return (
     <div className="copy-paste-panel">
       <div>Copy/paste current selection</div>
       <div className="copy-paste-panel__buttons">
-        <Button onClick={copy} icon={<CopyIcon size={20} />} aria-label="Copy selected frameworks and benchmarks" />
+        <Button
+          onClick={copyStateToClipboard}
+          icon={<CopyIcon size={20} />}
+          aria-label="Copy selected frameworks and benchmarks"
+        />
         <Button
           onClick={handlePasteFromClipboard}
           icon={<ClipboardPasteIcon size={20} />}

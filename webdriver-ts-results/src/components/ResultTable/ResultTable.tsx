@@ -4,7 +4,7 @@ import CpuResultsTable from "@/components/tables/CpuResultsTable";
 import MemResultsTable from "@/components/tables/MemResultsTable";
 // import StartupResultsTable from "./tables/StartupResultsTable";
 import { benchmarks } from "@/results";
-import { useRootStore } from "@/reducer";
+import { useRootStore } from "@/store";
 import SizeResultsTable from "@/components/tables/SizeResultsTable";
 
 const BoxPlotTable = React.lazy(() => import("@/components/BoxPlotTable/BoxPlotTable"));
@@ -51,21 +51,21 @@ const ResultTable = ({ type }: Props) => {
         <h1>{texts[type].label}</h1>
         <p>{texts[type].description}</p>
 
-        {cpuDurationMode === CpuDurationMode.Script && (
+        {cpuDurationMode === CpuDurationMode.SCRIPT && (
           <h3>
             Warning: This is an experimental view that includes script duration only. Don&apos;t rely on those values
             yet and don&apos;t report them until they are official. Report bugs in issue{" "}
             <a href="https://github.com/krausest/js-framework-benchmark/issues/1233">1233</a>.
           </h3>
         )}
-        {cpuDurationMode === CpuDurationMode.Render && (
+        {cpuDurationMode === CpuDurationMode.RENDER && (
           <h3>
             Warning: This is an experimental view that shows the difference between total duration and script duration.
             Don&apos;t rely on those values yet and don&apos;t report them until they are official. Report bugs in issue{" "}
             <a href="https://github.com/krausest/js-framework-benchmark/issues/1233">1233</a>.
           </h3>
         )}
-        {displayMode === DisplayMode.BoxPlot ? (
+        {displayMode === DisplayMode.BOX_PLOT ? (
           benchmarks.length > 0 && (
             <React.Suspense fallback={<div>Loading...</div>}>
               <BoxPlotTable
