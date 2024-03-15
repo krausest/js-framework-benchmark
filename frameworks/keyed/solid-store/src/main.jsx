@@ -42,7 +42,7 @@ const App = () => {
 
   return <div class='container'>
     <div class='jumbotron'><div class='row'>
-      <div class='col-md-6'><h1>SolidJS Keyed</h1></div>
+      <div class='col-md-6'><h1>SolidJS Store Keyed</h1></div>
       <div class='col-md-6'><div class='row'>
         <Button id='run' text='Create 1,000 rows' fn={ run } />
         <Button id='runlots' text='Create 10,000 rows' fn={ runLots } />
