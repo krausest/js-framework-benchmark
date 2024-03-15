@@ -17,9 +17,9 @@ const DurationModeSelector = ({ cpuDurationMode, onChange }: Props) => {
         value={cpuDurationMode}
         aria-label="Select CPU duration mode"
         options={[
-          { value: CpuDurationMode.Total, label: "total duration" },
-          { value: CpuDurationMode.Script, label: "only JS duration" },
-          { value: CpuDurationMode.Render, label: "only render duration" },
+          { value: CpuDurationMode.TOTAL, label: "total duration" },
+          { value: CpuDurationMode.SCRIPT, label: "only JS duration" },
+          { value: CpuDurationMode.RENDER, label: "only render duration" },
         ]}
         onChange={(value) => onChange(value as CpuDurationMode)}
       />

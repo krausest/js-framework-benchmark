@@ -16,9 +16,9 @@ const DisplayModeSelector = ({ displayMode, onChange }: Props) => {
         id="displayMode"
         defaultValue={displayMode}
         options={[
-          { value: DisplayMode.DisplayMean, label: "mean results" },
-          { value: DisplayMode.DisplayMedian, label: "median results" },
-          { value: DisplayMode.BoxPlot, label: "box plot" },
+          { value: DisplayMode.DISPLAY_MEAN, label: "mean results" },
+          { value: DisplayMode.DISPLAY_MEDIAN, label: "median results" },
+          { value: DisplayMode.BOX_PLOT, label: "box plot" },
         ]}
         aria-label="Select display mode"
         onChange={(value) => onChange(value as DisplayMode)}
