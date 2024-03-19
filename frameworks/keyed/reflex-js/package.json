@@ -23,6 +23,6 @@
     "esbuild": "^0.20.1"
   },
   "dependencies": {
-    "reflex-dom": "0.21.1"
+    "reflex-dom": "0.21.7"
   }
 }
