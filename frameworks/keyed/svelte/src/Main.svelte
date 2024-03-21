@@ -1,5 +1,3 @@
-<svelte:options immutable />
-
 <script>
 	let rowId = 1;
 	let data = $state.frozen([]);
