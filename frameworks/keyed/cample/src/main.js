@@ -27,19 +27,7 @@ const adjectives = [
     "expensive",
     "fancy",
   ],
-  colours = [
-    "red",
-    "yellow",
-    "blue",
-    "green",
-    "pink",
-    "brown",
-    "purple",
-    "brown",
-    "white",
-    "black",
-    "orange",
-  ],
+  colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"],
   nouns = [
     "table",
     "chair",
@@ -150,25 +138,29 @@ const mainComponent = component(
     },
     functions: {
       run: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData(() => buildData(1000));
         },
         "updateRows",
       ],
       runLots: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData(() => buildData(10000));
         },
         "updateRows",
       ],
       add: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData((d) => [...d, ...buildData(1000)]);
         },
         "updateRows",
       ],
       update: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData((d) => {
             const value = d.slice();
             for (let i = 0; i < value.length; i += 10) {
@@ -181,13 +173,15 @@ const mainComponent = component(
         "updateRows",
       ],
       clear: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData(() => []);
         },
         "updateRows",
       ],
       swapRows: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData((d) => {
             const value = d.slice();
             const tmp = value[1];
@@ -207,13 +201,15 @@ const mainComponent = component(
         },
         functions: {
           setSelected: [
-            (setData) => (id) => {
+            (setData, event) => (id) => {
+              event.preventDefault();
               setData(() => id);
             },
             "updateSelected",
           ],
           delete: [
-            (setData) => (id) => {
+            (setData, event) => (id) => {
+              event.preventDefault();
               setData((d) => {
                 const idx = d.findIndex((d) => d.id === id);
                 return [...d.slice(0, idx), ...d.slice(idx + 1)];

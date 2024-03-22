@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-cample",
-  "version": "3.2.0-alpha.25",
+  "version": "3.2.0-alpha.29",
   "description": "cample demo",
   "main": "dist/main.js",
   "js-framework-benchmark": {
@@ -30,6 +30,6 @@
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "cample": "3.2.0-alpha.25"
+    "cample": "3.2.0-alpha.29"
   }
 }
