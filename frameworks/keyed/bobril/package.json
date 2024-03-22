@@ -5,8 +5,7 @@
   "main": "src/app.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "bobril",
-    "frameworkHomeURL": "https://bobril.com/",
-    "issues": [1139]
+    "frameworkHomeURL": "https://bobril.com/"
   },
   "scripts": {
     "dev": "bb",
@@ -27,6 +26,6 @@
     "bobril-build": "*"
   },
   "dependencies": {
-    "bobril": "20.6.0"
+    "bobril": "20.6.4"
   }
 }
