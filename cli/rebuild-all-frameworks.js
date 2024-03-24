@@ -1,11 +1,9 @@
+// @ts-check
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
 import path from "node:path";
-import yargs from "yargs";
-import { takeWhile } from "./utils/common/index.js";
-import { getFrameworks } from "./utils/frameworks/index.js";
-import { hideBin } from "yargs/helpers";
-import esMain from "es-main";
+import { takeWhile } from "./utils/index.js";
+import { getFrameworks } from "./helpers/frameworks.js";
 
 /*
 This script rebuilds all frameworks from scratch,
@@ -29,7 +27,7 @@ npm run rebuild-frameworks --restartWith keyed/react
  */
 function shouldSkipFramework({ type, name }, restartWithFramework) {
   if (!restartWithFramework) return false;
-  if (restartWithFramework.indexOf("/") > -1) {
+  if (restartWithFramework.includes("/")) {
     return !`${type}/${name}`.startsWith(restartWithFramework);
   } else {
     return !name.startsWith(restartWithFramework);
@@ -41,7 +39,7 @@ function shouldSkipFramework({ type, name }, restartWithFramework) {
  * @param {string} command - The command to run
  * @param {string} [cwd] - The current working directory (optional)
  */
-function runCommand(command, cwd = undefined) {
+function runCommand(command, cwd) {
   console.log(command);
   execSync(command, { stdio: "inherit", cwd });
 }
@@ -66,7 +64,7 @@ function deleteFrameworkFiles(frameworkPath, filesToDelete) {
  * @returns
  */
 function buildFramework(framework, useCi) {
-  console.log("Building framework:", framework);
+  console.log("Building framework:", "framework", framework, "ci", useCi);
 
   const { type, name } = framework;
   const frameworkPath = path.join("frameworks", type, name);
@@ -82,14 +80,9 @@ function buildFramework(framework, useCi) {
   // }
   // rsync(keyed,name);
 
-  const filesToDelete = [
-    "yarn-lock",
-    "dist",
-    "elm-stuff",
-    "bower_components",
-    "node_modules",
-    "output",
-  ].concat(useCi ? [] : ["package-lock.json"]);
+  const filesToDelete = ["yarn-lock", "dist", "elm-stuff", "bower_components", "node_modules", "output"].concat(
+    useCi ? [] : ["package-lock.json"]
+  );
 
   deleteFrameworkFiles(frameworkPath, filesToDelete);
 
@@ -101,10 +94,13 @@ function buildFramework(framework, useCi) {
 }
 
 /**
- * @param {string} restartWithFramework
- * @param {boolean} useCi
+ * @param {Object} options
+ * @param {string} options.restartWithFramework
+ * @param {boolean} options.useCi
  */
-function buildFrameworks(restartWithFramework, useCi) {
+export function rebuildAllFrameworks({ restartWithFramework, useCi }) {
+  console.log("Rebuild all frameworks", "ci", useCi, "restartWith", restartWithFramework);
+
   const frameworks = getFrameworks();
 
   const skippableFrameworks = takeWhile(frameworks, (framework) =>
@@ -119,22 +115,4 @@ function buildFrameworks(restartWithFramework, useCi) {
   }
 
   console.log("All frameworks were built!");
-}
-
-if (esMain(import.meta)) {
-  const args = yargs(hideBin(process.argv))
-    .usage("$0 [--ci keyed/framework1 ... non-keyed/frameworkN]")
-    .help()
-    .boolean("ci")
-    .default("ci", false)
-    .default("restartWith", "")
-    .describe("ci", "Use npm ci or npm install?")
-    .parseSync();
-
-  const useCi = args.ci;
-  const restartWithFramework = args.restartWith;
-
-  console.log("ARGS", args, "ci", useCi, "restartWith", restartWithFramework);
-
-  buildFrameworks(restartWithFramework, useCi);
 }

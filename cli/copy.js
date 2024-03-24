@@ -1,3 +1,4 @@
+// @ts-check
 import * as fs from "node:fs";
 import path from "node:path";
 
@@ -88,7 +89,9 @@ function processDirectories() {
  * Creates a dist directory, copies `table.html` from `webdriver-ts` and `index.html` into it,
  * and then starts copying the project folders recursively using `processDirectories()`.
  */
-function copyProjectToDist() {
+export function copyProjectToDist() {
+  console.log("Copying project to dist directory");
+
   fs.rmSync("dist", { force: true, recursive: true });
   fs.mkdirSync(path.join("dist", "webdriver-ts"), { recursive: true });
 
@@ -97,5 +100,3 @@ function copyProjectToDist() {
 
   processDirectories();
 }
-
-export { copyProjectToDist };

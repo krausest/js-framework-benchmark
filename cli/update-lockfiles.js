@@ -3,7 +3,7 @@ import * as fs from "node:fs";
 import path from "node:path";
 import { cwd } from "node:process";
 
-import { getFrameworks } from "../utils/frameworks/index.js";
+import { getFrameworks } from "./helpers/frameworks.js";
 
 /**
  * @typedef {Object} Framework
@@ -31,7 +31,7 @@ function runNpmInstall(frameworkPath) {
  */
 function getPackageLockJSONVersion(packageLockJSONPath) {
   try {
-    const packageLockJSON = fs.readFileSync(packageLockJSONPath, "utf-8");
+    const packageLockJSON = fs.readFileSync(packageLockJSONPath, "utf8");
     const parsedPackageLockJSON = JSON.parse(packageLockJSON);
     return parsedPackageLockJSON.lockfileVersion;
   } catch (error) {
@@ -72,17 +72,15 @@ function updateFrameworkLockfile(framework, latestLockfileVersion, frameworkDirP
  * Updates all frameworks lockfiles in the frameworks directory.
  * @param {Object} options
  * @param {string} options.frameworksDirPath
- * @param {string} options.frameworksTypes
+ * @param {string[]} options.frameworksTypes
  * @param {string} options.latestLockfileVersion
  */
-function updateLockfilesOfAllFrameworks(options) {
-  const { frameworksDirPath, frameworksTypes, latestLockfileVersion } = options;
+export function updateFrameworkLockfiles({ frameworksDirPath, frameworksTypes, latestLockfileVersion }) {
+  console.log("Update framework names");
 
   const frameworks = getFrameworks(frameworksDirPath, frameworksTypes);
 
   for (const framework of frameworks) {
-    updateFrameworkLockfile(framework, latestLockfileVersion, frameworksDirPath);
+    updateFrameworkLockfile(framework, +latestLockfileVersion, frameworksDirPath);
   }
 }
-
-export { updateLockfilesOfAllFrameworks };
