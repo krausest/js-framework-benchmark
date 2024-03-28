@@ -1,0 +1,152 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Keyed Vugu</title>
+    <link href="/css/currentStyle.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>Vugu keyed</h1>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="run" @click="c.Run(event)"
+                        ref="text">Create 1,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="runlots"  @click="c.RunLots(event)"
+                        ref="text">Create 10,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block"  id="add"  @click="c.Add(event)"
+                        ref="text">Append 1,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block"  id="update"  @click="c.Update(event)"
+                        ref="text">Update every 10th row</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block"  id="clear"  @click="c.Clear(event)"
+                        ref="text">Clear</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block"  id="swaprows"  @click="c.SwapRows(event)"
+                        ref="text">Swap Rows</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table table-hover table-striped test-data">
+            <tbody>
+                <tr vg-for='index, item := range c.DataList' vg-attr='vugu.VGAttributeListerFunc(c.GetMarkAsSelectedFunc(item))'>
+                    <td class="col-md-1" vg-content="item.ID"></td>
+                    <td class="col-md-4">
+                        <a href="#" @click="c.Select(item, event)" vg-content="item.Label"></a>
+                    </td>
+                    <td class="col-md-1"><a href="#" @click="c.Delete(index, event)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                    <td class="col-md-6"></td>
+                </tr>
+            </tbody>
+        </table>
+        <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+    </div>
+</body>
+</html>
+
+<script type="application/x-go">
+
+import (
+    "math/rand/v2"
+    "fmt"
+)
+
+
+type Root struct {
+    DataList []Data `vugu:"data"`
+    SelectedItemID int `vugu:"data"`
+}
+
+type Data struct {
+    ID    int
+    Label string
+}
+
+var adjectives = []string{"pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"}
+var colours = []string{"red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"}
+var nouns = []string{"table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"}
+
+func BuildData(count int) []Data  {
+    data := make([]Data, count)
+    for i := 0; i < count; i++ {
+		data[i] = Data{
+			ID:    i + 1,
+			Label: fmt.Sprintf("%s %s %s", adjectives[rand.IntN(len(adjectives))], colours[rand.IntN(len(colours))], nouns[rand.IntN(len(nouns))]),
+		}
+	}
+    return data
+}
+
+func (c *Root) Run(event vugu.DOMEvent) {
+    c.DataList = BuildData(1000)
+}
+
+func (c *Root) RunLots(event vugu.DOMEvent) {
+    c.SelectedItemID = 0
+    c.DataList = BuildData(10000)
+}
+
+func (c *Root) Add(event vugu.DOMEvent) {
+        c.DataList = append(c.DataList, BuildData(1000)...)
+
+}
+
+func (c *Root) Update(event vugu.DOMEvent) {
+        for i := 0; i < len(c.DataList); i+=10 {
+            c.DataList[i].Label += " !!!";
+	}
+}
+
+func (c *Root) Clear(event vugu.DOMEvent) {
+    c.SelectedItemID = 0
+    c.DataList = []Data{}
+}
+
+func (c *Root) Select(item Data, event vugu.DOMEvent) {
+    c.SelectedItemID = item.ID
+}
+
+func (c *Root) Delete(index int, event vugu.DOMEvent) {
+    c.DataList = remove(c.DataList, index)
+}
+
+func (c *Root) SwapRows(event vugu.DOMEvent) {
+    if len(c.DataList) > 998 {
+        a := c.DataList[1]
+        c.DataList[1] = c.DataList[998]
+        c.DataList[998] = a
+    }
+}
+
+func (c *Root) GetMarkAsSelectedFunc(item Data) vugu.VGAttributeListerFunc {
+    return func() []vugu.VGAttribute {
+        return c.MarkAsSelected(item)
+    }
+}
+
+func (c *Root) MarkAsSelected(item Data) (ret []vugu.VGAttribute) {
+    if c.SelectedItemID == item.ID {
+    ret = append(ret, vugu.VGAttribute{
+        Key:"class",
+        Val:"danger",
+    })
+        }
+    return
+}
+
+func remove(slice []Data, index int) []Data {
+    return append(slice[:index], slice[index+1:]...)
+}
+</script>

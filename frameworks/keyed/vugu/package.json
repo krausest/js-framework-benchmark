@@ -1,0 +1,17 @@
+{
+  "name": "vugu",
+  "version": "1.0.0",
+  "description": "Simple Vugu Example",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "build-prod-force": "go run dist.go"
+  },
+  "license": "ISC",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.3.4",
+    "frameworkHomeURL": "https://www.vugu.org/",
+    "customURL": "/bundled-dist"
+  }
+}
