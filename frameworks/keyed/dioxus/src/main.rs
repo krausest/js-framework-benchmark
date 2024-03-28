@@ -8,7 +8,7 @@ fn random(max: usize) -> usize {
 }
 
 fn main() {
-    dioxus_web::launch(app);
+    launch(app);
 }
 
 #[derive(Clone, PartialEq)]
@@ -94,7 +94,7 @@ fn app(cx: Scope) -> Element {
         Tracked::new(&cx, None)
     });
 
-    render! {
+    rsx! {
         div { class: "container",
             div { class: "jumbotron",
                 div { class: "row",
@@ -184,7 +184,7 @@ fn Row(cx: Scope<RowProps>) -> Element {
         result
     });
 
-    render! {
+    rsx! {
         tr { class: is_in_danger,
             td { class:"col-md-1", "{label.key}" }
             td { class:"col-md-4", onclick: move |_| {
@@ -209,7 +209,7 @@ fn ActionButton<'a>(
     id: &'static str,
     onclick: EventHandler<'a>,
 ) -> Element {
-    render! {
+    rsx! {
         div {
             class: "col-sm-6 smallpad",
             button {
@@ -260,3 +260,4 @@ static NOUNS: &[&str] = &[
     "table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger",
     "pizza", "mouse", "keyboard",
 ];
+
