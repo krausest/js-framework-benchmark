@@ -11,28 +11,28 @@ fn main() {
     launch(app);
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(PartialEq, Clone, Props)]
 struct Label {
-    key: usize,
+    id: usize,
     label: Signal<String>,
 }
 
 impl Label {
-    fn new( num: usize, label: String) -> Self {
+    fn new(num: usize, label: String) -> Self {
         Label {
-            key: num,
+            id: num,
             label: use_signal(|| label),
         }
     }
 
-    fn new_list( num: usize, key_from: usize) -> Vec<Self> {
+    fn new_list(num: usize, key_from: usize) -> Vec<Self> {
         let mut labels = Vec::with_capacity(num);
         append(&mut labels, num, key_from);
         labels
     }
 }
 
-fn append( list: &mut Vec<Label>, num: usize, key_from: usize) {
+fn append(list: &mut Vec<Label>, num: usize, key_from: usize) {
     list.reserve_exact(num);
     for x in 0..num {
         let adjective = ADJECTIVES[random(ADJECTIVES.len())];
@@ -48,7 +48,7 @@ fn append( list: &mut Vec<Label>, num: usize, key_from: usize) {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Props, Clone, PartialEq)]
 struct LabelsContainer {
     last_key: usize,
     labels: Vec<Label>,
@@ -82,15 +82,16 @@ impl LabelsContainer {
     }
 
     fn remove(&mut self, key: usize) {
-        if let Some(to_remove) = self.labels.iter().position(|x| x.key == key) {
+        if let Some(to_remove) = self.labels.iter().position(|x| x.id == key) {
             self.labels.remove(to_remove);
         }
     }
 }
 
+#[component]
 fn app() -> Element {
-    let labels_container = use_signal(|| LabelsContainer::new(0, 0));
-    let selected: &Signal<Option<usize>> = use_signal(|| use_signal(|| None));
+    let mut labels_container = use_signal(|| LabelsContainer::new(0, 0));
+    let selected: Signal<Option<usize>> = use_signal(|| None);
 
     rsx! {
         div { class: "container",
@@ -110,7 +111,7 @@ fn app() -> Element {
                             }
                             ActionButton { name: "Update every 10th row", id: "update",
                                 onclick: move |_| {
-                                    let labels = labels_container.read();
+                                    let mut labels = labels_container.write();
                                     for i in 0..(labels.labels.len()/10) {
                                         *labels.labels[i*10].label.write() += " !!!";
                                     }
@@ -129,16 +130,16 @@ fn app() -> Element {
 
             table { class: "table table-hover table-striped test-data",
                 tbody { id: "tbody",
-                    labels_container.read().labels.iter().map(|item| {
+                    {labels_container.read().labels.iter().map(|item| {
                         rsx! {
                             Row {
                                 label: item.clone(),
                                 labels: labels_container.clone(),
                                 selected_row: selected.clone(),
-                                key: "{item.key}"
+                                key: "{item.id}",
                             }
                         }
-                    })
+                    })}
                 }
             }
 
@@ -147,11 +148,11 @@ fn app() -> Element {
     }
 }
 
-#[derive(Props)]
+#[derive(Clone, Props)]
 struct RowProps {
     label: Label,
-    labels: UseRef<LabelsContainer>,
-    selected_row: Tracked<Option<usize>>,
+    labels: Signal<LabelsContainer>,
+    selected_row: Signal<Option<usize>>,
 }
 
 impl PartialEq for RowProps {
@@ -160,19 +161,18 @@ impl PartialEq for RowProps {
     }
 }
 
-fn Row(props: RowProps) -> Element {
-    let RowProps {
-        label,
-        labels,
-        selected_row,
-    } = &props;
+#[component]
+fn Row(mut props: RowProps) -> Element {
     
-    let label_text = use_selector(&label.label, |label| label.clone());
-    let key = label.key;
-    let is_in_danger = use_selector(selected_row, move |selected_row: &Option<usize>| {
-        let result = match selected_row {
+    let label_text = use_memo(move || props.label.label.clone());
+    let id = props.label.id;
+    let is_in_danger = use_memo(move || {
+        
+        
+        let result = match props.selected_row.read().as_ref() {
+
             Some(selected_row) => {
-                if *selected_row == key {
+                if *selected_row == id {
                     "danger"
                 } else {
                     ""
@@ -185,14 +185,14 @@ fn Row(props: RowProps) -> Element {
 
     rsx! {
         tr { class: is_in_danger,
-            td { class:"col-md-1", "{label.key}" }
+            td { class:"col-md-1", "{props.label.id}" }
             td { class:"col-md-4", onclick: move |_| {
-                    *selected_row.write() = Some(label.key)
+                    *props.selected_row.write() = Some(props.label.id)
                 },
                 a { class: "lbl", "{label_text}" }
             }
             td { class: "col-md-1",
-                a { class: "remove", onclick: move |_| labels.write().remove(label.key),
+                a { class: "remove", onclick: move |_| props.labels.write().remove(props.label.id),
                     span { class: "glyphicon glyphicon-remove remove", aria_hidden: "true" }
                 }
             }
@@ -202,16 +202,16 @@ fn Row(props: RowProps) -> Element {
 }
 
 #[component]
-fn ActionButton(name: &str, id: &str, onclick: EventHandler) -> Element {
+fn ActionButton(name: String, id: String, onclick: EventHandler) -> Element {
     rsx! {
         div {
             class: "col-sm-6 smallpad",
             button {
                 class:"btn btn-primary btn-block",
                 r#type: "button",
-                id: *id,
+                id: id,
                 onclick: move |_| onclick.call(()),
-                *name
+                "{name}",
             }
         }
     }
