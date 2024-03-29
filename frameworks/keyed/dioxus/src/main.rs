@@ -49,48 +49,48 @@ fn append(list: &mut Vec<Label>, num: usize, key_from: usize) {
 }
 
 #[derive(Props, Clone, PartialEq)]
-struct LabelsContainer {
-    last_key: usize,
-    labels: Vec<Label>,
+struct Data {
+    last_row_id: usize,
+    rows: Vec<Label>,
 }
 
-impl LabelsContainer {
-    fn new(num: usize, last_key: usize) -> LabelsContainer {
+impl Data {
+    fn new(num: usize, last_key: usize) -> Data {
         let labels = Label::new_list(num, last_key + 1);
-        LabelsContainer {
-            labels,
-            last_key: last_key + num,
+        Data {
+            rows: labels,
+            last_row_id: last_key + num,
         }
     }
 
     fn append(&mut self, num: usize) {
-        self.labels.reserve(num);
-        append(&mut self.labels, num, self.last_key + 1);
-        self.last_key += num;
+        self.rows.reserve(num);
+        append(&mut self.rows, num, self.last_row_id + 1);
+        self.last_row_id += num;
     }
 
     fn overwrite(&mut self, num: usize) {
-        self.labels.clear();
-        append(&mut self.labels, num, self.last_key + 1);
-        self.last_key += num;
+        self.rows.clear();
+        append(&mut self.rows, num, self.last_row_id + 1);
+        self.last_row_id += num;
     }
 
     fn swap(&mut self, a: usize, b: usize) {
-        if self.labels.len() > a + 1 && self.labels.len() > b {
-            self.labels.swap(a, b);
+        if self.rows.len() > a + 1 && self.rows.len() > b {
+            self.rows.swap(a, b);
         }
     }
 
     fn remove(&mut self, key: usize) {
-        if let Some(to_remove) = self.labels.iter().position(|x| x.id == key) {
-            self.labels.remove(to_remove);
+        if let Some(to_remove) = self.rows.iter().position(|x| x.id == key) {
+            self.rows.remove(to_remove);
         }
     }
 }
 
 #[component]
 fn app() -> Element {
-    let mut labels_container = use_signal(|| LabelsContainer::new(0, 0));
+    let mut data = use_signal(|| Data::new(0, 0));
     let selected: Signal<Option<usize>> = use_signal(|| None);
 
     rsx! {
@@ -101,27 +101,27 @@ fn app() -> Element {
                     div { class: "col-md-6",
                         div { class: "row",
                             ActionButton { name: "Create 1,000 rows", id: "run",
-                                onclick: move |_| labels_container.write().overwrite(1_000),
+                                onclick: move |_| data.write().overwrite(1_000),
                             }
                             ActionButton { name: "Create 10,000 rows", id: "runlots",
-                                onclick: move |_| labels_container.write().overwrite(10_000),
+                                onclick: move |_| data.write().overwrite(10_000),
                             }
                             ActionButton { name: "Append 1,000 rows", id: "add",
-                                onclick: move |_| labels_container.write().append(1_000),
+                                onclick: move |_| data.write().append(1_000),
                             }
                             ActionButton { name: "Update every 10th row", id: "update",
                                 onclick: move |_| {
-                                    let mut labels = labels_container.write();
-                                    for i in 0..(labels.labels.len()/10) {
-                                        *labels.labels[i*10].label.write() += " !!!";
+                                    let mut labels = data.write();
+                                    for i in 0..(labels.rows.len()/10) {
+                                        *labels.rows[i*10].label.write() += " !!!";
                                     }
                                 },
                             }
                             ActionButton { name: "Clear", id: "clear",
-                                onclick: move |_| labels_container.write().overwrite(0),
+                                onclick: move |_| data.write().overwrite(0),
                             }
                             ActionButton { name: "Swap rows", id: "swaprows",
-                                onclick: move |_| labels_container.write().swap(1, 998),
+                                onclick: move |_| data.write().swap(1, 998),
                             }
                         }
                     }
@@ -130,11 +130,11 @@ fn app() -> Element {
 
             table { class: "table table-hover table-striped test-data",
                 tbody { id: "tbody",
-                    {labels_container.read().labels.iter().map(|item| {
+                    {data.read().rows.iter().map(|item| {
                         rsx! {
-                            Row {
-                                label: item.clone(),
-                                labels: labels_container.clone(),
+                            RowComponent {
+                                row: item.clone(),
+                                data: data.clone(),
                                 selected_row: selected.clone(),
                                 key: "{item.id}",
                             }
@@ -149,22 +149,22 @@ fn app() -> Element {
 }
 
 #[derive(Clone, Props)]
-struct RowProps {
-    label: Label,
-    labels: Signal<LabelsContainer>,
+struct RowComponentProps {
+    row: Label,
+    data: Signal<Data>,
     selected_row: Signal<Option<usize>>,
 }
 
-impl PartialEq for RowProps {
+impl PartialEq for RowComponentProps {
     fn eq(&self, other: &Self) -> bool {
-        self.label == other.label
+        self.row == other.row
     }
 }
 
 #[component]
-fn Row(mut props: RowProps) -> Element {
-    let label_text = use_memo(move || props.label.label.clone());
-    let id = props.label.id;
+fn RowComponent(mut props: RowComponentProps) -> Element {
+    let label_text = use_memo(move || props.row.label.clone());
+    let id = props.row.id;
     let is_in_danger = use_memo(move || {
         let result = match props.selected_row.read().as_ref() {
             Some(selected_row) => {
@@ -181,14 +181,14 @@ fn Row(mut props: RowProps) -> Element {
 
     rsx! {
         tr { class: is_in_danger,
-            td { class:"col-md-1", "{props.label.id}" }
+            td { class:"col-md-1", "{props.row.id}" }
             td { class:"col-md-4", onclick: move |_| {
-                    *props.selected_row.write() = Some(props.label.id)
+                    *props.selected_row.write() = Some(props.row.id)
                 },
                 a { class: "lbl", "{label_text}" }
             }
             td { class: "col-md-1",
-                a { class: "remove", onclick: move |_| props.labels.write().remove(props.label.id),
+                a { class: "remove", onclick: move |_| props.data.write().remove(props.row.id),
                     span { class: "glyphicon glyphicon-remove remove", aria_hidden: "true" }
                 }
             }
