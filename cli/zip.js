@@ -1,3 +1,4 @@
+// @ts-check
 import AdmZip from "adm-zip";
 import * as fs from "node:fs";
 import path from "node:path";
@@ -53,37 +54,46 @@ function addFrameworksToZip(frameworkType, frameworkDir, frameworkName) {
     addLocalFolderIfExists(`${frameworkDir}/public`, `${zipFrameworkPath}/public`);
   }
 
-  if (frameworkName === "halogen") {
-    addLocalFileIfExists(`${frameworkDir}/output/bundle.js`, `${zipFrameworkPath}/output`);
-  } else if (frameworkName === "dojo") {
-    addLocalFolderIfExists(
-      `${frameworkDir}/output/dist`,
-      `${zipFrameworkPath}/output/dist`,
-    );
-  } else if (frameworkName === "s2") {
-    addLocalFolderIfExists(
-      `${frameworkDir}/node_modules/s2-engine/dist`,
-      `${zipFrameworkPath}/node_modules/s2-engine/dist`,
-    );
-  } else if (frameworkName === "stem") {
-    addLocalFolderIfExists(
-      `${frameworkDir}/node_modules/babel-polyfill/dist`,
-      `${zipFrameworkPath}/node_modules/babel-polyfill/dist`
-    );
-    addLocalFileIfExists(`${frameworkDir}/src/bundle.js`, `${zipFrameworkPath}/src`);
-  } else {
-    addLocalFolderIfExists(`${frameworkDir}/output`, `${zipFrameworkPath}/output`);
+  switch (frameworkName) {
+    case "halogen": {
+      addLocalFileIfExists(`${frameworkDir}/output/bundle.js`, `${zipFrameworkPath}/output`);
+      break;
+    }
+    case "dojo": {
+      addLocalFolderIfExists(`${frameworkDir}/output/dist`, `${zipFrameworkPath}/output/dist`);
+      break;
+    }
+    case "s2": {
+      addLocalFolderIfExists(
+        `${frameworkDir}/node_modules/s2-engine/dist`,
+        `${zipFrameworkPath}/node_modules/s2-engine/dist`
+      );
+      break;
+    }
+    case "stem": {
+      addLocalFolderIfExists(
+        `${frameworkDir}/node_modules/babel-polyfill/dist`,
+        `${zipFrameworkPath}/node_modules/babel-polyfill/dist`
+      );
+      addLocalFileIfExists(`${frameworkDir}/src/bundle.js`, `${zipFrameworkPath}/src`);
+      break;
+    }
+    default: {
+      addLocalFolderIfExists(`${frameworkDir}/output`, `${zipFrameworkPath}/output`);
+    }
   }
 }
 
-function createFrameworkZipArchive() {
+export function createFrameworkZipArchive() {
+  console.log("Create a zip archive of frameworks");
+
   for (const frameworkType of frameworksTypes) {
     const frameworkTypeDirPath = path.resolve("frameworks", frameworkType);
     const frameworkNames = fs.readdirSync(frameworkTypeDirPath);
 
     for (const frameworkName of frameworkNames) {
       const frameworkPath = path.resolve(frameworkTypeDirPath, frameworkName);
-      console.log("zipping ", frameworkPath);
+      console.log("zipping", frameworkPath);
 
       addFrameworksToZip(frameworkType, frameworkPath, frameworkName);
     }
@@ -91,5 +101,3 @@ function createFrameworkZipArchive() {
 
   zip.writeZip(outputFile);
 }
-
-export { createFrameworkZipArchive };
