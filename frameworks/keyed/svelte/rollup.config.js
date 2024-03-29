@@ -1,6 +1,6 @@
-import svelte from "rollup-plugin-svelte";
-import resolve from "@rollup/plugin-node-resolve";
-import terser from "@rollup/plugin-terser";
+import svelte from 'rollup-plugin-svelte';
+import resolve from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
 
 const plugins = [
   resolve({ browser: true }),
@@ -14,11 +14,11 @@ if (process.env.production) {
 }
 
 export default {
-  input: "src/main.js",
+  input: 'src/main.js',
   output: {
-    file: "dist/main.js",
-    format: "iife",
-    name: "main",
+    file: 'dist/main.js',
+    format: 'iife',
+    name: 'main'
   },
-  plugins,
+  plugins
 };
