@@ -93,10 +93,11 @@ async function runBench(
         const hint = cspCheckSucessful ? "The flag 1139 should be removed" : "The flag 1139 should be added";
         console.log(`ERROR: CSP is incorrectly categorized for ${runFrameworks[i].fullNameWithKeyedAndVersion} . ${hint}`);
         cspCheckSucessful = false;
+        allCorrect = false;
       }
-      allCorrect = allCorrect && cspCheckSucessful;
     }
   } finally {
+    await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/csp/disable`);
     await page.close();
     await browser.close();
   }

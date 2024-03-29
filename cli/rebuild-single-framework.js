@@ -19,10 +19,10 @@ Pass list of frameworks
  *
  * @param {Object} options
  * @param {string[]} options.frameworks
- * @param {boolean} options.useCi
+ * @param {boolean} options.ci
  */
-export function rebuildSingleFramework({ frameworks, useCi }) {
-  console.log("Rebuild single:", "ci", useCi, "frameworks", frameworks);
+export function rebuildSingleFramework({ frameworks, ci }) {
+  console.log("Rebuild single:", "ci", ci, "frameworks", frameworks);
 
   if (frameworks.length === 0) {
     console.log("ERROR: Missing arguments. Command: rebuild-single keyed/framework1 non-keyed/framework2 ...");
@@ -30,7 +30,7 @@ export function rebuildSingleFramework({ frameworks, useCi }) {
   }
 
   try {
-    rebuildFrameworks(frameworks, useCi);
+    rebuildFrameworks(frameworks, ci);
 
     rebuildCheckSingle({ frameworks });
   } catch (error) {

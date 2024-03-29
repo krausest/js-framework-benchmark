@@ -20,7 +20,7 @@
     "install-server": "cd server && npm ci",
     "install-webdriver-ts-results": "cd webdriver-ts-results && npm ci",
     "install-local": "npm run install-webdriver-ts && npm run install-webdriver-ts-results && npm run install-server",
-    "rebuild": "node cli.js rebuild-songle -f",
+    "rebuild": "node cli.js rebuild-single -f",
     "rebuild-ci": "node cli.js rebuild-single --ci -f",
     "zip": "node cli.js zip",
     "format": "prettier . \"!(broken-frameworks|frameworks)/**/*\" -w",
