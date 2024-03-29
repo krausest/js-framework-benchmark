@@ -8,31 +8,31 @@ fn random(max: usize) -> usize {
 }
 
 fn main() {
-    dioxus_web::launch(app);
+    launch(app);
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(PartialEq, Clone, Props)]
 struct Label {
-    key: usize,
-    label: Tracked<String>,
+    id: usize,
+    label: Signal<String>,
 }
 
 impl Label {
-    fn new(cx: &ScopeState, num: usize, label: String) -> Self {
+    fn new(num: usize, label: String) -> Self {
         Label {
-            key: num,
-            label: Tracked::new(cx, label),
+            id: num,
+            label: use_signal(|| label),
         }
     }
 
-    fn new_list(cx: &ScopeState, num: usize, key_from: usize) -> Vec<Self> {
+    fn new_list(num: usize, key_from: usize) -> Vec<Self> {
         let mut labels = Vec::with_capacity(num);
-        append(cx, &mut labels, num, key_from);
+        append(&mut labels, num, key_from);
         labels
     }
 }
 
-fn append(cx: &ScopeState,list: &mut Vec<Label>, num: usize, key_from: usize) {
+fn append(list: &mut Vec<Label>, num: usize, key_from: usize) {
     list.reserve_exact(num);
     for x in 0..num {
         let adjective = ADJECTIVES[random(ADJECTIVES.len())];
@@ -44,57 +44,56 @@ fn append(cx: &ScopeState,list: &mut Vec<Label>, num: usize, key_from: usize) {
         label.push_str(colour);
         label.push(' ');
         label.push_str(noun);
-        list.push(Label::new(cx, x + key_from, label));
+        list.push(Label::new(x + key_from, label));
     }
 }
 
-#[derive(Clone, PartialEq)]
-struct LabelsContainer {
-    last_key: usize,
-    labels: Vec<Label>,
+#[derive(Props, Clone, PartialEq)]
+struct Data {
+    last_row_id: usize,
+    rows: Vec<Label>,
 }
 
-impl LabelsContainer {
-    fn new(cx: &ScopeState,num: usize, last_key: usize) -> LabelsContainer {
-        let labels = Label::new_list(cx, num, last_key + 1);
-        LabelsContainer {
-            labels,
-            last_key: last_key + num,
+impl Data {
+    fn new(num: usize, last_key: usize) -> Data {
+        let labels = Label::new_list(num, last_key + 1);
+        Data {
+            rows: labels,
+            last_row_id: last_key + num,
         }
     }
 
-    fn append(&mut self, cx: &ScopeState,num: usize) {
-        self.labels.reserve(num);
-        append(cx, &mut self.labels, num, self.last_key + 1);
-        self.last_key += num;
+    fn append(&mut self, num: usize) {
+        self.rows.reserve(num);
+        append(&mut self.rows, num, self.last_row_id + 1);
+        self.last_row_id += num;
     }
 
-    fn overwrite(&mut self,cx: &ScopeState,  num: usize) {
-        self.labels.clear();
-        append(cx, &mut self.labels, num, self.last_key + 1);
-        self.last_key += num;
+    fn overwrite(&mut self, num: usize) {
+        self.rows.clear();
+        append(&mut self.rows, num, self.last_row_id + 1);
+        self.last_row_id += num;
     }
 
     fn swap(&mut self, a: usize, b: usize) {
-        if self.labels.len() > a + 1 && self.labels.len() > b {
-            self.labels.swap(a, b);
+        if self.rows.len() > a + 1 && self.rows.len() > b {
+            self.rows.swap(a, b);
         }
     }
 
     fn remove(&mut self, key: usize) {
-        if let Some(to_remove) = self.labels.iter().position(|x| x.key == key) {
-            self.labels.remove(to_remove);
+        if let Some(to_remove) = self.rows.iter().position(|x| x.id == key) {
+            self.rows.remove(to_remove);
         }
     }
 }
 
-fn app(cx: Scope) -> Element {
-    let labels_container = use_ref(&cx, || LabelsContainer::new(cx, 0, 0));
-    let selected: &Tracked<Option<usize>> = cx.use_hook(||{
-        Tracked::new(&cx, None)
-    });
+#[component]
+fn app() -> Element {
+    let mut data = use_signal(|| Data::new(0, 0));
+    let selected: Signal<Option<usize>> = use_signal(|| None);
 
-    render! {
+    rsx! {
         div { class: "container",
             div { class: "jumbotron",
                 div { class: "row",
@@ -102,27 +101,27 @@ fn app(cx: Scope) -> Element {
                     div { class: "col-md-6",
                         div { class: "row",
                             ActionButton { name: "Create 1,000 rows", id: "run",
-                                onclick: move |_| labels_container.write().overwrite(cx, 1_000),
+                                onclick: move |_| data.write().overwrite(1_000),
                             }
                             ActionButton { name: "Create 10,000 rows", id: "runlots",
-                                onclick: move |_| labels_container.write().overwrite(cx, 10_000),
+                                onclick: move |_| data.write().overwrite(10_000),
                             }
                             ActionButton { name: "Append 1,000 rows", id: "add",
-                                onclick: move |_| labels_container.write().append(cx, 1_000),
+                                onclick: move |_| data.write().append(1_000),
                             }
                             ActionButton { name: "Update every 10th row", id: "update",
                                 onclick: move |_| {
-                                    let labels = labels_container.read();
-                                    for i in 0..(labels.labels.len()/10) {
-                                        *labels.labels[i*10].label.write() += " !!!";
+                                    let mut labels = data.write();
+                                    for i in 0..(labels.rows.len()/10) {
+                                        *labels.rows[i*10].label.write() += " !!!";
                                     }
                                 },
                             }
                             ActionButton { name: "Clear", id: "clear",
-                                onclick: move |_| labels_container.write().overwrite(cx, 0),
+                                onclick: move |_| data.write().overwrite(0),
                             }
                             ActionButton { name: "Swap rows", id: "swaprows",
-                                onclick: move |_| labels_container.write().swap(1, 998),
+                                onclick: move |_| data.write().swap(1, 998),
                             }
                         }
                     }
@@ -131,16 +130,16 @@ fn app(cx: Scope) -> Element {
 
             table { class: "table table-hover table-striped test-data",
                 tbody { id: "tbody",
-                    labels_container.read().labels.iter().map(|item| {
+                    {data.read().rows.iter().map(|item| {
                         rsx! {
-                            Row {
-                                label: item.clone(),
-                                labels: labels_container.clone(),
+                            RowComponent {
+                                row: item.clone(),
+                                data: data.clone(),
                                 selected_row: selected.clone(),
-                                key: "{item.key}"
+                                key: "{item.id}",
                             }
                         }
-                    })
+                    })}
                 }
             }
 
@@ -149,31 +148,27 @@ fn app(cx: Scope) -> Element {
     }
 }
 
-#[derive(Props)]
-struct RowProps {
-    label: Label,
-    labels: UseRef<LabelsContainer>,
-    selected_row: Tracked<Option<usize>>,
+#[derive(Clone, Props)]
+struct RowComponentProps {
+    row: Label,
+    data: Signal<Data>,
+    selected_row: Signal<Option<usize>>,
 }
 
-impl PartialEq for RowProps {
+impl PartialEq for RowComponentProps {
     fn eq(&self, other: &Self) -> bool {
-        self.label == other.label
+        self.row == other.row
     }
 }
 
-fn Row(cx: Scope<RowProps>) -> Element {
-    let RowProps {
-        label,
-        labels,
-        selected_row,
-    } = &cx.props;
-    let label_text = use_selector(&cx, &label.label, |label| label.clone());
-    let key = label.key;
-    let is_in_danger = use_selector(&cx, selected_row, move |selected_row: &Option<usize>| {
-        let result = match selected_row {
+#[component]
+fn RowComponent(mut props: RowComponentProps) -> Element {
+    let label_text = use_memo(move || props.row.label.clone());
+    let id = props.row.id;
+    let is_in_danger = use_memo(move || {
+        let result = match props.selected_row.read().as_ref() {
             Some(selected_row) => {
-                if *selected_row == key {
+                if *selected_row == id {
                     "danger"
                 } else {
                     ""
@@ -184,16 +179,16 @@ fn Row(cx: Scope<RowProps>) -> Element {
         result
     });
 
-    render! {
+    rsx! {
         tr { class: is_in_danger,
-            td { class:"col-md-1", "{label.key}" }
+            td { class:"col-md-1", "{props.row.id}" }
             td { class:"col-md-4", onclick: move |_| {
-                    *selected_row.write() = Some(label.key)
+                    *props.selected_row.write() = Some(props.row.id)
                 },
                 a { class: "lbl", "{label_text}" }
             }
             td { class: "col-md-1",
-                a { class: "remove", onclick: move |_| labels.write().remove(label.key),
+                a { class: "remove", onclick: move |_| props.data.write().remove(props.row.id),
                     span { class: "glyphicon glyphicon-remove remove", aria_hidden: "true" }
                 }
             }
@@ -202,22 +197,17 @@ fn Row(cx: Scope<RowProps>) -> Element {
     }
 }
 
-#[inline_props]
-fn ActionButton<'a>(
-    cx: Scope<'a, ActionButtonProps>,
-    name: &'static str,
-    id: &'static str,
-    onclick: EventHandler<'a>,
-) -> Element {
-    render! {
+#[component]
+fn ActionButton(name: String, id: String, onclick: EventHandler) -> Element {
+    rsx! {
         div {
             class: "col-sm-6 smallpad",
             button {
                 class:"btn btn-primary btn-block",
                 r#type: "button",
-                id: *id,
+                id: id,
                 onclick: move |_| onclick.call(()),
-                *name
+                "{name}",
             }
         }
     }
