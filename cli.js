@@ -64,7 +64,7 @@ program
 
 program
   .command("rebuild-single")
-  .option("--frameworks [frameworks...]", "", [])
+  .option("-f, --frameworks [frameworks...]", "", [])
   .option("--ci [boolean]", "", false)
   .action((options) => {
     rebuildSingleFramework(options);
