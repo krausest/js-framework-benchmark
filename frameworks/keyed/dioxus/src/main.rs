@@ -101,13 +101,13 @@ fn app() -> Element {
                     div { class: "col-md-6",
                         div { class: "row",
                             ActionButton { name: "Create 1,000 rows", id: "run",
-                                onclick: move |_| labels_container.write().overwrite( 1_000),
+                                onclick: move |_| labels_container.write().overwrite(1_000),
                             }
                             ActionButton { name: "Create 10,000 rows", id: "runlots",
-                                onclick: move |_| labels_container.write().overwrite( 10_000),
+                                onclick: move |_| labels_container.write().overwrite(10_000),
                             }
                             ActionButton { name: "Append 1,000 rows", id: "add",
-                                onclick: move |_| labels_container.write().append( 1_000),
+                                onclick: move |_| labels_container.write().append(1_000),
                             }
                             ActionButton { name: "Update every 10th row", id: "update",
                                 onclick: move |_| {
@@ -118,7 +118,7 @@ fn app() -> Element {
                                 },
                             }
                             ActionButton { name: "Clear", id: "clear",
-                                onclick: move |_| labels_container.write().overwrite( 0),
+                                onclick: move |_| labels_container.write().overwrite(0),
                             }
                             ActionButton { name: "Swap rows", id: "swaprows",
                                 onclick: move |_| labels_container.write().swap(1, 998),
