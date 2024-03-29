@@ -163,14 +163,10 @@ impl PartialEq for RowProps {
 
 #[component]
 fn Row(mut props: RowProps) -> Element {
-    
     let label_text = use_memo(move || props.label.label.clone());
     let id = props.label.id;
     let is_in_danger = use_memo(move || {
-        
-        
         let result = match props.selected_row.read().as_ref() {
-
             Some(selected_row) => {
                 if *selected_row == id {
                     "danger"
