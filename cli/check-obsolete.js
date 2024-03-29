@@ -1,9 +1,10 @@
+// @ts-check
 import JSON5 from "json5";
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
 import path from "node:path";
 
-import { getFrameworks } from "../utils/frameworks/index.js";
+import { getFrameworks } from "./helpers/frameworks.js";
 
 /**
  * @typedef {Object} Framework
@@ -61,7 +62,7 @@ function maybeObsolete(packageName) {
 
     const modifiedDate = new Date(timeData.modified);
     const isObsolete = modifiedDate < obsoleteDate;
-    const formattedDate = modifiedDate.toISOString().substring(0, 10);
+    const formattedDate = modifiedDate.toISOString().slice(0, 10);
 
     return { isObsolete, lastUpdate: formattedDate, packageName };
   } catch (error) {
@@ -81,8 +82,10 @@ const manualChecks = [];
  * @param {Object} options
  * @param {boolean} options.debug
  */
-function checkObsoleteFrameworks(options) {
-  const DEBUG = options.debug ?? false;
+export function checkObsoleteFrameworks({ debug }) {
+  console.log("Check obsolete frameworks", "debug", debug);
+
+  const DEBUG = debug;
 
   for (const { name, type } of frameworks) {
     const frameworkPath = path.join("frameworks", type, name);
@@ -93,7 +96,7 @@ function checkObsoleteFrameworks(options) {
       continue;
     }
 
-    const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf-8"));
+    const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
     const mainPackages = packageJSON?.["js-framework-benchmark"]?.frameworkVersionFromPackage;
 
     if (!mainPackages) {
@@ -106,7 +109,7 @@ function checkObsoleteFrameworks(options) {
     }
 
     const packages = mainPackages.split(":");
-    const isPackageObsolete = packages.map(maybeObsolete);
+    const isPackageObsolete = packages.map((element) => maybeObsolete(element));
 
     if (DEBUG) {
       console.log(`Results for ${type}/${name} ${isPackageObsolete}`);
@@ -132,5 +135,3 @@ function checkObsoleteFrameworks(options) {
   if (manualChecks.length > 0)
     console.warn("\nThe following frameworks must be checked manually\n" + manualChecks.join("\n"));
 }
-
-export { checkObsoleteFrameworks };

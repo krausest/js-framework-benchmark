@@ -1,3 +1,4 @@
+// @ts-check
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
 import path from "node:path";
@@ -20,13 +21,12 @@ Pass list of frameworks
  * @param {string} command - The command to run
  * @param {string|undefined} cwd - The current working directory (optional)
  */
-function runCommand(command, cwd = undefined) {
+function runCommand(command, cwd) {
   console.log(command);
-  if (cwd) {
-    if (!fs.existsSync(cwd)) {
-      throw `working directory ${cwd} doesn't exist.`;
-    }
+  if (cwd && !fs.existsSync(cwd)) {
+    throw `working directory ${cwd} doesn't exist.`;
   }
+
   execSync(command, { stdio: "inherit", cwd });
 }
 
@@ -58,20 +58,14 @@ function rebuildFramework(framework, useCi) {
   const [keyed, name] = components;
   const frameworkPath = path.join("frameworks", keyed, name);
 
-  const filesToDelete = [
-    "yarn-lock",
-    "dist",
-    "elm-stuff",
-    "bower_components",
-    "node_modules",
-    "output",
-  ].concat(useCi ? [] : ["package-lock.json"]);
+  const filesToDelete = ["yarn-lock", "dist", "elm-stuff", "bower_components", "node_modules", "output"].concat(
+    useCi ? [] : ["package-lock.json"]
+  );
 
   deleteFrameworkFiles(frameworkPath, filesToDelete);
 
   const installCmd = `npm ${useCi ? "ci" : "install"}`;
   runCommand(installCmd, frameworkPath);
-
   const buildCmd = "npm run build-prod";
   runCommand(buildCmd, frameworkPath);
 }
@@ -81,9 +75,9 @@ function rebuildFramework(framework, useCi) {
  * @param {boolean} useCi
  */
 export function rebuildFrameworks(frameworks, useCi) {
-  console.log("rebuild-build-single.js started: useCi", useCi, "frameworks", frameworks);
+  console.log("Rebuild build single: useCi", useCi, "frameworks", frameworks);
 
-  if (!frameworks.length) {
+  if (frameworks.length === 0) {
     console.log("ERROR: Missing arguments. Command: rebuild keyed/framework1 non-keyed/framework2 ...");
     process.exit(1);
   }
@@ -94,4 +88,3 @@ export function rebuildFrameworks(frameworks, useCi) {
 
   console.log("rebuild-build-single.js finished: Build finsished sucessfully!");
 }
-
