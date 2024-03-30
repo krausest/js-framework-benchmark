@@ -27,7 +27,19 @@ const adjectives = [
     "expensive",
     "fancy",
   ],
-  colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"],
+  colours = [
+    "red",
+    "yellow",
+    "blue",
+    "green",
+    "pink",
+    "brown",
+    "purple",
+    "brown",
+    "white",
+    "black",
+    "orange",
+  ],
   nouns = [
     "table",
     "chair",
@@ -138,29 +150,25 @@ const mainComponent = component(
     },
     functions: {
       run: [
-        (setData, event) => () => {
-          event.stopPropagation();
+        (setData) => () => {
           setData(() => buildData(1000));
         },
         "updateRows",
       ],
       runLots: [
-        (setData, event) => () => {
-          event.stopPropagation();
+        (setData) => () => {
           setData(() => buildData(10000));
         },
         "updateRows",
       ],
       add: [
-        (setData, event) => () => {
-          event.stopPropagation();
+        (setData) => () => {
           setData((d) => [...d, ...buildData(1000)]);
         },
         "updateRows",
       ],
       update: [
-        (setData, event) => () => {
-          event.stopPropagation();
+        (setData) => () => {
           setData((d) => {
             const value = d.slice();
             for (let i = 0; i < value.length; i += 10) {
@@ -173,15 +181,13 @@ const mainComponent = component(
         "updateRows",
       ],
       clear: [
-        (setData, event) => () => {
-          event.stopPropagation();
+        (setData) => () => {
           setData(() => []);
         },
         "updateRows",
       ],
       swapRows: [
-        (setData, event) => () => {
-          event.stopPropagation();
+        (setData) => () => {
           setData((d) => {
             const value = d.slice();
             const tmp = value[1];
@@ -201,15 +207,13 @@ const mainComponent = component(
         },
         functions: {
           setSelected: [
-            (setData, event) => (id) => {
-              event.stopPropagation();
+            (setData) => (id) => {
               setData(() => id);
             },
             "updateSelected",
           ],
           delete: [
-            (setData, event) => (id) => {
-              event.stopPropagation();
+            (setData) => (id) => {
               setData((d) => {
                 const idx = d.findIndex((d) => d.id === id);
                 return [...d.slice(0, idx), ...d.slice(idx + 1)];
