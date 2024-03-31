@@ -170,12 +170,11 @@ const mainComponent = component(
       update: [
         (setData) => () => {
           setData((d) => {
-            const value = d.slice();
-            for (let i = 0; i < value.length; i += 10) {
-              const item = value[i];
-              value[i] = { ...item, label: item.label + " !!!" };
+            for (let i = 0; i < d.length; i += 10) {
+              const item = d[i];
+              d[i] = { ...item, label: item.label + " !!!" };
             }
-            return value;
+            return d;
           });
         },
         "updateRows",
@@ -189,11 +188,10 @@ const mainComponent = component(
       swapRows: [
         (setData) => () => {
           setData((d) => {
-            const value = d.slice();
-            const tmp = value[1];
-            value[1] = value[998];
-            value[998] = tmp;
-            return value;
+            const tmp = d[1];
+            d[1] = d[998];
+            d[998] = tmp;
+            return d;
           });
         },
         "updateRows",
@@ -215,8 +213,10 @@ const mainComponent = component(
           delete: [
             (setData) => (id) => {
               setData((d) => {
+                const value = d.slice();
                 const idx = d.findIndex((d) => d.id === id);
-                return [...d.slice(0, idx), ...d.slice(idx + 1)];
+                value.splice(idx, 1);
+                return value;
               });
             },
             "updateRows",
