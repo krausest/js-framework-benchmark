@@ -171,8 +171,7 @@ const mainComponent = component(
         (setData) => () => {
           setData((d) => {
             for (let i = 0; i < d.length; i += 10) {
-              const item = d[i];
-              d[i] = { ...item, label: item.label + " !!!" };
+              d[i].label += " !!!";
             }
             return d;
           });
