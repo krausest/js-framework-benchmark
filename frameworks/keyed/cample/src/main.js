@@ -170,10 +170,12 @@ const mainComponent = component(
       update: [
         (setData) => () => {
           setData((d) => {
-            for (let i = 0; i < d.length; i += 10) {
-              d[i].label += " !!!";
+            const value = d.slice();
+            for (let i = 0; i < value.length; i += 10) {
+              const item = value[i];
+              value[i] = { ...item, label: item.label + " !!!" };
             }
-            return d;
+            return value;
           });
         },
         "updateRows",
