@@ -189,11 +189,10 @@ const mainComponent = component(
       swapRows: [
         (setData) => () => {
           setData((d) => {
-            const value = d.slice();
-            const tmp = value[1];
-            value[1] = value[998];
-            value[998] = tmp;
-            return value;
+            const tmp = d[1];
+            d[1] = d[998];
+            d[998] = tmp;
+            return d;
           });
         },
         "updateRows",
@@ -215,8 +214,10 @@ const mainComponent = component(
           delete: [
             (setData) => (id) => {
               setData((d) => {
+                const value = d.slice();
                 const idx = d.findIndex((d) => d.id === id);
-                return [...d.slice(0, idx), ...d.slice(idx + 1)];
+                value.splice(idx, 1);
+                return value;
               });
             },
             "updateRows",
