@@ -3,12 +3,7 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use dioxus::prelude::*;
-use js_sys::Math;
 use rand::{seq::SliceRandom, thread_rng};
-
-fn random(max: usize) -> usize {
-    (Math::random() * 1000.0) as usize % max
-}
 
 fn main() {
     launch(app);
