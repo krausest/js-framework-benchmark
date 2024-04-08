@@ -94,7 +94,7 @@ fn build_data(count: usize) -> Vec<RowData> {
 }
 
 #[component]
-fn ActionButton(name: String, id: String, onclick: EventHandler) -> Element {
+fn Button(name: String, id: String, onclick: EventHandler) -> Element {
     rsx! {
         div {
             class: "col-sm-6 smallpad",
@@ -156,22 +156,22 @@ fn app() -> Element {
                     div { class: "col-md-6", h1 { "Dioxus" } }
                     div { class: "col-md-6",
                         div { class: "row",
-                            ActionButton { name: "Create 1,000 rows", id: "run",
+                            Button { name: "Create 1,000 rows", id: "run",
                                 onclick: move |_| run(()),
                             }
-                            ActionButton { name: "Create 10,000 rows", id: "runlots",
+                            Button { name: "Create 10,000 rows", id: "runlots",
                                 onclick: move |_| run_lots(()),
                             }
-                            ActionButton { name: "Append 1,000 rows", id: "add",
+                            Button { name: "Append 1,000 rows", id: "add",
                                 onclick: move|_| add(()),
                             }
-                            ActionButton { name: "Update every 10th row", id: "update",
+                            Button { name: "Update every 10th row", id: "update",
                                 onclick: move |_| update(()),
                             }
-                            ActionButton { name: "Clear", id: "clear",
+                            Button { name: "Clear", id: "clear",
                                 onclick: move |_| clear(()),
                             }
-                            ActionButton { name: "Swap rows", id: "swaprows",
+                            Button { name: "Swap rows", id: "swaprows",
                                 onclick:  move|_| swap_rows(()),
                             }
                         }
