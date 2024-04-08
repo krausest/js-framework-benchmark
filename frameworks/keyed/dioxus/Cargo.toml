@@ -6,8 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dioxus = { version = "0.5.0", features = ["web"] }
+dioxus = { version = "0.5.1", features = ["web"] }
 js-sys = "*"
+getrandom = { version = "0.2.7", features = ["js"] }
+rand = { version = "0.8.5", features = ["small_rng"] }
 slab = "0.4.8"
 
 [profile.release]
