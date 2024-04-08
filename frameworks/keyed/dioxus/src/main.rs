@@ -5,11 +5,6 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use dioxus::prelude::*;
 use rand::{seq::SliceRandom, thread_rng};
 
-fn main() {
-    launch(app);
-}
-
-
 
 static ADJECTIVES: &[&str] = &[
     "pretty",
@@ -207,3 +202,7 @@ fn app() -> Element {
     }
 }
 
+
+fn main() {
+    launch(app);
+}
