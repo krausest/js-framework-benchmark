@@ -14,6 +14,47 @@ fn main() {
     launch(app);
 }
 
+
+
+static ADJECTIVES: &[&str] = &[
+    "pretty",
+    "large",
+    "big",
+    "small",
+    "tall",
+    "short",
+    "long",
+    "handsome",
+    "plain",
+    "quaint",
+    "clean",
+    "elegant",
+    "easy",
+    "angry",
+    "crazy",
+    "helpful",
+    "mushy",
+    "odd",
+    "unsightly",
+    "adorable",
+    "important",
+    "inexpensive",
+    "cheap",
+    "expensive",
+    "fancy",
+];
+
+static COLOURS: &[&str] = &[
+    "red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black",
+    "orange",
+];
+
+static NOUNS: &[&str] = &[
+    "table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger",
+    "pizza", "mouse", "keyboard",
+];
+
+
 #[derive(PartialEq, Clone, Props)]
 struct RowData {
     id: usize,
@@ -169,41 +210,3 @@ fn ActionButton(name: String, id: String, onclick: EventHandler) -> Element {
         }
     }
 }
-
-static ADJECTIVES: &[&str] = &[
-    "pretty",
-    "large",
-    "big",
-    "small",
-    "tall",
-    "short",
-    "long",
-    "handsome",
-    "plain",
-    "quaint",
-    "clean",
-    "elegant",
-    "easy",
-    "angry",
-    "crazy",
-    "helpful",
-    "mushy",
-    "odd",
-    "unsightly",
-    "adorable",
-    "important",
-    "inexpensive",
-    "cheap",
-    "expensive",
-    "fancy",
-];
-
-static COLOURS: &[&str] = &[
-    "red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black",
-    "orange",
-];
-
-static NOUNS: &[&str] = &[
-    "table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger",
-    "pizza", "mouse", "keyboard",
-];
