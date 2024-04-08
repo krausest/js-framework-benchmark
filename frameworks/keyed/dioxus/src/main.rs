@@ -63,6 +63,7 @@ struct RowData {
 
 static ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
 
+
 fn build_data(count: usize) -> Vec<RowData> {
     let mut thread_rng = thread_rng();
 
@@ -90,6 +91,22 @@ fn build_data(count: usize) -> Vec<RowData> {
     }
 
     data
+}
+
+#[component]
+fn ActionButton(name: String, id: String, onclick: EventHandler) -> Element {
+    rsx! {
+        div {
+            class: "col-sm-6 smallpad",
+            button {
+                class:"btn btn-primary btn-block",
+                r#type: "button",
+                id: id,
+                onclick: move |_| onclick.call(()),
+                "{name}",
+            }
+        }
+    }
 }
 
 #[component]
@@ -195,18 +212,3 @@ fn app() -> Element {
     }
 }
 
-#[component]
-fn ActionButton(name: String, id: String, onclick: EventHandler) -> Element {
-    rsx! {
-        div {
-            class: "col-sm-6 smallpad",
-            button {
-                class:"btn btn-primary btn-block",
-                r#type: "button",
-                id: id,
-                onclick: move |_| onclick.call(()),
-                "{name}",
-            }
-        }
-    }
-}
