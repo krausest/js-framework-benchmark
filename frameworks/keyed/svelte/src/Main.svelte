@@ -1,7 +1,7 @@
 <script>
 	let rowId = 1;
 	let data = $state.frozen([]);
-	let selected = $state();
+	let selected = $state.frozen();
 
 	const adjectives = [
 		'pretty',
@@ -96,7 +96,7 @@
 
 	class Item {
 		id = rowId++;
-		label = $state(
+		label = $state.frozen(
 			`${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
 		);
 	}
