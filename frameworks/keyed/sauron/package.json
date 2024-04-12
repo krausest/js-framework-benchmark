@@ -4,7 +4,7 @@
   "description": "Benchmark for Sauron",
   "license": "ISC",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.57.4",
+    "frameworkVersion": "0.61.4",
     "frameworkHomeURL": "https://github.com/ivanceras/sauron",
     "issues": [
       1139
