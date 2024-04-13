@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 [dependencies]
 rand = { version = "0.8.5", features = ["small_rng"] }
 getrandom = { version = "0.2.7", features = ["js"] }
-sauron = "0.57.4"
+sauron = "0.61.4"
 
 [profile.release]
 lto = true
