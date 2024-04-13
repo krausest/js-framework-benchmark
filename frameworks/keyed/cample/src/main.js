@@ -150,25 +150,29 @@ const mainComponent = component(
     },
     functions: {
       run: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData(() => buildData(1000));
         },
         "updateRows",
       ],
       runLots: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData(() => buildData(10000));
         },
         "updateRows",
       ],
       add: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData((d) => [...d, ...buildData(1000)]);
         },
         "updateRows",
       ],
       update: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData((d) => {
             const value = d.slice();
             for (let i = 0; i < value.length; i += 10) {
@@ -181,13 +185,15 @@ const mainComponent = component(
         "updateRows",
       ],
       clear: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData(() => []);
         },
         "updateRows",
       ],
       swapRows: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.preventDefault();
           setData((d) => {
             const tmp = d[1];
             d[1] = d[998];
