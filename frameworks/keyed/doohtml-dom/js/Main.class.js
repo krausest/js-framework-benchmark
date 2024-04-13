@@ -87,8 +87,9 @@ Doo.define(
 		}
 
 		update() {
+			const bang = ' !!!'
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
-				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
+				this.tbody.childNodes[i].childNodes[1].childNodes[0].firstChild.textContent  = this.data.rows[i].label = `${this.data.rows[i].label}${bang}`
 			}
 		}
 
