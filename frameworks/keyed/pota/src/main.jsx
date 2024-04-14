@@ -95,7 +95,7 @@ const Button = ({ id, text, fn }) => (
 
 const App = () => {
   const [data, setData, updateData] = signal([]),
-    [selected, setSelected] = signal(-1),
+    [selected, setSelected] = signal(null),
     run = () => setData(buildData(1000)),
     runLots = () => {
       setData(buildData(10000));
