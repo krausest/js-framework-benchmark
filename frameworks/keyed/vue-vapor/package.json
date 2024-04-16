@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-vue-jsx",
+  "name": "js-framework-benchmark-vue-vapor",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -13,10 +13,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "npm:@vue-vapor/vue@3.2024.0-83641f7"
+    "vue": "npm:@vue-vapor/vue@3.2024.0-b447ace"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "npm:@vue-vapor/vite-plugin-vue@0.0.0-alpha.4",
-    "vite": "^5.1.1"
+    "vite": "^5.2.9"
   }
 }
