@@ -50,6 +50,7 @@ const BoxPlotTableChart = ({ traces }: Props) => {
       },
       options: {
         animation: false,
+        maintainAspectRatio: false,
         scales: {
           x: {
             type: "category",

@@ -109,7 +109,12 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
   const window_width = width,
     window_height = height;
 
-  const args = [`--window-size=${window_width},${window_height}`, "--js-flags=--expose-gc", "--no-default-browser-check"];
+  const args = [
+    `--window-size=${window_width},${window_height}`,
+    "--js-flags=--expose-gc",
+    "--no-default-browser-check",
+    "--disable-features=PrivacySandboxSettings4",
+  ];
   if (benchmarkOptions.headless) args.push("--headless=new");
   args.push("--enable-benchmarking");
 
