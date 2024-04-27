@@ -116,7 +116,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
     "--disable-features=PrivacySandboxSettings4",
   ];
   if (benchmarkOptions.headless) args.push("--headless=new");
-  args.push("--enable-benchmarking");
+  // args.push("--enable-benchmarking");
 
   const browser = await puppeteer.launch({
     headless: false,

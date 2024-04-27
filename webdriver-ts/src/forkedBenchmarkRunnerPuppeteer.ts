@@ -1,10 +1,18 @@
 import { Browser, CDPSession, Page } from "puppeteer-core";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
 import { CPUBenchmarkPuppeteer, MemBenchmarkPuppeteer, BenchmarkPuppeteer, benchmarks } from "./benchmarksPuppeteer.js";
-import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
+import {
+  BenchmarkOptions,
+  config as defaultConfig,
+  ErrorAndWarning,
+  FrameworkData,
+  Config,
+  puppeteerWait,
+  wait,
+} from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
 import { computeResultsCPU, computeResultsJS, computeResultsPaint, fileNameTrace } from "./timeline.js";
-import * as fs from "node:fs"
+import * as fs from "node:fs";
 
 let config: Config = defaultConfig;
 
@@ -17,8 +25,6 @@ async function initBenchmark(page: Page, benchmark: BenchmarkPuppeteer, framewor
   await benchmark.init(page, framework);
   if (config.LOG_PROGRESS) console.log("after initialized", benchmark.benchmarkInfo.id, benchmark.type, framework.name);
 }
-
-const wait = (delay = 1000) => new Promise((res) => setTimeout(res, delay));
 
 function convertError(error: any): string {
   console.log(
@@ -44,7 +50,7 @@ function convertError(error: any): string {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function forceGC(page: Page, client: CDPSession) {
+async function forceGC(page: Page) {
   for (let i = 0; i < 7; i++) {
     // await client.send('HeapProfiler.collectGarbage');
     await page.evaluate("window.gc()");
@@ -72,7 +78,7 @@ async function runCPUBenchmark(
     // }
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
       const page = await browser.newPage();
-      page.on("console", (msg) => console.log('BROWSER:', ...msg.args()));
+      page.on("console", (msg) => console.log("BROWSER:", ...msg.args()));
       try {
         await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
           waitUntil: "networkidle0",
@@ -91,26 +97,60 @@ async function runCPUBenchmark(
       //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
       //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
       // });
+      // await puppeteerWait();
+
       console.log("initBenchmark");
       await initBenchmark(page, benchmark, framework);
+      await puppeteerWait();
 
-      let categories = ["blink.user_timing", "devtools.timeline", "disabled-by-default-devtools.timeline"];
+      // let categories = ["blink.user_timing", "devtools.timeline", "disabled-by-default-devtools.timeline"];
+      // "blink", "cc","toplevel","v8","benchmark","gpu","viz"
+      let categories = [
+        "disabled-by-default-v8.cpu_profiler",
+        "blink.user_timing",
+        "devtools.timeline",
+        "disabled-by-default-devtools.timeline",
+        // "loading",
+        // "-*",
+        // "v8.execute",
+        // "disabled-by-default-devtools.timeline.frame",
+        // "toplevel",
+        // "disabled-by-default-devtools.timeline.stack",
+        // "blink.console",
+        // "latencyInfo",
+      ];
+
       // let categories = [
-      // "loading",
-      // 'devtools.timeline',
-      //   'disabled-by-default-devtools.timeline',
-      //   '-*',
-      //   'v8.execute',
-      //     'disabled-by-default-devtools.timeline.frame',
-      //     'toplevel',
-      //     'blink.console',
-      //     'blink.user_timing',
-      //     'latencyInfo',
-      //     'disabled-by-default-v8.cpu_profiler',
-      //     'disabled-by-default-devtools.timeline.stack',
+      //   "-*", // exclude default
+      //   "toplevel",
+      //   "v8.execute",
+      //   "blink.console",
+      //   "blink.user_timing",
+      //   "benchmark",
+      //   "loading",
+      //   "latencyInfo",
+      //   "devtools.timeline",
+      //   "disabled-by-default-devtools.timeline",
+      //   "disabled-by-default-devtools.timeline.frame",
+      //   "disabled-by-default-devtools.timeline.stack",
+      //   "disabled-by-default-devtools.screenshot",
       // ];
 
-      const client = await page.target().createCDPSession();
+      // let categories = [
+      //   "-*",
+      //   "devtools.timeline",
+      //   "v8.execute",
+      //   "disabled-by-default-devtools.timeline",
+      //   "disabled-by-default-devtools.timeline.frame",
+      //   "toplevel",
+      //   "blink.console",
+      //   "blink.user_timing",
+      //   "latencyInfo",
+      //   "disabled-by-default-devtools.timeline.stack",
+      //   "disabled-by-default-v8.cpu_profiler",
+      // ];
+
+      // const client = await page.target().createCDPSession();
 
       let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
       if (throttleCPU) {
@@ -123,15 +163,23 @@ async function runCPUBenchmark(
         screenshots: false,
         categories: categories,
       });
-      await wait(50);
-      await forceGC(page, client);
+      // await wait(50);
+      await puppeteerWait();
+
+      await forceGC(page);
+      // await puppeteerWait();
+
       console.log("runBenchmark");
-      let m1 = await page.metrics();
+      // let m1 = await page.metrics();
+      await puppeteerWait();
+      // await wait(100);
+
       await runBenchmark(page, benchmark, framework);
 
-      await wait(50);
+      await puppeteerWait();
+      // await wait(100);
       await page.tracing.stop();
-      let m2 = await page.metrics();
+      // let m2 = await page.metrics();
       if (throttleCPU) {
         await page.emulateCPUThrottling(1);
       }
@@ -151,18 +199,23 @@ async function runCPUBenchmark(
           fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
         );
         console.log("**** resultScript =", resultScript);
-        if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
+        // if (m2.Timestamp == m1.Timestamp) throw new Error("Page metrics timestamp didn't change");
         results.push({ total: result.duration, script: resultScript, paint: resultPaint });
         console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(result)}`);
         if (result.duration < 0) throw new Error(`duration ${result} < 0`);
-        } catch (error) {
+      } catch (error) {
         if (error === "exactly one click event is expected") {
           let fileName = fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions);
           let errorFileName = fileName.replace(/\//, "/error-");
           fs.copyFileSync(fileName, errorFileName);
-          console.log("*** Repeating run because of 'exactly one click event is expected' error", fileName, "saved in", errorFileName);
+          console.log(
+            "*** Repeating run because of 'exactly one click event is expected' error",
+            fileName,
+            "saved in",
+            errorFileName
+          );
           i--;
-          
+
           continue;
         } else {
           console.log("*** Unhandled error:", error);
@@ -228,7 +281,7 @@ async function runMemBenchmark(
 
       console.log("runBenchmark");
       await runBenchmark(page, benchmark, framework);
-      await forceGC(page, client);
+      await forceGC(page);
       await wait(40);
       let result = ((await page.evaluate("performance.measureUserAgentSpecificMemory()")) as any).bytes / 1024 / 1024;
       console.log("afterBenchmark");

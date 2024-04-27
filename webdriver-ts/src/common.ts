@@ -170,3 +170,11 @@ export async function initializeFrameworks(
   }
   return frameworks;
 }
+
+export const wait = (delay = 1000) => {
+  console.log(`Waiting for ${delay} ms`);
+  if (delay === 0) return Promise.resolve();
+  else return new Promise((res) => setTimeout(res, delay));
+};
+
+export const puppeteerWait = () => wait(1000);
