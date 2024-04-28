@@ -48,7 +48,8 @@ const App = () => {
     };
 
   function appendData(count) {
-    array.push(...Array.from(Array(count), () => {
+    const arr = Array(count);
+    for (let i = 0; i < count; i++) {
       let label = Observer.mutable(`${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`);
 
       const dom =
@@ -60,8 +61,10 @@ const App = () => {
         </tr>;
 
       dom.label = label;
-      return dom;
-    }));
+      arr[i] = dom;
+    }
+
+    array.push(...arr);
   }
 
   return <div class='container'>
