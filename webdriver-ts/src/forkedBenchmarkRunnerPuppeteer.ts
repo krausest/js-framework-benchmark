@@ -97,7 +97,7 @@ async function runCPUBenchmark(
       //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
       //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
       // });
-      // await puppeteerWait();
+      await puppeteerWait();
 
       console.log("initBenchmark");
       await initBenchmark(page, benchmark, framework);
@@ -110,14 +110,6 @@ async function runCPUBenchmark(
         "blink.user_timing",
         "devtools.timeline",
         "disabled-by-default-devtools.timeline",
-        // "loading",
-        // "-*",
-        // "v8.execute",
-        // "disabled-by-default-devtools.timeline.frame",
-        // "toplevel",
-        // "disabled-by-default-devtools.timeline.stack",
-        // "blink.console",
-        // "latencyInfo",
       ];
 
       // let categories = [
@@ -136,22 +128,6 @@ async function runCPUBenchmark(
       //   "disabled-by-default-devtools.screenshot",
       // ];
 
-      // let categories = [
-      //   "-*",
-      //   "devtools.timeline",
-      //   "v8.execute",
-      //   "disabled-by-default-devtools.timeline",
-      //   "disabled-by-default-devtools.timeline.frame",
-      //   "toplevel",
-      //   "blink.console",
-      //   "blink.user_timing",
-      //   "latencyInfo",
-      //   "disabled-by-default-devtools.timeline.stack",
-      //   "disabled-by-default-v8.cpu_profiler",
-      // ];
-
-      // const client = await page.target().createCDPSession();
-
       let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
       if (throttleCPU) {
         console.log("CPU slowdown", throttleCPU);
@@ -163,21 +139,19 @@ async function runCPUBenchmark(
         screenshots: false,
         categories: categories,
       });
-      // await wait(50);
+      await wait(50);
       await puppeteerWait();
 
       await forceGC(page);
-      // await puppeteerWait();
+      await puppeteerWait();
 
       console.log("runBenchmark");
       // let m1 = await page.metrics();
-      await puppeteerWait();
-      // await wait(100);
 
       await runBenchmark(page, benchmark, framework);
 
       await puppeteerWait();
-      // await wait(100);
+      await wait(100);
       await page.tracing.stop();
       // let m2 = await page.metrics();
       if (throttleCPU) {
@@ -351,6 +325,8 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
+  defaultConfig.PUPPETEER_WAIT_MS = benchmarkOptions.puppeteerSleep;
+  console.log("forked runner using sleep for puppeteer", config.PUPPETEER_WAIT_MS);
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       process.send(result);

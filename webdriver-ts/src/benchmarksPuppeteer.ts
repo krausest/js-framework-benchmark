@@ -43,15 +43,15 @@ export let benchRun = new (class extends CPUBenchmarkPuppeteer {
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
     for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
-      await puppeteerWait();
       await clickElement(page, "pierce/#run");
+      await puppeteerWait();
       await checkElementContainsText(
         page,
         "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
         (i * 1000 + 1).toFixed()
       );
-      await puppeteerWait();
       await clickElement(page, "pierce/#clear");
+      await puppeteerWait();
       await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }
   }
@@ -73,6 +73,7 @@ export const benchReplaceAll = new (class extends CPUBenchmarkPuppeteer {
     await checkElementExists(page, "pierce/#run");
     for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, "pierce/#run");
+      await puppeteerWait();
       await checkElementContainsText(
         page,
         "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
@@ -227,12 +228,14 @@ export const benchRunBig = new (class extends CPUBenchmarkPuppeteer {
     await checkElementExists(page, "pierce/#run");
     for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, "pierce/#run");
+      await puppeteerWait();
       await checkElementContainsText(
         page,
         "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
         (i * 1000 + 1).toFixed()
       );
       await clickElement(page, "pierce/#clear");
+      await puppeteerWait();
       await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }
   }

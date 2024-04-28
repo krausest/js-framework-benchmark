@@ -93,8 +93,7 @@ async function runBenchmakLoopStartup(
     let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
     if (Array.isArray(res.result)) {
       results = results.concat(res.result as StartupBenchmarkResult[]);
-    } 
-    else {
+    } else {
       results.push(res.result);
     }
     if (res.warnings) {
@@ -338,6 +337,7 @@ async function main() {
     .array("framework")
     .array("benchmark")
     .number("count")
+    .number("puppeteerSleep")
     .string("chromeBinary").argv;
 
   console.log("args", args);
@@ -381,7 +381,10 @@ async function main() {
     resultsDirectory: "results",
     tracesDirectory: "traces",
     allowThrottling: !args.nothrottling,
+    puppeteerSleep: args.puppeteerSleep ?? 0,
   };
+
+  config.PUPPETEER_WAIT_MS = benchmarkOptions.puppeteerSleep;
 
   if (args.count) {
     benchmarkOptions.numIterationsForCPUBenchmarks = args.count;
@@ -412,14 +415,12 @@ async function main() {
   let matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length === 0 || frameworkArgument.some((arg: string) => arg == directoryName);
   let frameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
-  runFrameworks = frameworks.filter(
-    (f) => f.keyed || config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME
-  );
+  runFrameworks = frameworks.filter((f) => f.keyed || config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME);
 
-  if (args.type=='keyed') {
+  if (args.type == "keyed") {
     runFrameworks = runFrameworks.filter((f) => f.keyed);
     console.log("run only keyed frameworks");
-  } else if (args.type=='non-keyed') {
+  } else if (args.type == "non-keyed") {
     runFrameworks = runFrameworks.filter((f) => !f.keyed);
     console.log("run only non-keyed frameworks");
   }
