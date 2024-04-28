@@ -42,9 +42,11 @@ const App = () => {
     clear = () => {
       array.splice(0, array.length);
     },
-    remove = row => {
-      const idx = array.indexOf(row);
+    remove = idx => {
       array.splice(idx, 1);
+    },
+    select = idx => {
+      selected.set(array[idx]);
     };
 
   function appendData(count) {
@@ -55,8 +57,8 @@ const App = () => {
       const dom =
         <tr class={selected.map(sel => sel === dom ? "danger": "")}>
           <td class='col-md-1' $textContent={ idCounter++ } />
-          <td class='col-md-4'><a $onclick={() => selected.set(dom)} $textContent={ label } /></td>
-          <td class='col-md-1'><a $onclick={() => remove(dom)}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
+          <td class='col-md-4'><a $clickHandler={1} $textContent={ label } /></td>
+          <td class='col-md-1'><a $clickHandler={2}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
           <td class='col-md-6'/>
         </tr>;
 
@@ -79,7 +81,19 @@ const App = () => {
         <Button id='swaprows' text='Swap Rows' fn={ swapRows } />
       </div></div>
     </div></div>
-    <table class='table table-hover table-striped test-data'><tbody>
+    <table class='table table-hover table-striped test-data'><tbody $onclick={ev => {
+        let handler;
+        let e = ev.target;
+        while (e.parentElement.tagName !== "TBODY") {
+          if (e.clickHandler) handler = e.clickHandler;
+          e = e.parentElement;
+        }
+
+        if (!handler) return;
+
+        let i = Array.prototype.indexOf.call(e.parentElement.children, e);
+        [null, select, remove][handler](i);
+    }}>
       {array}
     </tbody></table>
     <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
