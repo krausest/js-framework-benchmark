@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "destam": "^0.1.0",
-    "destam-dom": "^0.4.0"
+    "destam-dom": "^0.6.0"
   },
   "devDependencies": {
     "@babel/parser": "^7.24.1",
