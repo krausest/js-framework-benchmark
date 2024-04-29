@@ -43,6 +43,7 @@ export interface BenchmarkOptions {
   allowThrottling: boolean;
   resultsDirectory: string;
   tracesDirectory: string;
+  puppeteerSleep?: number;
 }
 
 /*
@@ -76,6 +77,7 @@ export let config = {
   WRITE_RESULTS: true,
   ALLOW_BATCHING: true,
   BENCHMARK_RUNNER: BenchmarkRunner.PUPPETEER,
+  PUPPETEER_WAIT_MS: 1000,
 };
 export type Config = typeof config;
 
@@ -170,3 +172,11 @@ export async function initializeFrameworks(
   }
   return frameworks;
 }
+
+export const wait = (delay = 1000) => {
+  console.log(`Waiting for ${delay} ms`);
+  if (delay === 0) return Promise.resolve();
+  else return new Promise((res) => setTimeout(res, delay));
+};
+
+export const puppeteerWait = () => wait(config.PUPPETEER_WAIT_MS);
