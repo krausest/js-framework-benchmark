@@ -6,7 +6,7 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@markersunny/eventiveness",
     "frameworkHomeURL": "https://github.com/markersunny/eventiveness",
-    "frameworkVersion": "0.9.9",
+    "frameworkVersion": "0.9.954",
     "issues": [
       772
     ]
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "eventiveness": "^0.9.9",
+    "eventiveness": "^0.9.954",
     "rollup": "^4.14.2"
   }
 }

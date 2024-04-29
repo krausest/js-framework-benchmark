@@ -1,8 +1,10 @@
-import { createTree } from 'eventiveness/apriori';
-import { apply, set, parentSelector } from 'eventiveness/appliance';
-import { preventDefault, stopPropagation, eventListener, matchEventListener} from 'eventiveness/domitory';
+
+import { createFragment } from 'eventiveness/apriori';
+import { apply, parentSelector } from 'eventiveness/appliance';
+import { set } from 'eventiveness/domitory';
+import { preventDefault, stopPropagation, eventListener, matchListener} from 'eventiveness/eventivity';
 import { one } from 'eventiveness/onetomany';
-import {range} from 'eventiveness/generational';
+import {range, items} from 'eventiveness/generational';
 
 function _random(max) {return Math.round(Math.random() * 1000) % max;}
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
@@ -31,16 +33,22 @@ class View {
     append(data, index, n) {
         let markup = [], length = data.length, start = length - n;
         for (let i = start; i < length; i++) markup.push(`<tr><td class='col-md-1'>${index[i]}</td><td class='col-md-4'><a class='lbl'>${data[i]}</a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td></tr>`);
-        this.parent.append(createTree(markup.join('')));
+        this.parent.append(createFragment(markup.join('')));
     }
     set(at, label, index) {
         this.setIndex(at, index); this.setLabel(at, label);
     }
     setIndex(at, index) {
-        return set('td:first-child', at, {textContent: index}, this.parent);
+        at = [...at];
+        apply({
+            'td:first-child': (...tds) => set(items(tds, at), {textContent: items(index, at)})
+        }, this.parent);
     }
     setLabel(at, data) {
-        return set('a.lbl', at, {textContent: data}, this.parent);
+        at = [...at];
+        apply({
+            'a.lbl': (...labels) => set(items(labels, at), {textContent: items(data, at)})
+        }, this.parent);
     }
     removeRange(start, end) {
         const range = document.createRange();
@@ -78,12 +86,12 @@ class Component {
     update() {
         const length = this.data.length;
         for (let i = 0; i < length; i += 10) this.data[i] += ' !!!';
-        this.view.setLabel(range(0, length, 10), this.data);
+        this.view.setLabel([...range(0, length, 10)], this.data);
     }
     swap() {
         if (this.data.length >= 999) {
             [this.data[1], this.data[998]] = [this.data[998], this.data[1]];
-            [this.indices[1], this.indices[998]] = [this.indices[998], this.indices[1]]
+            [this.indices[1], this.indices[998]] = [this.indices[998], this.indices[1]];
             this.view.set([1, 998], this.data, this.indices);
         }
     }
@@ -116,7 +124,7 @@ apply({
             table.removeChild(component.beforeRemove(parentSelector(e.target, 'tr')));
         };
         
-        table.onclick = matchEventListener({
+        table.onclick = matchListener({
             'a.lbl': e => select(e.target.parentNode.parentNode),
             'span.remove': [removeListener, preventDefault, stopPropagation]
         }, true);

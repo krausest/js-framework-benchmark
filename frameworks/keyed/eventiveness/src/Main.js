@@ -1,15 +1,28 @@
-import { createTree } from 'eventiveness/apriori';
-import { apply, set, parentSelector } from 'eventiveness/appliance';
-import { preventDefault, stopPropagation, eventListener, matchEventListener} from 'eventiveness/domitory';
-import { one } from 'eventiveness/onetomany';
-import {range} from 'eventiveness/generational';
 
+import { arrayTemplate, createFragment } from 'eventiveness/apriori';
+import { apply, parentSelector } from 'eventiveness/appliance';
+import { set, update } from 'eventiveness/domitory';
+import { preventDefault, stopPropagation, eventListener, matchListener} from 'eventiveness/eventivity';
+import { one } from 'eventiveness/onetomany';
+import {range, items} from 'eventiveness/generational';
 
 function _random(max) {return Math.round(Math.random() * 1000) % max;}
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
 const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
 const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 
+const itemTemplate = arrayTemplate(`
+<tr>
+    <td class='col-md-1'>\${indices[item]}</td>
+    <td class='col-md-4'><a class='lbl'>\${data[item]}</a></td>
+    <td class='col-md-1'>
+        <a class='remove'>
+            <span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span>
+        </a>
+    </td>
+    <td class='col-md-6'></td>
+</tr>
+`, ['indices', 'data']);
 
 function data() {
     return {
@@ -46,7 +59,7 @@ function data() {
         },
         remove(element, context) {
             const index = Array.from(element.parentNode.children).indexOf(element);
-            context.indices.splice(index); context.data.splice(index);
+            context.indices.splice(index, 1); context.data.splice(index, 1);
         }
     }
 }
@@ -58,20 +71,22 @@ function view(table) {
             this.append(n, context);
         },
         append(n, context) {
-            let markup = [], length = context.data.length;
-            for (let i = length - n; i < length; i++) markup.push(`<tr><td class='col-md-1'>${context.indices[i]}</td><td class='col-md-4'><a class='lbl'>${context.data[i]}</a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td></tr>`);
-            table.append(createTree(markup.join('')));
+            const length = context.data.length;
+            const renderedItems = itemTemplate(range(length - n, length), context.indices, context.data);
+            table.append(createFragment(renderedItems));
         },
         update(context) {
-            set('a.lbl', [...range(0, context.data.length, 10)], 
-            {textContent: context.data}, table);
+            apply({
+                'a.lbl': (...labels) => {
+                    const indices = [...range(0, context.data.length, 10)]
+                    set(items(labels, indices), {textContent: items(context.data, indices)})
+                }
+            }, table);
         },
         clear(context) {table.innerHTML = '';},
         swap(context) {
             if (table.children.length >= 999) {
-                const e998 = table.children[998];
-                table.replaceChild(table.children[1], e998);
-                table.insertBefore(e998, table.children[1]);
+                update([...items(table.children, [1, 998])], [...items(table.children, [998, 1])]);
             }
         },
         remove(element, context) {table.removeChild(element);}
@@ -80,7 +95,7 @@ function view(table) {
 
 apply({
     'tbody': table => {
-        const component = one([data(), view(table)]);
+        const component = one([data(), view(table)], false, [{}]);
 
         let selected;
         function select(node) {
@@ -97,7 +112,7 @@ apply({
             component.remove([parentSelector(e.target, 'tr')]);
         };
         
-        table.addEventListener('click', matchEventListener({
+        table.addEventListener('click', matchListener({
             'a.lbl': e => select(e.target.parentNode.parentNode),
             'span.remove': eventListener([removeListener, preventDefault, stopPropagation], {})
         }));
