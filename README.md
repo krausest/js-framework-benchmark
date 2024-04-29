@@ -1,3 +1,5 @@
+**Please not: There's a [issue](https://github.com/krausest/js-framework-benchmark/issues/1655) with chrome 124 such that we don't get reliable values. Currently all PRs are blocked by this issue.**
+
 
 # js-framework-benchmark
 
