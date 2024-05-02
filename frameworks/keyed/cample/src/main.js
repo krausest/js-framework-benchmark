@@ -82,8 +82,8 @@ const eachComponent = each(
   ({ importedData }) => importedData.rows,
   `<tr key="{{row.id}}" class="{{[selected]}}">
     <td class='col-md-1'>{{row.id}}</td>
-    <td class='col-md-4'><a :click="{{importedData.setSelected(row.id)}}" class='lbl'>{{row.label}}</a></td>
-    <td class='col-md-1'><a :click="{{importedData.delete(row.id)}}" class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td>
+    <td class='col-md-4'><a ::click="{{importedData.setSelected(row.id)}}" class='lbl'>{{row.label}}</a></td>
+    <td class='col-md-1'><a ::click="{{importedData.delete(row.id)}}" class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td>
     <td class='col-md-6'></td>
   </tr>`,
   {
@@ -151,28 +151,28 @@ const mainComponent = component(
     functions: {
       run: [
         (setData, event) => () => {
-          event.preventDefault();
+          event.stopPropagation();
           setData(() => buildData(1000));
         },
         "updateRows",
       ],
       runLots: [
         (setData, event) => () => {
-          event.preventDefault();
+          event.stopPropagation();
           setData(() => buildData(10000));
         },
         "updateRows",
       ],
       add: [
         (setData, event) => () => {
-          event.preventDefault();
+          event.stopPropagation();
           setData((d) => [...d, ...buildData(1000)]);
         },
         "updateRows",
       ],
       update: [
         (setData, event) => () => {
-          event.preventDefault();
+          event.stopPropagation();
           setData((d) => {
             const value = d.slice();
             for (let i = 0; i < value.length; i += 10) {
@@ -186,14 +186,14 @@ const mainComponent = component(
       ],
       clear: [
         (setData, event) => () => {
-          event.preventDefault();
+          event.stopPropagation();
           setData(() => []);
         },
         "updateRows",
       ],
       swapRows: [
         (setData, event) => () => {
-          event.preventDefault();
+          event.stopPropagation();
           setData((d) => {
             const tmp = d[1];
             d[1] = d[998];
