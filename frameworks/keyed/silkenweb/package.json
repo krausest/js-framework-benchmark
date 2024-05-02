@@ -4,7 +4,7 @@
   "description": "Benchmark for silkenweb",
   "license": "ISC",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.6.0",
+    "frameworkVersion": "0.8.0",
     "frameworkHomeURL": "https://github.com/silkenweb/silkenweb",
     "customURL": "/bundled-dist",
     "issues": [
