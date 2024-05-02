@@ -1,6 +1,6 @@
 import * as puppeteer from "puppeteer-core";
 import { Page } from "puppeteer-core";
-import { BenchmarkOptions } from "./common.js";
+import { BenchmarkOptions, wait } from "./common.js";
 
 export async function checkElementNotExists(page: Page, selector: string) {
   let start = Date.now();
@@ -11,7 +11,7 @@ export async function checkElementNotExists(page: Page, selector: string) {
     }
     console.log("checkElementNotExists element found");
     await sel.dispose();
-    await page.waitForTimeout(k < 3 ? 10 : 1000);
+    await wait(k < 3 ? 10 : 1000);
   }
   console.log("checkElementNotExists waited " + (Date.now() - start) + " but no luck");
   throw `checkElementNotExists failed for ${selector};`;
@@ -26,7 +26,7 @@ export async function checkElementExists(page: Page, selector: string) {
       return sel;
     }
     console.log(`checkElementExists element ${selector} not found`);
-    await page.waitForTimeout(k < 3 ? 10 : 1000);
+    await wait(k < 3 ? 10 : 1000);
   }
   console.log("checkElementExists waited " + (Date.now() - start) + " but no luck");
   throw `checkElementExists failed for ${selector};`;
@@ -53,7 +53,7 @@ export async function checkElementContainsText(page: Page, selector: string, exp
         if (result) return;
       }
     }
-    await page.waitForTimeout(k < 3 ? 10 : 1000);
+    await wait(k < 3 ? 10 : 1000);
   }
   console.log("checkElementExists waited " + (Date.now() - start) + " but no luck");
   throw `checkElementContainsText ${selector} failed. expected ${expectedText}, but was ${txt}`;
@@ -72,7 +72,7 @@ export async function checkElementHasClass(page: Page, selector: string, classNa
         if (result) return;
       }
     }
-    await page.waitForTimeout(k < 3 ? 10 : 1000);
+    await wait(k < 3 ? 10 : 1000);
   }
   throw `checkElementHasClass ${selector} failed. expected ${className}, but was ${clazzes}`;
 }
@@ -109,41 +109,18 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
   const window_width = width,
     window_height = height;
 
-  const args = [`--window-size=${window_width},${window_height}`, "--js-flags=--expose-gc", "--no-default-browser-check"];
+  const args = [
+    `--window-size=${window_width},${window_height}`,
+    "--js-flags=--expose-gc",
+    "--no-default-browser-check",
+    "--disable-features=PrivacySandboxSettings4",
+  ];
   if (benchmarkOptions.headless) args.push("--headless=new");
-  args.push("--enable-benchmarking");
 
   const browser = await puppeteer.launch({
     headless: false,
     executablePath: browserPath(benchmarkOptions),
-    ignoreDefaultArgs: [
-      "--enable-automation", // 92/115
-      "--disable-background-networking",
-      "--enable-features=NetworkService,NetworkServiceInProcess",
-      "--disable-background-timer-throttling",
-      "--disable-extensions",
-      // "--disable-backgrounding-occluded-windows",
-      // "--disable-breakpad",
-      // "--disable-client-side-phishing-detection",
-      // "--disable-component-extensions-with-background-pages",
-      // "--disable-default-apps",
-      // "--disable-dev-shm-usage",
-      // // "--disable-extensions",
-      // // "--disable-features=Translate",
-      // "--disable-hang-monitor",
-      // "--disable-ipc-flooding-protection",
-      // "--disable-popup-blocking",
-      // "--disable-prompt-on-repost",
-      // "--disable-renderer-backgrounding",
-      // // "--disable-sync",
-      // "--force-color-profile=srgb",
-      // "--metrics-recording-only",
-      // // "--no-first-run",
-      // // "--password-store=basic",
-      // // "--use-mock-keychain",
-      // "--enable-blink-features=IdleDetection",
-      // // "--export-tagged-pdf"
-    ],
+
     args,
     dumpio: false,
     defaultViewport: {
