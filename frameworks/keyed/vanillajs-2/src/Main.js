@@ -83,31 +83,31 @@ class Main {
 
     document.getElementById("main").addEventListener("click", (e) => {
       //console.log("listener",e);
-      if (e.target.matches("#add")) {
+      if (e.target.id == "add") {
         e.stopPropagation();
         //console.log("add");
         this.add();
-      } else if (e.target.matches("#run")) {
+      } else if (e.target.id == "run") {
         e.stopPropagation();
         //console.log("run");
         this.run();
-      } else if (e.target.matches("#update")) {
+      } else if (e.target.id == "update") {
         e.stopPropagation();
         //console.log("update");
         this.update();
-      } else if (e.target.matches("#runlots")) {
+      } else if (e.target.id == "runlots") {
         e.stopPropagation();
         //console.log("runLots");
         this.runLots();
-      } else if (e.target.matches("#clear")) {
+      } else if (e.target.id == "clear") {
         e.stopPropagation();
         //console.log("clear");
         this.clear();
-      } else if (e.target.matches("#swaprows")) {
+      } else if (e.target.id == "swaprows") {
         e.stopPropagation();
         //console.log("swapRows");
         this.swapRows();
-      } else if (e.target.matches(".remove")) {
+      } else if (e.target.id == ".remove") {
         let id = getParentId(e.target);
         let idx = this.data.findIndex((row) => row.id === id);
         //console.log("delete",idx);
@@ -166,7 +166,7 @@ class Main {
     // var cNode = tbody.cloneNode(false);
     // tbody.parentNode.replaceChild(cNode ,tbody);
     // ~212 msecs
-    // this.tbody.textContent = "";
+    this.tbody.textContent = "";
 
     // ~236 msecs
     // var rangeObj = new Range();
@@ -176,9 +176,9 @@ class Main {
     // var last;
     // while (last = tbody.lastChild) tbody.removeChild(last);
 
-    const clone = this.tbody.cloneNode();
-    this.tbody.remove();
-    this.table.insertBefore((this.tbody = clone), null);
+    // const clone = this.tbody.cloneNode();
+    // this.tbody.remove();
+    // this.table.insertBefore((this.tbody = clone), null);
   }
   runLots() {
     this.removeAllRows();
