@@ -6,7 +6,7 @@ function _random(max) {
 
 const rowTemplate = document.createElement("tr");
 rowTemplate.innerHTML =
-  "<td class='col-md-1'></td><td class='col-md-4'><a class='lbl'></a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td>";
+  "<td class='col-md-1'> </td><td class='col-md-4'><a class='lbl'> </a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td>";
 
 var rowId = 1;
 function buildData(count = 1000) {
@@ -120,6 +120,7 @@ class Main {
       }
     });
     this.tbody = document.getElementById("tbody");
+    this.table = document.getElementsByTagName("table")[0];
   }
   run() {
     this.removeAllRows();
@@ -133,7 +134,7 @@ class Main {
   update() {
     for (let i = 0; i < this.data.length; i += 10) {
       this.data[i].label += " !!!";
-      this.tbody.childNodes[i].firstChild.nextSibling.firstChild.firstChild.data = this.data[i].label;
+      this.tbody.childNodes[i].firstChild.nextSibling.firstChild.firstChild.nodeValue = this.data[i].label;
     }
   }
   unselect() {
@@ -165,7 +166,7 @@ class Main {
     // var cNode = tbody.cloneNode(false);
     // tbody.parentNode.replaceChild(cNode ,tbody);
     // ~212 msecs
-    this.tbody.textContent = "";
+    // this.tbody.textContent = "";
 
     // ~236 msecs
     // var rangeObj = new Range();
@@ -174,6 +175,10 @@ class Main {
     // ~260 msecs
     // var last;
     // while (last = tbody.lastChild) tbody.removeChild(last);
+
+    const clone = this.tbody.cloneNode();
+    this.tbody.remove();
+    this.table.insertBefore((this.tbody = clone), null);
   }
   runLots() {
     this.removeAllRows();
@@ -237,8 +242,8 @@ class Main {
       td1 = tr.firstChild,
       a2 = td1.nextSibling.firstChild;
     tr.data_id = data.id;
-    td1.textContent = data.id;
-    a2.textContent = data.label;
+    td1.firstChild.nodeValue = data.id;
+    a2.firstChild.nodeValue = data.label;
     return tr;
   }
 }
