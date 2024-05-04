@@ -3,9 +3,49 @@ import { htm } from "@ivi/tpl";
 import { Entry, State, Action, ActionType } from "./types.js";
 
 const random = (max: number) => Math.round(Math.random() * 1000) % max;
-const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+const A = [
+  "pretty",
+  "large",
+  "big",
+  "small",
+  "tall",
+  "short",
+  "long",
+  "handsome",
+  "plain",
+  "quaint",
+  "clean",
+  "elegant",
+  "easy",
+  "angry",
+  "crazy",
+  "helpful",
+  "mushy",
+  "odd",
+  "unsightly",
+  "adorable",
+  "important",
+  "inexpensive",
+  "cheap",
+  "expensive",
+  "fancy",
+];
 const C = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-const N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+const N = [
+  "table",
+  "chair",
+  "house",
+  "bbq",
+  "desk",
+  "car",
+  "pony",
+  "cookie",
+  "sandwich",
+  "burger",
+  "pizza",
+  "mouse",
+  "keyboard",
+];
 
 let nextId = 1;
 function buildData(count: number): Entry[] {
@@ -64,15 +104,19 @@ interface RowProps {
 }
 
 const Row = component<RowProps>((c) => {
-  const onSelect = () => { dispatch(c, { type: ActionType.Select, entry: getProps(c).entry }); };
-  const onRemove = () => { dispatch(c, { type: ActionType.Remove, entry: getProps(c).entry }); };
+  const onSelect = () => {
+    dispatch(c, { type: ActionType.Select, entry: getProps(c).entry });
+  };
+  const onRemove = () => {
+    dispatch(c, { type: ActionType.Remove, entry: getProps(c).entry });
+  };
   return ({ entry, selected }) => htm`
     tr${selected === true ? "danger" : ""}
       td.col-md-1 =${entry.id}
       td.col-md-4
-        a @click=${onSelect} =${entry.label}
+        a.lbl @click=${onSelect} =${entry.label}
       td.col-md-1
-        a @click=${onRemove} span.glyphicon.glyphicon-remove :aria-hidden='true'
+        a.remove @click=${onRemove} span.remove.glyphicon.glyphicon-remove :aria-hidden='true'
       td.col-md-6
     `;
 });
@@ -86,14 +130,28 @@ const Button = (text: string, id: string, onClick: () => void) => /* preventClon
 const App = component((c) => {
   const [_state, _dispatch] = useReducer(c, INITIAL_STATE, appStateReducer);
 
-  const onDispatch = (ev: CustomEvent<Action>) => { _dispatch(ev.detail); };
+  const onDispatch = (ev: CustomEvent<Action>) => {
+    _dispatch(ev.detail);
+  };
   const buttons = [
-    Button("Create 1,000 rows", "run", () => { _dispatch({ type: ActionType.Run }); }),
-    Button("Create 10,000 rows", "runlots", () => { _dispatch({ type: ActionType.RunLots }); }),
-    Button("Append 1,000 rows", "add", () => { _dispatch({ type: ActionType.Add }); }),
-    Button("Update every 10th row", "update", () => { _dispatch({ type: ActionType.Update }); }),
-    Button("Clear", "clear", () => { _dispatch({ type: ActionType.Clear }); }),
-    Button("Swap Rows", "swaprows", () => { _dispatch({ type: ActionType.SwapRows }); }),
+    Button("Create 1,000 rows", "run", () => {
+      _dispatch({ type: ActionType.Run });
+    }),
+    Button("Create 10,000 rows", "runlots", () => {
+      _dispatch({ type: ActionType.RunLots });
+    }),
+    Button("Append 1,000 rows", "add", () => {
+      _dispatch({ type: ActionType.Add });
+    }),
+    Button("Update every 10th row", "update", () => {
+      _dispatch({ type: ActionType.Update });
+    }),
+    Button("Clear", "clear", () => {
+      _dispatch({ type: ActionType.Clear });
+    }),
+    Button("Swap Rows", "swaprows", () => {
+      _dispatch({ type: ActionType.SwapRows });
+    }),
   ];
 
   return () => {
@@ -106,9 +164,11 @@ const App = component((c) => {
           div.col-md-6 div.row ${buttons}
       table.table.table-hover.table-striped.test-data
         @dispatch=${onDispatch}
-        ${data.length
-           ? htm`tbody ${List(data, getEntryId, (entry) => Row({ entry, selected: selected === entry.id }))}`
-           : htm`tbody`}
+        ${
+          data.length
+            ? htm`tbody ${List(data, getEntryId, (entry) => Row({ entry, selected: selected === entry.id }))}`
+            : htm`tbody`
+        }
       span.preloadicon.glyphicon.glyphicon-remove :aria-hidden='true'
     `;
   };
@@ -116,6 +176,8 @@ const App = component((c) => {
 
 update(
   // Defines a custom root node that disables batching for benchmark.
-  defineRoot((root) => { dirtyCheck(root); })(document.getElementById("main")!),
+  defineRoot((root) => {
+    dirtyCheck(root);
+  })(document.getElementById("main")!),
   App()
 );
