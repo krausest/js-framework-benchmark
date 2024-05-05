@@ -6,7 +6,7 @@ function _random(max) {
 
 const rowTemplate = document.createElement("tr");
 rowTemplate.innerHTML =
-  "<td class='col-md-1'> </td><td class='col-md-4'><a class='lbl'> </a></td><td class='col-md-1'><a class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td>";
+  "<td class='col-md-1'> </td><td class='col-md-4'><a> </a></td><td class='col-md-1'><a><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a></td><td class='col-md-6'></td>";
 
 var rowId = 1;
 function buildData(count = 1000) {
@@ -83,40 +83,49 @@ class Main {
 
     document.getElementById("main").addEventListener("click", (e) => {
       //console.log("listener",e);
-      if (e.target.id == "add") {
+      if (e.target.matches("#add")) {
         e.stopPropagation();
         //console.log("add");
         this.add();
-      } else if (e.target.id == "run") {
+      } else if (e.target.matches("#run")) {
         e.stopPropagation();
         //console.log("run");
         this.run();
-      } else if (e.target.id == "update") {
+      } else if (e.target.matches("#update")) {
         e.stopPropagation();
         //console.log("update");
         this.update();
-      } else if (e.target.id == "runlots") {
+      } else if (e.target.matches("#runlots")) {
         e.stopPropagation();
         //console.log("runLots");
         this.runLots();
-      } else if (e.target.id == "clear") {
+      } else if (e.target.matches("#clear")) {
         e.stopPropagation();
         //console.log("clear");
         this.clear();
-      } else if (e.target.id == "swaprows") {
+      } else if (e.target.matches("#swaprows")) {
         e.stopPropagation();
         //console.log("swapRows");
         this.swapRows();
-      } else if (e.target.id == ".remove") {
+      }
+    });
+    document.getElementById("tbody").addEventListener("click", (e) => {
+      e.stopPropagation();
+      let p = e.target;
+      while (p && p.tagName !== "TD") {
+        p = p.parentNode;
+      }
+      if (!p) return;
+      if (p.parentNode.childNodes[1] == p) {
+        console.log("click on label");
         let id = getParentId(e.target);
         let idx = this.data.findIndex((row) => row.id === id);
-        //console.log("delete",idx);
-        this.delete(idx);
-      } else if (e.target.matches(".lbl")) {
-        let id = getParentId(e.target);
-        let idx = this.data.findIndex((row) => row.id === id);
-        //console.log("select",idx);
         this.select(idx);
+      } else if (p.parentNode.childNodes[2] == p) {
+        console.log("click on remove");
+        let id = getParentId(e.target);
+        let idx = this.data.findIndex((row) => row.id === id);
+        this.delete(idx);
       }
     });
     this.tbody = document.getElementById("tbody");
