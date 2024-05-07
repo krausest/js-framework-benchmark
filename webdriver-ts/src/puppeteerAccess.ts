@@ -113,6 +113,10 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
     `--window-size=${window_width},${window_height}`,
     "--js-flags=--expose-gc",
     "--no-default-browser-check",
+    "--disable-sync",
+    "--no-first-run",
+    "--disable-extensions",
+    "--disable-features=Translate",
     "--disable-features=PrivacySandboxSettings4",
   ];
   if (benchmarkOptions.headless) args.push("--headless=new");
