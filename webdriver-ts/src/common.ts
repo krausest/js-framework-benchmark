@@ -77,7 +77,7 @@ export let config = {
   WRITE_RESULTS: true,
   ALLOW_BATCHING: true,
   BENCHMARK_RUNNER: BenchmarkRunner.PUPPETEER,
-  PUPPETEER_WAIT_MS: 1000,
+  PUPPETEER_WAIT_MS: 0,
 };
 export type Config = typeof config;
 
