@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "js-framework-benchmark-vanillajs-lite",
+  "version": "1.0.0",
+  "description": "Vanilla.JS Lite Demo",
+  "js-framework-benchmark": {
+    "frameworkVersion": "",
+    "frameworkHomeURL": "",
+    "issues": [772]
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "devDependencies": {}
+}
