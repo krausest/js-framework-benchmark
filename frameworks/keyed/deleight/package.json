@@ -1,12 +1,12 @@
 {
-  "name": "js-framework-benchmark-eventiveness",
+  "name": "js-framework-benchmark-deleight",
   "version": "1.1.1",
-  "description": "Eventiveness demo",
+  "description": "Deleight demo",
   "main": "src/Main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@markersunny/eventiveness",
-    "frameworkHomeURL": "https://github.com/markersunny/eventiveness",
-    "frameworkVersion": "0.9.954",
+    "frameworkVersionFromPackage": "@markersunny/deleight",
+    "frameworkHomeURL": "https://github.com/markersunny/deleight",
+    "frameworkVersion": "1.1.7",
     "issues": [
       772
     ]
@@ -16,8 +16,7 @@
     "build-prod": "rollup -c"
   },
   "keywords": [
-    "eventiveness",
-    "es modules"
+    "deleight"
   ],
   "author": "Mark Sun",
   "license": "Apache-2.0",
@@ -28,7 +27,9 @@
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "eventiveness": "^0.9.954",
     "rollup": "^4.14.2"
+  },
+  "dependencies": {
+    "deleight": "^1.1.7"
   }
 }
