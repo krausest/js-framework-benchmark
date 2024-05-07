@@ -7,12 +7,12 @@ const pick = dict => dict[Math.round(Math.random() * 1000) % dict.length];
 let ID = 1, rows = [], selection;
 const ROW = Symbol(), ACTION = Symbol();
 
-const rowTemplate = document.querySelector('#rowTemplate').content.firstChild;
 const table = document.querySelector('table');
 let tbody = document.querySelector('tbody');
+const trow = document.querySelector('#trow');
 
 const {cloneNode, insertBefore} = Node.prototype;
-const clone = (cloneNode.bind(rowTemplate, true));
+const clone = (cloneNode.bind(trow.content.firstChild, true));
 const insert = ((row, before = null) => insertBefore.call(tbody, row, before));
 
 const build = (() => {
@@ -64,4 +64,3 @@ table.addEventListener('click', e => {
     let {target: t} = e;
     e.stopPropagation(), (t[ACTION] ?? (t = t.parentNode)[ACTION])?.(t[ROW]);
 });
-
