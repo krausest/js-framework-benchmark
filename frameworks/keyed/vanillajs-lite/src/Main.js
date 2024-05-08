@@ -42,8 +42,8 @@ const clear = patch => {
     const empty = !tbody.firstChild;
     if (!empty || patch)
         !empty && patch ? (tbody.textContent = '', patch()) :
-            tbody.remove(), tbody = TBody(), patch?.(),
-            insertBefore.call(table, tbody, null);
+            (tbody.remove(), tbody = TBody(), patch?.(),
+            insertBefore.call(table, tbody, null));
 };
 
 document.querySelectorAll('button').forEach(function (button) {
