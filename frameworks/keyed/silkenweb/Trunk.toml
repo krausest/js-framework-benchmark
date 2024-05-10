@@ -3,5 +3,5 @@ public_url = "/frameworks/keyed/silkenweb/bundled-dist/"
 dist = "bundled-dist"
 
 [tools]
-wasm_bindgen = "0.2.87"
-wasm_opt = "version_114"
+wasm_bindgen = "0.2.92"
+wasm_opt = "version_116"
