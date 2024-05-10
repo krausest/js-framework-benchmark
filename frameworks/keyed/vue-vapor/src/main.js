@@ -1,4 +1,4 @@
-import { render } from "vue/vapor";
+import { createVaporApp } from "vue/vapor";
 import App from "./App.vue";
 
-render(App, {}, "#app");
+createVaporApp(App).mount("#app");
