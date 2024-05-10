@@ -10,6 +10,7 @@ const createTransform = (name, transform, jsx) => ({
   transform(code, id) {
     if (id.endsWith('.js') || (jsx && id.endsWith('.jsx'))) {
       const transformed = transform(code, {
+        util_import: 'destam-dom',
         sourceFileName: id,
         plugins: id.endsWith('.jsx') ? ['jsx'] : [],
       });
