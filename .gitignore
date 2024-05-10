@@ -83,3 +83,6 @@ Cargo.lock
 *~
 frameworks/keyed/doohtml/js/doo.html.min.js.LICENSE.txt
 frameworks/non-keyed/doohtml/js/doo.html.min.js.LICENSE.txt
+
+# chrome for testing
+chrome-mac-arm64-*
