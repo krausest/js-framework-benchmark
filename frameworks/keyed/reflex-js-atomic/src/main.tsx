@@ -1,5 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { h, render, state } from "reflex-dom"
+import { h, render, state} from "reflex-dom";
+import type { IAtom } from "reflex-dom"
+import { For, atom, particle } from "reflex-dom/performance-helpers"
 
 // ----------------------------------------------------------------------------- DATA HELPERS
 
@@ -25,7 +27,7 @@ const _pick = array => array[Math.floor(Math.random() * array.length)]
 interface IDataItem
 {
 	id		:number
-	label	:string
+	label	:IAtom<string>
 }
 
 const $data = state<IDataItem[]>([])
@@ -36,11 +38,11 @@ const $selected = state<number>( null )
 const run = () => $data.set( buildData(1000) )
 const runLots = () => $data.set( buildData(10000) )
 const add = () => $data.set( d => [...d, ...buildData(1000)] )
-const update = () => $data.set( d => {
-	for ( let i = 0, len = d.length; i < len; i += 10 )
-		d[i].label += ' !!!';
-	return [...d]
-})
+const update = () => {
+	const list = $data.peek()
+	for ( let i = 0; i < list.length; i += 10 )
+		list[i].label.value += ' !!!';
+}
 const clear = () => $data.set([])
 const swapRows = () => $data.set( d => {
 	if ( d.length > 998 ) {
@@ -68,7 +70,7 @@ const buildData = (count:number) => {
 	for ( let i = 0; i < count; ++i ) {
 		data[i] = {
 			id: _counter++,
-			label: `${_pick(A)} ${_pick(C)} ${_pick(N)}`,
+			label: atom( `${_pick(A)} ${_pick(C)} ${_pick(N)}` ),
 		};
 	}
 	return data;
@@ -89,7 +91,7 @@ const Button = ({ id, onClick, title }) =>
 // ----------------------------------------------------------------------------- ROW
 
 const Row = ( props ) =>
-	<tr class={ props.selected ? "danger" : "" }>
+	<tr class={ particle( () => $selected.value === props.id ? "danger" : "" ) }>
 		<td class="col-md-1">{ props.id }</td>
 		<td class="col-md-4">
 			<a onClick={ () => toggleSelection( props.id ) }>
@@ -104,10 +106,7 @@ const Row = ( props ) =>
 		<td class="col-md-6" />
 	</tr>
 
-Row.shouldUpdate = (newProps, oldProps) => (
-	oldProps.selected !== newProps.selected
-	|| oldProps.label !== newProps.label
-)
+Row.shouldUpdate = () => false
 
 // ----------------------------------------------------------------------------- JUMBOTRON
 
@@ -115,7 +114,7 @@ const Jumbotron = () =>
 	<div class="jumbotron">
 		<div class="row">
 			<div class="col-md-6">
-				<h1>Reflex</h1>
+				<h1>Reflex - Atomic</h1>
 			</div>
 			<div class="col-md-6">
 				<div class="row">
@@ -132,24 +131,19 @@ const Jumbotron = () =>
 
 // ----------------------------------------------------------------------------- APP
 
-function App () {
-	return () => <div class="container">
+const App = () =>
+	<div class="container">
 		<Jumbotron />
 		<table class="table table-hover table-striped test-data">
-			<tbody>
-				{$data.value.map( item =>
-					<Row
-						key={ item.id }
-						id={ item.id }
-						label={ item.label }
-						selected={ $selected.value === item.id }
-					/>
-				)}
-			</tbody>
+			<For as="tbody" each={ $data }>
+				{ item => <Row
+					key={ item.id } id={ item.id }
+					label={ item.label }
+				/> }
+			</For>
 		</table>
 		<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
 	</div>
-}
 
 // eslint-disable-next-line no-undef,unicorn/prefer-query-selector
 render(<App />, document.getElementById("main"))
