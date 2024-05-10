@@ -10,10 +10,10 @@ function* _random(n) {
     }
 }
 const data = [], tbody = document.getElementsByTagName('tbody')[0];
-let index = 1, i, lbl, selected, temp;
+let index = 1, i, lbl, selected;
 
-function create(e, n = 1000) { if (data.length) clear(e); append(e, n); }
-function append(e, n = 1000) {
+function create(n = 1000) { if (data.length) clear(); append(n); }
+function append(n = 1000) {
     const [r1, r2, r3] = _random(n);
     const itemTemplate = document.getElementById('itemTemplate').content.firstElementChild;
     const itemId = itemTemplate.firstElementChild.firstChild, itemLabel = itemTemplate.querySelector('a.lbl').firstChild;
@@ -23,16 +23,16 @@ function append(e, n = 1000) {
         tbody.appendChild(itemTemplate.cloneNode(true));
     }
 }
-function update(e) {
+function update() {
     const labels = tbody.querySelectorAll('a.lbl'), length = labels.length;
     for (i = 0; i < length; i += 10) labels[i].firstChild.nodeValue = data[i] += ' !!!';
 }
-function clear(e) { data.length = 0; tbody.textContent = '' }
+function clear() { data.length = 0; tbody.textContent = '' }
 
-function swap(e) {
-    if (data.length < 999) return;
+function swap() {
+    if (data.length < 999) return; let temp;
     [data[1], data[998]] = [data[998], data[1]];
-    tbody.replaceChild(tbody.children[1], (temp = tbody.children[998]));
+    tbody.insertBefore(tbody.children[1], (temp = tbody.children[998]));
     tbody.insertBefore(temp, tbody.children[1]);
 }
 tbody.onclick = (e) => {
@@ -49,6 +49,6 @@ tbody.onclick = (e) => {
     }
 }
 for (let [key, fn] of Object.entries({
-    run: create, runlots: (e) => create(e, 10000),
+    run: create, runlots: () => create(10000),
     add: append, update, clear, swaprows: swap
-})) document.getElementById(key).onclick = (e) => { e.stopPropagation(); fn(e) }
+})) document.getElementById(key).onclick = (e) => { e.stopPropagation(); fn() }
