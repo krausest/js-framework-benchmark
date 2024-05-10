@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"strict": false,
+		"jsxFactory": "h",
+		"jsx": "react",
+		"module": "ESNext",
+		"target": "ESNext",
+		"moduleResolution": "node",
+		"lib": ["DOM", "ESNext"]
+	},
+}
