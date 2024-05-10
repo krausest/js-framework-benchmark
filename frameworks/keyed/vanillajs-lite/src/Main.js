@@ -12,11 +12,12 @@ let tbody = document.querySelector('tbody');
 const trow = document.querySelector('#trow');
 
 const {cloneNode, insertBefore} = Node.prototype;
-const clone = (cloneNode.bind(trow.content.firstChild, true));
+const TBody = (cloneNode.bind(tbody, false));
+const TRow = (cloneNode.bind(trow.content.firstChild, true));
 const insert = ((row, before = null) => insertBefore.call(tbody, row, before));
 
 const build = (() => {
-    const tr = clone();
+    const tr = TRow();
     const td1 = tr.firstChild, td2 = td1.nextSibling, td3 = td2.nextSibling;
     const a1 = td2.firstChild, a2 = td3.firstChild;
     const label = `${pick(adjectives)} ${pick(colours)} ${pick(nouns)}`;
@@ -36,19 +37,22 @@ const remove = (match => row => {
     rows = rows.filter(match, row), row.remove();
 })(function (row) { return row !== this; });
 
-const clear = () => {
+const clear = patch => {
     rows = [], selection = null;
-    const clone = tbody.cloneNode();
-    tbody.remove(), insertBefore.call(table, tbody = clone, null);
+    const empty = !tbody.firstChild;
+    if (!empty || patch)
+        !empty && patch ? (tbody.textContent = '', patch()) :
+            (tbody.remove(), tbody = TBody(), patch?.(),
+            insertBefore.call(table, tbody, null));
 };
 
 document.querySelectorAll('button').forEach(function (button) {
     button.addEventListener('click', this[button.id]);
 }, {
-    run () { clear(), rows = create(1000); },
-    runlots () { clear(), rows = create(10000); },
+    run () { clear(() => rows = create(1000)); },
+    runlots () { clear(() => rows = create(10000)); },
     add () { rows = [...rows, ...create(1000)]; },
-    clear,
+    clear () { clear(); },
     update () {
         for (let i = 0; i < rows.length; i += 10)
             rows[i].label.nodeValue += ' !!!';
