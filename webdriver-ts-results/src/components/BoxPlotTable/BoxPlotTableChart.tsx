@@ -51,6 +51,9 @@ const BoxPlotTableChart = ({ traces }: Props) => {
       options: {
         animation: false,
         maintainAspectRatio: false,
+        minStats: "min",
+        maxStats: "max",
+        coef: 0,
         scales: {
           x: {
             type: "category",
@@ -74,7 +77,7 @@ const BoxPlotTableChart = ({ traces }: Props) => {
   }, [traces]);
 
   return (
-    <div style={{ height: "28rem" }}>
+    <div style={{ height: "250px" }}>
       <canvas style={{ maxHeight: "100%" }} ref={chartRef}></canvas>
     </div>
   );

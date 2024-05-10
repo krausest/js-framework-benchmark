@@ -17,7 +17,9 @@ const KnownIssuesList = () => {
       renderItem={(issue) => (
         <List.Item>
           <Typography.Text className="known-issues__issue-code">
-            <a id={issue.number.toFixed()} href={issue.link}>{issue.number}</a>
+            <a id={issue.number.toFixed()} href={issue.link}>
+              {issue.number}
+            </a>
           </Typography.Text>{" "}
           {issue.text}
         </List.Item>
@@ -46,8 +48,8 @@ const App = () => {
 
   const testEnvironmentInfo = (
     <p>
-      The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 14.4), Chrome 123.0.6312.59 (arm64) using
-      the puppeteer benchmark driver with reduced tracing.
+      The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 14.4), Chrome for Testing 124.0.6367.91
+      (arm64) using the puppeteer benchmark driver with reduced tracing.
     </p>
   );
 

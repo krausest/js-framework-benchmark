@@ -25,7 +25,7 @@ const BoxPlotTableRow = ({ frameworks, benchmark, results, currentSortKey, sortB
   }));
 
   return (
-    <tr key={benchmark.id} style={{ height: 400 }}>
+    <tr key={benchmark.id} style={{ height: 250 }}>
       <th className="benchname">
         <button
           className={`button button__text ${currentSortKey === benchmark.id ? "sort-key" : ""}`}
