@@ -107,7 +107,6 @@ async function runCPUBenchmark(
         "devtools.timeline",
         "disabled-by-default-devtools.timeline",
       ];
-      const client = await page.createCDPSession();
 
       // let categories = [
       //   "-*", // exclude default
@@ -139,7 +138,7 @@ async function runCPUBenchmark(
       await wait(50);
       await puppeteerWait();
 
-      await forceGC(page, client);
+      await forceGC(page);
       await puppeteerWait();
 
       console.log("runBenchmark");
@@ -252,7 +251,7 @@ async function runMemBenchmark(
 
       console.log("runBenchmark");
       await runBenchmark(page, benchmark, framework);
-      await forceGC(page, client);
+      await forceGC(page);
       await wait(40);
       let result = ((await page.evaluate("performance.measureUserAgentSpecificMemory()")) as any).bytes / 1024 / 1024;
       console.log("afterBenchmark");

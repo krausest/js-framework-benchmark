@@ -191,7 +191,7 @@ async function runMemBenchmark(
 
       console.log("runBenchmark");
       await runBenchmark(browser, page, benchmark, framework);
-      await forceGC(page, client);
+      await forceGC(page);
       await wait(40);
       // let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
 
