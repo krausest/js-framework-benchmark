@@ -49,12 +49,8 @@ function convertError(error: any): string {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function forceGC(page: Page, client: CDPSession) {
-  for (let i = 0; i < 7; i++) {
-    await client.send("HeapProfiler.collectGarbage");
-    await page.evaluate("window.gc()");
-  }
+async function forceGC(page: Page) {
+  await page.evaluate("window.gc({type:'major',execution:'sync',flavor:'last-resort'})");
 }
 
 async function runCPUBenchmark(
