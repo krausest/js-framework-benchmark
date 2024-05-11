@@ -364,13 +364,15 @@ export class ResultTableData {
       benchmarkWeights = Array.from<number>({ length: benchmarks.length }).fill(1);
     }
 
+    let hasResults = false;
     let gMean = 0.0;
     resultsForFramework.forEach((r, idx) => {
       if (r !== null && !Number.isNaN(r.factor)) {
+        hasResults = true;
         gMean += benchmarkWeights[idx] * Math.log(r.factor);
       }
     });
-    const value = Math.exp(gMean / benchmarkWeights.reduce((a, b) => a + b, 0));
+    const value = hasResults ? Math.exp(gMean / benchmarkWeights.reduce((a, b) => a + b, 0)) : NaN;
 
     return this.compareWith
       ? new TableResultGeommeanEntry(framework.name, framework, value, "#fff", "#000")
