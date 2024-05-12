@@ -3,7 +3,7 @@ const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "b
 const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
 const [l1, l2, l3] = [adjectives.length, colours.length, nouns.length];
 
-const nTemplates = (n) => 10, tbody = document.getElementsByTagName('tbody')[0];
+const nTemplates = (n) => n / 100, tbody = document.getElementsByTagName('tbody')[0];
 let data = [], index = 1, i, lbl, selected;
 
 function create(n = 1000) { if (tbody.children.length) clear(); append(n); }
