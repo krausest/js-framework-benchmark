@@ -9,7 +9,7 @@ function* _random(n) {
         yield arr
     }
 }
-const data = [], nTemplates = (n) => 10, tbody = document.getElementsByTagName('tbody')[0];
+const data = [], nTemplates = (n) => Math.round(n / 100), tbody = document.getElementsByTagName('tbody')[0];
 let index = 1, i, lbl, selected;
 
 function create(n = 1000) { 
