@@ -53,6 +53,6 @@ tbody.onclick = (e) => {
     }
 }
 for (let [key, fn] of Object.entries({
-    run: create, runlots: () => create(10000),
+    run: create, runlots: () => create(10000), 
     add: append, update, clear, swaprows: swap
 })) document.getElementById(key).onclick = (e) => { e.stopPropagation(), fn() }
