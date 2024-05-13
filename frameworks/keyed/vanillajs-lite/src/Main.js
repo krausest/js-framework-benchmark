@@ -53,7 +53,7 @@ buttons.forEach(function (b) { b.onclick = this[b.id]; }, {
     swaprows () {
         if (rows.length > 998)
             insert(rows[1], rows[998]), insert(rows[998], rows[2]),
-            [rows[1], rows[998]] = [rows[998], rows[1]]
+            [rows[1], rows[998]] = [rows[998], rows[1]];
     }
 });
 
