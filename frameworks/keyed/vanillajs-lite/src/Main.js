@@ -22,7 +22,7 @@ const build = (TRow => () => {
     return a1[ROW] = a2[ROW] = tr;
 })(cloneNode.bind(trow.content.firstChild, true));
 
-const insert = ((row, before) => insertBefore.call(tbody, row, before));
+const insert = (insertBefore.bind(tbody));
 
 const create = (count, old) => {
     !old && clear();
