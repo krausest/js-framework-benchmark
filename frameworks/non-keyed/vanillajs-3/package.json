@@ -1,0 +1,27 @@
+{
+  "name": "js-framework-benchmark-vanillajs-3",
+  "version": "1.1.1",
+  "description": "Vanilla.JS-3 demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "",
+    "issues": [
+      772
+    ]
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "keywords": [
+    "vanilla",
+    "javascript"
+  ],
+  "author": "Mark Sune",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}
