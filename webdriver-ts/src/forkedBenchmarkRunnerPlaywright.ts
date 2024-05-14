@@ -60,12 +60,8 @@ function convertError(error: any): string {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function forceGC(page: Page, client?: CDPSession) {
-  for (let i = 0; i < 7; i++) {
-    // await client.send('HeapProfiler.collectGarbage');
-    await page.evaluate("window.gc()");
-  }
+async function forceGC(page: Page) {
+  await page.evaluate("window.gc({type:'major',execution:'sync',flavor:'last-resort'})");
 }
 
 async function runCPUBenchmark(
@@ -128,7 +124,7 @@ async function runCPUBenchmark(
         config,
         fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
       );
-      
+
       let res = { total: result.duration, script: resultScript, paint: resultPaint };
       results.push(res);
       console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(res)}`);
@@ -195,7 +191,7 @@ async function runMemBenchmark(
 
       console.log("runBenchmark");
       await runBenchmark(browser, page, benchmark, framework);
-      await forceGC(page, client);
+      await forceGC(page);
       await wait(40);
       // let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
 

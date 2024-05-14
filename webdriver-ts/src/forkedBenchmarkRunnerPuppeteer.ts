@@ -49,12 +49,8 @@ function convertError(error: any): string {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function forceGC(page: Page, client: CDPSession) {
-  for (let i = 0; i < 7; i++) {
-    await client.send("HeapProfiler.collectGarbage");
-    await page.evaluate("window.gc()");
-  }
+async function forceGC(page: Page) {
+  await page.evaluate("window.gc({type:'major',execution:'sync',flavor:'last-resort'})");
 }
 
 async function runCPUBenchmark(
@@ -111,7 +107,6 @@ async function runCPUBenchmark(
         "devtools.timeline",
         "disabled-by-default-devtools.timeline",
       ];
-      const client = await page.createCDPSession();
 
       // let categories = [
       //   "-*", // exclude default
@@ -143,7 +138,7 @@ async function runCPUBenchmark(
       await wait(50);
       await puppeteerWait();
 
-      await forceGC(page, client);
+      await forceGC(page);
       await puppeteerWait();
 
       console.log("runBenchmark");
@@ -256,7 +251,7 @@ async function runMemBenchmark(
 
       console.log("runBenchmark");
       await runBenchmark(page, benchmark, framework);
-      await forceGC(page, client);
+      await forceGC(page);
       await wait(40);
       let result = ((await page.evaluate("performance.measureUserAgentSpecificMemory()")) as any).bytes / 1024 / 1024;
       console.log("afterBenchmark");
