@@ -70,36 +70,38 @@
        (assoc ::data {})
        (assoc ::data-ids []))))
 
+(defn random-label []
+  (str (rand-nth adjectives) " "
+       (rand-nth colours) " "
+       (rand-nth nouns)))
+
 (rf/reg-event-db
  ::append-data
  (fn [db [_ n]]
    (let [start (::max-id db 0)
          ids (range (inc start) (+ start n 1))
-         new-data (apply merge
-                         (map (fn [id] {id {:id id
-                                            :label (str (rand-nth adjectives) " " (rand-nth colours) " " (rand-nth nouns))}}) ids))]
+         new-data
+         (into {} (map #(into [%] {:id % :label (random-label)}) ids))]
      (-> db
-         (assoc ::max-id (last ids))
+         (assoc ::max-id (+ start n))
          (update ::data-ids into ids)
          (update ::data merge new-data)))))
 
 (rf/reg-event-db
  ::update-some
  (fn [db _]
-   (let [ids (map-indexed (fn [idx id]
-                            (when (= 0 (mod idx 10)) id))
-                          (::data-ids db))
-         new-data (apply merge
-                         (map (fn [id]
-                                {id {:id id
-                                     :label (-> db
-                                                ::data
-                                                (get id)
-                                                :label
-                                                (str " !!!"))}})
-                              ids))]
-     (-> db
-         (update ::data merge new-data)))))
+   (let [updated-data
+         (transduce
+          (comp
+           (map-indexed vector)
+           (filter (fn [[idx _id]] (zero? (mod idx 10))))
+           (map (fn [[_idx id]]
+                  [id (-> (get-in db [::data id])
+                          (update :label str " !!!"))])))
+          merge
+          {}
+          (::data-ids db))]
+     (update db ::data merge updated-data))))
 
 (rf/reg-event-db
  ::swap-rows
