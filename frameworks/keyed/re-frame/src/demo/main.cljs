@@ -81,7 +81,9 @@
    (let [start (::max-id db 0)
          ids (range (inc start) (+ start n 1))
          new-data
-         (into {} (map #(into [%] {:id % :label (random-label)}) ids))]
+         (map #(vector % {:id %
+                          :label (random-label)})
+              ids)]
      (-> db
          (assoc ::max-id (+ start n))
          (update ::data-ids into ids)
