@@ -1,0 +1,15 @@
+{
+  "name": "re-frame",
+  "private": true,
+  "js-framework-benchmark": {
+    "frameworkVersion": "1.4.3",
+    "frameworkHomeURL": "https://day8.github.io/re-frame/re-frame/"
+  },
+  "scripts": {
+    "dev": "LEIN_VERSION=2.9.3 lein cljsbuild auto",
+    "build-prod": "LEIN_VERSION=2.9.3 lein cljsbuild once prod"
+  },
+  "dependencies": {
+    "lein-bin": "0.1.0"
+  }
+}
