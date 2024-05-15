@@ -15,7 +15,7 @@ const buildData = (count) => {
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: nextId++,
-      label: `${adjectives[random(adjectives.length)]} ${colours[random(colours.length)]} ${nouns[random(nouns.length)]}`
+      label: `${adjectives[random(adjectives.length)]} ${colors[random(colors.length)]} ${nouns[random(nouns.length)]}`
     }
   }
   return data;
