@@ -1,14 +1,7 @@
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
 const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
 const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-const lengths = [adjectives.length, colours.length, nouns.length];
-function* _random(n) {
-    for (let max of lengths) {
-        const arr = new Array(n);
-        for (i = 0; i < n; i++) arr[i] = Math.round(Math.random() * 1000) % max;
-        yield arr
-    }
-}
+const [l1, l2, l3] = [adjectives.length, colours.length, nouns.length];
 const data = [], nTemplates = (n) => Math.round(n / 100), tbody = document.getElementsByTagName('tbody')[0];
 let index = 1, i, lbl, selected;
 
@@ -35,7 +28,7 @@ function set(n) {
     }
 }
 function append(n = 1000) {
-    const [r1, r2, r3] = _random(n), nt = nTemplates(n); let j = 0;
+    const nt = nTemplates(n); let j = 0, r1, r2, r3;
     const itemTemplate = document.getElementById('itemTemplate').content;
     while (nt >= itemTemplate.children.length * 2) itemTemplate.appendChild(itemTemplate.cloneNode(true));
     while (nt > itemTemplate.children.length) itemTemplate.appendChild(itemTemplate.firstElementChild.cloneNode(true));
@@ -45,6 +38,9 @@ function append(n = 1000) {
     
     while ((n -= nt) >= 0) {
         for (i = 0; i < nt; i++, j++) {
+            r1 = Math.round(Math.random() * 1000) % l1;
+            r2 = Math.round(Math.random() * 1000) % l2;
+            r3 = Math.round(Math.random() * 1000) % l3;
             ids[i].nodeValue = index++;
             data.push(labels[i].nodeValue = `${adjectives[r1[j]]} ${colours[r2[j]]} ${nouns[r3[j]]}`)    
         }
@@ -53,7 +49,7 @@ function append(n = 1000) {
 }
 function update() {
     const labels = tbody.querySelectorAll('a.lbl'), length = labels.length;
-    for (i = 0; i < length; i += 10) labels[i].firstChild.nodeValue = data[i] += ' !!!';
+    for (i = 0; i < length; i += 10) labels[i].firstChild.nodeValue = data[i] = `${data[i]} !!!`;
 }
 function clear() { data.length = 0; tbody.textContent = '' }
 

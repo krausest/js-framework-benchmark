@@ -28,15 +28,16 @@ function append(n = 1000) {
 }
 function update() {
     const labels = tbody.querySelectorAll('a.lbl'), length = labels.length;
-    for (i = 0; i < length; i += 10) labels[i].firstChild.nodeValue = data[i] += ' !!!'
+    for (i = 0; i < length; i += 10) labels[i].firstChild.nodeValue = data[i] = `${data[i]} !!!`
 }
-function clear() { (data = []) && (tbody.textContent = '') }
+function clear() { data = []; tbody.textContent = '' }
 
 function swap() {
-    if (tbody.children.length < 999) return; const first = tbody.firstElementChild;
+    if (tbody.children.length < 999) return; 
+    const first = tbody.firstElementChild, c998 = tbody.children[998];
     [data[1], data[998]] = [data[998], data[1]];
-    tbody.insertBefore(tbody.insertBefore(first.nextElementSibling, 
-        tbody.children[998]).nextElementSibling, first.nextElementSibling);
+    tbody.insertBefore(tbody.insertBefore(first.nextElementSibling, c998) && c998, 
+                       first.nextElementSibling);
 }
 tbody.onclick = (e) => {
     e.preventDefault; e.stopPropagation;
@@ -45,11 +46,12 @@ tbody.onclick = (e) => {
         if (element === selected) selected.className = selected.className ? "" : "danger";
         else {
             if (selected) selected.className = "";
-            (element.className = "danger") && (selected = element)
+            element.className = "danger"; selected = element;
         }
     } else if (e.target.matches('span.remove')) { 
         const element = e.target.parentNode.parentNode.parentNode;
-        data.splice(Array.prototype.indexOf.call(tbody.children, element)) && tbody.removeChild(element);
+        data.splice(Array.prototype.indexOf.call(tbody.children, element), 1);
+        tbody.removeChild(element);
     }
 }
 for (let [key, fn] of Object.entries({
