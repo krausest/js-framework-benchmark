@@ -9,7 +9,7 @@ let data = [], index = 1, i, lbl, selected;
 function create(n = 1000) { if (tbody.children.length) clear(); append(n); }
 function append(n = 1000) {
     const nt = nTemplates(n); let j = 0, r1, r2, r3;
-    const itemTemplate = document.getElementById('itemTemplate').content;
+    const itemTemplate = document.getElementById('itemTemplate').content.cloneNode(true);
     while (nt >= itemTemplate.children.length * 2) itemTemplate.appendChild(itemTemplate.cloneNode(true));
     while (nt > itemTemplate.children.length) itemTemplate.appendChild(itemTemplate.firstElementChild.cloneNode(true));
     
