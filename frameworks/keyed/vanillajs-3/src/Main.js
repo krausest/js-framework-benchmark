@@ -17,15 +17,15 @@ new class App {
         const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
         const l1 = adjectives.length, l2 = colours.length,l3 = nouns.length;
     
-        const nt = Math.round(n / 100);
-        const itemTemplate = document.getElementById('itemTemplate').content.cloneNode(true);
-    
+        const itemTemplate = document.getElementById('itemTemplate').content;    // .cloneNode(true);
+        const nt = Math.max(itemTemplate.children.length, n / 100);   // Math.round(n / 50);
+
         while (nt >= itemTemplate.children.length * 2) itemTemplate.appendChild(itemTemplate.cloneNode(true));
         while (nt > itemTemplate.children.length) itemTemplate.appendChild(itemTemplate.firstElementChild.cloneNode(true));
         
         const ids = Array.prototype.map.call(itemTemplate.querySelectorAll('td:first-child'), i => i.firstChild)
         const labels = Array.prototype.map.call(itemTemplate.querySelectorAll('a.lbl'), i => i.firstChild);
-        
+
         let i, j = 0, r1, r2, r3;;
         while ((n -= nt) >= 0) {
             for (i = 0; i < nt; i++, j++) {
@@ -39,23 +39,18 @@ new class App {
         }
     };
     update() {
-        const children = this.tbody.children, data = this.data;
-        let child, lbl;
-        for (let i = 0; i < this.data.length; i+=10) {
-            child = children[i];
-            if (child.hasOwnProperty('lbl')) lbl = child.lbl;
-            else child.lbl = lbl = children[i].querySelector('a.lbl').firstChild;
-            lbl.nodeValue = this.data[i] = `${this.data[i]} !!!`
-        }
+        const labels = this.tbody.querySelectorAll('tr:nth-child(10n+1)>td>a.lbl'), length = labels.length, data = this.data;
+        let i = 0, lbl; for (lbl of labels) { lbl.firstChild.nodeValue = data[i] += ' !!!'; i += 10 }
     };
     clear() { this.tbody.textContent = ''; this.data = [] };
     
     swaprows() {
-        if (this.data.length < 999) return;  // nb: swap does not affect labels
-        const first = this.tbody.firstChild, sec = first.nextSibling, 
-            third = sec.nextSibling, c998 = this.tbody.children[998];
-        this.tbody.insertBefore(this.tbody.insertBefore(sec, c998) && c998, third);
-        const temp = this.data[1]; this.data[1] = this.data[998]; this.data[998] = temp;
+        const tbody = this.tbody, data = this.data;
+        if (tbody.children.length < 999) return; 
+        const first = tbody.firstElementChild;
+        [data[1], data[998]] = [data[998], data[1]];
+        tbody.insertBefore(tbody.insertBefore(first.nextElementSibling, 
+            tbody.children[998]).nextElementSibling, first.nextElementSibling);
     };
     onclick() {
         let selected;
