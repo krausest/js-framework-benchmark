@@ -4,7 +4,7 @@ new class App {
     index = 1; data = [];
     tbody = document.getElementsByTagName('tbody')[0];
     constructor() {
-        this.tbody.onclick = app.onclick();
+        this.tbody.onclick = this.onclick();
         for (let key of ['run', 'runlots', 'add', 'update', 'clear', 'swaprows']) {
             document.getElementById(key).onclick = (e) => { e.stopPropagation(); this[key](); }
         }
