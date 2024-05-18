@@ -1,3 +1,5 @@
+"use strict";
+
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
 const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
 const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
@@ -21,10 +23,13 @@ function create(n = 1000) {
 function set(n) {
     const indices = tbody.querySelectorAll('td:first-child'); 
     const labels = tbody.querySelectorAll('a.lbl'); 
-    const [r1, r2, r3] = _random(n);
+    let r1, r2, r3;
     for (i = 0; i < n; i++) {
+        r1 = Math.round(Math.random() * 1000) % l1;
+        r2 = Math.round(Math.random() * 1000) % l2;
+        r3 = Math.round(Math.random() * 1000) % l3;
         indices[i].firstChild.nodeValue = index++;
-        labels[i].firstChild.nodeValue = data[i] = `${adjectives[r1[i]]} ${colours[r2[i]]} ${nouns[r3[i]]}`;
+        labels[i].firstChild.nodeValue = data[i] = `${adjectives[r1]} ${colours[r2]} ${nouns[r3]}`;
     }
 }
 function append(n = 1000) {
@@ -42,7 +47,7 @@ function append(n = 1000) {
             r2 = Math.round(Math.random() * 1000) % l2;
             r3 = Math.round(Math.random() * 1000) % l3;
             ids[i].nodeValue = index++;
-            data.push(labels[i].nodeValue = `${adjectives[r1[j]]} ${colours[r2[j]]} ${nouns[r3[j]]}`)    
+            data.push(labels[i].nodeValue = `${adjectives[r1]} ${colours[r2]} ${nouns[r3]}`)    
         }
         tbody.appendChild(itemTemplate.cloneNode(true));
     }
@@ -73,7 +78,7 @@ tbody.onclick = (e) => {
     } else if (e.target.matches('span.remove')) { let temp;
         const element = e.target.parentNode.parentNode.parentNode;
         data.splice(Array.prototype.indexOf.call(tbody.children, element), 1);
-        tbody.removeChild(element);
+        element.remove();
     }
 }
 for (let [key, fn] of Object.entries({
