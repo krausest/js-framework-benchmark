@@ -179,4 +179,3 @@ export const wait = (delay = 1000) => {
   else return new Promise((res) => setTimeout(res, delay));
 };
 
-export const puppeteerWait = () => wait(config.PUPPETEER_WAIT_MS);

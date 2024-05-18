@@ -7,7 +7,6 @@ import {
   ErrorAndWarning,
   FrameworkData,
   Config,
-  puppeteerWait,
   wait,
 } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
@@ -93,11 +92,9 @@ async function runCPUBenchmark(
       //     downloadThroughput: 780 * 1024 / 8, // 780 kb/s
       //     uploadThroughput: 330 * 1024 / 8, // 330 kb/s
       // });
-      await puppeteerWait();
 
       console.log("initBenchmark");
       await initBenchmark(page, benchmark, framework);
-      await puppeteerWait();
 
       // let categories = ["blink.user_timing", "devtools.timeline", "disabled-by-default-devtools.timeline"];
       // "blink", "cc","toplevel","v8","benchmark","gpu","viz"
@@ -136,17 +133,14 @@ async function runCPUBenchmark(
         categories: categories,
       });
       await wait(50);
-      await puppeteerWait();
 
       await forceGC(page);
-      await puppeteerWait();
 
       console.log("runBenchmark");
       // let m1 = await page.metrics();
 
       await runBenchmark(page, benchmark, framework);
 
-      await puppeteerWait();
       await wait(100);
       await page.tracing.stop();
       // let m2 = await page.metrics();
