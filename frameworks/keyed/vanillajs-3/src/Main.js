@@ -1,8 +1,14 @@
 "use strict";
 
-class App {
+new class App {
     index = 1; data = [];
     tbody = document.getElementsByTagName('tbody')[0];
+    constructor() {
+        this.tbody.onclick = app.onclick();
+        for (let key of ['run', 'runlots', 'add', 'update', 'clear', 'swaprows']) {
+            document.getElementById(key).onclick = (e) => { e.stopPropagation(); this[key](); }
+        }
+    };
     run(n = 1000) { if (this.data.length) this.clear(); this.add(n); };
     runlots() { this.run(10000) };
     add(n = 1000) {
@@ -34,7 +40,13 @@ class App {
     };
     update() {
         const children = this.tbody.children, data = this.data;
-        for (let i = 0; i < this.data.length; i+=10) children[i].querySelector('a.lbl').firstChild.nodeValue = this.data[i] = `${this.data[i]} !!!`
+        let child, lbl;
+        for (let i = 0; i < this.data.length; i+=10) {
+            child = children[i];
+            if (child.hasOwnProperty('lbl')) lbl = child.lbl;
+            else child.lbl = lbl = children[i].querySelector('a.lbl').firstChild;
+            lbl.nodeValue = this.data[i] = `${this.data[i]} !!!`
+        }
     };
     clear() { this.tbody.textContent = ''; this.data = [] };
     
@@ -65,9 +77,4 @@ class App {
             }
         }
     }
-}
-const app = new App();
-tbody.onclick = app.onclick();
-for (let key of ['run', 'runlots', 'add', 'update', 'clear', 'swaprows']) {
-    document.getElementById(key).onclick = (e) => { e.stopPropagation(); app[key](); }
-}
+}();
