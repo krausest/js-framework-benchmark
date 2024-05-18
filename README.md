@@ -1,6 +1,3 @@
-**Please note: There's an [issue](https://github.com/krausest/js-framework-benchmark/issues/1655) with chrome 124 such that we don't get reliable values. Currently all PRs are blocked by this issue.**
-
-
 # js-framework-benchmark
 
 This is a simple benchmark for several javascript frameworks. The benchmarks creates a large table with randomized entries and measures the time for various operations including rendering duration.
