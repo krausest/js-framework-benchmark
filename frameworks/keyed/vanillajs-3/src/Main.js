@@ -1,6 +1,11 @@
 "use strict";
 
-new class App {
+const gAdjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+const gColours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+const gNouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+const nts = {1000: 10, 10000: 125};
+
+new class {
     index = 1; data = []; labels = null; invalidLabels = true;
     tbody = document.getElementsByTagName('tbody')[0];
     constructor() {
@@ -12,15 +17,12 @@ new class App {
     run(n = 1000) { if (this.data.length) this.clear(); this.add(n); };
     runlots() { this.run(10000) };
     add(n = 1000) {
-        const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-        const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-        const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-        const l1 = adjectives.length, l2 = colours.length,l3 = nouns.length;
-    
-        const nt = 125;    // n / 25;   // Math.round(n / 50);
+        const adjectives = gAdjectives, colours = gColours, nouns = gNouns;
+        const l1 = adjectives.length, l2 = colours.length, l3 = nouns.length;
+        const nt = nts[n];
         let i, j = 0, r1, r2, r3;;
 
-        const itemTemplates = document.getElementById('itemTemplate').content.cloneNode(true);   // .content; // .cloneNode(true);
+        const itemTemplates = document.getElementById('itemTemplate').content.cloneNode(true);
         if (itemTemplates.children.length < nt) {
             const itemTemplate = itemTemplates.firstElementChild;
             while (nt >= itemTemplates.children.length * 2) itemTemplates.appendChild(itemTemplates.cloneNode(true));
@@ -46,7 +48,6 @@ new class App {
         let i; for (i = 0; i < length; i += 10) labels[i].firstChild.nodeValue = data[i] += ' !!!';
     };
     clear() { this.tbody.textContent = ''; this.data = []; this.invalidLabels = true; };
-    
     swaprows() {
         const tbody = this.tbody, data = this.data;
         if (tbody.children.length < 999) return; this.invalidLabels = true;
