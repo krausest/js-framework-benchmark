@@ -17,14 +17,17 @@ new class App {
         const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
         const l1 = adjectives.length, l2 = colours.length,l3 = nouns.length;
     
-        const nt = 125;    // n / 25;   // Math.round(n / 50);
+        const nt = 5;    // n / 25;   // Math.round(n / 50);
         let i, j = 0, r1, r2, r3;;
 
-        const itemTemplates = document.getElementById('itemTemplate').content.cloneNode(true);   // .content; // .cloneNode(true);
-        if (itemTemplates.children.length < nt) {
-            const itemTemplate = itemTemplates.firstElementChild;
-            while (nt >= itemTemplates.children.length * 2) itemTemplates.appendChild(itemTemplates.cloneNode(true));
-            while (nt > itemTemplates.children.length) itemTemplates.appendChild(itemTemplate.cloneNode(true));;
+        const itemTemplateContainer = document.getElementById('itemTemplate');   // .content; // .cloneNode(true);
+        const itemTemplates = document.createDocumentFragment();
+        const itemTemplate = itemTemplateContainer.firstElementChild;
+        if (itemTemplateContainer.children.length >= nt) {
+            for (i = 0; i < nt; i++) itemTemplates.appendChild(itemTemplate.cloneNode(true))
+        } else {
+            for (i = itemTemplateContainer.children.length; i < nt; i++) itemTemplateContainer.appendChild(itemTemplate.cloneNode(true));
+            itemTemplates.append(...itemTemplateContainer.cloneNode(true).children)
         }
         const ids = Array.prototype.map.call(itemTemplates.querySelectorAll(`td:first-child`), i => i.firstChild)
         const labels = Array.prototype.map.call(itemTemplates.querySelectorAll(`a.lbl`), i => i.firstChild);
