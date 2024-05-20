@@ -41,6 +41,7 @@ sprae(document.getElementById('main'), {
 	},
 
 	add() {
+		// this.rows.push(...buildData(1000))
 		this.rows = this.rows.concat(buildData(1000))
 		this.selected = null
 	},
