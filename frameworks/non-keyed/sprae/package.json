@@ -13,11 +13,11 @@
     "vue"
   ],
   "scripts": {
-    "build-dev": "cp ./node_modules/sprae/sprae.js ./src/sprae.js",
-    "build-prod": "cp ./node_modules/sprae/sprae.min.js ./src/sprae.js"
+    "build-dev": "cp ./node_modules/sprae/dist/sprae.js ./src/sprae.js",
+    "build-prod": "cp ./node_modules/sprae/dist/sprae.min.js ./src/sprae.js"
   },
   "type": "module",
   "dependencies": {
-    "sprae": "^10.1.0"
+    "sprae": "^10.1.1"
   }
 }
