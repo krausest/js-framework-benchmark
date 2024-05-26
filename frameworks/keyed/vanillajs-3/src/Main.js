@@ -2,18 +2,20 @@
 (function() {
     let index = 1, data = [], labels = null, invalidLabels = true, selected = null;
     const tbody = document.getElementsByTagName('tbody')[0];
-    
+
+    const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
+    const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+    const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
+    const l1 = adjectives.length, l2 = colours.length, l3 = nouns.length;
+    const nts = (n) => Math.round(n / 100)
+
     function run(n = 1000) { if (data.length) clear(); add(n); }
     function runlots() { run(10000) }
     function add(n = 1000) {
-        const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-        const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-        const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-        const l1 = adjectives.length, l2 = colours.length, l3 = nouns.length;
-        const nts = {1000: 5, 10000: 125}, nt = nts[n];
+        const nt = nts(n);
         let i, j = 0, r1, r2, r3;;
 
-        const itemTemplates = document.getElementById('itemTemplate').content.cloneNode(true);
+        const itemTemplates = document.getElementById(`t${n}`).content   // .cloneNode(true);
         if (itemTemplates.children.length < nt) {
             const itemTemplate = itemTemplates.firstElementChild;
             while (nt >= itemTemplates.children.length * 2) itemTemplates.appendChild(itemTemplates.cloneNode(true));
