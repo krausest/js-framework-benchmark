@@ -111,6 +111,12 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
   const window_width = width,
     window_height = height;
 
+  const disableFeatures = [
+    "Translate", // avoid translation popups
+    "PrivacySandboxSettings4", // avoid privacy popup
+    "IPH_SidePanelGenericMenuFeature"  // bookmark popup see https://github.com/krausest/js-framework-benchmark/issues/1688
+  ];
+
   const args = [
     `--window-size=${window_width},${window_height}`,
     "--js-flags=--expose-gc",     // needed for gc() function
@@ -119,9 +125,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
     "--no-first-run",     
     "--ash-no-nudges",
     "--disable-extensions",
-    "--disable-features=Translate", // avoid translation popups
-    "--disable-features=PrivacySandboxSettings4", // avoid privacy popup
-    "--disable-features=IPH_SidePanelGenericMenuFeature"  // bookmark popup see https://github.com/krausest/js-framework-benchmark/issues/1688
+    `--disable-features=${disableFeatures.join()}`
   ];
   if (benchmarkOptions.headless) args.push("--headless=new");
 
