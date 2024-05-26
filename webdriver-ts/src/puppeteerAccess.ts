@@ -1,6 +1,8 @@
 import * as puppeteer from "puppeteer-core";
 import { Page } from "puppeteer-core";
 import { BenchmarkOptions, wait } from "./common.js";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 export async function checkElementNotExists(page: Page, selector: string) {
   let start = Date.now();
@@ -111,13 +113,15 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
 
   const args = [
     `--window-size=${window_width},${window_height}`,
-    "--js-flags=--expose-gc",
-    "--no-default-browser-check",
-    "--disable-sync",
-    "--no-first-run",
+    "--js-flags=--expose-gc",     // needed for gc() function
+    "--no-default-browser-check", 
+    "--disable-sync",           
+    "--no-first-run",     
+    "--ash-no-nudges",
     "--disable-extensions",
-    "--disable-features=Translate",
-    "--disable-features=PrivacySandboxSettings4",
+    "--disable-features=Translate", // avoid translation popups
+    "--disable-features=PrivacySandboxSettings4", // avoid privacy popup
+    "--disable-features=IPH_SidePanelGenericMenuFeature"  // bookmark popup see https://github.com/krausest/js-framework-benchmark/issues/1688
   ];
   if (benchmarkOptions.headless) args.push("--headless=new");
 

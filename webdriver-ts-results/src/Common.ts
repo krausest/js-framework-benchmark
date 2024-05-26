@@ -180,7 +180,7 @@ function colorsForStatisticResult(statisticResult: StatisticResult) {
 }
 
 const statisticComputeColor = function (sign: number, pValue: number): [string, string, StatisticResult] {
-  if (pValue > 0.1) {
+  if (pValue > 0.05) {
     return undecided; //['#fff','#000', StatisticResult.Undecided];
   }
   if (sign <= 0) {
@@ -495,11 +495,14 @@ export class ResultTableData {
     const s2_2 = compareWithResultsStdDev * compareWithResultsStdDev;
     const n1 = compareWithResultsValues.values.length;
     const n2 = resultValues.values.length;
-    const ny =
-      Math.pow(s1_2 / n1 + s2_2 / n2, 2) /
-      ((s1_2 * s1_2) / (n1 * n1 * (n1 - 1)) + (s2_2 * s2_2) / (n2 * n2 * (n2 - 1)));
+    // Welch Welch–Satterthwaite dof
+    // const dof =
+    //   Math.pow(s1_2 / n1 + s2_2 / n2, 2) /
+    //   ((s1_2 * s1_2) / (n1 * n1 * (n1 - 1)) + (s2_2 * s2_2) / (n2 * n2 * (n2 - 1)));
+    // simple dof 
+    const dof = n1 + n2 - 2;
     const t = (x1 - x2) / Math.sqrt(s1_2 / n1 + s2_2 / n2);
-    const p = (1.0 - jStat.studentt.cdf(Math.abs(t), ny)) * 2;
+    const p = (1.0 - jStat.studentt.cdf(Math.abs(t), dof)) * 2;
 
     const statisticalCol = statisticComputeColor(t, p);
     const statisticalResult = (p * 100).toFixed(3) + "%";
