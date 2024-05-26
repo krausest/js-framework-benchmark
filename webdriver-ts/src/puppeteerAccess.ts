@@ -125,7 +125,6 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
     "--js-flags=--expose-gc",     // needed for gc() function
     "--no-default-browser-check", 
     "--disable-sync",           
-    "--disable-first-run-ui",   // avoid popup "you can open bookmarks ..."
     "--no-first-run",     
     "--ash-no-nudges",
     "--disable-extensions",
