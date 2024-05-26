@@ -111,7 +111,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
   const window_width = width,
     window_height = height;
 
-  // delete the folder './chrome_profile' if it exists
+  // delete the folder './chrome_profile' if it exists see https://github.com/krausest/js-framework-benchmark/issues/1688
   const dir = "chrome_profile";
   if (fs.existsSync(dir)) {
     fs.rmSync(dir, { recursive: true });
