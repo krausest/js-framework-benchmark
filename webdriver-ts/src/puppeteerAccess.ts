@@ -1,6 +1,8 @@
 import * as puppeteer from "puppeteer-core";
 import { Page } from "puppeteer-core";
 import { BenchmarkOptions, wait } from "./common.js";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 export async function checkElementNotExists(page: Page, selector: string) {
   let start = Date.now();
@@ -109,16 +111,27 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
   const window_width = width,
     window_height = height;
 
+  // delete the folder './chrome_profile' if it exists
+  const dir = "chrome_profile";
+  if (fs.existsSync(dir)) {
+    fs.rmSync(dir, { recursive: true });
+  }
+  fs.mkdirSync(dir);
+  fs.mkdirSync(path.join(dir,"Default"));
+  fs.copyFileSync("Preferences", path.join(dir, "Default","Preferences"));
+
   const args = [
     `--window-size=${window_width},${window_height}`,
     "--js-flags=--expose-gc",     // needed for gc() function
     "--no-default-browser-check", 
     "--disable-sync",           
     "--disable-first-run-ui",   // avoid popup "you can open bookmarks ..."
-    "--no-first-run",           
+    "--no-first-run",     
+    "--ash-no-nudges",
     "--disable-extensions",
     "--disable-features=Translate", // avoid translation popups
     "--disable-features=PrivacySandboxSettings4", // avoid privacy popup
+    "--user-data-dir=./chrome_profile" 
   ];
   if (benchmarkOptions.headless) args.push("--headless=new");
 
