@@ -502,9 +502,7 @@ export class ResultTableData {
     // simple dof 
     const dof = n1 + n2 - 2;
     const t = (x1 - x2) / Math.sqrt(s1_2 / n1 + s2_2 / n2);
-    console.log(`x1 ${x1} x2 ${x2} s1_2 ${s1_2} s2_2 ${s2_2} n1 ${n1} n2 ${n2} dof ${dof} t ${t}`);
     const p = (1.0 - jStat.studentt.cdf(Math.abs(t), dof)) * 2;
-    console.log(`check 0.975 percentile ${jStat.studentt.cdf(Math.abs(2.048), dof)}`);
 
     const statisticalCol = statisticComputeColor(t, p);
     const statisticalResult = (p * 100).toFixed(3) + "%";
