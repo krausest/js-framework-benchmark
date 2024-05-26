@@ -111,14 +111,14 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
 
   const args = [
     `--window-size=${window_width},${window_height}`,
-    "--js-flags=--expose-gc",
-    "--no-default-browser-check",
-    "--disable-sync",
-    "--disable-first-run-ui",
-    "--no-first-run",
+    "--js-flags=--expose-gc",     // needed for gc() function
+    "--no-default-browser-check", 
+    "--disable-sync",           
+    "--disable-first-run-ui",   // avoid popup "you can open bookmarks ..."
+    "--no-first-run",           
     "--disable-extensions",
-    "--disable-features=Translate",
-    "--disable-features=PrivacySandboxSettings4",
+    "--disable-features=Translate", // avoid translation popups
+    "--disable-features=PrivacySandboxSettings4", // avoid privacy popup
   ];
   if (benchmarkOptions.headless) args.push("--headless=new");
 
