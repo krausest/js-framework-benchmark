@@ -114,6 +114,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
     "--js-flags=--expose-gc",
     "--no-default-browser-check",
     "--disable-sync",
+    "--disable-first-run-ui",
     "--no-first-run",
     "--disable-extensions",
     "--disable-features=Translate",
