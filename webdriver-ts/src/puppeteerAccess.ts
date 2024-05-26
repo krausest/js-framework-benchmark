@@ -125,10 +125,11 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
     "--no-first-run",     
     "--ash-no-nudges",
     "--disable-extensions",
-    `--disable-features=${disableFeatures.join()}`
+    `--disable-features=${disableFeatures.join(',')}`
   ];
   if (benchmarkOptions.headless) args.push("--headless=new");
 
+  console.log("browser arguments", args);
   const browser = await puppeteer.launch({
     headless: false,
     executablePath: browserPath(benchmarkOptions),
