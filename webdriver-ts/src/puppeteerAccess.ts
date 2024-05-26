@@ -111,15 +111,6 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
   const window_width = width,
     window_height = height;
 
-  // delete the folder './chrome_profile' if it exists see https://github.com/krausest/js-framework-benchmark/issues/1688
-  const dir = "chrome_profile";
-  if (fs.existsSync(dir)) {
-    fs.rmSync(dir, { recursive: true });
-  }
-  fs.mkdirSync(dir);
-  fs.mkdirSync(path.join(dir,"Default"));
-  fs.copyFileSync("Preferences", path.join(dir, "Default","Preferences"));
-
   const args = [
     `--window-size=${window_width},${window_height}`,
     "--js-flags=--expose-gc",     // needed for gc() function
@@ -130,7 +121,7 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
     "--disable-extensions",
     "--disable-features=Translate", // avoid translation popups
     "--disable-features=PrivacySandboxSettings4", // avoid privacy popup
-    "--user-data-dir=./chrome_profile" 
+    "--disable-features=IPH_SidePanelGenericMenuFeature"  // bookmark popup see https://github.com/krausest/js-framework-benchmark/issues/1688
   ];
   if (benchmarkOptions.headless) args.push("--headless=new");
 
