@@ -17,6 +17,7 @@ const App = () => {
   const
     array = OArray(),
     selected = Observer.mutable(null),
+    selector = selected.selector('danger', null),
     run = () => {
       array.splice(0, array.length);
       appendData(1000);
@@ -46,7 +47,7 @@ const App = () => {
       array.splice(idx, 1);
     },
     select = idx => {
-      selected.set(array[idx]);
+      selected.set(array[idx].label);
     };
 
   function appendData(count) {
@@ -55,7 +56,7 @@ const App = () => {
       let label = Observer.mutable(`${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`);
 
       const dom =
-        <tr class={selected.map(sel => sel === dom ? "danger": "")}>
+        <tr class={selector(label)}>
           <td class='col-md-1' $textContent={ idCounter++ } />
           <td class='col-md-4'><a $clickHandler={select} $textContent={ label } /></td>
           <td class='col-md-1'><a $clickHandler={remove}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
