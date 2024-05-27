@@ -57,8 +57,8 @@ const App = () => {
       const dom =
         <tr class={selected.map(sel => sel === dom ? "danger": "")}>
           <td class='col-md-1' $textContent={ idCounter++ } />
-          <td class='col-md-4'><a $clickHandler={1} $textContent={ label } /></td>
-          <td class='col-md-1'><a $clickHandler={2}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
+          <td class='col-md-4'><a $clickHandler={select} $textContent={ label } /></td>
+          <td class='col-md-1'><a $clickHandler={remove}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
           <td class='col-md-6'/>
         </tr>;
 
@@ -90,9 +90,7 @@ const App = () => {
         }
 
         if (!handler) return;
-
-        let i = Array.prototype.indexOf.call(e.parentElement.children, e);
-        [null, select, remove][handler](i);
+        handler(Array.prototype.indexOf.call(e.parentElement.children, e));
     }}>
       {array}
     </tbody></table>
