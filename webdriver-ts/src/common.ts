@@ -21,8 +21,8 @@ export interface JsonResult {
 export type BenchmarkStatus = "OK" | "TEST_FAILED" | "TECHNICAL_ERROR";
 
 export interface ErrorAndWarning<T> {
-  error: string;
-  warnings: string[];
+  error?: string;
+  warnings?: string[];
   result?: T[];
 }
 
@@ -43,6 +43,7 @@ export interface BenchmarkOptions {
   allowThrottling: boolean;
   resultsDirectory: string;
   tracesDirectory: string;
+  puppeteerSleep?: number;
 }
 
 /*
@@ -56,7 +57,6 @@ export enum BenchmarkRunner {
   PUPPETEER = "puppeteer",
   PLAYWRIGHT = "playwright",
   WEBDRIVER_CDP = "webdrivercdp",
-  WEBDRIVER = "webdriver",
   WEBDRIVER_AFTERFRAME = "webdriver-afterframe",
 }
 
@@ -66,7 +66,6 @@ export let config = {
   NUM_ITERATIONS_FOR_BENCHMARK_MEM: 1,
   NUM_ITERATIONS_FOR_BENCHMARK_STARTUP: 1,
   NUM_ITERATIONS_FOR_BENCHMARK_SIZE: 1,
-  WARMUP_COUNT: 5,
   TIMEOUT: 60 * 1000,
   LOG_PROGRESS: true,
   LOG_DETAILS: false,
@@ -78,6 +77,7 @@ export let config = {
   WRITE_RESULTS: true,
   ALLOW_BATCHING: true,
   BENCHMARK_RUNNER: BenchmarkRunner.PUPPETEER,
+  PUPPETEER_WAIT_MS: 0,
 };
 export type Config = typeof config;
 
@@ -172,3 +172,10 @@ export async function initializeFrameworks(
   }
   return frameworks;
 }
+
+export const wait = (delay = 1000) => {
+  console.log(`Waiting for ${delay} ms`);
+  if (delay === 0) return Promise.resolve();
+  else return new Promise((res) => setTimeout(res, delay));
+};
+

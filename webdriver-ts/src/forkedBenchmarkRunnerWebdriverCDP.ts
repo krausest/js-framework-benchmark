@@ -3,7 +3,7 @@ import { WebDriver } from "selenium-webdriver";
 import { BenchmarkType, CPUBenchmarkResult, slowDownFactor } from "./benchmarksCommon.js";
 import { benchmarks, CPUBenchmarkWebdriverCDP } from "./benchmarksWebdriverCDP.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
-import { computeResultsCPU, fileNameTrace } from "./timeline.js";
+import { computeResultsCPU, computeResultsJS, computeResultsPaint, fileNameTrace } from "./timeline.js";
 import {
   buildDriver,
   setButtonsInShadowRoot,
@@ -15,7 +15,10 @@ import {
 let config: Config = defaultConfig;
 
 // necessary to launch without specifiying a path
-require("chromedriver");
+import "chromedriver";
+
+const wait = (delay = 1000) => new Promise((res) => setTimeout(res, delay));
+
 
 async function runBenchmark(
   driver: WebDriver,
@@ -80,8 +83,8 @@ async function runCPUBenchmark(
   console.log("benchmarking", framework, benchmark.benchmarkInfo.id, "with webdriver (tracing via CDP Connection)");
   let driver: WebDriver = null;
   try {
-    driver = buildDriver(benchmarkOptions);
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
+      driver = buildDriver(benchmarkOptions);
       let trace: any = { traceEvents: [] }; //await fs.open(fileNameTrace(framework, benchmark.benchmarkInfo, i), "w");
       setUseShadowRoot(framework.useShadowRoot);
       setUseRowShadowRoot(framework.useRowShadowRoot);
@@ -146,22 +149,38 @@ async function runCPUBenchmark(
         });  
       });
 
+      await wait(100);
+
       await runBenchmark(driver, benchmark, framework);
 
       if (throttleCPU) {
         console.log("resetting CPU slowdown");
         await (driver as any).sendDevToolsCommand("Emulation.setCPUThrottlingRate", { rate: 1 });
       }
+      await wait(100);
+
       await cdpConnection.execute("Tracing.end", {});
       await p;
 
       let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
-      results.push({ total: result.duration, script: 0, paint: 0 });
-      console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
+      let resultScript = await computeResultsJS(
+        result,
+        config,
+        fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
+      );
+      let resultPaint = await computeResultsPaint(
+        result,
+        config,
+        fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
+      );
+      
+      let res = { total: result.duration, script: resultScript, paint: resultPaint };
+      results.push(res);
+      console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(res)}`);
       if (result.duration < 0) throw new Error(`duration ${result} < 0`);
+      await driver.close();
+      await driver.quit();
     }
-    await driver.close();
-    await driver.quit();
     return { error, warnings, result: results };
   } catch (error) {
     console.log("ERROR", error);
@@ -219,7 +238,7 @@ process.on("message", (msg: any) => {
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunner");
-      process.send({ failure: convertError(error) });
+      process.send({ error: convertError(error) });
       process.exit(0);
     });
 });

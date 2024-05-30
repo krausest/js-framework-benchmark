@@ -11,6 +11,8 @@ const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 const DEFAULT_SIZE = 1000
 const CHILD_1 = 1
 const CHILD_998 = 998
+const BANG = ' !!!'
+const DANGER = 'danger'
 
 Doo.define(
   	class Main extends Doo {
@@ -90,28 +92,26 @@ Doo.define(
 		}
 
 		update() {
+			const bang = ' !!!'
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
-				this.tbody.childNodes[i].childNodes[1].childNodes[0].innerText = this.data.rows[i].label += ' !!!'
+				this.data.rows[i].label += BANG
+				this.tbody.childNodes[i].childNodes[1].childNodes[0].firstChild.textContent  = this.data.rows[i].label
 			}
 		}
 
 		select(elem) {
 			if (this.selectedRow) {
-				this.selectedRow.classList.remove('danger')
+				this.selectedRow.className = ''
 				this.selectedRow = undefined
 			}
+			
 			if (elem) {
-				this.toggleSelect(this.getParentRow(elem))
-			}	
-		}
-
-		toggleSelect(row) {
-			if (row) {
-				row.classList.toggle('danger')
-				if (row.classList.contains('danger')) {
+				let row = this.getParentRow(elem)
+				if (row) {
 					this.selectedRow = row
-				}	
-			}    
+					row.className = DANGER
+				}
+			}	
 		}
 
 		clear() {

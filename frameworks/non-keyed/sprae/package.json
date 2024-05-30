@@ -4,17 +4,20 @@
   "description": "Benchmark for sprae",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "sprae",
-    "frameworkHomeURL": "https://github.com/dy/sprae"
+    "frameworkHomeURL": "https://github.com/dy/sprae",
+    "issues": [
+      1139
+    ]
   },
   "keywords": [
     "vue"
   ],
   "scripts": {
-    "build-dev": "cp ./node_modules/sprae/sprae.js ./src/sprae.js",
-    "build-prod": "cp ./node_modules/sprae/sprae.min.js ./src/sprae.js"
+    "build-dev": "cp ./node_modules/sprae/dist/sprae.js ./src/sprae.js",
+    "build-prod": "cp ./node_modules/sprae/dist/sprae.min.js ./src/sprae.js"
   },
   "type": "module",
   "dependencies": {
-    "sprae": "8.0.1"
+    "sprae": "^10.5.0"
   }
 }

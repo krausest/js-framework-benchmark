@@ -1,4 +1,3 @@
-
 # js-framework-benchmark
 
 This is a simple benchmark for several javascript frameworks. The benchmarks creates a large table with randomized entries and measures the time for various operations including rendering duration.
@@ -58,7 +57,7 @@ Some frameworks like React, Vue.js or Angular, allow you to create a 1:1 relatio
 
 The other mode is “non-keyed” and this is what e.g. vue.js uses by default for lists. In this mode, a change to the data items can modify DOM nodes that were associated with other data before. This can be more performant, since costly DOM operations can be avoided (e.g. first removing old nodes and then adding new nodes) and the existing DOM nodes are updated to display the new data. For React and Angular, using the item index as the key uses “non-keyed” mode for those frameworks.
 
-Depending on your requirements, the “non-keyed” mode can be a performance gain or can cause severe problems, so one must carefully choose the mode and check that the framework supports that mode.
+Depending on your requirements, the “non-keyed” mode can be a performance gain or can cause severe problems, so one must carefully choose the mode and check that the framework supports that mode.
 
 Read more here: [https://www.stefankrause.net/wp/?p=342](https://www.stefankrause.net/wp/?p=342)
 

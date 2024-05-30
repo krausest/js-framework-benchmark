@@ -1,0 +1,29 @@
+{
+  "name": "js-framework-benchmark-keyed-mikado-proxy",
+  "homepage": "https://github.com/nextapps-de/mikado/",
+  "author": "Thomas Wilkerling",
+  "publisher": "Nextapps GmbH",
+  "license": "Apache-2.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "mikado",
+    "frameworkVersion": "0.8.1",
+    "frameworkHomeURL": "https://github.com/nextapps-de/mikado/",
+    "issues": []
+  },
+  "preferGlobal": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "scripts": {
+    "compile": "npx mikado-compile --src src/template --module --inline --force && echo Compile Complete. && exit 0",
+    "build": "npm run compile && node task/build RELEASE=custom DEBUG=false POLYFILL=false SUPPORT_CACHE=true SUPPORT_EVENTS=true SUPPORT_DOM_HELPERS=false SUPPORT_ASYNC=false SUPPORT_REACTIVE=true REACTIVE_ONLY=true SUPPORT_CACHE_HELPERS=false SUPPORT_KEYED=true SUPPORT_POOLS=false SUPPORT_CALLBACKS=false SUPPORT_COMPILE=false SUPPORT_WEB_COMPONENTS=false SUPPORT_COMPACT_TEMPLATE=false && exit 0",
+    "build-prod": "npm run build"
+  },
+  "dependencies": {
+    "mikado": "^0.8.327"
+  },
+  "devDependencies": {
+    "google-closure-compiler": "^20230802.0.0"
+  }
+}

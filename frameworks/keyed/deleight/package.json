@@ -1,0 +1,34 @@
+{
+  "name": "js-framework-benchmark-deleight",
+  "version": "1.1.1",
+  "description": "Deleight demo",
+  "main": "src/Main.js",
+  "js-framework-benchmark": {
+    "frameworkHomeURL": "https://github.com/markersunny/deleight",
+    "frameworkVersionFromPackage": "deleight",
+    "issues": [
+      772
+    ]
+  },
+  "scripts": {
+    "dev": "rollup -c",
+    "build-prod": "rollup -c"
+  },
+  "keywords": [
+    "deleight"
+  ],
+  "author": "Mark Sun",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup": "^4.14.2"
+  },
+  "dependencies": {
+    "deleight": "^1.1.7"
+  }
+}

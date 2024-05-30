@@ -4,7 +4,8 @@
   "description": "UI5 Benchmark",
   "js-framework-benchmark": {
     "frameworkVersion": "1.120.0",
-    "frameworkHomeURL": "https://openui5.org/"
+    "frameworkHomeURL": "https://openui5.org/",
+    "issues": [1139]
   },
   "scripts": {
     "build-dev": "ui5 serve -o index.html",

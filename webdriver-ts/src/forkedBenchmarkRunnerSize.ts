@@ -88,14 +88,11 @@ async function runSizeBenchmark(
     if (await disableCompressionResponse.text() !== "OK") console.log("ERROR - Could not disable compression - OK missing");   
     try {
       if (browser) {
-        console.log("*** browser close");
         await browser.close();
-        console.log("*** browser closed");
       }
     } catch (error) {
       console.log("ERROR cleaning up driver", error);
     }
-    console.log("*** browser has been shutting down");
   }
 }
 
@@ -139,7 +136,7 @@ process.on("message", (msg: any) => {
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunnerSize");
-      process.send({ failure: convertError(error) });
+      process.send({ error: convertError(error) });
       process.exit(0);
     });
 });

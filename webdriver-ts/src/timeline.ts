@@ -94,7 +94,7 @@ const tracePaintEventNames = [
   "Paint",
   "Layerize",
   "PrePaint"
-  // including "PrePaint" causes longer duraations as reported by chrome
+  // including "PrePaint" causes longer durations as reported by chrome
 ];
 
 export function extractRelevantTraceEvents(config: Config, relevantEventNames: string[], entries: any[], includeClick: boolean) {
@@ -430,12 +430,13 @@ export async function computeResultsFromTrace(
   for (let ev of eventsWithin) {
     intervals = newContainedInterval(ev, intervals);
   }
-  if (intervals.length > 1) {
-    console.log(`*** More than 1 interval ${intervals.length} for ${fileName}`, intervals);
-  } else {
-    console.log(`1 interval for ${fileName}`, intervals);
+  if (config.LOG_DETAILS) {
+    if (intervals.length > 1) {
+      console.log(`*** More than 1 interval ${intervals.length} for ${fileName}`, intervals);
+    } else {
+      console.log(`1 interval for ${fileName}`, intervals);
+    }
   }
-
   let res = intervals.reduce((p, c) => p + (c.end - c.start), 0) / 1000.0;
   return res;
 }

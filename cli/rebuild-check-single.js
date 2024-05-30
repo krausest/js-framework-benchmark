@@ -1,3 +1,4 @@
+// @ts-check
 import { execSync } from "node:child_process";
 
 /*
@@ -17,16 +18,17 @@ Pass list of frameworks
  * @param {string} command - The command to run
  * @param {string|undefined} cwd - The current working directory (optional)
  */
-function runCommand(command, cwd = undefined) {
+function runCommand(command, cwd) {
   console.log(command);
   execSync(command, { stdio: "inherit", cwd });
 }
 
 /**
- * @param {string[]} frameworks
+ * @param {Object} options
+ * @param {Array<string>} options.frameworks
  */
-export function rebuildCheckSingle(frameworks) {
-  console.log("rebuild-check-single.js started: frameworks", frameworks);
+export function rebuildCheckSingle({ frameworks }) {
+  console.log("Rebuild check single:", "frameworks", frameworks);
 
   const frameworkNames = frameworks.join(" ");
 
@@ -37,10 +39,13 @@ export function rebuildCheckSingle(frameworks) {
     const keyedCmd = `npm run isKeyed -- --headless true ${frameworkNames}`;
     runCommand(keyedCmd, "webdriver-ts");
 
+    const cspCmd = `npm run checkCSP -- --headless true ${frameworkNames}`;
+    runCommand(cspCmd, "webdriver-ts");
+
     console.log("rebuild-check-single.js finished");
     console.log("All checks are fine!");
     console.log(`======> Please rerun the benchmark: npm run bench ${frameworkNames}`);
-  } catch (e) {
+  } catch (error) {
     console.log(`rebuild-check-single failed for ${frameworks.join(" ")}`);
     process.exit(-1);
   }

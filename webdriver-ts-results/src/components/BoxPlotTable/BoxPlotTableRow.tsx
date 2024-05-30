@@ -11,16 +11,8 @@ interface Props {
   cpuDurationMode: CpuDurationMode;
 }
 
-const BoxPlotTableRow = ({
-  frameworks,
-  benchmark,
-  results,
-  currentSortKey,
-  sortBy,
-  cpuDurationMode,
-}: Props) => {
-  const resultsValues = (framework: Framework) =>
-    results(benchmark, framework)?.results[cpuDurationMode].values ?? [];
+const BoxPlotTableRow = ({ frameworks, benchmark, results, currentSortKey, sortBy, cpuDurationMode }: Props) => {
+  const resultsValues = (framework: Framework) => results(benchmark, framework)?.results[cpuDurationMode].values ?? [];
 
   const handleSortByBenchmarkResults = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -33,12 +25,10 @@ const BoxPlotTableRow = ({
   }));
 
   return (
-    <tr key={benchmark.id} style={{ height: 400 }}>
+    <tr key={benchmark.id} style={{ height: 250 }}>
       <th className="benchname">
         <button
-          className={`button button__text ${
-            currentSortKey === benchmark.id ? "sort-key" : ""
-          }`}
+          className={`button button__text ${currentSortKey === benchmark.id ? "sort-key" : ""}`}
           onClick={handleSortByBenchmarkResults}
           aria-label="Sort by benchmark results (from best to worst)"
         >

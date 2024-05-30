@@ -1,12 +1,13 @@
 const fs = require("fs");
-const glob = require("glob");
+const glob = require("glob").glob;
+const path = require("path")
 
-glob("build/**/*", {}, (err, files) => {
-  if (err) console.error(err);
-
-  for (const file of files) fs.copyFileSync(file, file.replace("build/", ""));
+glob("build/**/*").then(files => {
+  for (const file of files) {
+    fs.copyFileSync(file, file.replace(`build${path.sep}`, ""));
+  }
 
   try {
-    fs.rmdirSync("build", { force: true, recursive: true });
+    fs.rm("build", { force: true, recursive: true }, () => {});
   } catch (e) {}
 });

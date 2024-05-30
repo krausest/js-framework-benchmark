@@ -1,4 +1,4 @@
-import { FrameworkData, config } from "./common.js";
+import { FrameworkData } from "./common.js";
 
 export enum BenchmarkType {
   CPU,
@@ -12,7 +12,7 @@ export enum BenchmarkType {
 export interface BenchmarkInfoBase {
   id: string;
   label: string;
-  description(throttleCPU: number | undefined): string;
+  description: string;
   type: BenchmarkType;
 }
 
@@ -21,6 +21,7 @@ export interface CPUBenchmarkInfo extends BenchmarkInfoBase {
   type: BenchmarkType.CPU;
   layoutEventRequired: boolean;
   additionalNumberOfRuns: number;
+  warmupCount: number
 }
 
 export interface MemBenchmarkInfo extends BenchmarkInfoBase {
@@ -113,6 +114,10 @@ export function slowDownNote(throttleCPU: number | undefined): string {
   return throttleCPU ? ` ${throttleCPU} x CPU slowdown.` : "";
 }
 
+export function warmupNote(b: BenchmarkInfo): string {
+  return 'warmupCount' in b ? ` (${b.warmupCount} warmup runs).` : "";
+}
+
 export function slowDownFactor(benchmarkId: string, allowThrottling: boolean): number | undefined {
   if (!allowThrottling) return undefined;
   return throttlingFactors[benchmarkId];
@@ -122,8 +127,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._01,
     label: "create rows",
-    description: (throttleCPU: number | undefined) =>
-      "creating 1,000 rows (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(throttleCPU),
+    warmupCount: 5,
+    description: "creating 1,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -132,8 +137,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._02,
     label: "replace all rows",
-    description: (throttleCPU: number | undefined) =>
-      "updating all 1,000 rows (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(throttleCPU),
+    warmupCount: 5,
+    description: "updating all 1,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -142,8 +147,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._03,
     label: "partial update",
-    description: (throttleCPU: number | undefined) =>
-      "updating every 10th row for 1,000 rows (3 warmup runs)." + slowDownNote(throttleCPU),
+    warmupCount: 3,
+    description: "updating every 10th row for 1,000 row.",
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -152,8 +157,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._04,
     label: "select row",
-    description: (throttleCPU: number | undefined) =>
-      "highlighting a selected row. (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(throttleCPU),
+    warmupCount: 5,
+    description: "highlighting a selected row.",
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: false,
@@ -162,8 +167,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._05,
     label: "swap rows",
-    description: (throttleCPU: number | undefined) =>
-      "swap 2 rows for table with 1,000 rows. (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(throttleCPU),
+    warmupCount: 5,
+    description: "swap 2 rows for table with 1,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -172,8 +177,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._06,
     label: "remove row",
-    description: (throttleCPU: number | undefined) =>
-      "removing one row. (" + config.WARMUP_COUNT + " warmup runs)." + slowDownNote(throttleCPU),
+    warmupCount: 5,
+    description: "removing one row.",
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -182,8 +187,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._07,
     label: "create many rows",
-    description: (throttleCPU: number | undefined) =>
-      "creating 10,000 rows. (" + config.WARMUP_COUNT + " warmup runs with 1k rows)." + slowDownNote(throttleCPU),
+    warmupCount: 5,
+    description: "creating 10,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -192,8 +197,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._08,
     label: "append rows to large table",
-    description: (throttleCPU: number | undefined) =>
-      "appending 1,000 to a table of 1,000 rows." + slowDownNote(throttleCPU),
+    warmupCount: 5,
+    description: "appending 1,000 to a table of 1,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -202,8 +207,8 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
   {
     id: Benchmark._09,
     label: "clear rows",
-    description: (throttleCPU: number | undefined) =>
-      "clearing a table with 1,000 rows." + slowDownNote(throttleCPU) + " (" + config.WARMUP_COUNT + " warmup runs).",
+    warmupCount: 5,
+    description: "clearing a table with 1,000 rows.",
     type: BenchmarkType.CPU,
     allowBatching: true,
     layoutEventRequired: true,
@@ -215,19 +220,19 @@ export const memBenchmarkInfosArray: Array<MemBenchmarkInfo> = [
   {
     id: Benchmark._21,
     label: "ready memory",
-    description: () => "Memory usage after page load.",
+    description: "Memory usage after page load.",
     type: BenchmarkType.MEM,
   },
   {
     id: Benchmark._22,
     label: "run memory",
-    description: () => "Memory usage after adding 1,000 rows.",
+    description: "Memory usage after adding 1,000 rows.",
     type: BenchmarkType.MEM,
   },
   {
     id: Benchmark._23,
     label: "update every 10th row for 1k rows (5 cycles)",
-    description: () => "Memory usage after clicking update every 10th row 5 times",
+    description: "Memory usage after clicking update every 10th row 5 times",
     type: BenchmarkType.MEM,
   },
   // {
@@ -239,13 +244,13 @@ export const memBenchmarkInfosArray: Array<MemBenchmarkInfo> = [
   {
     id: Benchmark._25,
     label: "creating/clearing 1k rows (5 cycles)",
-    description: () => "Memory usage after creating and clearing 1000 rows 5 times",
+    description: "Memory usage after creating and clearing 1000 rows 5 times",
     type: BenchmarkType.MEM,
   },
   {
     id: Benchmark._26,
     label: "run memory 10k",
-    description: () => "Memory usage after adding 10,000 rows.",
+    description: "Memory usage after adding 10,000 rows.",
     type: BenchmarkType.MEM,
   },
 ];
@@ -255,7 +260,7 @@ export const startupBenchmarkInfosArray: Array<StartupMainBenchmarkInfo> = [
     id: Benchmark._30,
     type: BenchmarkType.STARTUP_MAIN,
     label: "",
-    description: () => "",
+    description: "",
   }
 ];
 
@@ -264,7 +269,7 @@ export const sizesBenchmarkInfosArray: Array<SizeMainBenchmarkInfo> = [
     id: Benchmark._40,
     type: BenchmarkType.SIZE_MAIN,
     label: "",
-    description: () => "",
+    description: "",
   },
 ];
 
@@ -288,4 +293,4 @@ for (let bi of sizesBenchmarkInfosArray) {
   sizeBenchmarkInfos[bi.id] = bi;
 }
 
-export const benchmarkInfos = [...cpuBenchmarkInfosArray, ...memBenchmarkInfosArray, ...startupBenchmarkInfosArray, ...sizesBenchmarkInfosArray];
+export const benchmarkInfos = [...cpuBenchmarkInfosArray, ...memBenchmarkInfosArray, ...sizesBenchmarkInfosArray];

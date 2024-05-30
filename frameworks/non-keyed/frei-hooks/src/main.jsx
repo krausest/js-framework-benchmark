@@ -1,4 +1,4 @@
-import { createRoot, useReducer } from '@aimwhy/frei';
+import { createRoot, useReducer, useCallback } from '@aimwhy/frei';
 
 const random = (max) => Math.round(Math.random() * 1000) % max;
 
@@ -68,20 +68,25 @@ const listReducer = (state, action) => {
   }
 };
 
-const Row = ({ selected, item, dispatch }) => (
+const Row = ({ selected, item, dispatch }) => {
+  const selectFn = useCallback(() => dispatch({ type: "SELECT", id: item.id }), [item.id]);
+  const deleteFn = useCallback(() => dispatch({ type: "REMOVE", id: item.id }), [item.id]);
+
+  return (
     <tr className={selected ? "danger" : ""}>
       <td className="col-md-1">{item.id}</td>
       <td className="col-md-4">
-        <a onClick={() => dispatch({ type: 'SELECT', id: item.id })}>{item.label}</a>
+        <a onClick={selectFn}>{item.label}</a>
       </td>
       <td className="col-md-1">
-        <a onClick={() => dispatch({ type: 'REMOVE', id: item.id })}>
+        <a onClick={deleteFn}>
           <span className="glyphicon glyphicon-remove" aria-hidden="true" />
         </a>
       </td>
       <td className="col-md-6" />
     </tr>
-);
+  );
+}
 
 const Button = ({ id, cb, title }) => (
   <div className="col-sm-6 smallpad">
@@ -114,13 +119,17 @@ const Main = () => {
 
   return (<div className="container">
     <Jumbotron dispatch={dispatch} />
-    <table className="table table-hover table-striped test-data">
-      <tbody>
-        {data.map(item => (
-          <Row item={item} selected={selected === item.id} dispatch={dispatch} />
-        ))}
-      </tbody>
-    </table>
+    {
+      data.length > 0 ? 
+        (<table className="table table-hover table-striped test-data">
+          <tbody>
+            {data.map(item => (
+              <Row item={item} selected={selected === item.id} dispatch={dispatch} />
+            ))}
+          </tbody>
+        </table>) 
+        : null
+    }
     <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
   </div>);
 }

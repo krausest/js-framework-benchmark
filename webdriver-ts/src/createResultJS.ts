@@ -6,6 +6,8 @@ import {
   BenchmarkType,
   fileName,
   slowDownFactor,
+  slowDownNote,
+  warmupNote,
 } from "./benchmarksCommon.js";
 import * as benchmarksLighthouse from "./benchmarksLighthouse.js";
 import * as benchmarksSize from "./benchmarksSize.js";
@@ -59,9 +61,10 @@ async function main() {
         allBenchmarks.push(benchmarkInfo);
       }
     } else {
-      if (benchmarkInfo.type == BenchmarkType.STARTUP_MAIN) {
-        allBenchmarks = allBenchmarks.concat(benchmarksLighthouse.subbenchmarks);
-      } else if (benchmarkInfo.type == BenchmarkType.SIZE_MAIN) {
+      // if (benchmarkInfo.type == BenchmarkType.STARTUP_MAIN) {
+      //   allBenchmarks = allBenchmarks.concat(benchmarksLighthouse.subbenchmarks);
+      // } else 
+      if (benchmarkInfo.type == BenchmarkType.SIZE_MAIN) {
         allBenchmarks = allBenchmarks.concat(benchmarksSize.subbenchmarks);
       } else {
         allBenchmarks.push(benchmarkInfo);
@@ -69,8 +72,12 @@ async function main() {
     }
   });
 
-  frameworks.forEach((framework) => {
-    allBenchmarks.forEach((benchmarkInfo) => {
+  frameworks.forEach((framework,idx) => {
+    let result: any = {
+      f: idx,
+      b: []
+    };
+  allBenchmarks.forEach((benchmarkInfo) => {
       if (!args.browser || framework.keyed) {
         let name = `${fileName(framework, benchmarkInfo)}`;
         let file = `${resultsDirectory}/${name}`;
@@ -117,24 +124,25 @@ async function main() {
               );
             }
           }
-          let result: any = {
-            f: data.framework,
-            b: data.benchmark,
-            v: values,
-          };
+          result.b.push({
+              b: allBenchmarks.findIndex((b) => b.id== data.benchmark),
+              v: values,
+            });
           let resultNice = {
             framework: data.framework,
             benchmark: data.benchmark,
             values: values,
           };
 
-          resultJS += "\n" + JSON.stringify(result) + ",";
           jsonResult.push(resultNice);
         } else {
           console.log("MISSING FILE", file);
         }
       }
     });
+    resultJS += "\n" + JSON.stringify(result, function(key, val) {
+      return val.toFixed ? Number(val.toFixed(1)) : val;
+    }) + ",";
   });
 
   resultJS += "];\n";
@@ -153,7 +161,7 @@ async function main() {
   let formattedBenchmarks = allBenchmarks.map((b) => ({
     id: b.id,
     label: b.label,
-    description: b.description(slowDownFactor(b.id, true)),
+    description: b.description + warmupNote(b) + slowDownNote(slowDownFactor(b.id, true)),
     type: b.type,
   }));
   resultJS += "export const benchmarks = " + JSON.stringify(formattedBenchmarks) + ";\n";

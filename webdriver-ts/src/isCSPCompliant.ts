@@ -52,22 +52,17 @@ async function runBench(
 
   let allCorrect = true;
 
+  console.log("*** headless", benchmarkOptions.headless);
+
   let browser = await startBrowser(benchmarkOptions);
   let page = await browser.newPage();
   try {
-    await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/csp/enable`);
-  } finally {
-    await page.close();
-    await browser.close();
-  }
-
-  console.log("*** headless", benchmarkOptions.headless);
-
-  for (let i = 0; i < runFrameworks.length; i++) {
-    let browser = await startBrowser(benchmarkOptions);
-    let page = await browser.newPage();
-    try {
+    for (let i = 0; i < runFrameworks.length; i++) {
+      let cspCheckSucessful = true;
       let framework: FrameworkData = runFrameworks[i];
+      let frameworkPath = (framework.keyed ? "keyed" : "non-keyed") + "/" + framework.name
+      console.log(`checking ${frameworkPath}`);
+      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/csp/enable`);
 
       await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
         waitUntil: "networkidle",
@@ -75,36 +70,34 @@ async function runBench(
       try {
         await checkElementExists(page, "#add");
       } catch (error) {
+        cspCheckSucessful = false;
         console.log(`CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - during load`);
       }
-      await clickElement(page, "#add");
-      try {
-        await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
-      } catch (error) {
-        console.log(`CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - when clicking`);
+      if (cspCheckSucessful) {
+        try {
+          await clickElement(page, "#add");
+          await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
+        } catch (error) {
+          cspCheckSucessful = false;
+          console.log(`CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - when clicking`);
+        }
       }
-    } catch (error) {
-      //console.log("ERROR running " + runFrameworks[i].fullNameWithKeyedAndVersion, e);
-      allCorrect = false;
-    } finally {
-      try {
-        await page.close();
-        await browser.close();
-      } catch (error) {
-        console.log("error calling driver.quit - ignoring this exception");
+      await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/csp`);
+      const extractedText = await page.$eval("*", (el: any) => el.innerText);
+      let failed: string[] = JSON.parse(extractedText);
+      if (failed.includes(frameworkPath)) {
+        cspCheckSucessful = false;
+        console.log(`CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - due to reporting`);
+      }
+      if (!cspCheckSucessful != framework.issues.includes((1139))) {
+        const hint = cspCheckSucessful ? "The flag 1139 should be removed" : "The flag 1139 should be added";
+        console.log(`ERROR: CSP is incorrectly categorized for ${runFrameworks[i].fullNameWithKeyedAndVersion} . ${hint}`);
+        cspCheckSucessful = false;
+        allCorrect = false;
       }
     }
-  }
-
-  browser = await startBrowser(benchmarkOptions);
-  page = await browser.newPage();
-  try {
-    await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/csp`);
-    const extractedText = await page.$eval("*", (el: any) => el.innerText);
-    console.log(extractedText);
-    let failed = JSON.parse(extractedText);
-    console.log("CSP check failed for the following frameworks:\n", failed.join("\n"));
   } finally {
+    await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/csp/disable`);
     await page.close();
     await browser.close();
   }

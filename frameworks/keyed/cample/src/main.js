@@ -82,8 +82,8 @@ const eachComponent = each(
   ({ importedData }) => importedData.rows,
   `<tr key="{{row.id}}" class="{{[selected]}}">
     <td class='col-md-1'>{{row.id}}</td>
-    <td class='col-md-4'><a :click="{{importedData.setSelected(row.id)}}" class='lbl'>{{row.label}}</a></td>
-    <td class='col-md-1'><a :click="{{importedData.delete(row.id)}}" class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td>
+    <td class='col-md-4'><a ::click="{{importedData.setSelected(row.id)}}" class='lbl'>{{row.label}}</a></td>
+    <td class='col-md-1'><a ::click="{{importedData.delete(row.id)}}" class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td>
     <td class='col-md-6'></td>
   </tr>`,
   {
@@ -150,25 +150,29 @@ const mainComponent = component(
     },
     functions: {
       run: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.stopPropagation();
           setData(() => buildData(1000));
         },
         "updateRows",
       ],
       runLots: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.stopPropagation();
           setData(() => buildData(10000));
         },
         "updateRows",
       ],
       add: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.stopPropagation();
           setData((d) => [...d, ...buildData(1000)]);
         },
         "updateRows",
       ],
       update: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.stopPropagation();
           setData((d) => {
             const value = d.slice();
             for (let i = 0; i < value.length; i += 10) {
@@ -181,19 +185,20 @@ const mainComponent = component(
         "updateRows",
       ],
       clear: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.stopPropagation();
           setData(() => []);
         },
         "updateRows",
       ],
       swapRows: [
-        (setData) => () => {
+        (setData, event) => () => {
+          event.stopPropagation();
           setData((d) => {
-            const value = d.slice();
-            const tmp = value[1];
-            value[1] = value[998];
-            value[998] = tmp;
-            return value;
+            const tmp = d[1];
+            d[1] = d[998];
+            d[998] = tmp;
+            return d;
           });
         },
         "updateRows",
@@ -215,8 +220,10 @@ const mainComponent = component(
           delete: [
             (setData) => (id) => {
               setData((d) => {
+                const value = d.slice();
                 const idx = d.findIndex((d) => d.id === id);
-                return [...d.slice(0, idx), ...d.slice(idx + 1)];
+                value.splice(idx, 1);
+                return value;
               });
             },
             "updateRows",

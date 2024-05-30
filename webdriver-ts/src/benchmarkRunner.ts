@@ -40,8 +40,6 @@ function forkAndCallBenchmark(
       forkedRunner = "dist/forkedBenchmarkRunnerWebdriverCDP.js";
     } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.PLAYWRIGHT) {
       forkedRunner = "dist/forkedBenchmarkRunnerPlaywright.js";
-    } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER) {
-      forkedRunner = "dist/forkedBenchmarkRunnerWebdriver.js";
     } else if (config.BENCHMARK_RUNNER == BenchmarkRunner.WEBDRIVER_AFTERFRAME) {
       forkedRunner = "dist/forkedBenchmarkRunnerWebdriverAfterframe.js";
     } else {
@@ -95,21 +93,18 @@ async function runBenchmakLoopStartup(
     let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
     if (Array.isArray(res.result)) {
       results = results.concat(res.result as StartupBenchmarkResult[]);
-    } else results.push(res.result);
-    warnings = warnings.concat(res.warnings);
+    } else {
+      results.push(res.result);
+    }
+    if (res.warnings) {
+      warnings = warnings.concat(res.warnings);
+    }
     if (res.error) {
-      if (res.error.includes("Server terminated early with status 1")) {
-        console.log("******* STRANGE selenium error found - retry #", retries + 1);
-        retries++;
-        if (retries == 3) break;
-      } else {
-        errors.push(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + res.error);
-        break;
-      }
+      errors.push(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + res.error);
+      break;
     }
     done++;
   }
-  console.log("******* result", results);
   if (config.WRITE_RESULTS) {
     await writeResults(benchmarkOptions.resultsDirectory, {
       framework: framework,
@@ -153,7 +148,6 @@ async function runBenchmakLoopSize(
     }
     done++;
   }
-  console.log("******* result", results);
   if (config.WRITE_RESULTS) {
     await writeResults(benchmarkOptions.resultsDirectory, {
       framework: framework,
@@ -203,26 +197,11 @@ async function runBenchmakLoop(
     }
     warnings = warnings.concat(res.warnings);
     if (res.error) {
-      if (res.error.includes("Server terminated early with status 1")) {
-        console.log("******* STRANGE selenium error found - retry #", retries + 1);
-        retries++;
-        if (retries == 3) break;
-      } else {
-        errors.push(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + res.error);
-        break;
-      }
+      console.log(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + res.error);
+      errors.push(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + res.error);
+      break;
     }
   }
-  if (benchmarkInfo.type == BenchmarkType.CPU) {
-    console.log("CPU results before:", results);
-    // (results as CPUBenchmarkResult[]).sort(
-    //   (a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total
-    // );
-    // results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
-    // console.log("CPU results after: ", results)
-  }
-
-  console.log("******* result", results);
   if (config.WRITE_RESULTS) {
     if (benchmarkInfo.type == BenchmarkType.CPU) {
       await writeResults(benchmarkOptions.resultsDirectory, {
@@ -241,8 +220,6 @@ async function runBenchmakLoop(
     }
   }
   return { errors, warnings };
-  // } else {
-  //     return executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
 }
 
 async function runBench(
@@ -360,6 +337,7 @@ async function main() {
     .array("framework")
     .array("benchmark")
     .number("count")
+    .number("puppeteerSleep")
     .string("chromeBinary").argv;
 
   console.log("args", args);
@@ -368,7 +346,6 @@ async function main() {
   if (
     [
       BenchmarkRunner.WEBDRIVER_CDP,
-      BenchmarkRunner.WEBDRIVER,
       BenchmarkRunner.WEBDRIVER_AFTERFRAME,
       BenchmarkRunner.PLAYWRIGHT,
       BenchmarkRunner.PUPPETEER,
@@ -379,7 +356,7 @@ async function main() {
   } else {
     console.log("ERROR: argument driver has illegal value " + runner, [
       BenchmarkRunner.WEBDRIVER_CDP,
-      BenchmarkRunner.WEBDRIVER,
+      BenchmarkRunner.WEBDRIVER_AFTERFRAME,
       BenchmarkRunner.PLAYWRIGHT,
       BenchmarkRunner.PUPPETEER,
     ]);
@@ -404,7 +381,10 @@ async function main() {
     resultsDirectory: "results",
     tracesDirectory: "traces",
     allowThrottling: !args.nothrottling,
+    puppeteerSleep: args.puppeteerSleep ?? 0,
   };
+
+  config.PUPPETEER_WAIT_MS = benchmarkOptions.puppeteerSleep;
 
   if (args.count) {
     benchmarkOptions.numIterationsForCPUBenchmarks = args.count;
@@ -435,14 +415,12 @@ async function main() {
   let matchesDirectoryArg = (directoryName: string) =>
     frameworkArgument.length === 0 || frameworkArgument.some((arg: string) => arg == directoryName);
   let frameworks = await initializeFrameworks(benchmarkOptions, matchesDirectoryArg);
-  runFrameworks = frameworks.filter(
-    (f) => f.keyed || config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME
-  );
+  runFrameworks = frameworks.filter((f) => f.keyed || config.BENCHMARK_RUNNER !== BenchmarkRunner.WEBDRIVER_AFTERFRAME);
 
-  if (args.type=='keyed') {
+  if (args.type == "keyed") {
     runFrameworks = runFrameworks.filter((f) => f.keyed);
     console.log("run only keyed frameworks");
-  } else if (args.type=='non-keyed') {
+  } else if (args.type == "non-keyed") {
     runFrameworks = runFrameworks.filter((f) => !f.keyed);
     console.log("run only non-keyed frameworks");
   }

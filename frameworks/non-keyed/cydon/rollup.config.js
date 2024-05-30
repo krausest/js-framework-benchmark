@@ -23,6 +23,7 @@ if (process.env.production) {
 export default {
   input: 'src/main.js',
   output: {
+    compact: true,
     file: 'dist/main.js'
   },
   plugins

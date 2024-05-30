@@ -12,13 +12,13 @@
     "build-prod": "rollup -c --environment production"
   },
   "dependencies": {
-    "lwc": "3.0.1"
+    "lwc": "6.6.1"
   },
   "devDependencies": {
-    "@lwc/rollup-plugin": "3.0.1",
-    "@rollup/plugin-replace": "5.0.2",
-    "rollup": "3.26.2",
-    "@rollup/plugin-terser": "0.4.3"
+    "@lwc/rollup-plugin": "6.6.1",
+    "@rollup/plugin-replace": "5.0.5",
+    "rollup": "4.17.2",
+    "@rollup/plugin-terser": "0.4.4"
   },
   "license": "MIT",
   "keywords": [

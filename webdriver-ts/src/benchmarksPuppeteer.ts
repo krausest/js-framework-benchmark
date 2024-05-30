@@ -40,18 +40,26 @@ export let benchRun = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
     super(cpuBenchmarkInfos[Benchmark._01]);
   }
-  async init(page: Page) { 
+  async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, "pierce/#run");
-      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
+      await checkElementContainsText(
+        page,
+        "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
+        (i * 1000 + 1).toFixed()
+      );
       await clickElement(page, "pierce/#clear");
       await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }
   }
   async run(page: Page) {
-      await clickElement(page, "pierce/#run");
-      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", ((config.WARMUP_COUNT+1)*1000).toFixed());
+    await clickElement(page, "pierce/#run");
+    await checkElementContainsText(
+      page,
+      "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
+      ((this.benchmarkInfo.warmupCount + 1) * 1000).toFixed()
+    );
   }
 })();
 
@@ -60,15 +68,23 @@ export const benchReplaceAll = new (class extends CPUBenchmarkPuppeteer {
     super(cpuBenchmarkInfos[Benchmark._02]);
   }
   async init(page: Page) {
-      await checkElementExists(page, "pierce/#run");
-      for (let i = 0; i < config.WARMUP_COUNT; i++) {
-        await clickElement(page, "pierce/#run");
-        await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
-      }
+    await checkElementExists(page, "pierce/#run");
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
+      await clickElement(page, "pierce/#run");
+      await checkElementContainsText(
+        page,
+        "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
+        (i * 1000 + 1).toFixed()
+      );
+    }
   }
   async run(page: Page) {
     await clickElement(page, "pierce/#run");
-    await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", "5001");
+    await checkElementContainsText(
+      page,
+      "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
+      `${this.benchmarkInfo.warmupCount * 1000 + 1}`
+    );
   }
 })();
 
@@ -80,14 +96,22 @@ export const benchUpdate = new (class extends CPUBenchmarkPuppeteer {
     await checkElementExists(page, "pierce/#run");
     await clickElement(page, "pierce/#run");
     await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
-      for (let i = 0; i < 3; i++) {
-        await clickElement(page, "pierce/#update");
-        await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(991)>td:nth-of-type(2)>a", ' !!!'.repeat(i + 1));
-      }
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
+      await clickElement(page, "pierce/#update");
+      await checkElementContainsText(
+        page,
+        "pierce/tbody>tr:nth-of-type(991)>td:nth-of-type(2)>a",
+        " !!!".repeat(i + 1)
+      );
+    }
   }
   async run(page: Page) {
     await clickElement(page, "pierce/#update");
-    await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(991)>td:nth-of-type(2)>a", ' !!!'.repeat(3 + 1));
+    await checkElementContainsText(
+      page,
+      "pierce/tbody>tr:nth-of-type(991)>td:nth-of-type(2)>a",
+      " !!!".repeat(this.benchmarkInfo.warmupCount + 1)
+    );
   }
 })();
 
@@ -99,15 +123,15 @@ export const benchSelect = new (class extends CPUBenchmarkPuppeteer {
     await checkElementExists(page, "pierce/#run");
     await clickElement(page, "pierce/#run");
     await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
-    for (let i = 0; i <= config.WARMUP_COUNT; i++) {
+    for (let i = 0; i <= this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, `pierce/tbody>tr:nth-of-type(${i + 5})>td:nth-of-type(2)>a`);
       await checkElementHasClass(page, `pierce/tbody>tr:nth-of-type(${i + 5})`, "danger");
       await checkCountForSelector(page, "pierce/tbody>tr.danger", 1);
     }
   }
   async run(page: Page) {
-      await clickElement(page, "pierce/tbody>tr:nth-of-type(2)>td:nth-of-type(2)>a");
-      await checkElementHasClass(page, "pierce/tbody>tr:nth-of-type(2)", "danger");
+    await clickElement(page, "pierce/tbody>tr:nth-of-type(2)>td:nth-of-type(2)>a");
+    await checkElementHasClass(page, "pierce/tbody>tr:nth-of-type(2)", "danger");
   }
 })();
 
@@ -116,19 +140,21 @@ export const benchSwapRows = new (class extends CPUBenchmarkPuppeteer {
     super(cpuBenchmarkInfos[Benchmark._05]);
   }
   async init(page: Page) {
-      await checkElementExists(page, "pierce/#run");
-      await clickElement(page, "pierce/#run");
-      await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
-      for (let i = 0; i <= config.WARMUP_COUNT; i++) {
+    await checkElementExists(page, "pierce/#run");
+    await clickElement(page, "pierce/#run");
+    await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
+    for (let i = 0; i <= this.benchmarkInfo.warmupCount; i++) {
       let text = i % 2 == 0 ? "2" : "999";
-          await clickElement(page, "pierce/#swaprows");
-          await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text);
-      }
+      await clickElement(page, "pierce/#swaprows");
+      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text);
+    }
   }
   async run(page: Page) {
-      await clickElement(page, "pierce/#swaprows");
-      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(999)>td:nth-of-type(1)", "2");
-      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(2)>td:nth-of-type(1)", "999");
+    await clickElement(page, "pierce/#swaprows");
+    let text999 = this.benchmarkInfo.warmupCount % 2 == 0 ? "999" : "2";
+    let text2 = this.benchmarkInfo.warmupCount % 2 == 0 ? "2" : "999";
+    await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(999)>td:nth-of-type(1)", text999);
+    await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(2)>td:nth-of-type(1)", text2);
   }
 })();
 
@@ -136,59 +162,100 @@ export const benchRemove = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
     super(cpuBenchmarkInfos[Benchmark._06]);
   }
+  rowsToSkip = 4;
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
     await clickElement(page, "pierce/#run");
     await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
-      for (let i = 0; i < config.WARMUP_COUNT; i++) {
-          await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${config.WARMUP_COUNT - i + 4})>td:nth-of-type(1)`, (config.WARMUP_COUNT - i + 4).toString());
-          await clickElement(page, `pierce/tbody>tr:nth-of-type(${config.WARMUP_COUNT - i + 4})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-          await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(${config.WARMUP_COUNT - i + 4})>td:nth-of-type(1)`, "10");
-      }
-      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(5)>td:nth-of-type(1)`, "10");
-      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(4)>td:nth-of-type(1)`, "4");
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
+      const rowToClick = this.benchmarkInfo.warmupCount - i + this.rowsToSkip;
+      await checkElementContainsText(
+        page,
+        `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(1)`,
+        rowToClick.toString()
+      );
+      await clickElement(page, `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
+      await checkElementContainsText(
+        page,
+        `pierce/tbody>tr:nth-of-type(${rowToClick})>td:nth-of-type(1)`,
+        `${this.rowsToSkip + this.benchmarkInfo.warmupCount + 1}`
+      );
+    }
+    await checkElementContainsText(
+      page,
+      `pierce/tbody>tr:nth-of-type(${this.rowsToSkip + 1})>td:nth-of-type(1)`,
+      `${this.rowsToSkip + this.benchmarkInfo.warmupCount + 1}`
+    );
+    await checkElementContainsText(
+      page,
+      `pierce/tbody>tr:nth-of-type(${this.rowsToSkip})>td:nth-of-type(1)`,
+      `${this.rowsToSkip}`
+    );
 
-      // Click on a row the second time
-      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(6)>td:nth-of-type(1)`, "11");
-      await clickElement(page, `pierce/tbody>tr:nth-of-type(6)>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-      await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(6)>td:nth-of-type(1)`, "12");
+    // Click on a row the second time
+    await checkElementContainsText(
+      page,
+      `pierce/tbody>tr:nth-of-type(${this.rowsToSkip + 2})>td:nth-of-type(1)`,
+      `${this.rowsToSkip + this.benchmarkInfo.warmupCount + 2}`
+    );
+    await clickElement(
+      page,
+      `pierce/tbody>tr:nth-of-type(${this.rowsToSkip + 2})>td:nth-of-type(3)>a>span:nth-of-type(1)`
+    );
+    await checkElementContainsText(
+      page,
+      `pierce/tbody>tr:nth-of-type(${this.rowsToSkip + 2})>td:nth-of-type(1)`,
+      `${this.rowsToSkip + this.benchmarkInfo.warmupCount + 3}`
+    );
   }
   async run(page: Page) {
-    await clickElement(page, `pierce/tbody>tr:nth-of-type(4)>td:nth-of-type(3)>a>span:nth-of-type(1)`);
-    await checkElementContainsText(page, `pierce/tbody>tr:nth-of-type(4)>td:nth-of-type(1)`, "10");
+    await clickElement(page, `pierce/tbody>tr:nth-of-type(${this.rowsToSkip})>td:nth-of-type(3)>a>span:nth-of-type(1)`);
+    await checkElementContainsText(
+      page,
+      `pierce/tbody>tr:nth-of-type(${this.rowsToSkip})>td:nth-of-type(1)`,
+      `${this.rowsToSkip + this.benchmarkInfo.warmupCount + 1}`
+    );
   }
 })();
 export const benchRunBig = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
-    super(cpuBenchmarkInfos[Benchmark._07]);  
+    super(cpuBenchmarkInfos[Benchmark._07]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, "pierce/#run");
-      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
+      await checkElementContainsText(
+        page,
+        "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
+        (i * 1000 + 1).toFixed()
+      );
       await clickElement(page, "pierce/#clear");
       await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
-    }    
+    }
   }
   async run(page: Page) {
     await clickElement(page, "pierce/#runlots");
     await checkElementExists(page, "pierce/tbody>tr:nth-of-type(10000)>td:nth-of-type(2)>a");
   }
 })();
-  
+
 export const benchAppendToManyRows = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
     super(cpuBenchmarkInfos[Benchmark._08]);
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, "pierce/#run");
-      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
+      await checkElementContainsText(
+        page,
+        "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
+        (i * 1000 + 1).toFixed()
+      );
       await clickElement(page, "pierce/#clear");
       await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
-    }    
+    }
     await clickElement(page, "pierce/#run");
     await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
   }
@@ -204,18 +271,26 @@ export const benchClear = new (class extends CPUBenchmarkPuppeteer {
   }
   async init(page: Page) {
     await checkElementExists(page, "pierce/#run");
-    for (let i = 0; i < config.WARMUP_COUNT; i++) {
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
       await clickElement(page, "pierce/#run");
-      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
+      await checkElementContainsText(
+        page,
+        "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
+        (i * 1000 + 1).toFixed()
+      );
       await clickElement(page, "pierce/#clear");
       await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }
     await clickElement(page, "pierce/#run");
-    await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (config.WARMUP_COUNT*1000+1).toFixed());
+    await checkElementContainsText(
+      page,
+      "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)",
+      (this.benchmarkInfo.warmupCount * 1000 + 1).toFixed()
+    );
   }
   async run(page: Page) {
-      await clickElement(page, "pierce/#clear");
-      await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
+    await clickElement(page, "pierce/#clear");
+    await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
   }
 })();
 
@@ -299,7 +374,11 @@ export const benchCreateClear5Memory = new (class extends MemBenchmarkPuppeteer 
   async run(page: Page) {
     for (let i = 0; i < 5; i++) {
       await clickElement(page, "pierce/#run");
-      await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", (1000 * (i + 1)).toFixed());
+      await checkElementContainsText(
+        page,
+        "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)",
+        (1000 * (i + 1)).toFixed()
+      );
       await clickElement(page, "pierce/#clear");
       await checkElementNotExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
     }
@@ -307,19 +386,19 @@ export const benchCreateClear5Memory = new (class extends MemBenchmarkPuppeteer 
 })();
 
 export const benchmarks = [
-  benchRun, 
+  benchRun,
   benchReplaceAll,
-  benchUpdate, 
-  benchSelect, 
-  benchSwapRows, 
-  benchRemove, 
-  benchRunBig, 
-  benchAppendToManyRows, 
-  benchClear, 
-  benchReadyMemory, 
-  benchRunMemory, 
+  benchUpdate,
+  benchSelect,
+  benchSwapRows,
+  benchRemove,
+  benchRunBig,
+  benchAppendToManyRows,
+  benchClear,
+  benchReadyMemory,
+  benchRunMemory,
   benchUpdate5Memory,
-  // benchReplace5Memory, 
+  // benchReplace5Memory,
   benchCreateClear5Memory,
   benchRun10KMemory,
 ];

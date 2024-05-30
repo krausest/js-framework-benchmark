@@ -27,7 +27,7 @@
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
-    "@dark-engine/core": "0.25.1",
-    "@dark-engine/platform-browser": "0.25.1"
+    "@dark-engine/core": "1.0.2",
+    "@dark-engine/platform-browser": "1.0.2"
   }
 }

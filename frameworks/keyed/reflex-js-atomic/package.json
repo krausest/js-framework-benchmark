@@ -1,0 +1,28 @@
+{
+  "name": "js-framework-benchmark-reflex-js-atomic",
+  "version": "0.0.0",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "reflex-dom",
+    "frameworkHomeURL": "https://github.com/zouloux/reflex"
+  },
+  "description": "Benchmark for Reflex-DOM library",
+  "scripts": {
+    "build-dev": "node esbuild.config.js dev",
+    "build-prod": "node esbuild.config.js prod"
+  },
+  "author": "Alexis Bouhet",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.25",
+    "esbuild": "^0.20.1"
+  },
+  "dependencies": {
+    "reflex-dom": "0.23.1"
+  }
+}

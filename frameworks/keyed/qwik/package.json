@@ -9,7 +9,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@builder.io/qwik",
     "frameworkHomeURL": "https://qwik.builder.io/",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "issues": [1139]
   },
   "scripts": {
     "build-dev": "vite --mode ssr",
@@ -24,8 +25,8 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.3.0",
-    "@builder.io/qwik-city": "^1.3.0",
+    "@builder.io/qwik": "^1.5.0",
+    "@builder.io/qwik-city": "^1.5.0",
     "vite": "^5.0.6",
     "vite-tsconfig-paths": "^4.2.1"
   }

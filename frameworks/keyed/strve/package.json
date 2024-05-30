@@ -21,6 +21,6 @@
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
-    "strve-js": "6.2.6"
+    "strve-js": "6.7.0"
   }
 }
