@@ -20,8 +20,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "destam": "^0.1.0",
-    "destam-dom": "^0.6.0"
+    "destam": "^0.2.0",
+    "destam-dom": "^0.7.2"
   },
   "devDependencies": {
     "@babel/parser": "^7.24.1",

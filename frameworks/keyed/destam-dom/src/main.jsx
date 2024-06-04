@@ -13,91 +13,86 @@ const Button = ({ id, text, fn }) =>
     <button id={ id } class='btn btn-primary btn-block' type='button' $onclick={ fn }>{ text }</button>
   </div>
 
-const App = () => {
-  const
-    array = OArray(),
-    selected = Observer.mutable(null),
-    run = () => {
-      array.splice(0, array.length);
-      appendData(1000);
-    },
-    runLots = () => {
-      array.splice(0, array.length);
-      appendData(10000)
-    },
-    add = () => appendData(1000),
-    update = () => {
-      for(let i = 0, len = array.length; i < len; i += 10)
-        array[i].label.set(array[i].label.get() + ' !!!');
-    },
-    swapRows = () => {
-      if (array.length > 998) {
-        atomic (() => {
-          let tmp = array[1];
-          array[1] = array[998];
-          array[998] = tmp;
-        });
-      }
-    },
-    clear = () => {
-      array.splice(0, array.length);
-    },
-    remove = idx => {
-      array.splice(idx, 1);
-    },
-    select = idx => {
-      selected.set(array[idx]);
-    };
-
-  function appendData(count) {
-    const arr = Array(count);
-    for (let i = 0; i < count; i++) {
-      let label = Observer.mutable(`${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`);
-
-      const dom =
-        <tr class={selected.map(sel => sel === dom ? "danger": "")}>
-          <td class='col-md-1' $textContent={ idCounter++ } />
-          <td class='col-md-4'><a $clickHandler={1} $textContent={ label } /></td>
-          <td class='col-md-1'><a $clickHandler={2}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
-          <td class='col-md-6'/>
-        </tr>;
-
-      dom.label = label;
-      arr[i] = dom;
+const
+  array = OArray(),
+  selected = Observer.mutable(null),
+  selector = selected.selector('danger', null),
+  run = () => {
+    array.splice(0, array.length);
+    appendData(1000);
+  },
+  runLots = () => {
+    array.splice(0, array.length);
+    appendData(10000)
+  },
+  add = () => appendData(1000),
+  update = () => {
+    for(let i = 0, len = array.length; i < len; i += 10)
+      array[i].label.set(array[i].label.get() + ' !!!');
+  },
+  swapRows = () => {
+    if (array.length > 998) {
+      atomic (() => {
+        let tmp = array[1];
+        array[1] = array[998];
+        array[998] = tmp;
+      });
     }
+  },
+  clear = () => {
+    array.splice(0, array.length);
+  },
+  remove = idx => {
+    array.splice(idx, 1);
+  },
+  select = idx => {
+    selected.set(array[idx].label);
+  };
 
-    array.push(...arr);
+function appendData(count) {
+  const arr = Array(count);
+  for (let i = 0; i < count; i++) {
+    let label = Observer.mutable(`${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`);
+
+    const dom =
+      <tr class={selector(label)}>
+        <td class='col-md-1' $textContent={ idCounter++ } />
+        <td class='col-md-4'><a $clickHandler={select} $textContent={ label } /></td>
+        <td class='col-md-1'><a $clickHandler={remove}><span class='glyphicon glyphicon-remove' aria-hidden="true" /></a></td>
+        <td class='col-md-6'/>
+      </tr>;
+
+    dom.label = label;
+    arr[i] = dom;
   }
 
-  return <div class='container'>
-    <div class='jumbotron'><div class='row'>
-      <div class='col-md-6'><h1>Destam-Dom Keyed</h1></div>
-      <div class='col-md-6'><div class='row'>
-        <Button id='run' text='Create 1,000 rows' fn={ run } />
-        <Button id='runlots' text='Create 10,000 rows' fn={ runLots } />
-        <Button id='add' text='Append 1,000 rows' fn={ add } />
-        <Button id='update' text='Update every 10th row' fn={ update } />
-        <Button id='clear' text='Clear' fn={ clear } />
-        <Button id='swaprows' text='Swap Rows' fn={ swapRows } />
-      </div></div>
-    </div></div>
-    <table class='table table-hover table-striped test-data'><tbody $onclick={ev => {
-        let handler;
-        let e = ev.target;
-        while (e.parentElement.tagName !== "TBODY") {
-          if (e.clickHandler) handler = e.clickHandler;
-          e = e.parentElement;
-        }
-
-        if (!handler) return;
-
-        let i = Array.prototype.indexOf.call(e.parentElement.children, e);
-        [null, select, remove][handler](i);
-    }}>
-      {array}
-    </tbody></table>
-    <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
-  </div>;
+  array.push(...arr);
 }
 
-mount(document.body, App());
+mount(document.body, <div class='container'>
+  <div class='jumbotron'><div class='row'>
+    <div class='col-md-6'><h1>Destam-Dom Keyed</h1></div>
+    <div class='col-md-6'><div class='row'>
+      <Button id='run' text='Create 1,000 rows' fn={ run } />
+      <Button id='runlots' text='Create 10,000 rows' fn={ runLots } />
+      <Button id='add' text='Append 1,000 rows' fn={ add } />
+      <Button id='update' text='Update every 10th row' fn={ update } />
+      <Button id='clear' text='Clear' fn={ clear } />
+      <Button id='swaprows' text='Swap Rows' fn={ swapRows } />
+    </div></div>
+  </div></div>
+  <table class='table table-hover table-striped test-data'><tbody $onclick={ev => {
+      let handler;
+      let e = ev.target;
+      while (e.parentElement.tagName !== "TBODY") {
+        if (e.clickHandler) handler = e.clickHandler;
+        e = e.parentElement;
+      }
+
+      if (!handler) return;
+      handler(Array.prototype.indexOf.call(e.parentElement.children, e));
+  }}>
+    {array}
+  </tbody></table>
+  <span class='preloadicon glyphicon glyphicon-remove' aria-hidden="true" />
+</div>);
