@@ -95,7 +95,7 @@ class App extends SonnetComponent {
 
     for (let [key, value] of Object.entries({
       run: this.run,
-      runlots: this.run(10000),
+      runlots: () => this.run(10000),
       add: this.add,
       update: this.update,
       clear: this.clear,
