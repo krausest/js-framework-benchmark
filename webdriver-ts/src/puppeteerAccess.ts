@@ -133,7 +133,6 @@ export async function startBrowser(benchmarkOptions: BenchmarkOptions): Promise<
   const browser = await puppeteer.launch({
     headless: false,
     executablePath: browserPath(benchmarkOptions),
-
     args,
     dumpio: false,
     defaultViewport: {
