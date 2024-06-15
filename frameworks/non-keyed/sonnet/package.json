@@ -4,7 +4,7 @@
   "description": "SonnetJS Demo",
   "private": true,
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "sonnetjs",
+    "frameworkVersionFromPackage": "@sonnetjs/core",
     "frameworkHomeURL": "https://sonnet.js.org/",
     "customURL": "/dist"
   },
