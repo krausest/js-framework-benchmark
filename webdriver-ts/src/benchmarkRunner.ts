@@ -71,53 +71,6 @@ function forkAndCallBenchmark(
   });
 }
 
-async function runBenchmakLoopStartup(
-  framework: FrameworkData,
-  benchmarkInfo: StartupBenchmarkInfo,
-  benchmarkOptions: BenchmarkOptions
-): Promise<{ errors: string[]; warnings: string[] }> {
-  let warnings: string[] = [];
-  let errors: string[] = [];
-
-  let results: Array<StartupBenchmarkResult> = [];
-  let count = benchmarkOptions.numIterationsForStartupBenchmark;
-  benchmarkOptions.batchSize = 1;
-
-  let retries = 0;
-  let done = 0;
-
-  console.log("runBenchmakLoopStartup", framework, benchmarkInfo);
-
-  while (done < count) {
-    console.log("FORKING:", benchmarkInfo.id, "BatchSize", benchmarkOptions.batchSize);
-    let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
-    if (Array.isArray(res.result)) {
-      results = results.concat(res.result as StartupBenchmarkResult[]);
-    } else {
-      results.push(res.result);
-    }
-    if (res.warnings) {
-      warnings = warnings.concat(res.warnings);
-    }
-    if (res.error) {
-      errors.push(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + res.error);
-      break;
-    }
-    done++;
-  }
-  if (config.WRITE_RESULTS) {
-    await writeResults(benchmarkOptions.resultsDirectory, {
-      framework: framework,
-      benchmark: benchmarkInfo,
-      results: results,
-      type: BenchmarkType.STARTUP,
-    });
-  }
-  return { errors, warnings };
-  // } else {
-  //     return executeBenchmark(frameworks, keyed, frameworkName, benchmarkName, benchmarkOptions);
-}
-
 async function runBenchmakLoopSize(
   framework: FrameworkData,
   benchmarkInfo: SizeBenchmarkInfo,
@@ -252,13 +205,7 @@ async function runBench(
       try {
         let result;
 
-        if (benchmarkInfos[j].type == BenchmarkType.STARTUP_MAIN) {
-          result = await runBenchmakLoopStartup(
-            runFrameworks[i],
-            benchmarkInfos[j] as StartupBenchmarkInfo,
-            benchmarkOptions
-          );
-        } else if (benchmarkInfos[j].type == BenchmarkType.SIZE_MAIN) {
+        if (benchmarkInfos[j].type == BenchmarkType.SIZE_MAIN) {
           result = await runBenchmakLoopSize(
             runFrameworks[i],
             benchmarkInfos[j] as SizeBenchmarkInfo,
