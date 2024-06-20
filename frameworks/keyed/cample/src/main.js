@@ -95,6 +95,7 @@ const eachComponent = each(
     },
   }
 );
+let currentTr = null;
 const mainComponent = component(
   "main-component",
   `<div class="container">
@@ -207,15 +208,12 @@ const mainComponent = component(
         },
         functions: {
           setSelected: [
-            (setData, e) => () => {
-              setData((oldData) => {
-                if(oldData && oldData.className){
-                  oldData.className = "";
-                }
-                const currentTr = e.target.parentNode.parentNode;
-                currentTr.className = "danger";
-                return currentTr;
-              });
+            (_, e) => () => {
+              if (currentTr && currentTr.className) {
+                currentTr.className = "";
+              }
+              currentTr = e.target.parentNode.parentNode;
+              currentTr.className = "danger";
             },
             "updateSelected",
           ],
