@@ -87,11 +87,6 @@ const eachComponent = each(
     <td class='col-md-6'></td>
   </tr>`,
   {
-    values: {
-      selected: {
-        "row.id === importedData.selected": "danger",
-      },
-    },
     valueName: "row",
     functionName: "updateTable",
     import: {
