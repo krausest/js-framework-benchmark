@@ -80,9 +80,9 @@ const buildData = (count) => {
 const eachComponent = each(
   "table-rows",
   ({ importedData }) => importedData.rows,
-  `<tr key="{{row.id}}" class="{{[selected]}}">
+  `<tr key="{{row.id}}" class="">
     <td class='col-md-1'>{{row.id}}</td>
-    <td class='col-md-4'><a ::click="{{importedData.setSelected(row.id)}}" class='lbl'>{{row.label}}</a></td>
+    <td class='col-md-4'><a ::click="{{importedData.setSelected()}}" class='lbl'>{{row.label}}</a></td>
     <td class='col-md-1'><a ::click="{{importedData.delete(row.id)}}" class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td>
     <td class='col-md-6'></td>
   </tr>`,
@@ -212,8 +212,15 @@ const mainComponent = component(
         },
         functions: {
           setSelected: [
-            (setData) => (id) => {
-              setData(() => id);
+            (setData, e) => () => {
+              setData((oldData) => {
+                if(oldData && oldData.className){
+                  oldData.className = "";
+                }
+                const currentTr = e.target.parentNode.parentNode;
+                currentTr.className = "danger";
+                return currentTr;
+              });
             },
             "updateSelected",
           ],
