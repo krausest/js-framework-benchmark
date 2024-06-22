@@ -4,8 +4,8 @@
   "description": "Benchmark for Viewfly framework",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "viewfly",
-    "frameworkHomeURL": "https://github.com/viewfly/viewfly",
+    "frameworkVersionFromPackage": "@viewfly/core",
+    "frameworkHomeURL": "https://github.com/viewfly/viewfly"
   },
   "scripts": {
     "build-dev": "webpack-dev-server",
@@ -23,8 +23,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "@viewfly/core": "^1.0.0-alpha.12",
-    "@viewfly/platform-browser": "^1.0.0-alpha.12"
+    "@viewfly/core": "^1.0.0-alpha.13",
+    "@viewfly/platform-browser": "^1.0.0-alpha.13"
   },
   "devDependencies": {
     "html-webpack-plugin": "^5.5.0",

@@ -6,7 +6,7 @@ export interface Model {
   label: string
 }
 
-const random = (max) => Math.round(Math.random() * 1000) % max;
+const random = (max: number) => Math.round(Math.random() * 1000) % max;
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
   "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive",
@@ -17,7 +17,7 @@ const N = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "s
 
 let nextId = 1;
 
-const buildData = (count) => {
+const buildData = (count: number) => {
   const data = new Array(count);
 
   for (let i = 0; i < count; i++) {
@@ -41,7 +41,7 @@ function add() {
   rows.set(rows().concat(buildData(1000)))
 }
 
-function remove(id) {
+function remove(id: number) {
   rows().splice(
     rows().findIndex((d) => d.id === id),
     1
@@ -49,7 +49,7 @@ function remove(id) {
   setRows()
 }
 
-function select(id) {
+function select(id: number) {
   selected.set(id)
 }
 
@@ -93,7 +93,7 @@ function Jumbotron() {
       <div class="jumbotron">
         <div class="row">
           <div class="col-md-6">
-            <h1>Viewfly2 (keyed)</h1>
+            <h1>Viewfly (keyed)</h1>
           </div>
           <div class="col-md-6">
             <div class="row">
@@ -203,7 +203,7 @@ function Table() {
         <tbody>
         {
           rows().map(row => {
-            return <Row key={row.id} id={row.id} label={row.label}/>
+            return <Row key={row.id} id={row.id} label={row.label} />
           })
         }
         </tbody>
@@ -216,12 +216,12 @@ function App() {
   return () => {
     return (
       <>
-        <Jumbotron/>
-        <Table/>
-        <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"/>
+        <Jumbotron />
+        <Table />
+        <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
       </>
     )
   }
 }
 
-createApp(<App/>).mount(document.getElementById('main')!)
+createApp(<App />).mount(document.getElementById('main')!)
