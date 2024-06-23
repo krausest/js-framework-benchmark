@@ -14,14 +14,14 @@ fn main() {
 #[derive(PartialEq, Clone, Props)]
 struct Label {
     id: usize,
-    label: String,
+    label: Signal<String>,
 }
 
 impl Label {
     fn new(num: usize, label: String) -> Self {
         Label {
             id: num,
-            label
+            label: Signal::new(label)
         }
     }
 
@@ -107,7 +107,7 @@ fn app() -> Element {
                             ActionButton { name: "Update every 10th row", id: "update",
                                 onclick: move |_| {
                                     for row in data.write().rows.iter_mut().step_by(10) {
-                                        row.label += " !!!";
+                                        *row.label.write() += " !!!";
                                     }
                                 },
                             }
@@ -124,16 +124,14 @@ fn app() -> Element {
 
             table { class: "table table-hover table-striped test-data",
                 tbody { id: "tbody",
-                    {data.read().rows.iter().map(|item| {
-                        rsx! {
-                            RowComponent {
-                                row: item.clone(),
-                                data: data.clone(),
-                                selected_row: selected.clone(),
-                                key: "{item.id}",
-                            }
+                    for row in data.read().rows.clone() {
+                        RowComponent {
+                            row: row,
+                            data: data.clone(),
+                            selected_row: selected,
+                            key: "{row.id}",
                         }
-                    })}
+                    }
                 }
             }
 
@@ -157,6 +155,10 @@ impl PartialEq for RowComponentProps {
 
 #[component]
 fn RowComponent(mut props: RowComponentProps) -> Element {
+    use_drop(move || {
+        props.row.label.manually_drop();
+    });
+
     let danger_class = match props.selected_row.read().as_ref() {
         Some(selected_row) => {
             if *selected_row == props.row.id {
