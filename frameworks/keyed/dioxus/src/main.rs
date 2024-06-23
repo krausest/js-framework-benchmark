@@ -86,7 +86,7 @@ impl Data {
 #[component]
 fn app() -> Element {
     let mut data = use_signal(|| Data::new(0, 0));
-    let selected: Signal<Option<usize>> = use_signal(|| None);
+    let selected = use_signal::<Option<usize>>(|| None);
 
     rsx! {
         div { class: "container",
@@ -126,7 +126,7 @@ fn app() -> Element {
                 tbody { id: "tbody",
                     for row in data.read().rows.clone() {
                         RowComponent {
-                            row: row,
+                            row,
                             data: data.clone(),
                             selected_row: selected,
                             key: "{row.id}",
@@ -140,17 +140,11 @@ fn app() -> Element {
     }
 }
 
-#[derive(Clone, Props)]
+#[derive(Clone, Props, PartialEq)]
 struct RowComponentProps {
     row: Label,
     data: Signal<Data>,
     selected_row: Signal<Option<usize>>,
-}
-
-impl PartialEq for RowComponentProps {
-    fn eq(&self, other: &Self) -> bool {
-        self.row == other.row
-    }
 }
 
 #[component]
