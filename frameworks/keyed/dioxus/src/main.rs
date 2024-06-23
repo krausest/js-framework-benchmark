@@ -14,14 +14,14 @@ fn main() {
 #[derive(PartialEq, Clone, Props)]
 struct Label {
     id: usize,
-    label: Signal<String>,
+    label: String,
 }
 
 impl Label {
     fn new(num: usize, label: String) -> Self {
         Label {
             id: num,
-            label: use_signal(|| label),
+            label
         }
     }
 
@@ -38,12 +38,7 @@ fn append(list: &mut Vec<Label>, num: usize, key_from: usize) {
         let adjective = ADJECTIVES[random(ADJECTIVES.len())];
         let colour = COLOURS[random(COLOURS.len())];
         let noun = NOUNS[random(NOUNS.len())];
-        let mut label = String::with_capacity(adjective.len() + colour.len() + noun.len() + 2);
-        label.push_str(adjective);
-        label.push(' ');
-        label.push_str(colour);
-        label.push(' ');
-        label.push_str(noun);
+        let label = format!("{adjective} {colour} {noun}");
         list.push(Label::new(x + key_from, label));
     }
 }
@@ -111,9 +106,8 @@ fn app() -> Element {
                             }
                             ActionButton { name: "Update every 10th row", id: "update",
                                 onclick: move |_| {
-                                    let mut labels = data.write();
-                                    for i in 0..(labels.rows.len()/10) {
-                                        *labels.rows[i*10].label.write() += " !!!";
+                                    for row in data.write().rows.iter_mut().step_by(10) {
+                                        row.label += " !!!";
                                     }
                                 },
                             }
@@ -163,29 +157,24 @@ impl PartialEq for RowComponentProps {
 
 #[component]
 fn RowComponent(mut props: RowComponentProps) -> Element {
-    let label_text = use_memo(move || props.row.label.clone());
-    let id = props.row.id;
-    let is_in_danger = use_memo(move || {
-        let result = match props.selected_row.read().as_ref() {
-            Some(selected_row) => {
-                if *selected_row == id {
-                    "danger"
-                } else {
-                    ""
-                }
+    let danger_class = match props.selected_row.read().as_ref() {
+        Some(selected_row) => {
+            if *selected_row == props.row.id {
+                "danger"
+            } else {
+                ""
             }
-            None => "",
-        };
-        result
-    });
+        }
+        None => "",
+    };
 
     rsx! {
-        tr { class: is_in_danger,
+        tr { class: danger_class,
             td { class:"col-md-1", "{props.row.id}" }
             td { class:"col-md-4", onclick: move |_| {
                     *props.selected_row.write() = Some(props.row.id)
                 },
-                a { class: "lbl", "{label_text}" }
+                a { class: "lbl", "{props.row.label}" }
             }
             td { class: "col-md-1",
                 a { class: "remove", onclick: move |_| props.data.write().remove(props.row.id),
