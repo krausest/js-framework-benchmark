@@ -1,16 +1,35 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
     <meta charset="UTF-8">
     <title>Dioxus</title>
-    <link href="/css/currentStyle.css" rel="stylesheet">
-    <script type="module">import init from '/frameworks/keyed/dioxus/bundled-dist/dioxus_benchmark.js';init('/frameworks/keyed/dioxus/bundled-dist/dioxus_benchmark_bg.wasm');</script>
+    <link href="/css/currentStyle.css" rel="stylesheet" />
+    
+<script type="module" nonce="jvndOldWuwkMXEWQWURSUQ==">
+import init, * as bindings from '/frameworks/keyed/dioxus/bundled-dist/dioxus_benchmark.js';
+const wasm = await init('/frameworks/keyed/dioxus/bundled-dist/dioxus_benchmark_bg.wasm');
 
-<link rel="preload" href="/frameworks/keyed/dioxus/bundled-dist/dioxus_benchmark_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/frameworks/keyed/dioxus/bundled-dist/dioxus_benchmark.js"></head>
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+
+<link rel="modulepreload" href="/frameworks/keyed/dioxus/bundled-dist/dioxus_benchmark.js" crossorigin=anonymous integrity="sha384-+3J6wYDJdyoM1z/zOhslktRgkaTExFyt9ZzrKX5kbrHX4F9toXoFlYjXv/xj8rQE">
+<link rel="modulepreload" href="/frameworks/keyed/dioxus/bundled-dist/snippets/dioxus-interpreter-js-7c1300c6684e1811/src/js/common.js" crossorigin=anonymous integrity="sha384-lNXbLTw7Z18z5HtM0HV3R7/8J+II5Ei18I53QeIZolR+l1nGEBr27UjMtT/DJpiC">
+<link rel="modulepreload" href="/frameworks/keyed/dioxus/bundled-dist/snippets/dioxus-interpreter-js-7c1300c6684e1811/inline0.js" crossorigin=anonymous integrity="sha384-VC3noBrCJUM3xHCArssbXK3PW0yDS/Kdh2LOfWx4pjCSMw0vpIr77+OjjW4dBfBi">
+<link rel="modulepreload" href="/frameworks/keyed/dioxus/bundled-dist/snippets/dioxus-web-84af743b887ebc54/inline1.js" crossorigin=anonymous integrity="sha384-2v8X0XAeO26J0vmoLhIbIeAjVzFnrY9iLhlYJcksTMp7Ip2tbDcoX4vD/hCan7M7">
+<link rel="modulepreload" href="/frameworks/keyed/dioxus/bundled-dist/snippets/dioxus-web-84af743b887ebc54/inline0.js" crossorigin=anonymous integrity="sha384-xqSmg18C2FmchYWi9fb4cSqOW4ZNNo4b7NWZK1eW+fOqg4no+2F+zETwKUf1PJy3">
+<link rel="modulepreload" href="/frameworks/keyed/dioxus/bundled-dist/snippets/dioxus-web-84af743b887ebc54/src/eval.js" crossorigin=anonymous integrity="sha384-O0D0g9+cXudxTrzdAXYhjXnsL7oWNAzJlU2rv4ODwkbWi11CK6ZE3wz5cPJ3Jh5w">
+<link rel="preload" href="/frameworks/keyed/dioxus/bundled-dist/dioxus_benchmark_bg.wasm" crossorigin=anonymous integrity="sha384-E9Ctf0mj8C979OxjjgN+PWZ0e7EmsS3LjGBi/iL73CP9+5k6VX83uLDJBFcrA6Pr" as="fetch" type="application/wasm"></head>
 
 <body>
-    <div id="main"></div>
+    <div id='main'></div>
 
     <script src="/frameworks/keyed/dioxus/isKeyed.js"></script>
+</body>
 
-
-</body></html>
+</html>
