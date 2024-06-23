@@ -21,7 +21,7 @@ impl Label {
     fn new(num: usize, label: String) -> Self {
         Label {
             id: num,
-            label: Signal::new(label)
+            label: Signal::new(label),
         }
     }
 
@@ -159,16 +159,9 @@ fn RowComponent(mut props: RowComponentProps) -> Element {
         props.row.label.manually_drop();
     });
 
-    let danger_class = match props.selected_row.read().as_ref() {
-        Some(selected_row) => {
-            if *selected_row == props.row.id {
-                "danger"
-            } else {
-                ""
-            }
-        }
-        None => "",
-    };
+    let is_selected = use_memo(move || props.selected_row.read().as_ref() == Some(&props.row.id));
+
+    let danger_class = if is_selected() { "danger" } else { "" };
 
     rsx! {
         tr { class: danger_class,
