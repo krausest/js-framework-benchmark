@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-non-keyed-quel",
+  "name": "js-framework-benchmark-keyed-quel",
   "version": "1.0.0",
   "description": "benchmark for quel",
   "main": "index.js",

@@ -93,5 +93,3 @@ export class ViewModel {
     }
   }
 }
-
-export const moduleConfig = { useKeyed:false }
