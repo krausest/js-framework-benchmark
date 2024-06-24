@@ -1,4 +1,4 @@
-<script setup>
+<script setup vapor>
 import { ref, shallowRef } from "vue";
 import { buildData } from "./data";
 
