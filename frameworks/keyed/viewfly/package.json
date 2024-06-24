@@ -1,0 +1,37 @@
+{
+  "name": "js-framework-benchmark-viewfly",
+  "version": "1.1.1",
+  "description": "Benchmark for Viewfly framework",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@viewfly/core",
+    "frameworkHomeURL": "https://github.com/viewfly/viewfly"
+  },
+  "scripts": {
+    "build-dev": "webpack-dev-server",
+    "build-prod": "webpack --mode production"
+  },
+  "keywords": [
+    "react",
+    "webpack"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@viewfly/core": "^1.0.0-alpha.13",
+    "@viewfly/platform-browser": "^1.0.0-alpha.13"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^5.5.0",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.9.3",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.1"
+  }
+}
