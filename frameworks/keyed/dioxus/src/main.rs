@@ -21,7 +21,7 @@ impl Label {
     fn new(num: usize, label: String) -> Self {
         Label {
             id: num,
-            label: use_signal(|| label),
+            label: Signal::new(label),
         }
     }
 
@@ -38,12 +38,7 @@ fn append(list: &mut Vec<Label>, num: usize, key_from: usize) {
         let adjective = ADJECTIVES[random(ADJECTIVES.len())];
         let colour = COLOURS[random(COLOURS.len())];
         let noun = NOUNS[random(NOUNS.len())];
-        let mut label = String::with_capacity(adjective.len() + colour.len() + noun.len() + 2);
-        label.push_str(adjective);
-        label.push(' ');
-        label.push_str(colour);
-        label.push(' ');
-        label.push_str(noun);
+        let label = format!("{adjective} {colour} {noun}");
         list.push(Label::new(x + key_from, label));
     }
 }
@@ -91,7 +86,7 @@ impl Data {
 #[component]
 fn app() -> Element {
     let mut data = use_signal(|| Data::new(0, 0));
-    let selected: Signal<Option<usize>> = use_signal(|| None);
+    let selected = use_signal::<Option<usize>>(|| None);
 
     rsx! {
         div { class: "container",
@@ -111,9 +106,8 @@ fn app() -> Element {
                             }
                             ActionButton { name: "Update every 10th row", id: "update",
                                 onclick: move |_| {
-                                    let mut labels = data.write();
-                                    for i in 0..(labels.rows.len()/10) {
-                                        *labels.rows[i*10].label.write() += " !!!";
+                                    for row in data.write().rows.iter_mut().step_by(10) {
+                                        *row.label.write() += " !!!";
                                     }
                                 },
                             }
@@ -130,16 +124,14 @@ fn app() -> Element {
 
             table { class: "table table-hover table-striped test-data",
                 tbody { id: "tbody",
-                    {data.read().rows.iter().map(|item| {
-                        rsx! {
-                            RowComponent {
-                                row: item.clone(),
-                                data: data.clone(),
-                                selected_row: selected.clone(),
-                                key: "{item.id}",
-                            }
+                    for row in data.read().rows.clone() {
+                        RowComponent {
+                            row,
+                            data: data.clone(),
+                            selected_row: selected,
+                            key: "{row.id}",
                         }
-                    })}
+                    }
                 }
             }
 
@@ -148,44 +140,30 @@ fn app() -> Element {
     }
 }
 
-#[derive(Clone, Props)]
+#[derive(Clone, Props, PartialEq)]
 struct RowComponentProps {
     row: Label,
     data: Signal<Data>,
     selected_row: Signal<Option<usize>>,
 }
 
-impl PartialEq for RowComponentProps {
-    fn eq(&self, other: &Self) -> bool {
-        self.row == other.row
-    }
-}
-
 #[component]
 fn RowComponent(mut props: RowComponentProps) -> Element {
-    let label_text = use_memo(move || props.row.label.clone());
-    let id = props.row.id;
-    let is_in_danger = use_memo(move || {
-        let result = match props.selected_row.read().as_ref() {
-            Some(selected_row) => {
-                if *selected_row == id {
-                    "danger"
-                } else {
-                    ""
-                }
-            }
-            None => "",
-        };
-        result
+    use_drop(move || {
+        props.row.label.manually_drop();
     });
 
+    let is_selected = use_memo(move || props.selected_row.read().as_ref() == Some(&props.row.id));
+
+    let danger_class = if is_selected() { "danger" } else { "" };
+
     rsx! {
-        tr { class: is_in_danger,
+        tr { class: danger_class,
             td { class:"col-md-1", "{props.row.id}" }
             td { class:"col-md-4", onclick: move |_| {
                     *props.selected_row.write() = Some(props.row.id)
                 },
-                a { class: "lbl", "{label_text}" }
+                a { class: "lbl", "{props.row.label}" }
             }
             td { class: "col-md-1",
                 a { class: "remove", onclick: move |_| props.data.write().remove(props.row.id),
