@@ -1,217 +1,10 @@
 #![allow(non_snake_case)]
 
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 use dioxus::prelude::*;
-use js_sys::Math;
+use rand::{seq::SliceRandom, thread_rng};
 
-fn random(max: usize) -> usize {
-    (Math::random() * 1000.0) as usize % max
-}
-
-fn main() {
-    launch(app);
-}
-
-#[derive(PartialEq, Clone, Props)]
-struct Label {
-    id: usize,
-    label: Signal<String>,
-}
-
-impl Label {
-    fn new(num: usize, label: String) -> Self {
-        Label {
-            id: num,
-            label: use_signal(|| label),
-        }
-    }
-
-    fn new_list(num: usize, key_from: usize) -> Vec<Self> {
-        let mut labels = Vec::with_capacity(num);
-        append(&mut labels, num, key_from);
-        labels
-    }
-}
-
-fn append(list: &mut Vec<Label>, num: usize, key_from: usize) {
-    list.reserve_exact(num);
-    for x in 0..num {
-        let adjective = ADJECTIVES[random(ADJECTIVES.len())];
-        let colour = COLOURS[random(COLOURS.len())];
-        let noun = NOUNS[random(NOUNS.len())];
-        let mut label = String::with_capacity(adjective.len() + colour.len() + noun.len() + 2);
-        label.push_str(adjective);
-        label.push(' ');
-        label.push_str(colour);
-        label.push(' ');
-        label.push_str(noun);
-        list.push(Label::new(x + key_from, label));
-    }
-}
-
-#[derive(Props, Clone, PartialEq)]
-struct Data {
-    last_row_id: usize,
-    rows: Vec<Label>,
-}
-
-impl Data {
-    fn new(num: usize, last_key: usize) -> Data {
-        let labels = Label::new_list(num, last_key + 1);
-        Data {
-            rows: labels,
-            last_row_id: last_key + num,
-        }
-    }
-
-    fn append(&mut self, num: usize) {
-        self.rows.reserve(num);
-        append(&mut self.rows, num, self.last_row_id + 1);
-        self.last_row_id += num;
-    }
-
-    fn overwrite(&mut self, num: usize) {
-        self.rows.clear();
-        append(&mut self.rows, num, self.last_row_id + 1);
-        self.last_row_id += num;
-    }
-
-    fn swap(&mut self, a: usize, b: usize) {
-        if self.rows.len() > a + 1 && self.rows.len() > b {
-            self.rows.swap(a, b);
-        }
-    }
-
-    fn remove(&mut self, key: usize) {
-        if let Some(to_remove) = self.rows.iter().position(|x| x.id == key) {
-            self.rows.remove(to_remove);
-        }
-    }
-}
-
-#[component]
-fn app() -> Element {
-    let mut data = use_signal(|| Data::new(0, 0));
-    let selected: Signal<Option<usize>> = use_signal(|| None);
-
-    rsx! {
-        div { class: "container",
-            div { class: "jumbotron",
-                div { class: "row",
-                    div { class: "col-md-6", h1 { "Dioxus" } }
-                    div { class: "col-md-6",
-                        div { class: "row",
-                            ActionButton { name: "Create 1,000 rows", id: "run",
-                                onclick: move |_| data.write().overwrite(1_000),
-                            }
-                            ActionButton { name: "Create 10,000 rows", id: "runlots",
-                                onclick: move |_| data.write().overwrite(10_000),
-                            }
-                            ActionButton { name: "Append 1,000 rows", id: "add",
-                                onclick: move |_| data.write().append(1_000),
-                            }
-                            ActionButton { name: "Update every 10th row", id: "update",
-                                onclick: move |_| {
-                                    let mut labels = data.write();
-                                    for i in 0..(labels.rows.len()/10) {
-                                        *labels.rows[i*10].label.write() += " !!!";
-                                    }
-                                },
-                            }
-                            ActionButton { name: "Clear", id: "clear",
-                                onclick: move |_| data.write().overwrite(0),
-                            }
-                            ActionButton { name: "Swap rows", id: "swaprows",
-                                onclick: move |_| data.write().swap(1, 998),
-                            }
-                        }
-                    }
-                }
-            }
-
-            table { class: "table table-hover table-striped test-data",
-                tbody { id: "tbody",
-                    {data.read().rows.iter().map(|item| {
-                        rsx! {
-                            RowComponent {
-                                row: item.clone(),
-                                data: data.clone(),
-                                selected_row: selected.clone(),
-                                key: "{item.id}",
-                            }
-                        }
-                    })}
-                }
-            }
-
-            span { class: "preloadicon glyphicon glyphicon-remove", aria_hidden: "true" }
-        }
-    }
-}
-
-#[derive(Clone, Props)]
-struct RowComponentProps {
-    row: Label,
-    data: Signal<Data>,
-    selected_row: Signal<Option<usize>>,
-}
-
-impl PartialEq for RowComponentProps {
-    fn eq(&self, other: &Self) -> bool {
-        self.row == other.row
-    }
-}
-
-#[component]
-fn RowComponent(mut props: RowComponentProps) -> Element {
-    let label_text = use_memo(move || props.row.label.clone());
-    let id = props.row.id;
-    let is_in_danger = use_memo(move || {
-        let result = match props.selected_row.read().as_ref() {
-            Some(selected_row) => {
-                if *selected_row == id {
-                    "danger"
-                } else {
-                    ""
-                }
-            }
-            None => "",
-        };
-        result
-    });
-
-    rsx! {
-        tr { class: is_in_danger,
-            td { class:"col-md-1", "{props.row.id}" }
-            td { class:"col-md-4", onclick: move |_| {
-                    *props.selected_row.write() = Some(props.row.id)
-                },
-                a { class: "lbl", "{label_text}" }
-            }
-            td { class: "col-md-1",
-                a { class: "remove", onclick: move |_| props.data.write().remove(props.row.id),
-                    span { class: "glyphicon glyphicon-remove remove", aria_hidden: "true" }
-                }
-            }
-            td { class: "col-md-6" }
-        }
-    }
-}
-
-#[component]
-fn ActionButton(name: String, id: String, onclick: EventHandler) -> Element {
-    rsx! {
-        div {
-            class: "col-sm-6 smallpad",
-            button {
-                class:"btn btn-primary btn-block",
-                r#type: "button",
-                id: id,
-                onclick: move |_| onclick.call(()),
-                "{name}",
-            }
-        }
-    }
-}
 
 static ADJECTIVES: &[&str] = &[
     "pretty",
@@ -250,3 +43,166 @@ static NOUNS: &[&str] = &[
     "table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger",
     "pizza", "mouse", "keyboard",
 ];
+
+
+#[derive(PartialEq, Clone, Props)]
+struct RowData {
+    id: usize,
+    label: Signal<String>,
+}
+
+static ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
+
+
+fn build_data(count: usize) -> Vec<RowData> {
+    let mut thread_rng = thread_rng();
+
+    let mut data = Vec::new();
+    data.reserve_exact(count);
+
+    for _i in 0..count {
+        let adjective = ADJECTIVES.choose(&mut thread_rng).unwrap();
+        let colour = COLOURS.choose(&mut thread_rng).unwrap();
+        let noun = NOUNS.choose(&mut thread_rng).unwrap();
+        let capacity = adjective.len() + colour.len() + noun.len() + 2;
+        let mut label = String::with_capacity(capacity);
+        label.push_str(adjective);
+        label.push(' ');
+        label.push_str(colour);
+        label.push(' ');
+        label.push_str(noun);
+
+        data.push(RowData {
+            id: ID_COUNTER.load(Ordering::Relaxed),
+            label: use_signal(|| label),
+        });
+
+        ID_COUNTER.store(ID_COUNTER.load(Ordering::Relaxed) + 1, Ordering::Relaxed);
+    }
+
+    data
+}
+
+#[component]
+fn Button(name: String, id: String, onclick: EventHandler) -> Element {
+    rsx! {
+        div {
+            class: "col-sm-6 smallpad",
+            button {
+                class:"btn btn-primary btn-block",
+                r#type: "button",
+                id: id,
+                onclick: move |_| onclick.call(()),
+                "{name}",
+            }
+        }
+    }
+}
+
+#[component]
+fn app() -> Element {
+    let mut data = use_signal(|| Vec::<RowData>::new());
+    let mut selected: Signal<Option<usize>> = use_signal(|| None);
+
+    let mut select = move |id: usize| selected.set(Some(id));
+
+    let mut remove = move |id: usize| data.write().retain(|row| row.id != id);
+
+    let mut run = move |_| {
+        data.set(build_data(1000));
+        selected.set(None);
+    };
+
+    let mut run_lots = move |_| {
+        data.set(build_data(10000));
+        selected.set(None);
+    };
+
+    let mut add = move |_| {
+        data.set(build_data(1000));
+    };
+
+    let mut update = move |_| {
+        for row in data.write().iter_mut().step_by(10) {
+            row.label.set(format!("{} !!!", row.label.read()));
+        }
+    };
+
+    let mut clear = move |_| {
+        data.set(Vec::new());
+        selected.set(None);
+    };
+
+    let mut swap_rows = move |_| {
+        if data.len() > 998 {
+            data.write().swap(1, 998);
+        }
+    };
+
+    rsx! {
+        div { class: "container",
+            div { class: "jumbotron",
+                div { class: "row",
+                    div { class: "col-md-6", h1 { "Dioxus" } }
+                    div { class: "col-md-6",
+                        div { class: "row",
+                            Button { name: "Create 1,000 rows", id: "run",
+                                onclick: move |_| run(()),
+                            }
+                            Button { name: "Create 10,000 rows", id: "runlots",
+                                onclick: move |_| run_lots(()),
+                            }
+                            Button { name: "Append 1,000 rows", id: "add",
+                                onclick: move|_| add(()),
+                            }
+                            Button { name: "Update every 10th row", id: "update",
+                                onclick: move |_| update(()),
+                            }
+                            Button { name: "Clear", id: "clear",
+                                onclick: move |_| clear(()),
+                            }
+                            Button { name: "Swap rows", id: "swaprows",
+                                onclick:  move|_| swap_rows(()),
+                            }
+                        }
+                    }
+                }
+            }
+
+            table { class: "table table-hover table-striped test-data",
+                tbody { id: "tbody",
+                    {
+                        data.read().iter().map( |row| {
+                        
+                            let row_id = row.id;
+                            let label = row.label;
+                            let is_in_danger = selected.read() == Some(row.id);
+
+                            rsx! {
+                                tr { class: if is_in_danger {"danger"},
+                                    td { class:"col-md-1", "{row.id}" }
+                                    td { class:"col-md-4", onclick: move |_| select(row.id) ,
+                                        a { class: "lbl", "{label}" }
+                                    }
+                                    td { class: "col-md-1",
+                                        a { class: "remove", onclick: move |_| remove(row.id),
+                                            span { class: "glyphicon glyphicon-remove remove", aria_hidden: "true" }
+                                        }
+                                    }
+                                    td { class: "col-md-6" }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+
+            span { class: "preloadicon glyphicon glyphicon-remove", aria_hidden: "true" }
+        }
+    }
+}
+
+
+fn main() {
+    launch(app);
+}
