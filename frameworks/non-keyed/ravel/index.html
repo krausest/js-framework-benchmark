@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ravel</title>
+    <link href="/css/currentStyle.css" rel="stylesheet" />
+    
+<script type="module" nonce="9Zmp8jdrJLjvzzvcrRu1iQ==">
+import init, * as bindings from '/frameworks/non-keyed/ravel/bundled-dist/ravel-benchmark.js';
+const wasm = await init('/frameworks/non-keyed/ravel/bundled-dist/ravel-benchmark_bg.wasm');
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+
+<link rel="modulepreload" href="/frameworks/non-keyed/ravel/bundled-dist/ravel-benchmark.js" crossorigin=anonymous integrity="sha384-C1P2KTObs6rEIXRFzrFTqapCE3OIY5SkgDGVEBjxBtdvp3RxQMRFzvNa6ha+ktNH">
+<link rel="modulepreload" href="/frameworks/non-keyed/ravel/bundled-dist/snippets/ravel-web-98faac2aa4a53c75/inline0.js" crossorigin=anonymous integrity="sha384-rfyiCOgbvCddDOogfZgu+dPnBBu7Wh+fdg1O4q+2Fd/3fmUBfLf5h6G9TvoNluHM">
+<link rel="preload" href="/frameworks/non-keyed/ravel/bundled-dist/ravel-benchmark_bg.wasm" crossorigin=anonymous integrity="sha384-BQAwIp3OAA6KQeBFOKyqCoWt4EKX0eOtwVPd0osYoWfJY6ULMrS78htDAcyqaWn5" as="fetch" type="application/wasm"></head>
+<body>
+    <div id='main'></div>
+</body>
+</html>
