@@ -80,23 +80,31 @@ const buildData = (count) => {
 const eachComponent = each(
   "table-rows",
   ({ importedData }) => importedData.rows,
-  `<tr key="{{row.id}}" class="{{[selected]}}">
+  `<tr key="{{row.id}}" class="{{stack.class}}">
     <td class='col-md-1'>{{row.id}}</td>
-    <td class='col-md-4'><a ::click="{{importedData.setSelected(row.id)}}" class='lbl'>{{row.label}}</a></td>
+    <td class='col-md-4'><a ::click="{{setSelected()}}" class='lbl'>{{row.label}}</a></td>
     <td class='col-md-1'><a ::click="{{importedData.delete(row.id)}}" class='remove'><span class='remove glyphicon glyphicon-remove' aria-hidden='true'></span></a></td>
     <td class='col-md-6'></td>
   </tr>`,
   {
-    values: {
-      selected: {
-        "row.id === importedData.selected": "danger",
-      },
-    },
     valueName: "row",
     functionName: "updateTable",
+    stackName: "stack",
     import: {
-      value: ["rows", "selected", "setSelected", "delete"],
+      value: ["rows", "delete"],
       exportId: "mainExport",
+    },
+    functions: {
+      setSelected: [
+        (setData, event, eachStack) => () => {
+          const { setStack, clearStack } = eachStack;
+          clearStack();
+          setStack(() => {
+            return { class: "danger" };
+          });
+        },
+        "updateTable",
+      ],
     },
   }
 );
@@ -141,12 +149,10 @@ const mainComponent = component(
     data: () => {
       return {
         rows: [],
-        selected: null,
       };
     },
     dataFunctions: {
       updateRows: "rows",
-      updateSelected: "selected",
     },
     functions: {
       run: [
@@ -208,15 +214,8 @@ const mainComponent = component(
       tableData: {
         data: {
           rows: "rows",
-          selected: "selected",
         },
         functions: {
-          setSelected: [
-            (setData) => (id) => {
-              setData(() => id);
-            },
-            "updateSelected",
-          ],
           delete: [
             (setData) => (id) => {
               setData((d) => {
