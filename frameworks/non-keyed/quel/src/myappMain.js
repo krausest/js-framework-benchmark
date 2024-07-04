@@ -59,11 +59,11 @@ export class ViewModel {
       this.selectedIndex = this.$1;
     }
   }
-  select(e, $1) {
+  select() {
     if (typeof this.selectedIndex !== "undefined") {
       this[`data.${this.selectedIndex}.selected`] = false;
     }
-    this[`data.${$1}.selected`] = true;
+    this[`data.*.selected`] = true;
   }
   remove(e, $1) {
     this.data = this.data.toSpliced($1, 1);
