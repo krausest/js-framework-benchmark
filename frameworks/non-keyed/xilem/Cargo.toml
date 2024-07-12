@@ -1,7 +1,11 @@
 [package]
 name = "js-framework-benchmark-xilem"
 version = "0.1.0"
-authors = ["Markus Kohlhase <mail@markus-kohlhase.de>"]
+authors = [
+  "Philipp Mildenberger <philipp@mildenberger.me>",
+  "Markus Kohlhase <mail@markus-kohlhase.de>"
+]
+publish = false
 edition = "2021"
 
 [lib]
@@ -13,7 +17,6 @@ getrandom = { version = "0.2.15", features = ["js"] }
 rand = { version = "0.8.5", features = ["small_rng"] }
 wasm-bindgen = "0.2.92"
 web-sys = "0.3.69"
-xilem_core = "0.1.0"
 xilem_web = "0.1.0"
 
 [patch.crates-io]
@@ -25,6 +28,7 @@ lto = true
 codegen-units = 1
 panic = "abort"
 strip = true
+opt-level = "z"
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = ['-O4']
