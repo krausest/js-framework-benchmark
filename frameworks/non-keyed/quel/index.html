@@ -4,15 +4,23 @@
 	<meta charset="utf-8"/>
 	<title>quel-"non-keyed"</title>
 	<link href="/css/currentStyle.css" rel="stylesheet"/>
+	<script type="importmap">
+	{
+		"imports": {
+			"quel": "./src/quel.min.js",
+			"buildData": "./src/buildData.js",
+			"myappMain": "./src/myappMain.sfc.html"
+		}
+	}
+	</script>
 </head>
 <body>
 	<myapp-main></myapp-main>
 
 <script type="module">
-import { registerComponentModules as register } from "./src/quel.min.js";
-import * as myappMain from "./src/myappMain.js";
+import { registerSingleFileComponents as register } from "quel";
 
-register({ myappMain });
+register({ "myapp-main": "myappMain" });
 </script>
 
 </body>
