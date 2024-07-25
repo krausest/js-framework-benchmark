@@ -6,14 +6,16 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dioxus = { version = "0.5.1", features = ["web"] }
+dioxus = { git = "https://github.com/ealmloff/dioxus", branch = "restore-comparator" }
+dioxus-web = { git = "https://github.com/ealmloff/dioxus", branch = "restore-comparator", default-features = false }
 js-sys = "*"
-getrandom = { version = "0.2.7", features = ["js"] }
-rand = { version = "0.8.5", features = ["small_rng"] }
 slab = "0.4.8"
 
 [profile.release]
 opt-level = 3
+debug = false
 lto = true
 codegen-units = 1
 panic = "abort"
+strip = true
+incremental = false
