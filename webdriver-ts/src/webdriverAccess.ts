@@ -66,7 +66,7 @@ export async function findByXPath(driver: WebDriver, path: string, isInButtonAre
 
 function waitForCondition(driver: WebDriver) {
   return async function (text: string, fn: (driver: WebDriver) => Promise<boolean>, timeout: number): Promise<boolean> {
-    return await driver.wait(new Condition<Promise<boolean>>(text, fn), timeout);
+    return !!(await driver.wait(new Condition<Promise<boolean>>(text, fn), timeout));
   };
 }
 

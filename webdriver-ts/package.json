@@ -21,27 +21,27 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/node": "20.12.12",
-    "@types/ramda": "0.30.0",
-    "@types/selenium-webdriver": "4.1.22",
+    "@types/node": "20.14.12",
+    "@types/ramda": "0.30.1",
+    "@types/selenium-webdriver": "4.1.24",
     "@types/semver": "7.5.8",
     "@types/yargs": "17.0.32",
-    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/coverage-v8": "^2.0.4",
     "ts-node": "^10.9.2",
-    "typescript": "5.4.5",
-    "vitest": "^1.6.0"
+    "typescript": "5.5.4",
+    "vitest": "^2.0.4"
   },
   "dependencies": {
-    "chromedriver": "125.0.2",
+    "chromedriver": "127.0.0",
     "cross-env": "7.0.3",
-    "lighthouse": "12.0.0",
-    "playwright": "1.44.1",
-    "playwright-firefox": "1.44.1",
-    "playwright-webkit": "1.44.1",
-    "puppeteer-core": "22.10.0",
-    "ramda": "0.30.0",
-    "selenium-webdriver": "4.21.0",
-    "semver": "7.6.2",
+    "lighthouse": "12.1.0",
+    "playwright": "1.45.3",
+    "playwright-firefox": "1.45.3",
+    "playwright-webkit": "1.45.3",
+    "puppeteer-core": "22.13.1",
+    "ramda": "0.30.1",
+    "selenium-webdriver": "4.23.0",
+    "semver": "7.6.3",
     "yargs": "17.7.2"
   }
 }
