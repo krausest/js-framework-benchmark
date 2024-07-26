@@ -33,7 +33,7 @@
             <tr [class.danger]="item.id === selected()">
                 <td class="col-md-1">{{item.id}}</td>
                 <td class="col-md-4">
-                    <a href="#" (click)="selected.set(item.id)">{{item.label}}</a>
+                    <a href="#" (click)="$event.preventDefault(); selected.set(item.id)">{{item.label}}</a>
                 </td>
                 <td class="col-md-1"><a href="#" (click)="delete(item.id)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
                 <td class="col-md-6"></td>
