@@ -2,126 +2,72 @@
 
 use dioxus::prelude::*;
 use js_sys::Math;
-
-fn random(max: usize) -> usize {
-    (Math::random() * 1000.0) as usize % max
-}
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 fn main() {
-    launch(app);
-}
-
-#[derive(PartialEq, Clone, Props)]
-struct Label {
-    id: usize,
-    label: Signal<String>,
-}
-
-impl Label {
-    fn new(num: usize, label: String) -> Self {
-        Label {
-            id: num,
-            label: use_signal(|| label),
-        }
-    }
-
-    fn new_list(num: usize, key_from: usize) -> Vec<Self> {
-        let mut labels = Vec::with_capacity(num);
-        append(&mut labels, num, key_from);
-        labels
-    }
-}
-
-fn append(list: &mut Vec<Label>, num: usize, key_from: usize) {
-    list.reserve_exact(num);
-    for x in 0..num {
-        let adjective = ADJECTIVES[random(ADJECTIVES.len())];
-        let colour = COLOURS[random(COLOURS.len())];
-        let noun = NOUNS[random(NOUNS.len())];
-        let mut label = String::with_capacity(adjective.len() + colour.len() + noun.len() + 2);
-        label.push_str(adjective);
-        label.push(' ');
-        label.push_str(colour);
-        label.push(' ');
-        label.push_str(noun);
-        list.push(Label::new(x + key_from, label));
-    }
-}
-
-#[derive(Props, Clone, PartialEq)]
-struct Data {
-    last_row_id: usize,
-    rows: Vec<Label>,
-}
-
-impl Data {
-    fn new(num: usize, last_key: usize) -> Data {
-        let labels = Label::new_list(num, last_key + 1);
-        Data {
-            rows: labels,
-            last_row_id: last_key + num,
-        }
-    }
-
-    fn append(&mut self, num: usize) {
-        self.rows.reserve(num);
-        append(&mut self.rows, num, self.last_row_id + 1);
-        self.last_row_id += num;
-    }
-
-    fn overwrite(&mut self, num: usize) {
-        self.rows.clear();
-        append(&mut self.rows, num, self.last_row_id + 1);
-        self.last_row_id += num;
-    }
-
-    fn swap(&mut self, a: usize, b: usize) {
-        if self.rows.len() > a + 1 && self.rows.len() > b {
-            self.rows.swap(a, b);
-        }
-    }
-
-    fn remove(&mut self, key: usize) {
-        if let Some(to_remove) = self.rows.iter().position(|x| x.id == key) {
-            self.rows.remove(to_remove);
-        }
-    }
+    dioxus_web::launch::launch(app, Default::default(), Default::default());
 }
 
 #[component]
 fn app() -> Element {
-    let mut data = use_signal(|| Data::new(0, 0));
-    let selected: Signal<Option<usize>> = use_signal(|| None);
+    let mut rows = use_signal(|| Vec::<RowData>::new());
+    let selected_row: Signal<Option<usize>> = use_signal(|| None);
+    let compare_selected = use_set_compare(move || selected_row());
 
     rsx! {
         div { class: "container",
             div { class: "jumbotron",
                 div { class: "row",
-                    div { class: "col-md-6", h1 { "Dioxus" } }
+                    div { class: "col-md-6",
+                        h1 { "Dioxus" }
+                    }
                     div { class: "col-md-6",
                         div { class: "row",
-                            ActionButton { name: "Create 1,000 rows", id: "run",
-                                onclick: move |_| data.write().overwrite(1_000),
-                            }
-                            ActionButton { name: "Create 10,000 rows", id: "runlots",
-                                onclick: move |_| data.write().overwrite(10_000),
-                            }
-                            ActionButton { name: "Append 1,000 rows", id: "add",
-                                onclick: move |_| data.write().append(1_000),
-                            }
-                            ActionButton { name: "Update every 10th row", id: "update",
+                            Button {
+                                name: "Create 1,000 rows",
+                                id: "run",
                                 onclick: move |_| {
-                                    let mut labels = data.write();
-                                    for i in 0..(labels.rows.len()/10) {
-                                        *labels.rows[i*10].label.write() += " !!!";
+                                    randomize_rows(rows, 1000);
+                                }
+                            }
+                            Button {
+                                name: "Create 10,000 rows",
+                                id: "runlots",
+                                onclick: move |_| {
+                                    randomize_rows(rows, 10000);
+                                }
+                            }
+                            Button {
+                                name: "Append 1,000 rows",
+                                id: "add",
+                                onclick: move |_| {
+                                    add_data(&mut rows.write(), 1000);
+                                }
+                            }
+                            Button {
+                                name: "Update every 10th row",
+                                id: "update",
+                                onclick: move |_| {
+                                    for row in rows.iter().step_by(10) {
+                                        *row.label.write_unchecked() += " !!!";
                                     }
-                                },
+                                }
                             }
-                            ActionButton { name: "Clear", id: "clear",
-                                onclick: move |_| data.write().overwrite(0),
+                            Button {
+                                name: "Clear",
+                                id: "clear",
+                                onclick: move |_| {
+                                    rows.clear();
+                                }
                             }
-                            ActionButton { name: "Swap rows", id: "swaprows",
-                                onclick: move |_| data.write().swap(1, 998),
+                            Button {
+                                name: "Swap rows",
+                                id: "swaprows",
+                                onclick: move |_| {
+                                    if rows.len() > 998 {
+                                        rows.write().swap(1, 998);
+                                    }
+                                }
                             }
                         }
                     }
@@ -130,66 +76,50 @@ fn app() -> Element {
 
             table { class: "table table-hover table-striped test-data",
                 tbody { id: "tbody",
-                    {data.read().rows.iter().map(|item| {
-                        rsx! {
-                            RowComponent {
-                                row: item.clone(),
-                                data: data.clone(),
-                                selected_row: selected.clone(),
-                                key: "{item.id}",
-                            }
+                    for row in rows.iter() {
+                        Row {
+                            key: "{row.id}",
+                            id: row.id,
+                            label: row.label,
+                            rows,
+                            compare_selected,
+                            selected_row
                         }
-                    })}
+                    }
                 }
             }
-
-            span { class: "preloadicon glyphicon glyphicon-remove", aria_hidden: "true" }
         }
     }
 }
 
-#[derive(Clone, Props)]
-struct RowComponentProps {
-    row: Label,
-    data: Signal<Data>,
-    selected_row: Signal<Option<usize>>,
-}
-
-impl PartialEq for RowComponentProps {
-    fn eq(&self, other: &Self) -> bool {
-        self.row == other.row
-    }
-}
-
 #[component]
-fn RowComponent(mut props: RowComponentProps) -> Element {
-    let label_text = use_memo(move || props.row.label.clone());
-    let id = props.row.id;
-    let is_in_danger = use_memo(move || {
-        let result = match props.selected_row.read().as_ref() {
-            Some(selected_row) => {
-                if *selected_row == id {
-                    "danger"
-                } else {
-                    ""
-                }
-            }
-            None => "",
-        };
-        result
+fn Row(
+    rows: Signal<Vec<RowData>>,
+    id: usize,
+    label: Signal<String>,
+    compare_selected: SetCompare<Option<usize>>,
+    mut selected_row: Signal<Option<usize>>,
+) -> Element {
+    use_drop(move || {
+        label.manually_drop();
     });
-
+    let selected = use_set_compare_equal(Some(id), compare_selected);
     rsx! {
-        tr { class: is_in_danger,
-            td { class:"col-md-1", "{props.row.id}" }
-            td { class:"col-md-4", onclick: move |_| {
-                    *props.selected_row.write() = Some(props.row.id)
-                },
-                a { class: "lbl", "{label_text}" }
+        tr { class: if selected() { "danger" },
+            td { class: "col-md-1", "{id}" }
+            td {
+                class: "col-md-4",
+                onclick: move |_| selected_row.set(Some(id)),
+                a { class: "lbl", {label} }
             }
             td { class: "col-md-1",
-                a { class: "remove", onclick: move |_| props.data.write().remove(props.row.id),
-                    span { class: "glyphicon glyphicon-remove remove", aria_hidden: "true" }
+                a {
+                    class: "remove",
+                    onclick: move |_| rows.write().retain(|other_row| other_row.id != id),
+                    span {
+                        class: "glyphicon glyphicon-remove remove",
+                        aria_hidden: "true"
+                    }
                 }
             }
             td { class: "col-md-6" }
@@ -198,19 +128,63 @@ fn RowComponent(mut props: RowComponentProps) -> Element {
 }
 
 #[component]
-fn ActionButton(name: String, id: String, onclick: EventHandler) -> Element {
+fn Button(name: String, id: String, onclick: EventHandler) -> Element {
     rsx! {
-        div {
-            class: "col-sm-6 smallpad",
+        div { class: "col-sm-6 smallpad",
             button {
-                class:"btn btn-primary btn-block",
+                class: "btn btn-primary btn-block",
                 r#type: "button",
-                id: id,
-                onclick: move |_| onclick.call(()),
-                "{name}",
+                id,
+                onclick: move |_| onclick(()),
+                "{name}"
             }
         }
     }
+}
+
+#[derive(PartialEq, Clone, Copy)]
+struct RowData {
+    id: usize,
+    label: Signal<String>,
+}
+
+static ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
+
+fn randomize_rows(mut rows: Signal<Vec<RowData>>, count: usize) {
+    let mut write = rows.write();
+    write.clear();
+    add_data(&mut write, count);
+}
+
+fn add_data(rows: &mut Vec<RowData>, count: usize) {
+    rows.reserve_exact(count);
+
+    for _i in 0..count {
+        let adjective = select_random(ADJECTIVES);
+        let colour = select_random(COLOURS);
+        let noun = select_random(NOUNS);
+        let capacity = adjective.len() + colour.len() + noun.len() + 2;
+        let mut label = String::with_capacity(capacity);
+        label.push_str(adjective);
+        label.push(' ');
+        label.push_str(colour);
+        label.push(' ');
+        label.push_str(noun);
+
+        rows.push(RowData {
+            id: ID_COUNTER.fetch_add(1, Ordering::Relaxed),
+            label: Signal::new(label),
+        });
+    }
+}
+
+fn random(max: usize) -> usize {
+    (Math::random() * 1000.0) as usize % max
+}
+
+fn select_random<'a>(data: &'a [&'a str]) -> &'a str {
+    let index = random(data.len());
+    data[index]
 }
 
 static ADJECTIVES: &[&str] = &[
