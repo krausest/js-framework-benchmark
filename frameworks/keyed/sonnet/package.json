@@ -6,7 +6,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@sonnetjs/core",
     "frameworkHomeURL": "https://sonnet.js.org/",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "issues": [772]
   },
   "scripts": {
     "dev": "vite",
