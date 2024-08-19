@@ -1,0 +1,26 @@
+{
+  "name": "js-framework-benchmark-endr",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "endr",
+    "frameworkHomeURL": "https://github.com/caseywebdev/endr"
+  },
+  "scripts": {
+    "build-prod": "esbuild src/index.js --loader:.js=jsx --jsx=automatic --jsx-import-source=endr --outfile=dist/index.js --bundle --minify",
+    "dev": "esbuild src/index.js --loader:.js=jsx --jsx=automatic --jsx-import-source=endr --outfile=dist/index.js --bundle --minify --watch"
+  },
+  "dependencies": {
+    "endr": "0.0.44",
+    "esbuild": "0",
+    "eslint-config-coderiety": "2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": "coderiety",
+    "rules": {
+      "react/no-unknown-property": "off"
+    }
+  }
+}
