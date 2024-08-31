@@ -6,11 +6,13 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "blockdom",
     "frameworkHomeURL": "https://github.com/ged-odoo/blockdom",
-    "issues": [1261]
+    "issues": [
+      1261
+    ]
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build-prod": "rollup -c"
+    "build-prod": "rollup -c --environment BUILD:production"
   },
   "keywords": [
     "virtual dom"
@@ -23,9 +25,9 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "13.0.4",
-    "rollup": "2.56.2",
-    "rollup-plugin-terser": "7.0.2"
+    "@rollup/plugin-node-resolve": "15.2.3",
+    "rollup": "4.21.2",
+    "@rollup/plugin-terser": "0.4.4"
   },
   "dependencies": {
     "blockdom": "^0.9.26"

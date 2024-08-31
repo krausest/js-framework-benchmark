@@ -1,30 +1,24 @@
-import babel from "@rollup/plugin-babel";
-import resolve from "@rollup/plugin-node-resolve";
+import { babel } from "@rollup/plugin-babel";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 
-const outputOptions = {
-  format: "es",
-  sourcemap: false,
+const isProduction = process.env.BUILD === "production";
+
+/** @type {import('rollup').RollupOptions} */
+export default {
+  input: "./src/main.jsx",
+  plugins: [
+    nodeResolve(),
+    babel({
+      babelHelpers: "bundled",
+      presets: [["pota/babel-preset"]],
+    }),
+    isProduction && terser(),
+  ],
+  output: [
+    {
+      format: "es",
+      file: "./dist/main.js",
+    },
+  ],
 };
-
-const plugins = [
-  resolve({}),
-  babel({
-    babelHelpers: "bundled",
-    presets: [["pota/babel-preset"]],
-  }),
-  terser(),
-];
-
-export default [
-  {
-    input: "./src/main.jsx",
-    plugins,
-    output: [
-      {
-        ...outputOptions,
-        file: "./dist/main.js",
-      },
-    ],
-  },
-];
