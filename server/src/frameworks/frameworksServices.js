@@ -28,7 +28,7 @@ class PackageJSONProvider {
         framework,
         "package.json",
       );
-      const packageJSON = await fs.promises.readFile(packageJSONPath, "utf-8");
+      const packageJSON = await fs.promises.readFile(packageJSONPath, "utf8");
       return JSON.parse(packageJSON);
     } catch (error) {
       if (error.code === "ENOENT") {
@@ -54,7 +54,7 @@ class PackageJSONProvider {
       );
       const packageLockJSON = await fs.promises.readFile(
         packageLockJSONPath,
-        "utf-8",
+        "utf8",
       );
       return JSON.parse(packageLockJSON);
     } catch (error) {
