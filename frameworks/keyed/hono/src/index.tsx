@@ -141,10 +141,8 @@ const App = () => {
     <table class="table table-hover table-striped test-data">
       <tbody>
         {data.map(item => {
-          console.log(item);
-          return (
-            <Row item={item} selected={selected === item.id} dispatch={dispatch} />
-          );
+          // @ts-ignore
+          return <Row key={item.id} item={item} selected={selected === item.id} dispatch={dispatch} />;
         })}
       </tbody>
     </table>
