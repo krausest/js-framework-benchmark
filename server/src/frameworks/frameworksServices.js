@@ -22,12 +22,7 @@ class PackageJSONProvider {
    */
   async getPackageJSON(keyedDir, framework) {
     try {
-      const packageJSONPath = path.join(
-        this.#frameworksDir,
-        keyedDir,
-        framework,
-        "package.json",
-      );
+      const packageJSONPath = path.join(this.#frameworksDir, keyedDir, framework, "package.json");
       const packageJSON = await fs.promises.readFile(packageJSONPath, "utf8");
       return JSON.parse(packageJSON);
     } catch (error) {
@@ -46,16 +41,8 @@ class PackageJSONProvider {
    */
   async getPackageLockJSON(keyedDir, framework) {
     try {
-      const packageLockJSONPath = path.join(
-        this.#frameworksDir,
-        keyedDir,
-        framework,
-        "package-lock.json",
-      );
-      const packageLockJSON = await fs.promises.readFile(
-        packageLockJSONPath,
-        "utf8",
-      );
+      const packageLockJSONPath = path.join(this.#frameworksDir, keyedDir, framework, "package-lock.json");
+      const packageLockJSON = await fs.promises.readFile(packageLockJSONPath, "utf8");
       return JSON.parse(packageLockJSON);
     } catch (error) {
       if (error.code === "ENOENT") {
@@ -75,8 +62,7 @@ function isFrameworkDir(keyedDir, framework) {
   const frameworkPath = path.resolve(frameworksDirectory, keyedDir, framework);
   const packageJSONPath = path.resolve(frameworkPath, "package.json");
   const packageLockJSONPath = path.resolve(frameworkPath, "package-lock.json");
-  const exists =
-    fs.existsSync(packageJSONPath) && fs.existsSync(packageLockJSONPath);
+  const exists = fs.existsSync(packageJSONPath) && fs.existsSync(packageLockJSONPath);
 
   return exists;
 }
@@ -94,19 +80,12 @@ export async function loadFrameworkInfo(keyedDir, framework) {
     type: keyedDir,
     directory: framework,
   };
-  const packageJSON = await packageJSONProvider.getPackageJSON(
-    keyedDir,
-    framework,
-  );
-  const packageLockJSON = await packageJSONProvider.getPackageLockJSON(
-    keyedDir,
-    framework,
-  );
+  const packageJSON = await packageJSONProvider.getPackageJSON(keyedDir, framework);
+  const packageLockJSON = await packageJSONProvider.getPackageLockJSON(keyedDir, framework);
 
   const benchmarkData = packageJSON["js-framework-benchmark"];
   if (!benchmarkData) {
-    result.error =
-      "package.json must contain a 'js-framework-benchmark' property";
+    result.error = "package.json must contain a 'js-framework-benchmark' property";
     return result;
   }
 
@@ -117,11 +96,9 @@ export async function loadFrameworkInfo(keyedDir, framework) {
 
     for (const packageName of packageNames) {
       if (packageLockJSON.dependencies?.[packageName]) {
-        result.versions[packageName] =
-          packageLockJSON.dependencies[packageName].version;
+        result.versions[packageName] = packageLockJSON.dependencies[packageName].version;
       } else if (packageLockJSON.packages?.[`node_modules/${packageName}`]) {
-        result.versions[packageName] =
-          packageLockJSON.packages[`node_modules/${packageName}`].version;
+        result.versions[packageName] = packageLockJSON.packages[`node_modules/${packageName}`].version;
       } else {
         result.versions[packageName] = "ERROR: Not found in package-lock";
       }
@@ -130,17 +107,13 @@ export async function loadFrameworkInfo(keyedDir, framework) {
     result.frameworkVersionString = buildFrameworkVersionString(
       framework,
       packageNames.map((name) => result.versions[name]).join(" + "),
-      keyedDir,
+      keyedDir
     );
 
     copyProps(result, benchmarkData);
   } else if (typeof benchmarkData.frameworkVersion === "string") {
     result.version = benchmarkData.frameworkVersion;
-    result.frameworkVersionString = buildFrameworkVersionString(
-      framework,
-      result.version,
-      keyedDir,
-    );
+    result.frameworkVersionString = buildFrameworkVersionString(framework, result.version, keyedDir);
 
     copyProps(result, benchmarkData);
   } else {
@@ -155,9 +128,7 @@ export async function loadFrameworkVersions() {
   const resultsProm = [];
 
   for (const keyedType of keyedTypes) {
-    const directories = await fs.promises.readdir(
-      path.resolve(frameworksDirectory, keyedType),
-    );
+    const directories = await fs.promises.readdir(path.resolve(frameworksDirectory, keyedType));
 
     for (const directory of directories) {
       if (!isFrameworkDir(keyedType, directory)) {

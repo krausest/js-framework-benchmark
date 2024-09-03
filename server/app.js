@@ -2,13 +2,14 @@ import Fastify from "fastify";
 import frameworksRouter from "./src/frameworks/frameworksRouter.js";
 import cspRouter from "./src/csp/cspRouter.js";
 import staticRouter from "./src/static/staticRouter.js";
-import * as ejs from "ejs";
-import * as fastifyView from "@fastify/view";
+import ejs from "ejs";
+import fastifyView from "@fastify/view";
 import minifier from "html-minifier";
 import { Stream } from "node:stream";
 import toArray from "stream-to-array";
 import zlib from "node:zlib";
-import { getSizeRouter } from "./src/responseSize/responseSizeRouter.js";
+import { responseSizeRouter } from "./src/responseSize/responseSizeRouter.js";
+import { createResponseSizeDecorator } from "./src/responseSize/responseSizeDecorator.js";
 
 /**
  * Builds the server but does not start it. Need it for testing API
@@ -20,38 +21,15 @@ function buildServer(options = {}) {
 
   fastify.register(fastifyView, {
     engine: {
-      ejs: ejs,
+      ejs,
     },
     options: {
       useHtmlMinifier: minifier,
     },
   });
 
-  fastify.decorate("responseSize", {
-    use_compression: false,
-    size_uncompressed: 0,
-    size_compressed: 0,
-    get: function() {
-      return {
-        use_compression: this.use_compression,
-        size_uncompressed: this.size_uncompressed,
-        size_compressed: this.size_compressed,
-      };
-    },
-    reset: function() {
-      this.size_uncompressed = 0;
-      this.size_compressed = 0;
-    },
-    enableCompression: function(val) {
-      this.use_compression = val;
-    },
-    add: function(uncompressed, compressed) {
-      this.size_uncompressed += uncompressed;
-      this.size_compressed += compressed;
-    },
-  });
-
-  fastify.register(getSizeRouter);
+  fastify.decorate("responseSize", createResponseSizeDecorator());
+  fastify.register(responseSizeRouter);
 
   fastify.addHook("onSend", async (request, reply, payload) => {
     // const MISSING_HEADERS_AND_HTTP = 99;
@@ -72,42 +50,42 @@ function buildServer(options = {}) {
 
     if (request.url.startsWith("/css") || reply.statusCode != 200 || !fastify.responseSize.use_compression) {
       return payload;
-    } else {
-      if (typeof payload == "string") {
-        let { uncompressed, compressed } = getSizeInfo(payload);
-        fastify.responseSize.add(uncompressed, compressed);
-        console.log(
-          `onSend: ${request.url} as string with uncompressed size ${uncompressed} sum uncompressed ${fastify.responseSize.size_uncompressed}, compressed ${fastify.responseSize.size_compressed}`
-        );
-      } else if (payload instanceof Stream) {
-        return toArray(payload)
-          .then((chunks) => {
-            const buffer = Buffer.concat(chunks);
-            if (buffer.length >= 1024) {
-              let out = zlib.brotliCompressSync(buffer);
-              let { uncompressed, compressed } = getSizeInfo(buffer, out);
-              fastify.responseSize.add(uncompressed, compressed);
-              console.log(
-                `onSend: ${request.url} as stream with uncompressed size ${uncompressed} compressed ${compressed} sum uncompressed ${fastify.responseSize.size_uncompressed}, compressed ${fastify.responseSize.size_compressed}`
-              );
-              return out;
-            } else {
-              let { uncompressed, compressed } = getSizeInfo(buffer);
-              fastify.responseSize.add(uncompressed, compressed);
-              console.log(
-                `onSend: ${request.url} as stream with uncompressed size ${uncompressed} (not compressed since below threshold) sum uncompressed ${fastify.responseSize.size_uncompressed}, compressed ${fastify.responseSize.size_compressed}`
-              );
-              return buffer;
-            }
-          })
-          .catch((error) => {
-            console.log("onSend: Error", error);
-          });
-      } else {
-        console.log("onSend: Unknown payload type", typeof payload, payload);
-      }
-      return payload;
     }
+
+    if (typeof payload == "string") {
+      let { uncompressed, compressed } = getSizeInfo(payload);
+      fastify.responseSize.add(uncompressed, compressed);
+      console.log(
+        `onSend: ${request.url} as string with uncompressed size ${uncompressed} sum uncompressed ${fastify.responseSize.size_uncompressed}, compressed ${fastify.responseSize.size_compressed}`
+      );
+    } else if (payload instanceof Stream) {
+      return toArray(payload)
+        .then((chunks) => {
+          const buffer = Buffer.concat(chunks);
+          if (buffer.length >= 1024) {
+            let out = zlib.brotliCompressSync(buffer);
+            let { uncompressed, compressed } = getSizeInfo(buffer, out);
+            fastify.responseSize.add(uncompressed, compressed);
+            console.log(
+              `onSend: ${request.url} as stream with uncompressed size ${uncompressed} compressed ${compressed} sum uncompressed ${fastify.responseSize.size_uncompressed}, compressed ${fastify.responseSize.size_compressed}`
+            );
+            return out;
+          } else {
+            let { uncompressed, compressed } = getSizeInfo(buffer);
+            fastify.responseSize.add(uncompressed, compressed);
+            console.log(
+              `onSend: ${request.url} as stream with uncompressed size ${uncompressed} (not compressed since below threshold) sum uncompressed ${fastify.responseSize.size_uncompressed}, compressed ${fastify.responseSize.size_compressed}`
+            );
+            return buffer;
+          }
+        })
+        .catch((error) => {
+          console.log("onSend: Error", error);
+        });
+    } else {
+      console.log("onSend: Unknown payload type", typeof payload, payload);
+    }
+    return payload;
   });
 
   fastify.addHook("onRequest", (request, reply, done) => {

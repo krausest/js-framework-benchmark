@@ -19,11 +19,7 @@ export async function getFrameworksVersions(request, reply) {
 
   performance.mark("End");
 
-  const executionTime = performance.measure(
-    "/ls duration measurement",
-    "Start",
-    "End",
-  ).duration;
+  const executionTime = performance.measure("/ls duration measurement", "Start", "End").duration;
 
   console.log(`/ls duration: ${executionTime}ms`);
 
@@ -36,5 +32,5 @@ export async function getFrameworksVersions(request, reply) {
  * @param {Reply} reply
  */
 export async function generateAndServeIndex(request, reply) {
-  return reply.view("templates/index.ejs", {frameworks: await prepareFrameworkData()});
+  return reply.view("templates/index.ejs", { frameworks: await prepareFrameworkData() });
 }

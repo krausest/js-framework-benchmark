@@ -1,16 +1,19 @@
-let violations = [];
-let isCSPEnabled = false;
+// @ts-check
 
 /**
  * @typedef {import("fastify").FastifyRequest} Request
  * @typedef {import("fastify").FastifyReply} Reply
  */
 
+/** @type {string[]} */
+const violations = [];
+let isCSPEnabled = false;
+
 /**
  * @param {Request} request
  * @param {Reply} reply
  */
-export function getCSP(_request, reply) {
+export function getCSP(request, reply) {
   console.log("CSP violations recorded for", violations);
   reply.send(violations);
 }
@@ -24,6 +27,7 @@ export function addCSP(request, reply) {
 
   console.log("/CSP", body);
 
+  // @ts-expect-error - It's better to use a validator
   const uri = body["csp-report"]["document-uri"];
   const frameworkRegEx = /((non-)?keyed\/.*?\/)/;
   let framework = uri.match(frameworkRegEx)[0];
@@ -39,9 +43,9 @@ export function addCSP(request, reply) {
  * @param {Request} request
  * @param {Reply} reply
  */
-export function enableCSP(_request, reply) {
-  console.log("/startCSP");
-  violations = [];
+export function enableCSP(request, reply) {
+  console.log("/enableCSP");
+  violations.length = 0;
   isCSPEnabled = true;
   reply.send("OK");
 }
@@ -50,9 +54,9 @@ export function enableCSP(_request, reply) {
  * @param {Request} request
  * @param {Reply} reply
  */
-export function disableCSP(_request, reply) {
-  console.log("/endCSP");
-  violations = [];
+export function disableCSP(request, reply) {
+  console.log("/disableCSP");
+  violations.length = 0;
   isCSPEnabled = false;
   reply.send("OK");
 }
