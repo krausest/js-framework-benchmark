@@ -1,14 +1,15 @@
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import terser from '@rollup/plugin-terser';
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
+import terser from "@rollup/plugin-terser";
 
-const isProd = process.env.production
+const isProduction = process.env.BUILD === "production";
 
+/** @type {import('rollup').RollupOptions} */
 export default {
-	input: 'src/Main.js',
-	output: {
-		file: 'dist/main.js',
-		format: 'iife'
-	},
-	plugins: [resolve(),commonjs(), isProd && terser()]
+  input: "src/Main.js",
+  output: {
+    file: "dist/main.js",
+    format: "iife",
+  },
+  plugins: [nodeResolve(), commonjs(), isProduction && terser()],
 };

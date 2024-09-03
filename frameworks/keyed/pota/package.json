@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build-dev": "rollup -c -w",
-    "build-prod": "rollup -c"
+    "build-prod": "rollup -c --environment BUILD:production"
   },
   "author": "Tito Bouzout",
   "license": "Apache-2.0",
@@ -25,10 +25,10 @@
     "pota": "^0.13.121"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "rollup": "^4.9.6"
+    "@babel/core": "7.25.2",
+    "@rollup/plugin-babel": "6.0.4",
+    "@rollup/plugin-node-resolve": "15.2.3",
+    "@rollup/plugin-terser": "0.4.4",
+    "rollup": "4.21.2"
   }
 }

@@ -13,16 +13,15 @@
     "cydon"
   ],
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-replace": "^5.0.5",
-    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-node-resolve": "15.2.3",
+    "@rollup/plugin-replace": "5.0.7",
+    "@rollup/plugin-terser": "0.4.4",
     "cydon": "^0.1.9",
-    "rollup": "^4.12.1",
-    "terser": "^5.29.1"
+    "rollup": "4.21.2"
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build-prod": "rollup -c --environment production"
+    "build-prod": "rollup -c --environment BUILD:production"
   },
   "type": "module"
 }

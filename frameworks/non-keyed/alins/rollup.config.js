@@ -3,23 +3,20 @@
  * @Date: 2023-09-07 11:54:42
  * @Description: Coding something
  */
-import alins from 'rollup-plugin-alins';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
+import alins from "rollup-plugin-alins";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
+import terser from "@rollup/plugin-terser";
 
-const plugins = [resolve(), commonjs(), alins()];
+const isProduction = process.env.BUILD === "production";
 
-if (process.env.production) {
-  plugins.push(terser());
-}
-
+/** @type {import('rollup').RollupOptions} */
 export default {
-  input: 'src/main.js',
+  input: "src/main.js",
   output: {
-    file: 'dist/main.js',
-    format: 'iife',
-    name: 'main'
+    file: "dist/main.js",
+    format: "iife",
+    name: "main",
   },
-  plugins
+  plugins: [nodeResolve(), commonjs(), alins(), isProduction && terser()],
 };
