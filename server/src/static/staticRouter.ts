@@ -5,14 +5,11 @@ import { cwd } from "node:process";
 import { isCSPEnabled } from "../csp/cspControllers.js";
 import { frameworksDirectory } from "../config/directories.js";
 import { generateAndServeIndex } from "../frameworks/frameworksControllers.js";
+import { FastifyInstance } from "fastify";
 
 const projectRootPath = path.join(cwd(), "..");
 
-/**
- * @param {import("fastify").FastifyInstance} fastify
- * @param {import("fastify").RegisterOptions} options
- */
-async function routes(fastify) {
+async function routes(fastify: FastifyInstance) {
   fastify.register(fastifyStatic, {
     root: frameworksDirectory,
     prefix: "/frameworks",

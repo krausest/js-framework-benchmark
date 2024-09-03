@@ -1,28 +1,14 @@
-// @ts-check
+import { FastifyReply, FastifyRequest } from "fastify";
 
-/**
- * @typedef {import("fastify").FastifyRequest} Request
- * @typedef {import("fastify").FastifyReply} Reply
- */
-
-/** @type {string[]} */
-const violations = [];
+const violations: string[] = [];
 let isCSPEnabled = false;
 
-/**
- * @param {Request} request
- * @param {Reply} reply
- */
-export function getCSP(request, reply) {
+export function getCSP(request: FastifyRequest, reply: FastifyReply) {
   console.log("CSP violations recorded for", violations);
   reply.send(violations);
 }
 
-/**
- * @param {Request} request
- * @param {Reply} reply
- */
-export function addCSP(request, reply) {
+export function addCSP(request: FastifyRequest, reply: FastifyReply) {
   const { body } = request;
 
   console.log("/CSP", body);
@@ -39,22 +25,14 @@ export function addCSP(request, reply) {
   reply.code(201).send("Created");
 }
 
-/**
- * @param {Request} request
- * @param {Reply} reply
- */
-export function enableCSP(request, reply) {
+export function enableCSP(request: FastifyRequest, reply: FastifyReply) {
   console.log("/enableCSP");
   violations.length = 0;
   isCSPEnabled = true;
   reply.send("OK");
 }
 
-/**
- * @param {Request} request
- * @param {Reply} reply
- */
-export function disableCSP(request, reply) {
+export function disableCSP(request: FastifyRequest, reply: FastifyReply) {
   console.log("/disableCSP");
   violations.length = 0;
   isCSPEnabled = false;
