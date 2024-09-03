@@ -2,7 +2,6 @@ import fastifyStatic from "@fastify/static";
 import path from "node:path";
 import { cwd } from "node:process";
 
-import { isCSPEnabled } from "../csp/cspControllers.js";
 import { frameworksDirectory } from "../config/directories.js";
 import { generateAndServeIndex } from "../frameworks/frameworksControllers.js";
 import { FastifyInstance } from "fastify";
@@ -14,7 +13,7 @@ async function routes(fastify: FastifyInstance) {
     root: frameworksDirectory,
     prefix: "/frameworks",
     setHeaders: (res, path) => {
-      if (isCSPEnabled && path.endsWith("index.html")) {
+      if (fastify.csp.isEnabled && path.endsWith("index.html")) {
         res.setHeader("Content-Security-Policy", "default-src 'self'; report-uri /csp");
       }
     },
