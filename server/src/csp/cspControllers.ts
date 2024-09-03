@@ -1,15 +1,15 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-const violations: string[] = [];
-let isCSPEnabled = false;
-
 export function getCSP(request: FastifyRequest, reply: FastifyReply) {
+  const { violations } = request.server.csp;
+
   console.log("CSP violations recorded for", violations);
   reply.send(violations);
 }
 
 export function addCSP(request: FastifyRequest, reply: FastifyReply) {
   const { body } = request;
+  const { violations } = request.server.csp;
 
   console.log("/CSP", body);
 
@@ -27,16 +27,15 @@ export function addCSP(request: FastifyRequest, reply: FastifyReply) {
 
 export function enableCSP(request: FastifyRequest, reply: FastifyReply) {
   console.log("/enableCSP");
-  violations.length = 0;
-  isCSPEnabled = true;
+
+  request.server.csp.violations.length = 0;
+  request.server.csp.isEnabled = true;
   reply.send("OK");
 }
 
 export function disableCSP(request: FastifyRequest, reply: FastifyReply) {
   console.log("/disableCSP");
-  violations.length = 0;
-  isCSPEnabled = false;
+  request.server.csp.violations.length = 0;
+  request.server.csp.isEnabled = false;
   reply.send("OK");
 }
-
-export { isCSPEnabled };

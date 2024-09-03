@@ -9,6 +9,7 @@ import { Readable } from "node:stream";
 import zlib from "node:zlib";
 import { responseSizeRouter } from "./src/responseSize/responseSizeRouter.js";
 import { createResponseSizeDecorator } from "./src/responseSize/responseSizeDecorator.js";
+import { createCSPDecorator } from "./src/csp/cspDecorator.js";
 
 /**
  * Builds the server but does not start it. Need it for testing API
@@ -25,6 +26,7 @@ function buildServer(options: FastifyServerOptions = {}) {
     },
   });
 
+  fastify.decorate("csp", createCSPDecorator());
   fastify.decorate("responseSize", createResponseSizeDecorator());
 
   fastify.addHook("onSend", async function (request, reply, payload) {
