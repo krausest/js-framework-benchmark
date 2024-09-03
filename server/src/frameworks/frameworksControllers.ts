@@ -1,18 +1,8 @@
-// @ts-check
+import { FastifyReply, FastifyRequest } from "fastify";
 import { loadFrameworkVersions } from "./frameworksServices.js";
 import { prepareFrameworkData } from "./helpers/index.js";
 
-/**
- * @typedef {import("fastify").FastifyRequest} Request
- * @typedef {import("fastify").FastifyReply} Reply
- */
-
-/**
- * Get framework versions.
- * @param {Request} request
- * @param {Reply} reply
- */
-export async function getFrameworksVersions(request, reply) {
+export async function getFrameworksVersions(request: FastifyRequest, reply: FastifyReply) {
   performance.mark("Start");
 
   const frameworks = await loadFrameworkVersions();
@@ -28,9 +18,7 @@ export async function getFrameworksVersions(request, reply) {
 
 /**
  * Get and serve the index HTML page.
- * @param {Request} request
- * @param {Reply} reply
  */
-export async function generateAndServeIndex(request, reply) {
+export async function generateAndServeIndex(request: FastifyRequest, reply: FastifyReply) {
   return reply.view("templates/index.ejs", { frameworks: await prepareFrameworkData() });
 }

@@ -1,9 +1,7 @@
+import { FastifyInstance } from "fastify";
 import { addCSP, disableCSP, enableCSP, getCSP } from "./cspControllers.js";
 
-/**
- * @param {import("fastify").FastifyInstance} fastify
- */
-async function routes(fastify) {
+async function routes(fastify: FastifyInstance) {
   fastify.addContentTypeParser(
     "application/csp-report",
     { parseAs: "string" },

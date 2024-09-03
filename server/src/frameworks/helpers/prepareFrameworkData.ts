@@ -10,6 +10,6 @@ export async function prepareFrameworkData() {
     framework.uri = `frameworks/${framework.type}/${framework.directory}${framework.customURL || ""}`;
   }
 
-  frameworks.sort((a, b) => a.frameworkVersionString.localeCompare(b.frameworkVersionString));
+  frameworks.sort((a, b) => a.frameworkVersionString!.localeCompare(b.frameworkVersionString!));
   return frameworks;
 }

@@ -1,19 +1,6 @@
-/**
- * @typedef {Object} BenchmarkData
- * @prop {string} issues
- * @prop {string} customURL
- * @prop {string} frameworkHomeURL
- * @prop {string} useShadowRoot
- * @prop {string} useRowShadowRoot
- * @prop {string} shadowRootName
- * @prop {string} buttonsInShadowRoot
- */
+import { BenchmarkData, Result } from "../types/index.js";
 
-/**
- * @param {unknown} result
- * @param {BenchmarkData} benchmarkData
- */
-export function copyProps(result, benchmarkData) {
+export function copyProps(result: Partial<Result & BenchmarkData>, benchmarkData: Partial<BenchmarkData>) {
   const { issues, customURL, frameworkHomeURL, useShadowRoot, useRowShadowRoot, shadowRootName, buttonsInShadowRoot } =
     benchmarkData;
 

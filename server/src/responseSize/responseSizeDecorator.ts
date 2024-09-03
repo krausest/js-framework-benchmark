@@ -20,7 +20,7 @@ export function createResponseSizeDecorator() {
     disableCompression() {
       this.use_compression = false;
     },
-    add(uncompressed, compressed) {
+    add(uncompressed: number, compressed: number) {
       this.size_uncompressed += uncompressed;
       this.size_compressed += compressed;
     },
