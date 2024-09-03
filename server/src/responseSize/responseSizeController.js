@@ -1,3 +1,12 @@
+/**
+ * @typedef {import("fastify").FastifyRequest} Request
+ * @typedef {import("fastify").FastifyReply} Reply
+ */
+
+/**
+ * @param {Request} request
+ * @param {Reply} reply
+ */
 export function getSize(request, reply) {
   console.log("/getSize");
   reply.send({
@@ -6,14 +15,22 @@ export function getSize(request, reply) {
   });
 }
 
+/**
+ * @param {Request} request
+ * @param {Reply} reply
+ */
 export function enableCompression(request, reply) {
   console.log("/enableCompression");
-  request.server.responseSize.enableCompression(true);
+  request.server.responseSize.enableCompression();
   reply.send("OK");
 }
 
+/**
+ * @param {Request} request
+ * @param {Reply} reply
+ */
 export function disableCompression(request, reply) {
   console.log("/disableCompression");
-  request.server.responseSize.enableCompression(false);
+  request.server.responseSize.disableCompression();
   reply.send("OK");
 }

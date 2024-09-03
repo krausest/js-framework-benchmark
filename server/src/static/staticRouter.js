@@ -18,10 +18,7 @@ async function routes(fastify) {
     prefix: "/frameworks",
     setHeaders: (res, path) => {
       if (isCSPEnabled && path.endsWith("index.html")) {
-        res.setHeader(
-          "Content-Security-Policy",
-          "default-src 'self'; report-uri /csp",
-        );
+        res.setHeader("Content-Security-Policy", "default-src 'self'; report-uri /csp");
       }
     },
   });
