@@ -22,12 +22,12 @@ export function getCSP(_request, reply) {
 export function addCSP(request, reply) {
   const { body } = request;
 
-  console.log("/CSP ", body);
+  console.log("/CSP", body);
 
   const uri = body["csp-report"]["document-uri"];
   const frameworkRegEx = /((non-)?keyed\/.*?\/)/;
   let framework = uri.match(frameworkRegEx)[0];
-  framework = framework.substring(0, framework.length - 1);
+  framework = framework.slice(0, Math.max(0, framework.length - 1));
 
   if (!violations.includes(framework)) {
     violations.push(framework);

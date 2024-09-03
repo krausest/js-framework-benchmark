@@ -1,5 +1,5 @@
-import path from "path";
-import process from "process";
+import path from "node:path";
+import process from "node:process";
 
 // Checks if the directory is explicitly specified.
 // It can be specified by writing for example `npm start other-frameworks-directory`.

@@ -5,7 +5,7 @@ import staticRouter from "./src/static/staticRouter.js";
 import * as ejs from "ejs";
 import * as fastifyView from "@fastify/view";
 import minifier from "html-minifier";
-import { Stream } from "stream";
+import { Stream } from "node:stream";
 import toArray from "stream-to-array";
 import zlib from "node:zlib";
 import { getSizeRouter } from "./src/responseSize/responseSizeRouter.js";
@@ -56,11 +56,11 @@ function buildServer(options = {}) {
   fastify.addHook("onSend", async (request, reply, payload) => {
     // const MISSING_HEADERS_AND_HTTP = 99;
     let getSizeInfo = (original, compressed) => {
-      if (!compressed) {
-        compressed = original;
-      } else {
+      if (compressed) {
         reply.header("Content-Length", compressed.length);
         reply.header("Content-Encoding", "br");
+      } else {
+        compressed = original;
       }
       // let headers = Object.entries(reply.getHeaders()).reduce((p, [e, v]) => p + `${e}: ${v} \n`, "");
       // console.log(request.url, reply.statusCode, "\n", headers);
@@ -100,8 +100,8 @@ function buildServer(options = {}) {
               return buffer;
             }
           })
-          .catch((err) => {
-            console.log("onSend: Error", err);
+          .catch((error) => {
+            console.log("onSend: Error", error);
           });
       } else {
         console.log("onSend: Unknown payload type", typeof payload, payload);
