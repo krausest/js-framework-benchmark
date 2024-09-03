@@ -24,7 +24,7 @@
     "rebuild-ci": "node cli.js rebuild-single --ci -f",
     "zip": "node cli.js zip",
     "format": "prettier . \"!(broken-frameworks|frameworks)/**/*\" -w",
-    "lint": "eslint . --ignore-pattern 'broken-frameworks' --ignore-pattern 'frameworks'"
+    "lint": "eslint . --ignore-pattern 'broken-frameworks/' --ignore-pattern 'frameworks/'"
   },
   "keywords": [
     "benchmark",
@@ -50,16 +50,16 @@
     "rimraf": "^5.0.5"
   },
   "devDependencies": {
-    "@eslint/js": "^8.52.0",
-    "@typescript-eslint/eslint-plugin": "^6.8.0",
-    "@typescript-eslint/parser": "^6.8.0",
-    "eslint": "^8.52.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
-    "eslint-plugin-unicorn": "^49.0.0",
-    "globals": "^13.23.0",
+    "@eslint/js": "^9.8.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "eslint-plugin-unicorn": "^55.0.0",
+    "globals": "^15.8.0",
     "local-web-server": "^5.3.0",
-    "prettier": "^3.0.3"
+    "prettier": "^3.0.3",
+    "typescript-eslint": "^7.18.0"
   }
 }
