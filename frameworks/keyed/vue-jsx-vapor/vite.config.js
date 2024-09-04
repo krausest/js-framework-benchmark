@@ -1,9 +1,13 @@
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
-import Inspect from 'vite-plugin-inspect'
+import vueJsxVapor from "unplugin-vue-jsx-vapor/vite";
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), Inspect()],
+  plugins: [
+    vueJsxVapor({
+      restructure: true,
+    }),
+  ],
   build: {
     rollupOptions: {
       input: "src/main.js",
