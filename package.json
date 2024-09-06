@@ -9,7 +9,7 @@
     "build": "echo \"Please use 'npm run rebuild-all' instead\" && exit 1",
     "build-prod": "echo \"Please use 'npm run rebuild-all' instead\" && exit 1",
     "compile": "echo \"Please use 'npm run rebuild-all' instead\" && exit 1",
-    "start": "cd server && node index.js",
+    "start": "cd server && npm start",
     "bench": "cd webdriver-ts && cross-env LANG=\"en_US.UTF-8\" node dist/benchmarkRunner.js",
     "checkCSP": "cd webdriver-ts && cross-env LANG=\"en_US.UTF-8\" node dist/isCSPCompliant.js",
     "results": "cd webdriver-ts && npm run results",
