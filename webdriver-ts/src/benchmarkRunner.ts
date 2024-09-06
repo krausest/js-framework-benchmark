@@ -340,7 +340,7 @@ async function main() {
     benchmarkOptions.numIterationsForStartupBenchmark = args.count;
   }
 
-  let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
+  let allArgs = args._.length <= 2 ? [] : args._.slice(2);
   let frameworkArgument = args.framework ? args.framework : allArgs;
   console.log("args", args, "allArgs", allArgs);
 

@@ -36,7 +36,7 @@ let benchmarkOptions: BenchmarkOptions = {
   allowThrottling: !args.nothrottling,
 };
 
-let allArgs = args._.length <= 2 ? [] : args._.slice(2, args._.length);
+let allArgs = args._.length <= 2 ? [] : args._.slice(2);
 
 console.log("args.framework", args.framework, !args.framework);
 
@@ -89,7 +89,7 @@ async function runBench(
         cspCheckSucessful = false;
         console.log(`CSP test failed for ${runFrameworks[i].fullNameWithKeyedAndVersion} - due to reporting`);
       }
-      if (!cspCheckSucessful != framework.issues.includes((1139))) {
+      if (cspCheckSucessful == framework.issues.includes((1139))) {
         const hint = cspCheckSucessful ? "The flag 1139 should be removed" : "The flag 1139 should be added";
         console.log(`ERROR: CSP is incorrectly categorized for ${runFrameworks[i].fullNameWithKeyedAndVersion} . ${hint}`);
         cspCheckSucessful = false;

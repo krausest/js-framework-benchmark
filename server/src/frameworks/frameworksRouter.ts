@@ -1,10 +1,7 @@
+import { FastifyInstance } from "fastify";
 import { getFrameworksVersions } from "./frameworksControllers.js";
 
-/**
- * A plugin that provide encapsulated routes
- * @param {import("fastify").FastifyInstance} fastify
- */
-async function routes(fastify) {
+async function routes(fastify: FastifyInstance) {
   fastify.get("/ls", getFrameworksVersions);
 }
 

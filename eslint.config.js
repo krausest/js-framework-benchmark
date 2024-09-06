@@ -44,7 +44,7 @@ export default tseslint.config(
    * Webdriver
    */
   {
-    files: ["webdriver-ts/**/*.{js,cjs,ts}"],
+    files: ["webdriver-ts/src/**/*.{js,cjs,ts}"],
     languageOptions: {
       parserOptions: { project: ["./webdriver-ts/tsconfig.eslint.json"] },
     },
@@ -53,6 +53,7 @@ export default tseslint.config(
       "require-await": "error",
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/no-unused-vars": "off",
+      "prefer-const": "off",
     },
   },
   /**
@@ -83,7 +84,7 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ["**/node_modules/", "**/dist/", "**/results/", "css/", "**/csv_export.js"],
+    ignores: ["**/node_modules/", "**/dist/", "**/results/", "css/", "**/csv_export.js", "**/py/"],
   },
   eslintConfigPrettier
 );

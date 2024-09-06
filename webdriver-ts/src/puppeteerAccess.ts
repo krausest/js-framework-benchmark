@@ -1,8 +1,6 @@
 import * as puppeteer from "puppeteer-core";
 import { Page } from "puppeteer-core";
 import { BenchmarkOptions, wait } from "./common.js";
-import * as fs from "node:fs";
-import * as path from "node:path";
 
 export async function checkElementNotExists(page: Page, selector: string) {
   let start = Date.now();
@@ -99,6 +97,7 @@ function browserPath(benchmarkOptions: BenchmarkOptions) {
   } else if (process.platform == "linux") {
     return "google-chrome";
   } else if (/^win/i.test(process.platform)) {
+    // eslint-disable-next-line unicorn/prefer-string-raw
     return "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
   } else {
     throw new Error("Path to Google Chrome executable must be specified");
