@@ -4,7 +4,7 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@angular/core",
     "customURL": "/dist/angular/browser/",
-    "frameworkHomeURL": "https://angular.io/"
+    "frameworkHomeURL": "https://angular.dev/"
   },
   "scripts": {
     "ng": "ng",

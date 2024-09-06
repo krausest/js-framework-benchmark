@@ -1,16 +1,13 @@
 <script setup vapor>
-import { ref, shallowRef } from "vue";
+import { ref, shallowRef, triggerRef, watch } from "vue";
 import { buildData } from "./data";
 
 const selected = ref();
 const rows = shallowRef([]);
 
-function setRows(update = rows.value.slice()) {
-  rows.value = update;
-}
-
 function add() {
-  rows.value = rows.value.concat(buildData(1000));
+  rows.value.push(...buildData(1000));
+  triggerRef(rows);
 }
 
 function remove(id) {
@@ -18,7 +15,7 @@ function remove(id) {
     rows.value.findIndex((d) => d.id === id),
     1
   );
-  setRows();
+  triggerRef(rows);
 }
 
 function select(id) {
@@ -26,25 +23,24 @@ function select(id) {
 }
 
 function run() {
-  setRows(buildData());
+  rows.value = buildData();
   selected.value = undefined;
 }
 
 function update() {
   const _rows = rows.value;
-  for (let i = 0; i < _rows.length; i += 10) {
-    _rows[i].label += " !!!";
+  for (let i = 0, len = _rows.length; i < len; i += 10) {
+    _rows[i].label.value += " !!!";
   }
-  setRows();
 }
 
 function runLots() {
-  setRows(buildData(10000));
+  rows.value = buildData(10000);
   selected.value = undefined;
 }
 
 function clear() {
-  setRows([]);
+  rows.value = [];
   selected.value = undefined;
 }
 
@@ -55,9 +51,20 @@ function swapRows() {
     const d998 = _rows[998];
     _rows[1] = d998;
     _rows[998] = d1;
-    setRows();
+    triggerRef(rows)
   }
 }
+
+// Reduce the complexity of `selected` from O(n) to O(1).
+function createSelector(source) {
+  const cache = {}
+  watch(source, (val, old) => {
+    if (old != undefined) cache[old].value = false
+    if (val != undefined) cache[val].value = true
+  })
+  return id => (cache[id] ??= shallowRef(false)).value
+}
+const isSelected = createSelector(selected)
 </script>
 
 <template>
@@ -96,10 +103,10 @@ function swapRows() {
   </div>
   <table class="table table-hover table-striped test-data">
     <tbody>
-      <tr v-for="row of rows" :class="{ danger: row.id === selected }" :data-label="row.label">
+      <tr v-for="row of rows" :class="{ danger: isSelected(row.id) }" :data-label="row.label">
         <td class="col-md-1">{{ row.id }}</td>
         <td class="col-md-4">
-          <a @click="select(row.id)">{{ row.label }}</a>
+          <a @click="select(row.id)">{{ row.label.value }}</a>
         </td>
         <td class="col-md-1">
           <a @click="remove(row.id)">
