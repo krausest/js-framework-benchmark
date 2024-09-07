@@ -13,7 +13,7 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build-prod": "rollup -c --environment production"
+    "build-prod": "rollup -c --environment BUILD:production"
   },
   "author": "Wesley Luyten",
   "license": "Apache-2.0",
@@ -26,9 +26,9 @@
     "sinuous": "^0.32.1"
   },
   "devDependencies": {
-    "@rollup/plugin-babel": "^6.0.3",
-    "@rollup/plugin-node-resolve": "^15.1.0",
-    "@rollup/plugin-terser": "^0.4.3",
-    "rollup": "^3.26.2"
+    "@rollup/plugin-babel": "6.0.4",
+    "@rollup/plugin-node-resolve": "15.2.3",
+    "@rollup/plugin-terser": "0.4.4",
+    "rollup": "4.21.2"
   }
 }

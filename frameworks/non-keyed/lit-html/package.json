@@ -2,8 +2,8 @@
   "name": "js-framework-benchmark-non-keyed-lit-html",
   "version": "1.1.0",
   "description": "Lit-HTML demo",
-  "type": "module",
   "main": "index.js",
+  "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "lit-html",
     "frameworkHomeURL": "https://lit.dev/docs/libraries/standalone-templates/",
@@ -13,7 +13,7 @@
   },
   "scripts": {
     "dev": "rollup -c -w",
-    "build-prod": "rollup -c"
+    "build-prod": "rollup -c --environment BUILD:production"
   },
   "repository": {
     "type": "git",
@@ -32,8 +32,8 @@
     "lit-html": "^3.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-terser": "^0.4.4",
-    "rollup": "^4.1.4",
-    "rollup-plugin-minify-html-literals-v3": "^1.3.3"
+    "@rollup/plugin-terser": "0.4.4",
+    "rollup": "4.21.2",
+    "rollup-plugin-html-literals": "1.1.8"
   }
 }

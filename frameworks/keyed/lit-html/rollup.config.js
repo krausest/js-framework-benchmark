@@ -1,11 +1,11 @@
-import terser from '@rollup/plugin-terser';
-import minifyHTML from 'rollup-plugin-minify-html-literals-v3';
+import terser from "@rollup/plugin-terser";
+import minifyHTML from "rollup-plugin-html-literals";
 
+const isProduction = process.env.BUILD === "production";
+
+/** @type {import('rollup').RollupOptions} */
 export default {
   input: `src/index.js`,
-  output: { file: `dist/index.js`, format: 'iife' },
-  plugins: [
-    minifyHTML(),
-    terser()
-  ]
+  output: { file: `dist/index.js`, format: "iife" },
+  plugins: [minifyHTML(), isProduction && terser()],
 };

@@ -1,17 +1,14 @@
-import resolve from "@rollup/plugin-node-resolve";
-import { terser } from "rollup-plugin-terser";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
 
-const plugins = [resolve()];
+const isProduction = process.env.BUILD === "production";
 
-if (process.env.production) {
-  plugins.push(terser());
-}
-
+/** @type {import('rollup').RollupOptions} */
 export default {
   input: "src/main.js",
   output: {
     file: "dist/main.js",
     format: "iife",
   },
-  plugins,
+  plugins: [nodeResolve(), isProduction && terser()],
 };

@@ -1,9 +1,10 @@
-import resolve from "@rollup/plugin-node-resolve";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 import { babel } from "@rollup/plugin-babel";
 import terser from "@rollup/plugin-terser";
 
-const isProd = process.env.production;
+const isProduction = process.env.BUILD === "production";
 
+/** @type {import('rollup').RollupOptions} */
 export default {
   input: "src/main.js",
   output: {
@@ -12,7 +13,7 @@ export default {
   },
   plugins: [
     babel({ babelHelpers: "bundled", plugins: ["sinuous/babel-plugin-htm"] }),
-    resolve(),
-    isProd && terser(),
+    nodeResolve(),
+    isProduction && terser(),
   ],
 };

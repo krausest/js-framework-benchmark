@@ -1,15 +1,13 @@
-import { terser } from 'rollup-plugin-terser';
-import minifyHTML from 'rollup-plugin-minify-html-literals';
-import resolve from '@rollup/plugin-node-resolve';
-import typescript from 'rollup-plugin-typescript2';
+import terser from "@rollup/plugin-terser";
+import minifyHTML from "rollup-plugin-html-literals";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import typescript from "@rollup/plugin-typescript";
 
+const isProduction = process.env.BUILD === "production";
+
+/** @type {import('rollup').RollupOptions} */
 export default {
-  input: `src/main.ts`,
-  output: { file: `dist/main.js`, format: 'iife', name: 'app' },
-  plugins: [
-    resolve(),
-    minifyHTML(),
-    typescript({ typescript: require('typescript'), clean: true }),
-    terser(),
-  ],
+  input: "src/main.ts",
+  output: { file: "dist/main.js", format: "iife", name: "app" },
+  plugins: [nodeResolve(), typescript(), isProduction && minifyHTML(), isProduction && terser()],
 };

@@ -1,21 +1,19 @@
 import { nodeResolve } from "@rollup/plugin-node-resolve";
-import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
 
-const plugins = [nodeResolve()];
+const isProduction = process.env.BUILD === "production";
 
-if(process.env.production)
-  plugins.push(terser());
-
-export default [{
+/** @type {import('rollup').RollupOptions} */
+export default {
   input: "src/main.js",
   output: {
     file: "dist/main.js",
     format: "iife",
-    name: "main"
+    name: "main",
   },
   onwarn(warning, warn) {
-    if (warning.code === 'CIRCULAR_DEPENDENCY') return;
+    if (warning.code === "CIRCULAR_DEPENDENCY") return;
     warn(warning);
   },
-  plugins
-}];
+  plugins: [nodeResolve(), isProduction && terser()],
+};
