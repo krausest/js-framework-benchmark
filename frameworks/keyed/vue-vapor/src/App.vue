@@ -51,20 +51,9 @@ function swapRows() {
     const d998 = _rows[998];
     _rows[1] = d998;
     _rows[998] = d1;
-    triggerRef(rows)
+    triggerRef(rows);
   }
 }
-
-// Reduce the complexity of `selected` from O(n) to O(1).
-function createSelector(source) {
-  const cache = {}
-  watch(source, (val, old) => {
-    if (old != undefined) cache[old].value = false
-    if (val != undefined) cache[val].value = true
-  })
-  return id => (cache[id] ??= shallowRef(false)).value
-}
-const isSelected = createSelector(selected)
 </script>
 
 <template>
@@ -103,7 +92,13 @@ const isSelected = createSelector(selected)
   </div>
   <table class="table table-hover table-striped test-data">
     <tbody>
-      <tr v-for="row of rows" :key="row.id" :class="{ danger: isSelected(row.id) }" :data-label="row.label">
+      <tr
+        v-for="row of rows"
+        :key="row.id"
+        :class="{ danger: selected === row.id }"
+        :data-label="row.label.value"
+        v-memo="[row.label.value, row.id === selected]"
+      >
         <td class="col-md-1">{{ row.id }}</td>
         <td class="col-md-4">
           <a @click="select(row.id)">{{ row.label.value }}</a>
