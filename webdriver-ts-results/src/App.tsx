@@ -48,7 +48,7 @@ const App = () => {
 
   const testEnvironmentInfo = (
     <p>
-      The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 14.4), Chrome for Testing 128.0.6613.86
+      The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 15.0), Chrome for Testing 129.0.6668.58
       (arm64) using the puppeteer benchmark driver with reduced tracing.
     </p>
   );
