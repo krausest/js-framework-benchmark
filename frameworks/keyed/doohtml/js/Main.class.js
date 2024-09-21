@@ -114,7 +114,7 @@ Doo.define(
 			}
 			
 			if (elem) {
-				let row = this.getParentRow(elem)
+				const row = this.getParentRow(elem)
 				if (row) {
 					this.selectedRow = row
 					row.className = DANGER
