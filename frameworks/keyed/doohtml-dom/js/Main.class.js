@@ -59,7 +59,7 @@ Doo.define(
 			return data	
 		}
 		getIndex(row) {
-			return this.data.rows.findIndex((item, i) => item.id === row.key) 
+			return this.data.rows.findIndex((item) => item.id === row.key) 
 		}
 
 		delete(elem) {
@@ -92,9 +92,8 @@ Doo.define(
 		}
 
 		update() {
-			const bang = ' !!!'
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
-				this.tbody.childNodes[i].childNodes[1].childNodes[0].firstChild.textContent  = this.data.rows[i].label = `${this.data.rows[i].label}${bang}`
+				this.tbody.childNodes[i].childNodes[1].childNodes[0].firstChild.nodeValue  = this.data.rows[i].label = `${this.data.rows[i].label}${BANG}`
 			}
 		}
 
@@ -105,7 +104,7 @@ Doo.define(
 			}
 			
 			if (elem) {
-				let row = this.getParentRow(elem)
+				const row = this.getParentRow(elem)
 				if (row) {
 					this.selectedRow = row
 					row.className = DANGER
@@ -114,7 +113,7 @@ Doo.define(
 		}
 
 		clear() {
-			this.tbody.textContent = ''
+			this.tbody.nodeValue = ''
 			this.data.rows = []
 		}
 
