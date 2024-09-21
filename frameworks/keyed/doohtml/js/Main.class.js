@@ -123,7 +123,7 @@ Doo.define(
 		}
 
 		clear() {
-			this.tbody.nodeValue = ''
+			this.tbody.textContent = ''
 			this.data.rows = []
 		}
 

@@ -9,6 +9,7 @@ const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 const DEFAULT_SIZE = 1000
 const CHILD_1 = 1
 const CHILD_998 = 998
+const BANG = ' !!!'
 const DANGER = 'danger'
 Doo.define(
   	class Main extends Doo {
@@ -113,7 +114,7 @@ Doo.define(
 		}
 
 		clear() {
-			this.tbody.nodeValue = ''
+			this.tbody.textContent = ''
 			this.data.rows = []
 		}
 
