@@ -1,5 +1,6 @@
 <script setup vapor>
-import { ref, shallowRef, triggerRef, watch } from "vue";
+import { ref, shallowRef, triggerRef } from "vue";
+import { createSelector } from "vue/vapor";
 import { buildData } from "./data";
 
 const selected = ref();
@@ -54,6 +55,8 @@ function swapRows() {
     triggerRef(rows);
   }
 }
+
+const isSelected = createSelector(selected);
 </script>
 
 <template>
@@ -94,7 +97,7 @@ function swapRows() {
     <tbody>
       <tr
         v-for="row of rows"
-        :class="{ danger: selected === row.id }"
+        :class="{ danger: isSelected(row.id) }"
         :data-label="row.label.value"
         v-memo="[row.label.value, row.id === selected]"
       >
