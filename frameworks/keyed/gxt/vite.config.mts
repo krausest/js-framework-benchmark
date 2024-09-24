@@ -13,6 +13,8 @@ export default defineConfig(({ mode }) => ({
     flags: {
       TRY_CATCH_ERROR_HANDLING: false,
       SUPPORT_SHADOW_DOM: false,
+      REACTIVE_MODIFIERS: false,
+      WITH_CONTEXT_API: false,
     }
   })],
   build: {
@@ -29,12 +31,17 @@ export default defineConfig(({ mode }) => ({
     terserOptions: {
       module: true,
       compress: {
-        hoist_funs: true,
+        hoist_funs: false,
         drop_console: true,
-        inline: 2,
-        passes: 5,
+        inline: 3,
+        passes: 3,
         unsafe: true,
         unsafe_symbols: true,
+        unsafe_arrows: true,
+        booleans_as_integers: true,
+        ecma: 2020,
+        hoist_vars: false,
+        toplevel: true,
       },
       mangle: {
         module: true,

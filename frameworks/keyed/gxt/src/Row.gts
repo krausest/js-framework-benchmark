@@ -1,5 +1,5 @@
 import type { Item } from '@/utils/data';
-import { Component, cellFor } from '@lifeart/gxt';
+import { Component } from '@lifeart/gxt';
 import type { ModifierReturn } from '@glint/template/-private/integration';
 import { RemoveIcon } from './RemoveIcon.gts';
 
@@ -13,11 +13,8 @@ type RowArgs = {
 };
 
 export class Row extends Component<RowArgs> {
-  get isSelected() {
-    return this.args.selected === this.args.item.id;
-  }
   get className() {
-    return this.isSelected ? 'danger' : '';
+    return this.args.selected === this.args.item.id ? 'danger' : '';
   }
   onClick = () => {
     this.args.onSelect(this.args.item);
