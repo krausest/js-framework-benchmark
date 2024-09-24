@@ -9,6 +9,7 @@ const lenA = adjectives.length, lenB = colours.length, lenC = nouns.length
 const DEFAULT_SIZE = 1000
 const CHILD_1 = 1
 const CHILD_998 = 998
+const BANG = ' !!!'
 const DANGER = 'danger'
 Doo.define(
   	class Main extends Doo {
@@ -58,6 +59,9 @@ Doo.define(
 			}
 			return data	
 		}
+		getIndex(row) {
+			return this.data.rows.findIndex((item) => item.id === row.key) 
+		}
 
 		delete(elem) {
 			let row = this.getParentRow(elem)
@@ -88,9 +92,8 @@ Doo.define(
 		}
 
 		update() {
-			const bang = ' !!!'
 			for (let i=0, len = this.data.rows.length;i<len;i+=10) {
-				this.tbody.childNodes[i].childNodes[1].childNodes[0].firstChild.textContent  = this.data.rows[i].label = `${this.data.rows[i].label}${bang}`
+				this.tbody.childNodes[i].childNodes[1].childNodes[0].firstChild.nodeValue  = this.data.rows[i].label = `${this.data.rows[i].label}${BANG}`
 			}
 		}
 
@@ -101,7 +104,7 @@ Doo.define(
 			}
 			
 			if (elem) {
-				let row = this.getParentRow(elem)
+				const row = this.getParentRow(elem)
 				if (row) {
 					this.selectedRow = row
 					row.className = DANGER
