@@ -1,0 +1,35 @@
+{
+  "name": "js-framework-benchmark-angular-nozone",
+  "version": "0.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@angular/core",
+    "customURL": "/dist/angular/browser/",
+    "frameworkHomeURL": "https://angular.io/"
+  },
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "build-prod": "ng build --configuration production",
+    "dev": "ng serve"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "18.0.1",
+    "@angular/compiler": "18.0.1",
+    "@angular/core": "18.0.1",
+    "@angular/platform-browser": "18.0.1",
+    "@angular/ssr": "18.0.2",
+    "rxjs": "7.8.1",
+    "tslib": "^2.6.2"
+  },
+  "devDependencies": {
+    "@angular/build": "^18.0.2",
+    "@angular/cli": "18.0.2",
+    "@angular/compiler-cli": "18.0.1",
+    "@types/node": "^20.11.30",
+    "typescript": "5.4.3"
+  }
+}
