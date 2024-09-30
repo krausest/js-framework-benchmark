@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-rvjs",
+  "description": "@rvjs/core benchmark project",
+  "version": "1.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.2.21",
+    "frameworkVersionFromPackage": "@rvjs/core",
+    "frameworkHomeURL": "https://rvjs.xyz/",
+    "customURL": "/dist"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "tsc && vite build --mode prod",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1"
+  },
+  "dependencies": {
+    "@rvjs/core": "^0.2.21"
+  }
+}
