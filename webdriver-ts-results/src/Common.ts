@@ -180,7 +180,7 @@ function colorsForStatisticResult(statisticResult: StatisticResult) {
 }
 
 const statisticComputeColor = function (sign: number, pValue: number): [string, string, StatisticResult] {
-  if (pValue > 0.05) {
+  if (pValue > 0.05 || isNaN(pValue) && sign === 0) {
     return undecided; //['#fff','#000', StatisticResult.Undecided];
   }
   if (sign <= 0) {
@@ -460,9 +460,9 @@ export class ResultTableData {
     // if (benchmark.type === BenchmarkType.CPU) {
     //     factor = Math.max(1, factor);
     // }
-    const conficenceInterval =
+    const confidenceInterval =
       (1.959964 * (resultValues.standardDeviation || 0)) / Math.sqrt(resultValues.values.length);
-    const conficenceIntervalStr = benchmark.type === BenchmarkType.CPU ? conficenceInterval.toFixed(1) : null;
+    const confidenceIntervalStr = benchmark.type === BenchmarkType.CPU ? confidenceInterval.toFixed(1) : null;
     const formattedValue = formatEn.format(value);
 
     if (!this.compareWith) {
@@ -470,7 +470,7 @@ export class ResultTableData {
         framework.name,
         value,
         formattedValue,
-        conficenceIntervalStr,
+        confidenceIntervalStr,
         factor,
         factor.toFixed(2),
         computeColor(factor),
@@ -504,14 +504,14 @@ export class ResultTableData {
     const t = (x1 - x2) / Math.sqrt(s1_2 / n1 + s2_2 / n2);
     const p = (1.0 - jStat.studentt.cdf(Math.abs(t), dof)) * 2;
 
-    const statisticalCol = statisticComputeColor(t, p);
-    const statisticalResult = (p * 100).toFixed(3) + "%";
+    const statisticalCol = statisticComputeColor(x1 - x2, p);
+    const statisticalResult = isNaN(p) ? "" : (p * 100).toFixed(3) + "%";
 
     return new TableResultValueEntry(
       framework.name,
       value,
       formattedValue,
-      conficenceIntervalStr,
+      confidenceIntervalStr,
       factor,
       factor.toFixed(2),
       statisticalCol[0],
