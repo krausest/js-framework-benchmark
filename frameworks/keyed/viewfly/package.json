@@ -12,24 +12,24 @@
     "build-prod": "webpack --mode production"
   },
   "keywords": [
-    "react",
+    "viewfly",
     "webpack"
   ],
-  "author": "Stefan Krause",
-  "license": "Apache-2.0",
+  "author": "tanbo",
+  "license": "MIT",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "@viewfly/core": "^1.0.0-alpha.13",
-    "@viewfly/platform-browser": "^1.0.0-alpha.13"
+    "@viewfly/core": "^1.0.2",
+    "@viewfly/platform-browser": "^1.0.3"
   },
   "devDependencies": {
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.3.0",
-    "typescript": "^4.9.3",
+    "typescript": "^5.6.3",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.7.1"
