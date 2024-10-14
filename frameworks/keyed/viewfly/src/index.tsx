@@ -224,4 +224,5 @@ function App() {
   }
 }
 
-createApp(<App />).mount(document.getElementById('main')!)
+// eslint-disable-next-line no-undef
+createApp(<App />).mount(document.querySelector('#main')!)
