@@ -32,7 +32,6 @@ td {
   max-width: 100%;
 }
 .results__table-container {
-  overflow-x: auto;
 }
 .results__table {
   font-size: 11px;
