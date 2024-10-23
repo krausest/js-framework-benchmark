@@ -97,16 +97,19 @@ const Button = ({ id, text, fn }) => (
 const App = () => {
   const [data, setData, updateData] = signal([]),
     [selected, setSelected] = signal(null),
-    run = () => setData(buildData(1000)),
+    run = () => {
+        setData(buildData(1000))
+    },
     runLots = () => {
       setData(buildData(10000))
     },
-    add = () => updateData(d => [...d, ...buildData(1000)]),
-    update = () =>
-      batch(() => {
+    add = () => {
+        updateData(d => [...d, ...buildData(1000)])
+    },
+    update = () => {
         for (let i = 0, d = data(), len = d.length; i < len; i += 10)
           d[i].updateLabel(l => l + ' !!!')
-      }),
+    },
     swapRows = () => {
       const d = data().slice()
       if (d.length > 998) {
@@ -116,13 +119,16 @@ const App = () => {
         setData(d)
       }
     },
-    clear = () => setData([]),
-    remove = id =>
+    clear = () => {
+        setData([])
+    },
+    remove = id => {
       updateData(d => {
         const idx = d.findIndex(datum => datum.id === id)
         d.splice(idx, 1)
         return [...d]
-      }),
+      })
+    },
     isSelected = useSelector(selected)
 
   return (
@@ -186,7 +192,7 @@ const App = () => {
               const { id, label } = row
 
               return (
-                <tr class:danger={isSelected(id)}>
+                <tr class={{danger:isSelected(id) }}>
                   <td
                     class="col-md-1"
                     textContent={id}
