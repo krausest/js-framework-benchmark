@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-pota",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "main": "dist/main.js",
   "js-framework-benchmark": {
@@ -20,7 +20,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "pota": "^0.14.132"
+    "pota": "^0.16.156"
   },
   "devDependencies": {
     "@babel/core": "7.25.2",
@@ -28,5 +28,20 @@
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-terser": "0.4.4",
     "rollup": "4.21.2"
+  },
+  "prettier": {
+    "printWidth": 70,
+    "useTabs": true,
+    "semi": false,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "jsxSingleQuote": false,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "arrowParens": "avoid",
+    "proseWrap": "never",
+    "endOfLine": "lf",
+    "singleAttributePerLine": true
   }
 }
