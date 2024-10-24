@@ -1,4 +1,4 @@
-import { render, signal, batch } from 'pota'
+import { render, signal } from 'pota'
 import { For } from 'pota/web'
 
 import { useSelector } from 'pota/plugin/useSelector'
@@ -68,9 +68,7 @@ function buildData(count) {
   let data = new Array(count)
   for (let i = 0; i < count; i++) {
     const [label, setLabel, updateLabel] = signal(
-      `${adjectives[_random(adjectives.length)]} ${
-        colours[_random(colours.length)]
-      } ${nouns[_random(nouns.length)]}`,
+      `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
     )
     data[i] = {
       id: idCounter++,
@@ -97,16 +95,19 @@ const Button = ({ id, text, fn }) => (
 const App = () => {
   const [data, setData, updateData] = signal([]),
     [selected, setSelected] = signal(null),
-    run = () => setData(buildData(1000)),
+    run = () => {
+      setData(buildData(1000))
+    },
     runLots = () => {
       setData(buildData(10000))
     },
-    add = () => updateData(d => [...d, ...buildData(1000)]),
-    update = () =>
-      batch(() => {
-        for (let i = 0, d = data(), len = d.length; i < len; i += 10)
-          d[i].updateLabel(l => l + ' !!!')
-      }),
+    add = () => {
+      updateData(d => [...d, ...buildData(1000)])
+    },
+    update = () => {
+      for (let i = 0, d = data(), len = d.length; i < len; i += 10)
+        d[i].updateLabel(l => l + ' !!!')
+    },
     swapRows = () => {
       const d = data().slice()
       if (d.length > 998) {
@@ -116,13 +117,16 @@ const App = () => {
         setData(d)
       }
     },
-    clear = () => setData([]),
-    remove = id =>
+    clear = () => {
+      setData([])
+    },
+    remove = id => {
       updateData(d => {
         const idx = d.findIndex(datum => datum.id === id)
         d.splice(idx, 1)
         return [...d]
-      }),
+      })
+    },
     isSelected = useSelector(selected)
 
   return (
@@ -186,7 +190,7 @@ const App = () => {
               const { id, label } = row
 
               return (
-                <tr class:danger={isSelected(id)}>
+                <tr class={{ danger: isSelected(id) }}>
                   <td
                     class="col-md-1"
                     textContent={id}
