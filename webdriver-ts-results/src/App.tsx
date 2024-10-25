@@ -30,9 +30,10 @@ const KnownIssuesList = () => {
 
 const App = () => {
   // eslint-disable-next-line no-constant-condition
-  const disclaimer = false ? (
+  const version = "Chrome 130.0.6723.58"
+  const disclaimer = true ? (
     <div>
-      <h2>Results for js web frameworks benchmark - official run</h2>
+      <h2>js-framework-benchmark results for {version}</h2>
       <p>
         A description of the benchmark and the source code and can be found in the github{" "}
         <a href="https://github.com/krausest/js-framework-benchmark">repository</a>.
@@ -48,7 +49,7 @@ const App = () => {
 
   const testEnvironmentInfo = (
     <p>
-      The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 15.0), Chrome for Testing 129.0.6668.58
+      The benchmark was run on a MacBook Pro 14 (32 GB RAM, 8/14 Cores, OSX 15.0), {version}
       (arm64) using the puppeteer benchmark driver with reduced tracing.
     </p>
   );
