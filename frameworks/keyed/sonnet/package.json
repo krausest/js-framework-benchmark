@@ -7,7 +7,9 @@
     "frameworkVersionFromPackage": "@sonnetjs/core",
     "frameworkHomeURL": "https://sonnet.js.org/",
     "customURL": "/dist",
-    "issues": [772]
+    "issues": [
+      772
+    ]
   },
   "scripts": {
     "dev": "vite",
@@ -26,9 +28,9 @@
     "url": "https://github.com/sonnetjs/sonnet.git"
   },
   "devDependencies": {
-    "vite": "^5.2.6"
+    "vite": "^5.4.10"
   },
   "dependencies": {
-    "@sonnetjs/core": "0.0.29"
+    "@sonnetjs/core": "^0.0.33"
   }
 }
