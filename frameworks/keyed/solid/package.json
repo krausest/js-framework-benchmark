@@ -19,14 +19,14 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "solid-js": "^1.8.15"
+    "solid-js": "^1.9.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.0",
+    "@babel/core": "^7.26.0",
     "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-terser": "^0.4.4",
-    "babel-preset-solid": "^1.8.15",
-    "rollup": "^4.13.0"
+    "babel-preset-solid": "^1.9.3",
+    "rollup": "^4.24.3"
   }
 }
