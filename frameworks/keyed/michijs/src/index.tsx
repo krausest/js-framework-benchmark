@@ -1,4 +1,8 @@
-import { createCustomElement, ElementList } from '@michijs/michijs';
+import {
+  type ObservableType,
+  createCustomElement,
+  useObserve,
+} from "@michijs/michijs";
 
 function _random(max: number) {
   return Math.round(Math.random() * 1000) % max;
@@ -63,9 +67,9 @@ const adjectivesLength = adjectives.length;
 const coloursLength = colours.length;
 const nounsLength = nouns.length;
 
-type Row = { label: string; id: number; selected?: boolean };
+type Row = { label: string; id: number; selected?: string };
 let nextId = 1;
-let selectedId: number | null = null;
+let selectedItem: ObservableType<Row> | null = null;
 function buildData(count = 1000) {
   const data = new Array<Row>(count);
   for (let i = 0; i < count; i++)
@@ -77,67 +81,51 @@ function buildData(count = 1000) {
     };
   return data;
 }
-const rows = new ElementList<Row>();
-const run = () => rows.replace(...buildData());
-const runLots = () => rows.replace(...buildData(10000));
+const rows = useObserve<Row[]>([]);
+const run = () => rows.$replace(...buildData());
+const runLots = () => rows.$replace(...buildData(10000));
 const add = () => rows.push(...buildData());
 const update = () => {
-  for (let i = 0; i < rows.getData().length; i += 10) {
-    rows.update(i, (value) => {
-      value.label += " !!!";
-      return value;
-    });
+  for (let i = 0; i < rows.length; i += 10) {
+    // Will be solved on https://github.com/microsoft/TypeScript/issues/43826
+    // @ts-ignore
+    rows[i].label += " !!!";
   }
 };
-const clear = () => rows.clear();
-const select = (id: number) => {
-  const index = rows.getData().findIndex((x) => x.id === id);
-  rows.update(index, (value) => {
-    if (selectedId) {
-      const selectedIndex = rows.getData().findIndex((x) => x.selected);
-      if (selectedIndex >= 0)
-        rows.update(selectedIndex, (value) => {
-          value.selected = undefined;
-          return value;
-        });
-    }
-    value.selected = true;
-    selectedId = value.id;
-    return value;
-  });
+const clear = () => rows.$clear();
+const select = (row: ObservableType<Row>) => {
+  // Will be solved on https://github.com/microsoft/TypeScript/issues/43826
+  // @ts-ignore
+  row.selected = "danger";
+  if (selectedItem) selectedItem.selected(undefined);
+  selectedItem = row;
 };
-const deleteItem = (id: number) =>
-  rows.remove(rows.getData().findIndex((x) => x.id === id));
-const swapRows = () => rows.swap(1, 998);
+const deleteItem = (id: ObservableType<number>) =>
+  rows.$remove(rows.findIndex((x) => x.id === id));
+const swapRows = () => rows.$swap(1, 998);
 
 export const Table = createCustomElement("michi-table", {
   extends: {
     tag: "table",
     class: HTMLTableElement,
   },
-  fakeRoot: false,
   render() {
     return (
       <rows.List
         as="tbody"
-        _={{ id: "tbody" }}
-        renderItem={({ label, id, selected }) => (
-          <tr class={selected ? "danger" : undefined}>
-            <td _={{ className: "col-md-1" }}>{id}</td>
-            <td _={{ className: "col-md-4" }}>
-              <a _={{ onclick: () => select(id) }}>{label}</a>
+        id="tbody"
+        renderItem={(row) => (
+          <tr class={row.selected}>
+            <td class="col-md-1">{row.id}</td>
+            <td class="col-md-4">
+              <a onclick={() => select(row)}>{row.label}</a>
             </td>
-            <td _={{ className: "col-md-1" }}>
-              <a onclick={() => deleteItem(id)}>
-                <span
-                  _={{
-                    className: "glyphicon glyphicon-remove",
-                    ariaHidden: "true",
-                  }}
-                />
+            <td class="col-md-1">
+              <a onclick={() => deleteItem(row.id)}>
+                <span class="glyphicon glyphicon-remove" aria-hidden="true" />
               </a>
             </td>
-            <td _={{ className: "col-md-6" }} />
+            <td class="col-md-6" />
           </tr>
         )}
       />
@@ -150,78 +138,65 @@ export const TableManager = createCustomElement("michi-table-manager", {
     tag: "div",
     class: HTMLDivElement,
   },
-  fakeRoot: false,
   render() {
     return (
-      <div _={{ className: "row" }}>
-        <div _={{ className: "col-sm-6 smallpad" }}>
+      <div class="row">
+        <div class="col-sm-6 smallpad">
           <button
-            _={{
-              type: "button",
-              className: "btn btn-primary btn-block",
-              id: "run",
-              onclick: run,
-            }}
+            type="button"
+            class="btn btn-primary btn-block"
+            id="run"
+            onclick={run}
           >
             Create 1,000 rows
           </button>
         </div>
-        <div _={{ className: "col-sm-6 smallpad" }}>
+        <div class="col-sm-6 smallpad">
           <button
-            _={{
-              type: "button",
-              className: "btn btn-primary btn-block",
-              id: "runlots",
-              onclick: runLots,
-            }}
+            type="button"
+            class="btn btn-primary btn-block"
+            id="runlots"
+            onclick={runLots}
           >
             Create 10,000 rows
           </button>
         </div>
-        <div _={{ className: "col-sm-6 smallpad" }}>
+        <div class="col-sm-6 smallpad">
           <button
-            _={{
-              type: "button",
-              className: "btn btn-primary btn-block",
-              id: "add",
-              onclick: add,
-            }}
+            type="button"
+            class="btn btn-primary btn-block"
+            id="add"
+            onclick={add}
           >
             Append 1,000 rows
           </button>
         </div>
-        <div _={{ className: "col-sm-6 smallpad" }}>
+        <div class="col-sm-6 smallpad">
           <button
-            _={{
-              type: "button",
-              className: "btn btn-primary btn-block",
-              id: "update",
-              onclick: update,
-            }}
+            type="button"
+            class="btn btn-primary btn-block"
+            id="update"
+            onclick={update}
           >
             Update every 10th row
           </button>
         </div>
-        <div _={{ className: "col-sm-6 smallpad" }}>
+        <div class="col-sm-6 smallpad">
           <button
-            _={{
-              type: "button",
-              className: "btn btn-primary btn-block",
-              id: "clear",
-              onclick: clear,
-            }}
+            type="button"
+            class="btn btn-primary btn-block"
+            id="clear"
+            onclick={clear}
           >
             Clear
           </button>
         </div>
-        <div _={{ className: "col-sm-6 smallpad" }}>
+        <div class="col-sm-6 smallpad">
           <button
-            _={{
-              type: "button",
-              className: "btn btn-primary btn-block",
-              id: "swaprows",
-              onclick: swapRows,
-            }}
+            type="button"
+            class="btn btn-primary btn-block"
+            id="swaprows"
+            onclick={swapRows}
           >
             Swap Rows
           </button>
