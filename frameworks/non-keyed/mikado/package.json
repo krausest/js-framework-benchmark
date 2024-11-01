@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mikado",
-    "frameworkVersion": "0.8.1",
+    "frameworkVersion": "0.8.400",
     "frameworkHomeURL": "https://github.com/nextapps-de/mikado/",
     "issues": []
   },
@@ -21,9 +21,9 @@
     "build-prod": "npm run build"
   },
   "dependencies": {
-    "mikado": "^0.8.327"
+    "mikado": "^0.8.400"
   },
   "devDependencies": {
-    "google-closure-compiler": "^20230802.0.0"
+    "google-closure-compiler": "^20240317.0.0"
   }
 }
