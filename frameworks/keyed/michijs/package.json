@@ -7,7 +7,8 @@
     "frameworkVersionFromPackage": "@michijs/michijs",
     "frameworkHomeURL": "https://dev.michijs.com/",
     "useShadowRoot": false,
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "issues": [1139]
   },
   "scripts": {
     "start": "michi-server --start",
