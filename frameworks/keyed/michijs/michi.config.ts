@@ -1,4 +1,4 @@
-import { ServerConfigFactory } from '@michijs/dev-server';
+import type { ServerConfigFactory } from '@michijs/dev-server';
 
 export const config: ServerConfigFactory = () => ({
   esbuildOptions: {
