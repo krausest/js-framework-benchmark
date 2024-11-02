@@ -67,13 +67,14 @@ const adjectivesLength = adjectives.length;
 const coloursLength = colours.length;
 const nounsLength = nouns.length;
 
-type Row = { label: string; id: number; selected?: string };
+type Row = { label: string; id: number; selected: string | undefined };
 let nextId = 1;
 let selectedItem: ObservableType<Row> | null = null;
 function buildData(count = 1000) {
   const data = new Array<Row>(count);
   for (let i = 0; i < count; i++)
     data[i] = {
+      selected: undefined,
       id: nextId++,
       label: `${adjectives[_random(adjectivesLength)]} ${
         colours[_random(coloursLength)]
@@ -88,15 +89,13 @@ const add = () => rows.push(...buildData());
 const update = () => {
   for (let i = 0; i < rows.length; i += 10) {
     // Will be solved on https://github.com/microsoft/TypeScript/issues/43826
-    // @ts-ignore
-    rows[i].label += " !!!";
+    const label = rows[i].label;
+    label(`${label()} !!!`);
   }
 };
 const clear = () => rows.$clear();
 const select = (row: ObservableType<Row>) => {
-  // Will be solved on https://github.com/microsoft/TypeScript/issues/43826
-  // @ts-ignore
-  row.selected = "danger";
+  row.selected("danger");
   if (selectedItem) selectedItem.selected(undefined);
   selectedItem = row;
 };
