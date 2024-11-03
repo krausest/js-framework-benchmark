@@ -1,14 +1,13 @@
 {
   "name": "js-framework-benchmark-michijs",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "michijs",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@michijs/michijs",
     "frameworkHomeURL": "https://dev.michijs.com/",
     "useShadowRoot": false,
-    "customURL": "/dist",
-    "issues": [1139]
+    "customURL": "/dist"
   },
   "scripts": {
     "start": "michi-server --start",
@@ -34,6 +33,6 @@
     "typescript": "5.6.3"
   },
   "dependencies": {
-    "@michijs/michijs": "2.0.6"
+    "@michijs/michijs": "2.0.7"
   }
 }
