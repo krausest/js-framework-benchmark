@@ -1,7 +1,7 @@
 import {
   type ObservableType,
   createCustomElement,
-  useObserve,
+  observeCommonObject,
   ProxiedArray,
 } from "@michijs/michijs";
 
@@ -79,9 +79,9 @@ function buildData(count = 1000) {
   const data = new Array<Row>(count);
   for (let i = 0; i < count; i++)
     data[i] = {
-      selected: useObserve<string | undefined>(undefined),
+      selected: observeCommonObject<string | undefined>(undefined),
       id: nextId++,
-      label: useObserve(
+      label: observeCommonObject(
         `${adjectives[_random(adjectivesLength)]} ${colours[_random(coloursLength)]} ${nouns[_random(nounsLength)]}`,
       ),
     };
