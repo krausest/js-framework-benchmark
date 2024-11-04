@@ -1,23 +1,32 @@
 {
-  "name": "js-framework-benchmark-rvjs",
+  "name": "js-framework-benchmark-rvjs-v0.3.0",
   "description": "@rvjs/core benchmark project",
   "version": "1.0.0",
+  "type": "module",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.2.21",
+    "frameworkVersion": "0.3.0",
     "frameworkVersionFromPackage": "@rvjs/core",
     "frameworkHomeURL": "https://rvjs.xyz/",
     "customURL": "/dist"
   },
+  "author": "ILikeMintChocolate",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
   "scripts": {
     "dev": "vite",
-    "build-prod": "tsc && vite build --mode prod",
+    "build-prod": "vite build --mode prod",
     "preview": "vite preview"
   },
-  "devDependencies": {
-    "typescript": "^5.5.3",
-    "vite": "^5.4.1"
-  },
   "dependencies": {
-    "@rvjs/core": "^0.2.21"
+    "@rvjs/core": "0.3.0",
+    "vite-plugin-rvjs": "0.0.1"
+  },
+  "devDependencies": {
+    "typescript": "5.5.3",
+    "vite": "5.4.1"
   }
 }
