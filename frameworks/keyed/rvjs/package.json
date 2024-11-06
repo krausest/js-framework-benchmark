@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.3.0",
+    "frameworkVersion": "0.3.1",
     "frameworkVersionFromPackage": "@rvjs/core",
     "frameworkHomeURL": "https://rvjs.xyz/",
     "customURL": "/dist"
@@ -22,7 +22,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@rvjs/core": "0.3.0",
+    "@rvjs/core": "0.3.1",
     "vite-plugin-rvjs": "0.0.1"
   },
   "devDependencies": {
