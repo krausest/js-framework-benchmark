@@ -97,6 +97,7 @@ const eachComponent = each(
     functions: {
       setSelected: [
         (setData, event, eachStack) => () => {
+          event.stopPropagation();
           const { setStack, clearStack } = eachStack;
           clearStack();
           setStack(() => {
@@ -217,10 +218,18 @@ const mainComponent = component(
         },
         functions: {
           delete: [
-            (setData) => (id) => {
+            (setData, event) => (id) => {
+              event.stopPropagation();
               setData((d) => {
                 const value = d.slice();
-                const idx = d.findIndex((d) => d.id === id);
+                let idx = -1;
+                for (let i = 0; i < d.length; i++) {
+                  const item = d[i];
+                  if (item.id === id) {
+                    idx = i;
+                    break;
+                  }
+                }
                 value.splice(idx, 1);
                 return value;
               });
