@@ -1,4 +1,4 @@
-import { Container, GetState, StoreMessage, batch, container, rule, update, write } from "spheres/store";
+import { Container, GetState, State, update, StoreMessage, batch, container, write } from "spheres/store";
 
 function random(max: number) {
   return Math.round(Math.random() * 1000) % max;
@@ -86,8 +86,8 @@ export const selectedRow = container<Container<boolean> | undefined>({
   name: "selected-row"
 })
 
-export const selectRow = rule((get, getRow: (get: GetState) => RowData) => {
-  const rowData = getRow(get)
+export const selectRow = (rowState: State<RowData>) => (get: GetState) => {
+  const rowData = get(rowState)
   let messages: Array<StoreMessage<any>> = []
   messages.push(write(rowData.isSelected, true))
   const oldSelected = get(selectedRow)
@@ -96,7 +96,7 @@ export const selectRow = rule((get, getRow: (get: GetState) => RowData) => {
   }
   messages.push(write(selectedRow, rowData.isSelected))
   return batch(messages)
-})
+}
 
 let nextId = 1
 
