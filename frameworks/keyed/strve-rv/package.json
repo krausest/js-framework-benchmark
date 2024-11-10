@@ -5,7 +5,8 @@
   "description": "Benchmark for strve-rv.js framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "strve-rv",
-    "frameworkHomeURL": "https://strvejs.github.io/strve-doc/tool/strveRv/"
+    "frameworkHomeURL": "https://strvejs.github.io/strve-doc/tool/strveRv/",
+    "issues": [801]
   },
   "scripts": {
     "dev": "webpack --watch",
