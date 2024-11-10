@@ -1,0 +1,37 @@
+{
+  "name": "js-framework-benchmark-react-kr-observable",
+  "version": "1.1.1",
+  "description": "React demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "react:kr-observable",
+    "frameworkHomeURL": "https://www.npmjs.com/package/kr-observable"
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "author": "Maxim Molochkov",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "kr-observable": "1.0.12",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.21.8",
+    "@babel/preset-env": "7.21.5",
+    "@babel/preset-react": "7.18.6",
+    "@rollup/plugin-babel": "6.0.3",
+    "@rollup/plugin-commonjs": "25.0.0",
+    "@rollup/plugin-node-resolve": "15.0.2",
+    "@rollup/plugin-replace": "5.0.2",
+    "@rollup/plugin-terser": "0.4.3",
+    "rollup": "3.22.0"
+  }
+}
