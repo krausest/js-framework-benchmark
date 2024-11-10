@@ -1,7 +1,8 @@
 import {
   type ObservableType,
   createCustomElement,
-  useObserve,
+  observeCommonObject,
+  ProxiedArray,
 } from "@michijs/michijs";
 
 function _random(max: number) {
@@ -67,41 +68,45 @@ const adjectivesLength = adjectives.length;
 const coloursLength = colours.length;
 const nounsLength = nouns.length;
 
-type Row = { label: string; id: number; selected?: string };
+interface Row {
+  label: ObservableType<string>;
+  id: number;
+  selected: ObservableType<string | undefined>;
+}
 let nextId = 1;
-let selectedItem: ObservableType<Row> | null = null;
+let selectedItem: Row | null = null;
 function buildData(count = 1000) {
   const data = new Array<Row>(count);
   for (let i = 0; i < count; i++)
     data[i] = {
+      selected: observeCommonObject<string | undefined>(undefined),
       id: nextId++,
-      label: `${adjectives[_random(adjectivesLength)]} ${
-        colours[_random(coloursLength)]
-      } ${nouns[_random(nounsLength)]}`,
+      label: observeCommonObject(
+        `${adjectives[_random(adjectivesLength)]} ${colours[_random(coloursLength)]} ${nouns[_random(nounsLength)]}`,
+      ),
     };
   return data;
 }
-const rows = useObserve<Row[]>([]);
+const rows = new ProxiedArray<Row>([], undefined, true);
 const run = () => rows.$replace(...buildData());
 const runLots = () => rows.$replace(...buildData(10000));
 const add = () => rows.push(...buildData());
 const update = () => {
-  for (let i = 0; i < rows.length; i += 10) {
-    // Will be solved on https://github.com/microsoft/TypeScript/issues/43826
-    // @ts-ignore
-    rows[i].label += " !!!";
+  const array = rows.$value;
+  const length = array.length;
+  for (let i = 0; i < length; i += 10) {
+    const label = array[i].label;
+    label(`${label()} !!!`);
   }
 };
 const clear = () => rows.$clear();
-const select = (row: ObservableType<Row>) => {
-  // Will be solved on https://github.com/microsoft/TypeScript/issues/43826
-  // @ts-ignore
-  row.selected = "danger";
+const select = (row: Row) => {
+  row.selected("danger");
   if (selectedItem) selectedItem.selected(undefined);
   selectedItem = row;
 };
-const deleteItem = (id: ObservableType<number>) =>
-  rows.$remove(rows.findIndex((x) => x.id === id));
+const deleteItem = (id: number) =>
+  rows.$remove(rows.$value.findIndex((x) => x.id === id));
 const swapRows = () => rows.$swap(1, 998);
 
 export const Table = createCustomElement("michi-table", {
