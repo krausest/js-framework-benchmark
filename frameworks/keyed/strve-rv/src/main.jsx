@@ -1,18 +1,13 @@
 import { defineComponent, ref, shallowRef } from 'strve-rv';
 import { buildData } from './data.js';
 
-const Main = defineComponent(() => {
-  const selected = ref();
-  const rows = shallowRef([]);
+const selected = ref();
+const rows = shallowRef([]);
+function setRows(update = rows.value.slice()) {
+  rows.value = update;
+}
 
-  function setRows(update = rows.value.slice()) {
-    rows.value = update;
-  }
-
-  function add() {
-    rows.value = rows.value.concat(buildData(1000));
-  }
-
+const TbodyComponent = defineComponent(() => {
   function remove(id) {
     rows.value.splice(
       rows.value.findIndex((d) => d.id === id),
@@ -23,6 +18,31 @@ const Main = defineComponent(() => {
 
   function select(id) {
     selected.value = id;
+  }
+
+  return () => (
+    <tbody>
+      {rows.value.map(({ id, label }) => (
+        <tr class={id === selected.value ? 'danger' : ''} key={id}>
+          <td class='col-md-1'>{id}</td>
+          <td class='col-md-4'>
+            <a onClick={() => select(id)}>{label}</a>
+          </td>
+          <td class='col-md-1'>
+            <a onClick={() => remove(id)}>
+              <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
+            </a>
+          </td>
+          <td class='col-md-6'></td>
+        </tr>
+      ))}
+    </tbody>
+  );
+});
+
+const Main = defineComponent(() => {
+  function add() {
+    rows.value = rows.value.concat(buildData(1000));
   }
 
   function run() {
@@ -118,33 +138,7 @@ const Main = defineComponent(() => {
         </div>
       </div>
       <table class='table table-hover table-striped test-data'>
-        <tbody
-          onClick={(event) => {
-            const el = event.target;
-            const id = Number(el.closest('tr').firstChild.textContent);
-            if (el.matches('.glyphicon-remove')) {
-              remove(id);
-            } else {
-              select(id);
-            }
-            return false;
-          }}
-        >
-          {rows.value.map((item) => (
-            <tr class={item.id === selected.value ? 'danger' : ''} key={item.id}>
-              <td class='col-md-1'>{item.id}</td>
-              <td class='col-md-4'>
-                <a>{item.label}</a>
-              </td>
-              <td class='col-md-1'>
-                <a>
-                  <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
-                </a>
-              </td>
-              <td class='col-md-6'></td>
-            </tr>
-          ))}
-        </tbody>
+        <component $is={TbodyComponent} />
       </table>
       <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
     </fragment>
