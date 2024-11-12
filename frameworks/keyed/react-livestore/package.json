@@ -1,0 +1,35 @@
+{
+  "name": "livestore-react-benchmarks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "build:analyze": "VITE_ANALYZE=1 run build",
+    "dev": "WORKSPACE_ROOT='../../../' vite --force",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@livestore/devtools-vite": "0.1.0",
+    "@livestore/livestore": "0.1.0",
+    "@livestore/react": "0.1.0",
+    "@livestore/wa-sqlite": "1.0.1-dev.29",
+    "@livestore/web": "0.1.0",
+    "@overengineering/fps-meter": "^0.1.2",
+    "effect": "3.10.12",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "todomvc-app-css": "^2.4.3",
+    "uuid": "^11.0.2",
+    "workbox-window": "^7.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/uuid": "^10.0.0",
+    "@vitejs/plugin-react": "^4.3.3",
+    "rollup-plugin-visualizer": "^5.12.0",
+    "typescript": "5.5.4",
+    "vite": "^5.4.10",
+    "vite-plugin-pwa": "^0.20.5"
+  }
+}
