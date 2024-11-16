@@ -65,7 +65,7 @@ function _random(max) {
 }
 
 function buildData(count) {
-  let data = new Array(count)
+  const data = new Array(count)
   for (let i = 0; i < count; i++) {
     const [label, setLabel, updateLabel] = signal(
       `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
@@ -82,13 +82,12 @@ function buildData(count) {
 const Button = ({ id, text, fn }) => (
   <div class="col-sm-6 smallpad">
     <button
+      textContent={text}
       id={id}
       class="btn btn-primary btn-block"
       type="button"
       onClick={fn}
-    >
-      {text}
-    </button>
+    />
   </div>
 )
 
@@ -105,13 +104,15 @@ const App = () => {
       updateData(d => [...d, ...buildData(1000)])
     },
     update = () => {
-      for (let i = 0, d = data(), len = d.length; i < len; i += 10)
+      const d = data()
+      const len = d.length
+      for (let i = 0; i < len; i += 10)
         d[i].updateLabel(l => l + ' !!!')
     },
     swapRows = () => {
-      const d = data().slice()
+      const d = [...data()]
       if (d.length > 998) {
-        let tmp = d[1]
+        const tmp = d[1]
         d[1] = d[998]
         d[998] = tmp
         setData(d)
@@ -177,6 +178,7 @@ const App = () => {
         onClick={e => {
           const element = e.target
           const { selectRow, removeRow } = element
+
           if (selectRow !== undefined) {
             setSelected(selectRow)
           } else if (removeRow !== undefined) {
@@ -190,10 +192,10 @@ const App = () => {
               const { id, label } = row
 
               return (
-                <tr class={{ danger: isSelected(id) }}>
+                <tr class:danger={isSelected(id)}>
                   <td
-                    class="col-md-1"
                     textContent={id}
+                    class="col-md-1"
                   />
                   <td class="col-md-4">
                     <a
