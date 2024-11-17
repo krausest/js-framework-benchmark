@@ -145,7 +145,7 @@ const Jumbotron = ({}) =>
     { class: "jumbotron" },
     div(
       { class: "row" },
-      div({ class: "col-md-6" }, h1("Bau Keyed Benchmark")),
+      div({ class: "col-md-6" }, h1("Bau Non-Keyed Benchmark")),
       div(
         { class: "col-md-6" },
         div(
