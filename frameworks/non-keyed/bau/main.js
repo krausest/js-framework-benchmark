@@ -123,16 +123,25 @@ bau.derive(() => {
   if (val) val.className = "danger";
 });
 
-const Row = ({ id, label }) =>
-  tr(
-    td({ class: "col-md-1" }, id),
-    td({ class: "col-md-4" }, a({ onclick: selectRow }, label)),
-    td(
-      { class: "col-md-1" },
-      a({ onclick: remove(id) }, span({ class: "glyphicon glyphicon-remove", "aria-hidden": true }))
-    ),
+const Row = ({ id, label }) => {
+  const tdIdEl = td({ class: "col-md-1" }, id);
+  const aLabelEl = a({ onclick: selectRow }, label);
+  const aRemove = a({ onclick: remove(id) }, span({ class: "glyphicon glyphicon-remove", "aria-hidden": true }));
+
+  return tr(
+    {
+      bauUpdate: (element, data) => {
+        tdIdEl.textContent = data.id;
+        aLabelEl.replaceWith(a({ onclick: selectRow }, data.label));
+        aRemove.onclick = remove(data.id);
+      },
+    },
+    tdIdEl,
+    td({ class: "col-md-4" }, aLabelEl),
+    td({ class: "col-md-1" }, aRemove),
     td({ class: "col-md-6" })
   );
+};
 
 const Button = ({ id, title, onclick }) =>
   div(
