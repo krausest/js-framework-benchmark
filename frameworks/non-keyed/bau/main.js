@@ -68,16 +68,16 @@ const buildData = (count) => {
 };
 
 const dataState = bau.state([]);
-const selectedRowState = bau.state();
+let selectedRow = null;
 
 const run = () => {
   dataState.val = buildData(1000);
-  selectedRowState.val = null;
+  selectedRow = null;
 };
 
 const runLots = () => {
   dataState.val = buildData(10000);
-  selectedRowState.val = null;
+  selectedRow = null;
 };
 
 const add = () => {
@@ -103,7 +103,7 @@ const swapRows = () => {
 
 const clear = () => {
   dataState.val = [];
-  selectedRowState.val = null;
+  selectedRow = null;
 };
 
 const remove = (id) => () => {
@@ -114,14 +114,12 @@ const remove = (id) => () => {
 };
 
 const selectRow = (event) => {
-  selectedRowState.val = event.target.closest("tr");
+  if (selectedRow) {
+    selectedRow.className = "";
+  }
+  selectedRow = event.target.parentNode.parentNode;
+  selectedRow.className = "danger";
 };
-
-bau.derive(() => {
-  let { val, oldVal } = selectedRowState;
-  if (oldVal) oldVal.className = "";
-  if (val) val.className = "danger";
-});
 
 const Row = ({ id, label }) => {
   const tdIdEl = td({ class: "col-md-1" }, id);
