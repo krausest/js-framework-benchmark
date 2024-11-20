@@ -29,10 +29,10 @@
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "devDependencies": {
     "@michijs/tsconfig": "0.0.4",
-    "@michijs/dev-server": "0.7.21",
+    "@michijs/dev-server": "0.7.24",
     "typescript": "5.6.3"
   },
   "dependencies": {
-    "@michijs/michijs": "2.0.8"
+    "@michijs/michijs": "2.0.10"
   }
 }
