@@ -1,6 +1,6 @@
-import { memo, render, useState } from 'endr';
+/** @import {Children, SetState} from 'endr' */
 
-/** @import {Children} from 'endr' */
+import { createRoot, memo, useState } from 'endr';
 
 const { document } = globalThis;
 
@@ -52,10 +52,15 @@ const nouns = [
 
 let nextId = 0;
 
-const initialState = {
-  items: /** @type {{ id: number; label: string }[]} */ ([]),
-  selectedId: /** @type {number | null} */ (null)
-};
+/**
+ * @typedef {{
+ *   items: { id: number; label: string }[];
+ *   selectedId: number | null;
+ * }} State
+ */
+
+/** @type {State} */
+const initialState = { items: [], selectedId: null };
 
 /** @param {string[]} items */
 const sample = items => items[Math.floor(Math.random() * items.length)];
@@ -67,15 +72,9 @@ const createItems = length =>
     label: `${sample(adjectives)} ${sample(colors)} ${sample(nouns)}`
   }));
 
-
 const Row = memo(
-  /**
-   * @param {{
-   *   isSelected: boolean;
-   *   item: NonNullable<typeof initialState>['items'][number];
-   *   setState: ReturnType<typeof useState<initialState>>[1];
-   * }} props
-   */ ({ isSelected, item, setState }) => (
+  /** @param {{ isSelected: boolean; item: State['items'][number]; setState: SetState<State> }} props */
+  ({ isSelected, item, setState }) => (
     <tr className={isSelected ? 'danger' : ''}>
       <td className='col-md-1'>{item.id}</td>
       <td className='col-md-4'>
@@ -119,7 +118,8 @@ const Button = ({ id, onclick, children }) => (
 );
 
 const Jumbotron = memo(
-  /** @param {{ setState: ReturnType<typeof useState<initialState>>[1] }} props */ ({ setState }) => (
+  /** @param {{ setState: SetState<State> }} props */
+  ({ setState }) => (
     <div className='jumbotron'>
       <div className='row'>
         <div className='col-md-6'>
@@ -192,4 +192,4 @@ const Main = () => {
   );
 };
 
-render(<Main />, /** @type {Element} */ (document.querySelector('#main')));
+createRoot(/** @type {Element} */ (document.querySelector('#main'))).render(<Main />);
