@@ -1,42 +1,42 @@
 import {
-  type ObservableType,
-  observePrimitiveValue,
+  type PrimitiveObservableType,
+  useObservePrimitive,
   ProxiedArray,
   create,
 } from "@michijs/michijs";
 
 interface Row {
-  label: ObservableType<string>;
+  label: PrimitiveObservableType<string>;
   id: number;
-  selected: ObservableType<string | null>;
+  selected: PrimitiveObservableType<string | null>;
 }
 const adjectives = [
-  "pretty",
-  "large",
-  "big",
-  "small",
-  "tall",
-  "short",
-  "long",
-  "handsome",
-  "plain",
-  "quaint",
-  "clean",
-  "elegant",
-  "easy",
-  "angry",
-  "crazy",
-  "helpful",
-  "mushy",
-  "odd",
-  "unsightly",
-  "adorable",
-  "important",
-  "inexpensive",
-  "cheap",
-  "expensive",
-  "fancy",
-],
+    "pretty",
+    "large",
+    "big",
+    "small",
+    "tall",
+    "short",
+    "long",
+    "handsome",
+    "plain",
+    "quaint",
+    "clean",
+    "elegant",
+    "easy",
+    "angry",
+    "crazy",
+    "helpful",
+    "mushy",
+    "odd",
+    "unsightly",
+    "adorable",
+    "important",
+    "inexpensive",
+    "cheap",
+    "expensive",
+    "fancy",
+  ],
   colours = [
     "red",
     "yellow",
@@ -73,23 +73,21 @@ const adjectives = [
     const data = new Array<Row>(count);
     for (let i = 0; i < count; i++)
       data[i] = {
-        selected: observePrimitiveValue<string | null>(null),
+        selected: useObservePrimitive<string | null>(null),
         id: nextId++,
-        label: observePrimitiveValue(
+        label: useObservePrimitive(
           `${adjectives[_random(adjectivesLength)]} ${colours[_random(coloursLength)]} ${nouns[_random(nounsLength)]}`,
         ),
       };
     return data;
   },
-  rows = new ProxiedArray<Row>([], undefined, true),
-  run = () => rows.$replace(buildData()),
-  runLots = () => rows.$replace(buildData(10000)),
+  rows = new ProxiedArray<Row>(),
+  run = () => rows.$replace(...buildData()),
+  runLots = () => rows.$replace(...buildData(10000)),
   add = () => rows.push(...buildData()),
   update = () => {
-    const array = rows.$value,
-      length = array.length;
-    for (let i = 0; i < length; i += 10) {
-      const label = array[i].label;
+    for (let i = 0; i < rows.length; i += 10) {
+      const label = rows[i].label;
       label(`${label()} !!!`);
     }
   },
@@ -99,8 +97,7 @@ const adjectives = [
     if (selectedItem) selectedItem.selected(null);
     selectedItem = row;
   },
-  deleteItem = (id: number) =>
-    rows.$remove(rows.$value.findIndex((x) => x.id === id)),
+  deleteItem = (id: number) => rows.$remove(rows.findIndex((x) => x.id === id)),
   swapRows = () => rows.$swap(1, 998);
 
 let nextId = 1,
