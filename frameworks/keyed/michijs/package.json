@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "devDependencies": {
+    "@michijs/dev-server": "0.7.25",
     "@michijs/tsconfig": "0.0.4",
-    "@michijs/dev-server": "0.7.24",
     "typescript": "5.7.2"
   },
   "dependencies": {
