@@ -3,25 +3,19 @@
 <head>
 	<meta charset="utf-8"/>
 	<title>quel-"keyed"</title>
-	<link href="/css/currentStyle.css" rel="stylesheet"/>
 	<script type="importmap">
 		{
 			"imports": {
-				"quel": "./src/quel.min.js",
+				"quel":      "./src/quel.min.js",
 				"buildData": "./src/buildData.js",
 				"myappMain": "./src/myappMain.sfc.html"
 			}
 		}
-		</script>
-	</head>
+	</script>
+	<link href="/css/currentStyle.css" rel="stylesheet"/>
+	<script type="module" src="./src/boot.js"></script>
+</head>
 <body>
 	<myapp-main></myapp-main>
-
-<script type="module">
-import { registerSingleFileComponents as register } from "quel";
-
-register({ "myapp-main": "myappMain" });
-</script>
-
 </body>
 </html>
