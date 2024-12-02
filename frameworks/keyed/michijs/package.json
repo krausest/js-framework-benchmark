@@ -33,6 +33,6 @@
     "typescript": "5.7.2"
   },
   "dependencies": {
-    "@michijs/michijs": "2.1.0"
+    "@michijs/michijs": "2.1.1"
   }
 }
