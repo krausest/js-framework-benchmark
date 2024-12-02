@@ -4,8 +4,7 @@ export const config: ServerConfigFactory = () => ({
   esbuildOptions: {
     outdir: 'dist',
     legalComments: 'none',
-    define: undefined,
-    splitting: false
+    define: undefined
   }
 });
 
