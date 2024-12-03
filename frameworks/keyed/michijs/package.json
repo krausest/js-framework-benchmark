@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-michijs",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "michijs",
   "main": "index.js",
   "js-framework-benchmark": {
@@ -33,6 +33,6 @@
     "typescript": "5.7.2"
   },
   "dependencies": {
-    "@michijs/michijs": "2.1.3"
+    "@michijs/michijs": "2.1.4"
   }
 }
