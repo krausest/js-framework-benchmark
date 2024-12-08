@@ -12,7 +12,7 @@ wasm-bindgen = { version = "0.2", features = ["enable-interning"] }
 console_error_panic_hook = "0.1"
 getrandom = { version = "0.2.7", features = ["js"] }
 rand = { version = "0.8.5", features = ["small_rng"] }
-leptos = { version = "0.6.3", features = ["csr", "nightly", "template_macro"] }
+leptos = { version = "0.7", features = ["csr", "nightly", "delegation"] }
 web-sys = "0.3"
 
 [profile.release]
