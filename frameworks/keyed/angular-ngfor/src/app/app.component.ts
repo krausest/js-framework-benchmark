@@ -13,9 +13,8 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 @Component({
     selector: 'app-root',
-    standalone: true,
     imports: [NgFor],
-    templateUrl: './app.component.html',
+    templateUrl: './app.component.html'
 })
 export class AppComponent {
     data: Array<Data> = [];

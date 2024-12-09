@@ -17,20 +17,20 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "18.0.1",
-    "@angular/compiler": "18.0.1",
-    "@angular/core": "18.0.1",
-    "@angular/platform-browser": "18.0.1",
-    "@angular/ssr": "18.0.2",
+    "@angular/common": "19.0.3",
+    "@angular/compiler": "19.0.3",
+    "@angular/core": "19.0.3",
+    "@angular/platform-browser": "19.0.3",
+    "@angular/ssr": "19.0.4",
     "rxjs": "7.8.1",
     "tslib": "^2.6.2",
-    "zone.js": "0.14.4"
+    "zone.js": "0.15.0"
   },
   "devDependencies": {
-    "@angular/build": "^18.0.2",
-    "@angular/cli": "18.0.2",
-    "@angular/compiler-cli": "18.0.1",
+    "@angular/build": "^19.0.4",
+    "@angular/cli": "19.0.4",
+    "@angular/compiler-cli": "19.0.3",
     "@types/node": "^20.11.30",
-    "typescript": "5.4.3"
+    "typescript": "5.6.3"
   }
 }

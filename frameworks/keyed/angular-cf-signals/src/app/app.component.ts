@@ -63,11 +63,10 @@ interface Data {
 }
 
 @Component({
-  selector: "app-root",
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgFor],
-  templateUrl: "./app.component.html",
+    selector: "app-root",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgFor],
+    templateUrl: "./app.component.html"
 })
 export class AppComponent {
   data = signal<Array<Data>>([]);
