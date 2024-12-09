@@ -2,7 +2,7 @@
     <div class="jumbotron">
         <div class="row">
             <div class="col-md-6">
-                <h1>Angular {{version}} (no Zone.js)</h1>
+                <h1>Angular Signals (no-zone) keyed</h1>
             </div>
             <div class="col-md-6">
                 <div class="col-sm-6 smallpad">
@@ -28,14 +28,14 @@
     </div>
     <table class="table table-hover table-striped test-data">
         <tbody>
-            @for (item of data; track item.id) 
+            @for (item of data(); track item.id) 
             {
-            <tr [class.danger]="item.id === selected">
+            <tr [class.danger]="item.id === selected()">
                 <td class="col-md-1">{{item.id}}</td>
                 <td class="col-md-4">
-                    <a href="#" (click)="select(item, $event)">{{item.label}}</a>
+                    <a href="#" (click)="$event.preventDefault(); selected.set(item.id)">{{item.label}}</a>
                 </td>
-                <td class="col-md-1"><a href="#" (click)="delete(item, $event)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                <td class="col-md-1"><a href="#" (click)="delete(item.id)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
                 <td class="col-md-6"></td>
             </tr>
             }

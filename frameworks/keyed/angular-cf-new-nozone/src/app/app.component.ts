@@ -1,84 +1,142 @@
-import { Component, VERSION } from '@angular/core';
+import { NgFor } from "@angular/common";
+import { ChangeDetectionStrategy, Component, signal } from "@angular/core";
+
+const adjectives = [
+  "pretty",
+  "large",
+  "big",
+  "small",
+  "tall",
+  "short",
+  "long",
+  "handsome",
+  "plain",
+  "quaint",
+  "clean",
+  "elegant",
+  "easy",
+  "angry",
+  "crazy",
+  "helpful",
+  "mushy",
+  "odd",
+  "unsightly",
+  "adorable",
+  "important",
+  "inexpensive",
+  "cheap",
+  "expensive",
+  "fancy",
+];
+const colours = [
+  "red",
+  "yellow",
+  "blue",
+  "green",
+  "pink",
+  "brown",
+  "purple",
+  "brown",
+  "white",
+  "black",
+  "orange",
+];
+const nouns = [
+  "table",
+  "chair",
+  "house",
+  "bbq",
+  "desk",
+  "car",
+  "pony",
+  "cookie",
+  "sandwich",
+  "burger",
+  "pizza",
+  "mouse",
+  "keyboard",
+];
 
 interface Data {
-    id: number;
-    label: string;
+  id: number;
+  label: string;
 }
 
-const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
-const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
-const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
-
 @Component({
-    selector: 'app-root',
-    standalone: true,
-    templateUrl: './app.component.html',
+    selector: "app-root",
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgFor],
+    templateUrl: "./app.component.html"
 })
 export class AppComponent {
-    data: Array<Data> = [];
-    selected?: number = undefined;
-    id: number = 1;
-    backup?: Array<Data> = undefined;
-    version = VERSION.full;
+  data = signal<Array<Data>>([]);
+  selected = signal<number | undefined | null>(undefined);
+  id: number = 1;
 
-    buildData(count: number = 1000): Array<Data> {
-        var data: Array<Data> = [];
-        for (var i = 0; i < count; i++) {
-            data.push({ id: this.id, label: adjectives[this._random(adjectives.length)] + " " + colours[this._random(colours.length)] + " " + nouns[this._random(nouns.length)] });
-            this.id++;
-        }
-        return data;
-    }
+  #random(max: number) {
+    return Math.round(Math.random() * 1000) % max;
+  }
 
-    _random(max: number) {
-        return Math.round(Math.random() * 1000) % max;
+  buildData(count: number) {
+    const data: Data[] = new Array(count);
+    for (let i = 0; i < count; i++) {
+      data[i] = {
+        id: this.id++,
+        label: `${adjectives[this.#random(adjectives.length)]} ${
+          colours[this.#random(colours.length)]
+        } ${nouns[this.#random(nouns.length)]}`,
+      };
     }
+    return data;
+  }
 
-    itemById(index: number, item: Data) {
-        return item.id;
-    }
+  run() {
+    this.data.set(this.buildData(1000));
+    this.selected.set(null);
+  }
 
-    select(item: Data, event: Event) {
-        event.preventDefault();
-        this.selected = item.id;
-    }
+  runLots() {
+    this.data.set(this.buildData(10000));
+    this.selected.set(null);
+  }
 
-    delete(item: Data, event: Event) {
-        event.preventDefault();
-        for (let i = 0, l = this.data.length; i < l; i++) {
-            if (this.data[i].id === item.id) {
-                this.data.splice(i, 1);
-                break;
-            }
-        }
-    }
+  add() {
+    this.data.update((data) => [...data, ...this.buildData(1000)]);
+  }
 
-    run() {
-        this.data = this.buildData();
-    }
+  update() {
+    this.data.update((data) => {
+      for (let i = 0; i < data.length; i += 10) {
+        const item = data[i];
+        data[i] = { ...item, label: item.label + " !!!" };
+      }
+      return data;
+    });
+  }
 
-    add() {
-        this.data = this.data.concat(this.buildData(1000));
-    }
+  clear() {
+    this.data.set([]);
+    this.selected.set(null);
+  }
 
-    update() {
-        for (let i = 0; i < this.data.length; i += 10) {
-            this.data[i].label += ' !!!';
-        }
+  swapRows() {
+    const tmp = this.data();
+    if (tmp.length > 998) {
+      const a = tmp[1];
+      tmp[1] = tmp[998];
+      tmp[998] = a;
+      this.data.set(tmp);
     }
-    runLots() {
-        this.data = this.buildData(10000);
-        this.selected = undefined;
-    }
-    clear() {
-        this.data = [];
-        this.selected = undefined;
-    }
-    swapRows() {
-        if (this.data.length > 998) {
-            var a = this.data[1];
-            this.data[1] = this.data[998];
-            this.data[998] = a;
-        }
-    }
+  }
+
+  itemById(index: number, item: Data) {
+    return item.id;
+  }
+
+  delete(id: number) {
+    this.data.update((d) => {
+      const idx = d.findIndex((d) => d.id === id);
+      return [...d.slice(0, idx), ...d.slice(idx + 1)];
+    });
+  }
 }
