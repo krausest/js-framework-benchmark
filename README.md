@@ -564,8 +564,7 @@ Thanks to Baptiste Augrain for making the benchmarks more sophisticated and addi
 Frameworks without significant activity on github or npm for more than a year will be removed (_automatic commits like dependabot and minor updates, like docs editions, are ignored_).
 
 ## 2024-12-11
-The following frameworks were archived after chrome 131. Their last results are included in [chrome 131 results]
-(https://krausest.github.io/js-framework-benchmark/2024/table_chrome_131.0.6778.85.html)
+The following frameworks were archived after chrome 131. Their last results are included in [chrome 131 results](https://krausest.github.io/js-framework-benchmark/2024/table_chrome_131.0.6778.85.html)
 - [x] react-signalis
 - [x] react-recoil
 - [x] doz
