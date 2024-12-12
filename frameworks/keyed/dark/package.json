@@ -21,13 +21,13 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "ts-loader": "9.4.2",
-    "typescript": "4.9.4",
-    "webpack": "^5.76.3",
-    "webpack-cli": "5.0.1"
+    "ts-loader": "9.5.1",
+    "typescript": "5.7.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "@dark-engine/core": "1.0.2",
-    "@dark-engine/platform-browser": "1.0.2"
+    "@dark-engine/core": "1.4.2",
+    "@dark-engine/platform-browser": "1.4.2"
   }
 }

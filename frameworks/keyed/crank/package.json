@@ -24,14 +24,14 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@babel/core": "7.25.2",
+    "@babel/core": "7.26.0",
     "@rollup/plugin-babel": "6.0.4",
-    "@rollup/plugin-node-resolve": "15.2.3",
+    "@rollup/plugin-node-resolve": "15.3.0",
     "babel-preset-crank": "0.2.0",
-    "rollup": "4.21.2",
+    "rollup": "4.28.1",
     "@rollup/plugin-terser": "0.4.4"
   },
   "dependencies": {
-    "@b9g/crank": "0.4.1"
+    "@b9g/crank": "0.6.0"
   }
 }

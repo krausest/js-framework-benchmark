@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import { render } from 'react-dom';
+import { createRoot } from "react-dom/client";
 
 const random = (max) => Math.round(Math.random() * 1000) % max;
 
@@ -182,7 +182,4 @@ class Main extends Component {
   }
 }
 
-render(
-  <Main />,
-  document.getElementById('main'),
-);
+createRoot(document.getElementById("main")).render(<Main />);
