@@ -1,5 +1,4 @@
-import { defineRoot, dirtyCheck, update, component, List, eventDispatcher, getProps, useReducer } from "ivi";
-import { htm as html } from "@ivi/htm";
+import { defineRoot, dirtyCheck, update, component, List, eventDispatcher, getProps, useReducer, html } from "ivi";
 import { Entry, State, Action, ActionType } from "./types.js";
 
 const random = (max: number) => Math.round(Math.random() * 1000) % max;
