@@ -27,7 +27,7 @@ class PackageJSONProvider {
       if (error instanceof Error && (error as NodeJS.ErrnoException).code === "ENOENT") {
         throw new Error(`Package.json not found for ${framework}.`);
       }
-      console.error(error);
+      console.error(`error in ${keyedDir}/${framework} ${error}`);
     }
   }
 
@@ -40,7 +40,7 @@ class PackageJSONProvider {
       if (isErrorWithCode(error) && error.code === "ENOENT") {
         throw new Error(`Package-lock.json not found for ${framework}.`);
       }
-      console.error(error);
+      console.error(`error in ${keyedDir}/${framework} ${error}`);
     }
   }
 }

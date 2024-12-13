@@ -45,8 +45,9 @@ export function rebuildCheckSingle({ frameworks }) {
     console.log("rebuild-check-single.js finished");
     console.log("All checks are fine!");
     console.log(`======> Please rerun the benchmark: npm run bench ${frameworkNames}`);
+    return true;
   } catch (error) {
     console.log(`rebuild-check-single failed for ${frameworks.join(" ")}`);
-    process.exit(-1);
+    return false;
   }
 }

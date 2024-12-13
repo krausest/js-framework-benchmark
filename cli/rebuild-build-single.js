@@ -47,12 +47,12 @@ function deleteFrameworkFiles(frameworkPath, filesToDelete) {
  * @param {string} framework
  * @param {boolean} useCi
  */
-function rebuildFramework(framework, useCi) {
+export function rebuildFramework(framework, useCi) {
   const components = framework.split("/");
 
   if (components.length !== 2) {
     console.log(`ERROR: invalid name ${framework}. It must contain exactly one /.`);
-    process.exit(1);
+    return false
   }
   console.log("Rebuilding framework", framework);
   const [keyed, name] = components;
@@ -68,6 +68,7 @@ function rebuildFramework(framework, useCi) {
   runCommand(installCmd, frameworkPath);
   const buildCmd = "npm run build-prod";
   runCommand(buildCmd, frameworkPath);
+  return true;
 }
 
 /**
@@ -79,12 +80,15 @@ export function rebuildFrameworks(frameworks, useCi) {
 
   if (frameworks.length === 0) {
     console.log("ERROR: Missing arguments. Command: rebuild keyed/framework1 non-keyed/framework2 ...");
-    process.exit(1);
+    return false;
   }
 
   for (const framework of frameworks) {
-    rebuildFramework(framework, useCi);
+    if (!rebuildFramework(framework, useCi)) {
+      return false;
+    }
   }
 
   console.log("rebuild-build-single.js finished: Build finsished sucessfully!");
+  return true;
 }

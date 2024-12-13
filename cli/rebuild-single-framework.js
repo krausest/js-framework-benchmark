@@ -30,9 +30,12 @@ export function rebuildSingleFramework({ frameworks, ci }) {
   }
 
   try {
-    rebuildFrameworks(frameworks, ci);
-
-    rebuildCheckSingle({ frameworks });
+    if (!rebuildFrameworks(frameworks, ci)) {
+      process.exit(1);
+    }
+    if (!rebuildCheckSingle({ frameworks })) {
+      process.exit(1);
+    }
   } catch (error) {
     console.log("ERROR", error);
     console.log(`ERROR: Rebuilding  ${frameworks} was not successful`);

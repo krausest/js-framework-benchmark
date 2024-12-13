@@ -7,6 +7,8 @@ import semver from 'semver'
 
 import { getFrameworks } from "./helpers/frameworks.js";
 import { rebuildSingleFramework } from "./rebuild-single-framework.js";
+import { rebuildFramework } from "./rebuild-build-single.js";
+import { rebuildCheckSingle } from "./rebuild-check-single.js";
 
 /**
  * @typedef {Object} Framework
@@ -25,7 +27,8 @@ function performUpdate(frameworkPath, frameworkName) {
       cwd: frameworkPath,
       stdio: "inherit",
     });
-    rebuildSingleFramework({frameworks: [frameworkName], ci: false});
+    rebuildFramework(frameworkName, false);
+    rebuildCheckSingle({frameworks: [frameworkName]});
     return `Sucessfully updated ${frameworkPath}`;
   } catch (error) {
     console.error(`Failed to update ${frameworkPath}. Error Code ${error.status} and message: ${error.message}`);
@@ -167,38 +170,44 @@ export function updateFrameworks({ type, debug }) {
       continue;
     }
 
-    const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
-    const mainPackages = packageJSON?.["js-framework-benchmark"]?.frameworkVersionFromPackage;
+    try {
 
-    if (!mainPackages) {
-      manualChecks.push(`${type}/${name} has no frameworkVersionFromPackage`);
-      continue;
-    }
+      const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
+      const mainPackages = packageJSON?.["js-framework-benchmark"]?.frameworkVersionFromPackage;
 
-    if (DEBUG) {
-      console.log(`Checking ${type}/${name} ${mainPackages}`);
-    }
-
-    const packages = mainPackages.split(":");
-    const update = shouldUpdate(packageJSONLockPath, packages);
-    
-    if (update) {
-      log.push(performUpdate(frameworkPath, type+"/"+name));
-    } else {
-      const isPackageObsolete = packages.map((element) => maybeObsolete(element));
-      const anyPackageObsolete = isPackageObsolete.some((packageFramework) => packageFramework.isObsolete);
-  
-      if (anyPackageObsolete) {
-        const formattedPackages = isPackageObsolete
-          .map((result) => `${result.packageName}:${result.lastUpdate}`)
-          .join(", ");
-  
-        console.log(`Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`);
-        log.push(`Retire ${type}/${name} - ${mainPackages} is older than a year`);
-      }  
-      else if (DEBUG) {
-        log.push(`Nothing to do for ${type}/${name}`);
+      if (!mainPackages) {
+        manualChecks.push(`${type}/${name} has no frameworkVersionFromPackage`);
+        continue;
       }
+
+      if (DEBUG) {
+        console.log(`Checking ${type}/${name} ${mainPackages}`);
+      }
+
+      const packages = mainPackages.split(":");
+      const update = shouldUpdate(packageJSONLockPath, packages);
+      
+      if (update) {
+        log.push(performUpdate(frameworkPath, type+"/"+name));
+      } else {
+        const isPackageObsolete = packages.map((element) => maybeObsolete(element));
+        const anyPackageObsolete = isPackageObsolete.some((packageFramework) => packageFramework.isObsolete);
+    
+        if (anyPackageObsolete) {
+          const formattedPackages = isPackageObsolete
+            .map((result) => `${result.packageName}:${result.lastUpdate}`)
+            .join(", ");
+    
+          console.log(`Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`);
+          log.push(`Retire ${type}/${name} - ${mainPackages} is older than a year`);
+        }  
+        else if (DEBUG) {
+          log.push(`Nothing to do for ${type}/${name}`);
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to check ${type}/${name}. Error Code ${error.status} and message: ${error.message}`);
+      log.push(`Error checking ${type}/${name}`);
     }
   }
 
