@@ -95,7 +95,7 @@ function browserPath(benchmarkOptions: BenchmarkOptions) {
   if (process.platform == "darwin") {
     return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
   } else if (process.platform == "linux") {
-    return "google-chrome";
+    return "/usr/bin/google-chrome";
   } else if (/^win/i.test(process.platform)) {
     // eslint-disable-next-line unicorn/prefer-string-raw
     return "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
