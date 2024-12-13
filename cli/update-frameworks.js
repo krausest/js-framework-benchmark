@@ -3,8 +3,10 @@ import JSON5 from "json5";
 import { execSync } from "node:child_process";
 import * as fs from "node:fs";
 import path from "node:path";
+import semver from 'semver'
 
 import { getFrameworks } from "./helpers/frameworks.js";
+import { rebuildSingleFramework } from "./rebuild-single-framework.js";
 
 /**
  * @typedef {Object} Framework
@@ -13,6 +15,23 @@ import { getFrameworks } from "./helpers/frameworks.js";
  */
 
 const frameworks = getFrameworks();
+
+
+function performUpdate(frameworkPath, frameworkName) {
+  console.log(`Updating ${frameworkName}`);
+  try {
+    const npmCmd = `ncu -u`;
+    execSync(npmCmd, {
+      cwd: frameworkPath,
+      stdio: "inherit",
+    });
+    rebuildSingleFramework({frameworks: [frameworkName], ci: false});
+    return `Sucessfully updated ${frameworkPath}`;
+  } catch (error) {
+    console.error(`Failed to update ${frameworkPath}. Error Code ${error.status} and message: ${error.message}`);
+    return `Failed to update ${frameworkPath}`;
+  }
+}
 
 /**
  * Looks for duplicate frameworks
@@ -29,9 +48,56 @@ function findDuplicateFrameworks(frameworks) {
 const duplicateFrameworks = findDuplicateFrameworks(frameworks);
 const frameworksCache = new Map();
 
-/**
- * @param {string} packageName
- */
+function getVersionFromPackageLock(packageJSONLockPath, packageNames) {
+  if (!fs.existsSync(packageJSONLockPath)) {
+    throw new Error(`package-lock.json not found at ${packageJSONLockPath}`);
+  }
+
+  let versions = {};
+
+  for (let packageName of packageNames) {
+    const packageLockJSON = JSON.parse(fs.readFileSync(packageJSONLockPath, "utf8"));
+    const packageVersion =
+    packageLockJSON.dependencies?.[packageName]?.version ||
+    packageLockJSON.packages?.[`node_modules/${packageName}`]?.version ||
+    "ERROR: Not found in package-lock";
+    versions[packageName] = packageVersion;
+  }
+  return versions;
+}
+
+function shouldUpdate(packageJSONLockPath, packageNames, DEBUG) {
+  try {
+    let versions = getVersionFromPackageLock(packageJSONLockPath, packageNames);
+    console.log(versions);
+
+    for (let packageName of packageNames) {
+      const npmCmd = `npm view ${packageName} version`;
+
+
+      const newestVersion = execSync(npmCmd, {
+        stdio: ["ignore", "pipe", "ignore"],
+      }).toString();
+
+      let res = semver.diff(versions[packageName], newestVersion);
+      console.log(`Latest version for ${packageName} is ${newestVersion} and the 
+        current version is ${versions[packageName]} comparison result is ${res}`);
+        if (res === 'major' || res === 'minor') {
+          if (DEBUG) {
+            console.log(`Update required for ${packageName}`);
+          }
+          return true;
+        }
+    }
+  } catch (error) {
+    console.error(
+      `Failed to get latest versions for ${packageNames}. Error Code ${error.status} and message: ${error.message}`
+    );
+    return { isObsolete: false, lastUpdate: null, packageNames };
+  }    
+  return false;
+}
+
 function maybeObsolete(packageName) {
   try {
     const npmCmd = `npm view ${packageName} time`;
@@ -82,14 +148,19 @@ const manualChecks = [];
  * @param {Object} options
  * @param {boolean} options.debug
  */
-export function checkObsoleteFrameworks({ debug }) {
-  console.log("Check obsolete frameworks", "debug", debug);
+export function updateFrameworks({ type, debug }) {
+  let types = type || ["keyed", "non-keyed"];
+  console.log("Check implementations for updates", "debug", debug,"type", type);  
+  let log = [];
 
   const DEBUG = debug;
 
   for (const { name, type } of frameworks) {
+    if (!types.includes(type)) continue
+    console.log(`Checking ${type}/${name}`);  
     const frameworkPath = path.join("frameworks", type, name);
     const packageJSONPath = path.join(frameworkPath, "package.json");
+    const packageJSONLockPath = path.join(frameworkPath, "package-lock.json");
 
     if (!fs.existsSync(packageJSONPath)) {
       missingPackageWarnings.push(`WARN: skipping ${type}/${name} since there's no package.json`);
@@ -109,28 +180,29 @@ export function checkObsoleteFrameworks({ debug }) {
     }
 
     const packages = mainPackages.split(":");
-    const isPackageObsolete = packages.map((element) => maybeObsolete(element));
-
-    if (DEBUG) {
-      console.log(`Results for ${type}/${name} ${isPackageObsolete}`);
-    }
-
-    const anyPackageObsolete = isPackageObsolete.some((packageFramework) => packageFramework.isObsolete);
-
-    if (anyPackageObsolete) {
-      const formattedPackages = isPackageObsolete
-        .map((result) => `${result.packageName}:${result.lastUpdate}`)
-        .join(", ");
-
-      console.log(`Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`);
-      continue;
-    }
-
-    if (DEBUG) {
-      console.log(`Last npm update for ${type}/${name} ${mainPackages} is newer than a year`);
+    const update = shouldUpdate(packageJSONLockPath, packages);
+    
+    if (update) {
+      log.push(performUpdate(frameworkPath, type+"/"+name));
+    } else {
+      const isPackageObsolete = packages.map((element) => maybeObsolete(element));
+      const anyPackageObsolete = isPackageObsolete.some((packageFramework) => packageFramework.isObsolete);
+  
+      if (anyPackageObsolete) {
+        const formattedPackages = isPackageObsolete
+          .map((result) => `${result.packageName}:${result.lastUpdate}`)
+          .join(", ");
+  
+        console.log(`Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`);
+        log.push(`Retire ${type}/${name} - ${mainPackages} is older than a year`);
+      }  
+      else if (DEBUG) {
+        log.push(`Nothing to do for ${type}/${name}`);
+      }
     }
   }
 
+  console.log("Log:\n", log.join("\n"));
   if (missingPackageWarnings.length > 0) console.warn("\nWarnings:\n" + missingPackageWarnings.join("\n"));
   if (manualChecks.length > 0)
     console.warn("\nThe following frameworks must be checked manually\n" + manualChecks.join("\n"));

@@ -33,10 +33,10 @@ export function rebuildCheckSingle({ frameworks }) {
   const frameworkNames = frameworks.join(" ");
 
   try {
-    const benchCmd = `npm run bench -- --headless true --smoketest true ${frameworkNames}`;
+    const benchCmd = `npm run bench -- --runner playwright  --headless true --smoketest true ${frameworkNames}`;
     runCommand(benchCmd, "webdriver-ts");
 
-    const keyedCmd = `npm run isKeyed -- --headless true ${frameworkNames}`;
+    const keyedCmd = `npm run isKeyed -- --runner playwright --headless true ${frameworkNames}`;
     runCommand(keyedCmd, "webdriver-ts");
 
     const cspCmd = `npm run checkCSP -- --headless true ${frameworkNames}`;

@@ -2,7 +2,7 @@
 import { program } from "commander";
 
 import {
-  checkObsoleteFrameworks,
+  updateFrameworks,
   cleanFrameworkDirectories,
   configureStyles,
   copyProjectToDist,
@@ -17,11 +17,11 @@ program.command("zip").description("Create a zip archive of frameworks").action(
 program.command("copy").description("Copy project to dist directory").action(copyProjectToDist);
 
 program
-  .command("check-obsolete")
-  .description("Check for obsolete frameworks in the frameworks directory")
-  .option("--debug [boolean]", "", false)
+  .command("update-frameworks")
+  .option("--type [types...]", "", ["keyed", "non-keyed"])
+  .description("Update implementations in the frameworks directory")
   .action((options) => {
-    checkObsoleteFrameworks(options);
+    updateFrameworks(options);
   });
 
 program

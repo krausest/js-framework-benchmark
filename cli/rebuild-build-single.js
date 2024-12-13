@@ -22,7 +22,7 @@ Pass list of frameworks
  * @param {string|undefined} cwd - The current working directory (optional)
  */
 function runCommand(command, cwd) {
-  console.log(command);
+  console.log(`running '${command}' in '${cwd}'`);
   if (cwd && !fs.existsSync(cwd)) {
     throw `working directory ${cwd} doesn't exist.`;
   }
@@ -54,7 +54,7 @@ function rebuildFramework(framework, useCi) {
     console.log(`ERROR: invalid name ${framework}. It must contain exactly one /.`);
     process.exit(1);
   }
-
+  console.log("Rebuilding framework", framework);
   const [keyed, name] = components;
   const frameworkPath = path.join("frameworks", keyed, name);
 

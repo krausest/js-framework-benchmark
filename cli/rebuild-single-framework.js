@@ -34,6 +34,7 @@ export function rebuildSingleFramework({ frameworks, ci }) {
 
     rebuildCheckSingle({ frameworks });
   } catch (error) {
+    console.log("ERROR", error);
     console.log(`ERROR: Rebuilding  ${frameworks} was not successful`);
   }
 }
