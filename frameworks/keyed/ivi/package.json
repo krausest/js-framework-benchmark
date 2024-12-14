@@ -2,7 +2,7 @@
   "private": true,
   "name": "js-framework-benchmark-ivi",
   "type": "module",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "Benchmark for ivi",
   "author": "Stefan Krause",
   "license": "Apache-2",
@@ -18,15 +18,14 @@
     "build-prod": "rollup -c rollup.config.mjs"
   },
   "dependencies": {
-    "@ivi/htm": "^3.0.2",
-    "ivi": "3.0.3"
+    "ivi": "4.0.0"
   },
   "devDependencies": {
-    "@ivi/rollup-plugin": "3.0.4",
+    "@ivi/rollup-plugin": "4.0.0",
     "@rollup/plugin-node-resolve": "15.3.0",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "12.1.1",
-    "rollup": "4.27.4",
+    "rollup": "4.28.1",
     "tslib": "2.8.1",
     "typescript": "5.7.2"
   }
