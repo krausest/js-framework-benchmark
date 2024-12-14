@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-deleight",
-  "version": "4.0.0",
+  "version": "5.5.8",
   "description": "Deleight demo",
   "main": "src/Main.js",
   "js-framework-benchmark": {
@@ -29,6 +29,7 @@
     "rollup": "^4.14.2"
   },
   "dependencies": {
-    "deleight": "^4.0.0"
+    "@rollup/plugin-terser": "^0.4.4",
+    "deleight": "^5.5.8"
   }
 }
