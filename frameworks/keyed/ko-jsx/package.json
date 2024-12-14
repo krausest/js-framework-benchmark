@@ -24,7 +24,7 @@
   "dependencies": {
     "babel-plugin-jsx-dom-expressions": "0.25.12",
     "knockout": "3.5.1",
-    "ko-jsx": "0.16.1"
+    "ko-jsx": "0.17.1"
   },
   "devDependencies": {
     "@babel/core": "7.25.2",
