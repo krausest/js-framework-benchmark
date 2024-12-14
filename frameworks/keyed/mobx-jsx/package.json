@@ -21,7 +21,7 @@
   "dependencies": {
     "babel-plugin-jsx-dom-expressions": "0.25.12",
     "mobx": "6.1.8",
-    "mobx-jsx": "0.14.0"
+    "mobx-jsx": "0.16.0"
   },
   "devDependencies": {
     "@babel/core": "7.25.2",
