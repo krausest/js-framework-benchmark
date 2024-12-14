@@ -13,12 +13,12 @@
     "build-prod": "webpack --mode production"
   },
   "devDependencies": {
-    "@riotjs/compiler": "^9.0.7",
+    "@riotjs/compiler": "^9.4.1",
     "@riotjs/webpack-loader": "9.0.1",
-    "webpack": "5.90.3",
+    "webpack": "5.97.1",
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "riot": "^9.1.4"
+    "riot": "^9.4.4"
   }
 }

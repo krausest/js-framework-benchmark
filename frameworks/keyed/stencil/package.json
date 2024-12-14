@@ -19,7 +19,7 @@
     "dev": "stencil build --dev --watch"
   },
   "dependencies": {
-    "@stencil/core": "^4.11.0"
+    "@stencil/core": "^4.23.0"
   },
   "license": "Apache-2.0"
 }

@@ -7,10 +7,10 @@
     "issues": [801]
   },
   "dependencies": {
-    "karyon": "^2.0.0"
+    "karyon": "^2.2.0"
   },
   "devDependencies": {
-    "esbuild": "^0.19.7"
+    "esbuild": "^0.24.0"
   },
   "scripts": {
     "dev":"esbuild src/app.js --outfile=dist/app.js --bundle --watch",

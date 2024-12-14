@@ -27,12 +27,24 @@ function performUpdate(frameworkPath, frameworkName) {
       cwd: frameworkPath,
       stdio: "inherit",
     });
-    rebuildFramework(frameworkName, false);
-    rebuildCheckSingle({frameworks: [frameworkName]});
+    if (!rebuildFramework(frameworkName, false)) throw new Error(`Failed to rebuild ${frameworkPath}`);
+    if (!rebuildCheckSingle({frameworks: [frameworkName]})) throw new Error(`Failed to check ${frameworkPath}`);
     return `Sucessfully updated ${frameworkPath}`;
   } catch (error) {
     console.error(`Failed to update ${frameworkPath}. Error Code ${error.status} and message: ${error.message}`);
+    try {
+      console.error(`Git restore ${frameworkPath}`);
+      const npmCmd = `git restore .`;
+      execSync(npmCmd, {
+        cwd: frameworkPath,
+        stdio: "inherit",
+      });
+    } catch (error) {
+      console.error(`Failed to restore ${frameworkPath}. Error Code ${error.status} and message: ${error.message}`);
+    }
     return `Failed to update ${frameworkPath}`;
+  
+
   }
 }
 

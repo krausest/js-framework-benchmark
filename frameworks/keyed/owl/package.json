@@ -22,11 +22,11 @@
     "url": "https://github.com/odoo/owl.git"
   },
   "devDependencies": {
-    "webpack": "5.88.1",
+    "webpack": "5.97.1",
     "webpack-cli": "5.1.4"
   },
   "dependencies": {
-    "@odoo/owl": "^2.2.6",
-    "babel-loader": "^9.1.3"
+    "@odoo/owl": "^2.5.1",
+    "babel-loader": "^9.2.1"
   }
 }

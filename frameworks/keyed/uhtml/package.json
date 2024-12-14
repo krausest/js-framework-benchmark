@@ -29,13 +29,13 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "js-framework-benchmark-utils": "^0.3.2",
-    "uhtml": "^4.4.1"
+    "js-framework-benchmark-utils": "^0.4.0",
+    "uhtml": "^4.7.0"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "15.2.3",
+    "@rollup/plugin-node-resolve": "15.3.0",
     "@rollup/plugin-terser": "0.4.4",
-    "rollup": "4.21.2",
+    "rollup": "4.28.1",
     "rollup-plugin-html-literals": "1.1.8"
   }
 }

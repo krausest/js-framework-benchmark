@@ -19,10 +19,10 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@types/node": "^20.11.25",
-    "esbuild": "^0.20.1"
+    "@types/node": "^22.10.2",
+    "esbuild": "^0.24.0"
   },
   "dependencies": {
-    "reflex-dom": "0.23.1"
+    "reflex-dom": "0.25.3"
   }
 }
