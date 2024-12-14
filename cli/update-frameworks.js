@@ -29,7 +29,7 @@ function performUpdate(frameworkPath, frameworkName) {
     });
     if (!rebuildFramework(frameworkName, false)) throw new Error(`Failed to rebuild ${frameworkPath}`);
     if (!rebuildCheckSingle({frameworks: [frameworkName]})) throw new Error(`Failed to check ${frameworkPath}`);
-    return `Sucessfully updated ${frameworkPath}`;
+    return `Successfully updated ${frameworkPath}`;
   } catch (error) {
     console.error(`Failed to update ${frameworkPath}. Error Code ${error.status} and message: ${error.message}`);
     try {
