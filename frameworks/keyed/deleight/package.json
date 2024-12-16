@@ -4,7 +4,7 @@
   "description": "Deleight demo",
   "main": "src/Main.js",
   "js-framework-benchmark": {
-    "frameworkHomeURL": "https://github.com/markersunny/deleight",
+    "frameworkHomeURL": "https://github.com/mksunny1/deleight",
     "frameworkVersionFromPackage": "deleight",
     "issues": [
       772
