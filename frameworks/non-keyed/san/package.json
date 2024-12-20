@@ -5,7 +5,7 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "san",
     "frameworkHomeURL": "https://baidu.github.io/san/",
-    "issues": [800, 1139]
+    "issues": [800]
   },
   "scripts": {
     "dev": "webpack --watch",
@@ -29,6 +29,6 @@
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
-    "san": "^3.12.2"
+    "san": "3.15.1"
   }
 }
