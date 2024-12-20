@@ -29,9 +29,9 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "doz": "4.0.3"
+    "doz": "5.2.6"
   },
   "devDependencies": {
-    "esbuild": "^0.18.12"
+    "esbuild": "^0.24.0"
   }
 }

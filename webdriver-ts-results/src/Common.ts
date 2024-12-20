@@ -464,7 +464,6 @@ export class ResultTableData {
       (1.959964 * (resultValues.standardDeviation || 0)) / Math.sqrt(resultValues.values.length);
       const confidenceIntervalStr = benchmark.type === BenchmarkType.CPU ? confidenceInterval.toFixed(1) : null;
       const formattedValue = formatEn.format(value);
-      console.log("confidenceInterval", benchmark.id, framework.name, formattedValue, value, confidenceInterval, confidenceIntervalStr, resultValues.values.length)
 
     if (!this.compareWith || benchmark.type !== BenchmarkType.CPU) {
       return new TableResultValueEntry(

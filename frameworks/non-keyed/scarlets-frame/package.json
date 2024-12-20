@@ -27,11 +27,11 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "scarletsframe": "0.34.6"
+    "scarletsframe": "0.35.26"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "15.2.3",
+    "@rollup/plugin-node-resolve": "15.3.0",
     "@rollup/plugin-terser": "0.4.4",
-    "rollup": "4.21.2"
+    "rollup": "4.28.1"
   }
 }

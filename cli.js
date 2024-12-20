@@ -11,6 +11,7 @@ import {
   rebuildAllFrameworks,
   rebuildSingleFramework,
 } from "./cli/index.js";
+import { updateOneFramework } from "./cli/update-frameworks.js";
 
 program.command("zip").description("Create a zip archive of frameworks").action(createFrameworkZipArchive);
 
@@ -23,6 +24,17 @@ program
   .action((options) => {
     updateFrameworks(options);
   });
+
+  program
+  .command("update-one-framework")
+  .arguments("<frameworks>")
+  .description("Update implementation in the frameworks directory")
+  .action((framework) => {
+    let [type, name] = framework.split("/");
+    if (!["keyed","non-keyed"].includes(type)) throw new Error("Invalid framework name. Must be something like keyed/vue");
+    updateOneFramework({type,name, debug: true});
+  });
+
 
 program
   .command("cleanup")
@@ -56,10 +68,11 @@ program
 
 program
   .command("rebuild-all")
+  .option("--type [types...]", "", ["keyed", "non-keyed"])
   .option("--ci [boolean]", "", false)
   .option("--restart-with-framework [string]", "", "")
   .action((options) => {
-    rebuildAllFrameworks({ restartWithFramework: options.restartWithFramework, useCi: options.ci });
+    rebuildAllFrameworks({ type: options.type, restartWithFramework: options.restartWithFramework, useCi: options.ci });
   });
 
 program

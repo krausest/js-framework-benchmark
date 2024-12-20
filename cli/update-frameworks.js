@@ -82,34 +82,27 @@ function getVersionFromPackageLock(packageJSONLockPath, packageNames) {
 }
 
 function shouldUpdate(packageJSONLockPath, packageNames, DEBUG) {
-  try {
-    let versions = getVersionFromPackageLock(packageJSONLockPath, packageNames);
-    console.log(versions);
+  let versions = getVersionFromPackageLock(packageJSONLockPath, packageNames);
+  console.log(versions);
 
-    for (let packageName of packageNames) {
-      const npmCmd = `npm view ${packageName} version`;
+  for (let packageName of packageNames) {
+    const npmCmd = `npm view ${packageName} version`;
 
 
-      const newestVersion = execSync(npmCmd, {
-        stdio: ["ignore", "pipe", "ignore"],
-      }).toString();
+    let newestVersion = execSync(npmCmd, {
+      stdio: ["ignore", "pipe", "ignore"],
+    }).toString();
+    newestVersion = newestVersion.replace(/\n/g, "");
 
-      let res = semver.diff(versions[packageName], newestVersion);
-      console.log(`Latest version for ${packageName} is ${newestVersion} and the 
-        current version is ${versions[packageName]} comparison result is ${res}`);
-        if (res === 'major' || res === 'minor') {
-          if (DEBUG) {
-            console.log(`Update required for ${packageName}`);
-          }
-          return true;
+    let res = semver.diff(versions[packageName], newestVersion);
+    console.log(`Latest version for ${packageName} is ${newestVersion} and the installed version is ${versions[packageName]}. Comparison result is ${res}.`);
+      if (res === 'major' || res === 'minor') {
+        if (DEBUG) {
+          console.log(`Update required for ${packageName}`);
         }
-    }
-  } catch (error) {
-    console.error(
-      `Failed to get latest versions for ${packageNames}. Error Code ${error.status} and message: ${error.message}`
-    );
-    return { isObsolete: false, lastUpdate: null, packageNames };
-  }    
+        return true;
+      }
+  }
   return false;
 }
 
@@ -154,8 +147,55 @@ function maybeObsolete(packageName) {
   }
 }
 
-const missingPackageWarnings = [];
-const manualChecks = [];
+export function updateOneFramework({ type, name, debug }) {
+  console.log(`Checking ${type}/${name}`);  
+  const frameworkPath = path.join("frameworks", type, name);
+  const packageJSONPath = path.join(frameworkPath, "package.json");
+  const packageJSONLockPath = path.join(frameworkPath, "package-lock.json");
+
+  if (!fs.existsSync(packageJSONPath)) {
+    return `WARN: skipping ${type}/${name} since there's no package.json`;
+  }
+
+  try {
+
+    const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
+    const mainPackages = packageJSON?.["js-framework-benchmark"]?.frameworkVersionFromPackage;
+
+    if (!mainPackages) {
+      return `WARN: ${type}/${name} has no frameworkVersionFromPackage`;
+    }
+
+    if (debug) {
+      console.log(`Checking ${type}/${name} ${mainPackages}`);
+    }
+
+    const packages = mainPackages.split(":");
+    const update = shouldUpdate(packageJSONLockPath, packages);
+    
+    if (update) {
+      return performUpdate(frameworkPath, type+"/"+name);
+    } else {
+      const isPackageObsolete = packages.map((element) => maybeObsolete(element));
+      const anyPackageObsolete = isPackageObsolete.some((packageFramework) => packageFramework.isObsolete);
+  
+      if (anyPackageObsolete) {
+        const formattedPackages = isPackageObsolete
+          .map((result) => `${result.packageName}:${result.lastUpdate}`)
+          .join(", ");
+  
+        console.log(`Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`);
+        return `INFO: Retire ${type}/${name} - ${mainPackages} is older than a year`;
+      }  
+      else {
+        return `INFO: Nothing to do for ${type}/${name}`;
+      }
+    }
+  } catch (error) {
+    console.error(`Failed to check ${type}/${name}. Error Code ${error.status} and message: ${error.message}`, error);
+    return `ERROR: Error checking ${type}/${name}`;
+  }
+}
 
 /**
  * Checks frameworks in frameworks/keyed and frameworks/non-keyed for obsolescence,
@@ -172,59 +212,8 @@ export function updateFrameworks({ type, debug }) {
 
   for (const { name, type } of frameworks) {
     if (!types.includes(type)) continue
-    console.log(`Checking ${type}/${name}`);  
-    const frameworkPath = path.join("frameworks", type, name);
-    const packageJSONPath = path.join(frameworkPath, "package.json");
-    const packageJSONLockPath = path.join(frameworkPath, "package-lock.json");
-
-    if (!fs.existsSync(packageJSONPath)) {
-      missingPackageWarnings.push(`WARN: skipping ${type}/${name} since there's no package.json`);
-      continue;
-    }
-
-    try {
-
-      const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
-      const mainPackages = packageJSON?.["js-framework-benchmark"]?.frameworkVersionFromPackage;
-
-      if (!mainPackages) {
-        manualChecks.push(`${type}/${name} has no frameworkVersionFromPackage`);
-        continue;
-      }
-
-      if (DEBUG) {
-        console.log(`Checking ${type}/${name} ${mainPackages}`);
-      }
-
-      const packages = mainPackages.split(":");
-      const update = shouldUpdate(packageJSONLockPath, packages);
-      
-      if (update) {
-        log.push(performUpdate(frameworkPath, type+"/"+name));
-      } else {
-        const isPackageObsolete = packages.map((element) => maybeObsolete(element));
-        const anyPackageObsolete = isPackageObsolete.some((packageFramework) => packageFramework.isObsolete);
-    
-        if (anyPackageObsolete) {
-          const formattedPackages = isPackageObsolete
-            .map((result) => `${result.packageName}:${result.lastUpdate}`)
-            .join(", ");
-    
-          console.log(`Last npm update for ${type}/${name} - ${mainPackages} is older than a year: ${formattedPackages}`);
-          log.push(`Retire ${type}/${name} - ${mainPackages} is older than a year`);
-        }  
-        else if (DEBUG) {
-          log.push(`Nothing to do for ${type}/${name}`);
-        }
-      }
-    } catch (error) {
-      console.error(`Failed to check ${type}/${name}. Error Code ${error.status} and message: ${error.message}`);
-      log.push(`Error checking ${type}/${name}`);
-    }
+    log.push(updateOneFramework({ type, name, debug }));
   }
 
   console.log("Log:\n", log.join("\n"));
-  if (missingPackageWarnings.length > 0) console.warn("\nWarnings:\n" + missingPackageWarnings.join("\n"));
-  if (manualChecks.length > 0)
-    console.warn("\nThe following frameworks must be checked manually\n" + manualChecks.join("\n"));
 }

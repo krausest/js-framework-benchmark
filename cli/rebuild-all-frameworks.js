@@ -98,11 +98,12 @@ function buildFramework(framework, useCi) {
  * @param {string} options.restartWithFramework
  * @param {boolean} options.useCi
  */
-export function rebuildAllFrameworks({ restartWithFramework, useCi }) {
-  console.log("Rebuild all frameworks", "ci", useCi, "restartWith", restartWithFramework);
+export function rebuildAllFrameworks({ type, restartWithFramework, useCi }) {
+  let types = type || ["keyed", "non-keyed"];
+  console.log(`Rebuild all frameworks. ci: ${useCi}, restartWith: ${restartWithFramework}, types: ${types}`);
 
-  const frameworks = getFrameworks();
-
+  let frameworks = getFrameworks();
+  frameworks = frameworks.filter(f => types.includes(f.type));
   const skippableFrameworks = takeWhile(frameworks, (framework) =>
     shouldSkipFramework(framework, restartWithFramework)
   );
