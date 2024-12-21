@@ -1,4 +1,5 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
 
 export default [
     {
@@ -6,6 +7,6 @@ export default [
       output: [
         { format: 'es', dir: './dist' },
       ],
-      plugins: [nodeResolve()]
+      plugins: [nodeResolve(), terser()]
     }
   ]
