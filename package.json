@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "clean": "node cleanup.js",
-    "rebuild-all": "node rebuild-all.js --ci",
+    "rebuild-all": "node cli.js rebuild-all --ci true",
     "build": "echo \"Please use 'npm run rebuild-all' instead\" && exit 1",
     "build-prod": "echo \"Please use 'npm run rebuild-all' instead\" && exit 1",
     "compile": "echo \"Please use 'npm run rebuild-all' instead\" && exit 1",
