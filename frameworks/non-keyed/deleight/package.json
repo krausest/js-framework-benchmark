@@ -4,9 +4,9 @@
   "description": "Deleight demo",
   "main": "src/Main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@markersunny/deleight",
-    "frameworkHomeURL": "https://github.com/markersunny/deleight",
-    "frameworkVersion": "1.1.7",
+    "frameworkVersionFromPackage": "@mksunny1/deleight",
+    "frameworkHomeURL": "https://github.com/mksunny1/deleight",
+    "frameworkVersion": "5.5.10",
     "issues": [
       772
     ]
@@ -31,6 +31,7 @@
     "rollup": "^4.14.2"
   },
   "dependencies": {
-    "deleight": "^1.1.7"
+    "@rollup/plugin-terser": "^0.4.4",
+    "deleight": "^5.5.10"
   }
 }
