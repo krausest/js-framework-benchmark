@@ -23,7 +23,7 @@
     "pota": "^0.17.170"
   },
   "devDependencies": {
-    "@babel/core": "7.25.2",
+    "@babel/core": "7.26.0",
     "@rollup/plugin-babel": "6.0.4",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-terser": "0.4.4",
