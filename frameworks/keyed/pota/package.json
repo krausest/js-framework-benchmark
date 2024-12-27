@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-pota",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "main": "dist/main.js",
   "js-framework-benchmark": {
@@ -20,10 +20,10 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "pota": "^0.16.163"
+    "pota": "^0.17.170"
   },
   "devDependencies": {
-    "@babel/core": "7.25.2",
+    "@babel/core": "7.26.0",
     "@rollup/plugin-babel": "6.0.4",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-terser": "0.4.4",

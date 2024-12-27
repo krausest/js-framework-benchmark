@@ -86,7 +86,7 @@ const Button = ({ id, text, fn }) => (
       id={id}
       class="btn btn-primary btn-block"
       type="button"
-      onClick={fn}
+      on:click={fn}
     />
   </div>
 )
@@ -175,7 +175,7 @@ const App = () => {
       </div>
       <table
         class="table table-hover table-striped test-data"
-        onClick={e => {
+        on:click={e => {
           const element = e.target
           const { selectRow, removeRow } = element
 
