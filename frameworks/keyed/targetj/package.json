@@ -26,6 +26,6 @@
     "wepback": "^1.0.0"
   },
   "dependencies": {
-    "targetj": "1.0.118"
+    "targetj": "1.0.126"
   }
 }

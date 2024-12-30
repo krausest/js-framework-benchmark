@@ -53,11 +53,8 @@ App(new TModel("benchmark", {
                 const rows = this.getParent().findChild('rows');
                 const rowChildren = rows.allChildren;
                 if (rowChildren.length > 998) {
-                    const row1 = rowChildren[1];
-                    const row998 = rowChildren[998];
-                    const tempHtml = row1.val('html');
-                    row1.val('html', row998.val('html')).activate();
-                    row998.val('html', tempHtml).activate();
+                    rows.moveChild(rowChildren[1], 998);
+                    rows.moveChild(rowChildren[998], 1);
                 }
             }
         });        
