@@ -70,7 +70,7 @@ interface Data {
 })
 export class AppComponent {
   data = signal<Array<Data>>([], {equal: (a, b) => a.id === b.id});
-  selected = signal<number | undefined | null>(undefined, , {equal: (a, b) => a === b});
+  selected = signal<number | undefined | null>(undefined, {equal: (a, b) => a === b});
   id: number = 1;
 
   #random(max: number) {
