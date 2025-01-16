@@ -1,17 +1,17 @@
 {
-  "name": "js-framework-benchmark-targetj",
+  "name": "js-framework-benchmark-targetjs",
   "version": "1.0.0",
-  "description": "Benchmark for targetj framework",
+  "description": "Benchmark for targetjs framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "targetj",
-    "frameworkHomeURL": "https://targetj.io"        
+    "frameworkHomeURL": "https://targetjs.io"
   },
   "scripts": {
     "build-dev": "webpack --mode development --watch",
     "build-prod": "webpack --mode production"
   },
   "keywords": [
-    "targetj"
+    "targetjs"
   ],
   "author": "Ahmad Wasfi",
   "license": "Apache-2.0",
@@ -26,6 +26,6 @@
     "wepback": "^1.0.0"
   },
   "dependencies": {
-    "targetj": "1.0.126"
+    "targetj": "1.0.137"
   }
 }
