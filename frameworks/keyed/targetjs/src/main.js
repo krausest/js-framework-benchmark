@@ -51,7 +51,7 @@ App(new TModel("benchmark", {
         return new TModel('swaprows', {
             onClickEvent() {
                 const rows = this.getParent().findChild('rows');
-                const rowChildren = rows.allChildren;
+                const rowChildren = rows.allChildrenList;
                 if (rowChildren.length > 998) {
                     rows.moveChild(rowChildren[1], 998);
                     rows.moveChild(rowChildren[998], 1);
