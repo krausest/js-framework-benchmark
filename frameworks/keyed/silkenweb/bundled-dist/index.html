@@ -1,17 +1,29 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
   <meta charset="UTF-8">
   <title>Silkenweb</title>
-  <link href="/css/currentStyle.css" rel="stylesheet">
-  <script type="module">import init from '/frameworks/keyed/silkenweb/bundled-dist/js-framework-benchmark-silkenweb-f5f8ab44b95a6616.js';init('/frameworks/keyed/silkenweb/bundled-dist/js-framework-benchmark-silkenweb-f5f8ab44b95a6616_bg.wasm');</script>
+  <link href="/css/currentStyle.css" rel="stylesheet" />
+  
+<script type="module" nonce="OrnX43lmtAAq45rzfjP1mw==">
+import init, * as bindings from '/frameworks/keyed/silkenweb/bundled-dist/js-framework-benchmark-silkenweb-3fe0a7efb0dd4880.js';
+const wasm = await init({ module_or_path: '/frameworks/keyed/silkenweb/bundled-dist/js-framework-benchmark-silkenweb-3fe0a7efb0dd4880_bg.wasm' });
 
-<link rel="preload" href="/frameworks/keyed/silkenweb/bundled-dist/js-framework-benchmark-silkenweb-f5f8ab44b95a6616_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
-<link rel="modulepreload" href="/frameworks/keyed/silkenweb/bundled-dist/js-framework-benchmark-silkenweb-f5f8ab44b95a6616.js"></head>
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+<link rel="modulepreload" href="/frameworks/keyed/silkenweb/bundled-dist/js-framework-benchmark-silkenweb-3fe0a7efb0dd4880.js" crossorigin=anonymous integrity="sha384-WzQ5Ji3BqIdtSYqX+zjiYkgImehOTcLsqkM5+H+EoSXfg5oXl1oFXeY7RPtO7vll"><link rel="preload" href="/frameworks/keyed/silkenweb/bundled-dist/js-framework-benchmark-silkenweb-3fe0a7efb0dd4880_bg.wasm" crossorigin=anonymous integrity="sha384-OpVkkKW7JK9FU1217qKY9H6FdV9YTB4mM+D74bW88G/K+HPxOCvLat0OqExJU+qc" as="fetch" type="application/wasm"></head>
 
 <body>
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
   <div id="main">
     <div id="app"></div>
   </div>
+</body>
 
-
-</body></html>
+</html>
