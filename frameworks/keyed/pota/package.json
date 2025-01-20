@@ -20,7 +20,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "pota": "^0.17.172"
+    "pota": "^0.17.177"
   },
   "devDependencies": {
     "@babel/core": "7.26.0",
