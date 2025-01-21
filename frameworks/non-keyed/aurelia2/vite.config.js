@@ -14,7 +14,7 @@ export default defineConfig({
   },
   plugins: [
     aurelia({
-      useDev: true,
+      useDev: false,
     }),
     babel(),
     nodePolyfills(),
