@@ -90,6 +90,7 @@ export interface FrameworkData {
   useRowShadowRoot: boolean;
   shadowRootName: string | undefined;
   buttonsInShadowRoot: boolean;
+  startLogicEventName: string;
   issues: number[];
   frameworkHomeURL: string;
 }
@@ -108,6 +109,7 @@ export interface FrameworkInformation {
   versions?: { [key: string]: string };
   frameworkVersionString: string;
   frameworkHomeURL: string;
+  startLogicEventName: string;
 }
 
 export interface MatchPredicate {
@@ -163,6 +165,7 @@ export async function initializeFrameworks(
         buttonsInShadowRoot: !!frameworkVersionInformation.buttonsInShadowRoot,
         issues: (frameworkVersionInformation.issues ?? []).map(Number),
         frameworkHomeURL: frameworkVersionInformation.frameworkHomeURL ?? "",
+        startLogicEventName: frameworkVersionInformation.startLogicEventName
       });
     }
   }
