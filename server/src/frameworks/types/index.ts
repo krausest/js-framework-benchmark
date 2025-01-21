@@ -8,6 +8,7 @@ export interface BenchmarkData {
   buttonsInShadowRoot?: string | boolean;
   frameworkVersionFromPackage?: string;
   frameworkVersion?: string;
+  startLogicEventName?: string;
 }
 
 export interface Result {
