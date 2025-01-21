@@ -30,7 +30,7 @@ const KnownIssuesList = () => {
 
 const App = () => {
   // eslint-disable-next-line no-constant-condition
-  const version = "Chrome 131.0.6778.85"
+  const version = "Chrome 132.0.6834.83"
   const disclaimer = false ? (
     <div>
       <h2>js-framework-benchmark results for {version}</h2>
