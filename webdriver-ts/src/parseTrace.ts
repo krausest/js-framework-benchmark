@@ -12,10 +12,10 @@ async function debugSingle() {
   // const trace = `traces/alpine-v3.12.0-keyed_07_create10k_0.json`;
   // const trace = `traces/arrowjs-v1.0.0-alpha.9-keyed_07_create10k_0.json`;
   // const trace = `traces/better-react-v1.1.3-keyed_04_select1k_1.json`;
-    const trace = `traces/openui5-v1.120.0-keyed_02_replace1k_0.json`;
+    const trace = `traces/targetjs-v1.0.137-keyed_09_clear1k_x8_3.json`;
     // const trace = `traces/vanillajs-keyed_01_run1k_0.json`;
     console.log("analyzing trace", trace);
-    const cpuTrace = await computeResultsCPU(trace);
+    const cpuTrace = await computeResultsCPU(trace, "click");
     console.log(trace, cpuTrace);
     values.push(cpuTrace.duration);
     let resultJS = await computeResultsJS(cpuTrace, config, trace);
@@ -54,12 +54,12 @@ async function debugAll() {
   let plausibilityCheck = new PlausibilityCheck();
   for (let framework of frameworks) {
     for (let benchmarkInfo of cpuCPUBenchmarks) {
-      await parseCPUTrace(benchmarkOptions, framework, benchmarkInfo, plausibilityCheck);
+      await parseCPUTrace(benchmarkOptions, framework, benchmarkInfo, plausibilityCheck, framework.startLogicEventName);
     }
   }
   plausibilityCheck.print();
 }
 
-debugSingle()
+debugAll()
   .then(() => console.log("done"))
   .catch((error) => console.log(error));
