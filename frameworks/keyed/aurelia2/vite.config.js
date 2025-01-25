@@ -8,7 +8,7 @@ export default defineConfig({
     open: !process.env.CI,
     port: 9000,
   },
-  base: '/frameworks/non-keyed/aurelia2/dist/',
+  base: '/frameworks/keyed/aurelia2/dist/',
   esbuild: {
     target: 'es2022'
   },
