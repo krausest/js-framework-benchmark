@@ -1,40 +1,24 @@
-import gulp from 'gulp';
-import {CLIOptions, build as buildCLI} from 'aurelia-cli';
-import transpile from './transpile';
-import processMarkup from './process-markup';
-import processCSS from './process-css';
-import copyFiles from './copy-files';
-import watch from './watch';
-import project from '../aurelia.json';
+import { NPM } from 'aurelia-cli';
 
-let build = gulp.series(
-  readProjectConfiguration,
-  gulp.parallel(
-    transpile,
-    processMarkup,
-    processCSS,
-    copyFiles
-  ),
-  writeBundles
-);
-
-let main;
-
-if (CLIOptions.taskName() === 'build' && CLIOptions.hasFlag('watch')) {
-  main = gulp.series(
-    build,
-    (done) => { watch(); done(); }
-  );
-} else {
-  main = build;
+export default function() {
+  console.log('`au build` is an alias of the `npm run build:dev`, you may use either of those; see README for more details.');
+  const args = process.argv.slice(3);
+  return (new NPM()).run('run', ['build:dev', '--', ... cleanArgs(args)]);
 }
 
-function readProjectConfiguration() {
-  return buildCLI.src(project);
+// Cleanup --env prod to --env production
+// for backwards compatibility
+function cleanArgs(args) {
+  const cleaned = [];
+  for (let i = 0, ii = args.length; i < ii; i++) {
+    if (args[i] === '--env' && i < ii - 1) {
+      const env = args[++i].toLowerCase();
+      if (env.startsWith('prod')) {
+        cleaned.push('--env production');
+      }
+    } else {
+      cleaned.push(args[i]);
+    }
+  }
+  return cleaned;
 }
-
-function writeBundles() {
-  return buildCLI.dest();
-}
-
-export { main as default };
