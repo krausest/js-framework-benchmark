@@ -86,7 +86,7 @@ const Button = ({ id, text, fn }) => (
       on:click={(e)=>{
           e.stopPropagation()
           fn()
-      }
+      }}
     />
   </div>
 )
