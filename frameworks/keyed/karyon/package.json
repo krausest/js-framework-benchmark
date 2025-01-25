@@ -7,7 +7,7 @@
     "issues": [801]
   },
   "dependencies": {
-    "karyon": "^2.2.0"
+    "karyon": "^3.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.24.0"
