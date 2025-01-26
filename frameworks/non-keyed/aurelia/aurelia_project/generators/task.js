@@ -9,33 +9,32 @@ export default class TaskGenerator {
     this.ui = ui;
   }
 
-  execute() {
-    return this.ui
-      .ensureAnswer(this.options.args[0], 'What would you like to call the task?')
-      .then(name => {
-        let fileName = this.project.makeFileName(name);
-        let functionName = this.project.makeFunctionName(name);
+  async execute() {
+    const name = await this.ui.ensureAnswer(
+      this.options.args[0],
+      'What would you like to call the task?'
+    );
 
-        this.project.tasks.add(
-          ProjectItem.text(`${fileName}.js`, this.generateSource(functionName))
-        );
+    let fileName = this.project.makeFileName(name);
+    let functionName = this.project.makeFunctionName(name);
 
-        return this.project.commitChanges()
-          .then(() => this.ui.log(`Created ${fileName}.`));
-      });
+    this.project.tasks.add(
+      ProjectItem.text(`${fileName}.js`, this.generateSource(functionName))
+    );
+
+    await this.project.commitChanges();
+    await this.ui.log(`Created ${fileName}.`);
   }
 
   generateSource(functionName) {
     return `import gulp from 'gulp';
-import changed from 'gulp-changed';
 import project from '../aurelia.json';
 
 export default function ${functionName}() {
   return gulp.src(project.paths.???)
-    .pipe(changed(project.paths.output, {extension: '.???'}))
     .pipe(gulp.dest(project.paths.output));
 }
-
 `;
+
   }
 }

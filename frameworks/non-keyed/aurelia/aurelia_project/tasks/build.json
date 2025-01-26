@@ -1,7 +1,12 @@
 {
   "name": "build",
-  "description": "Builds and processes all application assets.",
+  "description": "Builds and processes all application assets. It is an alias of the `npm run build:dev`, you may use either of those; see README for more details.",
   "flags": [
+    {
+      "name": "analyze",
+      "description": "Enable Webpack Bundle Analyzer. Typically paired with --env prod",
+      "type": "boolean"
+    },
     {
       "name": "env",
       "description": "Sets the build environment.",
