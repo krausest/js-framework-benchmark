@@ -17,7 +17,7 @@ const when = (condition, config, negativeConfig) =>
 const outDir = path.resolve(__dirname, project.platform.output);
 const srcDir = path.resolve(__dirname, 'src');
 const nodeModulesDir = path.resolve(__dirname, 'node_modules');
-const baseUrl = '/';
+const baseUrl = '/frameworks/non-keyed/aurelia/dist/';
 
 const cssRules = [
   {
