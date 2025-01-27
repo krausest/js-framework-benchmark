@@ -200,8 +200,8 @@ async function runBench(
 
   let plausibilityCheck = new PlausibilityCheck();
 
-  for (let i = 0; i < runFrameworks.length; i++) {
-    for (let j = 0; j < benchmarkInfos.length; j++) {
+  for (let j = 0; j < benchmarkInfos.length; j++) {
+    for (let i = 0; i < runFrameworks.length; i++) {
       try {
         let result;
 

@@ -67,14 +67,11 @@ function _random(max) {
 function buildData(count) {
   const data = new Array(count)
   for (let i = 0; i < count; i++) {
-    const [label, setLabel, updateLabel] = signal(
+    const label = signal(
       `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
     )
-    data[i] = {
-      id: idCounter++,
-      label,
-      updateLabel,
-    }
+    label.id = idCounter++
+    data[i] = label
   }
   return data
 }
@@ -86,14 +83,17 @@ const Button = ({ id, text, fn }) => (
       id={id}
       class="btn btn-primary btn-block"
       type="button"
-      on:click={fn}
+      on:click={(e)=>{
+          e.stopPropagation()
+          fn()
+      }}
     />
   </div>
 )
 
 const App = () => {
   const [data, setData, updateData] = signal([]),
-    [selected, setSelected] = signal(null),
+    [selected, setSelected] = signal(),
     run = () => {
       setData(buildData(1000))
     },
@@ -107,7 +107,7 @@ const App = () => {
       const d = data()
       const len = d.length
       for (let i = 0; i < len; i += 10)
-        d[i].updateLabel(l => l + ' !!!')
+        d[i].update(l => l + ' !!!')
     },
     swapRows = () => {
       const d = [...data()]
@@ -176,6 +176,8 @@ const App = () => {
       <table
         class="table table-hover table-striped test-data"
         on:click={e => {
+          e.stopPropagation()
+            
           const element = e.target
           const { selectRow, removeRow } = element
 
@@ -189,7 +191,7 @@ const App = () => {
         <tbody>
           <For each={data}>
             {row => {
-              const { id, label } = row
+              const { id, read } = row
 
               return (
                 <tr class:danger={isSelected(id)}>
@@ -199,7 +201,7 @@ const App = () => {
                   />
                   <td class="col-md-4">
                     <a
-                      textContent={label}
+                      textContent={read}
                       prop:selectRow={id}
                     />
                   </td>

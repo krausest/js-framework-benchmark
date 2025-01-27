@@ -6,10 +6,10 @@ edition = "2021"
 publish = false
 
 [dependencies]
-silkenweb = { version = "0.8.0", features = ["weak-refs"] }
+silkenweb = { version = "0.9.0", features = ["weak-refs"] }
 futures-signals = "0.3.31"
 js-sys = "0.3.60"
-wasm-bindgen = { version = "=0.2.92", features = ["enable-interning"] }
+wasm-bindgen = { version = "=0.2.99", features = ["enable-interning"] }
 rand = { version = "0.8.5", features = ["small_rng"] }
 getrandom = { version = "0.2.7", features = ["js"] }
 

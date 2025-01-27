@@ -9,33 +9,33 @@ export default class ValueConverterGenerator {
     this.ui = ui;
   }
 
-  execute() {
-    return this.ui
-      .ensureAnswer(this.options.args[0], 'What would you like to call the value converter?')
-      .then(name => {
-        let fileName = this.project.makeFileName(name);
-        let className = this.project.makeClassName(name);
+  async execute() {
+    const name = await this.ui.ensureAnswer(
+      this.options.args[0],
+      'What would you like to call the value converter?'
+    );
 
-        this.project.valueConverters.add(
-          ProjectItem.text(`${fileName}.js`, this.generateSource(className))
-        );
+    let fileName = this.project.makeFileName(name);
+    let className = this.project.makeClassName(name);
 
-        return this.project.commitChanges()
-          .then(() => this.ui.log(`Created ${fileName}.`));
-      });
+    this.project.valueConverters.add(
+      ProjectItem.text(`${fileName}.js`, this.generateSource(className))
+    );
+
+    await this.project.commitChanges();
+    await this.ui.log(`Created ${fileName}.`);
   }
 
   generateSource(className) {
     return `export class ${className}ValueConverter {
   toView(value) {
-
+    //
   }
 
   fromView(value) {
-
+    //
   }
 }
-
 `;
   }
 }
