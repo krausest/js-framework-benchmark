@@ -51,8 +51,8 @@ App(new TModel("benchmark", {
         return new TModel('swaprows', {
             onClick() {
                 const rows = this.getParent().findChild('rows');
-                const rowCount = rows.$dom.elementCount();
-                if (rowCount > 998) {
+                const elementCount = rows.$dom.elementCount();
+                if (elementCount > 998) {
                     rows.activateTarget('swap', [1, 998]);
                 }
             }
@@ -60,52 +60,38 @@ App(new TModel("benchmark", {
     },
     rows() {
         const rows = new TModel('rows', {
-            isVisible: true, 
-            domHolder: true,
-            rowTemplate() {
-                const template = document.createElement('template');
-                template.innerHTML = `
-                    <tr>
-                        <td class="col-md-1 id-cell"></td>
-                        <td class="col-md-4 label-cell"><a></a></td>
-                        <td class="col-md-1 remove-cell"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
-                        <td class="col-md-6"></td>
-                    </tr>
-                `;
-                return template;
-            },
+            rowTemplate: $Dom.createTemplate(`
+                <tr>
+                    <td class="col-md-1 id-cell"></td>
+                    <td class="col-md-4 label-cell"><a></a></td>
+                    <td class="col-md-1 remove-cell"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                    <td class="col-md-6"></td>
+                </tr>`),
             _buildData() {
                 return buildData(this._buildData);                
             },
             _createRows() {
-                const fragment = document.createDocumentFragment();
                 this.val('buildData').forEach((data, index) => {
-                    const rowClone = this.val('rowTemplate').content.cloneNode(true);
-                    rowClone.querySelector('tr').setAttribute('data-id', `${index}`);
-                    rowClone.querySelector('.id-cell').textContent = data.id;
-                    rowClone.querySelector('.label-cell a').textContent = data.label;
-
-                    fragment.appendChild(rowClone);
+                    const $tr = this.val('rowTemplate').cloneTemplate();
+                    $tr.attr('data-id', `${index}`);
+                    $tr.query('.id-cell').textContent = data.id;
+                    $tr.query('.label-cell a').textContent = data.label;
+                    this.$dom.append$Dom($tr);
                 });
-                this.$dom.appendElement(fragment);
             },
             _updateEvery10thRow() {
-                const rows = this.$dom.querySelectorAll('tr');
-
-                for (let i = 0; i < rows.length; i += 10) {
-                    const labelCell = rows[i].querySelector('.label-cell a');
-                    if (labelCell) {
-                        labelCell.textContent += ' !!!';
-                    }
+                const rowElements = this.$dom.queryAll('tr');
+                for (let i = 0; i < rowElements.length; i += 10) {
+                    rowElements[i].querySelector('.label-cell a').textContent += ' !!!';
                 }                
             },
             _swap() {
-                const row1 = this.$dom.querySelector(`[data-id="${this._swap[0]}"]`);
-                const row2 = this.$dom.querySelector(`[data-id="${this._swap[1]}"]`);
-                this.$dom.swapElements(row1, row2);
+                const rowElements = this._swap.map(id => this.$dom.query(`[data-id="${id}"]`));
+                this.$dom.swapElements(...rowElements);
             },
             onClick(target) {
                 const rowElement = target.closest('tr');
+                if (!rowElement) return;
                 if (target?.className?.endsWith('remove')) {
                     this.$dom.removeElement(rowElement); 
                 } else {
