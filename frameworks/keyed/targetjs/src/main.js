@@ -8,8 +8,7 @@ App(new TModel("benchmark", {
             onClick() {                
                 const rows = this.getParent().findChild('rows');
                 rows.removeAll();
-                rows.activateTarget('buildData', 1000);                
-                rows.activateTarget('createRows');
+                rows.activateTarget('buildData', 1000).activateTarget('createRows');
             }
         });
     },    
@@ -18,8 +17,7 @@ App(new TModel("benchmark", {
             onClick() {                
                 const rows = this.getParent().findChild('rows');
                 rows.removeAll();
-                rows.activateTarget('buildData', 10000);                
-                rows.activateTarget('createRows');
+                rows.activateTarget('buildData', 10000).activateTarget('createRows');
             }
         });
     },
@@ -27,8 +25,7 @@ App(new TModel("benchmark", {
         return new TModel('add', {
             onClick() {                
                 const rows = this.getParent().findChild('rows');
-                rows.activateTarget('buildData', 1000);                                
-                rows.activateTarget('createRows');            
+                rows.activateTarget('buildData', 1000).activateTarget('createRows');            
             }
         });
     },
@@ -36,6 +33,9 @@ App(new TModel("benchmark", {
         return new TModel('update', {
             onClick() {
                 const rows = this.getParent().findChild('rows');
+                if (!rows.val('rowElements')) {
+                    rows.activateTarget('rowElements');
+                }
                 rows.activateTarget('updateEvery10thRow');
             }
         });
@@ -71,7 +71,8 @@ App(new TModel("benchmark", {
                 return buildData(this._buildData);                
             },
             _createRows() {
-                this.val('buildData').forEach((data, index) => {
+                this.deleteTargetValue('rowElements');
+                this.prevTargetValue.forEach((data, index) => {
                     const $tr = this.val('rowTemplate').cloneTemplate();
                     $tr.attr('data-id', `${index}`);
                     $tr.query('.id-cell').textContent = data.id;
@@ -79,10 +80,12 @@ App(new TModel("benchmark", {
                     this.$dom.append$Dom($tr);
                 });
             },
+            _rowElements() {
+                return this.$dom.queryAll('tr');
+            },
             _updateEvery10thRow() {
-                const rowElements = this.$dom.queryAll('tr');
-                for (let i = 0; i < rowElements.length; i += 10) {
-                    rowElements[i].querySelector('.label-cell a').textContent += ' !!!';
+                for (let i = 0; i < this.prevTargetValue.length; i += 10) {
+                    this.prevTargetValue[i].querySelector('.label-cell a').textContent += ' !!!';
                 }                
             },
             _swap() {
