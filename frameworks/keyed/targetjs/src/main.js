@@ -33,10 +33,7 @@ App(new TModel("benchmark", {
         return new TModel('update', {
             onClick() {
                 const rows = this.getParent().findChild('rows');
-                if (!rows.val('rowElements')) {
-                    rows.activateTarget('rowElements');
-                }
-                rows.activateTarget('updateEvery10thRow');
+                rows.activateTarget('updateEvery10thLink');
             }
         });
     },
@@ -71,7 +68,7 @@ App(new TModel("benchmark", {
                 return buildData(this._buildData);                
             },
             _createRows() {
-                this.deleteTargetValue('rowElements');
+                this.deleteTargetValue('selectLinks');
                 this.prevTargetValue.forEach((data, index) => {
                     const $tr = this.val('rowTemplate').cloneTemplate();
                     $tr.attr('data-id', `${index}`);
@@ -80,13 +77,16 @@ App(new TModel("benchmark", {
                     this.$dom.append$Dom($tr);
                 });
             },
-            _rowElements() {
-                return this.$dom.queryAll('tr');
+            _selectLinks() {
+                const $rows = this.$dom.queryAll('tr');
+                const links = [];
+                for (let i = 0; i < $rows.length; i += 10) {
+                    links.push($rows[i].querySelector('.label-cell a'));
+                }
+                return links;
             },
-            _updateEvery10thRow() {
-                for (let i = 0; i < this.prevTargetValue.length; i += 10) {
-                    this.prevTargetValue[i].querySelector('.label-cell a').textContent += ' !!!';
-                }                
+            _updateEvery10thLink() {
+                this.prevTargetValue.forEach(link => link.textContent += ' !!!')              
             },
             _swap() {
                 const rowElements = this._swap.map(id => this.$dom.query(`[data-id="${id}"]`));
