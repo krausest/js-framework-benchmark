@@ -7,7 +7,7 @@ App(new TModel("benchmark", {
         return new TModel('run', { 
             onClick() {                
                 const rows = this.getParentValue('rows');
-                rows.removeAll().activateTarget('buildData', 1000).activateTarget('createRows');
+                rows.removeAll().activateTarget('buildData', 1000);
             }
         });
     },    
@@ -15,7 +15,7 @@ App(new TModel("benchmark", {
         return new TModel('runlots', {
             onClick() {                
                 const rows = this.getParentValue('rows');
-                rows.removeAll().activateTarget('buildData', 10000).activateTarget('createRows');
+                rows.removeAll().activateTarget('buildData', 10000);
             }
         });
     },
@@ -23,7 +23,7 @@ App(new TModel("benchmark", {
         return new TModel('add', {
             onClick() {                
                 const rows = this.getParentValue('rows');
-                rows.activateTarget('buildData', 1000).activateTarget('createRows');            
+                rows.activateTarget('buildData', 1000);            
             }
         });
     },
@@ -31,7 +31,7 @@ App(new TModel("benchmark", {
         return new TModel('update', {
             onClick() {
                 const rows = this.getParentValue('rows');
-                rows.activateTarget('selectLinks').activateTarget('updateEvery10thLink');
+                rows.activateTarget('selectEvery10thLink');
             }
         });
     },
@@ -65,7 +65,7 @@ App(new TModel("benchmark", {
             _buildData() {
                 return buildData(this._buildData);                
             },
-            _createRows() {
+            _createRows$() {
                 this.prevTargetValue.forEach((data, index) => {
                     const $tr = this.val('rowTemplate').cloneTemplate();
                     $tr.attr('data-id', `${index}`);
@@ -74,7 +74,7 @@ App(new TModel("benchmark", {
                     this.$dom.append$Dom($tr);
                 });
             },
-            _selectLinks() {
+            _selectEvery10thLink() {
                 if (!this.isPrevTargetUpdated()) {
                     return (this.val(this.key) || []);
                 }
@@ -85,7 +85,7 @@ App(new TModel("benchmark", {
                 }
                 return links;
             },
-            _updateEvery10thLink() {
+            _updateLinks$() {
                 this.prevTargetValue.forEach(link => link.textContent += ' !!!');              
             },
             _swap() {
