@@ -4,7 +4,8 @@
   "description": "Benchmark for targetjs framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "targetj",
-    "frameworkHomeURL": "https://targetjs.io"        
+    "frameworkHomeURL": "https://targetjs.io",
+    "issues": [772]        
   },
   "scripts": {
     "build-dev": "webpack --mode development --watch",
