@@ -1,0 +1,26 @@
+{
+  "name": "js-framework-benchmark-keyed-mettle",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Benchmark for mettle.js framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "mettle",
+    "frameworkHomeURL": "https://maomincoding.github.io/mettle-doc/"
+  },
+  "scripts": {
+    "dev": "webpack --watch",
+    "build-prod": "webpack --mode production"
+  },
+  "devDependencies": {
+    "@babel/core": "7.21.0",
+    "babel-loader": "9.1.2",
+    "babel-plugin-jsx-to-mettle": "0.1.2",
+    "babel-plugin-mettle": "0.1.2",
+    "terser-webpack-plugin": "5.3.7",
+    "webpack": "5.76.1",
+    "webpack-cli": "5.0.1"
+  },
+  "dependencies": {
+    "mettle": "0.2.1"
+  }
+}
