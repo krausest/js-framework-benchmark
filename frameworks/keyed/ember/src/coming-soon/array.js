@@ -13,7 +13,7 @@
 // @ts-expect-error
 import { consumeTag, createUpdatableTag, dirtyTag } from '@glimmer/validator';
 
-const ARRAY_GETTER_METHODS = new Set<string | symbol | number>([
+const ARRAY_GETTER_METHODS = new Set([
   Symbol.iterator,
   'concat',
   'entries',
@@ -39,13 +39,10 @@ const ARRAY_GETTER_METHODS = new Set<string | symbol | number>([
 
 // For these methods, `Array` itself immediately gets the `.length` to return
 // after invoking them.
-const ARRAY_WRITE_THEN_READ_METHODS = new Set<string | symbol>([
-  'fill',
-  'push',
-  'unshift',
-]);
+const ARRAY_WRITE_THEN_READ_METHODS =
+  new Set(['fill', 'push', 'unshift']);
 
-function convertToInt(prop: number | string | symbol): number | null {
+function convertToInt(prop) {
   if (typeof prop === 'symbol') return null;
 
   const num = Number(prop);
@@ -56,45 +53,13 @@ function convertToInt(prop: number | string | symbol): number | null {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export class TrackedArray<T = unknown> {
-  /**
-   * Creates an array from an iterable object.
-   * @param iterable An iterable object to convert to an array.
-   */
-  static from<T>(iterable: Iterable<T> | ArrayLike<T>): TrackedArray<T>;
-
-  /**
-   * Creates an array from an iterable object.
-   * @param iterable An iterable object to convert to an array.
-   * @param mapfn A mapping function to call on every element of the array.
-   * @param thisArg Value of 'this' used to invoke the mapfn.
-   */
-  static from<T, U>(
-    iterable: Iterable<T> | ArrayLike<T>,
-    mapfn: (v: T, k: number) => U,
-    thisArg?: unknown
-  ): TrackedArray<U>;
-
-  static from<T, U>(
-    iterable: Iterable<T> | ArrayLike<T>,
-    mapfn?: (v: T, k: number) => U,
-    thisArg?: unknown
-  ): TrackedArray<T> | TrackedArray<U> {
-    return mapfn
-      ? new TrackedArray(Array.from(iterable, mapfn, thisArg))
-      : new TrackedArray(Array.from(iterable));
-  }
-
-  static of<T>(...arr: T[]): TrackedArray<T> {
-    return new TrackedArray(arr);
-  }
-
-  constructor(arr: T[] = []) {
+export class TrackedArray {
+  constructor(arr = []) {
     const clone = arr.slice();
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
 
-    const boundFns = new Map<string | symbol, (...args: any[]) => any>();
+    const boundFns = new Map();
 
     /**
       Flag to track whether we have *just* intercepted a call to `.push()` or
@@ -145,8 +110,7 @@ export class TrackedArray<T = unknown> {
           if (fn === undefined) {
             fn = (...args) => {
               consumeTag(self.#collection);
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-              return (target as any)[prop](...args);
+              return target[prop](...args);
             };
 
             boundFns.set(prop, fn);
@@ -155,13 +119,11 @@ export class TrackedArray<T = unknown> {
           return fn;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-        return (target as any)[prop];
+        return target[prop];
       },
 
       set(target, prop, value /*, _receiver */) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-        (target as any)[prop] = value;
+        target[prop] = value;
 
         const index = convertToInt(prop);
 
@@ -178,14 +140,14 @@ export class TrackedArray<T = unknown> {
       getPrototypeOf() {
         return TrackedArray.prototype;
       },
-    }) as TrackedArray<T>;
+    });
   }
 
   #collection = createUpdatableTag();
 
-  #storages = new Map<number, ReturnType<typeof createUpdatableTag>>();
+  #storages = new Map();
 
-  #readStorageFor(index: number) {
+  #readStorageFor(index) {
     let storage = this.#storages.get(index);
 
     if (storage === undefined) {
@@ -196,7 +158,7 @@ export class TrackedArray<T = unknown> {
     consumeTag(storage);
   }
 
-  #dirtyStorageFor(index: number): void {
+  #dirtyStorageFor(index) {
     const storage = this.#storages.get(index);
 
     if (storage) {
@@ -209,19 +171,6 @@ export class TrackedArray<T = unknown> {
     this.#storages.clear();
   }
 }
-
-// This rule is correct in the general case, but it doesn't understand
-// declaration merging, which is how we're using the interface here. This says
-// `TrackedArray` acts just like `Array<T>`, but also has the properties
-// declared via the `class` declaration above -- but without the cost of a
-// subclass, which is much slower that the proxied array behavior. That is: a
-// `TrackedArray` *is* an `Array`, just with a proxy in front of accessors and
-// setters, rather than a subclass of an `Array` which would be de-optimized by
-// the browsers.
-//
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface TrackedArray<T = unknown> extends Array<T> {}
 
 // Ensure instanceof works correctly
 Object.setPrototypeOf(TrackedArray.prototype, Array.prototype);

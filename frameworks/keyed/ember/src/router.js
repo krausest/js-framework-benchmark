@@ -1,8 +1,9 @@
 import EmberRouter from '@ember/routing/router';
+import config from '#config';
 
 export default class Router extends EmberRouter {
-  location = 'history';
-  rootURL = '/frameworks/keyed/ember/';
+  location = config.locationType;
+  rootURL = config.rootURL;
 }
 
 Router.map(function () {

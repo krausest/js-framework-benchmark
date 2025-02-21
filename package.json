@@ -43,6 +43,7 @@
   "license": "ISC",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "dependencies": {
+    "@esbuild/linux-x64": "0.23.1",
     "adm-zip": "^0.5.16",
     "commander": "^12.1.0",
     "cross-env": "^7.0.3",

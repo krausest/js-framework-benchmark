@@ -5,6 +5,7 @@
 *.yaml
 *.yml
 *.md
+package-lock.json
 
 # unconventional js
 /blueprints/*/files/

@@ -3,11 +3,6 @@
 # NOTE: the tooling will not detect us as a benchable implementation
 # unless there is a package-lock.json
 #
-# We're using pnpm to interact with js-framework-benchmark
-# instead of npm because pnpm (at least on my machine)
-# tends to work better.
-# (and is stricter)
-#
 # At the very least this script documents
 # how to interact with the jsfb packages...
 # at least in one point in time.
@@ -38,11 +33,13 @@ case "$1" in
   start)
     # https://github.com/krausest/js-framework-benchmark/tree/chrome110?tab=readme-ov-file#22-start-installing
     cd ../../../
-    pnpm install
+    npm install
+    # pnpm install
     # They are missing a dependency
-    pnpm add @esbuild/linux-x64@0.23.1
-    pnpm rebuild
-    pnpm start
+    # pnpm add @esbuild/linux-x64@0.23.1
+    # pnpm rebuild
+    # pnpm start
+    npm start
   ;;
 
   # 3. Verify

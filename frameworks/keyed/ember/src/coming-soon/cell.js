@@ -45,6 +45,6 @@ class Cell {
   }
 
   update(updater) {
-    this.set(updater(this.read()));
+    this.set(updater(this.#value));
   }
 }

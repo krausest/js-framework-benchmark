@@ -14,12 +14,14 @@
     "lint:hbs:fix": "ember-template-lint . --fix",
     "lint:js": "eslint . --cache",
     "lint:js:fix": "eslint . --fix",
+    "dev": "VITE_NO_JSBF=true vite",
     "start": "concurrently \"npm:start:jsbf\" \"npm:start:watch\" --prefixColors auto",
     "start:jsbf": "./checks.sh start",
     "start:watch": "npm run build-prod; npm exec vite build -- --watch"
   },
   "type": "module",
   "imports": {
+    "#config": "./src/config.js",
     "#soon/*": "./src/coming-soon/*",
     "#utils": "./src/utils.js",
     "#routes/*": "./src/routes/*",
@@ -27,7 +29,7 @@
   },
   "exports": {
     "./tests/*": "./tests/*",
-    "./*": "./app/*"
+    "./*": "./src/*"
   },
   "js-framework-benchmark": {
     "frameworkVersion": "6.4.0",
@@ -45,14 +47,13 @@
     "@babel/plugin-transform-runtime": "7.26.9",
     "@babel/runtime": "7.26.9",
     "@ember/optional-features": "2.2.0",
-    "@embroider/macros": "alpha",
-    "@embroider/compat": "alpha",
-    "@embroider/core": "alpha",
-    "@embroider/vite": "alpha",
+    "@embroider/macros": "1.17.0-alpha.5",
+    "@embroider/core": "4.0.0-alpha.6",
+    "@embroider/vite": "1.0.0-alpha.6",
     "@rollup/plugin-babel": "6.0.4",
     "babel-plugin-ember-template-compilation": "2.3.0",
     "concurrently": "9.1.2",
-    "ember-eslint": "0.1.0",
+    "ember-eslint": "0.1.1",
     "ember-template-lint": "6.1.0",
     "eslint": "9.20.1",
     "prettier": "3.5.1",
@@ -61,12 +62,12 @@
   },
   "pnpm": {
     "overrides": {
-      "@embroider/macros": "alpha",
+      "@embroider/macros": "1.17.0-alpha.5",
       "@glimmer/component": "2.0.0"
     }
   },
   "overrides": {
-    "@embroider/macros": "alpha",
+    "@embroider/macros": "1.17.0-alpha.5",
     "@glimmer/component": "2.0.0"
   },
   "engines": {
