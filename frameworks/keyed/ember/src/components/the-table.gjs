@@ -9,7 +9,7 @@ export class TheTable extends Component {
     <table class="table table-hover table-striped test-data">
       <tbody>
         {{#each this.state.data as |row|}}
-          <tr class={{if (this.state.isSelected row) "danger" ""}}><td
+          <tr class={{if (this.state.isSelected row) "danger"}}><td
               class="col-md-1"
             >{{row.id}}</td><td class="col-md-4"><a
                 onclick={{fn this.state.select row}}
