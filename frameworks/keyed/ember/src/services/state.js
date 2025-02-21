@@ -6,14 +6,14 @@ import { run, runLots, add, update, swapRows, deleteRow } from '#utils';
 
 export default class State extends Service {
   data = new TrackedArray();
-  id = cell(1);
+  id = 1;
   selected = cell(undefined);
 
   create = () => {
-    let id = this.id.read();
+    let id = this.id;
     const result = run(id);
 
-    this.id.set(result.id);
+    this.id = result.id;
     this.data.length = 0;
 
     this.data.push(...result.data);
@@ -21,9 +21,9 @@ export default class State extends Service {
   };
 
   add = () => {
-    let result = add(this.id.read());
+    let result = add(this.id);
     this.data.push(...result.data);
-    this.id.set(result.id);
+    this.id = result.id;
   };
 
   update = () => {
@@ -35,7 +35,7 @@ export default class State extends Service {
 
     this.data.length = 0;
     this.data.push(...result.data);
-    this.id.set(result.id);
+    this.id = result.id;
     this.selected.set(undefined);
   };
 

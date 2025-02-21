@@ -20,66 +20,65 @@ const updateData = (data, mod = 10) => {
   }
   return data;
 };
+var adjectives = [
+  'pretty',
+  'large',
+  'big',
+  'small',
+  'tall',
+  'short',
+  'long',
+  'handsome',
+  'plain',
+  'quaint',
+  'clean',
+  'elegant',
+  'easy',
+  'angry',
+  'crazy',
+  'helpful',
+  'mushy',
+  'odd',
+  'unsightly',
+  'adorable',
+  'important',
+  'inexpensive',
+  'cheap',
+  'expensive',
+  'fancy',
+];
+
+var colours = [
+  'red',
+  'yellow',
+  'blue',
+  'green',
+  'pink',
+  'brown',
+  'purple',
+  'brown',
+  'white',
+  'black',
+  'orange',
+];
+
+var nouns = [
+  'table',
+  'chair',
+  'house',
+  'bbq',
+  'desk',
+  'car',
+  'pony',
+  'cookie',
+  'sandwich',
+  'burger',
+  'pizza',
+  'mouse',
+  'keyboard',
+];
 
 export const buildData = (id, count = 1000) => {
-  var adjectives = [
-    'pretty',
-    'large',
-    'big',
-    'small',
-    'tall',
-    'short',
-    'long',
-    'handsome',
-    'plain',
-    'quaint',
-    'clean',
-    'elegant',
-    'easy',
-    'angry',
-    'crazy',
-    'helpful',
-    'mushy',
-    'odd',
-    'unsightly',
-    'adorable',
-    'important',
-    'inexpensive',
-    'cheap',
-    'expensive',
-    'fancy',
-  ];
-
-  var colours = [
-    'red',
-    'yellow',
-    'blue',
-    'green',
-    'pink',
-    'brown',
-    'purple',
-    'brown',
-    'white',
-    'black',
-    'orange',
-  ];
-
-  var nouns = [
-    'table',
-    'chair',
-    'house',
-    'bbq',
-    'desk',
-    'car',
-    'pony',
-    'cookie',
-    'sandwich',
-    'burger',
-    'pizza',
-    'mouse',
-    'keyboard',
-  ];
-
   var data = [];
 
   for (var i = 0; i < count; i++)
