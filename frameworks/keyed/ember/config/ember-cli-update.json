@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "packages": [
+    {
+      "name": "@embroider/app-blueprint",
+      "version": "0.19.0",
+      "blueprints": [
+        {
+          "name": "@embroider/app-blueprint",
+          "isBaseBlueprint": true,
+          "options": ["--package-manager pnpm"]
+        }
+      ]
+    }
+  ]
+}
