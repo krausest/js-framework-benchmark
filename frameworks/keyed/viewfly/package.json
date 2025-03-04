@@ -23,8 +23,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "@viewfly/core": "^1.1.2",
-    "@viewfly/platform-browser": "^1.1.5"
+    "@viewfly/core": "^1.2.3",
+    "@viewfly/platform-browser": "^1.2.3"
   },
   "devDependencies": {
     "html-webpack-plugin": "^5.6.3",
