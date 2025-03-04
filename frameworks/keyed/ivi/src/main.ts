@@ -65,6 +65,7 @@ interface RowProps {
 const Row = component<RowProps>((c) => {
   const onSelect = () => { dispatch(c, { type: ActionType.Select, entry: getProps(c).entry }); };
   const onRemove = () => { dispatch(c, { type: ActionType.Remove, entry: getProps(c).entry }); };
+
   return ({ entry, selected }) => html`
     <tr class=${selected === true ? "danger" : ""}>
       <td class="col-md-1" .textContent=${entry.id}/>
@@ -81,9 +82,11 @@ const Row = component<RowProps>((c) => {
   `;
 });
 
-const Button = (text: string, id: string, onClick: () => void) => /* preventClone */ html`
+const Button = (text: string, id: string, onClick: () => void) => html`
   <div class="col-sm-6 smallpad">
-    <button class="btn btn-primary btn-block" type="button" id=${id} @click=${onClick} .textContent=${text}/>
+    <button class="btn btn-primary btn-block" type="button" id=${id} @click=${onClick}>
+      ${text}
+    </button>
   </div>
 `;
 
@@ -91,18 +94,20 @@ const App = component((c) => {
   const [_state, _dispatch] = useReducer(c, INITIAL_STATE, appStateReducer);
 
   const onDispatch = (ev: CustomEvent<Action>) => { _dispatch(ev.detail); };
+
   const buttons = [
-    Button("Create 1,000 rows", "run", () => { _dispatch({ type: ActionType.Run }); }),
-    Button("Create 10,000 rows", "runlots", () => { _dispatch({ type: ActionType.RunLots }); }),
-    Button("Append 1,000 rows", "add", () => { _dispatch({ type: ActionType.Add }); }),
-    Button("Update every 10th row", "update", () => { _dispatch({ type: ActionType.Update }); }),
-    Button("Clear", "clear", () => { _dispatch({ type: ActionType.Clear }); }),
-    Button("Swap Rows", "swaprows", () => { _dispatch({ type: ActionType.SwapRows }); }),
+    Button("Create 1,000 rows",     "run",      () => { _dispatch({ type: ActionType.Run      }); }),
+    Button("Create 10,000 rows",    "runlots",  () => { _dispatch({ type: ActionType.RunLots  }); }),
+    Button("Append 1,000 rows",     "add",      () => { _dispatch({ type: ActionType.Add      }); }),
+    Button("Update every 10th row", "update",   () => { _dispatch({ type: ActionType.Update   }); }),
+    Button("Clear",                 "clear",    () => { _dispatch({ type: ActionType.Clear    }); }),
+    Button("Swap Rows",             "swaprows", () => { _dispatch({ type: ActionType.SwapRows }); }),
   ];
 
   return () => {
     const { data, selected } = _state();
-    return /* preventClone */ html`
+
+    return html`
       <div class="container">
         <div class="jumbotron">
           <div class="row">
@@ -117,10 +122,9 @@ const App = component((c) => {
           </div>
         </div>
         <table class="table table-hover table-striped test-data" @dispatch=${onDispatch}>
-          ${data.length
-            ? html`<tbody>${List(data, getEntryId, (entry) => Row({ entry, selected: selected === entry.id }))}</tbody>`
-            : html`<tbody/>`
-          }
+          <tbody>
+            ${List(data, getEntryId, (entry) => Row({ entry, selected: selected === entry.id }))}
+          </tbody>
         </table>
         <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"/>
       </div>
