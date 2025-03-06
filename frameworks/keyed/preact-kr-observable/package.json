@@ -11,7 +11,7 @@
     "dev": "rollup -c -w",
     "build-prod": "rollup -c --environment production"
   },
-  "author": "Maxim Molochkov",
+  "author": "Roman Constantin",
   "license": "Apache-2.0",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {
@@ -19,7 +19,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "kr-observable": "1.0.30",
+    "kr-observable": "1.0.3-5.beta-9",
     "preact": "^10.25.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
