@@ -18,6 +18,6 @@
   },
   "type": "module",
   "dependencies": {
-    "sprae": "^11.0.1"
+    "sprae": "^11.0.5"
   }
 }
