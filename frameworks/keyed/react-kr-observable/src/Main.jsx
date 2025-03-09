@@ -20,17 +20,13 @@ const Button = ({ children, id, onClick }) => {
 };
 
 const RowList = observer(function list() {
-  return (
-    <Fragment>
-      {rowsStore.rows.map(row => (
+  return rowsStore.rows.map(row => (
           <Row
             key={row.id}
             data={row}
           />
         )
-      )}
-    </Fragment>
-  )
+      )
 })
 
 

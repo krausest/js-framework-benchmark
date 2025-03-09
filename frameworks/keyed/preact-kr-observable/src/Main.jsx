@@ -40,7 +40,7 @@ function Main() {
       <div className="jumbotron">
         <div className="row">
           <div className="col-md-6">
-            <h1>React + kr-observable</h1>
+            <h1>Preact + kr-observable</h1>
           </div>
 
           <div className="col-md-6">

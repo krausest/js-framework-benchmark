@@ -6,11 +6,12 @@ export const Row = observer(function row({ data }) {
     <tr className={data.selected ? 'danger' : ''}>
       <td className="col-md-1">{data.id}</td>
       <td className="col-md-4">
-        <a onClick={() => rowsStore.select(data.id)}>{data.label}</a>
+        <a id={data.id} onClick={rowsStore.select}>{data.label}</a>
       </td>
       <td className="col-md-1">
-        <a onClick={() => rowsStore.delete(data.id)}>
+        <a onClick={rowsStore.delete}>
           <span
+            id={data.id}
             className="glyphicon glyphicon-remove"
             aria-hidden="true"
           ></span>
