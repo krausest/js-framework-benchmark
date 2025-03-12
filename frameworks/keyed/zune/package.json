@@ -2,7 +2,7 @@
   "name": "js-framework-benchmark-zune",
   "version": "1.0.0",
   "type": "module",
-  "main": "dist/core/main.js",
+  "main": "src/core/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "zune"
   },

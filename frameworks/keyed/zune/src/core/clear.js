@@ -1,0 +1,1 @@
+export default(()=>{if(isNum(coreData.cacheTime)){let e=Math.floor(Date.now()/1e3)-coreData.cacheTime;Object.keys(coreData.clear).forEach(r=>{if(isObj(coreData.clear[r]))for(let a in coreData.clear[r])coreData.clear[r].hasOwnProperty(a)&&coreData[r].hasOwnProperty(a)&&coreData.clear[r][a]<e&&(delete coreData.clear[r][a],delete coreData[r][a])})}});
