@@ -1,0 +1,83 @@
+{
+  "name": "results",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "author": "NullVoxPopuli",
+  "scripts": {
+    "build-prod": "vite build",
+    "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\" --prefixColors auto",
+    "format": "prettier . --write",
+    "lint:prettier": "prettier . --check",
+    "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\" --prefixColors auto && pnpm format",
+    "lint:hbs": "ember-template-lint .",
+    "lint:hbs:fix": "ember-template-lint . --fix",
+    "lint:js": "eslint . --cache",
+    "lint:js:fix": "eslint . --fix",
+    "dev": "VITE_NO_JSBF=true vite",
+    "start": "concurrently \"npm:start:jsbf\" \"npm:start:watch\" --prefixColors auto",
+    "start:jsbf": "./checks.sh start",
+    "start:watch": "npm run build-prod; npm exec vite build -- --watch"
+  },
+  "type": "module",
+  "imports": {
+    "#config": "./src/config.js",
+    "#soon/*": "./src/coming-soon/*",
+    "#utils": "./src/utils.js",
+    "#routes/*": "./src/routes/*",
+    "#components/*": "./src/components/*"
+  },
+  "exports": {
+    "./tests/*": "./tests/*",
+    "./*": "./src/*"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersion": "6.4.0",
+    "frameworkHomeURL": "https://emberjs.com/"
+  },
+  "packageManager": "npm@8",
+  "dependencies": {
+    "@glimmer/component": "2.0.0",
+    "@glimmer/tracking": "1.1.2",
+    "ember-resolver": "13.1.0",
+    "ember-source": "6.4.0-alpha.3"
+  },
+  "devDependencies": {
+    "@babel/core": "7.26.9",
+    "@babel/plugin-transform-runtime": "7.26.9",
+    "@babel/runtime": "7.26.9",
+    "@ember/optional-features": "2.2.0",
+    "@embroider/macros": "1.17.0-alpha.5",
+    "@embroider/core": "4.0.0-alpha.6",
+    "@embroider/vite": "1.0.0-alpha.6",
+    "@rollup/plugin-babel": "6.0.4",
+    "babel-plugin-ember-template-compilation": "2.3.0",
+    "concurrently": "9.1.2",
+    "ember-eslint": "0.1.1",
+    "ember-template-lint": "6.1.0",
+    "eslint": "9.20.1",
+    "prettier": "3.5.1",
+    "prettier-plugin-ember-template-tag": "2.0.4",
+    "vite": "6.1.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "@embroider/macros": "1.17.0-alpha.5",
+      "@glimmer/component": "2.0.0"
+    }
+  },
+  "overrides": {
+    "@embroider/macros": "1.17.0-alpha.5",
+    "@glimmer/component": "2.0.0"
+  },
+  "engines": {
+    "node": ">= 18"
+  },
+  "ember": {
+    "edition": "octane"
+  },
+  "ember-addon": {
+    "type": "app",
+    "version": 2
+  }
+}
