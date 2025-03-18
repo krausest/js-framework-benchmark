@@ -65,13 +65,11 @@ const random = (max) => Math.round(Math.random() * 1000) % max;
 export const buildData = (count) => {
   const data = [];
   for (let i = 0; i < count; i++) {
-    const d = {
+    data.push(makeObservable({
       id: id++,
       label: `${adjectives[random(adjectives.length)]} ${colours[random(colours.length)]} ${nouns[random(nouns.length)]}`,
       selected: false
-    }
-
-    data.push(makeObservable(d, ['id']))
+    }, ['id']))
   }
   return data;
 };

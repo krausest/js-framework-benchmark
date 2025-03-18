@@ -2,6 +2,7 @@ import { Observable } from 'kr-observable';
 import { buildData } from './data';
 
 export class RowsStore extends Observable {
+  static shallow = ['rows']
   rows = [];
 
   delete(e) {
@@ -45,5 +46,7 @@ export class RowsStore extends Observable {
     }
   };
 }
+
+
 
 export const rowsStore = new RowsStore()

@@ -4,6 +4,7 @@ import { Row } from './Row';
 import { rowsStore } from './RowsStore';
 import { Fragment } from "react";
 
+
 const Button = ({ children, id, onClick }) => {
   return (
     <div className="col-sm-6 smallpad">
@@ -28,7 +29,6 @@ const RowList = observer(function list() {
         )
       )
 })
-
 
 function Main() {
   return (
