@@ -30,8 +30,6 @@ const RowList = observer(function list() {
       )
 })
 
-
-
 function Main() {
   return (
     <div className="container">
