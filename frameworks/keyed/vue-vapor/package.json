@@ -13,7 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "https://pkg.pr.new/vue@5fdc953"
+    "vue": "https://pkg.pr.new/vue@eeab9c4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "https://pkg.pr.new/@vitejs/plugin-vue@c156992",
