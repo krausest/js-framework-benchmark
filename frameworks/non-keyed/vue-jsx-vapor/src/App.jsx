@@ -109,7 +109,7 @@ export default defineComponent({
             <tr v-for={ctx in rows.value} class={{ danger: ctx.id === selected.value }} data-label={ctx.label.value}>
               <td class="col-md-1">{ctx.id}</td>
               <td class="col-md-4">
-                <a onClick={() => select(ctx.id)}>{ctx.label.value}</a>
+                <a onClick={() => select(ctx.id)} v-text={ctx.label.value}></a>
               </td>
               <td class="col-md-1">
                 <a onClick={() => remove(ctx.id)}>
