@@ -23,7 +23,8 @@ const plugins = [
     entries:[
       { find: 'react', replacement: 'preact/compat' },
       { find: 'react-dom', replacement: 'preact/compat' },
-      { find: 'react/jsx-runtime', replacement: 'preact/compat' }
+      { find: 'react/jsx-runtime', replacement: 'preact/compat' },
+      { find: 'use-sync-external-store', replacement: 'preact/compat' }
     ]
   }),
   nodeResolve({ extensions: ['.js', '.jsx'] }),
