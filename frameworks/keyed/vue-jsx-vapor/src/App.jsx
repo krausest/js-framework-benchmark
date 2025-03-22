@@ -1,16 +1,13 @@
-import { defineComponent, ref, shallowRef } from "vue/vapor";
+import { defineComponent, ref, shallowRef, triggerRef } from "vue";
 import { buildData } from "./data";
 export default defineComponent({
   setup() {
     const selected = ref();
     const rows = shallowRef([]);
 
-    function setRows(update = rows.value.slice()) {
-      rows.value = update;
-    }
-
     function add() {
-      rows.value = rows.value.concat(buildData(1000));
+      rows.value.push(...buildData(1000));
+      triggerRef(rows);
     }
 
     function remove(id) {
@@ -18,7 +15,7 @@ export default defineComponent({
         rows.value.findIndex((d) => d.id === id),
         1
       );
-      setRows();
+      triggerRef(rows);
     }
 
     function select(id) {
@@ -26,25 +23,24 @@ export default defineComponent({
     }
 
     function run() {
-      setRows(buildData());
+      rows.value = buildData();
       selected.value = undefined;
     }
 
     function update() {
       const _rows = rows.value;
       for (let i = 0; i < _rows.length; i += 10) {
-        _rows[i].label += " !!!";
+        _rows[i].label.value += " !!!";
       }
-      setRows();
     }
 
     function runLots() {
-      setRows(buildData(10000));
+      rows.value=buildData(10000);
       selected.value = undefined;
     }
 
     function clear() {
-      setRows([]);
+      rows.value= [];
       selected.value = undefined;
     }
 
@@ -55,7 +51,7 @@ export default defineComponent({
         const d998 = _rows[998];
         _rows[1] = d998;
         _rows[998] = d1;
-        setRows();
+        triggerRef(rows);
       }
     }
 
@@ -64,7 +60,7 @@ export default defineComponent({
         <div class="jumbotron">
           <div class="row">
             <div class="col-md-6">
-              <h1>Vue.js JSX Vapor (keyed)</h1>
+              <h1>Vue JSX Vapor (keyed)</h1>
             </div>
 
             <div class="col-md-6">
@@ -110,22 +106,18 @@ export default defineComponent({
 
         <table class="table table-hover table-striped test-data">
           <tbody>
-            {rows.value.map((ctx) => {
-              return (
-                <tr key={ctx.id} class={{ danger: ctx.id === selected.value }} data-label={ctx.label}>
-                  <td class="col-md-1">{ctx.id}</td>
-                  <td class="col-md-4">
-                    <a onClick={() => select(ctx.id)}>{ctx.label}</a>
-                  </td>
-                  <td class="col-md-1">
-                    <a onClick={() => remove(ctx.id)}>
-                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </a>
-                  </td>
-                  <td class="col-md-6"></td>
-                </tr>
-              );
-            })}
+            <tr v-for={ctx in rows.value} key={ctx.id} class={{ danger: ctx.id === selected.value }} data-label={ctx.label.value}>
+              <td class="col-md-1">{ctx.id}</td>
+              <td class="col-md-4">
+                <a onClick={() => select(ctx.id)} v-text={ctx.label.value}></a>
+              </td>
+              <td class="col-md-1">
+                <a onClick={() => remove(ctx.id)}>
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </a>
+              </td>
+              <td class="col-md-6"></td>
+            </tr>
           </tbody>
         </table>
         <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
