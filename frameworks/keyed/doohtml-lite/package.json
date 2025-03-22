@@ -6,7 +6,7 @@
     "js-framework-benchmark": {
       "frameworkVersion": "",
       "frameworkHomeURL": "https://doohtml.com",
-      "issues": [772, 1139]
+      "issues": [772]
     },
     "scripts": {
       "dev": "exit 0",
