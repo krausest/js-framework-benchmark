@@ -2,13 +2,7 @@ function _random(max) {
   return Math.round(Math.random() * 1000) % max;
 }
 
-export const createRandomNRowsImpl = function(
-  adjectives,
-  colours,
-  nouns,
-  count,
-  lastId
-) {
+export const createRandomNRowsImpl = function (adjectives, colours, nouns, count, lastId) {
   var data = [];
   for (var i = 0; i < count; i++)
     data.push({
@@ -18,7 +12,7 @@ export const createRandomNRowsImpl = function(
         " " +
         colours[_random(colours.length)] +
         " " +
-        nouns[_random(nouns.length)]
+        nouns[_random(nouns.length)],
     });
   return data;
 };
