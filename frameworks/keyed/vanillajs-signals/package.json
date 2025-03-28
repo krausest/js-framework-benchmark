@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-vanillajs-signals",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Vanilla.JS with tc39 signals demo",
   "main": "index.js",
   "js-framework-benchmark": {
@@ -13,9 +13,10 @@
     ]
   },
   "scripts": {
-    "start": "michi-server --start",
-    "dev": "michi-server --build --env=DEVELOPMENT",
-    "build-prod": "michi-server --build"
+    "dev": "exit 0",
+    "build-esbuild": "esbuild src/index.js --bundle --legal-comments=none --outfile=dist/bundle.js",
+    "build-gcc": "google-closure-compiler --js dist/bundle.js --js_output_file public/index.js --output_wrapper %output% --compilation_level ADVANCED_OPTIMIZATIONS --language_in ECMASCRIPT_NEXT --language_out ECMASCRIPT_NEXT",
+    "build-prod": "npm run build-esbuild && npm run build-gcc"
   },
   "repository": {
     "type": "git",
@@ -30,12 +31,10 @@
     "url": "https://github.com/krausest/js-framework-benchmark/issues"
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
-  "devDependencies": {
-    "@michijs/dev-server": "0.7.24",
-    "@michijs/tsconfig": "0.0.4"
-  },
   "dependencies": {
-    "signal-polyfill": "0.2.1",
-    "signal-utils": "0.20.0"
+    "esbuild": "0.25.1",
+    "google-closure-compiler": "20240317.0.0",
+    "signal-polyfill": "0.2.2",
+    "signal-utils": "0.21.1"
   }
 }
