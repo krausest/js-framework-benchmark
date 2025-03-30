@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DooHTML - Lite</title>
   <link rel="shortcut icon" type="image/png" href="./favicon.png" />
-  <link href="/css/currentStyle.css" rel="preload" as="style"/>
-  <link href="/css/currentStyle.css" rel="stylesheet"/>
+  <link href="dist/css/currentStyle.css" rel="preload" as="style"/>
+  <link href="dist/css/currentStyle.css" rel="stylesheet"/>
   <script type="module" src="./src/main.js" defer ></script>
   <template id="table">
     <table class="table table-hover table-striped test-data">
@@ -20,7 +20,7 @@
         <div class="jumbotron">
             <div class="row">
                 <div class="col-md-6">
-                    <h1>DooHTML - Lite</h1><span class="ver"></span>
+                    <h1>DooHTML</h1><span class="ver"></span><span class="ver2"></span>
                 </div>
                 <div class="col-md-6">
                   <div class="row">
@@ -47,6 +47,7 @@
           </div>
       </div>
       <doo-table
+        context="document"
         bind="data"
         data-key="key"
         data-has-html="false"
