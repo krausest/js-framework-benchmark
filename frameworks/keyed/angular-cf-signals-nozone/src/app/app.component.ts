@@ -1,4 +1,3 @@
-import { NgFor } from "@angular/common";
 import { ChangeDetectionStrategy, Component, signal } from "@angular/core";
 
 const adjectives = [
@@ -65,7 +64,6 @@ interface Data {
 @Component({
     selector: "app-root",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor],
     templateUrl: "./app.component.html"
 })
 export class AppComponent {
