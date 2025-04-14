@@ -1,7 +1,6 @@
 'use strict'
 
-import {render, useTemplate, append, version} from '../lib/doohtml.lite.min.js';
-
+import {render, createTemplate, append, version} from '../lib/doohtml.mjs';
 const _random = max => Math.random() * max | 0
 
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"]
@@ -32,8 +31,8 @@ class Main  {
 	}
 
 	async init() {
-		this.tbody  = await useTemplate('table', [])
-		render(this.rows, this.tbody)
+		this.tbody  = await createTemplate('table', [])
+		render(this.tbody, this.rows)
 		this.firstDataBindNode = document.querySelector('#tbody')
 		this.dooAfterRender()
 	}	
@@ -90,27 +89,26 @@ class Main  {
 		this.select(undefined)
 		if (this.rows.length) this.clear()
 		this.rows = this.buildData()
-		render(this.rows, this.tbody)
+		render(this.tbody, this.rows)
 	}
 
 	add() {
 		let start = this.rows.length
 		this.rows = this.rows.concat(this.buildData())
-		append(this.rows, this.tbody, start)
+		append(this.tbody, this.rows, start)
 	}   
 
 	runLots() {
 		this.select(undefined)
 		if (this.rows.length) this.clear()
 		this.rows = this.buildData(DEFAULT_SIZE_RUN_LOTS)
-		render(this.rows, this.tbody)
+		render(this.tbody, this.rows)
 	}
 
 	update() {
 		const len = this.rows.length
 		for (let i = 0; i < len; i += 10) {
-			this.rows[i].label += BANG
-			this.firstDataBindNode.childNodes[i].querySelector('a').firstChild.nodeValue = this.rows[i].label
+			this.firstDataBindNode.childNodes[i].querySelector('a').append(BANG)
 		}
 	}
 
@@ -129,14 +127,6 @@ class Main  {
 		}	
 	}
 
-	toggleSelect(row) {
-		if (row) {
-			row.classList.toggle('danger')
-			if (row.classList.contains('danger')) {
-				this.selectedRow = row
-			}	
-		}    
-	}
 
 	clear() {
 		this.firstDataBindNode.textContent = null
