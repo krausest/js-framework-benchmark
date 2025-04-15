@@ -57,9 +57,11 @@ class Main  {
 	}
 
 	buildData(count = DEFAULT_SIZE) {
-		const data = [];
-		for (let i = 0; i < count; i++) {
-			data.push({id: this.ID++,label: adjectives[_random(lenA)] + " " + colours[_random(lenB)] + " " + nouns[_random(lenC)]})
+		const data = Array(count);
+		for (let i = 0; i < count; i=i+1) {
+			const label = `${adjectives[_random(lenA)]}  ${colours[_random(lenB)]} ${nouns[_random(lenC)]}`
+			const id = this.ID++
+			data[i] = { id, label }
 		}
 		return data	
 	}
