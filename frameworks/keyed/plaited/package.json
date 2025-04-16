@@ -5,7 +5,7 @@
   },
   "type": "module",
   "dependencies": {
-    "plaited": "5.3.0"
+    "plaited": "7.0.0"
   },
   "devDependencies": {
     "esbuild": "0.19.6"
@@ -17,8 +17,8 @@
     "shadowRootName": "js-benchmark",
     "buttonsInShadowRoot": true,
     "issues": [
-      800,
-      772
+      772,
+      800
     ]
   }
 }
