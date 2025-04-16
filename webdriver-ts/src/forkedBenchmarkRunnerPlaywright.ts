@@ -113,7 +113,7 @@ async function runCPUBenchmark(
       if (throttleCPU) {
         await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
       }
-      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), framework.startLogicEventName);
+      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), framework.startLogicEventName, benchmark.benchmarkInfo.expectedClickEvents ?? 1);
       let resultScript = await computeResultsJS(
         result,
         config,
@@ -223,7 +223,7 @@ export async function executeBenchmark(
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number | CPUBenchmarkResult>> {
   let runBenchmarks: Array<BenchmarkPlaywright> = benchmarks.filter(
-    (b) =>
+    (b:any) =>
       benchmarkId === b.benchmarkInfo.id && (b instanceof CPUBenchmarkPlaywright || b instanceof MemBenchmarkPlaywright)
   ) as Array<BenchmarkPlaywright>;
 

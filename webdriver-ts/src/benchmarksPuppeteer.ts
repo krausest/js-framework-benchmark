@@ -265,6 +265,38 @@ export const benchAppendToManyRows = new (class extends CPUBenchmarkPuppeteer {
   }
 })();
 
+export const benchUpdateManyTimes = new (class extends CPUBenchmarkPuppeteer {
+  constructor() {
+    super(cpuBenchmarkInfos[Benchmark._10]);
+  }
+  async init(page: Page) {
+    await checkElementExists(page, "pierce/#run");
+    await clickElement(page, "pierce/#run");
+    await checkElementExists(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)");
+    for (let i = 0; i < this.benchmarkInfo.warmupCount; i++) {
+      await clickElement(page, "pierce/#update");
+      await checkElementContainsText(
+        page,
+        "pierce/tbody>tr:nth-of-type(991)>td:nth-of-type(2)>a",
+        " !!!".repeat(i + 1)
+      );
+    }
+  }
+  async run(page: Page) {
+    const clicks: Array<Promise<void>> = [];
+    for (let i = 0; i < 5; i++){ 
+      clicks.push(clickElement(page, "pierce/#update"));
+    }
+    ;
+    await Promise.all(clicks);
+    await checkElementContainsText(
+      page,
+      "pierce/tbody>tr:nth-of-type(991)>td:nth-of-type(2)>a",
+      " !!!".repeat(this.benchmarkInfo.warmupCount + clicks.length)
+    );
+  }
+})();
+
 export const benchClear = new (class extends CPUBenchmarkPuppeteer {
   constructor() {
     super(cpuBenchmarkInfos[Benchmark._09]);

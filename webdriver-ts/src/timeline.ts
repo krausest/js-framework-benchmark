@@ -167,32 +167,45 @@ function logEvents(events: TimingResult[], click: TimingResult) {
     console.log("event", e.type, `${e.ts - click.ts} - ${e.end - click.ts}`, e.evt);
   });
 }
+
+export class UnexpectedNumberOfClickEvents extends Error {
+  constructor(found: number, expected: number) {
+    super(`exactly ${expected} click event expected. Found ${found}.`);
+  }
+}
+
+export class UnexpectedNumberOfMousedownEvents extends Error {
+  constructor(found: number, expected: number) {
+    super(`at most ${expected} mousedown event expected. Found ${found}.`);
+  }
+}
   
 export async function computeResultsCPU(
   fileName: string,
   startLogicEventName: string,
+  expectedClickEvents: number,
 ): Promise<CPUDurationResult> {
   const perfLogEvents = await fetchEventsFromPerformanceLog(fileName, startLogicEventName);
   let events = R.sortBy((e: TimingResult) => e.end)(perfLogEvents);
 
     // Find mousedown event. This is the start of the benchmark
     let mousedowns = R.filter(type_eq("mousedown"))(events);
-    // Invariant: There must be exactly one click event
+    // Invariant: There must be exactly ${expectedClickEvents} click event(s)
     if (mousedowns.length === 0) {
       console.log("no mousedown event", fileName);
     } else if (mousedowns.length == 1) {
       console.log("one mousedown event", fileName);
-    } else if (mousedowns.length > 1) {
-      console.log("more than one mousedown event", fileName, events);
-      throw "at most one mousedown event is expected";
+    } else if (mousedowns.length > expectedClickEvents) {
+      console.log(`more than ${expectedClickEvents} mousedown event.`, fileName, events);
+      throw new UnexpectedNumberOfMousedownEvents(mousedowns.length, expectedClickEvents);
     }
 
   // Find click event. This is the start of the benchmark. We're using the synthetic "startLogicEvent" event we've created above
   let clicks = R.filter(type_eq("startLogicEvent"))(events);
-  // Invariant: There must be exactly one click event
-  if (clicks.length !== 1) {
-    console.log("exactly one click event is expected", fileName, events);
-    throw "exactly one click event is expected";
+  // Invariant: There must be exactly ${expectedClickEvents} click event(s)
+  if (clicks.length !== expectedClickEvents) {
+    console.log(`exactly ${expectedClickEvents} click event(s) expected`, fileName, events);
+    throw new UnexpectedNumberOfClickEvents(clicks.length, expectedClickEvents);
   }
   let click = clicks[0];
 
@@ -467,7 +480,7 @@ export async function parseCPUTrace(
     if (fs.existsSync(trace)) {
       console.log("analyzing trace", trace);
       try {
-        let result = await computeResultsCPU(trace, startLogicEventName);
+        let result = await computeResultsCPU(trace, startLogicEventName, benchmarkInfo.expectedClickEvents ?? 1);
         plausibilityCheck.check(result, trace, framework, benchmarkInfo);
         let resultJS = await computeResultsJS(result, config, trace);
         let resultPaint = await computeResultsPaint(result, config, trace);

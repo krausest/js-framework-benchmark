@@ -162,7 +162,7 @@ async function runCPUBenchmark(
       await cdpConnection.execute("Tracing.end", {});
       await p;
 
-      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), framework.startLogicEventName);
+      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), framework.startLogicEventName, benchmark.benchmarkInfo.expectedClickEvents ?? 1);
       let resultScript = await computeResultsJS(
         result,
         config,

@@ -21,7 +21,8 @@ export interface CPUBenchmarkInfo extends BenchmarkInfoBase {
   type: BenchmarkType.CPU;
   layoutEventRequired: boolean;
   additionalNumberOfRuns: number;
-  warmupCount: number
+  warmupCount: number;
+  expectedClickEvents?: number;
 }
 
 export interface MemBenchmarkInfo extends BenchmarkInfoBase {
@@ -79,6 +80,7 @@ export enum Benchmark {
   _07 = "07_create10k",
   _08 = "08_create1k-after1k_x2",
   _09 = "09_clear1k_x8",
+  _10 = "10_update_many_times",
   _21 = "21_ready-memory",
   _22 = "22_run-memory",
   _23 = "23_update5-memory",
@@ -99,6 +101,7 @@ export type BenchmarkId =
   | typeof Benchmark._07
   | typeof Benchmark._08
   | typeof Benchmark._09
+  | typeof Benchmark._10
   | typeof Benchmark._30
   | typeof Benchmark._40;
 
@@ -213,6 +216,17 @@ export const cpuBenchmarkInfosArray: Array<CPUBenchmarkInfo> = [
     allowBatching: true,
     layoutEventRequired: true,
     additionalNumberOfRuns: 0,
+  },
+  {
+    id: Benchmark._10,
+    label: "partial update, 5 times",
+    warmupCount: 5,
+    description: "updating every 10th row for 1,000 row, 5 times",
+    type: BenchmarkType.CPU,
+    allowBatching: true,
+    layoutEventRequired: true,
+    additionalNumberOfRuns: 0,
+    expectedClickEvents: 5
   },
 ];
 

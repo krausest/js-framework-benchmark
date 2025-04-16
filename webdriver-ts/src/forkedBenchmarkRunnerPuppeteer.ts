@@ -10,7 +10,7 @@ import {
   wait,
 } from "./common.js";
 import { startBrowser } from "./puppeteerAccess.js";
-import { computeResultsCPU, computeResultsJS, computeResultsPaint, fileNameTrace } from "./timeline.js";
+import { computeResultsCPU, computeResultsJS, computeResultsPaint, fileNameTrace, UnexpectedNumberOfClickEvents } from "./timeline.js";
 import * as fs from "node:fs";
 
 let config: Config = defaultConfig;
@@ -151,7 +151,7 @@ async function runCPUBenchmark(
       // console.log("afterBenchmark", m1, m2);
       // let result = (m2.TaskDuration - m1.TaskDuration)*1000.0; //await computeResultsCPU(fileNameTrace(framework, benchmark, i), benchmarkOptions, framework, benchmark, warnings, benchmarkOptions.batchSize);
       try {
-        let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), framework.startLogicEventName);
+        let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), framework.startLogicEventName, benchmark.benchmarkInfo.expectedClickEvents);
         let resultScript = await computeResultsJS(
           result,
           config,
@@ -168,12 +168,12 @@ async function runCPUBenchmark(
         console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(result)}`);
         if (result.duration < 0) throw new Error(`duration ${result} < 0`);
       } catch (error) {
-        if (error === "exactly one click event is expected") {
+        if (error instanceof UnexpectedNumberOfClickEvents) {
           let fileName = fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions);
           let errorFileName = fileName.replace(/\//, "/error-");
           fs.copyFileSync(fileName, errorFileName);
           console.log(
-            "*** Repeating run because of 'exactly one click event is expected' error",
+            `*** Repeating run because of ${error.message} error`,
             fileName,
             "saved in",
             errorFileName
