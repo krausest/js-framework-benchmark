@@ -5,7 +5,7 @@
   "author": "omilli",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@hellajs/core",
-    "frameworkHomeURL": "https://github.com/omilli/hellajs"
+    "frameworkHomeURL": "https://hellajs.com"
   },
   "scripts": {
     "dev:server": "bun ./index.html",
