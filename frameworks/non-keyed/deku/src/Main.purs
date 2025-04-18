@@ -119,7 +119,16 @@ app = Do.do
         [ DA.klass_ "table table-hover table-striped test-data" ]
         [ rowsPoll <#~> \rows -> D.tbody_ $ map renderRow rows
         ]
+    , footer
     ]
+
+footer :: Nut
+footer =
+  D.span
+    [ DA.klass_ "preloadicon glyphicon glyphicon-remove"
+    , DA.ariaHidden_ "true"
+    ]
+    []
 
 -- Action buttons component
 actionButtons
