@@ -1,4 +1,4 @@
-import { FT, CloneCallback, defineTemplate } from "plaited";
+import { FT, defineTemplate } from "plaited";
 
 let did = 1;
 const adjectives = [
@@ -107,11 +107,11 @@ const shadowDom = (
   </>
 );
 
-const row = (
-  <tr p-target="row">
-    <td className="col-md-1" p-target="id"></td>
+const Row: FT<DataItem> = (data) => (
+  <tr p-target={`${data.id}`}>
+    <td className="col-md-1">{data.id}</td>
     <td className="col-md-4">
-      <a p-target="label"></a>
+      <a p-target="label">{data.label}</a>
     </td>
     <td className="col-md-1">
       <a>
@@ -122,27 +122,21 @@ const row = (
   </tr>
 );
 
-const forEachRow: CloneCallback<DataItem> = ($, data) => {
-  $("row")[0].attr("p-target", `${data.id}`);
-  $("id")[0].render(<>{data.id}</>);
-  $("label")[0].render(<>{data.label}</>);
-};
-
 defineTemplate({
   tag: "js-benchmark",
   shadowDom,
   bProgram({ $ }) {
     let selected = -1;
-    const cb = $.clone(row, forEachRow);
+    const [tbody] = $("tbody");
     return {
       add(evt: MouseEvent & { target: HTMLButtonElement }) {
-        $("table")[0].insert("beforeend", ...buildData(parseInt(evt.target.value)).map(cb));
+        tbody.insert("beforeend", ...buildData(parseInt(evt.target.value)).map(Row));
       },
       run(evt: MouseEvent & { target: HTMLButtonElement }) {
-        $("table")[0].render(...buildData(parseInt(evt.target.value)).map(cb));
+        tbody.render(...buildData(parseInt(evt.target.value)).map(Row));
       },
       clear() {
-        $("table")[0].replaceChildren();
+        tbody.replaceChildren();
       },
       interact(evt: MouseEvent & { target: HTMLElement }) {
         const target = evt.target;
@@ -158,8 +152,7 @@ defineTemplate({
         }
       },
       swapRows() {
-        const [tbody] = $("table");
-        const rows = Array.from($("tbody")[0].childNodes);
+        const rows = Array.from(tbody.childNodes);
         tbody.insertBefore(rows[1], rows[999]);
         tbody.insertBefore(rows[998], rows[2]);
       },

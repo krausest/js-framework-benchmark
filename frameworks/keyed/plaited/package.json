@@ -5,10 +5,10 @@
   },
   "type": "module",
   "dependencies": {
-    "plaited": "7.0.0"
+    "plaited": "7.1.1"
   },
   "devDependencies": {
-    "esbuild": "0.19.6"
+    "esbuild": "0.25.2"
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "plaited",
@@ -17,8 +17,8 @@
     "shadowRootName": "js-benchmark",
     "buttonsInShadowRoot": true,
     "issues": [
-      772,
-      800
+      800,
+      772
     ]
   }
 }
