@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-hellajs",
+  "private": true,
+  "version": "1.0.0",
+  "author": "omilli",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@hellajs/core",
+    "frameworkHomeURL": "https://hellajs.com"
+  },
+  "scripts": {
+    "dev:server": "bun ./index.html",
+    "dev:build": "bun build ./src/main.js --outdir ./dist --minify --watch",
+    "dev": "bun run dev:server & bun run dev:build",
+    "build-prod": "bun build ./src/main.js --outdir ./dist --minify"
+  },
+  "devDependencies": {
+    "bun": "^1.2.9"
+  },
+  "dependencies": {
+    "@hellajs/core": "^0.3.0"
+  }
+}
