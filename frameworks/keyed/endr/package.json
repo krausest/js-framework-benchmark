@@ -12,15 +12,9 @@
     "dev": "esbuild src/index.js --loader:.js=jsx --jsx=automatic --jsx-import-source=endr --outfile=dist/index.js --bundle --minify --watch"
   },
   "dependencies": {
-    "endr": "0.1.3",
+    "endr": "0.1.27",
     "esbuild": "0",
-    "eslint-config-coderiety": "2"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": "coderiety",
-    "rules": {
-      "react/no-unknown-property": "off"
-    }
+    "eslint-config-coderiety": "2",
+    "eslint": "9"
   }
 }
