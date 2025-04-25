@@ -25,10 +25,9 @@ export class AppComponent {
     version = VERSION.full;
 
     buildData(count: number = 1000): Array<Data> {
-        var data: Array<Data> = new Array(count);
-        for (var i = 0; i < count; i++) {
-            data[i]={ id: this.id, label: `${adjectives[this._random(adjectives.length)]} ${colours[this._random(colours.length)]} ${nouns[this._random(nouns.length)]}` };
-            this.id++;
+        const data: Array<Data> = new Array(count);
+        for (let i = 0; i < count; i++) {
+            data[i]={ id: this.id++, label: `${adjectives[this._random(adjectives.length)]} ${colours[this._random(colours.length)]} ${nouns[this._random(nouns.length)]}` };
         }
         return data;
     }
