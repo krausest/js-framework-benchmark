@@ -2,11 +2,11 @@ import { Observable } from 'kr-observable';
 import { buildData } from './data';
 
 export class RowsStore extends Observable {
-  static shallow = ['rows']
+  static shallow = new Set(['rows'])
   rows = [];
 
-  delete(e) {
-    const rowIndexToDelete = this.rows.findIndex((row) => row.id === +e.target.id);
+  delete(id) {
+    const rowIndexToDelete = this.rows.findIndex(row => row.id === id);
     this.rows.splice(rowIndexToDelete, 1);
   };
 
@@ -19,14 +19,14 @@ export class RowsStore extends Observable {
   };
 
   update() {
-    for (let i = 0; i < this.rows.length; i += 10) {
+    const length = this.rows.length;
+    for (let i = 0; i < length; i += 10) {
       this.rows[i].label += ' !!!';
     }
   };
 
-  select(e) {
-    // this.selectedRowId = rowId;
-    this.rows.forEach(row => row.selected = row.id === +e.target.id)
+  select(id) {
+    this.rows.forEach(row => row.selected = row.id === id)
   };
 
   runLots() {
