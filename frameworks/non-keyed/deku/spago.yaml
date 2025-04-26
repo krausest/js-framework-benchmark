@@ -1,0 +1,54 @@
+package:
+  publish:
+    version: 0.0.0
+    license: Apache-2.0
+  name: js-framework-benchmark-deku
+  dependencies:
+    - aff
+    - arrays
+    - console
+    - debug
+    - deku-core
+    - deku-dom
+    - deku-spa
+    - effect
+    - foldable-traversable
+    - integers
+    - maybe
+    - partial
+    - prelude
+    - tuples
+    - web-html
+workspace:
+  packageSet:
+    registry: 63.5.0
+  extraPackages:
+    hyrule:
+      git: https://github.com/mikesol/purescript-hyrule.git
+      ref: main
+    dodo-printer:
+      git: https://github.com/natefaubion/purescript-dodo-printer.git
+      ref: master
+    tldr:
+      git: https://github.com/mikesol/purescript-tldr.git
+      ref: main
+    deku-core:
+      git: https://github.com/mikesol/purescript-deku.git
+      ref: main
+      subdir: deku-core
+    deku-css:
+      git: https://github.com/mikesol/purescript-deku.git
+      ref: main
+      subdir: deku-css
+    deku-dom:
+      git: https://github.com/mikesol/purescript-deku.git
+      ref: main
+      subdir: deku-dom
+    deku-spa:
+      git: https://github.com/mikesol/purescript-deku.git
+      ref: main
+      subdir: deku-spa
+    deku-ssr:
+      git: https://github.com/mikesol/purescript-deku.git
+      ref: main
+      subdir: deku-ssr

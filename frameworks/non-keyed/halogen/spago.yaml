@@ -1,0 +1,22 @@
+package:
+  publish:
+    version: 0.0.0
+    license: Apache-2.0
+  name: js-framework-benchmark-deku
+  dependencies:
+    - aff
+    - halogen
+    - arrays
+    - console
+    - debug
+    - effect
+    - foldable-traversable
+    - integers
+    - maybe
+    - partial
+    - prelude
+    - tuples
+    - web-html
+workspace:
+  packageSet:
+    registry: 63.5.0

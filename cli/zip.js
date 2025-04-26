@@ -55,8 +55,9 @@ function addFrameworksToZip(frameworkType, frameworkDir, frameworkName) {
   }
 
   switch (frameworkName) {
+    case "deku": 
     case "halogen": {
-      addLocalFileIfExists(`${frameworkDir}/output/bundle.js`, `${zipFrameworkPath}/output`);
+      addLocalFileIfExists(`${frameworkDir}/output-es/bundle.js`, `${zipFrameworkPath}/output-es`);
       break;
     }
     case "dojo": {
