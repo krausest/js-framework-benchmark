@@ -1,10 +1,28 @@
 {
-	"compilerOptions": {
-		"target": "ES2022",
-		"module": "NodeNext",
+  "compilerOptions": {
+    // Enable latest features
+    "lib": ["ESNext", "DOM", "dom.iterable"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleDetection": "force",
     "jsx": "react-jsx",
-    "jsxImportSource": "plaited",
-    "moduleResolution": "nodenext",
-		"lib": ["dom", "es2022"]
-	}
+    "allowJs": true,
+
+    // Bundler mode
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+
+    // Best practices
+    "strict": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // Some stricter flags (disabled by default)
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noPropertyAccessFromIndexSignature": false,
+
+    "jsxImportSource": "plaited"
+  }
 }
