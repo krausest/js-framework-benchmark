@@ -1,6 +1,6 @@
 {
     "name": "js-framework-benchmark-doohtml",
-    "version": "0.97.5",
+    "version": "0.98.2",
     "description": "DooHTML-lite JS-Benchmark",
     "main": "main.js",
     "js-framework-benchmark": {
@@ -14,7 +14,7 @@
     },
     "keywords": [],
     "author": "Henrik Javen",
-    "license": "Apache-2.0",
+    "license": "MIT",
     "homepage": "https://doohtml.com",
     "repository": {
       "type": "git",
