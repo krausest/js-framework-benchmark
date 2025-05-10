@@ -1,6 +1,6 @@
 'use strict'
 
-import {render, createTemplate, append, version} from '../lib/doohtml.mjs';
+import {render, createTemplate, append, version} from '../lib/doohtml.mjs'
 const _random = max => Math.random() * max | 0
 
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"]
@@ -31,14 +31,8 @@ class Main  {
 	}
 
 	async init() {
-		this.tbody  = await createTemplate('table', [])
-		render(this.tbody, this.rows)
-		this.firstDataBindNode = document.querySelector('#tbody')
-		this.dooAfterRender()
-	}	
-
-	async dooAfterRender() {
-		this.firstDataBindNode.addEventListener('click', e => {
+		this.tbody  = await createTemplate('table', this.rows)
+		this.tbody.addEventListener('click', e => {
 			e.preventDefault()
 			if (e.target.parentElement.matches('.remove')) {
 				this.delete(e.target.parentElement)
@@ -48,47 +42,38 @@ class Main  {
 		})
 	}
 
-	getParentRow(elem) {
-		while (elem) {
-			if (elem.tagName === "TR") {return elem}
-			elem = elem.parentNode
-		}
-		return undefined
-	}
-
 	buildData(count = DEFAULT_SIZE) {
-		const data = Array(count);
-		for (let i = 0; i < count; i=i+1) {
-			const label = `${adjectives[_random(lenA)]}  ${colours[_random(lenB)]} ${nouns[_random(lenC)]}`
+		const data = Array(count)
+		for (let i = 0; i < count; i = i + 1) {
+			const label = `${adjectives[_random(lenA)]} ${colours[_random(lenB)]} ${nouns[_random(lenC)]}`
 			const id = this.ID++
 			data[i] = { id, label }
 		}
 		return data	
 	}
 
-	getIndex(row) {
-		let idx =  this.rows.findIndex((item, i) => {
-			if (item.id === row.key) {
+	getIndex(key) {
+		for (let i = 0; i < this.rows.length; i = i + 1) {
+			if (this.rows[i].id === key) {
 				return i
 			}
-		}) 
-		return idx
+		}
+		return -1
 	}
 
 	delete(elem) {
-		let row = this.getParentRow(elem)
+		const row = elem.closest('tr')
 		if (row) {
-			row.parentElement.removeChild(row)
-			let idx = this.getIndex(row)
-			if (idx !== undefined) {
+			const key = row.key 
+			const idx = this.getIndex(key)
+			if (key  && idx > -1) {
 				this.rows.splice(idx,1)
+				row.remove()
 			}
-
 		}
 	}  
 
 	run() {
-		this.select(undefined)
 		if (this.rows.length) this.clear()
 		this.rows = this.buildData()
 		render(this.tbody, this.rows)
@@ -101,16 +86,16 @@ class Main  {
 	}   
 
 	runLots() {
-		this.select(undefined)
 		if (this.rows.length) this.clear()
 		this.rows = this.buildData(DEFAULT_SIZE_RUN_LOTS)
 		render(this.tbody, this.rows)
 	}
 
 	update() {
-		const len = this.rows.length
-		for (let i = 0; i < len; i += 10) {
-			this.firstDataBindNode.childNodes[i].querySelector('a').append(BANG)
+		const len = this.tbody.children.length
+		for (let i = 0; i<len; i = i + 10) {
+			this.rows[i].label += BANG
+			this.tbody.children[i].querySelector('a').append(BANG)
 		}
 	}
 
@@ -121,7 +106,7 @@ class Main  {
 		}
 		
 		if (elem) {
-			const row = this.getParentRow(elem)
+			const row = elem.closest('tr')
 			if (row) {
 				this.selectedRow = row
 				row.className = DANGER
@@ -129,23 +114,23 @@ class Main  {
 		}	
 	}
 
-
 	clear() {
-		this.firstDataBindNode.textContent = null
+		this.selectedRow = undefined
+		this.tbody.textContent = null
 		this.rows = []	
 	}
 
 	swapRows() {
 		if (this.rows.length > SWAP_ROW) {
-			let node1 = this.firstDataBindNode.firstChild.nextSibling, 
-				swapRow = this.firstDataBindNode.childNodes[SWAP_ROW],
+			let node1 = this.tbody.firstChild.nextSibling, 
+				swapRow = this.tbody.children[SWAP_ROW],
 				node999 = swapRow.nextSibling,
 				row1 = this.rows[1]
 			
-			this.rows[1] = this.rows[SWAP_ROW];
+			this.rows[1] = this.rows[SWAP_ROW]
 			this.rows[SWAP_ROW] = row1
 			
-			this.firstDataBindNode.insertBefore(node1.parentNode.replaceChild(swapRow, node1), node999)
+			this.tbody.insertBefore(node1.parentNode.replaceChild(swapRow, node1), node999)
 		}
 	}
 
