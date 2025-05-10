@@ -1,4 +1,4 @@
-import { FT, defineTemplate } from "plaited";
+import { type FT, defineElement, useTemplate } from "plaited";
 
 let did = 1;
 const adjectives = [
@@ -104,36 +104,40 @@ const shadowDom = (
       </table>
     </div>
     <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+    <template p-target="row-template">
+      <tr p-target="row">
+        <td className="col-md-1" p-target="id"></td>
+        <td className="col-md-4">
+          <a p-target="label"></a>
+        </td>
+        <td className="col-md-1">
+          <a>
+            <span className="glyphicon glyphicon-remove" aria-hidden="true" p-target="delete"></span>
+          </a>
+        </td>
+        <td className="col-md-6"></td>
+      </tr>
+    </template>
   </>
 );
-
-const Row: FT<DataItem> = (data) => (
-  <tr p-target={`${data.id}`}>
-    <td className="col-md-1">{data.id}</td>
-    <td className="col-md-4">
-      <a p-target="label">{data.label}</a>
-    </td>
-    <td className="col-md-1">
-      <a>
-        <span className="glyphicon glyphicon-remove" aria-hidden="true" p-target="delete"></span>
-      </a>
-    </td>
-    <td className="col-md-6"></td>
-  </tr>
-);
-
-defineTemplate({
+defineElement({
   tag: "js-benchmark",
   shadowDom,
   bProgram({ $ }) {
     let selected = -1;
     const [tbody] = $("tbody");
+    const [template] = $<HTMLTemplateElement>("row-template");
+    const cb = useTemplate<DataItem>(template, ($, data) => {
+      $("row")[0].attr("p-target", data.id);
+      $("id")[0].render(data.id);
+      $("label")[0].render(data.label);
+    });
     return {
       add(evt: MouseEvent & { target: HTMLButtonElement }) {
-        tbody.insert("beforeend", ...buildData(parseInt(evt.target.value)).map(Row));
+        tbody.insert("beforeend", ...buildData(parseInt(evt.target.value)).map(cb));
       },
       run(evt: MouseEvent & { target: HTMLButtonElement }) {
-        tbody.render(...buildData(parseInt(evt.target.value)).map(Row));
+        tbody.render(...buildData(parseInt(evt.target.value)).map(cb));
       },
       clear() {
         tbody.replaceChildren();
