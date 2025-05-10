@@ -38,7 +38,7 @@ export default defineConfig({
   input: 'src/Main.jsx',
   output: {
     file: 'dist/main.js',
-    format: 'commonjs',
+    // format: 'commonjs',
   },
   plugins,
 });

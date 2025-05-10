@@ -8,13 +8,13 @@ import terser from '@rollup/plugin-terser';
 const plugins = [
   commonjs(),
   replace({
-    'process.env.NODE_ENV': JSON.stringify('production'),
+    'process.env.NODE_ENV': JSON.stringify('production'), //production
   }),
   babel({
     exclude: 'node_modules/**',
-    babelHelpers: 'bundled',
+    // babelHelpers: 'bundled',
     presets: [
-      '@babel/preset-env',
+      // '@babel/preset-env',
       ['@babel/preset-react', { runtime: 'automatic' }],
     ],
   }),
@@ -29,7 +29,7 @@ export default defineConfig({
   input: 'src/Main.jsx',
   output: {
     file: 'dist/main.js',
-    format: 'iife',
+    // format: 'iife',
   },
   plugins,
 });
