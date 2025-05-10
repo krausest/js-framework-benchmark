@@ -1,0 +1,12 @@
+{
+    "name": "js-framework-benchmark-aberdeen",
+    "version": "1.0.0",
+    "js-framework-benchmark": {
+        "frameworkVersion": "1.0.0",
+        "frameworkHomeURL": "https://aberdeenjs.org"
+    },
+    "scripts": {
+        "dev": "exit 0",
+        "build-prod": "exit 0"
+    }
+}
