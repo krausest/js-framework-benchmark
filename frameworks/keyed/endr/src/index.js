@@ -52,12 +52,7 @@ const nouns = [
 
 let nextId = 0;
 
-/**
- * @typedef {{
- *   items: { id: number; label: string }[];
- *   selectedId: number | null;
- * }} State
- */
+/** @typedef {{ items: { id: number; label: string }[]; selectedId: number | null }} State */
 
 /** @type {State} */
 const initialState = { items: [], selectedId: null };
@@ -67,10 +62,7 @@ const sample = items => items[Math.floor(Math.random() * items.length)];
 
 /** @param {number} length */
 const createItems = length =>
-  Array.from({ length }, () => ({
-    id: ++nextId,
-    label: `${sample(adjectives)} ${sample(colors)} ${sample(nouns)}`
-  }));
+  Array.from({ length }, () => ({ id: ++nextId, label: `${sample(adjectives)} ${sample(colors)} ${sample(nouns)}` }));
 
 const Row = memo(
   /** @param {{ isSelected: boolean; item: State['items'][number]; setState: SetState<State> }} props */
@@ -81,10 +73,7 @@ const Row = memo(
         <a
           onclick={() => {
             if (!isSelected) {
-              setState(({ items }) => ({
-                items,
-                selectedId: item.id
-              }));
+              setState(({ items }) => ({ items, selectedId: item.id }));
             }
           }}
         >
@@ -94,10 +83,7 @@ const Row = memo(
       <td className='col-md-1'>
         <a
           onclick={() =>
-            setState(({ items, selectedId }) => ({
-              items: items.filter(other => other !== item),
-              selectedId
-            }))
+            setState(({ items, selectedId }) => ({ items: items.filter(other => other !== item), selectedId }))
           }
         >
           <span className='glyphicon glyphicon-remove' aria-hidden='true' />
