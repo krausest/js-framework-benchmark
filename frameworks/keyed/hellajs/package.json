@@ -8,15 +8,12 @@
     "frameworkHomeURL": "https://hellajs.com"
   },
   "scripts": {
-    "dev:server": "bun ./index.html",
-    "dev:build": "bun build ./src/main.js --outdir ./dist --minify --watch",
-    "dev": "bun run dev:server & bun run dev:build",
     "build-prod": "bun build ./src/main.js --outdir ./dist --minify"
   },
   "devDependencies": {
     "bun": "^1.2.9"
   },
   "dependencies": {
-    "@hellajs/core": "^0.3.0"
+    "@hellajs/core": "^0.6.1"
   }
 }
