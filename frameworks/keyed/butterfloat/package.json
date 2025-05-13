@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "description": "Benchmark for Butterfloat",
   "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "butterfloat",
+    "frameworkHomeURL": "https://worldmaker.net/butterfloat/"
+  },
   "scripts": {
     "build-dev": "node _build.js",
     "build-prod": "node _build.js"
