@@ -22,7 +22,7 @@ const dom = new JSDOM(`
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>VanillaJS-"keyed"</title>
+    <title>Butterfloat</title>
     <link href="/css/currentStyle.css" rel="stylesheet"/>
     <script type="module" src="./main.js"></script>
 </head>
