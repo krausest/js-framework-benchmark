@@ -1,0 +1,20 @@
+{
+  "name": "js-framework-benchmark-keyed-butterfloat",
+  "version": "1.0.0",
+  "description": "Benchmark for Butterfloat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Max Battcher <me@worldmaker.net>",
+  "license": "MIT",
+  "dependencies": {
+    "butterfloat": "^1.6.1",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.4",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  }
+}
