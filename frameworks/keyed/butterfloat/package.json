@@ -1,10 +1,12 @@
 {
   "name": "js-framework-benchmark-keyed-butterfloat",
+  "type": "module",
   "version": "1.0.0",
   "description": "Benchmark for Butterfloat",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-dev": "node _build.js",
+    "build-prod": "node _build.js"
   },
   "author": "Max Battcher <me@worldmaker.net>",
   "license": "MIT",
@@ -13,7 +15,9 @@
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
     "esbuild": "^0.25.4",
+    "jsdom": "^26.1.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3"
   }
