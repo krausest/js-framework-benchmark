@@ -1,6 +1,6 @@
 import { butterfly, StateSetter } from 'butterfloat'
 import { filter, map, mergeMap, Observable, range } from 'rxjs'
-import { RowViewModel } from './row-vm'
+import { RowViewModel } from './row-vm.js'
 
 export interface IdRange {
   min: number
@@ -53,7 +53,15 @@ export class AppViewModel {
     this.#setSelectedId(id)
   }
 
-  addRows(count: number) {
+  createRows(count: number) {
+    this.#setIdRange((current) => {
+      const min = current.max
+      const max = current.max + count
+      return { min, max, added: [current.max, count] }
+    })
+  }
+
+  appendRows(count: number) {
     this.#setIdRange((current) => {
       const min = current.min
       const max = current.max + count
