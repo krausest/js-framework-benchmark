@@ -15,7 +15,7 @@
   "author": "Max Battcher <me@worldmaker.net>",
   "license": "MIT",
   "dependencies": {
-    "butterfloat": "^1.6.1",
+    "butterfloat": "^1.6.3",
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
