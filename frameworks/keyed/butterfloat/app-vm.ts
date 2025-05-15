@@ -26,6 +26,12 @@ export class AppViewModel {
     return this.#rows
   }
 
+  readonly #rowsToUpdate: Observable<number>
+  readonly #setRowsToUpdate: (rowsToUpdate: StateSetter<number>) => void
+  get rowsToUpdate() {
+    return this.#rowsToUpdate
+  }
+
   constructor() {
     ;[this.#idRange, this.#setIdRange] = butterfly<IdRange>({
       min: 0,
@@ -33,6 +39,7 @@ export class AppViewModel {
       added: [-1, -1],
     })
     ;[this.#selectedId, this.#setSelectedId] = butterfly<number>(-1)
+    ;[this.#rowsToUpdate, this.#setRowsToUpdate] = butterfly<number>(-1)
 
     this.#rows = this.#idRange.pipe(
       filter((idRange) => idRange.added[1] > 0),
@@ -67,5 +74,9 @@ export class AppViewModel {
       const max = current.max + count
       return { min, max, added: [current.max, count] }
     })
+  }
+
+  updateRow(id: number) {
+    this.#setRowsToUpdate(id)
   }
 }

@@ -1,19 +1,13 @@
 import { butterfly, StateSetter } from 'butterfloat'
-import {
-  filter,
-  map,
-  merge,
-  NEVER,
-  Observable,
-  Subject,
-  takeUntil,
-  tap,
-} from 'rxjs'
+import { filter, map, merge, Observable } from 'rxjs'
 import { randomLabel } from './data.js'
 import { AppViewModel } from './app-vm.js'
 
 export class RowViewModel {
   readonly #app: AppViewModel
+  get app() {
+    return this.#app
+  }
 
   readonly #id: number
   get id() {
