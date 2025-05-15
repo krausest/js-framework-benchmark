@@ -35,7 +35,7 @@ export class AppViewModel {
     ;[this.#selectedId, this.#setSelectedId] = butterfly<number>(-1)
 
     this.#rows = this.#idRange.pipe(
-      filter((idRange) => idRange.added[0] > 0 && idRange.added[1] > 0),
+      filter((idRange) => idRange.added[1] > 0),
       mergeMap((idRange) => range(idRange.added[0], idRange.added[1])),
       map((id) => new RowViewModel(this, id)),
     )

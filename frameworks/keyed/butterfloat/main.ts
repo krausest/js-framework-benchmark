@@ -9,10 +9,10 @@ if (appStamp) {
   stamps.registerOnlyStamp(App, appStamp)
 }
 
-const rowStamp = document.querySelector<HTMLTemplateElement>('template#row')
-if (rowStamp) {
-  stamps.registerOnlyStamp(Row, rowStamp)
-}
+// const rowStamp = document.querySelector<HTMLTemplateElement>('template#row')
+// if (rowStamp) {
+//   stamps.registerOnlyStamp(Row, rowStamp)
+// }
 
 const main = document.querySelector('#main')!
 runStamps(main, App, stamps)

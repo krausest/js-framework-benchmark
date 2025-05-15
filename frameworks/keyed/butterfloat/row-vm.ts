@@ -1,5 +1,14 @@
 import { butterfly, StateSetter } from 'butterfloat'
-import { filter, map, merge, NEVER, Observable, Subject, takeUntil } from 'rxjs'
+import {
+  filter,
+  map,
+  merge,
+  NEVER,
+  Observable,
+  Subject,
+  takeUntil,
+  tap,
+} from 'rxjs'
 import { randomLabel } from './data.js'
 import { AppViewModel } from './app-vm.js'
 
@@ -17,11 +26,12 @@ export class RowViewModel {
     return this.#label
   }
 
-  readonly #remove = new Subject<boolean>()
+  readonly #remove: Observable<boolean>
+  readonly #setRemove: (remove: StateSetter<boolean>) => void
 
-  readonly #alive: Observable<boolean>
-  get alive() {
-    return this.#alive
+  readonly #removed: Observable<boolean>
+  get removed() {
+    return this.#removed
   }
 
   readonly #selected: Observable<boolean>
@@ -33,16 +43,13 @@ export class RowViewModel {
     this.#app = app
     this.#id = id
     ;[this.#label, this.#setLabel] = butterfly(randomLabel())
+    ;[this.#remove, this.#setRemove] = butterfly(false)
 
-    this.#alive = NEVER.pipe(
-      takeUntil(
-        merge(
-          this.#remove.pipe(filter(() => true)),
-          this.#app.idRange.pipe(
-            filter((range) => range.min > this.#id),
-            map(() => true),
-          ),
-        ),
+    this.#removed = merge(
+      this.#remove.pipe(filter((remove) => remove)),
+      this.#app.idRange.pipe(
+        filter((range) => range.min > this.#id),
+        map(() => true),
       ),
     )
 
@@ -54,8 +61,7 @@ export class RowViewModel {
   }
 
   remove() {
-    this.#remove.next(true)
-    this.#remove.complete()
+    this.#setRemove(true)
   }
 
   select() {
