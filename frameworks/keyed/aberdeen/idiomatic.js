@@ -1,4 +1,4 @@
-import {$, copy, ref, proxy, onEach} from "./dist-min/aberdeen.js";
+import {$, copy, ref, proxy, onEach} from "aberdeen.js";
 import { buildData } from "./build-dummy-data.js";
 
 const data = proxy([]); // [{id, label}, ...]

@@ -12,7 +12,7 @@
  * The idiomatic implementation (with very slow deletes) is in `idiomatic.js`.
  */
 
-import {$, copy, ref, proxy, onEach} from "./dist/aberdeen.js";
+import {$, copy, ref, proxy, onEach} from "aberdeen";
 import { buildData } from "./build-dummy-data.js";
 
 const unproxiedData = []; // [{id, label}, ...]
