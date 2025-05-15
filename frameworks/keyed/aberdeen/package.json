@@ -1,12 +1,18 @@
 {
     "name": "js-framework-benchmark-aberdeen",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "js-framework-benchmark": {
-        "frameworkVersion": "1.0.0",
+        "frameworkVersion": "1.0.4",
         "frameworkHomeURL": "https://aberdeenjs.org"
     },
     "scripts": {
-        "dev": "exit 0",
-        "build-prod": "exit 0"
+        "dev": "npx esbuild --bundle main.js --outdir=dist --sourcemap --watch",
+        "build-prod": "npx esbuild --bundle main.js --outdir=dist --minify"
+    },
+    "dependencies": {
+        "aberdeen": "^1.0.4"
+    },
+    "devDependencies": {
+        "esbuild": "^0.25.4"
     }
 }
