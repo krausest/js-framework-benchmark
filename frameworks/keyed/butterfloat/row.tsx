@@ -27,7 +27,7 @@ export function Row(
     vm.updateLabel(),
   )
 
-  const id = concat(of(vm.id.toString()), NEVER)
+  const id = concat(of((vm.id+1).toString()), NEVER)
 
   return (
     <tr

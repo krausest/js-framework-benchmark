@@ -51,7 +51,7 @@ export class RowViewModel {
   }
 
   updateLabel() {
-    this.#setLabel((current) => current + '!!!')
+    this.#setLabel((current) => current + ' !!!')
   }
 
   remove() {
