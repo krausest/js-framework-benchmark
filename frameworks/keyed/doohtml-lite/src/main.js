@@ -93,9 +93,9 @@ class Main  {
 
 	update() {
 		const len = this.tbody.children.length
-		for (let i = 0; i<len; i = i + 10) {
+		for (let i = 0; i<len; i += 10) {
 			this.rows[i].label += BANG
-			this.tbody.children[i].querySelector('a').append(BANG)
+			this.tbody.children[i].children[1].children[0].append(BANG)
 		}
 	}
 
