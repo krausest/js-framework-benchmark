@@ -6,7 +6,7 @@ This is a simple benchmark for several javascript frameworks. The benchmarks cre
 
 ## Security advice
 
-Currently there are 186 implemenations in this repository. It's of course impossible for me to make a security assessment
+Currently there are 186 implementations in this repository. It's of course impossible for me to make a security assessment
 for all those implementations. `npm ci` and `npm install` can execute arbitraty commands, so they should be executed only for packages you trust. Consequently I build on a dedicated virtual private linux server such that I don't have to install the packages for all those implemenations on my laptop. There's a prebuild build.zip for each chrome release you can download such that you can avoid installing the packages from all implementations. 
 (I don't know of any (attempted) case for malicious packages in this repository, so please take it just as a general warning.)
 
@@ -79,7 +79,7 @@ v20.9.0
 ```
 
 ## 1.2 Downloading the pre-built binaries and starting the server
-building all frameworks can be challenging. There's a new way that allows to skip that and just run the benchmark without builiding all implementations.
+building all frameworks can be challenging. There's a new way that allows to skip that and just run the benchmark without building all implementations.
 
 
 Start with checking out a tagged release like that. Pick the release that you want (e.g. chrome 100):
