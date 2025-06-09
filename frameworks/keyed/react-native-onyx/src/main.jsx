@@ -128,11 +128,13 @@ function select(item) {
 }
 function swapRows() {
   const array = Object.values(object);
-  const firstRow = array[1];
-  const lastRow = array[998];
+  const firstRow = { ...array[1] };
+  const lastRow = { ...array[998] };
 
-  Onyx.set(`${ONYXKEYS.COLLECTION.OBJECT}${firstRow.id === 2 ? firstRow.id : lastRow.id}`, lastRow);
-  Onyx.set(`${ONYXKEYS.COLLECTION.OBJECT}${lastRow.id === 999 ? lastRow.id : firstRow.id}`, firstRow);
+  Onyx.mergeCollection(ONYXKEYS.COLLECTION.OBJECT, {
+    [`${ONYXKEYS.COLLECTION.OBJECT}${firstRow.id === 2 ? firstRow.id : lastRow.id}`]: lastRow,
+    [`${ONYXKEYS.COLLECTION.OBJECT}${lastRow.id === 999 ? lastRow.id : firstRow.id}`]: firstRow,
+  });
 }
 function clear() {
   Onyx.clear();
