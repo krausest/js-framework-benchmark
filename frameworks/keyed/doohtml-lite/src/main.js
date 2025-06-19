@@ -95,7 +95,7 @@ class Main  {
 		const len = this.tbody.children.length
 		for (let i = 0; i<len; i += 10) {
 			this.rows[i].label += BANG
-			this.tbody.children[i].children[1].children[0].append(BANG)
+			this.tbody.children[i].children[1].children[0].textContent = this.rows[i].label
 		}
 	}
 
