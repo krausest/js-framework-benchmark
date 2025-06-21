@@ -71,7 +71,6 @@ export const buildData = (count) => {
       id: id++,
       label: `${adjectives[random(adjectives.length)]} ${colours[random(colours.length)]} ${nouns[random(nouns.length)]}`,
       selected: false,
-
     }, ignore, shallow))
   }
   // const t1 = performance.now();

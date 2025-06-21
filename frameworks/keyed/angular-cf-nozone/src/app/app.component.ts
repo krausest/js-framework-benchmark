@@ -1,5 +1,4 @@
-import { NgFor } from '@angular/common';
-import { ChangeDetectorRef, Component, VERSION, inject } from '@angular/core';
+import { ApplicationRef, Component, VERSION, inject } from '@angular/core';
 
 interface Data {
     id: number;
@@ -12,11 +11,10 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 @Component({
     selector: 'app-root',
-    imports: [NgFor],
     templateUrl: './app.component.html'
 })
 export class AppComponent {
-    private cdr = inject(ChangeDetectorRef);
+    private applicationRef = inject(ApplicationRef);
 
     data: Array<Data> = [];
     selected?: number = undefined;
@@ -44,7 +42,7 @@ export class AppComponent {
     select(item: Data, event: Event) {
         event.preventDefault();
         this.selected = item.id;
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
 
     delete(item: Data, event: Event) {
@@ -55,34 +53,34 @@ export class AppComponent {
                 break;
             }
         }
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
 
     run() {
         this.data = this.buildData();
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
 
     add() {
         this.data = this.data.concat(this.buildData(1000));
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
 
     update() {
         for (let i = 0; i < this.data.length; i += 10) {
             this.data[i].label += ' !!!';
         }
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
     runLots() {
         this.data = this.buildData(10000);
         this.selected = undefined;
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
     clear() {
         this.data = [];
         this.selected = undefined;
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
     swapRows() {
         if (this.data.length > 998) {
@@ -90,6 +88,6 @@ export class AppComponent {
             this.data[1] = this.data[998];
             this.data[998] = a;
         }
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
 }

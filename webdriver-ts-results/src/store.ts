@@ -49,7 +49,12 @@ for (let result of rawResults) {
     results.push({ framework: rawFrameworks[result.f].name, benchmark: rawBenchmarks[b.b].id, results: values });
   }
 }
-console.log(results);
+
+allFrameworks.forEach((f) => {
+  if (!results.some((r) => r.framework === f.name)) {
+    allFrameworks.delete(f);
+  }
+})
 
 const resultLookup = convertToMap(results);
 
