@@ -19,7 +19,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "kr-observable": "2.0.0",
+    "kr-observable": "3.0.8",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },

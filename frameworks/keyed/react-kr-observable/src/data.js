@@ -70,7 +70,7 @@ export const buildData = (count) => {
     data.push(makeObservable({
       id: id++,
       label: `${adjectives[random(adjectives.length)]} ${colours[random(colours.length)]} ${nouns[random(nouns.length)]}`,
-      selected: false
+      selected: false,
     }, ignore, shallow))
   }
   // const t1 = performance.now();

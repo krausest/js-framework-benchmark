@@ -1,4 +1,4 @@
-import { observer } from 'kr-observable';
+import { observer } from 'kr-observable/react';
 import { rowsStore } from "./RowsStore";
 
 export const Row = observer(function row({ data }) {

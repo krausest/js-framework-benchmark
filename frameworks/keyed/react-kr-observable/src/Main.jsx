@@ -1,9 +1,7 @@
 import { createRoot } from 'react-dom/client';
-import { observer } from 'kr-observable';
+import { observer } from 'kr-observable/react';
 import { Row } from './Row';
 import { rowsStore } from './RowsStore';
-import { Fragment } from "react";
-
 
 const Button = ({ children, id, onClick }) => {
   return (
@@ -85,3 +83,5 @@ function Main() {
 
 
 createRoot(document.getElementById('main')).render(<Main />);
+
+
