@@ -1,8 +1,7 @@
-import { render, h } from "preact";
+import { render } from "preact";
 import { observer } from 'kr-observable/preact';
 import { Row } from './Row';
 import { rowsStore } from './RowsStore';
-import { Fragment } from "preact";
 
 const Button = ({ children, id, onClick }) => {
   return (
@@ -83,7 +82,5 @@ function Main() {
   );
 }
 
-if (typeof window !== "undefined") {
-  render(<Main />, document.getElementById('main'));
-}
+render(<Main />, document.getElementById('main'));
 
