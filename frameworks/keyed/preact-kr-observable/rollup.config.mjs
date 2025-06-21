@@ -9,7 +9,7 @@ import alias from '@rollup/plugin-alias';
 const plugins = [
   commonjs(),
   replace({
-    'process.env.NODE_ENV': JSON.stringify('development'),
+    'process.env.NODE_ENV': JSON.stringify('production'),
   }),
   babel({
     babelHelpers: "bundled",
