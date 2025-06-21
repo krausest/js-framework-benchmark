@@ -9,23 +9,17 @@ import alias from '@rollup/plugin-alias';
 const plugins = [
   commonjs(),
   replace({
-    'process.env.NODE_ENV': JSON.stringify('production'),
+    'process.env.NODE_ENV': JSON.stringify('development'),
   }),
   babel({
-    exclude: 'node_modules/**',
-    babelHelpers: 'bundled',
+    babelHelpers: "bundled",
+    exclude: "node_modules/**",
     presets: [
-      // '@babel/preset-env',
-      ['@babel/preset-react', { runtime: 'automatic' }],
+      ['@babel/preset-react', {
+        runtime: 'automatic',
+        importSource: 'preact'
+      }]
     ],
-  }),
-  alias({
-    entries:[
-      { find: 'react', replacement: 'preact/compat' },
-      { find: 'react-dom', replacement: 'preact/compat' },
-      { find: 'react/jsx-runtime', replacement: 'preact/compat' },
-      { find: 'use-sync-external-store', replacement: 'preact/compat' }
-    ]
   }),
   nodeResolve({ extensions: ['.js', '.jsx'] }),
 ];
