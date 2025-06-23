@@ -6,8 +6,8 @@
   const clear = () => setData([]);
   const partialUpdate = () => { for (let i = 0, d = data(), len = d.length; i < len; i += 10) d[i].setLabel((l) => l + " !!!") };
   const run = () => {
-      setData(buildData(1000));
-    };
+    setData(buildData(1000));
+  };
   const runLots = () => {
     setData(buildData(10000));
   };
