@@ -14,6 +14,7 @@
     "bun": "^1.2.9"
   },
   "dependencies": {
-    "@hellajs/core": "^0.6.3"
+    "@hellajs/core": "^0.10.0",
+    "@hellajs/dom": "^0.10.0"
   }
 }
