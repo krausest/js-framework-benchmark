@@ -104,6 +104,7 @@ function Bench() {
                   span({ class: 'glyphicon glyphicon-remove', ariaHidden: 'true' })
                 ),
               ),
+              td({ class: 'col-md-6' })
             )
           )
         ),
