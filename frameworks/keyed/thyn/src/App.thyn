@@ -1,17 +1,17 @@
 <script>
-  import {data, setData, buildData, selected} from "./state.thyn.js";
+  import {data, buildData, selected} from "./state.thyn.js";
   import Row from "./Row.thyn";
 
-  const add = () => setData(d => [...d, ...buildData(1000)]);
-  const clear = () => setData([]);
-  const partialUpdate = () => {for (let i = 0, d = data(), len = d.length; i < len; i += 10) d[i].setLabel((l) => l + " !!!")};
+  const add = () => data(d => [...d, ...buildData(1000)]);
+  const clear = () => data([]);
+  const partialUpdate = () => {for (let i = 0, d = data(), len = d.length; i < len; i += 10) d[i].label(l => l + " !!!")};
   const run = () => {
-    setData(buildData(1000));
+    data(buildData(1000));
   };
   const runLots = () => {
-    setData(buildData(10000));
+    data(buildData(10000));
   };
-  const swapRows = () => setData(d => {
+  const swapRows = () => data(d => {
     if (d.length > 998) {
       const clone = d.slice();
       const tmp = clone[1];
