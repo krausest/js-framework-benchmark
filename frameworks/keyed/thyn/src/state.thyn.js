@@ -1,6 +1,6 @@
 let rowId = 1;
-export const data = $state([]);
-export const selected = $state();
+export const data = $signal([]);
+export const selected = $signal();
 export const isSelected = $compare(selected);
 
 const adjectives = [
@@ -66,10 +66,10 @@ function random(max) {
 export const buildData = (count) => {
   let data = new Array(count);
   for (let i = 0; i < count; i++) {
-    const label = $state(
-      `${adjectives[random(adjectives.length)]} ${colors[random(colors.length)]} ${nouns[random(nouns.length)]}`
-    );
-    data[i] = { id: rowId++, label };
+    data[i] = {
+      id: rowId++,
+      label: $signal(`${adjectives[random(adjectives.length)]} ${colors[random(colors.length)]} ${nouns[random(nouns.length)]}`),
+    };
   }
   return data;
 };
