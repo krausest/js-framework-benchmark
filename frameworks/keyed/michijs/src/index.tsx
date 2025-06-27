@@ -141,7 +141,7 @@ const rowButton = (
   </div>
 );
 
-export const TableManager = create(
+const TableManager = create(
   <div class="row">
     {rowButton("run", run, "Create 1,000 rows")}
     {rowButton("runlots", runLots, "Create 10,000 rows")}
