@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "michi-server --start",
-    "dev": "michi-server --start",
+    "dev": "michi-server --build --env=DEVELOPMENT",
     "build": "michi-server --build"
   },
   "repository": {
