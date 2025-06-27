@@ -1,18 +1,18 @@
 {
   "name": "js-framework-benchmark-michijs",
-  "version": "2.1.4",
+  "version": "2.3.2",
   "description": "michijs",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@michijs/michijs",
     "frameworkHomeURL": "https://dev.michijs.com/",
     "useShadowRoot": false,
-    "customURL": "/dist"
+    "customURL": "/build"
   },
   "scripts": {
     "start": "michi-server --start",
     "dev": "michi-server --build --env=DEVELOPMENT",
-    "build-prod": "michi-server --build"
+    "build": "michi-server --build"
   },
   "repository": {
     "type": "git",
@@ -28,11 +28,11 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "devDependencies": {
-    "@michijs/dev-server": "0.7.26",
+    "@michijs/dev-server": "0.8.5",
     "@michijs/tsconfig": "0.0.4",
-    "typescript": "5.7.2"
+    "typescript": "5.8.2"
   },
   "dependencies": {
-    "@michijs/michijs": "2.1.4"
+    "@michijs/michijs": "2.3.2"
   }
 }

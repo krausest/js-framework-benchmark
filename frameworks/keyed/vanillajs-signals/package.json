@@ -1,21 +1,20 @@
 {
   "name": "js-framework-benchmark-vanillajs-signals",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Vanilla.JS with tc39 signals demo",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "signal-polyfill",
     "frameworkHomeURL": "https://github.com/tc39/proposal-signals",
     "useShadowRoot": false,
-    "customURL": "/dist",
+    "customURL": "/public",
     "issues": [
       772
     ]
   },
   "scripts": {
-    "start": "michi-server --start",
-    "dev": "michi-server --build --env=DEVELOPMENT",
-    "build-prod": "michi-server --build"
+    "dev": "exit 0",
+    "build": "esbuild src/index.js --bundle --legal-comments=none --minify --outfile=public/index.js"
   },
   "repository": {
     "type": "git",
@@ -30,12 +29,9 @@
     "url": "https://github.com/krausest/js-framework-benchmark/issues"
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
-  "devDependencies": {
-    "@michijs/dev-server": "0.7.24",
-    "@michijs/tsconfig": "0.0.4"
-  },
   "dependencies": {
-    "signal-polyfill": "0.2.1",
-    "signal-utils": "0.20.0"
+    "esbuild": "0.25.1",
+    "signal-polyfill": "0.2.2",
+    "signal-utils": "0.21.1"
   }
 }
