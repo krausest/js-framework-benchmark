@@ -58,10 +58,15 @@ const TbodyComponent = defineComponent(({ setData }) => {
     setRows();
   };
 
+  const symbol1 = Symbol();
   const select = (id) => {
-    setData(() => {
-      selected = id;
-    });
+    setData(
+      () => {
+        selected = id;
+      },
+      null,
+      symbol1
+    );
   };
 
   const handle = (event) => {
@@ -78,17 +83,21 @@ const TbodyComponent = defineComponent(({ setData }) => {
   return () => (
     <tbody onClick={handle}>
       {rows.map((item) => (
-        <tr class={item.id === selected ? 'danger' : ''} key={item.id}>
+        <tr
+          $memo={[item.id == selected, symbol1]}
+          class={item.id === selected ? 'danger' : ''}
+          key={item.id}
+        >
           <td class='col-md-1'>{item.id}</td>
           <td class='col-md-4'>
             <a>{item.label}</a>
           </td>
-          <td class='col-md-1'>
+          <td $once class='col-md-1'>
             <a>
               <span class='glyphicon glyphicon-remove' aria-hidden='true'></span>
             </a>
           </td>
-          <td class='col-md-6'></td>
+          <td $once class='col-md-6'></td>
         </tr>
       ))}
     </tbody>
