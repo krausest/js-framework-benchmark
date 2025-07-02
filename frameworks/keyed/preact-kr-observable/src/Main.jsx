@@ -1,8 +1,7 @@
-import { createRoot } from 'react-dom/client';
-import { observer } from 'kr-observable';
+import { render } from "preact";
+import { observer } from 'kr-observable/preact';
 import { Row } from './Row';
 import { rowsStore } from './RowsStore';
-import { Fragment } from "react";
 
 const Button = ({ children, id, onClick }) => {
   return (
@@ -20,17 +19,13 @@ const Button = ({ children, id, onClick }) => {
 };
 
 const RowList = observer(function list() {
-  return (
-    <Fragment>
-      {rowsStore.rows.map(row => (
+  return rowsStore.rows.map(row => (
           <Row
             key={row.id}
             data={row}
           />
         )
-      )}
-    </Fragment>
-  )
+      )
 })
 
 
@@ -87,5 +82,5 @@ function Main() {
   );
 }
 
+render(<Main />, document.getElementById('main'));
 
-createRoot(document.getElementById('main')).render(<Main />);
