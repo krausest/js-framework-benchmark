@@ -1,0 +1,21 @@
+{
+  "name": "thyn",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@thyn/core",
+    "frameworkHomeURL": "https://github.com/thynjs/thyn",
+    "customURL": "/dist"
+  },
+  "scripts": {
+    "build-prod": "vite build"
+  },
+  "devDependencies": {
+    "vite": "6.3.5",
+    "@thyn/vite-plugin": "0.0.47"
+  },
+  "dependencies": {
+    "@thyn/core": "0.0.47"
+  }
+}
