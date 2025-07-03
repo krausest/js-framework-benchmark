@@ -14,7 +14,7 @@
   },
   "scripts": {
     "dev": "exit 0",
-    "build": "esbuild src/index.js --bundle --legal-comments=none --minify --outfile=public/index.js"
+    "build-prod": "esbuild src/index.js --bundle --legal-comments=none --minify --outfile=public/index.js"
   },
   "repository": {
     "type": "git",
