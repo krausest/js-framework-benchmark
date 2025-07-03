@@ -1,0 +1,66 @@
+<script>
+  import {data, buildData, selected} from "./state.thyn.js";
+  import Row from "./Row.thyn";
+
+  const add = () => data(d => [...d, ...buildData(1000)]);
+  const clear = () => data([]);
+  const partialUpdate = () => {for (let i = 0, d = data(), len = d.length; i < len; i += 10) d[i].label(l => l + " !!!")};
+  const run = () => {
+    data(buildData(1000));
+  };
+  const runLots = () => {
+    data(buildData(10000));
+  };
+  const swapRows = () => data(d => {
+    if (d.length > 998) {
+      const clone = d.slice();
+      const tmp = clone[1];
+      clone[1] = clone[998];
+      clone[998] = tmp;
+      return clone;
+    }
+    return d;
+  });
+</script>
+
+<div id="main" class="container">
+  <div class="jumbotron">
+    <div class="row">
+      <div class="col-md-6">
+        <h1>Thyn</h1>
+      </div>
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-sm-6 smallpad">
+            <button type="button" class="btn btn-primary btn-block" id="run" @click={run}>Create 1,000 rows</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button type="button" class="btn btn-primary btn-block" id="runlots" @click={runLots}>
+              Create 10,000 rows
+            </button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button type="button" class="btn btn-primary btn-block" id="add" @click={add}>Append 1,000 rows</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button type="button" class="btn btn-primary btn-block" id="update" @click={partialUpdate}>
+              Update every 10th row
+            </button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button type="button" class="btn btn-primary btn-block" id="clear" @click={clear}>Clear</button>
+          </div>
+          <div class="col-sm-6 smallpad">
+            <button type="button" class="btn btn-primary btn-block" id="swaprows" @click={swapRows}>Swap Rows</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table class="table table-hover table-striped test-data">
+    <tbody>
+      <Row #for={row in data()} row={row} />
+    </tbody>
+  </table>
+  <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+</div>
