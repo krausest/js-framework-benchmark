@@ -1,17 +1,17 @@
 <script>
-  import {selected, data, isSelected} from "./state.thyn.js";
+  import {selected, data } from "./state.thyn.js";
 
   const {row} = $props;
   const {id, label} = row;
 </script>
 
-<tr class={isSelected(id) ? 'danger' : undefined}>
+<tr class={selected() === id ? 'danger' : undefined}>
   <td class="col-md-1">{{ id }}</td>
   <td class="col-md-4">
-    <a @click={() => selected(id)}>{{ label() }}</a>
+    <a onclick={() => selected(id)}>{{ label() }}</a>
   </td>
   <td class="col-md-1">
-    <a @click={() => data(d => {
+    <a onclick={() => data(d => {
       const clone = d.slice();
       clone.splice(clone.indexOf(row), 1);
       return clone;
