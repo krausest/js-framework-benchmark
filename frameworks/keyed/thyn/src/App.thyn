@@ -2,16 +2,16 @@
   import {data, buildData, selected} from "./state.thyn.js";
   import Row from "./Row.thyn";
 
-  const add = () => data(d => [...d, ...buildData(1000)]);
-  const clear = () => data([]);
-  const partialUpdate = () => {for (let i = 0, d = data(), len = d.length; i < len; i += 10) d[i].label(l => l + " !!!")};
+  const add = () => data.update(d => [...d, ...buildData(1000)]);
+  const clear = () => data.set([]);
+  const partialUpdate = () => {for (let i = 0, d = data.get(), len = d.length; i < len; i += 10) d[i].label.update(l => l + " !!!")};
   const run = () => {
-    data(buildData(1000));
+    data.set(buildData(1000));
   };
   const runLots = () => {
-    data(buildData(10000));
+    data.set(buildData(10000));
   };
-  const swapRows = () => data(d => {
+  const swapRows = () => data.update(d => {
     if (d.length > 998) {
       const clone = d.slice();
       const tmp = clone[1];
@@ -32,26 +32,26 @@
       <div class="col-md-6">
         <div class="row">
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="run" @click={run}>Create 1,000 rows</button>
+            <button type="button" class="btn btn-primary btn-block" id="run" onclick={run}>Create 1,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="runlots" @click={runLots}>
+            <button type="button" class="btn btn-primary btn-block" id="runlots" onclick={runLots}>
               Create 10,000 rows
             </button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="add" @click={add}>Append 1,000 rows</button>
+            <button type="button" class="btn btn-primary btn-block" id="add" onclick={add}>Append 1,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="update" @click={partialUpdate}>
+            <button type="button" class="btn btn-primary btn-block" id="update" onclick={partialUpdate}>
               Update every 10th row
             </button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="clear" @click={clear}>Clear</button>
+            <button type="button" class="btn btn-primary btn-block" id="clear" onclick={clear}>Clear</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="swaprows" @click={swapRows}>Swap Rows</button>
+            <button type="button" class="btn btn-primary btn-block" id="swaprows" onclick={swapRows}>Swap Rows</button>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
   </div>
   <table class="table table-hover table-striped test-data">
     <tbody>
-      <Row #for={row in data()} row={row} />
+      <Row #for={row in data.get()} row={row} />
     </tbody>
   </table>
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
