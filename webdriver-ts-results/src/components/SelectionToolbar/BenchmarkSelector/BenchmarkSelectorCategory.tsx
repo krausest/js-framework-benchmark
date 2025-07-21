@@ -1,4 +1,4 @@
-import { BenchmarkType } from "@/Common";
+import { BenchmarkType, FrameworkType } from "@/Common";
 import { useRootStore } from "@/store";
 import SelectorContentContainer from "@/components/SelectionToolbar/SelectorContentContainer";
 import BenchmarkSelectorList from "./BenchmarkSelectorList";
