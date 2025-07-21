@@ -82,8 +82,7 @@ export const rows = container<Array<RowData>, RowsUpdateMessage>({
 })
 
 export const selectedRow = container<Container<boolean> | undefined>({
-  initialValue: undefined,
-  name: "selected-row"
+  initialValue: undefined
 })
 
 export const selectRow = (rowState: State<RowData>) => (get: GetState) => {

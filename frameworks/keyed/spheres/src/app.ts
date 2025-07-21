@@ -1,6 +1,6 @@
 import { HTMLBuilder, HTMLView, renderToDOM } from "spheres/view";
 import { RowData, rows, selectRow } from "./state.js";
-import { State, Store, StoreMessage, use, write } from "spheres/store";
+import { createStore, State, StoreMessage, use, write } from "spheres/store";
 
 function app(root: HTMLBuilder) {
   root.div((el) => {
@@ -131,4 +131,4 @@ function button(props: ButtonContext): HTMLView {
     });
 }
 
-renderToDOM(new Store(), document.body, app);
+renderToDOM(createStore(), document.body, app);
