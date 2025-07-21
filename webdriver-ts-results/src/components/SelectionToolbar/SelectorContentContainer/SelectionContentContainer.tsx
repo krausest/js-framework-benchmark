@@ -5,10 +5,10 @@ import { Button, Flex } from "antd";
 interface Props {
   children: React.ReactElement;
   selectNone: (event: React.SyntheticEvent) => void;
-  selectUnflagged: (event: React.SyntheticEvent) => void;
+  selectUnflagged?: (event: React.SyntheticEvent) => void;
   selectAll: (event: React.SyntheticEvent) => void;
   isNoneSelected: boolean;
-  isUnflaggedSelected: boolean;
+  isUnflaggedSelected?: boolean;
   areAllSelected: boolean;
   grid?: boolean;
   label: string;
@@ -30,7 +30,7 @@ const SelectorContentContainer = ({
   };
 
   const handleSelectUnflagged = (event: React.MouseEvent) => {
-    !isUnflaggedSelected && selectUnflagged(event);
+    !isUnflaggedSelected && selectUnflagged && selectUnflagged(event);
   };
 
   const handleSelectAll = (event: React.MouseEvent) => {
@@ -48,9 +48,10 @@ const SelectorContentContainer = ({
           <Button type="text" onClick={handleSelectAll} disabled={areAllSelected} aria-label="Select all">
             All
           </Button>
-          <Button type="text" onClick={handleSelectUnflagged} disabled={isUnflaggedSelected} aria-label="Select unflagged">
+          {selectUnflagged &&
+          (<Button type="text" onClick={handleSelectUnflagged} disabled={isUnflaggedSelected} aria-label="Select unflagged">
             Unflagged
-          </Button>
+          </Button>)}
         </div>
       </Flex>
       <div className={`selector-content-container__content ${grid ? "grid" : ""}`}>
