@@ -1,7 +1,6 @@
 let rowId = 1;
 export const data = $signal([]);
 export const selected = $signal();
-export const isSelected = $compare(selected);
 
 const adjectives = [
   'pretty',
