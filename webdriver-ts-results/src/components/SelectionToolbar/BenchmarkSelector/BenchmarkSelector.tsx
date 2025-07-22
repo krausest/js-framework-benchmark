@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 const content = (
   <>
     <BenchmarkSelectorCategory benchmarkType={BenchmarkType.CPU} label="Duration" />
-    <BenchmarkSelectorCategory benchmarkType={BenchmarkType.STARTUP} label="Startup" />
+    <BenchmarkSelectorCategory benchmarkType={BenchmarkType.SIZE} label="Transferred size" />
     <BenchmarkSelectorCategory benchmarkType={BenchmarkType.MEM} label="Memory" />
   </>
 );

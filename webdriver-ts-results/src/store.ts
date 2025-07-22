@@ -190,7 +190,7 @@ const preInitialState: State = {
   benchmarkLists: {
     [BenchmarkType.CPU]: rawBenchmarks.filter((b) => b.type === BenchmarkType.CPU),
     [BenchmarkType.MEM]: rawBenchmarks.filter((b) => b.type === BenchmarkType.MEM),
-    [BenchmarkType.STARTUP]: rawBenchmarks.filter((b) => b.type === BenchmarkType.STARTUP),
+    [BenchmarkType.SIZE]: rawBenchmarks.filter((b) => b.type === BenchmarkType.SIZE),
   },
   frameworks: mappedFrameworks,
   frameworkLists: {

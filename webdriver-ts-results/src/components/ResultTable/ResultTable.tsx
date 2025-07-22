@@ -39,7 +39,7 @@ const ResultTable = ({ type }: Props) => {
     !data ||
     data.frameworks.length === 0 ||
     (data.getResult(BenchmarkType.CPU).benchmarks.length === 0 &&
-      data.getResult(BenchmarkType.STARTUP).benchmarks.length === 0 &&
+      data.getResult(BenchmarkType.SIZE).benchmarks.length === 0 &&
       data.getResult(BenchmarkType.MEM).benchmarks.length === 0)
   ) {
     return null;
