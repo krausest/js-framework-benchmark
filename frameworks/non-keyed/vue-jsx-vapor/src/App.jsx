@@ -60,7 +60,7 @@ export default defineComponent({
         <div class="jumbotron">
           <div class="row">
             <div class="col-md-6">
-              <h1>Vue JSX Vapor (keyed)</h1>
+              <h1>Vue JSX Vapor (non-keyed)</h1>
             </div>
 
             <div class="col-md-6">
@@ -107,9 +107,9 @@ export default defineComponent({
         <table class="table table-hover table-striped test-data">
           <tbody>
             <tr v-for={ctx in rows.value} class={{ danger: ctx.id === selected.value }} data-label={ctx.label.value}>
-              <td class="col-md-1">{ctx.id}</td>
+              <td class="col-md-1" v-text={ctx.id} />
               <td class="col-md-4">
-                <a onClick={() => select(ctx.id)} v-text={ctx.label.value}></a>
+                <a onClick={() => select(ctx.id)} v-text={ctx.label.value} />
               </td>
               <td class="col-md-1">
                 <a onClick={() => remove(ctx.id)}>
