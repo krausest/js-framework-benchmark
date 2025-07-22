@@ -16,7 +16,7 @@
     "vue": "3.6.0-alpha.2"
   },
   "devDependencies": {
-    "vue-jsx-vapor": "^2.5.2",
-    "vite": "^6.2.1"
+    "vue-jsx-vapor": "^2.5.3",
+    "vite": "^7.0.5"
   }
 }
