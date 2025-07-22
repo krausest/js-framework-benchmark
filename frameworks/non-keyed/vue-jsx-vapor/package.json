@@ -13,10 +13,10 @@
     "preview": "vite preview --port 4711"
   },
   "dependencies": {
-    "vue": "https://pkg.pr.new/vue@eeab9c4"
+    "vue": "3.6.0-alpha.2"
   },
   "devDependencies": {
-    "vue-jsx-vapor": "^2.1.5",
+    "vue-jsx-vapor": "^2.5.2",
     "vite": "^6.2.1"
   }
 }
