@@ -34,7 +34,6 @@ function Button({id, title}) {
   );
 }
 
-
 function Jumbotron() {
   this.addEventListener("click", (ev) => {
     if (ev.target.tagName === "BUTTON") {
@@ -175,7 +174,7 @@ function *Main() {
     this.refresh();
   });
 
-  while (true) {
+  for ({} of this) {
     yield (
       <div class="container">
         <Jumbotron />
@@ -183,7 +182,7 @@ function *Main() {
           <tbody>
             {data.map((item) => (
               <Row
-                crank-key={item.id}
+                key={item.id}
                 item={item}
                 selected={item.id === selected}
               />
