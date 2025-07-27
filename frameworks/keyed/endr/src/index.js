@@ -1,6 +1,6 @@
 /** @import {Children, SetState} from 'endr' */
 
-import { createRoot, memo, useState } from 'endr';
+import { createRender, memo, useState } from 'endr';
 
 const { document } = globalThis;
 
@@ -178,4 +178,4 @@ const Main = () => {
   );
 };
 
-createRoot(/** @type {Element} */ (document.querySelector('#main'))).render(<Main />);
+createRender(/** @type {Element} */ (document.getElementById('main')))(<Main />);
