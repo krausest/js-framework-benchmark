@@ -1,13 +1,12 @@
-import { defineComponent, setData } from 'mettle';
+import { createApp, setData } from 'mettle';
 import { buildData } from './data.js';
 
 let selected;
 let rows = [];
 
 const setRows = (update = rows.slice()) => {
-  setData(() => {
-    rows = update;
-  }, TbodyComponent);
+  rows = update;
+  setData(TbodyComponent);
 };
 
 const run = () => {
@@ -17,9 +16,8 @@ const run = () => {
 
 const add = () => {
   const data = rows.concat(buildData(1000));
-  setData(() => {
-    rows = data;
-  }, TbodyComponent);
+  rows = data;
+  setData(TbodyComponent);
 };
 
 const update = () => {
@@ -49,7 +47,7 @@ const swapRows = () => {
   }
 };
 
-const TbodyComponent = defineComponent(({ setData }) => {
+function TbodyComponent({ setData }) {
   const remove = (id) => {
     rows.splice(
       rows.findIndex((d) => d.id === id),
@@ -60,13 +58,8 @@ const TbodyComponent = defineComponent(({ setData }) => {
 
   const symbol1 = Symbol();
   const select = (id) => {
-    setData(
-      () => {
-        selected = id;
-      },
-      null,
-      symbol1
-    );
+    selected = id;
+    setData(null, symbol1);
   };
 
   const handle = (event) => {
@@ -84,7 +77,7 @@ const TbodyComponent = defineComponent(({ setData }) => {
     <tbody onClick={handle}>
       {rows.map((item) => (
         <tr
-          $memo={[item.id == selected, symbol1]}
+          $memo={[item.id == selected, symbol1, false]}
           class={item.id === selected ? 'danger' : ''}
           key={item.id}
         >
@@ -102,81 +95,73 @@ const TbodyComponent = defineComponent(({ setData }) => {
       ))}
     </tbody>
   );
-});
+}
 
-defineComponent(
-  {
-    mount: '#main',
-  },
-  () => {
-    return () => (
-      <fragment>
-        <div class='jumbotron'>
-          <div class='row'>
-            <div class='col-md-6'>
-              <h1>Mettle-keyed</h1>
-            </div>
-            <div class='col-md-6'>
-              <div class='row'>
-                <div class='col-sm-6 smallpad'>
-                  <button type='button' class='btn btn-primary btn-block' id='run' onClick={run}>
-                    Create 1,000 rows
-                  </button>
-                </div>
-                <div class='col-sm-6 smallpad'>
-                  <button
-                    type='button'
-                    class='btn btn-primary btn-block'
-                    id='runlots'
-                    onClick={runLots}
-                  >
-                    Create 10,000 rows
-                  </button>
-                </div>
-                <div class='col-sm-6 smallpad'>
-                  <button type='button' class='btn btn-primary btn-block' id='add' onClick={add}>
-                    Append 1,000 rows
-                  </button>
-                </div>
-                <div class='col-sm-6 smallpad'>
-                  <button
-                    type='button'
-                    class='btn btn-primary btn-block'
-                    id='update'
-                    onClick={update}
-                  >
-                    Update every 10th row
-                  </button>
-                </div>
-                <div class='col-sm-6 smallpad'>
-                  <button
-                    type='button'
-                    class='btn btn-primary btn-block'
-                    id='clear'
-                    onClick={clear}
-                  >
-                    Clear
-                  </button>
-                </div>
-                <div class='col-sm-6 smallpad'>
-                  <button
-                    type='button'
-                    class='btn btn-primary btn-block'
-                    id='swaprows'
-                    onClick={swapRows}
-                  >
-                    Swap Rows
-                  </button>
-                </div>
+function Main() {
+  return () => (
+    <fragment>
+      <div class='jumbotron'>
+        <div class='row'>
+          <div class='col-md-6'>
+            <h1>Mettle-keyed</h1>
+          </div>
+          <div class='col-md-6'>
+            <div class='row'>
+              <div class='col-sm-6 smallpad'>
+                <button type='button' class='btn btn-primary btn-block' id='run' onClick={run}>
+                  Create 1,000 rows
+                </button>
+              </div>
+              <div class='col-sm-6 smallpad'>
+                <button
+                  type='button'
+                  class='btn btn-primary btn-block'
+                  id='runlots'
+                  onClick={runLots}
+                >
+                  Create 10,000 rows
+                </button>
+              </div>
+              <div class='col-sm-6 smallpad'>
+                <button type='button' class='btn btn-primary btn-block' id='add' onClick={add}>
+                  Append 1,000 rows
+                </button>
+              </div>
+              <div class='col-sm-6 smallpad'>
+                <button
+                  type='button'
+                  class='btn btn-primary btn-block'
+                  id='update'
+                  onClick={update}
+                >
+                  Update every 10th row
+                </button>
+              </div>
+              <div class='col-sm-6 smallpad'>
+                <button type='button' class='btn btn-primary btn-block' id='clear' onClick={clear}>
+                  Clear
+                </button>
+              </div>
+              <div class='col-sm-6 smallpad'>
+                <button
+                  type='button'
+                  class='btn btn-primary btn-block'
+                  id='swaprows'
+                  onClick={swapRows}
+                >
+                  Swap Rows
+                </button>
               </div>
             </div>
           </div>
         </div>
-        <table class='table table-hover table-striped test-data'>
-          <component $is={TbodyComponent} />
-        </table>
-        <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
-      </fragment>
-    );
-  }
-);
+      </div>
+      <table class='table table-hover table-striped test-data'>
+        <TbodyComponent />
+      </table>
+      <span class='preloadicon glyphicon glyphicon-remove' aria-hidden='true'></span>
+    </fragment>
+  );
+}
+
+createApp(<Main />, '#main');
