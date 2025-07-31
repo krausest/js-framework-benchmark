@@ -5,6 +5,7 @@ import {
   ternary,
   $,
   setReactivity,
+  setGlobalSchedule,
   view,
   unset,
   onCleanup,
@@ -96,6 +97,7 @@ function random(max: number) {
   return (Math.random() * max) | 0;
 }
 
+setGlobalSchedule(false);
 setReactivity($("#main")!, { run, runLots, add, update, clear, swapRows });
 
 const data = reactive<Array<{ id: number; label: string }>>([]);

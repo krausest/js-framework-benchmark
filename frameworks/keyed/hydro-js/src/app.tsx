@@ -9,6 +9,7 @@ import {
   setReuseElements,
   unset,
   onCleanup,
+  setGlobalSchedule,
 } from "hydro-js";
 
 declare global {
@@ -97,6 +98,7 @@ function random(max: number) {
   return (Math.random() * max) | 0;
 }
 
+setGlobalSchedule(false);
 setReuseElements(false);
 setReactivity($("#main")!, { run, runLots, add, update, clear, swapRows });
 
