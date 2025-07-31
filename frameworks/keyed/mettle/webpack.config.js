@@ -19,7 +19,16 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              plugins: ['babel-plugin-jsx-to-mettle', 'babel-plugin-mettle'],
+              presets: [
+                ['@babel/preset-env'],
+                [
+                  '@babel/preset-react',
+                  {
+                    runtime: 'automatic',
+                    importSource: 'mettle-jsx-runtime',
+                  },
+                ],
+              ],
             },
           },
         ],
