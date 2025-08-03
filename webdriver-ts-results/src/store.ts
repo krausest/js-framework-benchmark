@@ -91,8 +91,10 @@ interface Actions {
   isNoneBenchmarkSelected: (type: BenchmarkType) => boolean;
   areAllFrameworksSelected: (type: FrameworkType) => boolean;
   isNoneFrameworkSelected: (type: FrameworkType) => boolean;
+  isUnflaggedFrameworkSelected: (type: FrameworkType) => boolean;
   selectFramework: (framework: Framework, add: boolean) => void;
   selectAllFrameworks: (frameworkType: FrameworkType, add: boolean) => void;
+  selectUnflaggedFrameworks: (frameworkType: FrameworkType) => void;
   selectCategory: (categoryId: number, add: boolean) => void;
   selectBenchmark: (benchmark: Benchmark, add: boolean) => void;
   selectAllBenchmarks: (benchmarkType: BenchmarkType, add: boolean) => void;
@@ -188,7 +190,7 @@ const preInitialState: State = {
   benchmarkLists: {
     [BenchmarkType.CPU]: rawBenchmarks.filter((b) => b.type === BenchmarkType.CPU),
     [BenchmarkType.MEM]: rawBenchmarks.filter((b) => b.type === BenchmarkType.MEM),
-    [BenchmarkType.STARTUP]: rawBenchmarks.filter((b) => b.type === BenchmarkType.STARTUP),
+    [BenchmarkType.SIZE]: rawBenchmarks.filter((b) => b.type === BenchmarkType.SIZE),
   },
   frameworks: mappedFrameworks,
   frameworkLists: {
@@ -232,6 +234,9 @@ export const useRootStore = create<State & Actions>((set, get) => ({
   isNoneFrameworkSelected: (type) => {
     return get().frameworkLists[type].every((framework) => !get().selectedFrameworks.has(framework));
   },
+  isUnflaggedFrameworkSelected: (type) => {
+    return get().frameworkLists[type].every((framework) => framework.issues.length ? !get().selectedFrameworks.has(framework) : get().selectedFrameworks.has(framework));
+  },
   // Actions
   selectFramework: (framework: Framework, add: boolean) => {
     const newSelectedFramework = new Set(get().selectedFrameworks);
@@ -240,6 +245,23 @@ export const useRootStore = create<State & Actions>((set, get) => ({
 
     const t = { ...get(), selectedFrameworks: newSelectedFramework };
     return set(() => ({ ...t, resultTables: updateResultTable(t) }));
+  },
+  selectUnflaggedFrameworks: (frameworkType: FrameworkType) => {
+    const newSelectedFramework = new Set(get().selectedFrameworks);
+    const frameworks =
+      frameworkType === FrameworkType.KEYED
+        ? get().frameworkLists[FrameworkType.KEYED]
+        : get().frameworkLists[FrameworkType.NON_KEYED];
+
+    for (const framework of frameworks) {
+      framework.issues.length ? newSelectedFramework.delete(framework) : newSelectedFramework.add(framework);
+    }
+
+    const t = { ...get(), selectedFrameworks: newSelectedFramework };
+    return set(() => ({
+      ...t,
+      resultTables: updateResultTable(t),
+    }));
   },
   selectAllFrameworks: (frameworkType: FrameworkType, add: boolean) => {
     const newSelectedFramework = new Set(get().selectedFrameworks);

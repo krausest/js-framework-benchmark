@@ -14,18 +14,22 @@ const FrameworkSelectorCategory = ({ label, frameworkType }: Props) => {
   const selectedFrameworks = useRootStore((state) => state.selectedFrameworks);
   const frameworks = useRootStore((state) => state.frameworkLists[frameworkType]);
   const isNoneSelected = useRootStore((state) => state.isNoneFrameworkSelected);
+  const isUnflaggedSelected = useRootStore((state) => state.isUnflaggedFrameworkSelected);
   const areAllSelected = useRootStore((state) => state.areAllFrameworksSelected);
 
   const selectFramework = useRootStore((state) => state.selectFramework);
   const selectAllFrameworks = useRootStore((state) => state.selectAllFrameworks);
+  const selectUnflaggedFrameworks = useRootStore((state) => state.selectUnflaggedFrameworks);
 
   return (
     <SelectorContentContainer
       grid
       isNoneSelected={isNoneSelected(frameworkType)}
+      isUnflaggedSelected={isUnflaggedSelected(frameworkType)}
       areAllSelected={areAllSelected(frameworkType)}
       selectNone={() => selectAllFrameworks(frameworkType, false)}
       selectAll={() => selectAllFrameworks(frameworkType, true)}
+      selectUnflagged={() => selectUnflaggedFrameworks(frameworkType)}
       label={label}
     >
       <FrameworkSelectorList
