@@ -1,8 +1,8 @@
 import { html, render, signal } from 'uhtml';
 
 import Table from './table.js';
-import Jumbotron from '../../../non-keyed/uhtml/src/jumbotron.js';
-import { handle } from '../../../non-keyed/uhtml/src/utils.js';
+import Jumbotron from './jumbotron.js';
+import { handle } from './utils.js';
 
 const App = ({ title, data }) => html`
   <div class="container">
