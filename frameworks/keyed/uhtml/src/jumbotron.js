@@ -1,36 +1,55 @@
-import {html} from 'uhtml/keyed';
+import { html } from 'uhtml';
 
-export default ({run, runLots, add, update, clear, swapRows}) => html`
+import { create } from './utils.js';
+
+// the Jumbotron can be used as component, even if it has no effect/subscription
+export default ({ title, data }) => html`
   <div class="jumbotron">
     <div class="row">
       <div class="col-md-6">
-        <h1>µhtml keyed</h1>
+        <h1 .textContent=${title} />
       </div>
       <div class="col-md-6">
         <div class="row">
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block"
-                    id="run" onclick=${run}>Create 1,000 rows</button>
+            <button id="run" type="button" class="btn btn-primary btn-block"
+              onclick=${() => data.value = create(1_000)}
+            >Create 1,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block"
-                    id="runlots" onclick=${runLots}>Create 10,000 rows</button>
+            <button id="runlots" type="button" class="btn btn-primary btn-block"
+              onclick=${() => data.value = create(10_000)}
+            >Create 10,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block"
-                    id="add" onclick=${add}>Append 1,000 rows</button>
+            <button id="add" type="button" class="btn btn-primary btn-block"
+              onclick=${() => data.value = create(1_000, true)}
+            >Append 1,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block"
-                    id="update" onclick=${update}>Update every 10th row</button>
+            <button id="update" type="button" class="btn btn-primary btn-block"
+              onclick=${() => {
+                const rows = create(-1);
+                for (let i = 0; i < rows.length; i += 10) rows[i].label += ' !!!';
+                data.value = rows;
+              }}
+            >Update every 10th row</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block"
-                    id="clear" onclick=${clear}>Clear</button>
+            <button id="clear" type="button" class="btn btn-primary btn-block"
+              onclick=${() => data.value = create(0)}
+            >Clear</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block"
-                    id="swaprows" onclick=${swapRows}>Swap Rows</button>
+            <button id="swaprows" type="button" class="btn btn-primary btn-block"
+              onclick=${() => {
+                const rows = create(-1);
+                if (998 < rows.length) {
+                  [rows[1], rows[998]] = [rows[998], rows[1]];
+                  data.value = rows;
+                }
+              }}
+            >Swap Rows</button>
           </div>
         </div>
       </div>
