@@ -1,4 +1,4 @@
-import minifyHTML from "rollup-plugin-html-literals";
+import minifyHTML from "rollup-plugin-minify-template-literals";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 
@@ -11,7 +11,9 @@ export default {
     minifyHTML({
       options: {
         minifyOptions: {
+          ignoreCustomComments: [/^!/],
           keepClosingSlash: true,
+          caseSensitive: true,
         },
       },
     }),
