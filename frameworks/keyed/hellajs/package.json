@@ -19,6 +19,6 @@
   },
   "dependencies": {
     "@hellajs/core": "^0.14.0",
-    "@hellajs/dom": "^0.14.1"
+    "@hellajs/dom": "^0.14.2"
   }
 }
