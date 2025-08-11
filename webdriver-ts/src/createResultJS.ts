@@ -141,7 +141,7 @@ async function main() {
       }
     });
     resultJS += "\n" + JSON.stringify(result, function(key, val) {
-      return val.toFixed ? Number(val.toFixed(1)) : val;
+      return val.toFixed ? Number(val.toFixed(2)) : val;
     }) + ",";
   });
 
