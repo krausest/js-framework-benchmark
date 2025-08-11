@@ -7,6 +7,7 @@
     "moduleResolution": "NodeNext",
     "declaration": false,
     "target": "es2017",
+    "lib": ["es2022", "dom"],
     "allowSyntheticDefaultImports": true,
     "noLib": false,
 
