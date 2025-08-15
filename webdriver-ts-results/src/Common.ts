@@ -2,6 +2,13 @@ import { jStat } from "jstat";
 import { formatEn } from "@/utils";
 import { knownIssues } from "@/helpers/issues";
 
+// Formatter for memory results with 2 decimal places
+const formatMemory = new Intl.NumberFormat("en-US", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+  useGrouping: true,
+});
+
 export enum StatisticResult {
   SLOWER,
   UNDECIDED,
@@ -40,6 +47,14 @@ export enum BenchmarkType {
   STARTUP = 3,
   SIZE = 5,
 }
+
+// Map of benchmark types to their corresponding formatters
+const benchmarkFormatters = new Map<BenchmarkType, Intl.NumberFormat>([
+  [BenchmarkType.CPU, formatEn],
+  [BenchmarkType.MEM, formatMemory],
+  [BenchmarkType.STARTUP, formatEn],
+  [BenchmarkType.SIZE, formatEn],
+]);
 
 const benchmarkTypes = [BenchmarkType.CPU, BenchmarkType.MEM, BenchmarkType.STARTUP, BenchmarkType.SIZE];
 
@@ -463,7 +478,8 @@ export class ResultTableData {
     const confidenceInterval = 
       (1.959964 * (resultValues.standardDeviation || 0)) / Math.sqrt(resultValues.values.length);
       const confidenceIntervalStr = benchmark.type === BenchmarkType.CPU ? confidenceInterval.toFixed(1) : null;
-      const formattedValue = formatEn.format(value);
+      const formatter = benchmarkFormatters.get(benchmark.type) || formatEn;
+      const formattedValue = formatter.format(value);
 
     if (!this.compareWith || benchmark.type !== BenchmarkType.CPU) {
       return new TableResultValueEntry(
