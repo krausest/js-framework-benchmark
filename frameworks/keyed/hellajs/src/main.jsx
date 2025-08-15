@@ -20,15 +20,14 @@ const buildData = (count) => {
   return d;
 };
 
-const ActionButton = (id, label, onclick) => (
+const ActionButton = (props) => (
   <div class="col-sm-6">
     <button
-      id={id}
-      onClick={onclick}
+      {...props}
       class="btn btn-primary btn-block col-md-6"
       type="button"
     >
-      {label}
+      {props.children}
     </button>
   </div>
 );
@@ -74,12 +73,12 @@ function Bench() {
             </div>
             <div class="col-md-6">
               <div class="row">
-                {ActionButton('run', 'Create 1,000 rows', () => create(1000))}
-                {ActionButton('runlots', 'Create 10,000 rows', () => create(10000))}
-                {ActionButton('add', 'Append 1,000 rows', () => append(1000))}
-                {ActionButton('update', 'Update every 10th row', () => update())}
-                {ActionButton('clear', 'Clear', () => clear())}
-                {ActionButton('swaprows', 'Swap Rows', () => swap())}
+                <ActionButton id="run" onClick={() => create(1000)}>Create 1,000 rows</ActionButton>
+                <ActionButton id="runlots" onClick={() => create(10000)}>Create 10,000 rows</ActionButton>
+                <ActionButton id="add" onClick={() => append(1000)}>Append 1,000 rows</ActionButton>
+                <ActionButton id="update" onClick={() => update()}>Update every 10th row</ActionButton>
+                <ActionButton id="clear" onClick={() => clear()}>Clear</ActionButton>
+                <ActionButton id="swaprows" onClick={() => swap()}>Swap Rows</ActionButton>
               </div>
             </div>
           </div>
