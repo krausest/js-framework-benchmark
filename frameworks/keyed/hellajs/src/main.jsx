@@ -1,4 +1,4 @@
-import { signal, batch, effect } from "@hellajs/core";
+import { signal, batch } from "@hellajs/core";
 import { forEach, mount } from "@hellajs/dom";
 
 const adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"];
@@ -63,10 +63,6 @@ function Bench() {
   const remove = (id) => rows(rows().filter(row => row.id !== id));
 
   const clear = () => rows([]);
-
-  effect(() => {
-    console.log(rows())
-  })
 
   return (
     <div id="main">
