@@ -13,7 +13,7 @@ const AppService = (function() {
       selected.set(0);
     },
     add() {
-      data.push(...buildData(1000));
+      data.merge(buildData(1000));
     },
     clear() {
       data.clear();
@@ -29,11 +29,6 @@ const AppService = (function() {
       data.remove(idx);
     },
     init(nb ) {
-      // if(data.$value.length > 0) {
-      //   data.clear();
-      //   data.set(buildData(nb));
-      //   return;
-      // }
       AppService.resetSelected();
       data.set(buildData(nb));
     },
