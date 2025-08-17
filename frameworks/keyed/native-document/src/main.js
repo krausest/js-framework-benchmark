@@ -14,7 +14,7 @@ const App = () => {
       TBody(
         ForEachArray(AppService.data, (item) => {
             let isSelected = Observable(false);
-            let disconnectSelected = AppService.selected.on(item.id, () => {
+            AppService.selected.on(item.id, () => {
               isSelected.set(true)
             }, () => {
               isSelected.set(false);
@@ -27,17 +27,7 @@ const App = () => {
               ).nd.onClick(() => AppService.select(item.id)),
               Td({ class: 'col-md-1' },RemoveIcon(item.id)),
               Td({ class: 'col-md-6'},'')
-            ]).nd.lifecycle({
-              unmounted: () => {
-                disconnectSelected();
-                isSelected.cleanup();
-                item.label?.cleanup?.();
-                item = null;
-                isSelected = null;
-                disconnectSelected = null;
-                return true;
-              }
-            });
+            ]);
           },
           'id')
       ),
