@@ -13,20 +13,13 @@ const App = () => {
     Table({ class: 'table table-hover table-striped test-data' }, [
       TBody(
         ForEachArray(AppService.data, (item) => {
-            let isSelected = Observable(false);
-            AppService.selected.on(item.id, () => {
-              isSelected.set(true)
-            }, () => {
-              isSelected.set(false);
-            });
-
-            return Tr( { class: { 'danger': isSelected } }, [
+            return Tr( { class: { 'danger': AppService.selected.is(item.id) } }, [
               Td({ class: 'col-md-1' }, item.id),
-              Td({ class: 'col-md-4', 'data-sid': item.id },
-                Link({ 'data-sid': item.id }, item.label)
+              Td({ class: 'col-md-4' },
+                Link(item.label)
               ).nd.onClick(() => AppService.select(item.id)),
-              Td({ class: 'col-md-1' },RemoveIcon(item.id)),
-              Td({ class: 'col-md-6'},'')
+              Td({ class: 'col-md-1' }, RemoveIcon(item.id)),
+              Td({ class: 'col-md-6'})
             ]);
           },
           'id')
