@@ -13,7 +13,7 @@ const App = () => {
     Table({ class: 'table table-hover table-striped test-data' }, [
       TBody(
         ForEachArray(AppService.data, (item) => {
-            return Tr( { class: { 'danger': AppService.selected.is(item.id) } }, [
+            return Tr( { class: { 'danger': AppService.selected.when(item.id) } }, [
               Td({ class: 'col-md-1' }, item.id),
               Td({ class: 'col-md-4' },
                 Link(item.label)
