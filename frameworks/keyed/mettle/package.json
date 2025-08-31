@@ -16,12 +16,13 @@
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
     "babel-loader": "9.1.2",
-    "mettle-jsx-runtime": "^0.1.0",
+    "babel-plugin-mettle": "^0.5.0",
+    "mettle-jsx-runtime": "^1.0.0",
     "terser-webpack-plugin": "5.3.7",
     "webpack": "5.76.1",
     "webpack-cli": "5.0.1"
   },
   "dependencies": {
-    "mettle": "1.1.2"
+    "mettle": "1.7.0"
   }
 }

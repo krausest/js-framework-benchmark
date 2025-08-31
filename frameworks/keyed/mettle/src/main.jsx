@@ -1,56 +1,61 @@
-import { createApp, setData } from 'mettle';
+import { createApp, signal, batch } from 'mettle';
 import { buildData } from './data.js';
 
-let selected;
-let rows = [];
+let selected = signal(null);
+let rows = signal([]);
 
-const setRows = (update = rows.slice()) => {
-  rows = update;
-  setData(TbodyComponent);
+const setRows = (update = rows.value.slice()) => {
+  rows.value = update;
 };
 
 const run = () => {
-  setRows(buildData());
-  selected = undefined;
+  batch(() => {
+    setRows(buildData());
+    selected.value = undefined;
+  });
 };
 
 const add = () => {
-  const data = rows.concat(buildData(1000));
-  rows = data;
-  setData(TbodyComponent);
+  rows.value = rows.value.concat(buildData(1000));
 };
 
 const update = () => {
-  for (let i = 0; i < rows.length; i += 10) {
-    rows[i].label += ' !!!';
+  const _rows = rows.value;
+  for (let i = 0; i < _rows.length; i += 10) {
+    _rows[i].label += ' !!!';
   }
   setRows();
 };
 
 const runLots = () => {
-  setRows(buildData(10000));
-  selected = undefined;
+  batch(() => {
+    setRows(buildData(10000));
+    selected.value = undefined;
+  });
 };
 
 const clear = () => {
-  setRows([]);
-  selected = undefined;
+  batch(() => {
+    setRows([]);
+    selected.value = undefined;
+  });
 };
 
 const swapRows = () => {
-  if (rows.length > 998) {
-    const d1 = rows[1];
-    const d998 = rows[998];
-    rows[1] = d998;
-    rows[998] = d1;
+  const _rows = rows.value;
+  if (_rows.length > 998) {
+    const d1 = _rows[1];
+    const d998 = _rows[998];
+    _rows[1] = d998;
+    _rows[998] = d1;
     setRows();
   }
 };
 
-function TbodyComponent({ setData }) {
+function TbodyComponent({ memo }) {
   const remove = (id) => {
-    rows.splice(
-      rows.findIndex((d) => d.id === id),
+    rows.value.splice(
+      rows.value.findIndex((d) => d.id === id),
       1
     );
     setRows();
@@ -58,8 +63,9 @@ function TbodyComponent({ setData }) {
 
   const symbol1 = Symbol();
   const select = (id) => {
-    selected = id;
-    setData(null, symbol1);
+    memo(() => {
+      selected.value = id;
+    }, symbol1);
   };
 
   const handle = (event) => {
@@ -73,15 +79,17 @@ function TbodyComponent({ setData }) {
     return false;
   };
 
-  return () => (
+  return (
     <tbody onClick={handle}>
-      {rows.map((item) => (
+      {rows.value.map((item) => (
         <tr
-          $memo={[item.id == selected, symbol1, false]}
-          class={item.id === selected ? 'danger' : ''}
+          $memo={[item.id == selected.value, symbol1, false]}
+          class={item.id === selected.value ? 'danger' : ''}
           key={item.id}
         >
-          <td class='col-md-1'>{item.id}</td>
+          <td $once class='col-md-1'>
+            {item.id}
+          </td>
           <td class='col-md-4'>
             <a>{item.label}</a>
           </td>
@@ -98,7 +106,7 @@ function TbodyComponent({ setData }) {
 }
 
 function Main() {
-  return () => (
+  return (
     <fragment>
       <div class='jumbotron'>
         <div class='row'>
