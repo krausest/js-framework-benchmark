@@ -8,6 +8,7 @@ const selected = Observable(0);
 const AppService = {
   data,
   selected,
+  clean: Observable(false),
   resetSelected() {
     selected.disconnectAll();
     selected.set(0);
