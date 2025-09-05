@@ -21,10 +21,10 @@
   "author": "",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@types/node": "24.2.1",
+    "@types/node": "24.3.1",
     "@types/ramda": "0.31.0",
     "@types/selenium-webdriver": "4.1.28",
-    "@types/semver": "7.7.0",
+    "@types/semver": "7.7.1",
     "@types/yargs": "17.0.33",
     "@vitest/coverage-v8": "^3.2.4",
     "ts-node": "^10.9.2",
@@ -32,15 +32,15 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "chromedriver": "139.0.0",
+    "chromedriver": "140.0.0",
     "cross-env": "10.0.0",
-    "lighthouse": "12.8.1",
-    "playwright": "1.54.2",
-    "playwright-firefox": "1.54.2",
-    "playwright-webkit": "1.54.2",
-    "puppeteer-core": "24.16.0",
+    "lighthouse": "12.8.2",
+    "playwright": "1.55.0",
+    "playwright-firefox": "1.55.0",
+    "playwright-webkit": "1.55.0",
+    "puppeteer-core": "24.19.0",
     "ramda": "0.31.3",
-    "selenium-webdriver": "4.34.0",
+    "selenium-webdriver": "4.35.0",
     "semver": "7.7.2",
     "yargs": "18.0.0"
   }
