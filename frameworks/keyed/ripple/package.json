@@ -1,0 +1,31 @@
+{
+  "name": "js-framework-benchmark-ripple",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Boilerplate for Ripple",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "ripple",
+    "frameworkHomeURL": "https://ripplejs.com/"
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "keywords": [
+    "ripple"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "ripple": "^0.2.24",
+    "rollup": "^4.50.0",
+    "rollup-plugin-ripple": "^0.2.24"
+  }
+}
