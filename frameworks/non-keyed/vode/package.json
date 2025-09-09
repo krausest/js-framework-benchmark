@@ -1,14 +1,14 @@
 {
   "name": "js-framework-benchmark-vode",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "vode framework benchmark",
   "main": "main.mjs",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "vode",
+    "frameworkVersionFromPackage": "@ryupold/vode",
     "frameworkHomeURL": "https://github.com/ryupold/vode"
   },
   "dependencies": {
-    "@ryupold/vode": "1.0.1"
+    "@ryupold/vode": "1.0.2"
   },
   "devDependencies": {
     "esbuild": "0.25.9"

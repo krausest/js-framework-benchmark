@@ -1,4 +1,4 @@
-import { app, createState, BUTTON, DIV, H1, TABLE, TBODY, TR, Vode, TD, A, SPAN } from "@ryupold/vode";
+import { app, createState, memo, A, BUTTON, DIV, H1, SPAN, TABLE, TBODY, TR, TD } from "@ryupold/vode";
 import { buildData, DataEntry } from "./data";
 import packageJson from "../package.json";
 
@@ -9,7 +9,7 @@ const s = createState({
 
 type State = typeof s;
 
-app(document.body, s, (s: State) => <Vode<State>>[DIV, { class: "container", id: 'main' },
+app(document.body, s, (s: State) => [DIV, { class: "container", id: 'main' },
     [DIV, { class: "jumbotron" },
         [DIV, { class: "row" },
             [DIV, { class: "col-md-6" },
@@ -89,7 +89,7 @@ app(document.body, s, (s: State) => <Vode<State>>[DIV, { class: "container", id:
 
     [TABLE, { class: 'table table-hover table-striped test-data' },
         [TBODY,
-            ...s.data.map(d => <Vode<State>>[TR,
+            ...s.data.map(d => memo([d.id, d.label, s.selected === d.id], (s: State) => [TR,
                 { class: { danger: s.selected === d.id } },
                 [TD, { class: "col-md-1" }, d.id],
                 [TD, { class: "col-md-4" },
@@ -106,7 +106,7 @@ app(document.body, s, (s: State) => <Vode<State>>[DIV, { class: "container", id:
                     ],
                 ],
                 [TD, { class: "col-md-6" }]
-            ])
+            ]))
         ],
     ],
 
