@@ -15,10 +15,10 @@
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
     "rollup": "^4.44.1",
-    "rollup-plugin-hellajs": "0.9.1"
+    "rollup-plugin-hellajs": "^0.9.8"
   },
   "dependencies": {
-    "@hellajs/core": "^0.14.2",
-    "@hellajs/dom": "^0.14.7"
+    "@hellajs/core": "^1.0.7",
+    "@hellajs/dom": "^1.1.0"
   }
 }
