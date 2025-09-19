@@ -18,7 +18,7 @@
     "rollup-plugin-hellajs": "^0.9.8"
   },
   "dependencies": {
-    "@hellajs/core": "^1.0.7",
-    "@hellajs/dom": "^1.1.0"
+    "@hellajs/core": "^1.0.8",
+    "@hellajs/dom": "^1.1.3"
   }
 }

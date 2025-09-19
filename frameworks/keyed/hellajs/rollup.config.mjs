@@ -3,7 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 
 export default {
-  input: 'src/main.jsx',
+  input: 'src/main.tsx',
   output: {
     file: 'dist/main.js',
     format: 'iife',
