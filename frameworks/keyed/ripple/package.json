@@ -24,8 +24,8 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-terser": "^0.4.4",
-    "ripple": "^0.2.31",
+    "ripple": "^0.2.56",
     "rollup": "^4.50.0",
-    "rollup-plugin-ripple": "^0.2.31"
+    "rollup-plugin-ripple": "^0.2.56"
   }
 }
