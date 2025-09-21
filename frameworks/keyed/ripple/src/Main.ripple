@@ -1,3 +1,5 @@
+import { track } from 'ripple';
+
 const adjectives = [
   'pretty',
   'large',
@@ -60,42 +62,42 @@ function _random(max) {
 
 export default component App() {
   let rowId = 1;
-  let $items = [];
-  let $selected;
+  let items = track([]);
+  let selected = track();
 
-  const add = () => ($items = [...$items, ...buildData(1000)]);
+  const add = () => (@items = [...@items, ...buildData(1000)]);
   const clear = () => {
-    $items = [];
+    @items = [];
 	}
 
   const partialUpdate = () => {
-    for (let i = 0; i < $items.length; i += 10) {
-      const row = $items[i];
-      row.$label = row.$label + ' !!!';
+    for (let i = 0; i < @items.length; i += 10) {
+      const row = @items[i];
+      row.@label = row.@label + ' !!!';
     }
   };
 
   const remove = (row) => {
-    const clone = $items.slice();
+    const clone = @items.slice();
     clone.splice(clone.indexOf(row), 1);
-    $items = clone;
+    @items = clone;
   }
   
   const run = () => {
-    $items = buildData(1000);
+    @items = buildData(1000);
   };
 
   const runLots = () => {	
-    $items = buildData(10000);
+    @items = buildData(10000);
   };
   
   const swapRows = () => {
-    if ($items.length > 998) {
-      const clone = $items.slice();
+    if (@items.length > 998) {
+      const clone = @items.slice();
       const tmp = clone[1];
       clone[1] = clone[998];
       clone[998] = tmp;
-      $items = clone;
+      @items = clone;
     }
   };
 
@@ -106,7 +108,7 @@ export default component App() {
       
 			data[i] = {
         id: rowId++,
-        $label: label,
+        label: track(label),
       }
 		}
 		return data;
@@ -156,11 +158,13 @@ export default component App() {
     </div>
     <table class="table table-hover table-striped test-data">
       <tbody>
-        for (const row of $items) {
-          <tr $class={$selected === row.id ? 'danger' : ''}>
-            <td class="col-md-1">{row.id}</td>
+        for (const row of @items) {
+          const id = row.id;
+
+          <tr $class={@selected === id ? 'danger' : ''}>
+            <td class="col-md-1">{id}</td>
             <td class="col-md-4">
-              <a onClick={() => { $selected = row.id; }}>{row.$label}</a>
+              <a onClick={() => { @selected = id; }}>{row.@label}</a>
             </td>
             <td class="col-md-1">
               <a onClick={() => remove(row)}>
