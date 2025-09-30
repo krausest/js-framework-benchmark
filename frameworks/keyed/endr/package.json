@@ -12,7 +12,7 @@
     "dev": "esbuild src/index.js --loader:.js=jsx --jsx=automatic --jsx-import-source=endr --outfile=dist/index.js --bundle --minify --watch"
   },
   "dependencies": {
-    "endr": "0.2.0",
+    "endr": "0.2.1",
     "esbuild": "0",
     "eslint-config-coderiety": "2",
     "eslint": "9"
