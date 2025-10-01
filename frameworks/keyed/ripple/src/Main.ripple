@@ -161,7 +161,7 @@ export default component App() {
         for (const row of @items) {
           const id = row.id;
 
-          <tr $class={@selected === id ? 'danger' : ''}>
+          <tr class={@selected === id ? 'danger' : ''}>
             <td class="col-md-1">{id}</td>
             <td class="col-md-4">
               <a onClick={() => { @selected = id; }}>{row.@label}</a>
