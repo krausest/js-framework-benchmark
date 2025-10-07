@@ -5,7 +5,8 @@
   "author": "omilli",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@hellajs/core",
-    "frameworkHomeURL": "https://hellajs.com"
+    "frameworkHomeURL": "https://hellajs.com",
+    "issues": [1139]
   },
   "scripts": {
     "build-prod": "rollup -c rollup.config.mjs"

@@ -113,6 +113,7 @@ function Bench() {
                     <span class="glyphicon glyphicon-remove" ariaHidden="true"></span>
                   </a>
                 </td>
+                <td class="col-md-6"></td>
               </tr>
             ))}
           </tbody>
