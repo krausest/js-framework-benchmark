@@ -30,7 +30,7 @@ const KnownIssuesList = () => {
 
 const App = () => {
   // eslint-disable-next-line no-constant-condition
-  const version = "Chrome 140.0.7339.81"
+  const version = "Chrome 141.0.7390.55"
   const disclaimer = false ? (
     <div>
       <h2>js-framework-benchmark results for {version}</h2>
@@ -49,7 +49,7 @@ const App = () => {
 
   const testEnvironmentInfo = (
     <p>
-      The benchmark was run on a MacBook Pro 14 (48 GB RAM, M4 14/20 Cores, OSX 15.6.1), {version}
+      The benchmark was run on a MacBook Pro 14 (48 GB RAM, M4 14/20 Cores, OSX 26.0.1), {version}
       (arm64) using the puppeteer benchmark driver with reduced tracing.
     </p>
   );
