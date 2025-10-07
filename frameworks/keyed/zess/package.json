@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-keyed-zess",
+  "version": "1.0.0",
+  "description": "Benchmark for Zess",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@zessjs/core",
+    "frameworkHomeURL": "https://rpsffx.github.io/zess/"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "vite build",
+    "preview": "vite preview"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@zessjs/vite-plugin": "^1.0.8",
+    "vite": "^7.1.9"
+  },
+  "dependencies": {
+    "@zessjs/core": "^1.0.8"
+  }
+}
