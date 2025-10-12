@@ -50,16 +50,12 @@ static ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
 fn build_data(count: usize) -> Vec<RowData> {
     let mut thread_rng = thread_rng();
 
-    let mut choose =
-        |slice: &[&'static str]| slice.choose(&mut thread_rng).unwrap();
-
     (0..count)
         .map(|_| RowData {
             id: ID_COUNTER.fetch_add(1, Ordering::Relaxed),
-            label: ArcRwSignal::new(format!("{} {} {}",
-                choose(ADJECTIVES),
-                choose(COLOURS),
-                choose(NOUNS))),
+            label: ArcRwSignal::new([ADJECTIVES, COLOURS, NOUNS]
+                .map(|slice| slice.choose(&mut thread_rng).unwrap())
+                .join(" "))
         })
         .collect()
 }
