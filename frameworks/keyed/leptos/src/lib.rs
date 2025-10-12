@@ -50,30 +50,18 @@ static ID_COUNTER: AtomicUsize = AtomicUsize::new(1);
 fn build_data(count: usize) -> Vec<RowData> {
     let mut thread_rng = thread_rng();
 
-    let mut data = Vec::new();
-    data.reserve_exact(count);
+    let mut choose =
+        |slice: &[&'static str]| slice.choose(&mut thread_rng).unwrap();
 
-    for _i in 0..count {
-        let adjective = ADJECTIVES.choose(&mut thread_rng).unwrap();
-        let colour = COLOURS.choose(&mut thread_rng).unwrap();
-        let noun = NOUNS.choose(&mut thread_rng).unwrap();
-        let capacity = adjective.len() + colour.len() + noun.len() + 2;
-        let mut label = String::with_capacity(capacity);
-        label.push_str(adjective);
-        label.push(' ');
-        label.push_str(colour);
-        label.push(' ');
-        label.push_str(noun);
-
-        data.push(RowData {
-            id: ID_COUNTER.load(Ordering::Relaxed),
-            label: ArcRwSignal::new(label),
-        });
-
-        ID_COUNTER.store(ID_COUNTER.load(Ordering::Relaxed) + 1, Ordering::Relaxed);
-    }
-
-    data
+    (0..count)
+        .map(|_| RowData {
+            id: ID_COUNTER.fetch_add(1, Ordering::Relaxed),
+            label: ArcRwSignal::new(format!("{} {} {}",
+                choose(ADJECTIVES),
+                choose(COLOURS),
+                choose(NOUNS))),
+        })
+        .collect()
 }
 
 /// Button component.
