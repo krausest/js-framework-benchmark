@@ -54,9 +54,11 @@ fn build_data(count: usize) -> Vec<RowData> {
         .map(|slice| slice.choose(&mut thread_rng).unwrap())
         .join(" ");
 
-    (0..count)
-        .map(|_| RowData {
-            id: ID_COUNTER.fetch_add(1, Ordering::Relaxed),
+    let id = ID_COUNTER.fetch_add(count, Ordering::Relaxed);
+
+    (id..id + count)
+        .map(|id| RowData {
+            id,
             label: ArcRwSignal::new(label())
         })
         .collect()
