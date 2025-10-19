@@ -44,7 +44,7 @@ export const knownIssues: Issue[] = [
   {
     number: 1139,
     severity: Severity.NOTE,
-    text: "[Note]: Implementation uses runtime code generation",
+    text: "[Note]: Implementation doesn't pass strict CSP",
     link: "https://github.com/krausest/js-framework-benchmark/issues/1139",
   },
   {
