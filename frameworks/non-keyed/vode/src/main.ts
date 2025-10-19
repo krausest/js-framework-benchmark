@@ -9,7 +9,7 @@ const s = createState({
 
 type State = typeof s;
 
-app(document.body, s, (s: State) => [DIV, { class: "container", id: 'main' },
+app(document.getElementById("app")!, s, (s: State) => [DIV, { class: "container", id: 'main' },
     [DIV, { class: "jumbotron" },
         [DIV, { class: "row" },
             [DIV, { class: "col-md-6" },
