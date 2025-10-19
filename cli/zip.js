@@ -71,6 +71,14 @@ function addFrameworksToZip(frameworkType, frameworkDir, frameworkName) {
       );
       break;
     }
+    case "lui": 
+    case "lui-noeval": {
+      addLocalFolderIfExists(
+        `${frameworkDir}/src`,
+        `${zipFrameworkPath}/src`
+      );
+      break;
+    }
     case "stem": {
       addLocalFolderIfExists(
         `${frameworkDir}/node_modules/babel-polyfill/dist`,
