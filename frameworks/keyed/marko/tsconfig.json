@@ -1,0 +1,13 @@
+{
+  "include": [".marko-run/*", "vite.config.ts", "src/**/*"],
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "dom.asynciterable", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "types": ["vite/client"]
+  }
+}
+

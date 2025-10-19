@@ -4,17 +4,19 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "marko",
     "frameworkHomeURL": "https://markojs.com/",
-    "customURL": "/dist",
-    "issues": [1139]
+    "customURL": "/dist/public",
+    "issues": [
+      1139
+    ]
   },
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@marko/run-adapter-static": "^0.1.5",
-    "marko": "^5.31.0"
+    "@marko/run-adapter-static": "^2.0.3",
+    "marko": "^5.37.60"
   },
   "devDependencies": {
-    "@marko/run": "^0.2.0"
+    "@marko/run": "^0.9.2"
   },
   "private": true,
   "scripts": {
