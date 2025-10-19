@@ -14,10 +14,10 @@
   ],
   "scripts": {
     "build-dev": "cp ./node_modules/sprae/dist/sprae.js ./src/sprae.js",
-    "build-prod": "cp ./node_modules/sprae/dist/sprae.min.js ./src/sprae.js"
+    "build-prod": "cp ./node_modules/sprae/dist/sprae.js ./src/sprae.js"
   },
   "type": "module",
   "dependencies": {
-    "sprae": "^11.3.0"
+    "sprae": "^12.1.0"
   }
 }
