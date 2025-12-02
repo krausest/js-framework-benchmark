@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-keyed-rasen",
+  "version": "1.0.0",
+  "description": "Rasen implementation for js-framework-benchmark",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@rasenjs/dom",
+    "frameworkHomeURL": "https://github.com/rasenjs/rasen"
+  },
+  "scripts": {
+    "build-prod": "vite build"
+  },
+  "dependencies": {
+    "@rasenjs/core": "^0.1.1-alpha",
+    "@rasenjs/dom": "^0.1.1-alpha",
+    "@rasenjs/reactive-vue": "^0.1.1-alpha",
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0"
+  }
+}
