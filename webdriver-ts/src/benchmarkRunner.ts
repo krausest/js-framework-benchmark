@@ -9,6 +9,7 @@ import {
 } from "./common.js";
 import { fork } from "node:child_process";
 import * as fs from "node:fs";
+import { performance } from "node:perf_hooks";
 import {
   BenchmarkInfo,
   benchmarkInfos,
@@ -201,6 +202,7 @@ async function runBench(
   let plausibilityCheck = new PlausibilityCheck();
 
   for (let j = 0; j < benchmarkInfos.length; j++) {
+    const startTime = performance.now();
     for (let i = 0; i < runFrameworks.length; i++) {
       try {
         let result;
@@ -233,6 +235,8 @@ async function runBench(
         errors.push(error as string);
       }
     }
+    const duration = performance.now() - startTime;
+    console.log(`==> Duration for benchmark ${benchmarkInfos[j].id}: ${duration.toFixed(2)} ms`);
   }
 
   if (warnings.length > 0) {

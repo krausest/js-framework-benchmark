@@ -323,8 +323,8 @@ export const benchmarks = [
    benchClear, 
    benchReadyMemory, 
    benchRunMemory, 
-   benchRun10KMemory,
-   benchUpdate5Memory,
+  //  benchRun10KMemory,
+  //  benchUpdate5Memory,
   //  benchReplace5Memory, 
    benchCreateClear5Memory,
 ];
