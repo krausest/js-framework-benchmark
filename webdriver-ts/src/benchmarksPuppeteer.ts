@@ -123,11 +123,12 @@ export const benchSelect = new (class extends CPUBenchmarkPuppeteer {
     await checkElementExists(page, "pierce/#run");
     await clickElement(page, "pierce/#run");
     await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
-    for (let i = 0; i <= this.benchmarkInfo.warmupCount; i++) {
+    // for (let i = 0; i <= this.benchmarkInfo.warmupCount; i++) {
+    let i=0;
       await clickElement(page, `pierce/tbody>tr:nth-of-type(${i + 5})>td:nth-of-type(2)>a`);
       await checkElementHasClass(page, `pierce/tbody>tr:nth-of-type(${i + 5})`, "danger");
       await checkCountForSelector(page, "pierce/tbody>tr.danger", 1);
-    }
+    // }
   }
   async run(page: Page) {
     await clickElement(page, "pierce/tbody>tr:nth-of-type(2)>td:nth-of-type(2)>a");
