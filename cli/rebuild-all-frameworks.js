@@ -86,7 +86,7 @@ function buildFramework(framework, useCi) {
 
   deleteFrameworkFiles(frameworkPath, filesToDelete);
 
-  const installCmd = `npm ${useCi ? "ci" : "install"}`;
+  const installCmd = `npm ${useCi ? "ci" : "install"} --ignore-scripts`;
   runCommand(installCmd, frameworkPath);
 
   const buildCmd = "npm run build-prod";

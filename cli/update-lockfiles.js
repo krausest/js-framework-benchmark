@@ -14,7 +14,7 @@ import { getFrameworks } from "./helpers/frameworks.js";
 /** @param {string} frameworkPath */
 function runNpmInstall(frameworkPath) {
   try {
-    execSync("npm install --package-lock-only", {
+    execSync("npm install --package-lock-only --ignore-scripts", {
       cwd: frameworkPath,
       stdio: "inherit",
     });
