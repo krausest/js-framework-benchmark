@@ -12,6 +12,7 @@ import {
 import { startBrowser } from "./puppeteerAccess.js";
 import { computeResultsCPU, computeResultsJS, computeResultsPaint, fileNameTrace } from "./timeline.js";
 import * as fs from "node:fs";
+import { performance } from "node:perf_hooks";
 
 let config: Config = defaultConfig;
 
@@ -283,6 +284,7 @@ export async function executeBenchmark(
   benchmarkId: string,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<any>> {
+  const startTime = performance.now();
   let runBenchmarks: Array<BenchmarkPuppeteer> = benchmarks.filter(
     (b) =>
       benchmarkId === b.benchmarkInfo.id && (b instanceof CPUBenchmarkPuppeteer || b instanceof MemBenchmarkPuppeteer)
@@ -290,7 +292,6 @@ export async function executeBenchmark(
   if (runBenchmarks.length != 1) throw `Benchmark name ${benchmarkId} is not unique (puppeteer)`;
 
   let benchmark = runBenchmarks[0];
-
   let errorAndWarnings: ErrorAndWarning<any>;
   if (benchmark.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark as CPUBenchmarkPuppeteer, benchmarkOptions);
@@ -298,6 +299,8 @@ export async function executeBenchmark(
     errorAndWarnings = await runMemBenchmark(framework, benchmark as MemBenchmarkPuppeteer, benchmarkOptions);
   }
   if (config.LOG_DEBUG) console.log("benchmark finished - got errors promise", errorAndWarnings);
+  const duration = performance.now() - startTime;
+  console.log(`=> Duration for ${benchmark.benchmarkInfo.id} and framework ${framework.name}: ${duration.toFixed(2)} ms`)
   return errorAndWarnings;
 }
 
