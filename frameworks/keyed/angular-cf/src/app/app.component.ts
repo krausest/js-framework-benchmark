@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component, VERSION } from '@angular/core';
 
 interface Data {
@@ -13,7 +12,6 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 @Component({
     selector: 'app-root',
-    imports: [NgFor],
     templateUrl: './app.component.html'
 })
 export class AppComponent {
@@ -24,8 +22,8 @@ export class AppComponent {
     version = VERSION.full;
 
     buildData(count: number = 1000): Array<Data> {
-        var data: Array<Data> = new Array(count);
-        for (var i = 0; i < count; i++) {
+        const data: Array<Data> = new Array(count);
+        for (let i = 0; i < count; i++) {
             data[i]={ id: this.id, label: `${adjectives[this._random(adjectives.length)]} ${colours[this._random(colours.length)]} ${nouns[this._random(nouns.length)]}` };
             this.id++;
         }
@@ -78,7 +76,7 @@ export class AppComponent {
     }
     swapRows() {
         if (this.data.length > 998) {
-            var a = this.data[1];
+            const a = this.data[1];
             this.data[1] = this.data[998];
             this.data[998] = a;
         }

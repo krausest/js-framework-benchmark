@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, VERSION, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ApplicationRef, Component, VERSION, inject } from '@angular/core';
 
 interface Data {
     id: number;
@@ -11,7 +11,8 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html'
+    templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
     private applicationRef = inject(ApplicationRef);
@@ -23,9 +24,9 @@ export class AppComponent {
     version = VERSION.full;
 
     buildData(count: number = 1000): Array<Data> {
-        var data: Array<Data> = [];
-        for (var i = 0; i < count; i++) {
-            data.push({ id: this.id, label: adjectives[this._random(adjectives.length)] + " " + colours[this._random(colours.length)] + " " + nouns[this._random(nouns.length)] });
+        const data: Array<Data> = new Array(count);
+        for (let i = 0; i < count; i++) {
+            data[i]={ id: this.id, label: adjectives[this._random(adjectives.length)] + " " + colours[this._random(colours.length)] + " " + nouns[this._random(nouns.length)] };
             this.id++;
         }
         return data;
@@ -84,7 +85,7 @@ export class AppComponent {
     }
     swapRows() {
         if (this.data.length > 998) {
-            var a = this.data[1];
+            const a = this.data[1];
             this.data[1] = this.data[998];
             this.data[998] = a;
         }
