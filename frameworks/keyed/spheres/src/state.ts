@@ -1,4 +1,5 @@
-import { Container, GetState, State, update, StoreMessage, batch, container, write } from "spheres/store";
+import { value, Value } from "spheres/store";
+import { GetState, update, StoreMessage, batch, container, write } from "spheres/store";
 
 function random(max: number) {
   return Math.round(Math.random() * 1000) % max;
@@ -44,9 +45,9 @@ type RowsUpdateMessage =
   SwapRowsMessage
 
 export interface RowData {
-  id: number;
-  label: Container<string>;
-  isSelected: Container<boolean>;
+  id: string;
+  label: Value<string>;
+  isSelected: Value<boolean>;
 }
 
 export const rows = container<Array<RowData>, RowsUpdateMessage>({
@@ -81,12 +82,11 @@ export const rows = container<Array<RowData>, RowsUpdateMessage>({
   }
 })
 
-export const selectedRow = container<Container<boolean> | undefined>({
+export const selectedRow = container<Value<boolean> | undefined>({
   initialValue: undefined
 })
 
-export const selectRow = (rowState: State<RowData>) => (get: GetState) => {
-  const rowData = get(rowState)
+export const selectRow = (rowData: RowData, get: GetState) => {
   let messages: Array<StoreMessage<any>> = []
   messages.push(write(rowData.isSelected, true))
   const oldSelected = get(selectedRow)
@@ -103,11 +103,9 @@ function buildRows(count: number): Array<RowData> {
   const data = new Array<RowData>(count);
   for (let i = 0; i < count; i++) {
     data[i] = {
-      id: nextId++,
-      label: container({
-        initialValue: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`,
-      }),
-      isSelected: container({ initialValue: false })
+      id: `${nextId++}`,
+      label: value(`${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`),
+      isSelected: value(false)
     }
   }
   return data;
