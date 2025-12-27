@@ -521,7 +521,7 @@ You can set an optional different URL if needed or specify that your DOM uses a 
 
 Please take a look at https://github.com/krausest/js-framework-benchmark/wiki/Process-for-merging-a-pull-request for informations how pull requests are merged.
 
-
+**Github Copilot may review your PR. It's still experimental so feel free to ignore its comments.**
 
 Contributions are very welcome. Please use the following rules:
 
