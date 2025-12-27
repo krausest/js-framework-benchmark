@@ -8,15 +8,19 @@
     "frameworkHomeURL": "https://srfnstack.github.io/fntags/"
   },
   "scripts": {
-    "dev": "npm i && node build.js dev",
-    "build-prod": "npm i && node build.js"
+    "dev": "npm i && DEV=true rollup -c",
+    "build-prod": "npm i && rollup -c"
   },
   "author": "Robert Kempton",
   "dependencies": {
-    "@srfnstack/fntags": "0.5.1"
+    "@srfnstack/fntags": "1.1.0"
   },
   "devDependencies": {
     "fs-extra": "11.2.0",
-    "terser": "5.37.0"
+    "terser": "5.37.0",
+    "rimraf": "^6.1.2",
+    "rollup": "^4.54.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^0.4.4"
   }
 }
