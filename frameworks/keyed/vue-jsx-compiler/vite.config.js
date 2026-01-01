@@ -12,7 +12,6 @@ export default defineConfig({
     },
   },
   build: {
-    minify: false,
     rollupOptions: {
       input: "src/main.js",
       output: {
