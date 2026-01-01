@@ -92,10 +92,8 @@ class Main  {
 	}
 
 	update() {
-		const len = this.tbody.children.length
-		for (let i = 0; i<len; i += 10) {
-			this.rows[i].label += BANG
-			this.tbody.children[i].children[1].children[0].textContent = this.rows[i].label
+		for (const i=0, len = this.rows.length;i<len;i+=10) {
+			this.tbody.childNodes[i].childNodes[1].childNodes[0].lastChild.nodeValue  = this.rows[i].label = `${this.rows[i].label}${BANG}`
 		}
 	}
 
