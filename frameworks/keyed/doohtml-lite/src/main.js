@@ -92,7 +92,7 @@ class Main  {
 	}
 
 	update() {
-		for (const i=0, len = this.rows.length;i<len;i+=10) {
+		for (let i=0, len = this.rows.length;i<len;i+=10) {
 			this.tbody.childNodes[i].childNodes[1].childNodes[0].lastChild.nodeValue  = this.rows[i].label = `${this.rows[i].label}${BANG}`
 		}
 	}
