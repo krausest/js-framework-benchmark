@@ -12,10 +12,10 @@
     "build-prod": "vite build"
   },
   "devDependencies": {
-    "vite": "6.3.5",
-    "@thyn/vite-plugin": "0.0.228"
+    "vite": "7.3.1",
+    "@thyn/vite-plugin": "0.0.234"
   },
   "dependencies": {
-    "@thyn/core": "0.0.228"
+    "@thyn/core": "0.0.234"
   }
 }
