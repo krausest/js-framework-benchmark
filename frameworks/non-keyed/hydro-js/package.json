@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-non-keyed-hydro-js",
-  "version": "1.5.10",
+  "version": "1.8.9",
   "description": "hydro-js demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
@@ -15,7 +15,7 @@
   "keywords": [
     "hydro-js"
   ],
-  "author": "Fabian Krutsch",
+  "author": "Fabian Klingenberg",
   "license": "Apache-2.0",
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {
@@ -23,12 +23,12 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@types/glob": "^7.2.0",
-    "glob": "^7.2.0",
-    "html-bundle": "^6.0.7",
-    "typescript": "^4.5.5"
+    "@types/glob": "^9.0.0",
+    "glob": "^10.4.5",
+    "html-bundle": "^6.2.0",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "hydro-js": "^1.5.10"
+    "hydro-js": "^1.8.9"
   }
 }

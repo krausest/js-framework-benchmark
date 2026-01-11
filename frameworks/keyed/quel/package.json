@@ -1,0 +1,19 @@
+{
+  "name": "js-framework-benchmark-keyed-quel",
+  "version": "1.0.0",
+  "description": "benchmark for quel",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.23.1",
+    "frameworkHomeURL": "https://github.com/mogera551/quel",
+    "issues": [1139]
+  },
+  "scripts": {
+    "build-dev": "echo 0",
+    "build-prod": "echo 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mogera551/quel.git"
+  }
+}

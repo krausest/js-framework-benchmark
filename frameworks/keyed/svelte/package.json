@@ -22,10 +22,10 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "15.1.0",
-    "@rollup/plugin-terser": "0.4.3",
-    "rollup": "3.26.2",
-    "rollup-plugin-svelte": "7.1.6",
-    "svelte": "4.0.0"
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.28.1",
+    "rollup-plugin-svelte": "^7.2.2",
+    "svelte": "^5.42.1"
   }
 }

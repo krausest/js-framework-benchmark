@@ -1,4 +1,5 @@
-import { signal, batch } from "@preact/signals";
+import { signal, batch, useComputed } from "@preact/signals";
+import { For } from "@preact/signals/utils";
 import { render, h } from "preact";
 
 let idCounter = 1;
@@ -109,8 +110,8 @@ const run = () => {
   swapRows = () => {
     const d = data.value.slice();
     if (d.length > 998) {
-      let tmp = d[1];
-      d[1] = d[998];
+      let tmp = {...d[1]};
+      d[1] = {...d[998]};
       d[998] = tmp;
       data.value = d;
     }
@@ -123,6 +124,24 @@ const run = () => {
   select = (id) => {
     selected.value = id;
   };
+
+const Row = ({ id, label }) => {
+  const rowClass = useComputed(() => selected.value === id ? "danger" : "");
+  return (
+    <tr class={rowClass}>
+      <td class="col-md-1" textContent={id} />
+      <td class="col-md-4">
+        <a onClick={() => select(id)} textContent={label} />
+      </td>
+      <td class="col-md-1">
+        <a onClick={() => remove(id)}>
+          <span class="glyphicon glyphicon-remove" aria-hidden="true" />
+        </a>
+      </td>
+      <td class="col-md-6" />
+    </tr>
+  )
+}
 
 const App = () => {
   return (
@@ -146,20 +165,9 @@ const App = () => {
       </div>
       <table class="table table-hover table-striped test-data">
         <tbody>
-          {data.value.map((row) => (
-            <tr key={row.id} class={selected.value === row.id ? "danger" : ""}>
-              <td class="col-md-1" textContent={row.id} />
-              <td class="col-md-4">
-                <a onClick={() => select(row.id)} textContent={row.label} />
-              </td>
-              <td class="col-md-1">
-                <a onClick={() => remove(row.id)}>
-                  <span class="glyphicon glyphicon-remove" aria-hidden="true" />
-                </a>
-              </td>
-              <td class="col-md-6" />
-            </tr>
-          ))}
+          <For each={data}>
+            {(row) => <Row key={row.id} id={row.id} label={row.label} />}
+          </For>
         </tbody>
       </table>
       <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />

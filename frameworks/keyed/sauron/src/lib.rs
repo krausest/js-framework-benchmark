@@ -1,6 +1,7 @@
+use std::cmp::min;
+
 use rand::prelude::*;
 use sauron::*;
-use std::cmp::min;
 
 static ADJECTIVES: &[&str] = &[
     "pretty",
@@ -74,6 +75,7 @@ impl RowData {
         }
     }
 }
+
 struct App {
     rows: Vec<RowData>,
     next_id: usize,
@@ -102,8 +104,10 @@ enum Msg {
     Select(usize),
 }
 
-impl Application<Msg> for App {
-    fn update(&mut self, msg: Msg) -> Cmd<Self, Msg> {
+impl Application for App {
+    type MSG = Msg;
+
+    fn update(&mut self, msg: Msg) -> Cmd<Msg> {
         match msg {
             Msg::Run(amount) => {
                 let rng = &mut self.rng;
@@ -157,7 +161,7 @@ impl Application<Msg> for App {
 
         node! {
             <div class="container">
-                { self.view_jumbotron() }
+                { view_jumbotron() }
                 <table class="table table-hover table-striped test-data">
                     <tbody id="tbody">
                         { for r in rows { r } }
@@ -169,73 +173,71 @@ impl Application<Msg> for App {
     }
 }
 
-impl App {
-    fn view_jumbotron(&self) -> Node<Msg> {
-        node! {
-             <div class="jumbotron">
-                 <div class="row">
-                     <div class="col-md-6">
-                         <h1>Sauron</h1>
-                     </div>
-                     <div class="col-md-6">
-                         <div class="row">
-                            <div class="col-sm-6 smallpad">
-                                <button
-                                    type="button"
-                                    id="run"
-                                    class="btn btn-primary btn-block"
-                                    on_click={|_| Msg::Run(1_000) }>
-                                    Create 1,000 rows
-                                </button>
-                             </div>
-                             <div class="col-sm-6 smallpad">
-                                <button
-                                    type="button"
-                                    class="btn btn-primary btn-block"
-                                    on_click={|_| Msg::Run(10_000)}
-                                    id="runlots">
-                                    Create 10,000 rows
-                                </button>
-                             </div>
-                             <div class="col-sm-6 smallpad">
-                                <button
-                                    type="button"
-                                    class="btn btn-primary btn-block"
-                                    on_click={ |_| Msg::Add(1_000)} id="add">
-                                    Append 1,000 rows
-                                </button>
-                             </div>
-                             <div class="col-sm-6 smallpad">
-                                <button
-                                    type="button"
-                                    class="btn btn-primary btn-block"
-                                    on_click={|_|Msg::Update(10)}
-                                    id="update">
-                                    Update every 10th row
-                                </button>
-                             </div>
-                             <div class="col-sm-6 smallpad">
-                                <button
-                                    type="button"
-                                    class="btn btn-primary btn-block"
-                                    on_click={|_|Msg::Clear} id="clear">
-                                    Clear
-                                </button>
-                             </div>
-                             <div class="col-sm-6 smallpad">
-                                <button
-                                    type="button"
-                                    class="btn btn-primary btn-block"
-                                    on_click={ |_|Msg::Swap }
-                                    id="swaprows">
-                                    Swap Rows
-                                </button>
-                             </div>
+fn view_jumbotron() -> Node<Msg> {
+    node! {
+         <div class="jumbotron">
+             <div class="row">
+                 <div class="col-md-6">
+                     <h1>Sauron</h1>
+                 </div>
+                 <div class="col-md-6">
+                     <div class="row">
+                        <div class="col-sm-6 smallpad">
+                            <button
+                                type="button"
+                                id="run"
+                                class="btn btn-primary btn-block"
+                                on_click={|_| Msg::Run(1_000) }>
+                                Create 1,000 rows
+                            </button>
+                         </div>
+                         <div class="col-sm-6 smallpad">
+                            <button
+                                type="button"
+                                class="btn btn-primary btn-block"
+                                on_click={|_| Msg::Run(10_000)}
+                                id="runlots">
+                                Create 10,000 rows
+                            </button>
+                         </div>
+                         <div class="col-sm-6 smallpad">
+                            <button
+                                type="button"
+                                class="btn btn-primary btn-block"
+                                on_click={ |_| Msg::Add(1_000)} id="add">
+                                Append 1,000 rows
+                            </button>
+                         </div>
+                         <div class="col-sm-6 smallpad">
+                            <button
+                                type="button"
+                                class="btn btn-primary btn-block"
+                                on_click={|_|Msg::Update(10)}
+                                id="update">
+                                Update every 10th row
+                            </button>
+                         </div>
+                         <div class="col-sm-6 smallpad">
+                            <button
+                                type="button"
+                                class="btn btn-primary btn-block"
+                                on_click={|_|Msg::Clear} id="clear">
+                                Clear
+                            </button>
+                         </div>
+                         <div class="col-sm-6 smallpad">
+                            <button
+                                type="button"
+                                class="btn btn-primary btn-block"
+                                on_click={ |_|Msg::Swap }
+                                id="swaprows">
+                                Swap Rows
+                            </button>
                          </div>
                      </div>
                  </div>
              </div>
-        }
+         </div>
     }
 }
 

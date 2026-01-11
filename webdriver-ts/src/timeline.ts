@@ -15,61 +15,73 @@ interface TimingResult {
   evt?: any;
 }
 
-export function extractRelevantEvents(entries: any[]) {
+/**
+ * 
+ * @param entries 
+ * @param startLogicEvent usually "click", but might be "pointerup" if needed
+ * @returns 
+ */
+export function extractRelevantEvents(entries: any[], startLogicEvent: string) {
   let filteredEvents: TimingResult[] = [];
-  let click_start = 0;
-  let click_end = 0;
+  let startLogicEvent_startTS = 0;
+  let startLogicEvent_endTS = 0;
 
   entries.forEach((x) => {
     let e = x;
     if (config.LOG_DEBUG) console.log(JSON.stringify(e));
     if (e.name === "EventDispatch") {
+      if (e.args.data.type === startLogicEvent) {
+        if (config.LOG_DETAILS) console.log("startLogicEvent", e.args.data.type, +e.ts);
+        startLogicEvent_startTS = +e.ts;
+        startLogicEvent_endTS = +e.ts + e.dur;
+        filteredEvents.push({ type: "startLogicEvent", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
+      }
       if (e.args.data.type === "click") {
-        if (config.LOG_DETAILS) console.log("CLICK", +e.ts);
-          click_start = +e.ts;
-          click_end = +e.ts + e.dur;
           filteredEvents.push({ type: "click", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
-      } else if (e.args.data.type === "mousedown") {
+        } else if (e.args.data.type === "mousedown") {
         if (config.LOG_DETAILS) console.log("MOUSEDOWN", +e.ts);
         filteredEvents.push({ type: "mousedown", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
+      } else if (e.args.data.type === "pointerup") {
+        if (config.LOG_DETAILS) console.log("POINTERUP", +e.ts);
+        filteredEvents.push({ type: "pointerup", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
       }
     } else if (e.name === "Layout" && e.ph === "X") {
-      if (config.LOG_DETAILS) console.log("Layout", +e.ts, +e.ts + e.dur - click_start);
+      if (config.LOG_DETAILS) console.log("Layout", +e.ts, +e.ts + e.dur - startLogicEvent_startTS);
       filteredEvents.push({ type: "layout", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
     } else if (e.name === "FunctionCall" && e.ph === "X") {
-      if (config.LOG_DETAILS) console.log("FunctionCall", +e.ts, +e.ts + e.dur - click_start);
+      if (config.LOG_DETAILS) console.log("FunctionCall", +e.ts, +e.ts + e.dur - startLogicEvent_startTS);
       filteredEvents.push({ type: "functioncall", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
     } else if (e.name === "HitTest" && e.ph === "X") {
-      if (config.LOG_DETAILS) console.log("HitTest", +e.ts, +e.ts + e.dur - click_start);
+      if (config.LOG_DETAILS) console.log("HitTest", +e.ts, +e.ts + e.dur - startLogicEvent_startTS);
       filteredEvents.push({ type: "hittest", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
     } else if (e.name === "Commit" && e.ph === "X") {
-      if (config.LOG_DETAILS) console.log("COMMIT PAINT", +e.ts, +e.ts + e.dur - click_start);
+      if (config.LOG_DETAILS) console.log("COMMIT PAINT", +e.ts, +e.ts + e.dur - startLogicEvent_startTS);
       filteredEvents.push({ type: "commit", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
     } else if (e.name === "Paint" && e.ph === "X") {
-      if (config.LOG_DETAILS) console.log("PAINT", +e.ts, +e.ts + e.dur - click_start);
+      if (config.LOG_DETAILS) console.log("PAINT", +e.ts, +e.ts + e.dur - startLogicEvent_startTS);
       filteredEvents.push({ type: "paint", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
     } else if (e.name === "FireAnimationFrame" && e.ph === "X") {
-      if (config.LOG_DETAILS) console.log("FireAnimationFrame", +e.ts, +e.ts - click_start);
+      if (config.LOG_DETAILS) console.log("FireAnimationFrame", +e.ts, +e.ts - startLogicEvent_startTS);
       filteredEvents.push({ type: "fireAnimationFrame", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, pid: e.pid, evt: JSON.stringify(e) });
     } else if (e.name === "TimerFire" && e.ph === "X") {
-      if (config.LOG_DETAILS) console.log("TimerFire", +e.ts, +e.ts - click_start, +e.ts - click_end);
+      if (config.LOG_DETAILS) console.log("TimerFire", +e.ts, +e.ts - startLogicEvent_startTS, +e.ts - startLogicEvent_endTS);
       filteredEvents.push({ type: "timerFire", ts: +e.ts, dur: 0, end: +e.ts, pid: e.pid, evt: JSON.stringify(e) });
     } else if (e.name === "RequestAnimationFrame") {
-      if (config.LOG_DETAILS) console.log("RequestAnimationFrame", +e.ts, +e.ts - click_start, +e.ts - click_end);
+      if (config.LOG_DETAILS) console.log("RequestAnimationFrame", +e.ts, +e.ts - startLogicEvent_startTS, +e.ts - startLogicEvent_endTS);
       filteredEvents.push({ type: "requestAnimationFrame", ts: +e.ts, dur: 0, end: +e.ts, pid: e.pid, evt: JSON.stringify(e) });
     }
     });
     return filteredEvents;
   }
   
-async function fetchEventsFromPerformanceLog(fileName: string): Promise<TimingResult[]> {
+async function fetchEventsFromPerformanceLog(fileName: string, startLogicEventName: string): Promise<TimingResult[]> {
   let timingResults: TimingResult[] = [];
     let entries = [];
     do {
       let contents = await readFile(fileName, { encoding: "utf8" });
       let json = JSON.parse(contents);
       let entries = json["traceEvents"];
-      const filteredEvents = extractRelevantEvents(entries);
+      const filteredEvents = extractRelevantEvents(entries, startLogicEventName);
       timingResults = timingResults.concat(filteredEvents);
     } while (entries.length > 0);
     return timingResults;
@@ -87,27 +99,39 @@ const traceJSEventNames = [
   "V8.Execute",
 ];
 
-export function extractRelevantJSEvents(config: Config, entries: any[]) {
+const tracePaintEventNames = [
+  "UpdateLayoutTree",
+  "Layout",
+  "Commit",
+  "Paint",
+  "Layerize",
+  "PrePaint"
+  // including "PrePaint" causes longer durations as reported by chrome
+];
+
+export function extractRelevantTraceEvents(config: Config, relevantEventNames: string[], entries: any[], includeClick: boolean) {
   let filteredEvents: any[] = [];
   
   entries.forEach((x) => {
     let e = x;
     if (config.LOG_DEBUG) console.log(JSON.stringify(e));
     if (e.name === "EventDispatch") {
-      if (e.args.data.type === "click") {
+      if (e.args.data.type === "click" && includeClick) {
         if (config.LOG_DETAILS) console.log("CLICK", +e.ts);
         filteredEvents.push({ type: "click", ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur });
       }
-    } else if (traceJSEventNames.includes(e.name) && e.ph === "X") {
+    } else if (relevantEventNames.includes(e.name) && e.ph === "X") {
       filteredEvents.push({ type: e.name, ts: +e.ts, dur: +e.dur, end: +e.ts + e.dur, orig: JSON.stringify(e) });
     }
   });
   return filteredEvents;
 }
   
-async function fetchJSEventsFromPerformanceLog(
+async function fetchEventsFromTraceLog(
   config: Config,
-  fileName: string
+  fileName: string,
+  relevantTraceEvents: string[],
+  includeClick: boolean
 ): Promise<TimingResult[]> {
   let timingResults: TimingResult[] = [];
   let entries = [];
@@ -115,7 +139,7 @@ async function fetchJSEventsFromPerformanceLog(
     let contents = await readFile(fileName, { encoding: "utf8" });
     let json = JSON.parse(contents);
     let entries = json["traceEvents"];
-    const filteredEvents = extractRelevantJSEvents(config, entries);
+    const filteredEvents = extractRelevantTraceEvents(config, relevantTraceEvents, entries, includeClick);
     timingResults = timingResults.concat(filteredEvents);
   } while (entries.length > 0);
   return timingResults;
@@ -146,8 +170,9 @@ function logEvents(events: TimingResult[], click: TimingResult) {
   
 export async function computeResultsCPU(
   fileName: string,
+  startLogicEventName: string,
 ): Promise<CPUDurationResult> {
-  const perfLogEvents = await fetchEventsFromPerformanceLog(fileName);
+  const perfLogEvents = await fetchEventsFromPerformanceLog(fileName, startLogicEventName);
   let events = R.sortBy((e: TimingResult) => e.end)(perfLogEvents);
 
     // Find mousedown event. This is the start of the benchmark
@@ -161,9 +186,9 @@ export async function computeResultsCPU(
       console.log("more than one mousedown event", fileName, events);
       throw "at most one mousedown event is expected";
     }
-  
-  // Find click event. This is the start of the benchmark
-  let clicks = R.filter(type_eq("click"))(events);
+
+  // Find click event. This is the start of the benchmark. We're using the synthetic "startLogicEvent" event we've created above
+  let clicks = R.filter(type_eq("startLogicEvent"))(events);
   // Invariant: There must be exactly one click event
   if (clicks.length !== 1) {
     console.log("exactly one click event is expected", fileName, events);
@@ -177,7 +202,7 @@ export async function computeResultsCPU(
     if (mousedownToClick>0) {
       console.log("mousedownToClick", mousedownToClick, fileName);
     }
-    if (mousedownToClick > 10000) {
+    if (mousedownToClick > 5000) {
       console.log("difference between mousedown and click is unusually long", mousedownToClick, fileName);
       // throw "difference between mousedown and click is unusually long";
     }
@@ -378,14 +403,32 @@ function newContainedInterval(outer: TimingResult, intervals: Array<Interval>) {
   return cleanedUp;
 }
 
-export async function computeResultsJS(
+export function computeResultsJS(
   cpuTrace: CPUDurationResult,
   config: Config,
   fileName: string
 ): Promise<number> {
+  return computeResultsFromTrace(cpuTrace, config, fileName, traceJSEventNames, true);
+}
+
+export function computeResultsPaint(
+  cpuTrace: CPUDurationResult,
+  config: Config,
+  fileName: string
+): Promise<number> {
+  return computeResultsFromTrace(cpuTrace, config, fileName, tracePaintEventNames, false);
+}
+
+export async function computeResultsFromTrace(
+  cpuTrace: CPUDurationResult,
+  config: Config,
+  fileName: string,
+  relevantTraceEvents: string[],
+  includeClick: boolean
+): Promise<number> {
   const totalDuration = cpuTrace;
 
-  const perfLogEvents = await fetchJSEventsFromPerformanceLog(config, fileName);
+  const perfLogEvents = await fetchEventsFromTraceLog(config, fileName, relevantTraceEvents, includeClick);
   
   const eventsWithin = R.filter<TimingResult>(
     (e) => e.ts >= totalDuration.tsStart && e.ts <= totalDuration.tsEnd
@@ -400,12 +443,13 @@ export async function computeResultsJS(
   for (let ev of eventsWithin) {
     intervals = newContainedInterval(ev, intervals);
   }
-  if (intervals.length > 1) {
-    console.log(`*** More than 1 interval ${intervals.length} for ${fileName}`, intervals);
-  } else {
-    console.log(`1 interval for ${fileName}`, intervals);
+  if (config.LOG_DETAILS) {
+    if (intervals.length > 1) {
+      console.log(`*** More than 1 interval ${intervals.length} for ${fileName}`, intervals);
+    } else {
+      console.log(`1 interval for ${fileName}`, intervals);
+    }
   }
-  
   let res = intervals.reduce((p, c) => p + (c.end - c.start), 0) / 1000.0;
   return res;
 }
@@ -414,19 +458,21 @@ export async function parseCPUTrace(
   benchmarkOptions: BenchmarkOptions,
   framework: FrameworkData,
   benchmarkInfo: CPUBenchmarkInfo,
-  plausibilityCheck: PlausibilityCheck
+  plausibilityCheck: PlausibilityCheck,
+  startLogicEventName: string
 ) {
   let results: CPUBenchmarkResult[] = [];
-  for (let i = 0; i < benchmarkOptions.numIterationsForCPUBenchmarks; i++) {
+  for (let i = 0; i < benchmarkOptions.numIterationsForCPUBenchmarks + benchmarkInfo.additionalNumberOfRuns; i++) {
     let trace = `${fileNameTrace(framework, benchmarkInfo, i, benchmarkOptions)}`;
     if (fs.existsSync(trace)) {
       console.log("analyzing trace", trace);
       try {
-        let result = await computeResultsCPU(trace);
+        let result = await computeResultsCPU(trace, startLogicEventName);
         plausibilityCheck.check(result, trace, framework, benchmarkInfo);
-        // let resultJS = await computeResultsJS(result, config, trace); 
-        results.push({ total: result.duration, script: 0 });
-        console.log(result);
+        let resultJS = await computeResultsJS(result, config, trace);
+        let resultPaint = await computeResultsPaint(result, config, trace);
+        results.push({ total: result.duration, script: resultJS, paint: resultPaint });
+        // console.log(result);
       } catch (error) {
         console.log(error);
       }
@@ -435,8 +481,8 @@ export async function parseCPUTrace(
     }
   }
   
-  results.sort((a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total);
-  results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
+  // results.sort((a: CPUBenchmarkResult, b: CPUBenchmarkResult) => a.total - b.total);
+  // results = results.slice(0, config.NUM_ITERATIONS_FOR_BENCHMARK_CPU);
   await writeResults(benchmarkOptions.resultsDirectory, {
     framework: framework,
     benchmark: benchmarkInfo,

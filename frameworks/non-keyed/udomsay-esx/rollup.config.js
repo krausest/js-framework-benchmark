@@ -1,25 +1,26 @@
-import {nodeResolve} from '@rollup/plugin-node-resolve';
-import terser from '@rollup/plugin-terser';
-import babel from "@rollup/plugin-babel";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
+import { babel } from "@rollup/plugin-babel";
 
+const isProduction = process.env.BUILD === "production";
+
+/** @type {import('rollup').RollupOptions} */
 export default {
-  input: './src/main.jsx',
+  input: "./src/main.jsx",
+  output: {
+    file: "dist/main.js",
+    format: "iife",
+  },
   plugins: [
     babel({
       babelHelpers: "bundled",
       exclude: "node_modules/**",
-      "targets": {
-        "esmodules": true
+      targets: {
+        esmodules: true,
       },
-      plugins: [
-        ["@ungap/babel-plugin-transform-esx"]
-      ]
+      plugins: [["@ungap/babel-plugin-transform-esx"]],
     }),
-    nodeResolve({extensions: [".js", ".jsx"]}),
-    terser()
+    nodeResolve({ extensions: [".js", ".jsx"] }),
+    isProduction && terser(),
   ],
-  output: {
-    file: './dist/main.js',
-    format: 'iife'
-  }
 };

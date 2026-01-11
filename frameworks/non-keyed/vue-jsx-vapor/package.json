@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-vue-jsx-vapor",
+  "version": "1.4.4",
+  "private": true,
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "vue",
+    "frameworkHomeURL": "https://github.com/vuejs/vue-jsx-vapor"
+  },
+  "scripts": {
+    "dev": "vite --force",
+    "build-prod": "vite build",
+    "preview": "vite preview --port 4711"
+  },
+  "dependencies": {
+    "vue": "3.6.0-alpha.2"
+  },
+  "devDependencies": {
+    "vue-jsx-vapor": "^2.6.0",
+    "vite": "^7.0.5"
+  }
+}

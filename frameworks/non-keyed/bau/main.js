@@ -33,19 +33,7 @@ const A = [
   "expensive",
   "fancy",
 ];
-const C = [
-  "red",
-  "yellow",
-  "blue",
-  "green",
-  "pink",
-  "brown",
-  "purple",
-  "brown",
-  "white",
-  "black",
-  "orange",
-];
+const C = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
 const N = [
   "table",
   "chair",
@@ -64,10 +52,7 @@ const N = [
 
 let nextId = 1;
 
-const buildLabel = () =>
-  bau.state(
-    `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`
-  );
+const buildLabel = () => bau.state(`${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}`);
 
 const buildData = (count) => {
   const data = new Array(count);
@@ -83,16 +68,16 @@ const buildData = (count) => {
 };
 
 const dataState = bau.state([]);
-const selectedState = bau.state(0);
+let selectedRow = null;
 
 const run = () => {
   dataState.val = buildData(1000);
-  selectedState.val = 0;
+  selectedRow = null;
 };
 
 const runLots = () => {
   dataState.val = buildData(10000);
-  selectedState.val = 0;
+  selectedRow = null;
 };
 
 const add = () => {
@@ -118,47 +103,48 @@ const swapRows = () => {
 
 const clear = () => {
   dataState.val = [];
-  selectedState.val = 0;
+  selectedRow = null;
 };
 
-const remove = ({ id, event }) => {
+const remove = (id) => () => {
   const idx = dataState.val.findIndex((d) => d.id === id);
   if (idx > -1) {
     dataState.val.splice(idx, 1);
   }
 };
 
-const select = ({ id, event }) => {
-  selectedState.val = id;
+const selectRow = (event) => {
+  if (selectedRow) {
+    selectedRow.className = "";
+  }
+  selectedRow = event.target.parentNode.parentNode;
+  selectedRow.className = "danger";
 };
 
-const Row = ({ id, label }) =>
-  tr(
+const Row = ({ id, label }) => {
+  const tdIdEl = td({ class: "col-md-1" }, id);
+  const aLabelEl = a({ onclick: selectRow }, label);
+  const aRemove = a({ onclick: remove(id) }, span({ class: "glyphicon glyphicon-remove", "aria-hidden": true }));
+
+  return tr(
     {
-      class: () => (selectedState.val == id ? "danger" : ""),
+      bauUpdate: (element, data) => {
+        tdIdEl.textContent = data.id;
+        aLabelEl.replaceWith(a({ onclick: selectRow }, data.label));
+        aRemove.onclick = remove(data.id);
+      },
     },
-    td({ class: "col-md-1" }, id),
-    td(
-      { class: "col-md-4" },
-      a({ onclick: (event) => select({ id, event }) }, label)
-    ),
-    td(
-      { class: "col-md-1" },
-      a(
-        { onclick: (event) => remove({ id, event }) },
-        span({ class: "glyphicon glyphicon-remove", "aria-hidden": true })
-      )
-    ),
+    tdIdEl,
+    td({ class: "col-md-4" }, aLabelEl),
+    td({ class: "col-md-1" }, aRemove),
     td({ class: "col-md-6" })
   );
+};
 
 const Button = ({ id, title, onclick }) =>
   div(
     { class: "col-sm-6 smallpad" },
-    button(
-      { type: "button", class: "btn btn-primary btn-block", id, onclick },
-      title
-    )
+    button({ type: "button", class: "btn btn-primary btn-block", id, onclick }, title)
   );
 
 const Jumbotron = ({}) =>
@@ -166,7 +152,7 @@ const Jumbotron = ({}) =>
     { class: "jumbotron" },
     div(
       { class: "row" },
-      div({ class: "col-md-6" }, h1("Bau Benchmark")),
+      div({ class: "col-md-6" }, h1("Bau Non-Keyed Benchmark")),
       div(
         { class: "col-md-6" },
         div(

@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-vue-jsx-compiler",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "vue",
+    "frameworkHomeURL": "https://vuejs.org/"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.6.0-alpha.2",
+    "vue-jsx-vapor": "^3.1.4"
+  },
+  "devDependencies": {
+    "vite": "^7.0.5"
+  }
+}

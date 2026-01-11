@@ -1,0 +1,17 @@
+{
+  "name": "native-document",
+  "version": "1.0.13",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "native-document",
+    "frameworkHomeURL": "https://github.com/afrocodeur/native-document"
+  },
+  "scripts": {
+    "build-prod": "vite build",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "native-document": "1.0.34",
+    "vite": "^7.0.4"
+  }
+}

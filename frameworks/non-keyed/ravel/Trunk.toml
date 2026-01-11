@@ -1,0 +1,5 @@
+[build]
+target = "trunk.html"
+dist = "bundled-dist"
+public_url = "/frameworks/non-keyed/ravel/bundled-dist/"
+filehash = false

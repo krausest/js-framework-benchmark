@@ -1,51 +1,18 @@
 import globals from "globals";
-import js from "@eslint/js";
-import ts from "@typescript-eslint/eslint-plugin";
-import tsParser from "@typescript-eslint/parser";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import unicorn from "eslint-plugin-unicorn";
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+import reactPlugin from "eslint-plugin-react";
+import reactRefreshPlugin from "eslint-plugin-react-refresh";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
+import unicornPlugin from "eslint-plugin-unicorn";
+import eslintConfigPrettier from "eslint-config-prettier";
 
-export default [
-  js.configs.recommended,
+export default tseslint.config(
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
+  unicornPlugin.configs["flat/recommended"],
   {
-    ignores: ["**/dist", "**/results", "**/node_modules", "css", "**/csv_export.js"],
-  },
-  {
-    files: ["**/*.{ts,tsx}"],
-    plugins: { "@typescript-eslint": ts },
-    languageOptions: { parser: tsParser },
-    rules: ts.configs["recommended"].rules,
-  },
-  /**
-   * Root
-   */
-  {
-    files: ["*.js", "utils/**/*", "cli/**/*.js"],
-    languageOptions: { globals: { ...globals.node } },
     rules: {
-      "no-unused-vars": "warn",
-    },
-  },
-  /**
-   * Server
-   */
-  {
-    files: ["server/**/*"],
-    languageOptions: { globals: { ...globals.node } },
-  },
-  /**
-   * Webdriver
-   */
-  {
-    files: ["webdriver-ts/**/*.ts"],
-    plugins: { unicorn },
-    languageOptions: {
-      parserOptions: { project: ["./webdriver-ts/tsconfig.eslint.json"] },
-      globals: { ...globals.node },
-    },
-    rules: {
-      ...unicorn.configs.recommended.rules,
       // no:
       "unicorn/filename-case": "off",
       "unicorn/no-for-loop": "off",
@@ -56,7 +23,7 @@ export default [
       "unicorn/prefer-ternary": "off",
       "unicorn/require-number-to-fixed-digits-argument": "off",
       "unicorn/prefer-set-has": "off",
-      "unicorn/unicorn/no-array-reduce": "off",
+      "unicorn/no-array-reduce": "off",
       // maybe not:
       "unicorn/consistent-function-scoping": "off",
       "unicorn/no-array-for-each": "off",
@@ -70,35 +37,54 @@ export default [
       "unicorn/prefer-dom-node-text-content": "off",
       "unicorn/prefer-optional-catch-binding": "off",
       "unicorn/prefer-logical-operator-over-ternary": "off",
-
-      "no-unused-vars": "off",
+    },
+    languageOptions: { globals: { ...globals.node } },
+  },
+  /**
+   * Webdriver
+   */
+  {
+    files: ["webdriver-ts/src/**/*.{js,cjs,ts}"],
+    languageOptions: {
+      parserOptions: { project: ["./webdriver-ts/tsconfig.eslint.json"] },
+    },
+    rules: {
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
       "require-await": "error",
       "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-unused-vars": "off",
+      "prefer-const": "off",
     },
   },
   /**
    * Web
    */
   {
-    files: ["webdriver-ts-results/**/*.tsx"],
+    files: ["webdriver-ts-results/**/*.{js,cjs,ts,jsx,tsx}"],
     plugins: {
-      react,
-      "react-hooks": reactHooks,
+      react: reactPlugin,
+      "react-refresh": reactRefreshPlugin,
+      "react-hooks": reactHooksPlugin,
     },
     rules: {
-      ...react.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
+      ...reactPlugin.configs.flat.recommended.rules,
+      ...reactPlugin.configs.flat["jsx-runtime"].rules,
+      ...reactHooksPlugin.configs.recommended.rules,
+      "react/jsx-no-useless-fragment": "warn",
+      "react-refresh/only-export-components": "warn",
     },
-    settings: { react: { version: "detect" } },
-    languageOptions: { globals: { ...globals.browser } },
+    settings: {
+      react: {
+        version: "18.2",
+      },
+    },
+    languageOptions: {
+      ...reactPlugin.configs.flat["jsx-runtime"].languageOptions,
+      globals: { ...globals.browser },
+    },
   },
   {
-    files: ["webdriver-ts-results/**/*"],
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
-    rules: {
-      "@typescript-eslint/no-loss-of-precision": "off",
-    },
+    ignores: ["**/node_modules/", "**/dist/", "**/results/", "css/", "**/csv_export.js", "**/py/"],
   },
-];
+  eslintConfigPrettier
+);

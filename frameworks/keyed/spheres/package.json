@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-spheres",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "spheres",
+    "frameworkHomeURL": "https://github.com/brian-watkins/spheres"
+  },
+  "scripts": {
+    "start": "vite --open /frameworks/keyed/spheres/local.html",
+    "build-prod": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1"
+  },
+  "dependencies": {
+    "spheres": "0.25.2"
+  }
+}

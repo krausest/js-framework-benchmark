@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "moduleResolution": "node"
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@dark-engine/core"
   }
 }

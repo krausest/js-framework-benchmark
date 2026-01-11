@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
   "dependencies": {
-    "lit": "^3.0.0"
+    "lit": "3.2.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "11.2.1",

@@ -1,0 +1,1 @@
+export { formatEn } from "./numberFormatter";

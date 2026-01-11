@@ -1,3 +1,4 @@
+// @ts-check
 import AdmZip from "adm-zip";
 import * as fs from "node:fs";
 import path from "node:path";
@@ -35,78 +36,73 @@ function addLocalFileIfExists(sourcePath, zipPath) {
  * @param {string} frameworkName
  */
 function addFrameworksToZip(frameworkType, frameworkDir, frameworkName) {
-  const zipFrameworkPath = path.join(
-    "frameworks",
-    frameworkType,
-    frameworkName,
-  );
+  const zipFrameworkPath = path.join("frameworks", frameworkType, frameworkName);
 
-  addLocalFileIfExists(
-    `${frameworkDir}/package-lock.json`,
-    `${zipFrameworkPath}`,
-  );
+  addLocalFileIfExists(`${frameworkDir}/package-lock.json`, `${zipFrameworkPath}`);
 
   addLocalFolderIfExists(`${frameworkDir}/dist`, `${zipFrameworkPath}/dist`);
-  addLocalFolderIfExists(
-    `${frameworkDir}/scripts`,
-    `${zipFrameworkPath}/scripts`,
-  );
-  addLocalFolderIfExists(
-    `${frameworkDir}/node_modules/slim-js/dist`,
-    `${zipFrameworkPath}/node_modules/slim-js/dist`,
-  );
+  addLocalFolderIfExists(`${frameworkDir}/scripts`, `${zipFrameworkPath}/scripts`);
+  addLocalFolderIfExists(`${frameworkDir}/node_modules/slim-js/dist`, `${zipFrameworkPath}/node_modules/slim-js/dist`);
   addLocalFolderIfExists(
     `${frameworkDir}/node_modules/@neow/core/dist`,
-    `${zipFrameworkPath}/node_modules/@neow/core/dist`,
+    `${zipFrameworkPath}/node_modules/@neow/core/dist`
   );
-  addLocalFolderIfExists(
-    `${frameworkDir}/target/web/stage`,
-    `${zipFrameworkPath}/target/web/stage`,
-  );
+  addLocalFolderIfExists(`${frameworkDir}/target/web/stage`, `${zipFrameworkPath}/target/web/stage`);
   addLocalFolderIfExists(`${frameworkDir}/build`, `${zipFrameworkPath}/build`);
 
   if (frameworkName !== "ember" && frameworkName !== "glimmer") {
-    addLocalFolderIfExists(
-      `${frameworkDir}/public`,
-      `${zipFrameworkPath}/public`,
-    );
+    addLocalFolderIfExists(`${frameworkDir}/public`, `${zipFrameworkPath}/public`);
   }
 
-  if (frameworkName === "halogen") {
-    addLocalFileIfExists(
-      `${frameworkDir}/output/bundle.js`,
-      `${zipFrameworkPath}/output`,
-    );
-  } else if (frameworkName === "dojo") {
-    addLocalFolderIfExists(
-      `${frameworkDir}/output/dist`,
-      `${zipFrameworkPath}/output/dist`,
-    );
-  } else if (frameworkName === "stem") {
-    addLocalFolderIfExists(
-      `${frameworkDir}/node_modules/babel-polyfill/dist`,
-      `${zipFrameworkPath}/node_modules/babel-polyfill/dist`,
-    );
-    addLocalFileIfExists(
-      `${frameworkDir}/src/bundle.js`,
-      `${zipFrameworkPath}/src`,
-    );
-  } else {
-    addLocalFolderIfExists(
-      `${frameworkDir}/output`,
-      `${zipFrameworkPath}/output`,
-    );
+  switch (frameworkName) {
+    case "deku": 
+    case "halogen": {
+      addLocalFileIfExists(`${frameworkDir}/output-es/bundle.js`, `${zipFrameworkPath}/output-es`);
+      break;
+    }
+    case "dojo": {
+      addLocalFolderIfExists(`${frameworkDir}/output/dist`, `${zipFrameworkPath}/output/dist`);
+      break;
+    }
+    case "s2": {
+      addLocalFolderIfExists(
+        `${frameworkDir}/node_modules/s2-engine/dist`,
+        `${zipFrameworkPath}/node_modules/s2-engine/dist`
+      );
+      break;
+    }
+    case "lui": 
+    case "lui-noeval": {
+      addLocalFolderIfExists(
+        `${frameworkDir}/src`,
+        `${zipFrameworkPath}/src`
+      );
+      break;
+    }
+    case "stem": {
+      addLocalFolderIfExists(
+        `${frameworkDir}/node_modules/babel-polyfill/dist`,
+        `${zipFrameworkPath}/node_modules/babel-polyfill/dist`
+      );
+      addLocalFileIfExists(`${frameworkDir}/src/bundle.js`, `${zipFrameworkPath}/src`);
+      break;
+    }
+    default: {
+      addLocalFolderIfExists(`${frameworkDir}/output`, `${zipFrameworkPath}/output`);
+    }
   }
 }
 
-function createFrameworkZipArchive() {
+export function createFrameworkZipArchive() {
+  console.log("Create a zip archive of frameworks");
+
   for (const frameworkType of frameworksTypes) {
     const frameworkTypeDirPath = path.resolve("frameworks", frameworkType);
     const frameworkNames = fs.readdirSync(frameworkTypeDirPath);
 
     for (const frameworkName of frameworkNames) {
       const frameworkPath = path.resolve(frameworkTypeDirPath, frameworkName);
-      console.log("zipping ", frameworkPath);
+      console.log("zipping", frameworkPath);
 
       addFrameworksToZip(frameworkType, frameworkPath, frameworkName);
     }
@@ -114,5 +110,3 @@ function createFrameworkZipArchive() {
 
   zip.writeZip(outputFile);
 }
-
-export { createFrameworkZipArchive };

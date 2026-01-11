@@ -1,0 +1,27 @@
+{
+  "name": "hono",
+  "version": "1.0.0",
+  "description": "None",
+  "main": "dist/index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "hono",
+    "frameworkHomeURL": "https://hono.dev/"
+  },
+  "scripts": {
+    "build": "vite build",
+    "build-prod": "npm run build",
+    "start": "npm run build && vite preview --port 8080",
+    "dev": "vite --port 8080"
+  },
+  "type": "module",
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "hono": "4.6.13"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "shx": "^0.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3"
+  }
+}

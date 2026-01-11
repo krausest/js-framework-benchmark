@@ -1,27 +1,25 @@
-import resolve from '@rollup/plugin-node-resolve';
-import commonJS from '@rollup/plugin-commonjs';
-import babel from '@rollup/plugin-babel';
-import { terser } from 'rollup-plugin-terser';
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import commonJS from "@rollup/plugin-commonjs";
+import { babel } from "@rollup/plugin-babel";
+import terser from "@rollup/plugin-terser";
 
-const plugins = [
-  babel({
-    babelHelpers: 'bundled',
-  }),
-  resolve(),
-  commonJS({
-	  include: 'node_modules/**'
-  }),
-];
+const isProduction = process.env.BUILD === "production";
 
-if (process.env.production) {
-  plugins.push(terser({ output: { comments: false } }));
-}
-
+/** @type {import('rollup').RollupOptions} */
 export default {
-  input: 'src/Main.js',
+  input: "src/Main.js",
   output: {
-    file: 'dist/main.js',
-    format: 'iife',
+    file: "dist/main.js",
+    format: "iife",
   },
-  plugins,
+  plugins: [
+    babel({
+      babelHelpers: "bundled",
+    }),
+    nodeResolve(),
+    commonJS({
+      include: "node_modules/**",
+    }),
+    isProduction && terser(),
+  ],
 };

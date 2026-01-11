@@ -1,0 +1,30 @@
+{
+  "name": "js-framework-benchmark-targetjs",
+  "version": "1.0.0",
+  "description": "Benchmark for targetjs framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "targetj",
+    "frameworkHomeURL": "https://targetjs.io",
+    "issues": [772]        
+  },
+  "scripts": {
+    "build-dev": "webpack --mode development --watch",
+    "build-prod": "webpack --mode production"
+  },
+  "keywords": [
+    "targetjs"
+  ],
+  "author": "Ahmad Wasfi",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
+    "wepback": "^1.0.0",
+    "targetj": "1.0.142"
+  }
+}

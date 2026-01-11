@@ -1,0 +1,15 @@
+.selector-content-container {
+  position: relative;
+}
+
+@media screen and (width>= 640px) {
+  .selector-content-container__content.grid .selector-content-container__content-wrapper {
+    column-count: 2;
+  }
+}
+
+@media screen and (width>= 1024px) {
+  .selector-content-container__content.grid .selector-content-container__content-wrapper {
+    column-count: 3;
+  }
+}

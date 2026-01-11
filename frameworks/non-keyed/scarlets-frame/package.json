@@ -3,10 +3,14 @@
   "version": "1.0.4",
   "description": "ScarletsFrame demo",
   "main": "src/index.js",
+  "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "scarletsframe",
     "frameworkHomeURL": "https://github.com/ScarletsFiction/ScarletsFrame",
-    "issues": [800, 1139]
+    "issues": [
+      800,
+      1139
+    ]
   },
   "scripts": {
     "dev": "rollup -c -w",
@@ -23,11 +27,11 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "scarletsframe": "0.34.6"
+    "scarletsframe": "0.35.26"
   },
   "devDependencies": {
-    "rollup": "2.38.1",
-    "@rollup/plugin-node-resolve": "11.1.1",
-    "rollup-plugin-terser": "7.0.2"
+    "@rollup/plugin-node-resolve": "15.3.0",
+    "@rollup/plugin-terser": "0.4.4",
+    "rollup": "4.28.1"
   }
 }

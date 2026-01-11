@@ -42,6 +42,7 @@ angular*/app/app.js.map
 angular*/src/app.ngsummary.json
 tests/results/completed/
 target/
+webdriver-ts/chrome_profile
 webdriver-ts/results/
 webdriver-ts/traces/
 webdriver-ts/results*/
@@ -83,3 +84,11 @@ Cargo.lock
 *~
 frameworks/keyed/doohtml/js/doo.html.min.js.LICENSE.txt
 frameworks/non-keyed/doohtml/js/doo.html.min.js.LICENSE.txt
+frameworks/keyed/ui5-webcomponents/src/generated/
+
+# chrome for testing
+chrome-mac-arm64-*
+
+log.txt
+build.zip
+

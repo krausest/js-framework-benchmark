@@ -1,4 +1,3 @@
-
 # js-framework-benchmark
 
 This is a simple benchmark for several javascript frameworks. The benchmarks creates a large table with randomized entries and measures the time for various operations including rendering duration.
@@ -7,7 +6,7 @@ This is a simple benchmark for several javascript frameworks. The benchmarks cre
 
 ## Security advice
 
-Currently there are 186 implemenations in this repository. It's of course impossible for me to make a security assessment
+Currently there are 186 implementations in this repository. It's of course impossible for me to make a security assessment
 for all those implementations. `npm ci` and `npm install` can execute arbitraty commands, so they should be executed only for packages you trust. Consequently I build on a dedicated virtual private linux server such that I don't have to install the packages for all those implemenations on my laptop. There's a prebuild build.zip for each chrome release you can download such that you can avoid installing the packages from all implementations. 
 (I don't know of any (attempted) case for malicious packages in this repository, so please take it just as a general warning.)
 
@@ -58,7 +57,7 @@ Some frameworks like React, Vue.js or Angular, allow you to create a 1:1 relatio
 
 The other mode is “non-keyed” and this is what e.g. vue.js uses by default for lists. In this mode, a change to the data items can modify DOM nodes that were associated with other data before. This can be more performant, since costly DOM operations can be avoided (e.g. first removing old nodes and then adding new nodes) and the existing DOM nodes are updated to display the new data. For React and Angular, using the item index as the key uses “non-keyed” mode for those frameworks.
 
-Depending on your requirements, the “non-keyed” mode can be a performance gain or can cause severe problems, so one must carefully choose the mode and check that the framework supports that mode.
+Depending on your requirements, the “non-keyed” mode can be a performance gain or can cause severe problems, so one must carefully choose the mode and check that the framework supports that mode.
 
 Read more here: [https://www.stefankrause.net/wp/?p=342](https://www.stefankrause.net/wp/?p=342)
 
@@ -80,7 +79,7 @@ v20.9.0
 ```
 
 ## 1.2 Downloading the pre-built binaries and starting the server
-building all frameworks can be challenging. There's a new way that allows to skip that and just run the benchmark without builiding all implementations.
+building all frameworks can be challenging. There's a new way that allows to skip that and just run the benchmark without building all implementations.
 
 
 Start with checking out a tagged release like that. Pick the release that you want (e.g. chrome 100):
@@ -288,7 +287,7 @@ You can build all frameworks by issuing:
 
 ```
 cd ..
-npm run build-prod
+npm run rebuild-all
 ```
 
 After downloading the whole internet it starts building it. Basically there should be no errors during the build, but I can't guarantee that the dependencies won't break. 
@@ -520,6 +519,10 @@ You can set an optional different URL if needed or specify that your DOM uses a 
 
 ## 4.4 Submitting your implementation
 
+Please take a look at https://github.com/krausest/js-framework-benchmark/wiki/Process-for-merging-a-pull-request for informations how pull requests are merged.
+
+**Github Copilot may review your PR. It's still experimental so feel free to ignore its comments.**
+
 Contributions are very welcome. Please use the following rules:
 
 - Name your directory frameworks/[keyed|non-keyed]/[FrameworkName]
@@ -531,7 +534,7 @@ Contributions are very welcome. Please use the following rules:
 - Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
 - Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
 - Please push only files in your framework folder (not index.html or results.json)
-- **Please make sure your implementation is validated by the test tool.** cd to webdriver-ts and invoke it with `npm run isKeyed [keyed|non-keyed]/[FrameworkName]`. It'll print an error if your framework behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation. Some common errors include:
+- **Please make sure your implementation is validated by the test tool.** cd to the root directory and perform a check  `npm run rebuild-ci [keyed|non-keyed]/[FrameworkName]`. It'll print an error if your framework doesn't build, the benchmark can't be run or behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation. Some common errors include:
   - Your package.json is missing some required fields
   - Incorrect classification (Keyed/NonKeyed)
   - You have gzipped files in /dist (unfortunately the web server prefers these when they exist)
@@ -559,6 +562,30 @@ Thanks to Baptiste Augrain for making the benchmarks more sophisticated and addi
 # History
 
 Frameworks without significant activity on github or npm for more than a year will be removed (_automatic commits like dependabot and minor updates, like docs editions, are ignored_).
+
+## 2024-12-11
+The following frameworks were archived after chrome 131. Their last results are included in [chrome 131 results](https://krausest.github.io/js-framework-benchmark/2024/table_chrome_131.0.6778.85.html)
+- [x] react-signalis
+- [x] react-recoil
+- [x] doz
+- [x] ef.js
+- [x] metron
+- [x] mimbl
+- [x] react-focal
+- [x] react-diagon
+- [x] rax
+- [x] scarlets-frame
+- [x] strv, strve-rv, strve-reactivity
+- [x] unis
+- [x] whatsup
+
+## 2023-12-10
+The following frameworks were archived after chrome 120. Their last results are included in [chrome 120 results](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_120.0.6099.62.html).
+- [x] petite-vue
+
+## 2023-11-07
+The following frameworks were archived after chrome 119. Their last results are included in [chrome 119 results](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_119.0.6045.105.html).
+- [x] sifrr
 
 ## 2023-10-22
 The following frameworks were archived after chrome 118. Their last results are included in [chrome 118 results](https://krausest.github.io/js-framework-benchmark/2023/table_chrome_118.0.5993.70.html).

@@ -1,15 +1,21 @@
-import {State} from 'js-framework-benchmark-utils';
-import {html, render} from 'uhtml';
+import { html, render, signal } from 'uhtml';
 
-import Jumbotron from './jumbotron.js';
 import Table from './table.js';
+import Jumbotron from './jumbotron.js';
+import { handle } from './utils.js';
 
-const state = State(Table, false, html.for);
-
-render(document.getElementById('container'), html`
+const App = ({ title, data }) => html`
   <div class="container">
-    ${Jumbotron(state)}
-    ${Table(state)}
+    <!-- direct, non reactive, component -->
+    ${Jumbotron({ title, data })}
+    <!-- reactive component -->
+    <${Table} ...${{ data, select: handle('select'), remove: handle('remove') }} />
     <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
   </div>
-`);
+`;
+
+render(document.getElementById('container'), App({
+  title: 'µhtml keyed',
+  data: signal([], { greedy: true })
+}));
+

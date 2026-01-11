@@ -1,0 +1,47 @@
+{
+  "name": "js-framework-benchmark-pota",
+  "version": "1.0.10",
+  "type": "module",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "pota",
+    "frameworkHomeURL": "https://pota.quack.uy/",
+    "issues": [801]
+  },
+  "scripts": {
+    "build-dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment BUILD:production"
+  },
+  "author": "Tito Bouzout",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "pota": "^0.19.206"
+  },
+  "devDependencies": {
+    "@babel/core": "7.26.0",
+    "@rollup/plugin-babel": "6.0.4",
+    "@rollup/plugin-node-resolve": "15.2.3",
+    "@rollup/plugin-terser": "0.4.4",
+    "rollup": "4.21.2"
+  },
+  "prettier": {
+    "printWidth": 70,
+    "useTabs": true,
+    "semi": false,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "jsxSingleQuote": false,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "arrowParens": "avoid",
+    "proseWrap": "never",
+    "endOfLine": "lf",
+    "singleAttributePerLine": true
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "js-framework-benchmark-react",
+  "version": "1.2.0",
+  "type": "module",
+  "description": "React demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "react",
+    "frameworkHomeURL": "https://www.reactjs.org"
+  },
+  "scripts": {
+    "dev": "node esbuild.config.js --watch",
+    "build-prod": "node esbuild.config.js"
+  },
+  "keywords": [
+    "react",
+    "esbuild"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "esbuild-plugin-license": "^1.2.3"
+  },
+  "dependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  }
+}

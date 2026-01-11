@@ -286,5 +286,5 @@ fn row(props: &RowProps) -> Html {
 pub fn start() {
     let document = window().unwrap().document().unwrap();
     let mount_el = document.query_selector("#main").unwrap().unwrap();
-    yew::start_app_in_element::<App>(mount_el);
+    yew::Renderer::<App>::with_root(mount_el).render();
 }

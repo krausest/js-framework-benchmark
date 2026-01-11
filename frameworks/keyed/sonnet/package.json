@@ -1,0 +1,36 @@
+{
+  "name": "js-framework-benchmark-sonnet",
+  "version": "0.0.1",
+  "description": "SonnetJS Demo",
+  "private": true,
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@sonnetjs/core",
+    "frameworkHomeURL": "https://sonnet.js.org/",
+    "customURL": "/dist",
+    "issues": [
+      772
+    ]
+  },
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "sonnetjs",
+    "javascript"
+  ],
+  "author": "Talha Mujahid",
+  "license": "MIT",
+  "homepage": "sonnet.js.org",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sonnetjs/sonnet.git"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  },
+  "dependencies": {
+    "@sonnetjs/core": "^0.0.33"
+  }
+}

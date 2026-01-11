@@ -8,6 +8,7 @@ var extensions = [
 ];
 
 module.exports = [{
+    mode: 'production',
     cache: true,
     module: {
         rules: [

@@ -1,31 +1,22 @@
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import replace from '@rollup/plugin-replace';
-import terser from '@rollup/plugin-terser';
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import replace from "@rollup/plugin-replace";
+import terser from "@rollup/plugin-terser";
 
-const plugins = [
-  nodeResolve(),
-  replace({
-    'globalThis.CYDON_NO_EXTRA': 'true',
-    preventAssignment: true
-  })
-];
+const isProduction = process.env.BUILD === "production";
 
-if (process.env.production) {
-  plugins.push(terser({
-    ecma: 2020,
-    compress: {
-      ecma: 2020,
-      unsafe: true
-    }
-  }));
-}
-
+/** @type {import('rollup').RollupOptions} */
 export default {
-  input: 'src/main.js',
+  input: "src/main.js",
   output: {
-    file: 'dist/main.js',
-    format: 'iife',
-    name: 'main'
+    compact: true,
+    file: "dist/main.js",
   },
-  plugins
+  plugins: [
+    nodeResolve(),
+    replace({
+      "globalThis.CYDON_NO_EXTRA": "true",
+      preventAssignment: true,
+    }),
+    isProduction && terser(),
+  ],
 };

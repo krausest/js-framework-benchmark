@@ -1,0 +1,1 @@
+export default(async(e=null,n=null)=>{let t=hasArr(n)&&["SHA-1","SHA-256","SHA-384","SHA-512"].find(e=>n.some(n=>isStr(n)&&n.toUpperCase()===e))||"SHA-256",l=hasArr(n)&&n.find(e=>hasNum(e))||null,a=Array.from(new Uint8Array(await crypto.subtle.digest(t,new TextEncoder().encode(JSON.stringify(e))))).map(e=>String(e).padStart(2,"0")).join("");return hasNum(l)?a.slice(0,l):a});

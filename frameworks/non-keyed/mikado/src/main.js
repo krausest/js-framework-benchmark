@@ -1,30 +1,37 @@
-import Mikado from "../node_modules/mikado/src/mikado.js";
-import tpl_app from "./template/app.es6.js";
-import tpl_item from "./template/item.es6.js";
+import Mikado, { once } from "../node_modules/mikado/src/mikado.js";
+import { route } from "../node_modules/mikado/src/event.js";
+import tpl_app from "./template/app.js";
+import tpl_item from "./template/item.js";
 import buildData from "./data.js";
 
-Mikado.once(document.getElementById("main"), tpl_app);
+once(document.body, tpl_app).eventCache = true;
 
-let data = [];
-const view = new Mikado(document.getElementById("tbody"), tpl_item)
-.route("run", () => view.render(data = buildData(1000)))
-.route("runlots", () => view.render(buildData(10000)))
-.route("add", () => view.append(buildData(1000)))
-.route("update", () => {
+const view = new Mikado(tpl_item, {
+    mount: document.getElementById("tbody"),
+    recycle: true
+});
+
+let data;
+route("run", () => view.render(data = buildData(1000)));
+route("runlots", () => view.render(data = buildData(10000)));
+route("add", () => view.append(data = buildData(1000)));
+route("update", () => {
     for(let i = 0; i < data.length; i += 10){
         data[i].label += " !!!";
         view.update(i, data[i]);
     }
-})
-.route("clear", () => view.clear())
-.route("swaprows", () => {
+});
+route("clear", () => view.clear());
+route("swaprows", () => {
     const tmp = data[998];
     view.update(998, data[998] = data[1]);
     view.update(1, data[1] = tmp);
-})
-.route("remove", target => view.remove(target))
-.route("select", target => {
-    let selected = view.selected;
-    selected && view.update(selected, data[selected]);
-    view.update(selected = view.selected = view.index(target), data[selected], selected);
+});
+route("remove", target => view.remove(target));
+route("select", target => {
+    const state = view.state;
+    const current = state.selected;
+    state.selected = view.index(target);
+    current >= 0 && view.update(current, data[current]);
+    view.update(state.selected, data[state.selected]);
 });

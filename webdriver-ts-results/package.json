@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@sgratzl/chartjs-chart-boxplot": "^4.2.8",
+    "antd": "^5.14.2",
+    "chart.js": "^4.4.2",
     "jstat": "^1.9.6",
-    "plotly.js-cartesian-dist": "2.18.2",
+    "lucide-react": "^0.344.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zustand": "^4.4.1"
@@ -13,7 +16,6 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:prod": "tsc && SINGLEFILE=true vite build && mv dist/index.html table.html",
     "lint": "eslint src/",
     "preview": "vite preview"
   },
@@ -21,10 +23,9 @@
     "@types/node": "^20.6.2",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
-    "@vitejs/plugin-react": "^4.0.4",
+    "@vitejs/plugin-react": "^4.2.0",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9",
-    "vite-plugin-singlefile": "^0.13.5",
+    "vite": "^5.0.2",
     "vite-tsconfig-paths": "^4.2.1"
   }
 }

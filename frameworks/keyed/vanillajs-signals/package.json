@@ -1,0 +1,37 @@
+{
+  "name": "js-framework-benchmark-vanillajs-signals",
+  "version": "0.2.2",
+  "description": "Vanilla.JS with tc39 signals demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "signal-polyfill",
+    "frameworkHomeURL": "https://github.com/tc39/proposal-signals",
+    "useShadowRoot": false,
+    "customURL": "/public",
+    "issues": [
+      772
+    ]
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "esbuild src/index.js --bundle --legal-comments=none --minify --outfile=public/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "keywords": [
+    "signals"
+  ],
+  "author": "Lucas M. Segurado",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
+  "dependencies": {
+    "esbuild": "0.25.1",
+    "signal-polyfill": "0.2.2",
+    "signal-utils": "0.21.1"
+  }
+}

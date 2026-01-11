@@ -34,10 +34,10 @@
     "url": "https://github.com/vanjs-org/van.git"
   },
   "dependencies": {
-    "vanjs-core": "1.1.0"
+    "vanjs-core": "1.5.2"
   },
   "devDependencies": {
-    "esbuild": "^0.19.2",
-    "terser": "^5.19.2"
+    "esbuild": "^0.24.0",
+    "terser": "^5.37.0"
   }
 }

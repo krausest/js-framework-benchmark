@@ -1,13 +1,10 @@
 import { Browser, Page } from "puppeteer-core";
-import { CPUBenchmarkResult, SizeInfoJSON, sizeBenchmarkInfos, slowDownFactor } from "./benchmarksCommon.js";
-import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
-import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./puppeteerAccess.js";
-import { fileNameTrace } from "./timeline.js";
+import { SizeInfoJSON } from "./benchmarksCommon.js";
 import { BenchmarkSize, SizeBenchmarkResult, benchmarks } from "./benchmarksSize.js";
+import { BenchmarkOptions, Config, ErrorAndWarning, FrameworkData, config as defaultConfig } from "./common.js";
+import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./puppeteerAccess.js";
 
 let config: Config = defaultConfig;
-
-const wait = (delay = 1000) => new Promise((res) => setTimeout(res, delay));
 
 function convertError(error: any): string {
   console.log(
@@ -65,10 +62,16 @@ async function runSizeBenchmark(
       await clickElement(page, "pierce/#run");
       await checkElementContainsText(page, "pierce/tbody>tr:nth-of-type(1)>td:nth-of-type(1)", (i*1000+1).toFixed());
 
+      let paintEvents = JSON.parse(await page.evaluate(`JSON.stringify(performance.getEntriesByType("paint"))`) as string);
+      console.log("paintEvents", paintEvents);
+
+
       let sizeInfoResponse = await fetch(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/sizeInfo`);
       if (sizeInfoResponse.status !== 200) throw new Error("Could not enable compression");
       let sizeInfo = (await sizeInfoResponse.json()) as SizeInfoJSON;
       console.log("sizeInfo", sizeInfo);
+      sizeInfo.fp = paintEvents.find((e: any) => e.name === "first-paint").startTime;
+      // sizeInfo.fcp = paintEvents.find((e: any) => e.name === "first-contentful-paint").startTime;
 
       results = benchmarks.subbenchmarks.map((b) => ({
           benchmark: b,
@@ -85,14 +88,11 @@ async function runSizeBenchmark(
     if (await disableCompressionResponse.text() !== "OK") console.log("ERROR - Could not disable compression - OK missing");   
     try {
       if (browser) {
-        console.log("*** browser close");
         await browser.close();
-        console.log("*** browser closed");
       }
     } catch (error) {
       console.log("ERROR cleaning up driver", error);
     }
-    console.log("*** browser has been shutting down");
   }
 }
 
@@ -136,7 +136,7 @@ process.on("message", (msg: any) => {
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunnerSize");
-      process.send({ failure: convertError(error) });
+      process.send({ error: convertError(error) });
       process.exit(0);
     });
 });

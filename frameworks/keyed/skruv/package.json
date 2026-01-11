@@ -11,7 +11,7 @@
     "build-prod": "esbuild src/index.js --bundle --minify --format=esm --outfile=dist/index.min.js"
   },
   "dependencies": {
-    "skruv": "0.6.3"
+    "skruv": "0.7.3"
   },
   "keywords": [
     "skruv"
@@ -19,6 +19,6 @@
   "author": "Svante Richter",
   "license": "MIT",
   "devDependencies": {
-    "esbuild": "^0.18.13"
+    "esbuild": "^0.24.0"
   }
 }

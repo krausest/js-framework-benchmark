@@ -59,7 +59,7 @@ async function runLighthouse(
       await chrome.kill();
       throw error;
     }
-    if (config.LOG_DEBUG) console.log("lighthouse result", results);
+    if (config.LOG_DEBUG) console.log("lighthouse result", JSON.stringify(results));
 
     return startupBenchmarks.map((bench) => ({
         benchmark: bench,
@@ -149,7 +149,7 @@ process.on("message", (msg: any) => {
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunnerLighthouse");
-      process.send({ failure: convertError(error) });
+      process.send({ error: convertError(error) });
       process.exit(0);
     });
 });

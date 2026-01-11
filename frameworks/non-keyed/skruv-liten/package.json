@@ -1,0 +1,21 @@
+{
+  "name": "skruv-liten-js-benchmark",
+  "version": "1.0.0",
+  "description": "skruv-liten js benchmark",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@skruv/liten",
+    "frameworkHomeURL": "https://github.com/skruv/liten",
+    "issues": [1139]
+  },
+  "scripts": {
+    "build-prod": "cp -f index-clean.html index.html && (printf '<script>' && esbuild src/index.js --bundle --minify --format=esm | tr -d '\n\r' && printf '</script>') >> index.html"
+  },
+  "author": "Svante Richter",
+  "license": "MIT",
+  "dependencies": {
+    "@skruv/liten": "^0.0.4"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}

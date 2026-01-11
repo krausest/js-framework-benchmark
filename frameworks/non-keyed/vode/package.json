@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-vode",
+  "version": "1.2.0",
+  "description": "vode framework benchmark",
+  "main": "main.mjs",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@ryupold/vode",
+    "frameworkHomeURL": "https://github.com/ryupold/vode"
+  },
+  "dependencies": {
+    "@ryupold/vode": "1.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10"
+  },
+  "scripts": {
+    "build-prod": "npm run bundle",
+    "bundle": "esbuild src/main.ts --bundle --outfile=main.mjs --minify"
+  },
+  "keywords": [
+    "@ryupold/vode",
+    "vode"
+  ],
+  "license": "MIT"
+}

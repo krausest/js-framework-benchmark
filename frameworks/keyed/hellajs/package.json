@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-hellajs",
+  "private": true,
+  "version": "1.0.0",
+  "author": "omilli",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@hellajs/core",
+    "frameworkHomeURL": "https://hellajs.com",
+    "issues": [1139]
+  },
+  "scripts": {
+    "build-prod": "rollup -c rollup.config.mjs"
+  },
+  "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.44.1",
+    "rollup-plugin-hellajs": "^0.9.8"
+  },
+  "dependencies": {
+    "@hellajs/core": "^1.0.8",
+    "@hellajs/dom": "^1.1.3"
+  }
+}

@@ -1,5 +1,4 @@
-import { NgFor } from '@angular/common';
-import { ChangeDetectorRef, Component, VERSION, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ApplicationRef, Component, VERSION, inject } from '@angular/core';
 
 interface Data {
     id: number;
@@ -12,12 +11,11 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 @Component({
     selector: 'app-root',
-    standalone: true,
-    imports: [NgFor],
     templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-    private cdr = inject(ChangeDetectorRef);
+    private applicationRef = inject(ApplicationRef);
 
     data: Array<Data> = [];
     selected?: number = undefined;
@@ -26,9 +24,9 @@ export class AppComponent {
     version = VERSION.full;
 
     buildData(count: number = 1000): Array<Data> {
-        var data: Array<Data> = [];
-        for (var i = 0; i < count; i++) {
-            data.push({ id: this.id, label: adjectives[this._random(adjectives.length)] + " " + colours[this._random(colours.length)] + " " + nouns[this._random(nouns.length)] });
+        const data: Array<Data> = new Array(count);
+        for (let i = 0; i < count; i++) {
+            data[i]={ id: this.id, label: adjectives[this._random(adjectives.length)] + " " + colours[this._random(colours.length)] + " " + nouns[this._random(nouns.length)] };
             this.id++;
         }
         return data;
@@ -45,7 +43,7 @@ export class AppComponent {
     select(item: Data, event: Event) {
         event.preventDefault();
         this.selected = item.id;
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
 
     delete(item: Data, event: Event) {
@@ -56,41 +54,41 @@ export class AppComponent {
                 break;
             }
         }
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
 
     run() {
         this.data = this.buildData();
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
 
     add() {
         this.data = this.data.concat(this.buildData(1000));
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
 
     update() {
         for (let i = 0; i < this.data.length; i += 10) {
             this.data[i].label += ' !!!';
         }
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
     runLots() {
         this.data = this.buildData(10000);
         this.selected = undefined;
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
     clear() {
         this.data = [];
         this.selected = undefined;
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
     swapRows() {
         if (this.data.length > 998) {
-            var a = this.data[1];
+            const a = this.data[1];
             this.data[1] = this.data[998];
             this.data[998] = a;
         }
-        this.cdr.detectChanges();
+        this.applicationRef.tick();
     }
 }

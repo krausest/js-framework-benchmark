@@ -1,0 +1,33 @@
+{
+  "name": "js-framework-benchmark-destam-dom",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "destam-dom",
+    "frameworkHomeURL": "https://github.com/Nefsen402/destam-dom"
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c",
+    "build-prod": "rollup -c --environment production"
+  },
+  "author": "Alexander Orzechowski",
+  "license": "GPL-3.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "destam": "^0.5.0",
+    "destam-dom": "^0.10.2"
+  },
+  "devDependencies": {
+    "@babel/parser": "^7.26.3",
+    "@babel/traverse": "^7.26.4",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.28.1"
+  }
+}

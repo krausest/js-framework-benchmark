@@ -1,0 +1,39 @@
+{
+  "name": "js-framework-benchmark-react-compiler-hooks",
+  "version": "1.0.0",
+  "description": "React Compiler Hooks Demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "react",
+    "frameworkHomeURL": "https://reactjs.org/"
+  },
+  "scripts": {
+    "dev": "webpack --watch",
+    "build-prod": "webpack"
+  },
+  "keywords": [
+    "react",
+    "webpack"
+  ],
+  "author": "Valentyn Vasylenko",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@babel/core": "7.26.0",
+    "@babel/preset-env": "7.26.0",
+    "@babel/preset-react": "7.26.3",
+    "babel-loader": "9.2.1",
+    "babel-plugin-react-compiler": "19.0.0-beta-37ed2a7-20241206",
+    "terser-webpack-plugin": "5.3.10",
+    "webpack": "5.97.1",
+    "webpack-cli": "5.1.4"
+  },
+  "dependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  }
+}

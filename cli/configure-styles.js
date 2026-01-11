@@ -1,3 +1,4 @@
+// @ts-check
 import * as fs from "node:fs";
 import path from "node:path";
 
@@ -12,22 +13,19 @@ async function copyAndGenerateSharedStyles(sourceCss, mainCss) {
   const sharedStylesContent = `<dom-module id="shared-styles"><template><style>${mainCssContent}</style></template></dom-module>`;
 
   // Write shared-styles.html
-  await fs.promises.writeFile(
-    path.join("polymer-v2.0.0-non-keyed", "src", "shared-styles.html"),
-    sharedStylesContent,
-  );
+  await fs.promises.writeFile(path.join("polymer-v2.0.0-non-keyed", "src", "shared-styles.html"), sharedStylesContent);
 }
 
 /**
  * @param {Object} options
  * @param {boolean} options.bootstrap
  * @param {boolean} options.minimal
- * @returns
  */
-async function configureStyles(options) {
-  const { bootstrap, minimal } = options;
+export async function configureStyles({ bootstrap, minimal }) {
+  console.log("Configure styles", "bootstrap", bootstrap, "minimal", minimal);
 
   try {
+    // @ts-ignore
     if (bootstrap ^ minimal) {
       console.log("ERROR: You must either choose bootstrap or minimal");
       return;
@@ -37,17 +35,12 @@ async function configureStyles(options) {
     if (bootstrap) {
       await copyAndGenerateSharedStyles(
         path.join("css", "useOriginalBootstrap.css"),
-        path.join("css", "bootstrap", "dist", "css", "bootstrap.min.css"),
+        path.join("css", "bootstrap", "dist", "css", "bootstrap.min.css")
       );
     } else {
-      await copyAndGenerateSharedStyles(
-        path.join("css", "useMinimalCss.css"),
-        path.join("css", "useMinimalCss.css"),
-      );
+      await copyAndGenerateSharedStyles(path.join("css", "useMinimalCss.css"), path.join("css", "useMinimalCss.css"));
     }
   } catch (error) {
     console.error("An error occurred:", error.message);
   }
 }
-
-export { configureStyles };

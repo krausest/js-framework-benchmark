@@ -1,33 +1,24 @@
 {
-  "name": "js-framework-benchmark-vue-next",
-  "version": "1.0.0",
-  "description": "Benchmark for vue.js framework",
+  "name": "js-framework-benchmark-vue-pinia",
+  "private": true,
+  "version": "0.0.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "vue:pinia",
-    "frameworkHomeURL": "https://vue.js.org/"
+    "frameworkHomeURL": "https://vue.js.org/",
+    "customURL": "/dist"
   },
+  "type": "module",
   "scripts": {
-    "dev": "webpack --mode development --watch",
-    "build-prod": "webpack --mode production"
-  },
-  "keywords": [
-    "vue"
-  ],
-  "author": "Stefan Krause",
-  "license": "Apache-2.0",
-  "homepage": "https://github.com/krausest/js-framework-benchmark",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/krausest/js-framework-benchmark.git"
-  },
-  "devDependencies": {
-    "@vue/compiler-sfc": "3.3.4",
-    "vue-loader": "17.2.2",
-    "webpack": "5.88.1",
-    "webpack-cli": "5.1.4"
+    "dev": "vite",
+    "build-prod": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "pinia": "^2.1.7",
-    "vue": "3.3.4"
+    "pinia": "^2.3.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.0.3"
   }
 }

@@ -1,11 +1,12 @@
 {
-  "name": "js-framework-benchmark-bau",
+  "name": "js-framework-benchmark-bau-non-keyed",
   "version": "1.2.0",
-  "description": "bau demo benchmark",
+  "description": "bau non keyed demo benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@grucloud/bau",
-    "frameworkHomeURL": "https://github.com/grucloud/bau"
+    "frameworkHomeURL": "https://github.com/grucloud/bau",
+    "issues": [772]
   },
   "scripts": {
     "dev": "vite",
@@ -21,7 +22,7 @@
     "vite": "^4.4.8"
   },
   "dependencies": {
-    "@grucloud/bau": "0.39.0",
+    "@grucloud/bau": "0.92.0",
     "bootstrap": "3.3.6"
   }
 }

@@ -1,0 +1,25 @@
+{
+  "name": "better-react",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "better-react",
+    "frameworkHomeURL": "https://www.npmjs.com/package/better-react"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "build-prod": "vite build"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3"
+  },
+  "dependencies": {
+    "better-react": "^1.2.7",
+    "better-react-dom": "^1.2.7",
+    "better-react-helper": "^1.2.9"
+  }
+}

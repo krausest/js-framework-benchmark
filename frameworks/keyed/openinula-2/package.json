@@ -1,0 +1,26 @@
+{
+  "name": "js-framework-benchmark-inula-next",
+  "version": "1.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@openinula/next",
+    "frameworkHomeURL": "https://www.openinula.net/",
+    "customURL": "/dist"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build-prod": "vite build"
+  },
+  "dependencies": {
+    "@openinula/next": "^0.0.5",
+    "@openinula/vite-plugin-inula-next": "^0.0.7"
+  },
+  "devDependencies": {
+    "vite": "^4.4.9"
+  },
+  "keywords": [
+    "inula-next"
+  ]
+}

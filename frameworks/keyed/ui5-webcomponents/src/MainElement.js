@@ -8,13 +8,8 @@ import MainElementTemplate from "./generated/templates/MainElementTemplate.lit.j
 const metadata = {
 	tag: "main-element",
 	properties: {
-		_rows: {
-			"type": Object,
-			"multiple": true,
-		},
-		_selected: {
-			"type": String,
-		},
+		_rows: {},
+		_selected: {},
 	},
 	slots: {
 	},
@@ -25,6 +20,7 @@ const metadata = {
 class MainElement extends UI5Element {
 	constructor() {
 		super();
+		this._rows = [];
 		this.store = new Store();
 	}
 
@@ -32,7 +28,7 @@ class MainElement extends UI5Element {
 		return metadata;
 	}
 
-	static get render() {
+	static get renderer() {
 		return litRender;
 	}
 
@@ -66,7 +62,7 @@ class MainElement extends UI5Element {
 
 	update() {
 		this.store.update();
-		this._rows = this.store.data;
+		this._rows = [...this.store.data];
 		this._selected = this.store.selected;
 	}
 
@@ -78,7 +74,7 @@ class MainElement extends UI5Element {
 
 	swapRows() {
 		this.store.swapRows();
-		this._rows = this.store.data;
+		this._rows = [...this.store.data];
 		this._selected = this.store.selected;
 	}
 
@@ -97,7 +93,7 @@ class MainElement extends UI5Element {
 
 	remove(id) {
 		this.store.delete(id);
-		this._rows = this.store.data;
+		this._rows = [...this.store.data];
 		this._selected = this.store.selected;
 	}
 }

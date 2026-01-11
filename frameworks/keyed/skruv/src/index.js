@@ -1,147 +1,77 @@
 import { render, elementFactory } from 'skruv'
 import { buildData } from "./store.js"
-const { body, table, tbody, tr, td, span, div, button, h1, a } = elementFactory
+const { tbody, tr, td, span, a } = elementFactory
 
-const deleteRow = (row) => {
-  state.data.splice(state.data.indexOf(row), 1)
-  doRender()
-}
+let data = []
+let selected = {}
 
-const selectRow = (row) => {
-  state.selected = row
-  doRender()
-}
-
-const state = {
-  data: [],
-  selected: false,
-}
+const spacer = td({ class: "col-md-6" })
+const icon = span({ class: "glyphicon glyphicon-remove", "aria-hidden": "true" })
+const singleAttr = { class: "col-md-1" }
+const quadrupleAttr = { class: "col-md-4" }
+const tbodyAttr = { id: 'container' }
 
 const doRender = () => render(
-  body(
-    div({ class: "container" },
-      div({ class: "jumbotron" },
-        div({ class: "row" },
-          div({ class: "col-md-6" }, h1("skruv")),
-          div({ class: "col-md-6" },
-            div({ class: "row" },
-              div({ class: "col-sm-6 smallpad" },
-                button({
-                  type: "button",
-                  class: "btn btn-primary btn-block",
-                  id: "run",
-                  onclick: () => {
-                    state.data = buildData()
-                    doRender()
-                  },
-                },
-                  "Create 1,000 rows"
-                )
-              ),
-              div({ class: "col-sm-6 smallpad" },
-                button({
-                  type: "button",
-                  class: "btn btn-primary btn-block",
-                  id: "runlots",
-                  onclick: () => {
-                    state.data = buildData(10000)
-                    doRender()
-                  },
-                },
-                  "Create 10,000 rows"
-                )
-              ),
-              div({ class: "col-sm-6 smallpad" },
-                button({
-                  type: "button",
-                  class: "btn btn-primary btn-block",
-                  id: "add",
-                  onclick: () => {
-                    state.data.push(...buildData())
-                    doRender()
-                  },
-                },
-                  "Append 1,000 rows"
-                )
-              ),
-              div({ class: "col-sm-6 smallpad" },
-                button({
-                  type: "button",
-                  class: "btn btn-primary btn-block",
-                  id: "update",
-                  onclick: () => {
-                    for (let i = 0; i < state.data.length; i++) {
-                      if (i % 10 === 0) {
-                        state.data[i].label += " !!!"
-                      }
-                    }
-                    doRender()
-                  },
-                },
-                  "Update every 10th row"
-                )
-              ),
-              div({ class: "col-sm-6 smallpad" },
-                button({
-                  type: "button",
-                  class: "btn btn-primary btn-block",
-                  id: "clear",
-                  onclick: () => {
-                    state.data = []
-                    doRender()
-                  },
-                },
-                  "Clear"
-                )
-              ),
-              div({ class: "col-sm-6 smallpad" },
-                button({
-                  type: "button",
-                  class: "btn btn-primary btn-block",
-                  id: "swaprows",
-                  onclick: () => {
-                    const temp = state.data[1]
-                    state.data[1] = state.data[998]
-                    state.data[998] = temp
-                    doRender()
-                  },
-                },
-                  "Swap Rows"
-                )
-              )
-            )
-          )
+  tbody(tbodyAttr,
+    data.map((row) => tr({
+      class: (row === selected) && "danger",
+      skruvKey: row
+    },
+      td(singleAttr, row.id),
+      td(quadrupleAttr,
+        a({
+          onclick: () => {
+            selected.selected = false
+            row.selected = true
+            selected = row
+            doRender()
+          }
+        }, row.label),
+      ),
+      td(singleAttr,
+        a({
+          onclick: () => {
+            data.splice(data.indexOf(row), 1)
+            doRender()
+          }
+        },
+          icon
         )
       ),
-      table({ class: "table table-hover table-striped test-data" },
-      tbody(
-        state.data.map((data) => tr({
-          class: (data.selected = data === state.selected) && "danger",
-          'data-skruv-key': data
-        },
-          td({ class: "col-md-1" }, data.id),
-          td({ class: "col-md-4" },
-            a({ onclick: () => selectRow(data) }, data.label),
-          ),
-          td({ class: "col-md-1" },
-            a({ onclick: () => deleteRow(data) },
-              span({
-                class: "glyphicon glyphicon-remove",
-                "aria-hidden": "true",
-              })
-            ),
-          ),
-          td({ class: "col-md-6" }),
-        ))
-      )
-      ),
-      span({
-        class: "preloadicon glyphicon glyphicon-remove",
-        "aria-hidden": "true"
-      })
-    )
+      spacer
+    ))
   ),
-  document.querySelector('body')
+  container
 )
 
-doRender()
+run.onclick = () => {
+  data = buildData()
+  doRender()
+}
+
+runlots.onclick = () => {
+  data = buildData(10000)
+  doRender()
+}
+
+add.onclick = () => {
+  data.push(...buildData())
+  doRender()
+}
+
+update.onclick = () => {
+  for (let i = 0; i < data.length; i += 10) {
+    data[i].label += " !!!"
+  }
+  doRender()
+}
+
+clear.onclick = () => {
+  data = []
+  doRender()
+}
+
+swaprows.onclick = () => {
+  [data[1], data[998]] = [data[998], data[1]]
+  doRender()
+}

@@ -1,14 +1,8 @@
+// @ts-check
 import * as fs from "node:fs";
 import path from "node:path";
 
-const filesToDelete = [
-  "package-lock.json",
-  "yarn-lock",
-  "dist",
-  "elm-stuff",
-  "bower_components",
-  "node_modules",
-];
+const filesToDelete = ["package-lock.json", "yarn-lock", "dist", "elm-stuff", "bower_components", "node_modules"];
 
 /**
  * Delete specified files in the framework directory
@@ -29,8 +23,14 @@ function deleteFrameworkFiles(frameworkPath, filesToDelete) {
  * @param {string} options.frameworksDirPath
  * @param {Array<string>} options.frameworksTypes
  */
-function cleanFrameworkDirectories(options) {
-  const { frameworksDirPath, frameworksTypes } = options;
+export function cleanFrameworkDirectories({ frameworksDirPath, frameworksTypes }) {
+  console.log(
+    "Clean framework directories",
+    "frameworksDirPath",
+    frameworksDirPath,
+    "frameworksTypes",
+    frameworksTypes
+  );
 
   for (const frameworkType of frameworksTypes) {
     const frameworkDir = path.resolve(frameworksDirPath, frameworkType);
@@ -43,5 +43,3 @@ function cleanFrameworkDirectories(options) {
     }
   }
 }
-
-export { cleanFrameworkDirectories };

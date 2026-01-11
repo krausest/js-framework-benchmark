@@ -1,3 +1,4 @@
+// @ts-check
 import * as fs from "node:fs";
 import path from "node:path";
 
@@ -17,7 +18,7 @@ function shouldInclude(name) {
     const isTargetWeb = name.includes("/target/web");
 
     console.log(
-      `File: ${name}\nIs Binding Scala: ${isBindingScala}\nIs Target: ${isTarget}\nIs Target Web: ${isTargetWeb}`,
+      `File: ${name}\nIs Binding Scala: ${isBindingScala}\nIs Target: ${isTarget}\nIs Target Web: ${isTargetWeb}`
     );
 
     if (isTarget) {
@@ -72,15 +73,10 @@ function copyFolderRecursiveSync(sourcePath, destinationPath) {
  */
 function processDirectories() {
   const directories = fs.readdirSync(".");
-  const nonHiddenDirectories = directories.filter(
-    (directory) => !directory.startsWith("."),
-  );
+  const nonHiddenDirectories = directories.filter((directory) => !directory.startsWith("."));
 
   for (const directory of nonHiddenDirectories) {
-    if (
-      fs.statSync(directory).isDirectory() &&
-      !rootExclude.includes(directory)
-    ) {
+    if (fs.statSync(directory).isDirectory() && !rootExclude.includes(directory)) {
       const dirPath = path.join("dist", directory);
       console.log(dirPath);
       fs.mkdirSync(dirPath);
@@ -93,17 +89,14 @@ function processDirectories() {
  * Creates a dist directory, copies `table.html` from `webdriver-ts` and `index.html` into it,
  * and then starts copying the project folders recursively using `processDirectories()`.
  */
-function copyProjectToDist() {
+export function copyProjectToDist() {
+  console.log("Copying project to dist directory");
+
   fs.rmSync("dist", { force: true, recursive: true });
   fs.mkdirSync(path.join("dist", "webdriver-ts"), { recursive: true });
 
-  fs.copyFileSync(
-    path.join("webdriver-ts", "table.html"),
-    path.join("dist", "webdriver-ts", "table.html"),
-  );
+  fs.copyFileSync(path.join("webdriver-ts", "table.html"), path.join("dist", "webdriver-ts", "table.html"));
   fs.copyFileSync("index.html", path.join("dist", "index.html"));
 
   processDirectories();
 }
-
-export { copyProjectToDist };

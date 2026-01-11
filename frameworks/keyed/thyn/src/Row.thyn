@@ -1,0 +1,22 @@
+<script>
+  import { selected, data } from "./state.thyn.js";
+
+  const { row: { id, label } } = $props;
+</script>
+
+<tr class={selected.get() === id ? 'danger' : undefined}>
+  <td class="col-md-1">{{ id }}</td>
+  <td class="col-md-4">
+    <a onclick={() => selected.set(id)}>{{ label.get() }}</a>
+  </td>
+  <td class="col-md-1">
+    <a onclick={() => data.update(d => {
+      const clone = d.slice();
+      clone.splice(clone.findIndex(r => r.id === id), 1);
+      return clone;
+    })}>
+      <span class="glyphicon glyphicon-remove" aria-hidden="true" />
+    </a>
+  </td>
+  <td class="col-md-6" />
+</tr>

@@ -1,0 +1,154 @@
+:root {
+  --border-color: #ccc;
+}
+
+thead.dummy th {
+  padding: 0;
+  border: 0;
+}
+.results__table td.description {
+  text-align: left;
+  overflow: visible;
+  height: 42px;
+  padding: 0 !important;
+  border: 0;
+}
+td > h3 {
+  position: absolute;
+  font-size: 16px;
+  margin: 0px;
+  padding: 10px;
+  top: 0;
+  left: 0;
+  width: 800px;
+  height: 40px;
+  background-color: #fff;
+}
+td {
+  text-align: center;
+}
+.results {
+  width: 100%;
+  max-width: 100%;
+}
+.results__table-container {
+}
+.results__table {
+  font-size: 11px;
+  width: 150px;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.results__table th {
+  width: 60px;
+  font-weight: normal;
+  font-size: 11px;
+  z-index: 9;
+  text-align: center;
+  word-break: normal;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+.results__table th.benchname {
+  width: 120px;
+}
+.results__table th,
+.results__table td {
+  padding: 3px;
+  border: 1px solid #ddd;
+}
+.results__table th:first-child,
+.results__table td:first-child {
+  position: sticky;
+  left: 0;
+  width: 120px;
+  background-color: white;
+}
+.results__table th:first-child::before,
+.results__table td:not(.description):first-child::before,
+.results__table th:first-child::after,
+.results__table td:not(.description):first-child::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #ddd;
+}
+.results__table th:first-child::before,
+.results__table td:first-child::before {
+  left: -1px;
+}
+.results__table th:first-child::after,
+.results__table td:first-child::after {
+  right: -1px;
+}
+
+.rowCount {
+  font-size: 10px;
+}
+
+.deviation {
+  font-size: 8px;
+  padding-left: 5px;
+}
+.deviation::before {
+  content: "± ";
+}
+
+.factor {
+  font-size: 8px;
+}
+
+.sort-key {
+  text-decoration: underline;
+}
+
+dl {
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  margin-bottom: 16px;
+}
+dt {
+  float: left;
+  width: 50px;
+  padding: 0;
+  margin: 0;
+}
+dd {
+  padding: 0;
+  margin: 0;
+}
+
+.with-issues {
+  background-color: #faa;
+}
+
+.button {
+  cursor: pointer;
+}
+
+.button__text {
+  color: #00e;
+  font-size: inherit;
+  border: none;
+  background: none;
+}
+
+.button__text:disabled {
+  color: #666;
+  font-weight: normal;
+}
+
+.error {
+  background-color: #f99;
+}
+
+.warning {
+  background-color: #ff6;
+}
+
+.check-full-width::after {
+  display: inline-block;
+}

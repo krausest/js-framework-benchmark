@@ -1,5 +1,4 @@
-import { defineRoot, dirtyCheck, update, component, List, eventDispatcher, getProps, useReducer } from "ivi";
-import { htm } from "@ivi/tpl";
+import { defineRoot, dirtyCheck, update, component, List, eventDispatcher, getProps, useReducer, html } from "ivi";
 import { Entry, State, Action, ActionType } from "./types.js";
 
 const random = (max: number) => Math.round(Math.random() * 1000) % max;
@@ -66,50 +65,69 @@ interface RowProps {
 const Row = component<RowProps>((c) => {
   const onSelect = () => { dispatch(c, { type: ActionType.Select, entry: getProps(c).entry }); };
   const onRemove = () => { dispatch(c, { type: ActionType.Remove, entry: getProps(c).entry }); };
-  return ({ entry, selected }) => htm`
-    tr${selected === true ? "danger" : ""}
-      td.col-md-1 =${entry.id}
-      td.col-md-4
-        a @click=${onSelect} =${entry.label}
-      td.col-md-1
-        a @click=${onRemove} span.glyphicon.glyphicon-remove :aria-hidden='true'
-      td.col-md-6
-    `;
+
+  return ({ entry, selected }) => html`
+    <tr class=${selected === true ? "danger" : ""}>
+      <td class="col-md-1" .textContent=${entry.id}/>
+      <td class="col-md-4">
+        <a @click=${onSelect} .textContent=${entry.label}/>
+      </td>
+      <td class="col-md-1">
+        <a @click=${onRemove}>
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"/>
+        </a>
+      </td>
+      <td class="col-md-6"/>
+    </tr>
+  `;
 });
 
-const Button = (text: string, id: string, onClick: () => void) => /* preventClone */ htm`
-  div.col-sm-6.smallpad
-    button.btn.btn-primary.btn-block :type='button' :id=${id} @click=${onClick}
-      =${text}
+const Button = (text: string, id: string, onClick: () => void) => html`
+  <div class="col-sm-6 smallpad">
+    <button class="btn btn-primary btn-block" type="button" id=${id} @click=${onClick}>
+      ${text}
+    </button>
+  </div>
 `;
 
 const App = component((c) => {
   const [_state, _dispatch] = useReducer(c, INITIAL_STATE, appStateReducer);
 
   const onDispatch = (ev: CustomEvent<Action>) => { _dispatch(ev.detail); };
+
   const buttons = [
-    Button("Create 1,000 rows", "run", () => { _dispatch({ type: ActionType.Run }); }),
-    Button("Create 10,000 rows", "runlots", () => { _dispatch({ type: ActionType.RunLots }); }),
-    Button("Append 1,000 rows", "add", () => { _dispatch({ type: ActionType.Add }); }),
-    Button("Update every 10th row", "update", () => { _dispatch({ type: ActionType.Update }); }),
-    Button("Clear", "clear", () => { _dispatch({ type: ActionType.Clear }); }),
-    Button("Swap Rows", "swaprows", () => { _dispatch({ type: ActionType.SwapRows }); }),
+    Button("Create 1,000 rows",     "run",      () => { _dispatch({ type: ActionType.Run      }); }),
+    Button("Create 10,000 rows",    "runlots",  () => { _dispatch({ type: ActionType.RunLots  }); }),
+    Button("Append 1,000 rows",     "add",      () => { _dispatch({ type: ActionType.Add      }); }),
+    Button("Update every 10th row", "update",   () => { _dispatch({ type: ActionType.Update   }); }),
+    Button("Clear",                 "clear",    () => { _dispatch({ type: ActionType.Clear    }); }),
+    Button("Swap Rows",             "swaprows", () => { _dispatch({ type: ActionType.SwapRows }); }),
   ];
 
   return () => {
     const { data, selected } = _state();
-    return /* preventClone */ htm`
-    div.container
-      div.jumbotron
-        div.row
-          div.col-md-6 h1 'ivi'
-          div.col-md-6 div.row ${buttons}
-      table.table.table-hover.table-striped.test-data
-        @dispatch=${onDispatch}
-        ${data.length
-           ? htm`tbody ${List(data, getEntryId, (entry) => Row({ entry, selected: selected === entry.id }))}`
-           : htm`tbody`}
-      span.preloadicon.glyphicon.glyphicon-remove :aria-hidden='true'
+
+    return html`
+      <div class="container">
+        <div class="jumbotron">
+          <div class="row">
+            <div class="col-md-6">
+              <h1>ivi</h1>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                ${buttons}
+              </div>
+            </div>
+          </div>
+        </div>
+        <table class="table table-hover table-striped test-data" @dispatch=${onDispatch}>
+          <tbody>
+            ${List(data, getEntryId, (entry) => Row({ entry, selected: selected === entry.id }))}
+          </tbody>
+        </table>
+        <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"/>
+      </div>
     `;
   };
 });

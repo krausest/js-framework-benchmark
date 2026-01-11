@@ -1,0 +1,30 @@
+{
+  "name": "mutraction-dom-template",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Mutraction demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "mutraction-dom",
+    "frameworkHomeURL": "https://mutraction.dev/"
+  },
+  "scripts": {
+    "dev": "npm run build",
+    "build-prod": "npm run build",
+    "build": "npx tsc && npm run transform && npm run bundle",
+    "transform": "npx babel out -d out2",
+    "bundle": "npx esbuild out2/index.js --bundle --format=esm --outfile=dist/index.js --minify"
+  },
+  "author": "Tom Theisen",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.26.4",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "mutraction-dom": "0.28.0"
+  }
+}

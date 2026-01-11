@@ -8,7 +8,7 @@ import {
 } from "./benchmarksPlaywright.js";
 import { BenchmarkOptions, config as defaultConfig, ErrorAndWarning, FrameworkData, Config } from "./common.js";
 import { startBrowser } from "./playwrightAccess.js";
-import { computeResultsCPU, fileNameTrace } from "./timeline.js";
+import { computeResultsCPU, computeResultsJS, computeResultsPaint, fileNameTrace } from "./timeline.js";
 
 let config: Config = defaultConfig;
 
@@ -60,12 +60,8 @@ function convertError(error: any): string {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function forceGC(page: Page, client: CDPSession) {
-  for (let i = 0; i < 7; i++) {
-      // await client.send('HeapProfiler.collectGarbage');
-    await page.evaluate("window.gc()");
-  }
+async function forceGC(page: Page) {
+  await page.evaluate("window.gc({type:'major',execution:'sync',flavor:'last-resort'})");
 }
 
 async function runCPUBenchmark(
@@ -73,111 +69,87 @@ async function runCPUBenchmark(
   benchmark: CPUBenchmarkPlaywright,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
-    let error: string = undefined;
-    let warnings: string[] = [];
-    let results: CPUBenchmarkResult[] = [];
+  let error: string = undefined;
+  let warnings: string[] = [];
+  let results: CPUBenchmarkResult[] = [];
 
-    console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
+  console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
   let browser: Browser = null;
-  let page: Page = null;
-    try {
-        browser = await startBrowser(benchmarkOptions);
-        page = await browser.newPage();
-        // if (config.LOG_DETAILS) {
-    page.on("console", (msg) => {
-      for (let i = 0; i < msg.args().length; ++i) console.log(`BROWSER: ${msg.args()[i]}`);
-            });
-        // }
-        let client = await page.context().newCDPSession(page);
-    await client.send("Performance.enable");
+  try {
+    browser = await startBrowser(benchmarkOptions);
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
+      let page = await browser.newPage();
+      // if (config.LOG_DETAILS) {
+      page.on("console", (msg) => {
+        for (let i = 0; i < msg.args().length; ++i) console.log(`BROWSER: ${msg.args()[i]}`);
+      });
+      // }
+      let client = await page.context().newCDPSession(page);
+      // await client.send("Performance.enable");
       await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
-          waitUntil: "networkidle",
+        waitUntil: "networkidle",
       });
 
-            console.log("initBenchmark Playwright");
-            await initBenchmark(browser, page, benchmark, framework);
-            // minimal categories
-            // result svelte-v3.46.2-keyed_01_run1k.json min 67.237 max 71.611 mean 69.4036 median 69.20949999999999 stddev 1.3601652023845432
-            // default categories:
-            // result svelte-v3.46.2-keyed_01_run1k.json min 61.334 max 65.92 mean 63.84379999999999 median 63.756 stddev 1.5925086987377977
-            let categories = [
-                "blink.user_timing",
-                "devtools.timeline",
-                "disabled-by-default-devtools.timeline",
-            ];
-            // let categories = [
-            // "loading",
-            // 'devtools.timeline',
-            //   'disabled-by-default-devtools.timeline',
-            //   '-*',
-            //   'v8.execute',
-            //     'disabled-by-default-devtools.timeline.frame',
-            //     'toplevel',
-            //     'blink.console',
-            //     'blink.user_timing',
-            //     'latencyInfo',
-            //     'disabled-by-default-v8.cpu_profiler',                
-            //     'disabled-by-default-devtools.timeline.stack',
-            // ];
+      console.log("initBenchmark Playwright");
+      await initBenchmark(browser, page, benchmark, framework);
+      let categories = ["blink.user_timing", "devtools.timeline", "disabled-by-default-devtools.timeline"];
 
-            await forceGC(page, client);
+      await forceGC(page);
       let throttleCPU = slowDownFactor(benchmark.benchmarkInfo.id, benchmarkOptions.allowThrottling);
-            if (throttleCPU) {
-              console.log("CPU slowdown", throttleCPU);
-              await client.send("Emulation.setCPUThrottlingRate", { rate: throttleCPU });
-            }
+      if (throttleCPU) {
+        console.log("CPU slowdown", throttleCPU);
+        await client.send("Emulation.setCPUThrottlingRate", { rate: throttleCPU });
+      }
 
       await browser.startTracing(page, {
         path: fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions),
-                screenshots: false,
+        screenshots: false,
         categories: categories,
-            });
-      let m1 = (await client.send("Performance.getMetrics")).metrics;
-      let m1_val = m1.find((m) => m.name === "ScriptDuration").value;
-      let m1_Timestamp = m1.find((m) => m.name === "Timestamp").value;
-            console.log("m1", m1, m1_val);
-            console.log("runBenchmark Playwright");
-            await runBenchmark(browser, page, benchmark, framework);
+      });
+      await runBenchmark(browser, page, benchmark, framework);
 
-            await wait(40);
-            await browser.stopTracing();
-      let m2 = (await client.send("Performance.getMetrics")).metrics;
-      let m2_val = m2.find((m) => m.name === "ScriptDuration").value;
-      let m2_Timestamp = m2.find((m) => m.name === "Timestamp").value;
-            console.log("m2", m2, m2_val);
-            if (throttleCPU) {
+      await wait(40);
+      await browser.stopTracing();
+      if (throttleCPU) {
         await client.send("Emulation.setCPUThrottlingRate", { rate: 1 });
-          }  
-      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions));
-      let resultScript = (m2_val - m1_val) * 1000.0;
-            console.log("**** resultScript =", resultScript);
-            if (m2_Timestamp == m1_Timestamp) throw new Error("Page metrics timestamp didn't change");
+      }
+      let result = await computeResultsCPU(fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions), framework.startLogicEventName);
+      let resultScript = await computeResultsJS(
+        result,
+        config,
+        fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
+      );
+      let resultPaint = await computeResultsPaint(
+        result,
+        config,
+        fileNameTrace(framework, benchmark.benchmarkInfo, i, benchmarkOptions)
+      );
 
-      results.push({ total: result.duration, script: resultScript });
-            console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${result}`);
+      let res = { total: result.duration, script: resultScript, paint: resultPaint };
+      results.push(res);
+      console.log(`duration for ${framework.name} and ${benchmark.benchmarkInfo.id}: ${JSON.stringify(res)}`);
       if (result.duration < 0) throw new Error(`duration ${result} < 0`);
+      try {
+        if (page) {
+          await page.close();
         }
-    return { error, warnings, result: results };
-    } catch (error) {
-        console.log("ERROR", error);
-    return { error: convertError(error), warnings };
-    } finally {
-        try {
-            if (page) {
-                await page.close();
-            }
-        } catch (error) {
-            console.log("ERROR closing page", error);
-        }
-        try {
-            if (browser) {
-                await browser.close();
-            }
-        } catch (error) {
-            console.log("ERROR cleaning up driver", error);
-        }
+      } catch (error) {
+        console.log("ERROR closing page", error);
+      }
     }
+    return { error, warnings, result: results };
+  } catch (error) {
+    console.log("ERROR", error);
+    return { error: convertError(error), warnings };
+  } finally {
+    try {
+      if (browser) {
+        await browser.close();
+      }
+    } catch (error) {
+      console.log("ERROR cleaning up driver", error);
+    }
+  }
 }
 
 async function runMemBenchmark(
@@ -202,7 +174,7 @@ async function runMemBenchmark(
       }
 
       await page.goto(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`, {
-          waitUntil: "networkidle",
+        waitUntil: "networkidle",
       });
 
       // await (driver as any).sendDevToolsCommand('Network.enable');
@@ -219,7 +191,7 @@ async function runMemBenchmark(
 
       console.log("runBenchmark");
       await runBenchmark(browser, page, benchmark, framework);
-      await forceGC(page, client);
+      await forceGC(page);
       await wait(40);
       // let result = (await client.send('Performance.getMetrics')).metrics.filter((m) => m.name==='JSHeapUsedSize')[0].value / 1024 / 1024;
 
@@ -287,7 +259,7 @@ process.on("message", (msg: any) => {
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunner", error);
-      process.send({ failure: convertError(error) });
+      process.send({ error: convertError(error) });
       process.exit(0);
     });
 });

@@ -1,0 +1,17 @@
+[package]
+name = "ravel-benchmark"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+getrandom = { version = "0.2.15", features = ["js"] }
+gloo-utils = "0.2.0"
+rand = "0.8.5"
+ravel-web = "0.3"
+wasm-bindgen-futures = "0.4.42"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"

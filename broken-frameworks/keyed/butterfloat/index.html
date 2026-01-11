@@ -1,0 +1,13 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="utf-8">
+    <title>Butterfloat</title>
+    <link href="/css/currentStyle.css" rel="stylesheet">
+    <script type="module" src="./main.js"></script>
+</head>
+<body>
+<div id="main">
+</div>
+<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+
+
+<template id="app"><div class="container"><div class="jumbotron"><div class="row"><div class="col-md-6"><h1>Butterfloat</h1></div><div class="col-md-6"><div class="row"><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="run" data-bf-bind="0">Create 1,000 rows</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="runlots" data-bf-bind="1">Create 10,000 rows</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="add" data-bf-bind="2">Append 1,000 rows</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="update" data-bf-bind="3">Update every 10th row</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="clear" data-bf-bind="4">Clear</button></div><div class="col-sm-6 smallpad"><button type="button" class="btn btn-primary btn-block" id="swaprows" data-bf-bind="5">Swap Rows</button></div></div></div></div></div><table class="table table-hover table-striped test-data"><tbody id="tbody" data-bf-bind="6"></tbody></table></div></template><template id="row"><tr data-bf-bind="0"><td class="col-md-1" data-bf-bind="1"></td><td class="col-md-4"><a data-bf-bind="2"></a></td><td class="col-md-1"><a type="button" data-bf-bind="3"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr></template></body></html>

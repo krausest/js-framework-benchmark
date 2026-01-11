@@ -66,10 +66,9 @@ Doo.define(
 		delete(elem) {
 			let row = this.getParentRow(elem)
 			if (row) {
-				let idx = this.getIndex(row)
 				this.tbody.removeChild(row)
-				if (idx !== undefined && idx !== -1) {
-					this.data.rows.splice(idx,1)
+				if (row.key !== undefined) {
+					this.data.rows.splice(row,1)
 				}
 			}
 		}  
