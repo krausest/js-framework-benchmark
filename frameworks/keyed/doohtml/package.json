@@ -1,15 +1,15 @@
 {
     "name": "js-framework-benchmark-doohtml",
-    "version": "0.92.2",
+    "version": "0.98.2",
     "description": "DooHTML JS-Benchmark",
-    "main": "Main.class.js",
+    "main": "main.js",
     "js-framework-benchmark": {
       "frameworkVersion": "",
       "frameworkHomeURL": "https://doohtml.com",
-      "useShadowRoot": true,
-      "shadowRootName": "doo-main",
+      "useShadowRoot": false,
+      "shadowRootName": "",
       "buttonsInShadowRoot": false,
-      "issues": [772]
+      "issues": [772, 1139]
     },
     "scripts": {
       "dev": "exit 0",
