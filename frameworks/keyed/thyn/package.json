@@ -16,6 +16,6 @@
     "@thyn/vite-plugin": "0.0.234"
   },
   "dependencies": {
-    "@thyn/core": "0.0.234"
+    "@thyn/core": "0.0.237"
   }
 }
