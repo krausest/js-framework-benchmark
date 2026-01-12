@@ -13,9 +13,9 @@
   },
   "devDependencies": {
     "vite": "7.3.1",
-    "@thyn/vite-plugin": "0.0.234"
+    "@thyn/vite-plugin": "0.0.245"
   },
   "dependencies": {
-    "@thyn/core": "0.0.237"
+    "@thyn/core": "0.0.245"
   }
 }
