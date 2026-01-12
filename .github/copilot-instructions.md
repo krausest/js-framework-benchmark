@@ -17,7 +17,7 @@ You must also run the rebuild step for non javascript frameworks since it perfor
     npm install. "npm run rebuild-ci" can only be called when npm ci works and package.json and package-lock.json are in sync.
 7. if the npm command above reported "======> Please rerun the benchmark:" then the PR can be merged.
     * Check first if some file must be added to git and commit it. You can ignore all untracked files.
-    * Merge the PR using merge commits as the merge strategy
+    * Merge the PR using merge commits as the merge strategy using git checkout and git merge (and NOT gh commands)
 8. Delete the branch after merging
 9. Print the {list of framework-paths} from above
 
@@ -44,6 +44,9 @@ Advice: Use whatever fits the idiomatic style of your framework, but please don'
 * "Note #800": View state on the model. These implementations move the selected state on to each row. While this is a perfectly fine thing to do it changes the nature of the select rows test. Every library would benefit from it, so a note is added to the implementation when it is used.
 * "Note #772": Implementation uses manual DOM manipulations. These implementations use direct DOM modification in the end user code. This means specific DOM updating code is written tailored for these specific tests.
 Those implementation are expected to perform very close to vanillajs (which consists of manual DOM manipulations).
+Updating bindings doesn't count as manual DOM manipulation. The latter 
+avoids using the framework to access the DOM and this should be noted
+as we're not measuring the frameworks performance in this case.
 * "Note #796": Implementation uses explicit requestAnimationFrame calls. (Severity: Code smell / cheating)
 There were some discussions whether using requestAnimationFrame in client code is okay, a code smell or cheating.
 Applying RAF for selected benchmark operations should be avoided and is considered cheating: #166 #430
