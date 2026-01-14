@@ -1,7 +1,7 @@
 <script>
   import { selected, data } from "./state.thyn.js";
 
-  const { row: { id, label } } = $props;
+  const { id, label } = $props;
 </script>
 
 <tr class={selected() === id ? 'danger' : undefined}>

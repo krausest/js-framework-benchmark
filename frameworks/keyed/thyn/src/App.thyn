@@ -59,7 +59,7 @@
   </div>
   <table class="table table-hover table-striped test-data">
     <tbody>
-      <Row #for={row in data()} row={row} />
+      <Row #for={row in data()} {...row} />
     </tbody>
   </table>
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
