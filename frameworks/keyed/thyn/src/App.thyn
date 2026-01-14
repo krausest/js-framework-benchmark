@@ -2,16 +2,16 @@
   import {data, buildData, selected} from "./state.thyn.js";
   import Row from "./Row.thyn";
 
-  const add = () => data.update(d => [...d, ...buildData(1000)]);
-  const clear = () => data.set([]);
-  const partialUpdate = () => {for (let i = 0, d = data.get(), len = d.length; i < len; i += 10) d[i].label.update(l => l + " !!!")};
+  const add = () => data(d => [...d, ...buildData(1000)]);
+  const clear = () => data([]);
+  const partialUpdate = () => {for (let i = 0, d = data(), len = d.length; i < len; i += 10) d[i].label(l => l + " !!!")};
   const run = () => {
-    data.set(buildData(1000));
+    data(buildData(1000));
   };
   const runLots = () => {
-    data.set(buildData(10000));
+    data(buildData(10000));
   };
-  const swapRows = () => data.update(d => {
+  const swapRows = () => data(d => {
     if (d.length > 998) {
       const clone = d.slice();
       const tmp = clone[1];
@@ -59,7 +59,7 @@
   </div>
   <table class="table table-hover table-striped test-data">
     <tbody>
-      <Row #for={row in data.get()} row={row} />
+      <Row #for={row in data()} row={row} />
     </tbody>
   </table>
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
