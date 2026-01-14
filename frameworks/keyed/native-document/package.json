@@ -11,7 +11,7 @@
     "dev": "vite"
   },
   "dependencies": {
-    "native-document": "1.0.34",
+    "native-document": "1.0.76",
     "vite": "^7.0.4"
   }
 }
