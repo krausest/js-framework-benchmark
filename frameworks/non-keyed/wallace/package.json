@@ -1,11 +1,10 @@
 {
   "name": "js-framework-benchmark-wallace",
   "version": "1.0.0",
-  "description": "Wallace implementation",
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "wallace",
-    "frameworkHomeURL": "https://github.com/wallace-js/wallace"
+    "frameworkHomeURL": "https://wallace.js.org/"
   },
   "scripts": {
     "dev": "webpack --watch",
@@ -15,7 +14,7 @@
     "wallace"
   ],
   "author": "Andrew Buchan",
-  "homepage": "https://github.com/wallace-js/wallace",
+  "homepage": "https://wallace.js.org/",
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
@@ -25,7 +24,7 @@
     "@babel/plugin-syntax-jsx": "^7.25.9",
     "@babel/preset-env": "^7.22.14",
     "babel-loader": "^9.1.3",
-    "wallace": "0.8.0",
+    "wallace": "0.11.0",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"

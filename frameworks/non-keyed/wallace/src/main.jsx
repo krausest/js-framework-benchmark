@@ -72,7 +72,7 @@ const add = () => (items = items.concat(buildData(1000))),
       items[i].label += " !!!";
     }
   },
-  rowCss = (row) => (row.id === selected ? "danger" : ""),
+  rowCss = (rowId) => (rowId === selected ? "danger" : ""),
   removeRow = (rowId) => {
     items.splice(
       items.findIndex((x) => x.id === rowId),
@@ -117,7 +117,7 @@ const add = () => (items = items.concat(buildData(1000))),
 // Wallace code starts here
 
 const MainView = () => (
-  <div class="container">
+  <div unique class="container">
     <div class="jumbotron">
       <div class="row">
         <div class="col-md-6">
@@ -136,24 +136,24 @@ const MainView = () => (
   </div>
 );
 
-const Button = (btn) => (
+const Button = ({ id, callback, title }) => (
   <div class="col-sm-6 smallpad">
-    <button id={btn.id} onClick={btn.callback()} class="btn btn-primary btn-block">
-      {btn.title}
+    <button id={id} onClick={callback()} class="btn btn-primary btn-block">
+      {title}
     </button>
   </div>
 );
 
-const Row = (row) => (
-  <tr className={rowCss(row)}>
-    <td class="col-md-1">{row.id}</td>
+const Row = ({ id, label }) => (
+  <tr class={rowCss(id)}>
+    <td class="col-md-1">{id}</td>
     <td class="col-md-4">
-      <a onClick={selectRow(row.id)} class="lbl">
-        {row.label}
+      <a onClick={selectRow(id)} class="lbl">
+        {label}
       </a>
     </td>
     <td class="col-md-1">
-      <a class="remove" onClick={removeRow(row.id)}>
+      <a class="remove" onClick={removeRow(id)}>
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
       </a>
     </td>
