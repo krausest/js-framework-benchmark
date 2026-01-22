@@ -124,7 +124,7 @@ const MainView = () => (
           <h1>Wallace keyed</h1>
         </div>
         <div class="col-md-6">
-          <Button.repeat items={buttons} />
+          <Button.repeat items={buttons} key="id" />
         </div>
       </div>
     </div>
