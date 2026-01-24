@@ -6,6 +6,7 @@
   "js-framework-benchmark": {
     "frameworkVersion": "0.7.2",
     "frameworkHomeURL": "https://dioxuslabs.com/",
+    "customURL": "/bundled-dist",
     "issues": [
       1139
     ]
