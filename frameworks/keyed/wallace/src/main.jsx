@@ -121,16 +121,16 @@ const MainView = () => (
     <div class="jumbotron">
       <div class="row">
         <div class="col-md-6">
-          <h1>Wallace non-keyed</h1>
+          <h1>Wallace keyed</h1>
         </div>
         <div class="col-md-6">
-          <Button.repeat items={buttons} />
+          <Button.repeat items={buttons} key="id" />
         </div>
       </div>
     </div>
     <table class="table table-hover table-striped test-items">
       <tbody id="tbody">
-        <Row.repeat items={items} />
+        <Row.repeat items={items} key="id" />
       </tbody>
     </table>
   </div>
