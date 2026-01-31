@@ -4,10 +4,7 @@
   "description": "Benchmark for sprae",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "sprae",
-    "frameworkHomeURL": "https://github.com/dy/sprae",
-    "issues": [
-      1139
-    ]
+    "frameworkHomeURL": "https://github.com/dy/sprae"
   },
   "keywords": [
     "vue"
@@ -18,6 +15,6 @@
   },
   "type": "module",
   "dependencies": {
-    "sprae": "^12.1.0"
+    "sprae": "^12.4.0"
   }
 }
