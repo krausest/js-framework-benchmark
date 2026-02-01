@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-wcf",
+  "version": "1.0.0",
+  "description": "WCF framework benchmark implementation",
+  "author": "Timothy Louw",
+  "license": "MIT",
+  "type": "module",
+  "js-framework-benchmark": {
+    "customURL": "/dist/",
+    "frameworkVersion": "1.1.1",
+    "frameworkHomeURL": "https://github.com/user/wcf"
+  },
+  "scripts": {
+    "build": "wcf build --entry ./main.ts --out ./dist --assets ./assets --html ./index.html",
+    "build-prod": "wcf build --prod --entry ./main.ts --out ./dist --assets ./assets --html ./index.html",
+    "start": "wcf dev --entry ./main.ts --out ./dist --assets ./assets --html ./index.html",
+    "start-prod": "wcf serve --prod --entry ./main.ts --out ./dist --assets ./assets --html ./index.html"
+  },
+  "dependencies": {
+    "wcf": "file:../../../wcf-source/wcf-0.0.1.tgz"
+  }
+}
