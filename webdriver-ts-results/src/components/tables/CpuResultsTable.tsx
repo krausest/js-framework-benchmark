@@ -20,15 +20,6 @@ const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
 
   return resultsCPU.results.length === 0 ? null : (
     <>
-      {/* Dummy row for fixed td width */}
-      <thead className="dummy">
-        <tr>
-          <th></th>
-          {data.frameworks.map((_f, idx) => (
-            <th key={idx}></th>
-          ))}
-        </tr>
-      </thead>
       <thead>
         <tr>
           <td className="description">
