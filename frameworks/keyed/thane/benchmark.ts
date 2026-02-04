@@ -1,4 +1,4 @@
-import { Component, registerComponent, signal } from "wcf";
+import { Component, registerComponent, signal } from "thane";
 
 const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
 const colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
@@ -34,7 +34,7 @@ export const Benchmark = registerComponent(
           <div class="jumbotron">
             <div class="row">
               <div class="col-md-6">
-                <h1>WCF Benchmark</h1>
+                <h1>Thane Benchmark</h1>
               </div>
               <div class="col-md-6">
                 <div class="row">

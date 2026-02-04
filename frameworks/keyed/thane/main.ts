@@ -1,4 +1,4 @@
-import { mount } from 'wcf';
+import { mount } from 'thane';
 import { Benchmark } from './benchmark.js';
 
 mount(Benchmark);
