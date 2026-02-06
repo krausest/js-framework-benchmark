@@ -1,0 +1,34 @@
+{
+  "runtimeOptions": {
+    "tfm": "net9.0",
+    "includedFrameworks": [
+      {
+        "name": "Microsoft.NETCore.App",
+        "version": "9.0.12"
+      }
+    ],
+    "wasmHostProperties": {
+      "perHostConfig": [
+        {
+          "name": "browser",
+          "host": "browser"
+        }
+      ]
+    },
+    "configProperties": {
+      "System.Diagnostics.Debugger.IsSupported": false,
+      "System.Diagnostics.Metrics.Meter.IsSupported": false,
+      "System.Diagnostics.Tracing.EventSource.IsSupported": false,
+      "System.Globalization.Invariant": false,
+      "System.TimeZoneInfo.Invariant": false,
+      "System.Linq.Enumerable.IsSizeOptimized": true,
+      "System.Net.Http.EnableActivityPropagation": false,
+      "System.Net.Http.WasmEnableStreamingResponse": true,
+      "System.Net.SocketsHttpHandler.Http3Support": false,
+      "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
+      "System.Resources.UseSystemResourceKeys": true,
+      "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+      "System.Text.Encoding.EnableUnsafeUTF7Encoding": false
+    }
+  }
+}

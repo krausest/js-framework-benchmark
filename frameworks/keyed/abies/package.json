@@ -1,0 +1,44 @@
+{
+  "name": "js-framework-benchmark-abies",
+  "version": "1.0.0",
+  "description": "Abies MVU Framework Benchmark",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "",
+    "frameworkVersion": "1.0.151",
+    "customURL": "/bundeled-dist/wwwroot/",
+    "frameworkHomeURL": "https://github.com/Picea/Abies"
+  },
+  "scripts": {
+    "install": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to build from source use: && echo npm run install-force",
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "install-force": "run-script-os",
+    "install-force:win32": "dotnet-install.cmd",
+    "install-force:nix": "./dotnet-install.sh",
+    "dev": "run-script-os",
+    "dev:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet.exe build ./src/ -c Debug",
+    "dev:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet build ./src/ -c Debug",
+    "build-prod-force": "rimraf bundeled-dist && run-script-os",
+    "build-prod-force:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet.exe publish ./src/ -c Release -o ./bundeled-dist",
+    "build-prod-force:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet publish ./src/ -c Release -o ./bundeled-dist"
+  },
+  "keywords": [
+    "abies",
+    "mvu",
+    "webassembly",
+    "blazor",
+    "elm"
+  ],
+  "author": "Picea",
+  "license": "MIT",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "cross-env": "^7.0.2",
+    "run-script-os": "1.1.1"
+  }
+}
