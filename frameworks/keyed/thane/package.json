@@ -7,7 +7,7 @@
   "type": "module",
   "js-framework-benchmark": {
     "customURL": "/dist/",
-    "frameworkVersion": "0.0.2",
+    "frameworkVersion": "0.0.6",
     "frameworkHomeURL": "https://github.com/timlouw/thane"
   },
   "scripts": {
