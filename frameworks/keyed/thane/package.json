@@ -17,6 +17,6 @@
     "start-prod": "thane serve --prod --entry ./main.ts --out ./dist --assets ./assets --html ./index.html"
   },
   "dependencies": {
-    "thane": "^0.0.2"
+    "thane": "0.0.6"
   }
 }
