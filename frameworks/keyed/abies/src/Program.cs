@@ -181,7 +181,7 @@ public class Benchmark : Program<Model, Arguments>
         }
 
         var result = new List<Row>(data);
-        (result[1], result[997]) = (result[997], result[1]);
+        (result[1], result[998]) = (result[998], result[1]);
         return result;
     }
 
@@ -234,14 +234,14 @@ public class Benchmark : Program<Model, Arguments>
 
     private static Node TableRow(Row row, bool isSelected) =>
         tr([class_(isSelected ? "danger" : ""), id(row.Id.ToString())], [
-            td([class_("col-md-1")], [text(row.Id.ToString())]),
+            td([class_("col-md-1")], [text(row.Id.ToString(), id: $"id-{row.Id}")]),
             td([class_("col-md-4")], [
-                a([class_("lbl"), onclick(new Select(row.Id))], [text(row.Label)])
+                a([class_("lbl"), onclick(new Select(row.Id))], [text(row.Label, id: $"lbl-{row.Id}")], id: $"sel-{row.Id}")
             ]),
             td([class_("col-md-1")], [
                 a([onclick(new Delete(row.Id))], [
-                    span([class_("glyphicon glyphicon-remove"), ariaHidden("true")], [])
-                ])
+                    span([class_("glyphicon glyphicon-remove"), ariaHidden("true")], [], id: $"del-icon-{row.Id}")
+                ], id: $"del-{row.Id}")
             ]),
             td([class_("col-md-6")], [])
         ], id: $"row-{row.Id}");

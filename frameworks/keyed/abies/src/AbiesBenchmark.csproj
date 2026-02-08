@@ -9,12 +9,14 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
     <InterceptorsNamespaces>$(InterceptorsNamespaces);Praefixum</InterceptorsNamespaces>
+    <NoWarn>$(NoWarn);CA1416;CA2252</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abies" Version="1.0.*" />
+    <ProjectReference Include="/Users/mauricepeters/RiderProjects/Abies/Abies/Abies.csproj" />
   </ItemGroup>
 
 </Project>

@@ -423,6 +423,33 @@ void (async () => {
 
 let tracer = trace.getTracer('Abies.JS');
 
+// =============================================================================
+// UPDATE COMPLETION TRACKING
+// =============================================================================
+// Tracks pending DOM updates for synchronization. When an event is dispatched,
+// a promise is created. After the C# runtime processes the message and applies
+// DOM patches, it calls signalUpdateComplete() to resolve the promise.
+// This enables benchmark/test frameworks to wait for DOM updates to complete.
+// =============================================================================
+let pendingUpdateResolve = null;
+let pendingUpdatePromise = null;
+
+function createPendingUpdate() {
+    pendingUpdatePromise = new Promise(resolve => {
+        pendingUpdateResolve = resolve;
+    });
+    return pendingUpdatePromise;
+}
+
+function signalUpdateComplete() {
+    if (pendingUpdateResolve) {
+        const resolve = pendingUpdateResolve;
+        pendingUpdateResolve = null;
+        pendingUpdatePromise = null;
+        resolve();
+    }
+}
+
 // Wrap a function with tracing, respecting verbosity settings
 function withSpan(name, fn) {
     return async (...args) => {
@@ -841,20 +868,26 @@ function addEventListeners(root) {
  * container element to ensure browser parsing succeeds. Browsers strip
  * table-related elements (tr, td, etc.) when placed inside invalid containers.
  * @param {string} html - The HTML string to parse.
- * @returns {Element} The first element child from the parsed HTML.
+ * @returns {Element|null} The first element child from the parsed HTML, or null if none.
  */
 function parseHtmlFragment(html) {
     const trimmedHtml = html.trimStart();
     let tempContainer;
-    if (trimmedHtml.startsWith('<tr')) {
+
+    // Extract the first tag name to avoid prefix-matching issues
+    // (e.g., <thead> matching <th>, <track> matching <tr>)
+    const tagMatch = /^<\s*([a-zA-Z0-9]+)/.exec(trimmedHtml);
+    const tagName = tagMatch ? tagMatch[1].toLowerCase() : null;
+
+    if (tagName === 'tr') {
         tempContainer = document.createElement('tbody');
-    } else if (trimmedHtml.startsWith('<td') || trimmedHtml.startsWith('<th')) {
+    } else if (tagName === 'td' || tagName === 'th') {
         tempContainer = document.createElement('tr');
-    } else if (trimmedHtml.startsWith('<thead') || trimmedHtml.startsWith('<tbody') || trimmedHtml.startsWith('<tfoot') || trimmedHtml.startsWith('<colgroup') || trimmedHtml.startsWith('<caption')) {
+    } else if (tagName === 'thead' || tagName === 'tbody' || tagName === 'tfoot' || tagName === 'colgroup' || tagName === 'caption') {
         tempContainer = document.createElement('table');
-    } else if (trimmedHtml.startsWith('<col')) {
+    } else if (tagName === 'col') {
         tempContainer = document.createElement('colgroup');
-    } else if (trimmedHtml.startsWith('<option') || trimmedHtml.startsWith('<optgroup')) {
+    } else if (tagName === 'option' || tagName === 'optgroup') {
         tempContainer = document.createElement('select');
     } else {
         tempContainer = document.createElement('div');
@@ -1032,6 +1065,171 @@ setModuleImports('abies.js', {
         }
     }),
 
+    /**
+     * Apply a batch of patches to the DOM in a single operation.
+     * This reduces JS interop overhead by processing multiple patches at once.
+     * @param {string} patchesJson - JSON array of patch operations.
+     */
+    applyPatches: withSpan('applyPatches', async (patchesJson) => {
+        const patches = JSON.parse(patchesJson);
+        for (const patch of patches) {
+            switch (patch.Type) {
+                case 'SetAppContent':
+                    document.body.innerHTML = patch.Html;
+                    addEventListeners();
+                    window.abiesReady = true;
+                    break;
+                case 'AddChild': {
+                    const parent = document.getElementById(patch.ParentId);
+                    if (parent) {
+                        // Use parseHtmlFragment for proper table/select handling
+                        const childElement = parseHtmlFragment(patch.Html);
+                        if (childElement) {
+                            parent.appendChild(childElement);
+                            // Use addEventListeners to discover all event handlers
+                            addEventListeners(childElement);
+                        }
+                    } else {
+                        console.error(`Parent node with ID ${patch.ParentId} not found.`);
+                    }
+                    break;
+                }
+                case 'RemoveChild': {
+                    const child = document.getElementById(patch.ChildId);
+                    // Guard against child already removed or reparented
+                    if (child && child.parentNode) {
+                        child.remove();
+                    }
+                    break;
+                }
+                case 'ReplaceChild': {
+                    const oldNode = document.getElementById(patch.TargetId);
+                    if (oldNode && oldNode.parentNode) {
+                        // Use parseHtmlFragment for proper table/select handling
+                        const newNode = parseHtmlFragment(patch.Html);
+                        if (newNode) {
+                            oldNode.parentNode.replaceChild(newNode, oldNode);
+                            // Use addEventListeners which includes the root element
+                            addEventListeners(newNode);
+                        }
+                    } else {
+                        console.error(`ReplaceChild failed: target=${patch.TargetId} not found.`);
+                    }
+                    break;
+                }
+                case 'UpdateAttribute': {
+                    const node = document.getElementById(patch.TargetId);
+                    // Debug: Log class attribute updates
+                    if (patch.AttrName === 'class') {
+                        console.log('[DEBUG] UpdateAttribute class:', patch.TargetId, patch.AttrValue, 'node:', node ? node.tagName : 'null');
+                    }
+                    if (node) {
+                        const lower = patch.AttrName.toLowerCase();
+                        const isBooleanAttr = (
+                            lower === 'disabled' || lower === 'checked' || lower === 'selected' || lower === 'readonly' ||
+                            lower === 'multiple' || lower === 'required' || lower === 'autofocus' || lower === 'inert' ||
+                            lower === 'hidden' || lower === 'open' || lower === 'loop' || lower === 'muted' || lower === 'controls'
+                        );
+                        if (lower === 'value' && 'value' in node) {
+                            // Keep the live value in sync for inputs/textareas
+                            node.value = patch.AttrValue;
+                            node.setAttribute(patch.AttrName, patch.AttrValue);
+                        } else if (isBooleanAttr) {
+                            // Boolean attributes: presence => true (use empty string like non-batched path)
+                            node.setAttribute(patch.AttrName, '');
+                            try { if (lower in node) node[lower] = true; } catch { /* ignore */ }
+                        } else {
+                            node.setAttribute(patch.AttrName, patch.AttrValue);
+                        }
+                        if (patch.AttrName.startsWith('data-event-')) {
+                            ensureEventListener(patch.AttrName.substring('data-event-'.length));
+                        }
+                    } else {
+                        console.error(`UpdateAttribute failed: node=${patch.TargetId} not found.`);
+                    }
+                    break;
+                }
+                case 'AddAttribute': {
+                    const node = document.getElementById(patch.TargetId);
+                    if (node) {
+                        const lower = patch.AttrName.toLowerCase();
+                        const isBooleanAttr = (
+                            lower === 'disabled' || lower === 'checked' || lower === 'selected' || lower === 'readonly' ||
+                            lower === 'multiple' || lower === 'required' || lower === 'autofocus' || lower === 'inert' ||
+                            lower === 'hidden' || lower === 'open' || lower === 'loop' || lower === 'muted' || lower === 'controls'
+                        );
+                        if (lower === 'value' && 'value' in node) {
+                            // Keep the live value in sync for inputs/textareas
+                            node.value = patch.AttrValue;
+                            node.setAttribute(patch.AttrName, patch.AttrValue);
+                        } else if (isBooleanAttr) {
+                            // Boolean attributes: presence => true (use empty string like non-batched path)
+                            node.setAttribute(patch.AttrName, '');
+                            try { if (lower in node) node[lower] = true; } catch { /* ignore */ }
+                        } else {
+                            node.setAttribute(patch.AttrName, patch.AttrValue);
+                        }
+                        if (patch.AttrName.startsWith('data-event-')) {
+                            ensureEventListener(patch.AttrName.substring('data-event-'.length));
+                        }
+                    } else {
+                        console.error(`AddAttribute failed: node=${patch.TargetId} not found.`);
+                    }
+                    break;
+                }
+                case 'RemoveAttribute': {
+                    const node = document.getElementById(patch.TargetId);
+                    if (node) {
+                        const lower = patch.AttrName.toLowerCase();
+                        const isBooleanAttr = (
+                            lower === 'disabled' || lower === 'checked' || lower === 'selected' || lower === 'readonly' ||
+                            lower === 'multiple' || lower === 'required' || lower === 'autofocus' || lower === 'inert' ||
+                            lower === 'hidden' || lower === 'open' || lower === 'loop' || lower === 'muted' || lower === 'controls'
+                        );
+                        node.removeAttribute(patch.AttrName);
+                        if (isBooleanAttr) {
+                            try { if (lower in node) node[lower] = false; } catch { /* ignore */ }
+                        }
+                    } else {
+                        console.error(`RemoveAttribute failed: node=${patch.TargetId} not found.`);
+                    }
+                    break;
+                }
+                case 'UpdateText': {
+                    const node = document.getElementById(patch.TargetId);
+                    if (node) {
+                        node.textContent = patch.Text;
+                        // Sync textarea.value like updateTextContent does
+                        const tag = (node.tagName || '').toUpperCase();
+                        if (tag === 'TEXTAREA') {
+                            try { node.value = patch.Text; } catch { /* ignore */ }
+                        }
+                    } else {
+                        console.error(`UpdateText failed: node=${patch.TargetId} not found.`);
+                    }
+                    break;
+                }
+                case 'UpdateTextWithId': {
+                    const node = document.getElementById(patch.TargetId);
+                    if (node) {
+                        node.textContent = patch.Text;
+                        node.setAttribute('id', patch.NewId);
+                        // Sync textarea.value like updateTextContent does
+                        const tag = (node.tagName || '').toUpperCase();
+                        if (tag === 'TEXTAREA') {
+                            try { node.value = patch.Text; } catch { /* ignore */ }
+                        }
+                    } else {
+                        console.error(`UpdateTextWithId failed: node=${patch.TargetId} not found.`);
+                    }
+                    break;
+                }
+                default:
+                    console.error(`Unknown patch type: ${patch.Type}`);
+            }
+        }
+    }),
+
     setLocalStorage: withSpan('setLocalStorage', async (key, value) => {
         localStorage.setItem(key, value);
     }),
@@ -1128,6 +1326,10 @@ setModuleImports('abies.js', {
 
     unsubscribe: (key) => {
         unsubscribe(key);
+    },
+
+    signalUpdateComplete: () => {
+        signalUpdateComplete();
     }
 });
     
