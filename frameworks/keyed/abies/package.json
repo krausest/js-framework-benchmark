@@ -5,7 +5,7 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "",
     "frameworkVersion": "1.0.151",
-    "customURL": "/bundeled-dist/wwwroot/",
+    "customURL": "/bundled-dist/wwwroot/",
     "frameworkHomeURL": "https://github.com/Picea/Abies"
   },
   "scripts": {
@@ -17,9 +17,9 @@
     "dev": "run-script-os",
     "dev:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet.exe build ./src/ -c Debug",
     "dev:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet build ./src/ -c Debug",
-    "build-prod-force": "rimraf bundeled-dist && run-script-os",
-    "build-prod-force:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet.exe publish ./src/ -c Release -o ./bundeled-dist",
-    "build-prod-force:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet publish ./src/ -c Release -o ./bundeled-dist"
+    "build-prod-force": "rimraf bundled-dist && run-script-os",
+    "build-prod-force:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet.exe publish ./src/ -c Release -o ./bundled-dist",
+    "build-prod-force:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=0 ./dotnet/dotnet publish ./src/ -c Release -o ./bundled-dist"
   },
   "keywords": [
     "abies",
