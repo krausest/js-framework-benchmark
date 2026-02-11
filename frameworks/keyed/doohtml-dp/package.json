@@ -10,7 +10,7 @@
       "useShadowRoot": false,
       "shadowRootName": "",
       "buttonsInShadowRoot": false,
-      "issues": [772, 1139]
+      "issues": [772, 801]
     },
     "scripts": {
       "dev": "exit 0",
