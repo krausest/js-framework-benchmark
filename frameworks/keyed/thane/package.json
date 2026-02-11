@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-thane",
+  "version": "1.0.0",
+  "description": "Thane framework benchmark implementation",
+  "author": "Timothy Louw",
+  "license": "MIT",
+  "type": "module",
+  "js-framework-benchmark": {
+    "customURL": "/dist/",
+    "frameworkVersion": "0.0.6",
+    "frameworkHomeURL": "https://github.com/timlouw/thane"
+  },
+  "scripts": {
+    "build": "thane build --entry ./main.ts --out ./dist --assets ./assets --html ./index.html",
+    "build-prod": "thane build --prod --entry ./main.ts --out ./dist --assets ./assets --html ./index.html",
+    "start": "thane dev --entry ./main.ts --out ./dist --assets ./assets --html ./index.html",
+    "start-prod": "thane serve --prod --entry ./main.ts --out ./dist --assets ./assets --html ./index.html"
+  },
+  "dependencies": {
+    "thane": "0.0.6"
+  }
+}
