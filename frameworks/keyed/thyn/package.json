@@ -6,7 +6,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@thyn/core",
     "frameworkHomeURL": "https://github.com/thynjs/thyn",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "issues": [
+      801, 702
+    ]
   },
   "scripts": {
     "build-prod": "vite build"
