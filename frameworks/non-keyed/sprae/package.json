@@ -4,7 +4,10 @@
   "description": "Benchmark for sprae",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "sprae",
-    "frameworkHomeURL": "https://github.com/dy/sprae"
+    "frameworkHomeURL": "https://github.com/dy/sprae",
+    "issues": [
+      1139
+    ]
   },
   "keywords": [
     "vue"
