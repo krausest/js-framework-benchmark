@@ -15,10 +15,9 @@
     "build-prod": "vite build"
   },
   "devDependencies": {
-    "vite": "7.3.1",
-    "@thyn/vite-plugin": "0.0.344"
+    "vite": "7.3.1"
   },
   "dependencies": {
-    "@thyn/core": "0.0.344"
+    "@thyn/core": "0.0.355"
   }
 }
