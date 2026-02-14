@@ -6,7 +6,9 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@grucloud/bau",
     "frameworkHomeURL": "https://github.com/grucloud/bau",
-    "issues": [772]
+    "issues": [
+      772
+    ]
   },
   "scripts": {
     "dev": "vite",
@@ -19,6 +21,7 @@
   "author": "Frederic Heem",
   "license": "Apache-2.0",
   "devDependencies": {
+    "esbuild": "^0.25.12",
     "vite": "^4.4.8"
   },
   "dependencies": {

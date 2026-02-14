@@ -174,7 +174,7 @@ export function updateOneFramework({ type, name, debug }) {
     const update = shouldUpdate(packageJSONLockPath, packages);
     
     if (update) {
-      return performUpdate(frameworkPath, type+"/"+name);
+      // return performUpdate(frameworkPath, type+"/"+name);
     } else {
       const isPackageObsolete = packages.map((element) => maybeObsolete(element));
       const anyPackageObsolete = isPackageObsolete.some((packageFramework) => packageFramework.isObsolete);
