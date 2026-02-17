@@ -1,4 +1,4 @@
-import thyn from "@thyn/vite-plugin";
+import thyn from "@thyn/core";
 import { defineConfig } from "vite";
 
 export default defineConfig({
