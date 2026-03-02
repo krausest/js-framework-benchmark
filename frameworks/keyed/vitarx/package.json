@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-vitarx",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "vitarx",
+    "frameworkHomeURL": "https://vitarx.cn/",
+    "customURL": "/dist"
+  },
+  "scripts": {
+    "dev": "vite --force",
+    "build-prod": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vitarx": "4.0.0-beta.0"
+  },
+  "devDependencies": {
+    "@vitarx/plugin-vite": "0.0.1-alpha.2",
+    "vite": "^8.0.0-beta.16"
+  }
+}
