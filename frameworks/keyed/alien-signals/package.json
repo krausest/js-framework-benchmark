@@ -1,0 +1,36 @@
+{
+  "name": "alien-signals",
+  "version": "2.0.0",
+  "description": "Alien signals demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "alien-signals",
+    "frameworkHomeURL": "https://github.com/stackblitz/alien-signals",
+    "useShadowRoot": false,
+    "customURL": "/public",
+    "issues": [
+      772
+    ]
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build": "esbuild src/index.js --bundle --legal-comments=none --minify --outfile=public/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "keywords": [
+    "signals"
+  ],
+  "author": "Lucas M. Segurado",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
+  "dependencies": {
+    "alien-signals": "^3.1.2",
+    "esbuild": "0.27.3"
+  }
+}
