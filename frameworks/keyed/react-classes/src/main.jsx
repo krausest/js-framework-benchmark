@@ -170,11 +170,11 @@ class Main extends Component {
         <div className="container">
           <Jumbotron dispatch={this.dispatch} />
           <table className="table table-hover table-striped test-data">
-            <tbody>
+            {!!data.length && <tbody>
               {data.map((item) => (
                 <Row key={item.id} item={item} selected={selected === item.id} dispatch={this.dispatch} />
               ))}
-            </tbody>
+            </tbody>}
           </table>
           <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
         </div>

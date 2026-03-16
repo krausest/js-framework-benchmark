@@ -120,11 +120,11 @@ const Main = () => {
   return (<div className="container">
     <Jumbotron dispatch={transitionedDispatch} />
     <table className="table table-hover table-striped test-data">
-      <tbody>
+      {!!data.length && <tbody>
       {data.map(item => (
         <Row key={item.id} item={item} selected={selected === item.id} dispatch={transitionedDispatch} />
       ))}
-      </tbody>
+      </tbody>}
     </table>
     <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
   </div>);

@@ -216,11 +216,11 @@ const Main = () => {
 		<div className="container">
 			<Jumbotron />
 			<table className="table table-hover table-striped test-data">
-				<tbody>
+				{!!items.length && <tbody>
 					{items.map((item) => (
 						<Row key={item.id} item={item} />
 					))}
-				</tbody>
+				</tbody>}
 			</table>
 			<span
 				className="preloadicon glyphicon glyphicon-remove"

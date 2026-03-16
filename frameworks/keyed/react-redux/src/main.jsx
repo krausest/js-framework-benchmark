@@ -105,7 +105,7 @@ const RowList = connect(
   {
     areStatesEqual: (prev, next) => prev.data === next.data,
   },
-)(({ data }) => data.map((item, i) => <Row key={item.id} i={i} />));
+)(({ data }) => !!data.length && <tbody>{data.map((item, i) => <Row key={item.id} i={i} />)}</tbody>);
 
 function Button(props) {
   return (
@@ -144,7 +144,7 @@ const Main = connect(
         </div>
       </div>
     </div>
-    <table className="table table-hover table-striped test-data"><tbody><RowList /></tbody></table>
+    <table className="table table-hover table-striped test-data"><RowList /></table>
     <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
   </div>
 ));

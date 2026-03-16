@@ -106,11 +106,11 @@ const Main = () => {
         </div>
       </div>
       <table className="table table-hover table-striped test-data">
-        <tbody>
+        {!!items.length && <tbody>
           {items.map((item) => (
             <Row key={item.id} item={item} isSelected={selected === item.id} select={setSelected} remove={remove} />
           ))}
-        </tbody>
+        </tbody>}
       </table>
       <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true" />
     </div>

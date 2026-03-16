@@ -81,7 +81,7 @@ const Row = memo(({ item, isSelected }) => {
 
 const RowList = memo(() => {
   const { data, selected } = useTrackedState();
-  return data.map((item) => <Row key={item.id} item={item} isSelected={selected === item.id} />);
+  return !!data.length && <tbody>{data.map((item) => <Row key={item.id} item={item} isSelected={selected === item.id} />)}</tbody>;
 });
 
 const Button = memo(({ id, title, cb }) => (
@@ -107,7 +107,7 @@ const Main = () => {
           </div></div>
         </div>
       </div>
-      <table className="table table-hover table-striped test-data"><tbody><RowList /></tbody></table>
+      <table className="table table-hover table-striped test-data"><RowList /></table>
       <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
     </div>
   );

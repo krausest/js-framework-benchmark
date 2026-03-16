@@ -75,9 +75,9 @@ const _Main = () => {
       </div>
 
       <table className="table table-hover table-striped test-data">
-        <tbody>
+        {!!store.rows.length && <tbody>
           <RowList store={store} />
-        </tbody>
+        </tbody>}
       </table>
 
       <span

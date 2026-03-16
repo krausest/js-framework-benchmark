@@ -82,7 +82,7 @@ const Row = React.memo(({ data }) => {
 
 const RowList = React.memo(() => {
   const rows = useSelector((state) => state.data);
-  return rows.map((data) => <Row key={data.id} data={data} />);
+  return !!rows.length && <tbody>{rows.map((data) => <Row key={data.id} data={data} />)}</tbody>;
 });
 
 const Button = React.memo(({ id, title, cb }) => (
@@ -114,7 +114,7 @@ const Main = () => {
           </div></div>
         </div>
       </div>
-      <table className="table table-hover table-striped test-data"><tbody><RowList /></tbody></table>
+      <table className="table table-hover table-striped test-data"><RowList /></table>
       <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
     </div>
   );

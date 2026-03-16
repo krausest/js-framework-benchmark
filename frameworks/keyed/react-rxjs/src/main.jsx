@@ -152,9 +152,9 @@ const Row = React.memo(({ item, isSelected }) => {
 const RowList = () => {
   const rows = useStateObservable(items$);
   const selecteId = useStateObservable(selectedId$);
-  return rows.map((item) => (
+  return !!rows.length && <tbody>{rows.map((item) => (
     <Row key={item.id} item={item} isSelected={selecteId === item.id} />
-  ));
+  ))}</tbody>;
 };
 
 const Button = ({ id, title, cb }) => (
@@ -198,9 +198,7 @@ const Main = () => (
       </div>
     </div>
     <table className="table table-hover table-striped test-data">
-      <tbody>
-        <RowList />
-      </tbody>
+      <RowList />
     </table>
     <span
       className="preloadicon glyphicon glyphicon-remove"

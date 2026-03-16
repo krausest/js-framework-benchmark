@@ -54,7 +54,7 @@ const Row = memo(({item}) => {
 const Rows = () => {
     const items = useSelector(data);
 
-    return items.map(item => (<Row key={item.id} item={item}/>));
+    return !!items.length && <tbody>{items.map(item => (<Row key={item.id} item={item}/>))}</tbody>;
 }
 
 const Button = ({id, cb, title}) => (
@@ -112,9 +112,7 @@ const Main = () => (
             </div>
         </div>
         <table className="table table-hover table-striped test-data">
-            <tbody>
             <Rows/>
-            </tbody>
         </table>
         <span className="preloadicon glyphicon glyphicon-remove" aria-hidden="true"/>
     </div>

@@ -19,13 +19,13 @@ const Button = ({ children, id, onClick }) => {
 };
 
 const RowList = observer(function list() {
-  return rowsStore.rows.map(row => (
-          <Row
-            key={row.id}
-            data={row}
-          />
-        )
-      )
+  return !!rowsStore.rows.length && <tbody>{rowsStore.rows.map(row => (
+    <Row
+      key={row.id}
+      data={row}
+    />
+  )
+)}</tbody>
 })
 
 function Main() {
@@ -68,9 +68,7 @@ function Main() {
       </div>
 
       <table className="table table-hover table-striped test-data">
-        <tbody>
         <RowList />
-        </tbody>
       </table>
 
       <span
