@@ -1,0 +1,28 @@
+{
+  "name": "js-framework-benchmark-lattice",
+  "version": "0.1.0",
+  "description": "Lattice — compiled UI framework with a Rust compiler that emits optimized vanilla JS",
+  "main": "src/Main.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.1.0",
+    "frameworkHomeURL": "https://github.com/nicoobc/lattice",
+    "issues": [772]
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "keywords": [
+    "lattice",
+    "compiler",
+    "ui",
+    "framework"
+  ],
+  "author": "Sidharth Satapathy",
+  "license": "MIT",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}
