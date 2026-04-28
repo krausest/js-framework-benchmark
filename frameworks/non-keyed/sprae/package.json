@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-keyed-sprae",
+  "name": "js-framework-benchmark-non-keyed-sprae",
   "version": "1.0.0",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "sprae",
@@ -16,6 +16,6 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "sprae": "13.3.5"
+    "sprae": "13.3.6"
   }
 }
