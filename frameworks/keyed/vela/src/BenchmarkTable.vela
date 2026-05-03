@@ -1,0 +1,19 @@
+model Row {
+  id: u32
+  label: string
+}
+
+component BenchmarkTable(rows: Row[], selected: number | null) {
+  view """
+    <tbody>
+      {#each rows as row, i (row.id)}
+        <tr class={selected === row.id ? 'danger' : ''}>
+          <td class="col-md-1">{row.id}</td>
+          <td class="col-md-4"><a>{row.label}</a></td>
+          <td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+          <td class="col-md-6"></td>
+        </tr>
+      {/each}
+    </tbody>
+  """
+}
