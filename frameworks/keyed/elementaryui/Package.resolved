@@ -1,0 +1,51 @@
+{
+  "originHash" : "0bf62ee7bff53713b04bbce8ae7308dac2afe5d8a8344bc4a50acf3313bfe1f7",
+  "pins" : [
+    {
+      "identity" : "elementary",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/elementary-swift/elementary",
+      "state" : {
+        "revision" : "37b26923e73156f524b52e649855277bc7ead2c2",
+        "version" : "0.7.1"
+      }
+    },
+    {
+      "identity" : "elementary-ui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/elementary-swift/elementary-ui",
+      "state" : {
+        "revision" : "72893957516de8e5045b3eadb7a6d2d71984ae2b",
+        "version" : "0.2.3"
+      }
+    },
+    {
+      "identity" : "javascriptkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftwasm/JavaScriptKit",
+      "state" : {
+        "revision" : "46182e2a9503454efba1682a1835248409438058",
+        "version" : "0.50.2"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections",
+      "state" : {
+        "revision" : "6675bc0ff86e61436e615df6fc5174e043e57924",
+        "version" : "1.4.1"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax",
+      "state" : {
+        "revision" : "9de99a78f099e59caf2b2beec65a4c45d54b2081",
+        "version" : "603.0.1"
+      }
+    }
+  ],
+  "version" : 3
+}

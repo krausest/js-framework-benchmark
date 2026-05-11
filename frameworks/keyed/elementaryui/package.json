@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-keyed-elementaryui",
+  "version": "1.0.0",
+  "description": "Benchmark for ElementaryUI",
+  "license": "ISC",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.2.3",
+    "frameworkHomeURL": "https://elementary.codes",
+    "customURL": "/bundled-dist",
+    "language": "Swift"
+  },
+  "scripts": {
+    "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",
+    "build-prod-force": "swift package resolve && npm install --no-save --no-package-lock ./.build/checkouts/elementary-ui/BrowserRuntime && vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@bjorn3/browser_wasi_shim": "0.4.2",
+    "@elementary-swift/vite-plugin-swift-wasm": "0.1.2",
+    "vite": "8.0.12"
+  }
+}
