@@ -1,13 +1,13 @@
 import { Button, Div, H1 } from "native-document/elements";
 import AppService from "../service";
 
-const JumbotromButton = function(title, id, onClick) {
+const JumbotromButton = (title, id, onClick) => {
   return Div({ class: 'col-sm-6 smallpad' }, [
     Button({ id , class: 'btn btn-primary btn-block' }, title).nd.onClick(onClick)
   ]);
 };
 
-export  default function Jumbotron() {
+const Jumbotron = () => {
   return Div({ class: 'jumbotron' }, [
     Div({ class: 'row' }, [
       Div({ class: 'col-md-6' }, [
@@ -26,3 +26,5 @@ export  default function Jumbotron() {
     ])
   ])
 }
+
+export default Jumbotron;
