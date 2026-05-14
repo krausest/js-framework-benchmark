@@ -1,7 +1,6 @@
 import { buildData } from './data';
 import { Observable } from "native-document";
 
-
 const data = Observable.array([]);
 const selected = Observable(0);
 
