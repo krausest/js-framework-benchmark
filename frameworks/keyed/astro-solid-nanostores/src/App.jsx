@@ -1,6 +1,6 @@
-import { useStore } from '@nanostores/solid';
-import { For } from 'solid-js';
-import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from './store.js';
+import { useStore } from "@nanostores/solid";
+import { For } from "solid-js";
+import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from "./store.js";
 
 const Button = ([id, text, fn]) => (
   <div class="col-sm-6 smallpad">
@@ -18,15 +18,17 @@ export default function App() {
     <div class="container">
       <div class="jumbotron">
         <div class="row">
-          <div class="col-md-6"><h1>Astro Solid Nano Stores keyed</h1></div>
+          <div class="col-md-6">
+            <h1>Astro-solid-nanostores-keyed</h1>
+          </div>
           <div class="col-md-6">
             <div class="row">
-              <Button {...['run', 'Create 1,000 rows', run]} />
-              <Button {...['runlots', 'Create 10,000 rows', runLots]} />
-              <Button {...['add', 'Append 1,000 rows', add]} />
-              <Button {...['update', 'Update every 10th row', update]} />
-              <Button {...['clear', 'Clear', clear]} />
-              <Button {...['swaprows', 'Swap Rows', swapRows]} />
+              <Button {...["run", "Create 1,000 rows", run]} />
+              <Button {...["runlots", "Create 10,000 rows", runLots]} />
+              <Button {...["add", "Append 1,000 rows", add]} />
+              <Button {...["update", "Update every 10th row", update]} />
+              <Button {...["clear", "Clear", clear]} />
+              <Button {...["swaprows", "Swap Rows", swapRows]} />
             </div>
           </div>
         </div>
@@ -35,7 +37,7 @@ export default function App() {
         <tbody>
           <For each={$rows()}>
             {(item) => (
-              <tr class={$selectedId() === item.id ? 'danger' : ''}>
+              <tr class={$selectedId() === item.id ? "danger" : ""}>
                 <td class="col-md-1" textContent={item.id} />
                 <td class="col-md-4">
                   <a onClick={() => select(item.id)} textContent={item.label} />

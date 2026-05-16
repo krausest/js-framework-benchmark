@@ -1,6 +1,6 @@
 <script setup>
-import { useStore } from '@nanostores/vue';
-import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from './store.js';
+import { useStore } from "@nanostores/vue";
+import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from "./store.js";
 
 const $rows = useStore(rows);
 const $selectedId = useStore(selectedId);
@@ -11,7 +11,7 @@ const $selectedId = useStore(selectedId);
     <div class="jumbotron">
       <div class="row">
         <div class="col-md-6">
-          <h1>Astro Vue Nano Stores keyed</h1>
+          <h1>Astro-vue-nanostores-keyed</h1>
         </div>
         <div class="col-md-6">
           <div class="row">
@@ -19,13 +19,17 @@ const $selectedId = useStore(selectedId);
               <button type="button" class="btn btn-primary btn-block" id="run" @click="run">Create 1,000 rows</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type="button" class="btn btn-primary btn-block" id="runlots" @click="runLots">Create 10,000 rows</button>
+              <button type="button" class="btn btn-primary btn-block" id="runlots" @click="runLots">
+                Create 10,000 rows
+              </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button type="button" class="btn btn-primary btn-block" id="add" @click="add">Append 1,000 rows</button>
             </div>
             <div class="col-sm-6 smallpad">
-              <button type="button" class="btn btn-primary btn-block" id="update" @click="update">Update every 10th row</button>
+              <button type="button" class="btn btn-primary btn-block" id="update" @click="update">
+                Update every 10th row
+              </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button type="button" class="btn btn-primary btn-block" id="clear" @click="clear">Clear</button>
@@ -46,7 +50,9 @@ const $selectedId = useStore(selectedId);
           v-memo="[item.label, item.id === $selectedId]"
         >
           <td class="col-md-1">{{ item.id }}</td>
-          <td class="col-md-4"><a @click="select(item.id)">{{ item.label }}</a></td>
+          <td class="col-md-4">
+            <a @click="select(item.id)">{{ item.label }}</a>
+          </td>
           <td class="col-md-1">
             <a @click="removeRow(item.id)">
               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>

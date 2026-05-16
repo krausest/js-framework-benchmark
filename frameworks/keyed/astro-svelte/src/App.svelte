@@ -3,14 +3,53 @@
   let data = $state.raw([]);
   let selected = $state.raw();
 
-  const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint',
-    'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable',
-    'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
-  const colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
-  const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger',
-    'pizza', 'mouse', 'keyboard'];
+  const adjectives = [
+    "pretty",
+    "large",
+    "big",
+    "small",
+    "tall",
+    "short",
+    "long",
+    "handsome",
+    "plain",
+    "quaint",
+    "clean",
+    "elegant",
+    "easy",
+    "angry",
+    "crazy",
+    "helpful",
+    "mushy",
+    "odd",
+    "unsightly",
+    "adorable",
+    "important",
+    "inexpensive",
+    "cheap",
+    "expensive",
+    "fancy",
+  ];
+  const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+  const nouns = [
+    "table",
+    "chair",
+    "house",
+    "bbq",
+    "desk",
+    "car",
+    "pony",
+    "cookie",
+    "sandwich",
+    "burger",
+    "pizza",
+    "mouse",
+    "keyboard",
+  ];
 
-  function _random(max) { return Math.round(Math.random() * 1000) % max; }
+  function _random(max) {
+    return Math.round(Math.random() * 1000) % max;
+  }
 
   class Item {
     id = rowId++;
@@ -25,12 +64,21 @@
     return arr;
   }
 
-  const run = () => { data = buildData(1000); selected = undefined; };
-  const runLots = () => { data = buildData(10000); selected = undefined; };
+  const run = () => {
+    data = buildData(1000);
+    selected = undefined;
+  };
+  const runLots = () => {
+    data = buildData(10000);
+    selected = undefined;
+  };
   const add = () => (data = [...data, ...buildData(1000)]);
-  const clear = () => { data = []; selected = undefined; };
+  const clear = () => {
+    data = [];
+    selected = undefined;
+  };
   const partialUpdate = () => {
-    for (let i = 0; i < data.length; i += 10) data[i].label = data[i].label + ' !!!';
+    for (let i = 0; i < data.length; i += 10) data[i].label = data[i].label + " !!!";
   };
   const remove = (row) => {
     const clone = data.slice();
@@ -40,7 +88,9 @@
   const swapRows = () => {
     if (data.length > 998) {
       const clone = data.slice();
-      const tmp = clone[1]; clone[1] = clone[998]; clone[998] = tmp;
+      const tmp = clone[1];
+      clone[1] = clone[998];
+      clone[998] = tmp;
       data = clone;
     }
   };
@@ -49,20 +99,24 @@
 <div class="container">
   <div class="jumbotron">
     <div class="row">
-      <div class="col-md-6"><h1>Astro Svelte keyed</h1></div>
+      <div class="col-md-6"><h1>Astro-svelte-keyed</h1></div>
       <div class="col-md-6">
         <div class="row">
           <div class="col-sm-6 smallpad">
             <button type="button" class="btn btn-primary btn-block" id="run" onclick={run}>Create 1,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="runlots" onclick={runLots}>Create 10,000 rows</button>
+            <button type="button" class="btn btn-primary btn-block" id="runlots" onclick={runLots}
+              >Create 10,000 rows</button
+            >
           </div>
           <div class="col-sm-6 smallpad">
             <button type="button" class="btn btn-primary btn-block" id="add" onclick={add}>Append 1,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="update" onclick={partialUpdate}>Update every 10th row</button>
+            <button type="button" class="btn btn-primary btn-block" id="update" onclick={partialUpdate}
+              >Update every 10th row</button
+            >
           </div>
           <div class="col-sm-6 smallpad">
             <button type="button" class="btn btn-primary btn-block" id="clear" onclick={clear}>Clear</button>
@@ -77,10 +131,15 @@
   <table class="table table-hover table-striped test-data">
     <tbody>
       {#each data as row (row)}
-        <tr class={selected === row.id ? 'danger' : ''}
-          ><td class="col-md-1">{row.id}</td
-          ><td class="col-md-4"><a onclick={() => { selected = row.id; }}>{row.label}</a></td
-          ><td class="col-md-1"><a onclick={() => remove(row)}><span class="glyphicon glyphicon-remove" aria-hidden="true" /></a></td
+        <tr class={selected === row.id ? "danger" : ""}
+          ><td class="col-md-1">{row.id}</td><td class="col-md-4"
+            ><a
+              onclick={() => {
+                selected = row.id;
+              }}>{row.label}</a
+            ></td
+          ><td class="col-md-1"
+            ><a onclick={() => remove(row)}><span class="glyphicon glyphicon-remove" aria-hidden="true" /></a></td
           ><td class="col-md-6" /></tr
         >
       {/each}

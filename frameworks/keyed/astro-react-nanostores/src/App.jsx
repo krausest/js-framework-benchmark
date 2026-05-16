@@ -1,6 +1,6 @@
-import { memo } from 'react';
-import { useStore } from '@nanostores/react';
-import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from './store.js';
+import { memo } from "react";
+import { useStore } from "@nanostores/react";
+import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from "./store.js";
 
 const Button = ({ id, title, fn }) => (
   <div className="col-sm-6 smallpad">
@@ -15,7 +15,7 @@ const Jumbotron = memo(
     <div className="jumbotron">
       <div className="row">
         <div className="col-md-6">
-          <h1>Astro React Nano Stores keyed</h1>
+          <h1>Astro-react-nanostores-keyed</h1>
         </div>
         <div className="col-md-6">
           <div className="row">
@@ -30,12 +30,12 @@ const Jumbotron = memo(
       </div>
     </div>
   ),
-  () => true,
+  () => true
 );
 
 const Row = memo(
   ({ item, selected }) => (
-    <tr className={selected ? 'danger' : ''}>
+    <tr className={selected ? "danger" : ""}>
       <td className="col-md-1">{item.id}</td>
       <td className="col-md-4">
         <a onClick={() => select(item.id)}>{item.label}</a>
@@ -48,7 +48,7 @@ const Row = memo(
       <td className="col-md-6" />
     </tr>
   ),
-  (prev, next) => prev.selected === next.selected && prev.item === next.item,
+  (prev, next) => prev.selected === next.selected && prev.item === next.item
 );
 
 export default function App() {

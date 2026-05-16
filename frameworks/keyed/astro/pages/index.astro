@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Astro-keyed</title>
+    <link href="/css/currentStyle.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="main">
+      <div class="container">
+        <div class="jumbotron">
+          <div class="row">
+            <div class="col-md-6">
+              <h1>Astro-keyed</h1>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="run">Create 1,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="runlots">Create 10,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="add">Append 1,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="update">Update every 10th row</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="clear">Clear</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="swaprows">Swap Rows</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <table class="table table-hover table-striped test-data">
+          <tbody id="tbody"></tbody>
+        </table>
+        <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+    </div>
+    <template id="trow">
+      <tr>
+        <td class="col-md-1"></td>
+        <td class="col-md-4"><a></a></td>
+        <td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+        <td class="col-md-6"></td>
+      </tr>
+    </template>
+    <script>
+      const adjectives = [
+        "pretty",
+        "large",
+        "big",
+        "small",
+        "tall",
+        "short",
+        "long",
+        "handsome",
+        "plain",
+        "quaint",
+        "clean",
+        "elegant",
+        "easy",
+        "angry",
+        "crazy",
+        "helpful",
+        "mushy",
+        "odd",
+        "unsightly",
+        "adorable",
+        "important",
+        "inexpensive",
+        "cheap",
+        "expensive",
+        "fancy",
+      ];
+      const colours = [
+        "red",
+        "yellow",
+        "blue",
+        "green",
+        "pink",
+        "brown",
+        "purple",
+        "brown",
+        "white",
+        "black",
+        "orange",
+      ];
+      const nouns = [
+        "table",
+        "chair",
+        "house",
+        "bbq",
+        "desk",
+        "car",
+        "pony",
+        "cookie",
+        "sandwich",
+        "burger",
+        "pizza",
+        "mouse",
+        "keyboard",
+      ];
+
+      const pick = (dict) => dict[Math.round(Math.random() * 1000) % dict.length];
+      const label = () => `${pick(adjectives)} ${pick(colours)} ${pick(nouns)}`;
+
+      let ID = 1;
+      let SEL = null;
+      const TBODY = document.getElementById("tbody");
+      const TABLE = document.querySelector("table");
+      const TROW = document.getElementById("trow");
+      const ROWS = () => TBODY.children;
+
+      const create = (count, add) => {
+        !add && (clear(), TBODY.remove());
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < count; i++) {
+          const tr = TROW.content.firstElementChild.cloneNode(true);
+          tr.children[0].textContent = ID++;
+          tr.children[1].firstChild.textContent = label();
+          fragment.appendChild(tr);
+        }
+        TBODY.appendChild(fragment);
+        !add && TABLE.appendChild(TBODY);
+      };
+
+      const clear = () => {
+        TBODY.textContent = "";
+        SEL = null;
+      };
+
+      const run = () => create(1000);
+      const runlots = () => create(10000);
+      const add = () => create(1000, true);
+
+      const update = () => {
+        for (let i = 0; i < ROWS().length; i += 10) {
+          ROWS()[i].children[1].firstChild.textContent += " !!!";
+        }
+      };
+
+      const swaprows = () => {
+        const rows = ROWS();
+        if (rows.length <= 998) return;
+        TBODY.insertBefore(rows[998], rows[2]);
+        TBODY.insertBefore(rows[1], rows[999]);
+      };
+
+      document.getElementById("run").onclick = run;
+      document.getElementById("runlots").onclick = runlots;
+      document.getElementById("add").onclick = add;
+      document.getElementById("update").onclick = update;
+      document.getElementById("clear").onclick = clear;
+      document.getElementById("swaprows").onclick = swaprows;
+
+      TBODY.onclick = (e) => {
+        const t = e.target;
+        const n = t.tagName;
+        const r = t.closest("TR");
+        e.stopPropagation();
+        if (n === "SPAN" || (n === "A" && t.firstElementChild)) {
+          r.remove();
+        } else if (n === "A") {
+          if (SEL) SEL.className = "";
+          SEL = r;
+          SEL.className = "danger";
+        }
+      };
+    </script>
+  </body>
+</html>

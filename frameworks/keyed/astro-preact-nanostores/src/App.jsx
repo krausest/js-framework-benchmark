@@ -1,6 +1,6 @@
-import { useStore } from '@nanostores/preact';
-import { h } from 'preact';
-import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from './store.js';
+import { useStore } from "@nanostores/preact";
+import { h } from "preact";
+import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from "./store.js";
 
 const Button = ({ id, text, fn }) => (
   <div class="col-sm-6 smallpad">
@@ -18,7 +18,9 @@ export default function App() {
     <div class="container">
       <div class="jumbotron">
         <div class="row">
-          <div class="col-md-6"><h1>Astro Preact Nano Stores keyed</h1></div>
+          <div class="col-md-6">
+            <h1>Astro-preact-nanostores-keyed</h1>
+          </div>
           <div class="col-md-6">
             <div class="row">
               <Button id="run" text="Create 1,000 rows" fn={run} />
@@ -34,9 +36,11 @@ export default function App() {
       <table class="table table-hover table-striped test-data">
         <tbody>
           {$rows.map((item) => (
-            <tr key={item.id} class={$selectedId === item.id ? 'danger' : ''}>
+            <tr key={item.id} class={$selectedId === item.id ? "danger" : ""}>
               <td class="col-md-1">{item.id}</td>
-              <td class="col-md-4"><a onClick={() => select(item.id)}>{item.label}</a></td>
+              <td class="col-md-4">
+                <a onClick={() => select(item.id)}>{item.label}</a>
+              </td>
               <td class="col-md-1">
                 <a onClick={() => removeRow(item.id)}>
                   <span class="glyphicon glyphicon-remove" aria-hidden="true" />

@@ -1,11 +1,48 @@
-import { atom } from 'nanostores';
+import { atom } from "nanostores";
 
-const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint',
-  'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable',
-  'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
-const colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
-const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger',
-  'pizza', 'mouse', 'keyboard'];
+const adjectives = [
+  "pretty",
+  "large",
+  "big",
+  "small",
+  "tall",
+  "short",
+  "long",
+  "handsome",
+  "plain",
+  "quaint",
+  "clean",
+  "elegant",
+  "easy",
+  "angry",
+  "crazy",
+  "helpful",
+  "mushy",
+  "odd",
+  "unsightly",
+  "adorable",
+  "important",
+  "inexpensive",
+  "cheap",
+  "expensive",
+  "fancy",
+];
+const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+const nouns = [
+  "table",
+  "chair",
+  "house",
+  "bbq",
+  "desk",
+  "car",
+  "pony",
+  "cookie",
+  "sandwich",
+  "burger",
+  "pizza",
+  "mouse",
+  "keyboard",
+];
 
 let nextId = 1;
 const random = (max) => Math.round(Math.random() * 1000) % max;
@@ -24,17 +61,26 @@ const buildData = (count) => {
 export const rows = atom([]);
 export const selectedId = atom(null);
 
-export const run = () => { rows.set(buildData(1000)); selectedId.set(null); };
-export const runLots = () => { rows.set(buildData(10000)); selectedId.set(null); };
+export const run = () => {
+  rows.set(buildData(1000));
+  selectedId.set(null);
+};
+export const runLots = () => {
+  rows.set(buildData(10000));
+  selectedId.set(null);
+};
 export const add = () => rows.set([...rows.get(), ...buildData(1000)]);
 export const update = () => {
   const current = rows.get().slice();
   for (let i = 0; i < current.length; i += 10) {
-    current[i] = { id: current[i].id, label: current[i].label + ' !!!' };
+    current[i] = { id: current[i].id, label: current[i].label + " !!!" };
   }
   rows.set(current);
 };
-export const clear = () => { rows.set([]); selectedId.set(null); };
+export const clear = () => {
+  rows.set([]);
+  selectedId.set(null);
+};
 export const swapRows = () => {
   const current = rows.get().slice();
   if (current.length <= 998) return;
