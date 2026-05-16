@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Astro Nano Stores keyed</title>
+  <link href="/css/currentStyle.css" rel="stylesheet" />
+</head>
+<body>
+  <div id="main">
+    <div class="container">
+      <div class="jumbotron">
+        <div class="row">
+          <div class="col-md-6">
+            <h1>Astro Nano Stores keyed</h1>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="run">Create 1,000 rows</button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="runlots">Create 10,000 rows</button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="add">Append 1,000 rows</button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="update">Update every 10th row</button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="clear">Clear</button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button type="button" class="btn btn-primary btn-block" id="swaprows">Swap Rows</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="table table-hover table-striped test-data">
+        <tbody id="tbody"></tbody>
+      </table>
+      <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+    </div>
+  </div>
+  <template id="trow">
+    <tr>
+      <td class="col-md-1"></td>
+      <td class="col-md-4"><a></a></td>
+      <td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+      <td class="col-md-6"></td>
+    </tr>
+  </template>
+  <script>
+    import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from '../store.js';
+
+    const TBODY  = document.getElementById('tbody');
+    const TROW   = document.getElementById('trow');
+    const rowEls = new Map(); // id (number) → TR element
+
+    rows.subscribe((data) => {
+      TBODY.textContent = '';
+      rowEls.clear();
+      const fragment = document.createDocumentFragment();
+      for (const item of data) {
+        const tr = TROW.content.firstElementChild.cloneNode(true);
+        tr.dataset.id = item.id;
+        tr.children[0].textContent = item.id;
+        tr.children[1].firstChild.textContent = item.label;
+        rowEls.set(item.id, tr);
+        fragment.appendChild(tr);
+      }
+      TBODY.appendChild(fragment);
+      const selId = selectedId.get();
+      if (selId != null) {
+        const tr = rowEls.get(selId);
+        if (tr) tr.className = 'danger';
+      }
+    });
+
+    selectedId.subscribe((id, oldId) => {
+      if (oldId != null) { const tr = rowEls.get(oldId); if (tr) tr.className = ''; }
+      if (id   != null) { const tr = rowEls.get(id);    if (tr) tr.className = 'danger'; }
+    });
+
+    document.getElementById('run').onclick      = run;
+    document.getElementById('runlots').onclick   = runLots;
+    document.getElementById('add').onclick       = add;
+    document.getElementById('update').onclick    = update;
+    document.getElementById('clear').onclick     = clear;
+    document.getElementById('swaprows').onclick  = swapRows;
+
+    TBODY.onclick = (e) => {
+      const t = e.target;
+      const n = t.tagName;
+      const r = t.closest('TR');
+      e.stopPropagation();
+      if (n === 'SPAN' || (n === 'A' && t.firstElementChild)) {
+        removeRow(Number(r.dataset.id));
+      } else if (n === 'A') {
+        select(Number(r.dataset.id));
+      }
+    };
+  </script>
+</body>
+</html>

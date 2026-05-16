@@ -1,0 +1,26 @@
+{
+  "name": "js-framework-benchmark-astro-vue-nanostores",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Astro Vue Nano Stores demo",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "astro:vue:nanostores",
+    "customURL": "/dist",
+    "frameworkHomeURL": "https://astro.build",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build-prod": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/vue": "^6.0.1",
+    "@nanostores/vue": "^1.1.0",
+    "astro": "^6.3.3",
+    "nanostores": "^1.3.0",
+    "vue": "^3.5.34"
+  }
+}

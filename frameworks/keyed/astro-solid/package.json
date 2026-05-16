@@ -1,0 +1,24 @@
+{
+  "name": "js-framework-benchmark-astro-solid",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Astro Solid demo",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "astro:solid-js",
+    "customURL": "/dist",
+    "frameworkHomeURL": "https://astro.build",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build-prod": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/solid-js": "^6.0.1",
+    "astro": "^6.3.3",
+    "solid-js": "^1.9.13"
+  }
+}

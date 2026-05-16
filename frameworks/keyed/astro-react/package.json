@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-astro-react",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Astro React demo",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "astro:react",
+    "customURL": "/dist",
+    "frameworkHomeURL": "https://astro.build",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build-prod": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/react": "^5.0.5",
+    "astro": "^6.3.3",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  }
+}

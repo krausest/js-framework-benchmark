@@ -1,0 +1,24 @@
+{
+  "name": "js-framework-benchmark-astro-vue",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Astro Vue demo",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "astro:vue",
+    "customURL": "/dist",
+    "frameworkHomeURL": "https://astro.build",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build-prod": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/vue": "^6.0.1",
+    "astro": "^6.3.3",
+    "vue": "^3.5.34"
+  }
+}
