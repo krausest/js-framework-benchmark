@@ -1,5 +1,4 @@
 import { useState } from "preact/hooks";
-import { h } from "preact";
 
 const random = (max) => Math.round(Math.random() * 1000) % max;
 
