@@ -22,11 +22,29 @@ const buildData = (count) => {
 };
 
 export const rows = atom([]);
+export const orderedIds = atom([]);
 export const selectedId = atom(null);
 
-export const run = () => { rows.set(buildData(1000)); selectedId.set(null); };
-export const runLots = () => { rows.set(buildData(10000)); selectedId.set(null); };
-export const add = () => rows.set([...rows.get(), ...buildData(1000)]);
+export const run = () => {
+  const data = buildData(1000);
+  rows.set(data);
+  orderedIds.set(data.map((d) => d.id));
+  selectedId.set(null);
+};
+
+export const runLots = () => {
+  const data = buildData(10000);
+  rows.set(data);
+  orderedIds.set(data.map((d) => d.id));
+  selectedId.set(null);
+};
+
+export const add = () => {
+  const newData = buildData(1000);
+  rows.set([...rows.get(), ...newData]);
+  orderedIds.set([...orderedIds.get(), ...newData.map((d) => d.id)]);
+};
+
 export const update = () => {
   const current = rows.get().slice();
   for (let i = 0; i < current.length; i += 10) {
@@ -34,19 +52,28 @@ export const update = () => {
   }
   rows.set(current);
 };
-export const clear = () => { rows.set([]); selectedId.set(null); };
-export const swapRows = () => {
-  const current = rows.get().slice();
-  if (current.length <= 998) return;
-  const tmp = current[1];
-  current[1] = current[998];
-  current[998] = tmp;
-  rows.set(current);
+
+export const clear = () => {
+  rows.set([]);
+  orderedIds.set([]);
+  selectedId.set(null);
 };
+
+export const swapRows = () => {
+  const ids = orderedIds.get().slice();
+  if (ids.length <= 998) return;
+  const tmp = ids[1];
+  ids[1] = ids[998];
+  ids[998] = tmp;
+  orderedIds.set(ids);
+};
+
 export const removeRow = (id) => {
   const current = rows.get();
   const idx = current.findIndex((d) => d.id === id);
   if (idx < 0) return;
   rows.set([...current.slice(0, idx), ...current.slice(idx + 1)]);
+  orderedIds.set(orderedIds.get().filter((x) => x !== id));
 };
+
 export const select = (id) => selectedId.set(id);

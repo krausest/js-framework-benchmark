@@ -1,4 +1,4 @@
-import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from "./store.js";
+import { rows, orderedIds, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from "./store.js";
 
 const tbody = document.querySelector("tbody");
 const template = document.getElementById("row-template");
@@ -26,16 +26,44 @@ rows.subscribe((newRows) => {
     }
   }
   for (const [id, tr] of dataMap) {
-    if (!newIds.has(id)) tr.remove();
+    if (!newIds.has(id)) {
+      tr.remove();
+      dataMap.delete(id);
+    }
+  }
+});
+
+let prevOrder = null;
+
+orderedIds.subscribe((newIds) => {
+  const n = newIds.length;
+  if (prevOrder && prevOrder.length === n) {
+    let firstDiff = -1, secondDiff = -1;
+    for (let i = 0; i < n; i++) {
+      if (newIds[i] !== prevOrder[i]) {
+        if (firstDiff === -1) firstDiff = i;
+        else if (secondDiff === -1) secondDiff = i;
+        else { firstDiff = -2; secondDiff = -2; break; }
+      }
+    }
+    if (firstDiff >= 0 && secondDiff >= 0) {
+      const refA = dataMap.get(newIds[firstDiff + 1]) || null;
+      tbody.insertBefore(dataMap.get(prevOrder[secondDiff]), refA);
+      const refB = dataMap.get(newIds[secondDiff + 1]) || null;
+      tbody.insertBefore(dataMap.get(prevOrder[firstDiff]), refB);
+      prevOrder = newIds;
+      return;
+    }
   }
   let refNode = null;
-  for (let i = newRows.length - 1; i >= 0; i--) {
-    const tr = dataMap.get(newRows[i].id);
+  for (let i = n - 1; i >= 0; i--) {
+    const tr = dataMap.get(newIds[i]);
     if (tr.parentNode !== tbody || tr.nextSibling !== refNode) {
       tbody.insertBefore(tr, refNode);
     }
     refNode = tr;
   }
+  prevOrder = newIds;
 });
 
 selectedId.subscribe((newId) => {
