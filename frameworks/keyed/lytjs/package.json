@@ -1,0 +1,16 @@
+{
+  "name": "lytjs-js-framework-benchmark",
+  "version": "6.0.0",
+  "description": "LytJS implementation for js-framework-benchmark",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8080",
+    "build": "echo 'No build needed - just open index.html directly'",
+    "test": "echo 'Testing not needed'"
+  },
+  "keywords": [
+    "lytjs",
+    "benchmark"
+  ],
+  "license": "MIT"
+}

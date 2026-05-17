@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LytJS v6.0.0 - js-framework-benchmark</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>LytJS v6.0.0</h1>
+          <p>js-framework-benchmark Implementation</p>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary btn-block" id="run">Create 1,000 rows</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary btn-block" id="runlots">Create 10,000 rows</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary btn-block" id="add">Append 1,000 rows</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary btn-block" id="update">Update every 10th row</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary btn-block" id="clear">Clear</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button type="button" class="btn btn-primary btn-block" id="swaprows">Swap Rows</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="table table-hover table-striped test-data">
+      <tbody></tbody>
+    </table>
+    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+  </div>
+
+  <script>
+    // ============================================================
+    // LytJS v6.0.0 - Simplified Signal Implementation
+    // ============================================================
+
+    function signal(initialValue) {
+      let value = initialValue;
+      const subscribers = new Set();
+
+      const signalFn = function() {
+        const currentSubscriber = signalFn._activeSubscriber;
+        if (currentSubscriber && !subscribers.has(currentSubscriber)) {
+          subscribers.add(currentSubscriber);
+        }
+        return value;
+      };
+
+      signalFn.set = function(newValue) {
+        if (Object.is(newValue, value)) return;
+        value = newValue;
+        subscribers.forEach(sub => sub());
+      };
+
+      signalFn._subscribe = function(subscriber) {
+        subscribers.add(subscriber);
+        return () => subscribers.delete(subscriber);
+      };
+
+      signalFn._activeSubscriber = null;
+
+      return signalFn;
+    }
+
+    function batch(fn) {
+      fn();
+    }
+
+    // ============================================================
+    // Benchmark Implementation
+    // ============================================================
+
+    const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
+    const colours = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
+    const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'train', 'plane', 'bridge', 'sunglasses', 'tower', 'house', 'plant', 'bicycle', 'tree'];
+
+    let _id = 1;
+
+    function generateId() {
+      return _id++;
+    }
+
+    function generateRandomString() {
+      return adjectives[Math.floor(Math.random() * adjectives.length)] +
+        ' ' +
+        colours[Math.floor(Math.random() * colours.length)] +
+        ' ' +
+        nouns[Math.floor(Math.random() * nouns.length)];
+    }
+
+    const data = signal([]);
+    const selectedId = signal(undefined);
+
+    let tbody;
+
+    function createRow(item) {
+      const tr = document.createElement('tr');
+      tr.setAttribute('data-id', item.id);
+
+      const td1 = document.createElement('td');
+      td1.className = 'col-md-1';
+      td1.textContent = item.id;
+
+      const td2 = document.createElement('td');
+      td2.className = 'col-md-4';
+      const a1 = document.createElement('a');
+      a1.textContent = item.label;
+      a1.addEventListener('click', () => select(item.id));
+      td2.appendChild(a1);
+
+      const td3 = document.createElement('td');
+      td3.className = 'col-md-1';
+      const a2 = document.createElement('a');
+      a2.addEventListener('click', () => remove(item.id));
+      const span = document.createElement('span');
+      span.className = 'glyphicon glyphicon-remove';
+      span.setAttribute('aria-hidden', 'true');
+      a2.appendChild(span);
+      td3.appendChild(a2);
+
+      const td4 = document.createElement('td');
+      td4.className = 'col-md-6';
+
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tr.appendChild(td3);
+      tr.appendChild(td4);
+
+      return tr;
+    }
+
+    function render() {
+      if (!tbody) return;
+
+      while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+      }
+
+      const fragment = document.createDocumentFragment();
+      const currentData = data();
+      const selId = selectedId();
+
+      for (let i = 0; i < currentData.length; i++) {
+        const tr = createRow(currentData[i]);
+        if (currentData[i].id === selId) {
+          tr.className = 'danger';
+        }
+        fragment.appendChild(tr);
+      }
+
+      tbody.appendChild(fragment);
+    }
+
+    function run() {
+      batch(() => {
+        const newData = [];
+        for (let i = 0; i < 1000; i++) {
+          newData.push({ id: generateId(), label: generateRandomString() });
+        }
+        data.set(newData);
+      });
+    }
+
+    function runLots() {
+      batch(() => {
+        const newData = [];
+        for (let i = 0; i < 10000; i++) {
+          newData.push({ id: generateId(), label: generateRandomString() });
+        }
+        data.set(newData);
+      });
+    }
+
+    function add() {
+      batch(() => {
+        const currentData = data();
+        const newData = [...currentData];
+        for (let i = 0; i < 1000; i++) {
+          newData.push({ id: generateId(), label: generateRandomString() });
+        }
+        data.set(newData);
+      });
+    }
+
+    function update() {
+      batch(() => {
+        const currentData = data();
+        const newData = [...currentData];
+        for (let i = 0; i < newData.length; i += 10) {
+          newData[i] = { ...newData[i], label: newData[i].label + ' !!!' };
+        }
+        data.set(newData);
+      });
+    }
+
+    function clear() {
+      batch(() => {
+        data.set([]);
+        selectedId.set(undefined);
+      });
+    }
+
+    function swapRows() {
+      batch(() => {
+        const currentData = data();
+        if (currentData.length > 998) {
+          const newData = [...currentData];
+          const temp = newData[1];
+          newData[1] = newData[998];
+          newData[998] = temp;
+          data.set(newData);
+        }
+      });
+    }
+
+    function remove(id) {
+      batch(() => {
+        const currentData = data();
+        data.set(currentData.filter(item => item.id !== id));
+      });
+    }
+
+    function select(id) {
+      selectedId.set(id);
+    }
+
+    let isRendering = false;
+    function debouncedRender() {
+      if (isRendering) return;
+      isRendering = true;
+      requestAnimationFrame(() => {
+        render();
+        isRendering = false;
+      });
+    }
+
+    data._subscribe(debouncedRender);
+    selectedId._subscribe(debouncedRender);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      tbody = document.querySelector('.test-data tbody');
+
+      document.getElementById('run').addEventListener('click', run);
+      document.getElementById('runlots').addEventListener('click', runLots);
+      document.getElementById('add').addEventListener('click', add);
+      document.getElementById('update').addEventListener('click', update);
+      document.getElementById('clear').addEventListener('click', clear);
+      document.getElementById('swaprows').addEventListener('click', swapRows);
+    });
+  </script>
+</body>
+</html>
