@@ -1,0 +1,16 @@
+{
+  "name": "lytjs",
+  "description": "Lightweight Zero-Dependency JavaScript Framework",
+  "version": "6.4.0",
+  "keywords": [
+    "lytjs",
+    "benchmark"
+  ],
+  "main": "index.html",
+  "scripts": {
+    "build-prod": "echo 'No build required - production ready'",
+    "dev": "python -m http.server 8080"
+  },
+  "license": "MIT",
+  "author": "LytJS Team"
+}
