@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ElementaryUI</title>
+  <link href="/css/currentStyle.css" rel="stylesheet" />
+</head>
+
+<body>
+  <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+  <div id="app"></div>
+  <script type="module">
+    import { runApplication } from "elementary-ui-browser-runtime";
+    import appInit from "virtual:swift-wasm?init&product=App";
+
+    await runApplication(appInit);
+  </script>
+</body>
+
+</html>
