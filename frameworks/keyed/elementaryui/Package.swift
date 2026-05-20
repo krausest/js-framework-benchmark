@@ -5,7 +5,8 @@ let package = Package(
     name: "PerformanceBenchmarks",
     platforms: [.macOS(.v15)],
     dependencies: [
-        .package(url: "https://github.com/elementary-swift/elementary-ui", exact: "0.2.3")
+        // IMPORTANT: make sure to update version in package.json as well
+        .package(url: "https://github.com/elementary-swift/elementary-ui", exact: "0.3.0")
     ],
     targets: [
         .executableTarget(

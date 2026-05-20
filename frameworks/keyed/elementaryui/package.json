@@ -4,7 +4,7 @@
   "description": "Benchmark for ElementaryUI",
   "license": "ISC",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.2.3",
+    "frameworkVersion": "0.3.0",
     "frameworkHomeURL": "https://elementary.codes",
     "customURL": "/bundled-dist",
     "language": "Swift"
