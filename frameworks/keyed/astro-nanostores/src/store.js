@@ -1,4 +1,4 @@
-import { atom, map } from "nanostores";
+import { atom } from "nanostores";
 
 const adjectives = [
   "pretty",
@@ -58,65 +58,41 @@ const buildData = (count) => {
   return data;
 };
 
-export const rows = map({});
+export const rows = atom([]);
 export const selectedId = atom(null);
-export const actions = atom(null);
-
-let ids = [];
 
 export const run = () => {
-  const data = buildData(1000);
-  const obj = {};
-  ids = [];
-  for (const d of data) {
-    obj[d.id] = d;
-    ids.push(d.id);
-  }
-  actions.set({ type: "set", ids: ids.slice(), data: obj });
+  rows.set(buildData(1000));
+  selectedId.set(null);
 };
-
 export const runLots = () => {
-  const data = buildData(10000);
-  const obj = {};
-  ids = [];
-  for (const d of data) {
-    obj[d.id] = d;
-    ids.push(d.id);
-  }
-  actions.set({ type: "set", ids: ids.slice(), data: obj });
+  rows.set(buildData(10000));
+  selectedId.set(null);
 };
-
-export const add = () => {
-  const data = buildData(1000);
-  const newIds = data.map((d) => d.id);
-  ids = [...ids, ...newIds];
-  actions.set({ type: "append", data, ids: newIds });
-};
-
+export const add = () => rows.set([...rows.get(), ...buildData(1000)]);
 export const update = () => {
-  const updated = [];
-  for (let i = 0; i < ids.length; i += 10) updated.push(ids[i]);
-  actions.set({ type: "update", ids: updated });
+  const current = rows.get().slice();
+  for (let i = 0; i < current.length; i += 10) {
+    current[i] = { id: current[i].id, label: current[i].label + " !!!" };
+  }
+  rows.set(current);
 };
-
 export const clear = () => {
-  actions.set({ type: "clear" });
+  rows.set([]);
+  selectedId.set(null);
 };
-
 export const swapRows = () => {
-  if (ids.length <= 998) return;
-  const a = ids[1],
-    b = ids[998];
-  ids[1] = b;
-  ids[998] = a;
-  actions.set({ type: "swap", a, b });
+  const current = rows.get().slice();
+  if (current.length <= 998) return;
+  const tmp = current[1];
+  current[1] = current[998];
+  current[998] = tmp;
+  rows.set(current);
 };
-
 export const removeRow = (id) => {
-  const idx = ids.indexOf(id);
+  const current = rows.get();
+  const idx = current.findIndex((d) => d.id === id);
   if (idx < 0) return;
-  ids.splice(idx, 1);
-  actions.set({ type: "remove", id });
+  rows.set([...current.slice(0, idx), ...current.slice(idx + 1)]);
 };
-
 export const select = (id) => selectedId.set(id);
