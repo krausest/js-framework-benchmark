@@ -1,5 +1,4 @@
 import { useStore } from "@nanostores/preact";
-import { h } from "preact";
 import { rows, selectedId, run, runLots, add, update, clear, swapRows, removeRow, select } from "./store.js";
 
 const Button = ({ id, text, fn }) => (

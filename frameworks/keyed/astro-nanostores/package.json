@@ -7,6 +7,9 @@
     "frameworkVersionFromPackage": "astro:nanostores",
     "customURL": "/dist",
     "frameworkHomeURL": "https://astro.build",
+    "issues": [
+      772
+    ],
     "language": "JavaScript"
   },
   "scripts": {
