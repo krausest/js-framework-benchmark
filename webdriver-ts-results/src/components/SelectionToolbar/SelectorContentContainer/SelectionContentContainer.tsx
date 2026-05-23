@@ -26,15 +26,15 @@ const SelectorContentContainer = ({
   label,
 }: Props) => {
   const handleSelectNone = (event: React.MouseEvent) => {
-    !isNoneSelected && selectNone(event);
+    if (!isNoneSelected) selectNone(event);
   };
 
   const handleSelectUnflagged = (event: React.MouseEvent) => {
-    !isUnflaggedSelected && selectUnflagged && selectUnflagged(event);
+    if (!isUnflaggedSelected && selectUnflagged) selectUnflagged(event);
   };
 
   const handleSelectAll = (event: React.MouseEvent) => {
-    !areAllSelected && selectAll(event);
+    if (!areAllSelected) selectAll(event);
   };
 
   return (

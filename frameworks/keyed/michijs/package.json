@@ -7,7 +7,8 @@
     "frameworkVersionFromPackage": "@michijs/michijs",
     "frameworkHomeURL": "https://dev.michijs.com/",
     "useShadowRoot": false,
-    "customURL": "/build"
+    "customURL": "/build",
+    "language": "TypeScript"
   },
   "scripts": {
     "start": "michi-server --start",

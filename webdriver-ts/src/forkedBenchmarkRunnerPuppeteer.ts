@@ -62,7 +62,7 @@ async function runCPUBenchmark(
   let results: CPUBenchmarkResult[] = [];
 
   console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
-  let browser: Browser = null;
+  let browser: Browser | null = null;
   // let page: Page = null;
   try {
     browser = await startBrowser(benchmarkOptions);
@@ -213,12 +213,12 @@ async function runMemBenchmark(
   benchmark: MemBenchmarkPuppeteer,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number>> {
-  let error: string = undefined;
+  let error: string | undefined = undefined;
   let warnings: string[] = [];
   let results: number[] = [];
 
   console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
-  let browser: Browser = null;
+  let browser: Browser | null = null;
   try {
     browser = await startBrowser(benchmarkOptions);
     const page = await browser.newPage();
@@ -318,16 +318,16 @@ process.on("message", (msg: any) => {
     benchmarkId: string;
     benchmarkOptions: BenchmarkOptions;
   } = msg;
-  defaultConfig.PUPPETEER_WAIT_MS = benchmarkOptions.puppeteerSleep;
+  defaultConfig.PUPPETEER_WAIT_MS = benchmarkOptions.puppeteerSleep ?? 0;
   console.log("forked runner using sleep for puppeteer", config.PUPPETEER_WAIT_MS);
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
-      process.send(result);
+      process.send!(result);
       process.exit(0);
     })
     .catch((error) => {
-      console.log("CATCH: Error in forkedBenchmarkRunner");
-      process.send({ error: convertError(error) });
+      console.log("CATCH: Error in forkedBenchmarkRunnerPuppeteer");
+      process.send!({ error: convertError(error) });
       process.exit(0);
     });
 });

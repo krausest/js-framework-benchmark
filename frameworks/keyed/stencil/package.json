@@ -6,7 +6,8 @@
     "frameworkHomeURL": "https://stenciljs.com/",
     "issues": [
       1139
-    ]
+    ],
+    "language": "TypeScript"
   },
   "description": "Stencil Demo",
   "homepage": "https://github.com/krausest/js-framework-benchmark",

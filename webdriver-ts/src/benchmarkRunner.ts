@@ -93,10 +93,12 @@ async function runBenchmakLoopSize(
     let res = await forkAndCallBenchmark(framework, benchmarkInfo, benchmarkOptions);
     if (Array.isArray(res.result)) {
       results = results.concat(res.result as SizeBenchmarkResult[]);
-    } else {
+    } else if (res.result !== undefined) {
       results.push(res.result);
     }
-    warnings = warnings.concat(res.warnings);
+    if (res.warnings) {
+      warnings = warnings.concat(res.warnings);
+    }
     if (res.error) {
       errors.push(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + res.error);
     }
@@ -119,7 +121,6 @@ async function runBenchmakLoop(
   framework: FrameworkData,
   benchmarkInfo: CPUBenchmarkInfo | MemBenchmarkInfo,
   benchmarkOptions: BenchmarkOptions,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   plausibilityCheck: PlausibilityCheck
 ): Promise<{ errors: string[]; warnings: string[] }> {
   let warnings: string[] = [];
@@ -149,7 +150,9 @@ async function runBenchmakLoop(
     } else if (res.result !== undefined) {
       results.push(res.result);
     }
-    warnings = warnings.concat(res.warnings);
+    if (res.warnings) {
+      warnings = warnings.concat(res.warnings);
+    }
     if (res.error) {
       console.log(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + res.error);
       errors.push(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + res.error);
@@ -157,20 +160,25 @@ async function runBenchmakLoop(
     }
   }
   if (config.WRITE_RESULTS) {
-    if (benchmarkInfo.type == BenchmarkType.CPU) {
-      await writeResults(benchmarkOptions.resultsDirectory, {
-        framework: framework,
-        benchmark: benchmarkInfo,
-        results: results as CPUBenchmarkResult[],
-        type: BenchmarkType.CPU,
-      });
-    } else {
-      await writeResults(benchmarkOptions.resultsDirectory, {
-        framework: framework,
-        benchmark: benchmarkInfo,
-        results: results as number[],
-        type: BenchmarkType.MEM,
-      });
+    try {
+      if (benchmarkInfo.type == BenchmarkType.CPU) {
+        await writeResults(benchmarkOptions.resultsDirectory, {
+          framework: framework,
+          benchmark: benchmarkInfo,
+          results: results as CPUBenchmarkResult[],
+          type: BenchmarkType.CPU,
+        });
+      } else {
+        await writeResults(benchmarkOptions.resultsDirectory, {
+          framework: framework,
+          benchmark: benchmarkInfo,
+          results: results as number[],
+          type: BenchmarkType.MEM,
+        });
+      }      
+    } catch (e) {
+        console.error(e);
+        errors.push(`Executing ${framework.uri} and benchmark ${benchmarkInfo.id} failed: ` + e);
     }
   }
   return { errors, warnings };
@@ -184,7 +192,7 @@ async function runBench(
   let errors: string[] = [];
   let warnings: string[] = [];
 
-  let restart: string;
+  let restart: string | undefined = undefined;
   let index = runFrameworks.findIndex((f) => f.fullNameWithKeyedAndVersion === restart);
   if (index > -1) {
     runFrameworks = runFrameworks.slice(index);
@@ -335,7 +343,7 @@ async function main() {
     puppeteerSleep: args.puppeteerSleep ?? 0,
   };
 
-  config.PUPPETEER_WAIT_MS = benchmarkOptions.puppeteerSleep;
+  config.PUPPETEER_WAIT_MS = benchmarkOptions.puppeteerSleep ?? 0;
 
   if (args.count) {
     benchmarkOptions.numIterationsForCPUBenchmarks = args.count;

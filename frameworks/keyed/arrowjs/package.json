@@ -1,14 +1,15 @@
 {
   "name": "js-framework-benchmark-arrowjs",
   "version": "1.0.0",
-  "description": "ArrowJs demo",
+  "description": "ArrowJS demo",
   "js-framework-benchmark": {
-    "frameworkVersion": "1.0.0-alpha.9",
-    "frameworkHomeURL": "https://www.arrow-js.com/"
+    "frameworkHomeURL": "https://www.arrow-js.com/",
+    "language": "JavaScript",
+    "frameworkVersionFromPackage": "@arrow-js/core"
   },
   "scripts": {
-    "dev": "exit 0",
-    "build-prod": "exit 0"
+    "dev": "esbuild src/Main.js --bundle --format=esm --target=es2020 --outfile=dist/main.js --watch",
+    "build-prod": "esbuild src/Main.js --bundle --format=esm --minify --target=es2020 --outfile=dist/main.js"
   },
   "keywords": [
     "arrowjs"
@@ -19,5 +20,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@arrow-js/core": "1.0.6"
+  },
+  "devDependencies": {
+    "esbuild": "0.27.4"
   }
 }

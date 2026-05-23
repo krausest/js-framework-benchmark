@@ -1,5 +1,6 @@
 import React from "react";
-import { ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_STARTUP, BenchmarkType } from "@/Common";
+import { SORT_BY_NAME, SORT_BY_GEOMMEAN_STARTUP, BenchmarkType } from "@/Common";
+import type { ResultTableData } from "@/Common";
 import ValueResultRow from "./ValueResultRow";
 import GeomMeanRow from "./GeomMeanRow";
 

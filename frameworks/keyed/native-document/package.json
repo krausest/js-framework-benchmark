@@ -4,14 +4,15 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "native-document",
-    "frameworkHomeURL": "https://github.com/afrocodeur/native-document"
+    "frameworkHomeURL": "https://github.com/afrocodeur/native-document",
+    "language": "JavaScript"
   },
   "scripts": {
     "build-prod": "vite build",
     "dev": "vite"
   },
   "dependencies": {
-    "native-document": "1.0.76",
+    "native-document": "1.0.113",
     "vite": "^7.0.4"
   }
 }

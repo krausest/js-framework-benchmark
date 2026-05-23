@@ -19,6 +19,7 @@
     "issues": [
       800,
       772
-    ]
+    ],
+    "language": "TypeScript"
   }
 }

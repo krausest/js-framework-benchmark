@@ -5,7 +5,10 @@
   "js-framework-benchmark": {
     "frameworkVersion": "2.2.0",
     "frameworkHomeURL": "https://github.com/L3P3/lui",
-    "issues": [1139]
+    "issues": [
+      1139
+    ],
+    "language": "JavaScript"
   },
   "devDependencies": {
     "bun": "latest"

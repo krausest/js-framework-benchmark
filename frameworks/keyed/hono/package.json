@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "hono",
-    "frameworkHomeURL": "https://hono.dev/"
+    "frameworkHomeURL": "https://hono.dev/",
+    "language": "TypeScript"
   },
   "scripts": {
     "build": "vite build",

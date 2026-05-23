@@ -5,7 +5,7 @@ async function routes(fastify: FastifyInstance) {
   fastify.addContentTypeParser(
     "application/csp-report",
     { parseAs: "string" },
-    fastify.getDefaultJsonParser("ignore", "ignore")
+    fastify.getDefaultJsonParser("remove", "remove")
   );
 
   fastify.get("/enable", enableCSP);

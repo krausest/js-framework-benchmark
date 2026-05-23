@@ -4,7 +4,8 @@
   "description": "Benchmark for gyron.js framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "gyron",
-    "frameworkHomeURL": "https://www.npmjs.com/package/gyron"
+    "frameworkHomeURL": "https://www.npmjs.com/package/gyron",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --mode development --watch",

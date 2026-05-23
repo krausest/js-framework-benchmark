@@ -8,7 +8,8 @@
     "customURL": "/bundeled-dist/wwwroot/",
     "issues": [
       1139
-    ]
+    ],
+    "language": "c#"
   },
   "scripts": {
     "install": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to clone reflex-dom\\'s benchmark and build system use: && echo npm run install-force",
@@ -35,8 +36,7 @@
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "rimraf": "^3.0.2",
     "cross-env": "^7.0.2",

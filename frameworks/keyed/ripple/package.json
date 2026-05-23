@@ -5,7 +5,8 @@
   "description": "Boilerplate for Ripple",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ripple",
-    "frameworkHomeURL": "https://ripplejs.com/"
+    "frameworkHomeURL": "https://ripplejs.com/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

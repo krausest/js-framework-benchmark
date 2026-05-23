@@ -1,5 +1,5 @@
 import React from "react";
-import { TableResultValueEntry, Benchmark } from "@/Common";
+import type { TableResultValueEntry, Benchmark } from "@/Common";
 import ValueCell from "./ValueCell";
 
 interface Props {

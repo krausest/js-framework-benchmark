@@ -5,7 +5,8 @@
   "description": "Boilerplate for Svelte",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "svelte",
-    "frameworkHomeURL": "https://svelte.dev/"
+    "frameworkHomeURL": "https://svelte.dev/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

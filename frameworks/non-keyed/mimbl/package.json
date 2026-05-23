@@ -4,7 +4,8 @@
   "description": "Benchmark for Mimbl framework (non-keyed)",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mimbl",
-    "frameworkHomeURL": "https://mimjs.com/"
+    "frameworkHomeURL": "https://mimjs.com/",
+    "language": "TypeScript"
   },
   "scripts": {
     "build-prod": "webpack"

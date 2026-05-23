@@ -5,8 +5,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "riot",
     "frameworkHomeURL": "https://riot.js.org/",
-    "issues": [
-    ]
+    "issues": [],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --watch",

@@ -8,11 +8,10 @@ import { writeResults } from "./writeResults.js";
 interface TimingResult {
   type: string;
   ts: number;
-  dur?: number;
-  end?: number;
-  mem?: number;
+  dur: number;
+  end: number;
   pid: number;
-  evt?: any;
+  evt: any;
 }
 
 /**
@@ -75,17 +74,11 @@ export function extractRelevantEvents(entries: any[], startLogicEvent: string) {
   }
   
 async function fetchEventsFromPerformanceLog(fileName: string, startLogicEventName: string): Promise<TimingResult[]> {
-  let timingResults: TimingResult[] = [];
-    let entries = [];
-    do {
-      let contents = await readFile(fileName, { encoding: "utf8" });
-      let json = JSON.parse(contents);
-      let entries = json["traceEvents"];
-      const filteredEvents = extractRelevantEvents(entries, startLogicEventName);
-      timingResults = timingResults.concat(filteredEvents);
-    } while (entries.length > 0);
-    return timingResults;
-  }
+  let contents = await readFile(fileName, { encoding: "utf8" });
+  let json = JSON.parse(contents);
+  let entries = json["traceEvents"];
+  return extractRelevantEvents(entries, startLogicEventName);
+}
   
 const traceJSEventNames = [
   "EventDispatch",
@@ -133,16 +126,10 @@ async function fetchEventsFromTraceLog(
   relevantTraceEvents: string[],
   includeClick: boolean
 ): Promise<TimingResult[]> {
-  let timingResults: TimingResult[] = [];
-  let entries = [];
-  do {
-    let contents = await readFile(fileName, { encoding: "utf8" });
-    let json = JSON.parse(contents);
-    let entries = json["traceEvents"];
-    const filteredEvents = extractRelevantTraceEvents(config, relevantTraceEvents, entries, includeClick);
-    timingResults = timingResults.concat(filteredEvents);
-  } while (entries.length > 0);
-  return timingResults;
+  let contents = await readFile(fileName, { encoding: "utf8" });
+  let json = JSON.parse(contents);
+  let entries = json["traceEvents"];
+  return extractRelevantTraceEvents(config, relevantTraceEvents, entries, includeClick);
 }
 
 function type_eq(...requiredTypes: string[]) {
@@ -170,7 +157,7 @@ function logEvents(events: TimingResult[], click: TimingResult) {
   
 export async function computeResultsCPU(
   fileName: string,
-  startLogicEventName: string,
+  startLogicEventName: string = "click",
 ): Promise<CPUDurationResult> {
   const perfLogEvents = await fetchEventsFromPerformanceLog(fileName, startLogicEventName);
   let events = R.sortBy((e: TimingResult) => e.end)(perfLogEvents);
@@ -231,9 +218,12 @@ export async function computeResultsCPU(
     }
   }
 
-  let startFrom = R.filter(type_eq("click", "fireAnimationFrame", "timerFire", "layout", "functioncall"))(eventsOnMainThreadDuringBenchmark);
+  let startFrom = R.filter(type_eq(startLogicEventName, "fireAnimationFrame", "timerFire", "layout", "functioncall"))(eventsOnMainThreadDuringBenchmark);
   // we're looking for the commit after this event
   let startFromEvent = startFrom.at(-1);
+  if (startFromEvent === undefined) {
+    throw "unexpected situation. There must be some events, but there were none."
+  }
   if (config.LOG_DETAILS) console.log("DEBUG: searching for commit event after", startFromEvent, "for", fileName);
   let commit = R.find((e: TimingResult) => e.ts > startFromEvent.end)(R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark));
   let allCommitsAfterClick = R.filter(type_eq("commit"))(eventsOnMainThreadDuringBenchmark);
@@ -247,8 +237,12 @@ export async function computeResultsCPU(
     } else {
       commit = allCommitsAfterClick.at(-1);
     }
-  } 
-  let maxDeltaBetweenCommits = (allCommitsAfterClick.at(-1).ts - allCommitsAfterClick[0].ts)/1000.0;
+  }
+  let lastCommit = allCommitsAfterClick.at(-1);
+  if (lastCommit === undefined || commit === undefined) {
+    throw "unexpected situation. allCommitsAfterClick and  commit must not be empty";
+  }  
+  let maxDeltaBetweenCommits = (lastCommit.ts - allCommitsAfterClick[0].ts)/1000.0;
 
   let duration = (commit.end - clicks[0].ts) / 1000.0;
   if (config.LOG_DEBUG) console.log("duration", duration);
@@ -343,11 +337,11 @@ export class PlausibilityCheck {
     }
     
     putIfAbsent(this.maxDeltaBetweenCommits, framework.fullNameWithKeyedAndVersion, 0);
-    let val = this.maxDeltaBetweenCommits.get(framework.fullNameWithKeyedAndVersion);
+    let val = this.maxDeltaBetweenCommits.get(framework.fullNameWithKeyedAndVersion) ?? 0;
     this.maxDeltaBetweenCommits.set(framework.fullNameWithKeyedAndVersion, Math.max(val, result.maxDeltaBetweenCommits));
 
     putIfAbsent(this.raf_long_delays, framework.fullNameWithKeyedAndVersion, 0);
-    val = this.raf_long_delays.get(framework.fullNameWithKeyedAndVersion);
+    val = this.raf_long_delays.get(framework.fullNameWithKeyedAndVersion) ?? 0;
     this.raf_long_delays.set(framework.fullNameWithKeyedAndVersion, Math.max(val, result.raf_long_delay));
   }
 
@@ -366,13 +360,6 @@ export class PlausibilityCheck {
         if (maxDelay > 0) console.log(` ${impl}: ${maxDelay}`);
       }
       console.log("  Interpretation: If the list contains more than just a few entries or large numbers the results should be checked");
-    }
-    if (this.maxDeltaBetweenCommits.size > 0) {
-      console.log("Info: Implemenations with multiple commit events and max delay between both:");
-      for (let [impl, maxDelay] of this.maxDeltaBetweenCommits.entries()) {
-        if (maxDelay > 0) console.log(` ${impl}: ${maxDelay}`);
-      }
-      console.log("  Interpretation: Those frameworks make measuring the duration of the benchmark difficult. The results should be checked occasionally for correctness.");
     }
   }
 }

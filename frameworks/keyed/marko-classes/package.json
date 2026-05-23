@@ -7,7 +7,8 @@
     "customURL": "/dist/public",
     "issues": [
       1139
-    ]
+    ],
+    "language": "JavaScript"
   },
   "version": "1.0.0",
   "type": "module",

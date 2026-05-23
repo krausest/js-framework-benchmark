@@ -8,7 +8,8 @@
     "frameworkHomeURL": "https://github.com/ivanceras/sauron",
     "issues": [
       1139
-    ]
+    ],
+    "language": "Rust"
   },
   "scripts": {
     "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",

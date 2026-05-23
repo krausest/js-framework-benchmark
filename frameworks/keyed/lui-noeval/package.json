@@ -4,7 +4,8 @@
   "description": "Benchmark for lui, without code generation",
   "js-framework-benchmark": {
     "frameworkVersion": "2.2.0",
-    "frameworkHomeURL": "https://github.com/L3P3/lui"
+    "frameworkHomeURL": "https://github.com/L3P3/lui",
+    "language": "JavaScript"
   },
   "devDependencies": {
     "bun": "latest"

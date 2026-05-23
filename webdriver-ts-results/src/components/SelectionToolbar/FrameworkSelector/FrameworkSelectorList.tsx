@@ -1,4 +1,4 @@
-import { Framework } from "@/Common";
+import type { Framework } from "@/Common";
 import { Checkbox, Flex } from "antd";
 
 interface Props {

@@ -6,7 +6,10 @@
   "js-framework-benchmark": {
     "frameworkVersion": "0.23.1",
     "frameworkHomeURL": "https://github.com/mogera551/quel",
-    "issues": [1139]
+    "issues": [
+      1139
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "build-dev": "echo 0",

@@ -1,0 +1,34 @@
+{
+  "name": "miso-ghc-js-keyed-1.9.0.0",
+  "version": "1.0.0",
+  "description": "Benchmark for miso",
+  "author": "@dmjio",
+  "contributors": [
+    "Jens Krause",
+    "David Johnson"
+  ],
+  "js-framework-benchmark": {
+    "frameworkVersion": "1.9.0",
+    "frameworkHomeURL": "https://haskell-miso.org/",
+    "customURL": "/dist-bundle",
+    "issues": [
+      1139
+    ]
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "license": "Apache-2.0",
+  "scripts": {
+    "build-prod": "echo This is a no-op. The generated javascript is already provided in dist-bundle.",
+    "build": "nix develop .#ghcjs --command bash -c 'make all'"
+  },
+  "keywords": [
+    "miso",
+    "ghc",
+    "js",
+    "haskell"
+  ]
+}

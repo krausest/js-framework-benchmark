@@ -4,7 +4,8 @@
   "description": "Benchmark for Mithrill 2.2.4 framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mithril",
-    "frameworkHomeURL": "https://mithril.js.org/"
+    "frameworkHomeURL": "https://mithril.js.org/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack -w -d",

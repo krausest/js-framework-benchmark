@@ -7,7 +7,8 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "marionette",
-    "frameworkHomeURL": "https://marionettejs.com/"
+    "frameworkHomeURL": "https://marionettejs.com/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

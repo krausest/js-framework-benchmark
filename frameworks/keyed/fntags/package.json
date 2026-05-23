@@ -5,7 +5,8 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@srfnstack/fntags",
-    "frameworkHomeURL": "https://srfnstack.github.io/fntags/"
+    "frameworkHomeURL": "https://srfnstack.github.io/fntags/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "npm i && DEV=true rollup -c",

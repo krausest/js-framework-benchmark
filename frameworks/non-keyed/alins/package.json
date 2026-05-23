@@ -5,7 +5,8 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersion": "0.0.34",
-    "frameworkHomeURL": ""
+    "frameworkHomeURL": "",
+    "language": "JavaScript"
   },
   "keywords": [
     "alins"

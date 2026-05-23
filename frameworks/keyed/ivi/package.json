@@ -11,7 +11,8 @@
   "keywords": [],
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ivi",
-    "frameworkHomeURL": "https://github.com/localvoid/ivi"
+    "frameworkHomeURL": "https://github.com/localvoid/ivi",
+    "language": "TypeScript"
   },
   "scripts": {
     "dev": "rollup -c rollup.config.mjs",

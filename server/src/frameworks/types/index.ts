@@ -2,6 +2,7 @@ export interface BenchmarkData {
   issues: string;
   customURL: string;
   frameworkHomeURL: string;
+  language: string;
   useShadowRoot: string;
   useRowShadowRoot: string;
   shadowRootName?: string;

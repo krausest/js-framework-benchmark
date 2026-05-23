@@ -6,7 +6,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "pota",
     "frameworkHomeURL": "https://pota.quack.uy/",
-    "issues": [801]
+    "issues": [
+      801
+    ],
+    "language": "TypeScript"
   },
   "scripts": {
     "build-dev": "rollup -c -w",

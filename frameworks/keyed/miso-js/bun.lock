@@ -1,0 +1,28 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 0,
+  "workspaces": {
+    "": {
+      "name": "js-framework-benchmark-misojs-keyed",
+      "dependencies": {
+        "haskell-miso": "^0.0.8",
+        "typescript": "^5.9.3",
+      },
+    },
+  },
+  "packages": {
+    "@lcov-viewer/cli": ["@lcov-viewer/cli@1.3.0", "", { "dependencies": { "commander": "^9.3.0" }, "bin": { "lcov-viewer": "lib/index.js" } }, "sha512-A9altXh2ZyeuagYZsJqVja6WMlgGJGcV+SHOOgIZB+CA2bfk78vgOqrPJrWg+IflFpoEzo1QeqwH4WbKSM4d9A=="],
+
+    "commander": ["commander@9.5.0", "", {}, "sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ=="],
+
+    "fsevents": ["fsevents@2.3.2", "", { "os": "darwin" }, "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="],
+
+    "haskell-miso": ["haskell-miso@0.0.8", "", { "dependencies": { "@lcov-viewer/cli": "^1.3.0", "playwright": "1.53", "typescript": "^5.8.3" } }, "sha512-3ddpnJUnZfiPHnkrZCiAkULGO+3a0UOVyhHm32WL9KXjq/NnnGizVR86vgOoXfk2WIrEdYyJW6mqAXNRREY6iQ=="],
+
+    "playwright": ["playwright@1.53.2", "", { "dependencies": { "playwright-core": "1.53.2" }, "optionalDependencies": { "fsevents": "2.3.2" }, "bin": { "playwright": "cli.js" } }, "sha512-6K/qQxVFuVQhRQhFsVZ9fGeatxirtrpPgxzBYWyZLEXJzqYwuL4fuNmfOfD5et1tJE4GScKyPNeLhZeRwuTU3A=="],
+
+    "playwright-core": ["playwright-core@1.53.2", "", { "bin": { "playwright-core": "cli.js" } }, "sha512-ox/OytMy+2w1jcYEYlOo1Hhp8hZkLCximMTUTMBXjGUA1KoFfiSZ+DU+3a739jsPY0yoKH2TFy9S2fsJas8yAw=="],
+
+    "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+  }
+}

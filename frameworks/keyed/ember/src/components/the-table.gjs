@@ -9,12 +9,12 @@ export class TheTable extends Component {
     <table class="table table-hover table-striped test-data">
       <tbody>
         {{#each this.state.data as |row|}}
-          <tr class={{if (this.state.isSelected row) "danger"}}><td
+          <tr class={{if row.selected.current "danger"}}><td
               class="col-md-1"
             >{{row.id}}</td><td class="col-md-4"><a
-                onclick={{fn this.state.select row}}
+                onclick={{fn this.state.select row.id}}
               >{{row.label.current}}</a></td><td class="col-md-1"><a
-                onclick={{fn this.state.remove row}}
+                onclick={{fn this.state.remove row.id}}
               ><span
                   class="glyphicon glyphicon-remove"
                   aria-hidden="true"

@@ -7,7 +7,8 @@
     "frameworkVersion": "0.3.31",
     "frameworkVersionFromPackage": "@rvjs/core",
     "frameworkHomeURL": "https://rvjs.xyz/",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "language": "JavaScript"
   },
   "author": "ILikeMintChocolate",
   "license": "Apache-2.0",

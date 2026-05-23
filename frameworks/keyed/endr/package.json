@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "endr",
-    "frameworkHomeURL": "https://github.com/caseywebdev/endr"
+    "frameworkHomeURL": "https://github.com/caseywebdev/endr",
+    "language": "TypeScript"
   },
   "scripts": {
     "build-prod": "esbuild src/index.js --loader:.js=jsx --jsx=automatic --jsx-import-source=endr --outfile=dist/index.js --bundle --minify",

@@ -7,7 +7,11 @@
     "frameworkVersion": "0.2.84",
     "frameworkHomeURL": "https://rustwasm.github.io/docs/wasm-bindgen/",
     "customURL": "/bundled-dist",
-    "issues": [772, 1139]
+    "issues": [
+      772,
+      1139
+    ],
+    "language": "Rust"
   },
   "scripts": {
     "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",

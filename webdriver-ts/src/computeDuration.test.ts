@@ -26,7 +26,7 @@ describe("duration is computed matching to some hand checked examples", () => {
     expect(result.maxDeltaBetweenCommits).toBe(60.919);
     expect(result.numberCommits).toBe(2);
   });
-  test.only("Use the commit event after the fireAnimationFrame event", async () => {
+  test("Use the commit event after the fireAnimationFrame event", async () => {
     let result = await computeResultsCPU("unittests/dojo-v8.0.0-keyed_02_replace1k_0.json");
     expect(result.duration).toBe(67.348);
     expect(result.droppedNonMainProcessCommitEvents).toBe(false);

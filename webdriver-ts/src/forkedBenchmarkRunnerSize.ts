@@ -39,8 +39,8 @@ async function runSizeBenchmark(
   let results: SizeBenchmarkResult[] = [];
 
   console.log("size benchmarking", framework);
-  let browser: Browser = null;
-  let page: Page = null;
+  let browser: Browser | null = null;
+  let page: Page | null = null;
   try {
     browser = await startBrowser(benchmarkOptions);
     page = await browser.newPage();
@@ -131,12 +131,12 @@ process.on("message", (msg: any) => {
   } = msg;
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
-      process.send(result);
+      process.send!(result);
       process.exit(0);
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunnerSize");
-      process.send({ error: convertError(error) });
+      process.send!({ error: convertError(error) });
       process.exit(0);
     });
 });

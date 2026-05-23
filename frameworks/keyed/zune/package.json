@@ -4,7 +4,8 @@
   "type": "module",
   "main": "src/core/main.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "zune"
+    "frameworkVersionFromPackage": "zune",
+    "language": "JavaScript"
   },
   "scripts": {
     "build-dev": "exit 0",

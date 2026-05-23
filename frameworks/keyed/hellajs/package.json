@@ -6,7 +6,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@hellajs/core",
     "frameworkHomeURL": "https://hellajs.com",
-    "issues": [1139]
+    "issues": [
+      1139
+    ],
+    "language": "TypeScript"
   },
   "scripts": {
     "build-prod": "rollup -c rollup.config.mjs"

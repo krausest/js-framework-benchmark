@@ -6,7 +6,8 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "spheres",
-    "frameworkHomeURL": "https://github.com/brian-watkins/spheres"
+    "frameworkHomeURL": "https://github.com/brian-watkins/spheres",
+    "language": "TypeScript"
   },
   "scripts": {
     "start": "vite --open /frameworks/keyed/spheres/local.html",

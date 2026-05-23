@@ -6,7 +6,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ef-core",
     "frameworkHomeURL": "https://ef.js.org/#!home",
-    "issues": []
+    "issues": [],
+    "language": "JavaScript"
   },
   "scripts": {
     "build": "rollup -c ./config/rollup.config.mjs",

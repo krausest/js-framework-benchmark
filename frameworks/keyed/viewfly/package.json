@@ -5,7 +5,8 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@viewfly/core",
-    "frameworkHomeURL": "https://github.com/viewfly/viewfly"
+    "frameworkHomeURL": "https://github.com/viewfly/viewfly",
+    "language": "TypeScript"
   },
   "scripts": {
     "build-dev": "webpack-dev-server",

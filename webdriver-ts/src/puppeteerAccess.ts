@@ -34,7 +34,7 @@ export async function checkElementExists(page: Page, selector: string) {
 
 export async function clickElement(page: Page, selector: string) {
   let elem = await page.$(selector);
-  if (!elem.asElement()) throw `clickElementByXPath ${selector} failed. Element was not found.`;
+  if (!elem || !elem.asElement()) throw `clickElementByXPath ${selector} failed. Element was not found.`;
   await elem.click();
   await elem.dispose();
 }
@@ -97,7 +97,6 @@ function browserPath(benchmarkOptions: BenchmarkOptions) {
   } else if (process.platform == "linux") {
     return "/usr/bin/google-chrome";
   } else if (/^win/i.test(process.platform)) {
-    // eslint-disable-next-line unicorn/prefer-string-raw
     return "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
   } else {
     throw new Error("Path to Google Chrome executable must be specified");

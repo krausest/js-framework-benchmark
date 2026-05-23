@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { jStat } from "jstat";
-import { knownIssues } from "@/helpers/issues";
 import { frameworks as rawFrameworks, benchmarks as rawBenchmarks, results as rawResults } from "./results";
 import {
   Benchmark,
@@ -15,6 +14,7 @@ import {
   ResultValues,
   CpuDurationMode,
 } from "@/Common";
+import { knownIssues } from "@/helpers/issues";
 
 const removeKeyedSuffix = (value: string) => {
   return value.replace(/-keyed|-non-keyed$/, "");
@@ -25,6 +25,7 @@ const mappedFrameworks = rawFrameworks.map((f) => ({
   dir: f.dir,
   displayname: removeKeyedSuffix(f.name),
   issues: f.issues ?? [],
+  language: (f as Record<string, unknown>).language as string ?? "",
   type: f.keyed ? FrameworkType.KEYED : FrameworkType.NON_KEYED,
   frameworkHomeURL: f.frameworkHomeURL,
 }));
@@ -33,8 +34,8 @@ const allBenchmarks = new Set(rawBenchmarks);
 const allFrameworks = new Set(mappedFrameworks);
 
 const results: Result[] = [];
-for (let result of rawResults) {
-  for (let b of result.b) {
+for (const result of rawResults) {
+  for (const b of result.b) {
     const values: { [k: string]: ResultValues } = {};
     for (const key of Object.keys(b.v)) {
       const r = b.v[key];
@@ -78,11 +79,11 @@ interface State {
   frameworks: Array<Framework>;
   selectedBenchmarks: Set<Benchmark>;
   selectedFrameworks: Set<Framework>;
+  selectedIssues: Set<number>;
   resultTables: ResultTables;
   sortKey: string;
   displayMode: DisplayMode;
   compareWith: CompareWith;
-  categories: Set<number>;
   cpuDurationMode: CpuDurationMode;
 }
 
@@ -92,10 +93,13 @@ interface Actions {
   areAllFrameworksSelected: (type: FrameworkType) => boolean;
   isNoneFrameworkSelected: (type: FrameworkType) => boolean;
   isUnflaggedFrameworkSelected: (type: FrameworkType) => boolean;
+  areAllIssuesSelected: () => boolean;
+  isNoneIssueSelected: () => boolean;
+  selectIssue: (issueNumber: number, add: boolean) => void;
+  selectAllIssues: (add: boolean) => void;
   selectFramework: (framework: Framework, add: boolean) => void;
   selectAllFrameworks: (frameworkType: FrameworkType, add: boolean) => void;
   selectUnflaggedFrameworks: (frameworkType: FrameworkType) => void;
-  selectCategory: (categoryId: number, add: boolean) => void;
   selectBenchmark: (benchmark: Benchmark, add: boolean) => void;
   selectAllBenchmarks: (benchmarkType: BenchmarkType, add: boolean) => void;
   selectDisplayMode: (displayMode: DisplayMode) => void;
@@ -107,42 +111,51 @@ interface Actions {
   setStateFromClipboard: (arg: unknown) => void;
 }
 
+function filterFrameworksByIssues(selectedFrameworks: Set<Framework>, selectedIssues: Set<number>): Set<Framework> {
+  const filtered = new Set<Framework>();
+  for (const framework of selectedFrameworks) {
+    if (framework.issues.length === 0 || framework.issues.every((i) => selectedIssues.has(i))) {
+      filtered.add(framework);
+    }
+  }
+  return filtered;
+}
+
 function updateResultTable({
   frameworks,
   benchmarks,
   selectedFrameworks,
   selectedBenchmarks,
+  selectedIssues,
   sortKey,
   displayMode,
   compareWith,
-  categories,
   cpuDurationMode,
 }: State) {
+  const filteredFrameworks = filterFrameworksByIssues(selectedFrameworks, selectedIssues);
   return {
     [FrameworkType.KEYED]: new ResultTableData(
       frameworks,
       benchmarks,
       resultLookup,
-      selectedFrameworks,
+      filteredFrameworks,
       selectedBenchmarks,
       FrameworkType.KEYED,
       sortKey,
       displayMode,
       compareWith[FrameworkType.KEYED],
-      categories,
       cpuDurationMode
     ),
     [FrameworkType.NON_KEYED]: new ResultTableData(
       frameworks,
       benchmarks,
       resultLookup,
-      selectedFrameworks,
+      filteredFrameworks,
       selectedBenchmarks,
       FrameworkType.NON_KEYED,
       sortKey,
       displayMode,
       compareWith[FrameworkType.NON_KEYED],
-      categories,
       cpuDurationMode
     ),
   };
@@ -151,6 +164,7 @@ function updateResultTable({
 interface ClipboardState {
   benchmarks: string[];
   frameworks: string[];
+  issues?: number[];
   displayMode: DisplayMode;
 }
 
@@ -181,6 +195,10 @@ function extractClipboardState(state: ClipboardState): Partial<State> {
     newState.displayMode = state.displayMode;
   }
 
+  if (state.issues) {
+    newState.selectedIssues = new Set(state.issues);
+  }
+
   return newState;
 }
 
@@ -200,6 +218,7 @@ const preInitialState: State = {
   // dynamic
   selectedBenchmarks: allBenchmarks,
   selectedFrameworks: allFrameworks,
+  selectedIssues: new Set(knownIssues.map((i) => i.number)),
   sortKey: SORT_BY_GEOMMEAN_CPU,
   displayMode: DisplayMode.DISPLAY_MEDIAN,
   resultTables: {
@@ -210,7 +229,6 @@ const preInitialState: State = {
     [FrameworkType.KEYED]: undefined,
     [FrameworkType.NON_KEYED]: undefined,
   },
-  categories: new Set(knownIssues.map((issue) => issue.number)),
   cpuDurationMode: CpuDurationMode.TOTAL,
 };
 
@@ -237,11 +255,41 @@ export const useRootStore = create<State & Actions>((set, get) => ({
   isUnflaggedFrameworkSelected: (type) => {
     return get().frameworkLists[type].every((framework) => framework.issues.length ? !get().selectedFrameworks.has(framework) : get().selectedFrameworks.has(framework));
   },
+  areAllIssuesSelected: () => {
+    return knownIssues.every((issue) => get().selectedIssues.has(issue.number));
+  },
+  isNoneIssueSelected: () => {
+    return knownIssues.every((issue) => !get().selectedIssues.has(issue.number));
+  },
   // Actions
+  selectIssue: (issueNumber: number, add: boolean) => {
+    const newSelectedIssues = new Set(get().selectedIssues);
+    if (add) {
+      newSelectedIssues.add(issueNumber);
+    } else {
+      newSelectedIssues.delete(issueNumber);
+    }
+    const t = { ...get(), selectedIssues: newSelectedIssues };
+    return set(() => ({ ...t, resultTables: updateResultTable(t) }));
+  },
+  selectAllIssues: (add: boolean) => {
+    const newSelectedIssues = new Set<number>();
+    if (add) {
+      for (const issue of knownIssues) {
+        newSelectedIssues.add(issue.number);
+      }
+    }
+    const t = { ...get(), selectedIssues: newSelectedIssues };
+    return set(() => ({ ...t, resultTables: updateResultTable(t) }));
+  },
   selectFramework: (framework: Framework, add: boolean) => {
     const newSelectedFramework = new Set(get().selectedFrameworks);
 
-    add ? newSelectedFramework.add(framework) : newSelectedFramework.delete(framework);
+    if (add) {
+      newSelectedFramework.add(framework);
+    } else {
+      newSelectedFramework.delete(framework);
+    }
 
     const t = { ...get(), selectedFrameworks: newSelectedFramework };
     return set(() => ({ ...t, resultTables: updateResultTable(t) }));
@@ -254,7 +302,11 @@ export const useRootStore = create<State & Actions>((set, get) => ({
         : get().frameworkLists[FrameworkType.NON_KEYED];
 
     for (const framework of frameworks) {
-      framework.issues.length ? newSelectedFramework.delete(framework) : newSelectedFramework.add(framework);
+      if (framework.issues.length) {
+        newSelectedFramework.delete(framework);
+      } else {
+        newSelectedFramework.add(framework);
+      }
     }
 
     const t = { ...get(), selectedFrameworks: newSelectedFramework };
@@ -271,7 +323,11 @@ export const useRootStore = create<State & Actions>((set, get) => ({
         : get().frameworkLists[FrameworkType.NON_KEYED];
 
     for (const framework of frameworks) {
-      add ? newSelectedFramework.add(framework) : newSelectedFramework.delete(framework);
+      if (add) {
+        newSelectedFramework.add(framework);
+      } else {
+        newSelectedFramework.delete(framework);
+      }
     }
 
     const t = { ...get(), selectedFrameworks: newSelectedFramework };
@@ -280,21 +336,14 @@ export const useRootStore = create<State & Actions>((set, get) => ({
       resultTables: updateResultTable(t),
     }));
   },
-  selectCategory: (categoryId: number, add: boolean) => {
-    const categories = new Set(get().categories);
-
-    add ? categories.add(categoryId) : categories.delete(categoryId);
-
-    const t = { ...get(), categories };
-    return set(() => ({
-      ...t,
-      resultTables: updateResultTable(t),
-    }));
-  },
   selectBenchmark: (benchmark: Benchmark, add: boolean) => {
     const newSelectedBenchmark = new Set(get().selectedBenchmarks);
 
-    add ? newSelectedBenchmark.add(benchmark) : newSelectedBenchmark.delete(benchmark);
+    if (add) {
+      newSelectedBenchmark.add(benchmark);
+    } else {
+      newSelectedBenchmark.delete(benchmark);
+    }
 
     const t = { ...get(), selectedBenchmarks: newSelectedBenchmark };
     return set(() => ({
@@ -307,7 +356,11 @@ export const useRootStore = create<State & Actions>((set, get) => ({
     const benchmarks = get().benchmarkLists[benchmarkType];
 
     for (const benchmark of benchmarks) {
-      add ? newSelectedBenchmark.add(benchmark) : newSelectedBenchmark.delete(benchmark);
+      if (add) {
+        newSelectedBenchmark.add(benchmark);
+      } else {
+        newSelectedBenchmark.delete(benchmark);
+      }
     }
 
     const t = { ...get(), selectedBenchmarks: newSelectedBenchmark };
@@ -348,6 +401,7 @@ export const useRootStore = create<State & Actions>((set, get) => ({
     const serializedState: ClipboardState = {
       frameworks: currentState.frameworks.filter((f) => currentState.selectedFrameworks.has(f)).map((f) => f.dir),
       benchmarks: currentState.benchmarks.filter((f) => currentState.selectedBenchmarks.has(f)).map((f) => f.id),
+      issues: [...currentState.selectedIssues],
       displayMode: currentState.displayMode,
     };
 

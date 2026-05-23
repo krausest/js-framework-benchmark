@@ -6,9 +6,9 @@ import path from "node:path";
 import semver from 'semver'
 
 import { getFrameworks } from "./helpers/frameworks.js";
-import { rebuildSingleFramework } from "./rebuild-single-framework.js";
-import { rebuildFramework } from "./rebuild-build-single.js";
-import { rebuildCheckSingle } from "./rebuild-check-single.js";
+// import { rebuildSingleFramework } from "./rebuild-single-framework.js";
+// import { rebuildFramework } from "./rebuild-build-single.js";
+// import { rebuildCheckSingle } from "./rebuild-check-single.js";
 
 /**
  * @typedef {Object} Framework
@@ -19,34 +19,32 @@ import { rebuildCheckSingle } from "./rebuild-check-single.js";
 const frameworks = getFrameworks();
 
 
-function performUpdate(frameworkPath, frameworkName) {
-  console.log(`Updating ${frameworkName}`);
-  try {
-    const npmCmd = `ncu -u`;
-    execSync(npmCmd, {
-      cwd: frameworkPath,
-      stdio: "inherit",
-    });
-    if (!rebuildFramework(frameworkName, false)) throw new Error(`Failed to rebuild ${frameworkPath}`);
-    if (!rebuildCheckSingle({frameworks: [frameworkName]})) throw new Error(`Failed to check ${frameworkPath}`);
-    return `Successfully updated ${frameworkPath}`;
-  } catch (error) {
-    console.error(`Failed to update ${frameworkPath}. Error Code ${error.status} and message: ${error.message}`);
-    try {
-      console.error(`Git restore ${frameworkPath}`);
-      const npmCmd = `git restore .`;
-      execSync(npmCmd, {
-        cwd: frameworkPath,
-        stdio: "inherit",
-      });
-    } catch (error) {
-      console.error(`Failed to restore ${frameworkPath}. Error Code ${error.status} and message: ${error.message}`);
-    }
-    return `Failed to update ${frameworkPath}`;
-  
-
-  }
-}
+// function performUpdate(frameworkPath, frameworkName) {
+//   console.log(`Updating ${frameworkName}`);
+//   try {
+//     const npmCmd = `ncu -u`;
+//     execSync(npmCmd, {
+//       cwd: frameworkPath,
+//       stdio: "inherit",
+//     });
+//     if (!rebuildFramework(frameworkName, false)) throw new Error(`Failed to rebuild ${frameworkPath}`);
+//     if (!rebuildCheckSingle({frameworks: [frameworkName]})) throw new Error(`Failed to check ${frameworkPath}`);
+//     return `Successfully updated ${frameworkPath}`;
+//   } catch (error) {
+//     console.error(`Failed to update ${frameworkPath}. Error Code ${error.status} and message: ${error.message}`);
+//     try {
+//       console.error(`Git restore ${frameworkPath}`);
+//       const npmCmd = `git restore .`;
+//       execSync(npmCmd, {
+//         cwd: frameworkPath,
+//         stdio: "inherit",
+//       });
+//     } catch (error) {
+//       console.error(`Failed to restore ${frameworkPath}. Error Code ${error.status} and message: ${error.message}`);
+//     }
+//     return `Failed to update ${frameworkPath}`;
+//   }
+// }
 
 /**
  * Looks for duplicate frameworks
@@ -208,7 +206,7 @@ export function updateFrameworks({ type, debug }) {
   console.log("Check implementations for updates", "debug", debug,"type", type);  
   let log = [];
 
-  const DEBUG = debug;
+  // const DEBUG = debug;
 
   for (const { name, type } of frameworks) {
     if (!types.includes(type)) continue

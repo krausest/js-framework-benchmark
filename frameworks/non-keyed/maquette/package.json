@@ -5,7 +5,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "maquette",
     "frameworkHomeURL": "https://maquettejs.org/",
-    "issues": []
+    "issues": [],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "node build.js",

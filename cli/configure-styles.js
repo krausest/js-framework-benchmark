@@ -25,7 +25,7 @@ export async function configureStyles({ bootstrap, minimal }) {
   console.log("Configure styles", "bootstrap", bootstrap, "minimal", minimal);
 
   try {
-    // @ts-ignore
+    // @ts-expect-error bitwise XOR on booleans
     if (bootstrap ^ minimal) {
       console.log("ERROR: You must either choose bootstrap or minimal");
       return;

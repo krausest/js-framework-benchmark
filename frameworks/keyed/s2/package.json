@@ -7,7 +7,8 @@
     "frameworkHomeURL": "https://gr0uch.github.io/s2",
     "issues": [
       800
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "echo 0",

@@ -489,7 +489,8 @@ Your package.json must include some information for the benchmark. Since you cop
   ...
   "js-framework-benchmark": {
     "frameworkVersion": "",
-    "frameworkHomeURL": ""
+    "frameworkHomeURL": "",
+    "language": ""
   },
   ...
 ```
@@ -501,7 +502,8 @@ package name like that:
 ```
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react"
-    "frameworkHomeURL": "https://www.reactjs.org"
+    "frameworkHomeURL": "https://www.reactjs.org",
+    "language": "JavaScript"
   },
 ```
 

@@ -1,0 +1,155 @@
+<lang-js shallow>
+    import { buildData } from "../data"
+
+    let rows = []
+    let selected
+
+    const clear = () => {
+        rows = []
+    }
+
+    const select = id => {
+        selected = id
+    }
+
+    const run = () => {
+        rows = buildData(1000)
+    }
+
+    const runLots = () => {
+        rows = buildData(10000)
+    }
+
+    const add = () => {
+        rows = rows.concat(buildData(1000))
+    }
+
+    const remove = id => {
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].id === id) {
+                rows.splice(i, 1)
+                break
+            }
+        }
+        rows = rows.slice()
+    }
+
+    const update = () => {
+        for (let i = 0; i < rows.length; i += 10) {
+            rows[i] = {
+                id: rows[i].id,
+                label: rows[i].label + " !!!"
+            }
+        }
+        rows = rows.slice()
+    }
+
+    const swapRows = () => {
+        if (rows.length > 998) {
+            const clone = rows.slice()
+            const tmp = clone[1]
+            clone[1] = clone[998]
+            clone[998] = tmp
+            rows = clone
+        }
+    }
+</lang-js>
+
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Qingkuai (Keyed)</h1>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-sm-6 smallpad">
+                    <button
+                        id="run"
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        @click={run}
+                    >
+                        Create 1,000 rows
+                    </button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button
+                        id="runlots"
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        @click={runLots}
+                    >
+                        Create 10,000 rows
+                    </button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button
+                        id="add"
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        @click={add}
+                    >
+                        Append 1,000 rows
+                    </button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button
+                        id="update"
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        @click={update}
+                    >
+                        Update every 10th row
+                    </button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button
+                        id="clear"
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        @click={clear}
+                    >
+                        Clear
+                    </button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                    <button
+                        id="swaprows"
+                        type="button"
+                        class="btn btn-primary btn-block"
+                        @click={swapRows}
+                    >
+                        Swap Rows
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-hover table-striped test-data">
+    <tbody>
+        <tr
+            #key={item.id}
+            #for={item of rows}
+            !class={selected === item.id ? "danger" : ""}
+        >
+            <td class="col-md-1">{item.id}</td>
+            <td class="col-md-4">
+                <a @click={select(item.id)}>{item.label}</a>
+            </td>
+            <td class="col-md-1">
+                <a @click={remove(item.id)}>
+                    <span
+                        aria-hidden="true"
+                        class="glyphicon glyphicon-remove"
+                    ></span>
+                </a>
+            </td>
+            <td class="col-md-6"></td>
+        </tr>
+    </tbody>
+</table>
+<span
+    aria-hidden="true"
+    class="preloadicon glyphicon glyphicon-remove"
+></span>

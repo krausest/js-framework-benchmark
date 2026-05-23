@@ -9,7 +9,8 @@
     "frameworkHomeURL": "https://redom.js.org/",
     "issues": [
       772
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

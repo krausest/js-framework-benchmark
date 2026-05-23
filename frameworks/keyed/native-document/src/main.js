@@ -14,15 +14,13 @@ const Attributes = {
 const TableRowBuilder = useCache(($binder) => {
 
   const isSelected = $binder.class((item) => AppService.selected.when(item.id));
-  const id = $binder.value((item) => item.id);
-  const label = $binder.value((item) => item.label);
 
-  const rowClick = $binder.attach((_, item) => AppService.select(item.id));
-  const removeClick = $binder.attach((_, item) => AppService.remove(item.id));
+  const rowClick = $binder.callback(AppService.select);
+  const removeClick = $binder.callback(AppService.remove);
 
   return Tr( { class: { 'danger': isSelected } }, [
-    Td({ class: 'col-md-1' }, id),
-    Td({ class: 'col-md-4' }, Link(label)).nd.attach('onClick', rowClick),
+    Td({ class: 'col-md-1' }, $binder.id),
+    Td({ class: 'col-md-4' }, Link($binder.label)).nd.attach('onClick', rowClick),
     Td({ class: 'col-md-1' },
       RemoveIcon().nd.attach('onClick', removeClick)
     ),

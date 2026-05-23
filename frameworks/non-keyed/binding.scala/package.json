@@ -6,7 +6,8 @@
     "frameworkVersion": "10.0.1",
     "frameworkHomeURL": "https://github.com/ThoughtWorksInc/Binding.scala",
     "customURL": "/target/web/stage",
-    "issues": []
+    "issues": [],
+    "language": "Scala"
   },
   "scripts": {
     "install": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to build use: && echo npm run install-force",
@@ -15,6 +16,5 @@
     "build-prod-force": "sbt web-stage"
   },
   "author": "杨博 (Yang Bo) <pop.atry@gmail.com>",
-  "dependencies": {
-  }
+  "dependencies": {}
 }

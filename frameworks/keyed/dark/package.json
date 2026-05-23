@@ -4,7 +4,8 @@
   "description": "Benchmark for Dark framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@dark-engine/core",
-    "frameworkHomeURL": "https://github.com/atellmer/dark"
+    "frameworkHomeURL": "https://github.com/atellmer/dark",
+    "language": "TypeScript"
   },
   "scripts": {
     "dev": "npx webpack --watch",

@@ -5,7 +5,10 @@
   "js-framework-benchmark": {
     "frameworkVersion": "1.120.0",
     "frameworkHomeURL": "https://openui5.org/",
-    "issues": [1139]
+    "issues": [
+      1139
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "build-dev": "ui5 serve -o index.html",
@@ -16,7 +19,7 @@
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
-    "devDependencies": {
+  "devDependencies": {
     "@ui5/cli": "^3"
   }
 }

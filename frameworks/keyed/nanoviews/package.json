@@ -6,7 +6,8 @@
   "description": "Nanoviews Benchmark",
   "js-framework-benchmark": {
     "frameworkVersion": "1.0.0-alpha.2",
-    "frameworkHomeURL": "https://github.com/TrigenSoftware/nanoviews/tree/main/packages/nanoviews#readme"
+    "frameworkHomeURL": "https://github.com/TrigenSoftware/nanoviews/tree/main/packages/nanoviews#readme",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

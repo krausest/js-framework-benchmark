@@ -9,7 +9,8 @@
     "issues": [
       800,
       801
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

@@ -5,7 +5,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "targetj",
     "frameworkHomeURL": "https://targetjs.io",
-    "issues": [772]        
+    "issues": [
+      772
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "build-dev": "webpack --mode development --watch",

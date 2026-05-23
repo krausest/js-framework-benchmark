@@ -4,7 +4,8 @@
   "description": "Benchmark for inferno framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "inferno",
-    "frameworkHomeURL": "https://github.com/infernojs/inferno"
+    "frameworkHomeURL": "https://github.com/infernojs/inferno",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c",

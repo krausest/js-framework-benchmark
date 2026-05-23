@@ -1,13 +1,12 @@
 import Service from '@ember/service';
-import { cell } from '#soon/cell.js';
-import { TrackedArray } from '#soon/array.js';
+import { trackedArray } from '@ember/reactive/collections';
 
 import { run, runLots, add, update, swapRows, deleteRow } from '#utils';
 
 export default class State extends Service {
-  data = new TrackedArray();
+  data = trackedArray();
   id = 1;
-  selected = cell(undefined);
+  _selectedRow = null;
 
   create = () => {
     let id = this.id;
@@ -17,7 +16,7 @@ export default class State extends Service {
     this.data.length = 0;
 
     this.data.push(...result.data);
-    this.selected.set(undefined);
+    this._selectedRow = null;
   };
 
   add = () => {
@@ -36,29 +35,31 @@ export default class State extends Service {
     this.data.length = 0;
     this.data.push(...result.data);
     this.id = result.id;
-    this.selected.set(undefined);
+    this._selectedRow = null;
   };
 
   clear = () => {
     this.data.length = 0;
-    this.selected.set(undefined);
+    this._selectedRow = null;
   };
 
   swapRows = () => {
     swapRows(this.data);
   };
 
-  remove = ({ id }) => {
+  remove = (id) => {
     let idx = this.data.findIndex((d) => d.id === id);
     this.data.splice(idx, 1);
-    // this.selected.set(undefined);
   };
 
-  select = ({ id }) => {
-    this.selected.set(id);
-  };
-
-  isSelected = ({ id }) => {
-    return this.selected.read() === id;
+  select = (id) => {
+    if (this._selectedRow) {
+      this._selectedRow.selected.set(false);
+    }
+    const row = this.data.find((d) => d.id === id);
+    if (row) {
+      row.selected.set(true);
+      this._selectedRow = row;
+    }
   };
 }

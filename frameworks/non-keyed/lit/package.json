@@ -6,7 +6,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "lit",
     "frameworkHomeURL": "https://lit.dev/",
-    "useShadowRoot": true
+    "useShadowRoot": true,
+    "language": "TypeScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

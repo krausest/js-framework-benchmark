@@ -5,7 +5,8 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:valtio",
-    "frameworkHomeURL": "https://valtio.pmnd.rs/"
+    "frameworkHomeURL": "https://valtio.pmnd.rs/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --watch",

@@ -92,3 +92,5 @@ chrome-mac-arm64-*
 log.txt
 build.zip
 
+#haskell
+dist-newstyle/

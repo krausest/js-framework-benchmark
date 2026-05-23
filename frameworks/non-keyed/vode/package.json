@@ -5,7 +5,8 @@
   "main": "main.mjs",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@ryupold/vode",
-    "frameworkHomeURL": "https://github.com/ryupold/vode"
+    "frameworkHomeURL": "https://github.com/ryupold/vode",
+    "language": "JavaScript"
   },
   "dependencies": {
     "@ryupold/vode": "1.2.0"

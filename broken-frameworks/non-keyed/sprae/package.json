@@ -1,0 +1,21 @@
+{
+  "name": "js-framework-benchmark-non-keyed-sprae",
+  "version": "1.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "sprae",
+    "frameworkHomeURL": "https://github.com/dy/sprae",
+    "language": "JavaScript"
+  },
+  "type": "module",
+  "scripts": {
+    "build-prod": "cp node_modules/sprae/dist/sprae.js src/sprae.js"
+  },
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "sprae": "13.3.5"
+  }
+}

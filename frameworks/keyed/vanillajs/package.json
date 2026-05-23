@@ -7,7 +7,8 @@
     "frameworkVersion": "",
     "issues": [
       772
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "exit 0",

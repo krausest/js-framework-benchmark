@@ -1,4 +1,7 @@
 export function stats(values: number[]) {
+  if (values.length === 0) {
+    throw new Error("Cannot compute stats on empty array");
+  }
   let sorted = [...values].sort((a, b) => a - b);
   let median = 0;
   if (sorted.length % 2 == 0) {
@@ -15,7 +18,7 @@ export function stats(values: number[]) {
 
   return {
     min: sorted[0],
-    max: sorted.at(-1),
+     max: sorted[sorted.length - 1],
     median,
     mean,
     stddev,

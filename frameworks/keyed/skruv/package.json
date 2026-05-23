@@ -5,7 +5,8 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "skruv",
-    "frameworkHomeURL": "https://skruv.io"
+    "frameworkHomeURL": "https://skruv.io",
+    "language": "JavaScript"
   },
   "scripts": {
     "build-prod": "esbuild src/index.js --bundle --minify --format=esm --outfile=dist/index.min.js"
