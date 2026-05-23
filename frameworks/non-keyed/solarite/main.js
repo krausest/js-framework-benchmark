@@ -66,6 +66,7 @@ function buildData(count) {
 
 class JSFrameworkBenchmark extends Solarite {
 	data = [];
+	selectedId = null;
 
 	// quickly mimic what the js-framework-benchmark does.
 	// This is useful to see if performance changes after code modifications.
@@ -126,11 +127,13 @@ class JSFrameworkBenchmark extends Solarite {
 
 	runBench() {
 		this.data = buildData(1000);
+		this.selectedId = null;
 		this.render()
 	}
 
 	runLotsBench() {
 		this.data = buildData(10_000);
+		this.selectedId = null;
 		this.render()
 	}
 
@@ -158,17 +161,20 @@ class JSFrameworkBenchmark extends Solarite {
 
 	clearBench() {
 		this.data = [];
+		this.selectedId = null;
 		this.render()
 	}
 
 	removeBench(id) {
 		let index = this.data.findIndex(row=>row.id===id);
+		if (this.selectedId === id)
+			this.selectedId = null;
 		this.data.splice(index, 1);
 		this.render();
 	}
 
 	setSelectedBench(row) {
-		row.selected = !row.selected;
+		this.selectedId = row.id;
 		this.render();
 	}
 
@@ -213,7 +219,7 @@ class JSFrameworkBenchmark extends Solarite {
 			</div>
 			<table class="table table-hover table-striped test-data"><tbody>
 				${this.data.map(row =>
-					h`<tr class=${row.selected ? 'danger' : ''}>
+					h`<tr class=${row.id === this.selectedId ? 'danger' : ''}>
 						<td class="col-md-1">${row.id}</td>
 						<td class="col-md-4">
 							<a onclick=${[this.setSelectedBench, row]}>${row.label}</a></td>

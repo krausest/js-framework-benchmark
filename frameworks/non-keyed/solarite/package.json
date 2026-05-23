@@ -8,6 +8,7 @@
     "frameworkHomeURL": "https://vorticode.github.io/solarite"
   },
   "scripts": {
+    "build": "echo 0",
     "build-dev": "echo 0",
     "build-prod": "echo 0"
   },
