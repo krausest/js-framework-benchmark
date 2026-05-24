@@ -2,27 +2,22 @@ import { Tr, Td, ForEachArray, Link, Span, Div, Table, TBody } from "native-docu
 import { useCache } from 'native-document';
 
 import Jumbotron from "./components/Jumbotron";
-import RemoveIcon from "./components/RemoveIcon";
 
 import AppService from "./service";
 
+const RemoveIcon = useCache(() => {
+  return Link(Span({ class: 'glyphicon glyphicon-remove', 'aria-hidden': true }));
+});
 
-const Attributes = {
-  table: { class: 'table table-hover table-striped test-data' },
-};
 
 const TableRowBuilder = useCache(($binder) => {
+  const $isSelected = $binder.class((item) => AppService.selected.when(item.id));
 
-  const isSelected = $binder.class((item) => AppService.selected.when(item.id));
-
-  const rowClick = $binder.callback(AppService.select);
-  const removeClick = $binder.callback(AppService.remove);
-
-  return Tr( { class: { 'danger': isSelected } }, [
+  return Tr( { class: { 'danger': $isSelected } }, [
     Td({ class: 'col-md-1' }, $binder.id),
-    Td({ class: 'col-md-4' }, Link($binder.label)).nd.attach('onClick', rowClick),
+    Td({ class: 'col-md-4' }, Link($binder.label)).nd.attach('onClick', AppService.select),
     Td({ class: 'col-md-1' },
-      RemoveIcon().nd.attach('onClick', removeClick)
+      RemoveIcon().nd.attach('onClick', AppService.remove)
     ),
     Td({ class: 'col-md-6'})
   ]);
@@ -30,8 +25,8 @@ const TableRowBuilder = useCache(($binder) => {
 
 const App = Div({ class: 'container' }, [
   Jumbotron(),
-  Table(Attributes.table,
-    TBody(ForEachArray(AppService.data, TableRowBuilder, 'id', { isParentUniqueChild: true}))
+  Table({ class: 'table table-hover table-striped test-data' },
+    TBody(ForEachArray(AppService.data, TableRowBuilder, { isParentUniqueChild: true}))
   ),
   Span({ class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': true })
 ]);
