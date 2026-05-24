@@ -1,4 +1,4 @@
-import { track } from 'ripple';
+import { track, type Tracked } from 'ripple';
 
 const adjectives = [
   'pretty',
@@ -56,69 +56,74 @@ const nouns = [
   'keyboard'
 ];
 
-function _random(max) {
+function _random(max: number) {
   return Math.round(Math.random() * 1000) % max;
+}
+
+interface Row {
+  id: number;
+  label: Tracked<string>;
 }
 
 export default component App() {
   let rowId = 1;
-  let items = track([]);
-  let selected = track();
+  const items = track<Row[]>([]);
+  const selected = track<number | undefined>(undefined);
 
-  const add = () => (@items = [...@items, ...buildData(1000)]);
+  const add = () => (items.value = [...items.value, ...buildData(1000)]);
   const clear = () => {
-    @items = [];
-	}
+    items.value = [];
+  };
 
   const partialUpdate = () => {
-    for (let i = 0; i < @items.length; i += 10) {
-      const row = @items[i];
-      row.@label = row.@label + ' !!!';
+    for (let i = 0; i < items.value.length; i += 10) {
+      const row = items.value[i];
+      row.label.value = row.label.value + ' !!!';
     }
   };
 
-  const remove = (row) => {
-    const clone = @items.slice();
+  const remove = (row: Row) => {
+    const clone = items.value.slice();
     clone.splice(clone.indexOf(row), 1);
-    @items = clone;
-  }
-  
-  const run = () => {
-    @items = buildData(1000);
+    items.value = clone;
   };
 
-  const runLots = () => {	
-    @items = buildData(10000);
+  const run = () => {
+    items.value = buildData(1000);
   };
-  
+
+  const runLots = () => {
+    items.value = buildData(10000);
+  };
+
   const swapRows = () => {
-    if (@items.length > 998) {
-      const clone = @items.slice();
+    if (items.value.length > 998) {
+      const clone = items.value.slice();
       const tmp = clone[1];
       clone[1] = clone[998];
       clone[998] = tmp;
-      @items = clone;
+      items.value = clone;
     }
   };
 
-  function buildData(count = 1000) {
-		const data = new Array(count);
-		for (let i = 0; i < count; i++) {
+  function buildData(count = 1000): Row[] {
+    const data = new Array(count);
+    for (let i = 0; i < count; i++) {
       const label = `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`;
-      
-			data[i] = {
+
+      data[i] = {
         id: rowId++,
         label: track(label),
-      }
-		}
-		return data;
-	}
+      };
+    }
+    return data;
+  }
 
   <div id="main" class="container">
     <div class="jumbotron">
       <div class="row">
         <div class="col-md-6">
-          <h1>{'Ripple'}</h1>
+          <h1>{"Ripple"}</h1>
         </div>
         <div class="col-md-6">
           <div class="row">
@@ -158,13 +163,13 @@ export default component App() {
     </div>
     <table class="table table-hover table-striped test-data">
       <tbody>
-        for (const row of @items) {
+        for (const row of items.value) {
           const id = row.id;
 
-          <tr class={@selected === id ? 'danger' : ''}>
-            <td class="col-md-1">{id}</td>
+          <tr class={selected.value === id ? 'danger' : ''}>
+            <td class="col-md-1">{text id}</td>
             <td class="col-md-4">
-              <a onClick={() => { @selected = id; }}>{row.@label}</a>
+              <a onClick={() => { selected.value = id; }}>{text row.label.value}</a>
             </td>
             <td class="col-md-1">
               <a onClick={() => remove(row)}>
