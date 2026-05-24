@@ -67,6 +67,7 @@ You must also run the rebuild step for non javascript frameworks since it perfor
 7. Delete the branch after merging
 8. Print the {list of framework-paths} from above
 
-## Rules:
+## Important Rules:
+* Don't be clever. Stick to the PR and do not add or commit unreleated files. Don't analyse git history unless needed. Work straight through the PR.
 * Never push automatically to the remote
 * If you run into an error, stop executing and report the error
