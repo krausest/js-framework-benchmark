@@ -2,10 +2,14 @@
     import { buildData } from "../data"
 
     let rows = []
-    let selected = null
+    let selected
 
     const clear = () => {
         rows = []
+    }
+
+    const select = id => {
+        selected = id
     }
 
     const run = () => {
@@ -17,17 +21,23 @@
     }
 
     const add = () => {
-        rows = [...rows, ...buildData(1000)]
+        rows = rows.concat(buildData(1000))
     }
 
     const remove = id => {
-        rows = rows.filter(item => id !== item.id)
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].id === id) {
+                rows.splice(i, 1)
+                break
+            }
+        }
+        rows = rows.slice()
     }
 
     const update = () => {
         for (let i = 0; i < rows.length; i += 10) {
             rows[i] = {
-                ...rows[i],
+                id: rows[i].id,
                 label: rows[i].label + " !!!"
             }
         }
@@ -43,20 +53,12 @@
             rows = clone
         }
     }
-
-    function select() {
-        const node = this.parentNode.parentNode
-        if (selected) {
-            selected.removeAttribute("class")
-        }
-        ;(selected = node).className = "danger"
-    }
 </lang-js>
 
 <div class="jumbotron">
     <div class="row">
         <div class="col-md-6">
-            <h1>QingKuai (Keyed)</h1>
+            <h1>Qingkuai (Keyed)</h1>
         </div>
         <div class="col-md-6">
             <div class="row">
@@ -129,10 +131,11 @@
         <tr
             #key={item.id}
             #for={item of rows}
+            !class={selected === item.id ? "danger" : ""}
         >
             <td class="col-md-1">{item.id}</td>
             <td class="col-md-4">
-                <a @click={select}>{item.label}</a>
+                <a @click={select(item.id)}>{item.label}</a>
             </td>
             <td class="col-md-1">
                 <a @click={remove(item.id)}>

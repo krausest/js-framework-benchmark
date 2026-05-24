@@ -32,7 +32,7 @@
     "./*": "./src/*"
   },
   "js-framework-benchmark": {
-    "frameworkVersion": "6.4.0",
+    "frameworkVersionFromPackage": "ember-source",
     "frameworkHomeURL": "https://emberjs.com/",
     "language": "JavaScript"
   },

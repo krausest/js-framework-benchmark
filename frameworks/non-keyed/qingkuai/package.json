@@ -11,7 +11,7 @@
         "build-prod": "vite build"
     },
     "dependencies": {
-        "qingkuai": "^1.0.55",
+        "qingkuai": "^1.0.61",
         "vite": "^8.0.3",
         "vite-plugin-qingkuai": "^1.0.14"
     },

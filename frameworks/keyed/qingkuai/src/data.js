@@ -57,20 +57,28 @@ const nouns = [
 ]
 
 function random(max) {
-    return Math.round(Math.random() * 100) % max
+    return (Math.random() * max) | 0
 }
 
 export function buildData(count) {
-    const data = []
-    for (let i = 0; i < count; i++)
-        data.push({
-            id: id++,
+    const data = new Array(count)
+    const adjectiveCount = adjectives.length
+    const colourCount = colours.length
+    const nounCount = nouns.length
+    let nextId = id
+
+    for (let i = 0; i < count; i++) {
+        data[i] = {
+            id: nextId++,
             label:
-                adjectives[random(adjectives.length)] +
+                adjectives[random(adjectiveCount)] +
                 " " +
-                colours[random(colours.length)] +
+                colours[random(colourCount)] +
                 " " +
-                nouns[random(nouns.length)]
-        })
+                nouns[random(nounCount)]
+        }
+    }
+
+    id = nextId
     return data
 }

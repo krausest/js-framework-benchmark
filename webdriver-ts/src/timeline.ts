@@ -74,17 +74,11 @@ export function extractRelevantEvents(entries: any[], startLogicEvent: string) {
   }
   
 async function fetchEventsFromPerformanceLog(fileName: string, startLogicEventName: string): Promise<TimingResult[]> {
-  let timingResults: TimingResult[] = [];
-    let entries = [];
-    do {
-      let contents = await readFile(fileName, { encoding: "utf8" });
-      let json = JSON.parse(contents);
-      let entries = json["traceEvents"];
-      const filteredEvents = extractRelevantEvents(entries, startLogicEventName);
-      timingResults = timingResults.concat(filteredEvents);
-    } while (entries.length > 0);
-    return timingResults;
-  }
+  let contents = await readFile(fileName, { encoding: "utf8" });
+  let json = JSON.parse(contents);
+  let entries = json["traceEvents"];
+  return extractRelevantEvents(entries, startLogicEventName);
+}
   
 const traceJSEventNames = [
   "EventDispatch",
@@ -132,16 +126,10 @@ async function fetchEventsFromTraceLog(
   relevantTraceEvents: string[],
   includeClick: boolean
 ): Promise<TimingResult[]> {
-  let timingResults: TimingResult[] = [];
-  let entries = [];
-  do {
-    let contents = await readFile(fileName, { encoding: "utf8" });
-    let json = JSON.parse(contents);
-    let entries = json["traceEvents"];
-    const filteredEvents = extractRelevantTraceEvents(config, relevantTraceEvents, entries, includeClick);
-    timingResults = timingResults.concat(filteredEvents);
-  } while (entries.length > 0);
-  return timingResults;
+  let contents = await readFile(fileName, { encoding: "utf8" });
+  let json = JSON.parse(contents);
+  let entries = json["traceEvents"];
+  return extractRelevantTraceEvents(config, relevantTraceEvents, entries, includeClick);
 }
 
 function type_eq(...requiredTypes: string[]) {
@@ -230,7 +218,7 @@ export async function computeResultsCPU(
     }
   }
 
-  let startFrom = R.filter(type_eq("click", "fireAnimationFrame", "timerFire", "layout", "functioncall"))(eventsOnMainThreadDuringBenchmark);
+  let startFrom = R.filter(type_eq(startLogicEventName, "fireAnimationFrame", "timerFire", "layout", "functioncall"))(eventsOnMainThreadDuringBenchmark);
   // we're looking for the commit after this event
   let startFromEvent = startFrom.at(-1);
   if (startFromEvent === undefined) {
@@ -372,13 +360,6 @@ export class PlausibilityCheck {
         if (maxDelay > 0) console.log(` ${impl}: ${maxDelay}`);
       }
       console.log("  Interpretation: If the list contains more than just a few entries or large numbers the results should be checked");
-    }
-    if (this.maxDeltaBetweenCommits.size > 0) {
-      console.log("Info: Implemenations with multiple commit events and max delay between both:");
-      for (let [impl, maxDelay] of this.maxDeltaBetweenCommits.entries()) {
-        if (maxDelay > 0) console.log(` ${impl}: ${maxDelay}`);
-      }
-      console.log("  Interpretation: Those frameworks make measuring the duration of the benchmark difficult. The results should be checked occasionally for correctness.");
     }
   }
 }

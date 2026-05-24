@@ -1,0 +1,24 @@
+{
+	"name": "js-framework-benchmark-roqa",
+	"version": "1.0.0",
+	"type": "module",
+	"engines": {
+		"node": ">=20.0.0"
+	},
+	"js-framework-benchmark": {
+		"frameworkVersionFromPackage": "roqa",
+		"frameworkHomeURL": "https://github.com/roqajs/roqa",
+		"language": "JavaScript"
+	},
+	"scripts": {
+		"dev": "vite",
+		"build-prod": "vite build"
+	},
+	"dependencies": {
+		"roqa": "0.0.7"
+	},
+	"devDependencies": {
+		"@roqajs/vite-plugin": "0.0.7",
+		"vite": "6.4.1"
+	}
+}

@@ -3,8 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@akashjs/runtime",
+    "customURL": "/dist/",
+    "frameworkHomeURL": "https://akash.js.org",
+    "language": "TypeScript",
+    "issues": [772, 801]
+  },
   "scripts": {
-    "build": "vite build"
+    "build-prod": "vite build"
   },
   "dependencies": {
     "@akashjs/runtime": "0.2.7",
