@@ -7,12 +7,12 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@akashjs/runtime": "0.2.7",
-    "@akashjs/compiler": "0.1.59",
-    "@akashjs/vite-plugin": "0.2.3"
+    "@akashjs/compiler": "0.1.60",
+    "@akashjs/runtime": "0.2.8",
+    "@akashjs/vite-plugin": "0.2.4"
   },
   "devDependencies": {
-    "vite": "5.4.21",
-    "typescript": "^5.5.0"
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21"
   }
 }
