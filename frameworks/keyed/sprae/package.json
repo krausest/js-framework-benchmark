@@ -4,6 +4,7 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "sprae",
     "frameworkHomeURL": "https://github.com/dy/sprae",
+    "issues": [1139],
     "language": "JavaScript"
   },
   "type": "module",
@@ -16,6 +17,6 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "sprae": "file:../../../../../../../tmp/sprae-13.3.7.tgz"
+    "sprae": "13.3.7"
   }
 }
