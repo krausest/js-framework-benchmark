@@ -1,4 +1,4 @@
-# miso.js-1.3.0.0-keyed
+# miso.js-1.11.0.0-keyed
 
 [Miso](https://haskell-miso.org) is a tasty [Haskell](https://www.haskell.org/) front-end framework.
 
@@ -9,7 +9,7 @@
 Now you can start benchmarks by running
 ```
 cd webdriver-ts
-yarn selenium --count 3 --framework miso.js-1.3.0.0-keyed
+yarn selenium --count 3 --framework miso.js-1.11.0.0-keyed
 ```
 (^ see [Running a single framework with the automated benchmark driver](../README#4-running-a-single-framework-with-the-automated-benchmark-driver))
 
