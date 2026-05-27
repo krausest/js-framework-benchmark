@@ -14,10 +14,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vitarx": "^4.0.0-beta.1"
+    "vitarx": "^4.0.0"
   },
   "devDependencies": {
-    "@vitarx/plugin-vite": "0.0.1-alpha.2",
-    "vite": "^8.0.0-beta.16"
+    "@vitarx/plugin-vite": "1.0.0",
+    "vite": "^8.0.14"
   }
 }
