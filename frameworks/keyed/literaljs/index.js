@@ -8,7 +8,7 @@ const Row = component({
 	render() {
 		const { item, selected, onSelect, onDelete } = this.props;
 		return (
-			<tr class={selected ? 'danger' : ''}>
+			<tr key={item.id} class={selected ? 'danger' : ''}>
 				<td class="col-md-1">{item.id}</td>
 				<td class="col-md-4">
 					<a events={{ click: () => onSelect(item.id) }}>

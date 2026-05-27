@@ -5,6 +5,7 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "literaljs",
     "frameworkHomeURL": "https://literaljs.com/",
+    "customURL": "/dist",
     "language": "JavaScript"
   },
   "scripts": {
