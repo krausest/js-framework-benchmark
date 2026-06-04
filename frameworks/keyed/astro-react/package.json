@@ -7,6 +7,9 @@
     "frameworkVersionFromPackage": "astro:react",
     "customURL": "/dist",
     "frameworkHomeURL": "https://astro.build",
+    "issues": [
+      1139
+    ],
     "language": "JavaScript"
   },
   "scripts": {

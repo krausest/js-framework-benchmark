@@ -8,7 +8,9 @@
     "customURL": "/dist",
     "frameworkHomeURL": "https://astro.build",
     "issues": [
-      772
+      772,
+      801,
+      1139
     ],
     "language": "JavaScript"
   },
