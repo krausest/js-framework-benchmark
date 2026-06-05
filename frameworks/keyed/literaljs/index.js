@@ -4,6 +4,32 @@ import { App as LiteralJSApp, component, h } from 'literaljs';
 
 import { Store } from './store';
 
+const Row = component({
+	render() {
+		const { item, selected, onSelect, onDelete } = this.props;
+		return (
+			<tr key={item.id} class={selected ? 'danger' : ''}>
+				<td class="col-md-1">{item.id}</td>
+				<td class="col-md-4">
+					<a events={{ click: () => onSelect(item.id) }}>
+						{item.label}
+					</a>
+				</td>
+				<td class="col-md-1">
+					<a>
+						<span
+							class="glyphicon glyphicon-remove"
+							aria-hidden="true"
+							events={{ click: () => onDelete(item.id) }}
+						/>
+					</a>
+				</td>
+				<td class="col-md-6" />
+			</tr>
+		);
+	}
+});
+
 const App = component({
 	state: { store: new Store() },
 	methods() {
@@ -50,7 +76,7 @@ const App = component({
 				<div class="jumbotron">
 					<div class="row">
 						<div class="col-md-6">
-							<h1>LiteralJS (non-keyed)</h1>
+							<h1>LiteralJS (keyed)</h1>
 						</div>
 						<div class="col-md-6">
 							<div class="row">
@@ -121,35 +147,13 @@ const App = component({
 				<table class="table table-hover table-striped test-data">
 					<tbody id="tbody">
 						{store.data.map(item => (
-							<tr
-								class={
-									item.id === store.selected ? 'danger' : ''
-								}
-							>
-								<td class="col-md-1">{item.id}</td>
-								<td class="col-md-4">
-									<a
-										events={{
-											click: () => this.select(item.id)
-										}}
-									>
-										{item.label}
-									</a>
-								</td>
-								<td class="col-md-1">
-									<a>
-										<span
-											class="glyphicon glyphicon-remove"
-											aria-hidden="true"
-											events={{
-												click: () =>
-													this.delete(item.id)
-											}}
-										/>
-									</a>
-								</td>
-								<td class="col-md-6" />
-							</tr>
+							<Row
+								key={item.id}
+								item={item}
+								selected={item.id === store.selected}
+								onSelect={this.select}
+								onDelete={this.delete}
+							/>
 						))}
 					</tbody>
 				</table>

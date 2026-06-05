@@ -1,16 +1,19 @@
 {
-  "name": "miso-js-keyed-1.9.0.0",
-  "version": "2.0.0",
-  "description": "Benchmark for miso-1.9",
+  "name": "miso-js-keyed-1.11.0.0",
+  "version": "3.0.0",
+  "description": "Benchmark for miso-1.11",
   "author": "David Johnson",
   "contributors": [
     "Jens Krause",
     "David Johnson"
   ],
   "js-framework-benchmark": {
-    "frameworkVersion": "1.9.0.0",
+    "frameworkVersion": "1.11.0.0",
     "frameworkHomeURL": "https://haskell-miso.org/",
     "customURL": "/",
+    "issues": [
+      1139
+    ],
     "language": "TypeScript"
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark",
@@ -31,8 +34,8 @@
     "javascript"
   ],
   "dependencies": {
-    "haskell-miso": "^0.0.8",
-    "typescript": "^5.9.3"
+    "haskell-miso": "^0.0.11",
+    "typescript": "^6.0.3"
   },
   "files": [
     "main.ts"
