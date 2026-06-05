@@ -11,6 +11,9 @@
     "frameworkVersion": "1.11.0.0",
     "frameworkHomeURL": "https://haskell-miso.org/",
     "customURL": "/",
+    "issues": [
+      1139
+    ],
     "language": "TypeScript"
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark",
