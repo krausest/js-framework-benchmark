@@ -4,7 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build"
+    "build-prod": "vite build"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@akashjs/runtime",
+    "customURL": "/dist/",
+    "frameworkHomeURL": "https://akash.js.org",
+    "language": "TypeScript"
   },
   "dependencies": {
     "@akashjs/compiler": "0.1.60",
