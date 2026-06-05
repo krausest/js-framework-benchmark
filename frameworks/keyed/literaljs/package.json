@@ -1,7 +1,7 @@
 {
-  "name": "js-framework-benchmark-non-keyed-literaljs",
+  "name": "js-framework-benchmark-keyed-literaljs",
   "version": "1.0.0",
-  "description": "Benchmark for LiteralJS framework v8 (non-keyed)",
+  "description": "Benchmark for LiteralJS framework (keyed)",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "literaljs",
     "frameworkHomeURL": "https://literaljs.com/",
@@ -11,7 +11,7 @@
   "scripts": {
     "start": "parcel index.html",
     "dev": "parcel index.html --open",
-    "build-prod": "cross-env NODE_ENV=production parcel build index.html --public-url /frameworks/non-keyed/literaljs/dist/",
+    "build-prod": "cross-env NODE_ENV=production parcel build index.html --public-url /frameworks/keyed/literaljs/dist/",
     "test": "echo \"Error: no test specified\" && exit 1",
     "rebuild": "sudo rm -rf node_modules && rm -rf yarn.lock && yarn && yarn dev"
   },
