@@ -11,15 +11,6 @@
   },
   "scripts": {
     "build-prod": "vite build"
-<<<<<<< HEAD
-=======
-  },
-  "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@akashjs/runtime",
-    "customURL": "/dist/",
-    "frameworkHomeURL": "https://akash.js.org",
-    "language": "TypeScript"
->>>>>>> merge-pr-2020
   },
   "dependencies": {
     "@akashjs/compiler": "0.1.60",
