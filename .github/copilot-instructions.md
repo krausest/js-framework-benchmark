@@ -23,7 +23,7 @@ I'll give you the number of the PR on github you should review and merge.
 2. PRs for implementations of the benchmark (subdirectories of the framework folders) should not modify files in webdriver-ts, the root directory or webdriver-ts-results. Reasonable modifications to the root `.gitignore` are an acceptable exception.
 3. For implementations of the benchmark there must be no pre-install or post-install scripts in package.json
 4. Check if the rendering library is available via npm and github. If not report a warning.
-5. Perform a security audit especially regarding supply chain attacks
+5. Perform a security audit especially regarding supply chain attacks. To clarify: Malicious packages are inacceptable, even severe security issues in dependencies don't matter for the benchmark. Report findings, but do *not* try to bump versions on your own decisions.
 6. Take a look at the code. There are same cases that should be reported. Here's a list of the issues and the description you should check:
 * "Note #1261": This implementation contains client side code to achieve better performance by using manual caching of (virtual) dom nodes.
 * "Note #801": Implementation uses explicit event delegation. This note (and it should be regarded as a note, not an issue) marks implementations that use explicit, i.e. manual, event delegation.
