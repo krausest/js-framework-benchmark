@@ -68,24 +68,36 @@ export default function App() {
           </div>
           <div class="col-md-6">
             <div class="row">
-              <button id="run" onClick={run}>
-                Create 1,000 rows
-              </button>
-              <button id="runlots" onClick={runLots}>
-                Create 10,000 rows
-              </button>
-              <button id="add" onClick={add}>
-                Append 1,000 rows
-              </button>
-              <button id="update" onClick={update}>
-                Update every 10th row
-              </button>
-              <button id="clear" onClick={clear}>
-                Clear
-              </button>
-              <button id="swaprows" onClick={swapRows}>
-                Swap Rows
-              </button>
+              <div class="col-sm-6 smallpad">
+                <button id="run" onClick={run} class="btn btn-primary btn-block">
+                  Create 1,000 rows
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button id="runlots" onClick={runLots} class="btn btn-primary btn-block">
+                  Create 10,000 rows
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button id="add" onClick={add} class="btn btn-primary btn-block">
+                  Append 1,000 rows
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button id="update" onClick={update} class="btn btn-primary btn-block">
+                  Update every 10th row
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button id="clear" onClick={clear} class="btn btn-primary btn-block">
+                  Clear
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button id="swaprows" onClick={swapRows} class="btn btn-primary btn-block">
+                  Swap Rows
+                </button>
+              </div>
             </div>
           </div>
         </div>
