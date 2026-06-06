@@ -17,10 +17,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.9.3",
-    "vite": "^6.4.1"
+    "typescript": "^6.0.3",
+    "vite": "^7.3.3"
   },
   "dependencies": {
-    "spheres": "0.25.2"
+    "spheres": "^0.27.2"
   }
 }
