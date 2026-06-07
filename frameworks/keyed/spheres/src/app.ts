@@ -1,5 +1,5 @@
-import { HTMLBuilder, HTMLView, renderToDOM, UseData } from "spheres/view";
-import { RowData, rows, selectRow } from "./state.js";
+import { HTMLBuilder, HTMLView, renderToDOM, UseItem } from "spheres/view";
+import { removeRow, RowData, rows, selectRow } from "./state.js";
 import { createStore, StoreMessage, use, write } from "spheres/store";
 
 function app(root: HTMLBuilder) {
@@ -80,23 +80,26 @@ function app(root: HTMLBuilder) {
   });
 }
 
-function tableRow(useRow: UseData<RowData>): HTMLView {
+function tableRow(useRow: UseItem<RowData>): HTMLView {
+  const doRemove = use(useRow(removeRow))
+  const doSelect = use(useRow(selectRow))
+
   return (root) =>
     root.tr((el) => {
       el.config
-        .class(useRow((row, get) => get(row.isSelected) ? "danger" : undefined))
+        .class(useRow((row, get) => get(row.data.isSelected) ? "danger" : undefined))
       el.children
         .td((el) => {
           el.config.class("col-md-1");
-          el.children.textNode(useRow(row => row.id))
+          el.children.textNode(useRow(row => row.data.id))
         })
         .td((el) => {
           el.config.class("col-md-4");
           el.children.a((el) => {
             el.config
               .class("lbl")
-              .on("click", () => use(useRow(selectRow)))
-            el.children.textNode(useRow((row, get) => get(row.label)))
+              .on("click", () => doSelect)
+            el.children.textNode(useRow((row, get) => get(row.data.label)))
           });
         })
         .td((el) => {
@@ -104,7 +107,7 @@ function tableRow(useRow: UseData<RowData>): HTMLView {
           el.children.a((el) => {
             el.config
               .class("remove")
-              .on("click", () => use(useRow(row => write(rows, { type: "remove", rowData: row }))))
+              .on("click", () => doRemove)
             el.children.span((el) => {
               el.config.class("remove glyphicon glyphicon-remove").aria("hidden", "true");
             });

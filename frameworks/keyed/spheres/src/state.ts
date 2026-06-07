@@ -1,5 +1,7 @@
-import { value, Value } from "spheres/store";
+import { ValueGenerator } from "spheres/store";
+import { Value } from "spheres/store";
 import { GetState, update, StoreMessage, batch, container, write } from "spheres/store";
+import { ListItem } from "spheres/view";
 
 function random(max: number) {
   return Math.round(Math.random() * 1000) % max;
@@ -25,7 +27,7 @@ export interface ClearRowsMessage {
 
 export interface RemoveRowMessage {
   type: "remove"
-  rowData: RowData
+  index: number
 }
 
 export interface SwapRowsMessage {
@@ -50,15 +52,15 @@ export interface RowData {
   isSelected: Value<boolean>;
 }
 
-export const rows = container<Array<RowData>, RowsUpdateMessage>({
+export const rows = container<Array<RowData>, RowsUpdateMessage>(value => ({
   initialValue: [],
   name: "rows",
   update: (message, current) => {
     switch (message.type) {
       case "set":
-        return { value: buildRows(message.count) }
+        return { value: buildRows(value, message.count) }
       case "add":
-        return { value: current.concat(buildRows(message.count)) }
+        return { value: current.concat(buildRows(value, message.count)) }
       case "update":
         let updates: Array<StoreMessage<any>> = []
         for (let i = 0; i < current.length; i += 10) {
@@ -75,31 +77,38 @@ export const rows = container<Array<RowData>, RowsUpdateMessage>({
           return { value: current }
         }
       case "remove":
-        return { value: current.filter(row => row.id !== message.rowData.id) }
+        return { value: current.toSpliced(message.index, 1) }
       case "clear":
         return { value: [] }
     }
   }
-})
+}))
 
 export const selectedRow = container<Value<boolean> | undefined>({
   initialValue: undefined
 })
 
-export const selectRow = (rowData: RowData, get: GetState) => {
+export const selectRow = (row: ListItem<RowData>, get: GetState) => {
   let messages: Array<StoreMessage<any>> = []
-  messages.push(write(rowData.isSelected, true))
+  messages.push(write(row.data.isSelected, true))
   const oldSelected = get(selectedRow)
   if (oldSelected !== undefined) {
     messages.push(write(oldSelected, false))
   }
-  messages.push(write(selectedRow, rowData.isSelected))
+  messages.push(write(selectedRow, row.data.isSelected))
   return batch(messages)
+}
+
+export const removeRow = (row: ListItem<RowData>) => {
+  return write(rows, {
+    type: "remove",
+    index: row.index
+  })
 }
 
 let nextId = 1
 
-function buildRows(count: number): Array<RowData> {
+function buildRows(value: ValueGenerator, count: number): Array<RowData> {
   const data = new Array<RowData>(count);
   for (let i = 0; i < count; i++) {
     data[i] = {
