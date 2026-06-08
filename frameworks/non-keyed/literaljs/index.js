@@ -1,10 +1,10 @@
 /** @jsx h */
 
-import { render, component, h } from 'literaljs';
+import { App, component, h } from 'literaljs';
 
 import { Store } from './store';
 
-const App = component({
+const AppComponent = component({
 	state: { store: new Store() },
 	methods() {
 		const { store } = this.getState();
@@ -162,4 +162,4 @@ const App = component({
 	}
 });
 
-render(App, 'root', {});
+new App(AppComponent, {}).mount('root');
