@@ -1,7 +1,8 @@
 {
   "name": "js-framework-benchmark-keyed-literaljs",
   "version": "1.0.0",
-  "description": "Benchmark for LiteralJS framework (keyed)",
+  "type": "module",
+  "description": "Benchmark for LiteralJS framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "literaljs",
     "frameworkHomeURL": "https://literaljs.com/",
@@ -9,11 +10,8 @@
     "language": "JavaScript"
   },
   "scripts": {
-    "start": "parcel index.html",
-    "dev": "parcel index.html --open",
-    "build-prod": "cross-env NODE_ENV=production parcel build index.html --public-url /frameworks/keyed/literaljs/dist/",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "rebuild": "sudo rm -rf node_modules && rm -rf yarn.lock && yarn && yarn dev"
+    "build": "rollup -c",
+    "build-prod": "rollup -c --environment NODE_ENV:production"
   },
   "keywords": [
     "literaljs"
@@ -21,14 +19,11 @@
   "author": "Michael Farrell",
   "license": "MIT",
   "dependencies": {
-    "@babel/runtime": "7.17.0",
-    "literaljs": "^8.0.5"
+    "literaljs": "8.1.8"
   },
   "devDependencies": {
-    "@babel/core": "7.17.0",
-    "@babel/plugin-transform-react-jsx": "7.16.7",
-    "@babel/plugin-transform-runtime": "7.17.0",
-    "cross-env": "7.0.3",
-    "parcel": "2.6.2"
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-terser": "^0.4.0",
+    "rollup": "^4.0.0"
   }
 }
