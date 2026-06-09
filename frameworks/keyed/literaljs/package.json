@@ -10,8 +10,8 @@
     "language": "JavaScript"
   },
   "scripts": {
-    "build": "rollup -c",
-    "build-prod": "rollup -c --environment NODE_ENV:production"
+    "build": "rollup -c && cp index.html dist/index.html && sed -i 's|dist/main.js|main.js|g' dist/index.html",
+    "build-prod": "rollup -c --environment NODE_ENV:production && cp index.html dist/index.html && sed -i 's|dist/main.js|main.js|g' dist/index.html"
   },
   "keywords": [
     "literaljs"
