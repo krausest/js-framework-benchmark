@@ -1,16 +1,10 @@
-plastron-dom v0.0.2 (keyed division)
+plastron-dom v0.1.0 (keyed division)
 
-Pre-built bundle (vanillajs pattern — `build-prod` is a no-op).
-`main.js` is the production artifact; `src/main.ts` is the
-framework scaffold source, kept for reviewer reference. Its
-deep-relative imports point at the plastron monorepo and aren't
-resolvable in this directory.
+plastron-dom is the DOM renderer of plastron — a reactive *cel* substrate,
+published as `plastron@0.1.0` on npm. This is the keyed plastron-dom entry.
 
+`npm install` pulls `plastron@0.1.0` from npm; `npm run build-prod` runs
+`vite build`, producing `dist/main.js` referenced by `index.html`.
+
+Homepage: https://plastron.ca
 Source repo: https://github.com/rheophile10/plastron
-Scaffold path in source repo: bench/krausest/keyed/plastron-dom-v0.0.2/
-plastron-dom segment: segments/plastron-dom/
-
-isKeyed validation: confirmed at keyed on this machine via `npm run isKeyed -- keyed/plastron-dom-v0.0.2`.
-CSP non-compliance (issues: [1139]): the plastron-sheet formula
-compiler uses `new Function()` for codegen; declared explicitly
-per krausest convention.
