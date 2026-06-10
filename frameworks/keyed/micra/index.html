@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Micra-keyed</title>
+    <link href="/css/currentStyle.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container" id="main" data-component="main">
+      <div class="jumbotron">
+        <div class="row">
+          <div class="col-md-6">
+            <h1>Micra-keyed</h1>
+          </div>
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col-sm-6 smallpad">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-block"
+                  id="run"
+                  @click="run"
+                >
+                  Create 1,000 rows
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-block"
+                  id="runlots"
+                  @click="runLots"
+                >
+                  Create 10,000 rows
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-block"
+                  id="add"
+                  @click="add"
+                >
+                  Append 1,000 rows
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-block"
+                  id="update"
+                  @click="update"
+                >
+                  Update every 10th row
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-block"
+                  id="clear"
+                  @click="clear"
+                >
+                  Clear
+                </button>
+              </div>
+              <div class="col-sm-6 smallpad">
+                <button
+                  type="button"
+                  class="btn btn-primary btn-block"
+                  id="swaprows"
+                  @click="swapRows"
+                >
+                  Swap Rows
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table class="table table-hover table-striped test-data">
+        <tbody>
+          <template data-each="data" data-key="id">
+            <tr data-class="danger:item.id === selected">
+              <td class="col-md-1" data-text="item.id"></td>
+              <td class="col-md-4">
+                <a @click="select" data-bind="data-id:item.id" data-text="item.label"></a>
+              </td>
+              <td class="col-md-1">
+                <a @click="remove" data-bind="data-id:item.id"
+                  ><span
+                    class="glyphicon glyphicon-remove"
+                    aria-hidden="true"
+                  ></span
+                ></a>
+              </td>
+              <td class="col-md-6"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+
+      <span
+        class="preloadicon glyphicon glyphicon-remove"
+        aria-hidden="true"
+      ></span>
+    </div>
+
+    <script src="node_modules/micra.js/dist/micra.min.js"></script>
+    <script src="src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-micra",
+  "version": "1.0.0",
+  "description": "Micra.js keyed implementation",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "micra.js",
+    "frameworkHomeURL": "https://denisfl.github.io/micra.js/",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "micra.js": "2.3.2"
+  }
+}
