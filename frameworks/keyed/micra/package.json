@@ -5,7 +5,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "micra.js",
     "frameworkHomeURL": "https://denisfl.github.io/micra.js/",
-    "language": "JavaScript"
+    "language": "JavaScript",
+    "issues": [1139]
   },
   "scripts": {
     "dev": "exit 0",
