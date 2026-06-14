@@ -1,5 +1,5 @@
 {
-  "name": "js-framework-benchmark-non-keyed-solarite",
+  "name": "js-framework-benchmark-keyed-solarite",
   "version": "1.1.1",
   "description": "Solarite demo",
   "main": "index.js",
