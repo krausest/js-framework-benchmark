@@ -16,6 +16,7 @@
   "js-framework-benchmark": {
     "frameworkVersion": "0.1.0",
     "frameworkHomeURL": "https://github.com/rheophile10/plastron",
-    "language": "typescript"
+    "language": "typescript",
+    "issues": [1139]
   }
 }
