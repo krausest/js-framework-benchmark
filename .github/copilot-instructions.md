@@ -58,6 +58,7 @@ You must also run the rebuild step for non javascript frameworks since it perfor
 6. Check the output of the rebuild command.
     * **Success**: If the output contains "======> Please rerun the benchmark:", then the tests passed.
         * Check first if some file must be added to git and commit it. You can ignore all untracked files.
+        * Before committing, add any detected notes (see Review PR step 6) to the `"issues"` array in the framework's `package.json` (inside the `"js-framework-benchmark"` section). Use the integer issue number (e.g. `"issues": [801, 1261]`). Commit all changes (the package.json issue additions and any other files to be added) in a single commit before merging.
         * Merge the PR using merge commits as the merge strategy using git checkout and git merge (and NOT gh commands)
     * **Failure**: If the output does NOT contain the success message, or if you see errors like "checkElementExists failed":
         * **STOP**. Do not merge the PR.
