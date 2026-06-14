@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@akashjs/compiler": "0.1.60",
-    "@akashjs/runtime": "0.2.8",
+    "@akashjs/runtime": "0.2.9",
     "@akashjs/vite-plugin": "0.2.4"
   },
   "devDependencies": {
