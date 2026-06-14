@@ -1,16 +1,22 @@
 {
   "name": "js-framework-benchmark-plastron-dom-keyed",
-  "version": "0.0.2",
+  "version": "0.1.0",
+  "private": true,
   "type": "module",
-  "main": "dist/main.js",
   "scripts": {
-    "build-prod": "exit 0"
+    "build-prod": "vite build"
+  },
+  "dependencies": {
+    "plastron": "^0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vite": "^5.4.10"
   },
   "js-framework-benchmark": {
-    "frameworkVersion": "0.0.2",
+    "frameworkVersion": "0.1.0",
     "frameworkHomeURL": "https://github.com/rheophile10/plastron",
     "language": "typescript",
     "issues": [1139]
-  },
-  "_comment_buildShape": "Pre-built bundle (vanillajs pattern). plastron is not yet published to npm, so source-time deps can't be resolved by krausest's CI. The dist/main.js is the production artifact produced by vite-bundling the framework scaffold at bench/krausest/keyed/plastron-dom-v0.0.2/ in the plastron monorepo. src/main.ts is included verbatim from that scaffold for review — its deep-relative imports (../../../../../plastron/...) point at the plastron monorepo and are not resolvable inside this directory; they document the structure for readers, nothing more."
+  }
 }
