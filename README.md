@@ -519,6 +519,20 @@ The other important, but optional properties for js-framework-benchmark are show
 
 You can set an optional different URL if needed or specify that your DOM uses a shadow root.
 
+When `npm run zip` creates the pre-built archive, it includes `dist/` and `package-lock.json` for each framework by default. If your build outputs to a different location, declare it with `includeInBuild`:
+
+```
+"includeInBuild": "public"
+```
+
+The value is a colon-separated list of file or directory paths relative to your framework directory. Examples:
+
+- `"public"` — for frameworks that build directly into a `public/` folder
+- `"build"` — for frameworks that use a `build/` output directory
+- `"output/dist"` — for nested output paths
+- `"output-es/bundle.js"` — for a single output file
+- `"node_modules/my-engine/dist"` — when a runtime dependency's dist must be bundled
+
 ## 4.4 Submitting your implementation
 
 Please take a look at https://github.com/krausest/js-framework-benchmark/wiki/Process-for-merging-a-pull-request for informations how pull requests are merged.

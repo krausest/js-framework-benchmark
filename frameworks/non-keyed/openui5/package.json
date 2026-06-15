@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build-dev": "ui5 serve -o index.html",
-    "build-prod": "ui5 build self-contained --include-all-dependencies --clean-dest"
+    "build-prod": "ui5 build self-contained --include-all-dependencies --clean-dest  && rimraf dist/test-resources"
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark",
   "repository": {

@@ -8,6 +8,7 @@
     "frameworkHomeURL": "https://github.com/stackblitz/alien-signals",
     "useShadowRoot": false,
     "customURL": "/public",
+    "includeInBuild": "public",
     "issues": [
       772
     ],

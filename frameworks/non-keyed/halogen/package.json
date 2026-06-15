@@ -6,6 +6,7 @@
   "js-framework-benchmark": {
     "frameworkVersion": "7.0.0",
     "frameworkHomeURL": "https://github.com/purescript-halogen/purescript-halogen",
+    "includeInBuild": "output-es/bundle.js",
     "language": "PureScript"
   },
   "scripts": {

@@ -5,6 +5,7 @@
     "frameworkVersionFromPackage": "@dojo/framework",
     "frameworkHomeURL": "https://dojo.io/",
     "customURL": "/output/dist",
+    "includeInBuild": "output/dist",
     "issues": [
       1139
     ],

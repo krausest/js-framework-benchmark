@@ -8,6 +8,7 @@
     "frameworkHomeURL": "https://dev.michijs.com/",
     "useShadowRoot": false,
     "customURL": "/build",
+    "includeInBuild": "build",
     "language": "TypeScript"
   },
   "scripts": {

@@ -8,6 +8,7 @@
     "frameworkHomeURL": "https://github.com/tc39/proposal-signals",
     "useShadowRoot": false,
     "customURL": "/public",
+    "includeInBuild": "public",
     "issues": [
       772
     ],

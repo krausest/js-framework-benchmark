@@ -30,7 +30,11 @@ function addLocalFileIfExists(sourcePath, zipPath) {
 }
 
 /**
- * Adds frameworks to the zip archive
+ * Adds frameworks to the zip archive.
+ * Default: includes dist/ and package-lock.json.
+ * Extra paths are declared in the framework's package.json under
+ * js-framework-benchmark.includeInBuild as a colon-separated list of
+ * relative file or directory paths.
  * @param {string} frameworkType
  * @param {string} frameworkDir
  * @param {string} frameworkName
@@ -38,57 +42,28 @@ function addLocalFileIfExists(sourcePath, zipPath) {
 function addFrameworksToZip(frameworkType, frameworkDir, frameworkName) {
   const zipFrameworkPath = path.join("frameworks", frameworkType, frameworkName);
 
-  addLocalFileIfExists(`${frameworkDir}/package-lock.json`, `${zipFrameworkPath}`);
-
+  addLocalFileIfExists(`${frameworkDir}/package-lock.json`, zipFrameworkPath);
   addLocalFolderIfExists(`${frameworkDir}/dist`, `${zipFrameworkPath}/dist`);
-  addLocalFolderIfExists(`${frameworkDir}/scripts`, `${zipFrameworkPath}/scripts`);
-  addLocalFolderIfExists(`${frameworkDir}/node_modules/slim-js/dist`, `${zipFrameworkPath}/node_modules/slim-js/dist`);
-  addLocalFolderIfExists(
-    `${frameworkDir}/node_modules/@neow/core/dist`,
-    `${zipFrameworkPath}/node_modules/@neow/core/dist`
-  );
-  addLocalFolderIfExists(`${frameworkDir}/target/web/stage`, `${zipFrameworkPath}/target/web/stage`);
-  addLocalFolderIfExists(`${frameworkDir}/build`, `${zipFrameworkPath}/build`);
 
-  if (frameworkName !== "ember" && frameworkName !== "glimmer") {
-    addLocalFolderIfExists(`${frameworkDir}/public`, `${zipFrameworkPath}/public`);
-  }
+  const pkgPath = `${frameworkDir}/package.json`;
+  if (!fs.existsSync(pkgPath)) return;
 
-  switch (frameworkName) {
-    case "deku": 
-    case "halogen": {
-      addLocalFileIfExists(`${frameworkDir}/output-es/bundle.js`, `${zipFrameworkPath}/output-es`);
-      break;
+  const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
+  const includeInBuild = pkg["js-framework-benchmark"]?.includeInBuild;
+  if (!includeInBuild) return;
+
+  for (const entry of includeInBuild.split(":")) {
+    if (entry.includes("..") || path.isAbsolute(entry)) {
+      console.warn(`Skipping unsafe includeInBuild entry "${entry}" in ${frameworkDir}`);
+      continue;
     }
-    case "dojo": {
-      addLocalFolderIfExists(`${frameworkDir}/output/dist`, `${zipFrameworkPath}/output/dist`);
-      break;
-    }
-    case "s2": {
-      addLocalFolderIfExists(
-        `${frameworkDir}/node_modules/s2-engine/dist`,
-        `${zipFrameworkPath}/node_modules/s2-engine/dist`
-      );
-      break;
-    }
-    case "lui": 
-    case "lui-noeval": {
-      addLocalFolderIfExists(
-        `${frameworkDir}/src`,
-        `${zipFrameworkPath}/src`
-      );
-      break;
-    }
-    case "stem": {
-      addLocalFolderIfExists(
-        `${frameworkDir}/node_modules/babel-polyfill/dist`,
-        `${zipFrameworkPath}/node_modules/babel-polyfill/dist`
-      );
-      addLocalFileIfExists(`${frameworkDir}/src/bundle.js`, `${zipFrameworkPath}/src`);
-      break;
-    }
-    default: {
-      addLocalFolderIfExists(`${frameworkDir}/output`, `${zipFrameworkPath}/output`);
+    const fullPath = `${frameworkDir}/${entry}`;
+    const zipEntry = `${zipFrameworkPath}/${entry}`;
+    if (!fs.existsSync(fullPath)) continue;
+    if (fs.statSync(fullPath).isDirectory()) {
+      zip.addLocalFolder(fullPath, zipEntry);
+    } else {
+      zip.addLocalFile(fullPath, path.dirname(zipEntry));
     }
   }
 }

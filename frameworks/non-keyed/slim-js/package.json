@@ -6,6 +6,7 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "slim-js",
     "frameworkHomeURL": "https://slimjs.com/#/welcome",
+    "includeInBuild": "node_modules/slim-js/dist",
     "issues": [
       1139
     ],
