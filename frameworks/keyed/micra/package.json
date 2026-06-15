@@ -6,7 +6,6 @@
     "frameworkVersionFromPackage": "micra.js",
     "frameworkHomeURL": "https://denisfl.github.io/micra.js/",
     "language": "JavaScript",
-    "issues": [1139],
     "includeInBuild" : "node_modules/micra.js/dist/micra.min.js"
   },
   "scripts": {
@@ -20,6 +19,6 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "micra.js": "2.3.2"
+    "micra.js": "2.5.0"
   }
 }
