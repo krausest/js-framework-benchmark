@@ -19,6 +19,6 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "micra.js": "2.3.2"
+    "micra.js": "2.5.0"
   }
 }
