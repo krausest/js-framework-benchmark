@@ -11,8 +11,7 @@
   },
   "scripts": {
     "build": "rollup -c && cp index.html dist/index.html && sed -i 's|dist/main.js|main.js|g' dist/index.html",
-    "build-prod": "rollup -c --environment NODE_ENV:production && cp index.html dist/index.html && sed -i 's|dist/main.js|main.js|g' dist/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-prod": "rollup -c --environment NODE_ENV:production && cp index.html dist/index.html && sed -i 's|dist/main.js|main.js|g' dist/index.html"
   },
   "keywords": [
     "literaljs"
