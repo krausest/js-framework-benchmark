@@ -36,7 +36,7 @@ const MainView = defineView({
     this.render();
   },
 
-  "runlots<click>"(): void {
+  "runLots<click>"(): void {
     this._data = buildData(10000);
     this._selected = null;
     this.render();
@@ -61,7 +61,7 @@ const MainView = defineView({
     this.render();
   },
 
-  "swaprows<click>"(): void {
+  "swapRows<click>"(): void {
     const d = this._data;
     if (d.length > 998) {
       const tmp = d[1];
