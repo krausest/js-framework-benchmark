@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-lark-mvc",
+  "private": true,
+  "version": "0.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@lark.js/mvc",
+    "frameworkHomeURL": "https://github.com/hangtiancheng/lark/tree/main/packages/lark-mvc",
+    "customURL": "/dist",
+    "language": "TypeScript"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@lark.js/mvc": "^0.0.9"
+  },
+  "devDependencies": {
+    "vite": "^8.0.14"
+  }
+}
