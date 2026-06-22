@@ -13,7 +13,7 @@
     "build-prod": "node_modules/.bin/esbuild src/main.ts --bundle --minify --outfile=dist/bundle.js"
   },
   "dependencies": {
-    "nuclo": "0.2.3"
+    "nuclo": "^0.2.4"
   },
   "devDependencies": {
     "esbuild": "^0.24.0"
