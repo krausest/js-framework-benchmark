@@ -4,7 +4,7 @@
   "description": "Nuclo benchmark",
   "type": "module",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.2.3",
+    "frameworkVersion": "0.2.4",
     "frameworkHomeURL": "https://nuclo.dev/",
     "language": "TypeScript"
   },
