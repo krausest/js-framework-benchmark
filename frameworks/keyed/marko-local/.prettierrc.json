@@ -1,0 +1,10 @@
+{
+  "trailingComma": "all",
+  "printWidth": 80,
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": false,
+  "markoSyntax": "html",
+  "experimentalTernaries": true,
+  "markoAttrParen": true
+}

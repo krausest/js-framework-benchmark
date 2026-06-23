@@ -1,0 +1,36 @@
+{
+  "name": "marko-local",
+  "description": "Marko starter app linked against a local build of Marko",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "marko",
+    "frameworkHomeURL": "https://markojs.com/",
+    "customURL": "/dist/public",
+    "issues": [
+      1139
+    ],
+    "language": "TypeScript"
+  },
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "marko": "file:.local/runtime-tags",
+    "@marko/runtime-tags": "file:.local/runtime-tags",
+    "@marko/compiler": "file:.local/compiler",
+    "@marko/run-adapter-static": "^2.0.3"
+  },
+  "devDependencies": {
+    "@marko/run": "^0.9.2"
+  },
+  "overrides": {
+    "marko": "file:.local/runtime-tags",
+    "@marko/runtime-tags": "file:.local/runtime-tags",
+    "@marko/compiler": "file:.local/compiler"
+  },
+  "private": true,
+  "scripts": {
+    "link-local": "node link-local-marko.mjs",
+    "build-prod": "NODE_ENV=production marko-run build",
+    "dev": "marko-run",
+    "preview": "marko-run preview"
+  }
+}
