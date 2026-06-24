@@ -4,7 +4,7 @@
   "description": "Nuclo benchmark",
   "type": "module",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.2.5",
+    "frameworkVersion": "0.2.6",
     "frameworkHomeURL": "https://nuclo.dev/",
     "language": "TypeScript"
   },
@@ -13,9 +13,12 @@
     "build-prod": "node_modules/.bin/esbuild src/main.ts --bundle --minify --outfile=dist/bundle.js"
   },
   "dependencies": {
-    "nuclo": "^0.2.5"
+    "nuclo": "^0.2.6"
   },
   "devDependencies": {
     "esbuild": "^0.24.0"
+  },
+  "allowScripts": {
+    "esbuild@0.24.2": true
   }
 }
