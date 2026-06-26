@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-mjs",
+  "version": "2.0.0",
+  "description": "ModularJS V2 — js-framework-benchmark adapter (keyed)",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersion": "2.0.0",
+    "frameworkHomeURL": "https://github.com/",
+    "useShadowRoot": false,
+    "buttonsInShadowRoot": false,
+    "issues": [],
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "node build.mjs --watch",
+    "build-prod": "node build.mjs"
+  },
+  "author": "MJS team",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "modularjs-compiler": "file:../../../../ModularJS"
+  }
+}

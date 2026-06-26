@@ -1,0 +1,6 @@
+{
+  "sourceDir": "src",
+  "outputDir": "dist",
+  "manifestPath": "dist/bundle.js",
+  "defaultScriptLang": "civet"
+}
