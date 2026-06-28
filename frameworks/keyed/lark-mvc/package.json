@@ -15,7 +15,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@lark.js/mvc": "^0.0.10"
+    "@lark.js/mvc": "^0.0.16"
   },
   "devDependencies": {
     "vite": "^8.0.14"

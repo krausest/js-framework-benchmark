@@ -3,12 +3,8 @@ import { larkMvcPlugin } from "@lark.js/mvc/vite";
 
 export default defineConfig({
   base: "/frameworks/keyed/lark-mvc/dist/",
-  plugins: [larkMvcPlugin()],
+  plugins: [larkMvcPlugin({ virtualDom: true })],
   build: {
-    rolldownOptions: {
-      output: {
-        minify: true
-      }
-    },
+    minify: true,
   },
 });

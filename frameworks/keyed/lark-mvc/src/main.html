@@ -37,11 +37,9 @@
       {{forOf data as item idx}}
       <tr id="row-{{=item.id}}" class="{{if selected===item.id}}danger{{/if}}">
         <td class="col-md-1">{{=item.id}}</td>
-        <td class="col-md-4"><a data-action="select" data-id="{{=item.id}}">{{=item.label}}</a></td>
+        <td class="col-md-4"><a @click="select({id: item.id})">{{=item.label}}</a></td>
         <td class="col-md-1">
-          <a data-action="remove" data-id="{{=item.id}}"
-            ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span
-          ></a>
+          <a @click="remove({id: item.id})"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
         </td>
         <td class="col-md-6"></td>
       </tr>

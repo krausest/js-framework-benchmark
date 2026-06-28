@@ -3,95 +3,72 @@ import template from "./main.html";
 import { buildData } from "./data";
 import type { RowData } from "./data";
 
-const MainView = defineView({
-  template,
+export default defineView((ctx) => {
+  let data: RowData[] = [];
+  let selected: number | null = null;
 
-  _data: [] as RowData[],
-  _selected: null as number | null,
+  function render(): void {
+    ctx.updater.set({ data, selected });
+    ctx.updater.digest();
+  }
 
-  make(): void {
-    this._data = [];
-    this._selected = null;
-    this.updater.set({ data: [], selected: null });
-  },
+  return {
+    template,
+    events: {
+      "run<click>"(): void {
+        data = buildData(1000);
+        selected = null;
+        render();
+      },
 
-  assign(): void {
-    this.updater.snapshot();
-    this.updater.set({
-      data: this._data,
-      selected: this._selected,
-    });
-  },
+      "runLots<click>"(): void {
+        data = buildData(10000);
+        selected = null;
+        render();
+      },
 
-  render(): void {
-    this.assign();
-    this.updater.digest();
-  },
+      "add<click>"(): void {
+        data = data.concat(buildData(1000));
+        render();
+      },
 
-  // --- button handlers (static @click, no dynamic params) ---
+      "update<click>"(): void {
+        for (let i = 0; i < data.length; i += 10) {
+          data[i].label += " !!!";
+        }
+        render();
+      },
 
-  "run<click>"(): void {
-    this._data = buildData(1000);
-    this._selected = null;
-    this.render();
-  },
+      "clear<click>"(): void {
+        data = [];
+        selected = null;
+        render();
+      },
 
-  "runLots<click>"(): void {
-    this._data = buildData(10000);
-    this._selected = null;
-    this.render();
-  },
+      "swapRows<click>"(): void {
+        if (data.length > 998) {
+          const tmp = data[1];
+          data[1] = data[998];
+          data[998] = tmp;
+        }
+        render();
+      },
 
-  "add<click>"(): void {
-    this._data = this._data.concat(buildData(1000));
-    this.render();
-  },
+      "select<click>"(e: Event & { params?: Record<string, string> }): void {
+        e.preventDefault();
+        selected = Number(e.params?.id);
+        render();
+      },
 
-  "update<click>"(): void {
-    const d = this._data;
-    for (let i = 0; i < d.length; i += 10) {
-      d[i].label += " !!!";
-    }
-    this.render();
-  },
-
-  "clear<click>"(): void {
-    this._data = [];
-    this._selected = null;
-    this.render();
-  },
-
-  "swapRows<click>"(): void {
-    const d = this._data;
-    if (d.length > 998) {
-      const tmp = d[1];
-      d[1] = d[998];
-      d[998] = tmp;
-    }
-    this.render();
-  },
-
-  // --- selector-based handler for all <a> clicks inside the view ---
-  // Uses data-action and data-id attributes to dispatch.
-
-  "$a<click>"(e: MouseEvent): void {
-    e.preventDefault();
-    const target = e.target as Element;
-    const a = target.closest("a") as HTMLElement | null;
-    if (!a) return;
-    const action = a.dataset.action;
-    const id = Number(a.dataset.id);
-    if (action === "select") {
-      this._selected = id;
-      this.render();
-    } else if (action === "remove") {
-      const idx = this._data.findIndex((d: RowData) => d.id === id);
-      if (idx !== -1) {
-        this._data.splice(idx, 1);
-      }
-      this.render();
-    }
-  },
+      "remove<click>"(e: Event & { params?: Record<string, string> }): void {
+        e.preventDefault();
+        const id = Number(e.params?.id);
+        const idx = data.findIndex((d: RowData) => d.id === id);
+        if (idx !== -1) {
+          data.splice(idx, 1);
+        }
+        render();
+      },
+    },
+  };
 });
-
-export default MainView;

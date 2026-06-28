@@ -1,4 +1,5 @@
 declare module "*.html" {
-  const template: (data: Record<string, unknown>, viewId: string, refData: Record<string, unknown>) => string;
+  import type { ViewTemplate } from "@lark.js/mvc";
+  const template: ViewTemplate;
   export default template;
 }
