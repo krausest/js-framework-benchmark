@@ -6,5 +6,5 @@ registerViewClass("main", MainView);
 Framework.boot({
   rootId: "main",
   defaultView: "main",
-  virtualDom: true,
+  vdom: true,
 });
