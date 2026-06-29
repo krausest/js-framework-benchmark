@@ -6,7 +6,7 @@ import type { RowData } from "./data";
 export default defineView((ctx) => {
   let data: RowData[] = [];
   let selected: number | null = null;
-  
+
   // Seed the updater with initial data so the framework's auto-render
   // (mountCtx → ctx.render() → digest()) has a valid `data` array.
   // Without this, updater.data stays { vId } and the template's
@@ -27,7 +27,7 @@ export default defineView((ctx) => {
         render();
       },
 
-      "runLots<click>"(): void {
+      "runlots<click>"(): void {
         data = buildData(10000);
         selected = null;
         render();
@@ -51,7 +51,7 @@ export default defineView((ctx) => {
         render();
       },
 
-      "swapRows<click>"(): void {
+      "swaprows<click>"(): void {
         if (data.length > 998) {
           const tmp = data[1];
           data[1] = data[998];

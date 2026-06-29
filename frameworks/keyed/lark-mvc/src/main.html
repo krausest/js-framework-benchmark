@@ -10,7 +10,7 @@
             <button type="button" class="btn btn-primary btn-block" id="run" @click="run()">Create 1,000 rows</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="runlots" @click="runLots()">
+            <button type="button" class="btn btn-primary btn-block" id="runlots" @click="runlots()">
               Create 10,000 rows
             </button>
           </div>
@@ -26,7 +26,7 @@
             <button type="button" class="btn btn-primary btn-block" id="clear" @click="clear()">Clear</button>
           </div>
           <div class="col-sm-6 smallpad">
-            <button type="button" class="btn btn-primary btn-block" id="swaprows" @click="swapRows()">Swap Rows</button>
+            <button type="button" class="btn btn-primary btn-block" id="swaprows" @click="swaprows()">Swap Rows</button>
           </div>
         </div>
       </div>
@@ -35,11 +35,11 @@
   <table class="table table-hover table-striped test-data">
     <tbody id="tbody">
       {{forOf data as item idx}}
-      <tr id="row-{{=item.id}}" class="{{if selected===item.id}}danger{{/if}}">
+      <tr id="row-{{=item.id}}" class="{{=selected===item.id?'danger':''}}">
         <td class="col-md-1">{{=item.id}}</td>
-        <td class="col-md-4"><a @click="select({id: item.id})">{{=item.label}}</a></td>
+        <td class="col-md-4"><a @click="select(id={{=item.id}})">{{=item.label}}</a></td>
         <td class="col-md-1">
-          <a @click="remove({id: item.id})"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+          <a @click="remove(id={{=item.id}})"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
         </td>
         <td class="col-md-6"></td>
       </tr>
