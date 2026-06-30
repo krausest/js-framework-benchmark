@@ -157,6 +157,7 @@ const app = div(
             td(
               { className: "col-md-1" },
               a(
+                { className: "remove" },
                 on("click", () => doDelete(row.id)),
                 span({ className: "glyphicon glyphicon-remove", "aria-hidden": "true" }),
               ),
