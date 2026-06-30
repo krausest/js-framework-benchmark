@@ -4,7 +4,7 @@
 	"type": "module",
 	"main": "dist/main.js",
 	"js-framework-benchmark": {
-		"frameworkVersion": "2.3.0",
+		"frameworkVersion": "2.5.1",
 		"frameworkHomeURL": "https://gitee.com/thor.qin/knno-jsx",
 		"language": "TypeScript"
 	},
@@ -19,8 +19,8 @@
 		"url": "https://github.com/krausest/js-framework-benchmark.git"
 	},
 	"dependencies": {
-		"@knno/jsx": "2.3.0",
-		"@knno/jsx-optimizer": "2.2.0"
+		"@knno/jsx": "2.5.1",
+		"@knno/jsx-optimizer": "2.2.1"
 	},
 	"devDependencies": {
 		"@rollup/plugin-node-resolve": "16.0.3",
