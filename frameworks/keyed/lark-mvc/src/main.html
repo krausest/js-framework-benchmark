@@ -39,7 +39,7 @@
         <td class="col-md-1">{{=item.id}}</td>
         <td class="col-md-4"><a @click="select(id={{=item.id}})">{{=item.label}}</a></td>
         <td class="col-md-1">
-          <a @click="remove(id={{=item.id}})"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+          <a class="remove" @click="remove(id={{=item.id}})"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
         </td>
         <td class="col-md-6"></td>
       </tr>
