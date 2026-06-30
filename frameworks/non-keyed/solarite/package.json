@@ -5,7 +5,6 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersion": "0.6.0",
-    "issues": [801, 1261],
     "language": "JavaScript",
     "frameworkHomeURL": "https://vorticode.github.io/solarite"
   },
