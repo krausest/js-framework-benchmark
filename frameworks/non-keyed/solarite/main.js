@@ -154,9 +154,10 @@ class JSFrameworkBenchmark extends Solarite {
 	}
 
 	updateBench() {
-		let len = this.data.length;
+		let data = this.data, len = data.length;
+		// h.map reuses a row while it's the same object, so replace changed rows instead of mutating them.
 		for (let i=0; i<len; i+=10)
-			this.data[i].label += ' !!!';
+			data[i] = {...data[i], label: data[i].label + ' !!!'};
 		this.render()
 	}
 
@@ -185,12 +186,22 @@ class JSFrameworkBenchmark extends Solarite {
 	}
 
 	setSelectedBench(row) {
+		let data = this.data, old = this.selectedId;
 		this.selectedId = row.id;
+		// The `danger` class depends on selectedId, so replace the two affected rows to rebuild them.
+		let i = data.indexOf(row);
+		if (i >= 0)
+			data[i] = {...row};
+		if (old != null && old !== row.id) {
+			let pi = data.findIndex(r => r.id === old);
+			if (pi >= 0)
+				data[pi] = {...data[pi]};
+		}
 		this.render();
 	}
 
 	render() {
-		let options = {ids: false, scripts: false, styles: false, eventDelegation: true};
+		let options = {ids: false, scripts: false, styles: false};
 		h(this, options)`
 		<div class="container">
 			<div class="jumbotron">
@@ -229,11 +240,10 @@ class JSFrameworkBenchmark extends Solarite {
 				</div>
 			</div>
 			<table class="table table-hover table-striped test-data"><tbody>
-				${this.data.map(row =>
-					h.memo(row, [row.label, row.id === this.selectedId], row =>
+				${h.map(this.data, row =>
 					// Whitespace inside cells would become real text nodes, cloned and laid out per row.
 					h`<tr class=${row.id === this.selectedId ? 'danger' : ''}><td class="col-md-1">${row.id}</td><td class="col-md-4"><a onclick=${[this.setSelectedBench, row]}>${row.label}</a></td><td class="col-md-1"><a onclick=${[this.removeBench, row.id]}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>`)
-				)}
+				}
 			</tbody></table>
 		</div>`;
 
