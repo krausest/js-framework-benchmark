@@ -8,7 +8,7 @@
     "build-prod": "vite build"
   },
   "dependencies": {
-    "kerfjs": "0.15.1"
+    "kerfjs": "0.16.0"
   },
   "devDependencies": {
     "typescript": "5.9.3",
