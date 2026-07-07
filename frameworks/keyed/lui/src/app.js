@@ -1,7 +1,7 @@
 const {
 	hook_dom,
+	hook_memo,
 	hook_model,
-	hook_static,
 	init,
 	node,
 	node_dom,
@@ -17,10 +17,9 @@ const nouns = 'table,chair,house,bbq,desk,car,pony,cookie,sandwich,burger,pizza,
 
 const pick = options => (
 	options[
-		Math.round(
-			Math.random() *
-			(options.length - 1)
-		)
+		(
+			Math.random() * options.length
+		) | 0
 	]
 );
 
@@ -36,26 +35,27 @@ const model = {
 		todos: [],
 		selected: null,
 	}),
-	create: (state, count) => ({
-		...state,
-		todos: (
-			new Array(count)
-			.fill(null)
-			.map(todo_create)
-		),
-		selected: null,
-	}),
-	add: (state, count) => ({
-		...state,
-		todos: [
-			...state.todos,
-			...(
-				new Array(count)
-				.fill(null)
-				.map(todo_create)
-			),
-		],
-	}),
+	create: (state, count) => {
+		const todos = new Array(count);
+		for (let i = 0; i < count; i++) {
+			todos[i] = todo_create();
+		}
+		return {
+			...state,
+			todos,
+			selected: null,
+		};
+	},
+	add: (state, count) => {
+		const todos = state.todos.slice();
+		for (let i = 0; i < count; i++) {
+			todos.push(todo_create());
+		}
+		return {
+			...state,
+			todos,
+		};
+	},
 	remove: (state, id) => ({
 		...state,
 		todos: state.todos.filter(item => item.id !== id),
@@ -69,31 +69,29 @@ const model = {
 		...state,
 		selected: id,
 	}),
-	update: (state, mod) => ({
-		...state,
-		todos: state.todos.map((item, index) =>
-			index % mod > 0
-			?	item
-			:	{
-					...item,
-					label: item.label + ' !!!',
-				}
-		),
-	}),
-	swap: (state) => ({
-		...state,
-		todos: (
-			state.todos.length > 998
-			?	[
-					state.todos[0],
-					state.todos[998],
-					...state.todos.slice(2, 998),
-					state.todos[1],
-					...state.todos.slice(999),
-				]
-			:	state.todos
-		),
-	}),
+	update: (state, mod) => {
+		const todos = state.todos.slice();
+		for (let i = 0; i < todos.length; i += mod) {
+			todos[i] = {
+				id: todos[i].id,
+				label: todos[i].label + ' !!!',
+			};
+		}
+		return {
+			...state,
+			todos,
+		};
+	},
+	swap: state => {
+		if (state.todos.length < 999) return state;
+		const todos = state.todos.slice();
+		todos[1] = todos[998];
+		todos[998] = state.todos[1];
+		return {
+			...state,
+			todos,
+		};
+	},
 };
 
 
@@ -156,29 +154,25 @@ const Row = ({
 			danger: selected === id,
 		},
 	}),
-	[
+	hook_memo(() => [
 		node_dom('td[className=col-md-1]', {
 			innerText: id,
 		}),
 		node_dom('td[className=col-md-4]', null, [
 			node_dom('a', {
 				innerText: label,
-				onclick: hook_static(() => {
-					actions.select(id);
-				}),
+				onclick: () => actions.select(id),
 			}),
 		]),
 		node_dom('td[className=col-md-1]', null, [
 			node_dom('a', {
-				onclick: hook_static(() => {
-					actions.remove(id);
-				}),
+				onclick: () => actions.remove(id),
 			}, [
 				node_dom('span[className=glyphicon glyphicon-remove][ariaHidden]'),
 			]),
 		]),
 		node_dom('td[className=col-md-6]'),
-	]
+	], [label])
 );
 
 init(() => {
