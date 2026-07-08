@@ -1,0 +1,24 @@
+{
+  "name": "js-framework-benchmark-spark-html",
+  "version": "1.1.0",
+  "description": "spark-html keyed benchmark",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "spark-html",
+    "frameworkHomeURL": "https://spark-html.dev",
+    "issues": [],
+    "language": "JavaScript",
+    "customURL": "/dist"
+  },
+  "scripts": {
+    "dev": "spark dev",
+    "build-prod": "spark build --out-dir dist --base /frameworks/keyed/spark-html/dist/"
+  },
+  "dependencies": {
+    "spark-html": "^1.1.0"
+  },
+  "devDependencies": {
+    "spark-html-bun": "^1.0.0"
+  },
+  "author": "",
+  "license": "Apache-2.0"
+}
