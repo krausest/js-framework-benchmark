@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-spark-html",
-  "version": "1.2.0",
+  "version": "1.5.0",
   "description": "spark-html keyed benchmark",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "spark-html",
@@ -14,7 +14,7 @@
     "build-prod": "spark build --out-dir dist --base /frameworks/keyed/spark-html/dist/"
   },
   "dependencies": {
-    "spark-html": "^1.2.0"
+    "spark-html": "^1.5.0"
   },
   "devDependencies": {
     "spark-html-bun": "^1.0.0"
