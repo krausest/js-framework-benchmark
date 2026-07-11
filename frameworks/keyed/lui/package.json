@@ -13,6 +13,6 @@
   },
   "scripts": {
     "dev": "echo 0",
-    "build-prod": "bun build --minify --outfile=src/app.min.js src/app.js"
+    "build-prod": "cd node_modules/bun && node install.js && cd ../.. && bun build --minify --outfile=src/app.min.js src/app.js"
   }
 }
