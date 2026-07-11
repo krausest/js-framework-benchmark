@@ -1,14 +1,11 @@
 {
   "name": "js-framework-benchmark-lui",
-  "version": "2.2.0",
+  "version": "2.4.1",
   "description": "Benchmark for lui",
   "js-framework-benchmark": {
-    "frameworkVersion": "2.2.0",
+    "frameworkVersion": "2.4.1",
     "frameworkHomeURL": "https://github.com/L3P3/lui",
     "includeInBuild": "src",
-    "issues": [
-      1139
-    ],
     "language": "JavaScript"
   },
   "devDependencies": {
