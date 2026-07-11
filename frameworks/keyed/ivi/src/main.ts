@@ -10,7 +10,7 @@ let nextId = 1;
 function buildData(count: number): Entry[] {
   const data = Array(count);
   for (let i = 0; i < count; i++) {
-    data[i] = { id: nextId++, label: `${A[random(A.length)]} ${C[random(C.length)]} ${N[random(N.length)]}` };
+    data[i] = { id: nextId++, label: A[random(A.length)] + " " + C[random(C.length)] + " " + N[random(N.length)] };
   }
   return data;
 }
@@ -26,7 +26,7 @@ function appStateReducer(state: State, action: Action): State {
     case ActionType.RunLots:
       return { ...state, data: buildData(10000) };
     case ActionType.Add:
-      return { ...state, data: [...state.data, ...buildData(1000)] };
+      return { ...state, data: state.data.concat(buildData(1000)) };
     case ActionType.Update: {
       const data = state.data.slice();
       for (let i = 0; i < data.length; i += 10) {
