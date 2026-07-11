@@ -47,19 +47,7 @@ const ADJECTIVES = [
   "expensive",
   "fancy",
 ];
-const COLOURS = [
-  "red",
-  "yellow",
-  "blue",
-  "green",
-  "pink",
-  "brown",
-  "purple",
-  "brown",
-  "white",
-  "black",
-  "orange",
-];
+const COLOURS = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
 const NOUNS = [
   "table",
   "chair",
@@ -84,12 +72,7 @@ function buildData(count: number) {
   for (let i = 0; i < count; i++) {
     data[i] = {
       id: nextId++,
-      label:
-        ADJECTIVES[random(len_ADJECTIVES)] +
-        " " +
-        COLOURS[random(len_COLOURS)] +
-        " " +
-        NOUNS[random(len_NOUNS)],
+      label: ADJECTIVES[random(len_ADJECTIVES)] + " " + COLOURS[random(len_COLOURS)] + " " + NOUNS[random(len_NOUNS)],
     };
   }
   return data;
@@ -106,16 +89,11 @@ const data = reactive<Array<{ id: number; label: string }>>([]);
 const selected = reactive(-1);
 
 view("tbody", data, (item, i) => {
-  const className = ternary(
-    (val: number) => val === item.id,
-    "danger",
-    "",
-    selected
-  );
+  const className = ternary((val: number) => val === item.id, "danger", "", selected);
 
   const tr = (
     <tr class={className} bind={data[i]}>
-      <td class="col-md-1">{data[i].id}</td>
+      <td class="col-md-1">{item.id}</td>
       <td class="col-md-4">
         <a onclick={() => selected(item.id)}>{data[i].label}</a>
       </td>
@@ -151,7 +129,7 @@ function update() {
   const d = getValue(data);
   let index = 0;
   while (index < d.length) {
-    data[index].setter((item: typeof data[number]) => {
+    data[index].setter((item: (typeof data)[number]) => {
       item.label += " !!!";
     });
     index += 10;
@@ -165,9 +143,7 @@ function swapRows() {
   });
 }
 function remove(id: number) {
-  const index = getValue(data).findIndex(
-    (i: typeof data[number]) => i?.id === id
-  );
+  const index = getValue(data).findIndex((i: (typeof data)[number]) => i?.id === id);
   data((curr: typeof data) => {
     curr[index] = null;
   });
