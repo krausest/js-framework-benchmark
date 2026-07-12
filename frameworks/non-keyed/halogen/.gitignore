@@ -8,5 +8,5 @@ node_modules
 .psci
 .psc*
 output
-output-es
-
+output-es/*
+!output-es/bundle.js
