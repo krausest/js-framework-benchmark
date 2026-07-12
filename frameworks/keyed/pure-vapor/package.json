@@ -1,0 +1,24 @@
+{
+  "name": "js-framework-benchmark-pure-vapor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "vue",
+    "frameworkHomeURL": "https://github.com/shenjunjian/pure-core",
+    "language": "JavaScript"
+  },
+  "description": "Pure Vapor is a reimplementation of Vue's Vapor logic built with AI, intended for learning and research purposes. It only rewrites the code for runtime-vapor, allowing it to reuse the existing Vue ecosystem.",
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "npm:pure-vapor@3.6.0-beta.18"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "vite": "^7.0.5"
+  }
+}
