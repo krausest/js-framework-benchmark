@@ -80,7 +80,7 @@ view("tbody", data, (item, i) => {
 
   const tr = (
     <tr class={className} bind={data[i]}>
-      <td class="col-md-1">{item.id}</td>
+      <td class="col-md-1">{data[i].id}</td>
       <td class="col-md-4">
         <a onclick={() => selected(item.id)}>{data[i].label}</a>
       </td>
