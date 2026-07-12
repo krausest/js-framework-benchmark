@@ -36,6 +36,7 @@
     "del": "^7.0.0",
     "del-cli": "^5.0.0",
     "eft-parser": "^0.16.5",
+    "esbuild": "^0.28.1",
     "eslint": "^8.43.0",
     "eslint-plugin-react": "^7.32.2",
     "postcss": "^8.4.24",
@@ -51,5 +52,8 @@
   },
   "dependencies": {
     "ef-core": "^0.17.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true
   }
 }

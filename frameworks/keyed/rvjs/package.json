@@ -27,6 +27,7 @@
     "vite-plugin-rvjs": "0.0.1"
   },
   "devDependencies": {
+    "babel-plugin-jsx-dom-expressions": "^0.40.7",
     "typescript": "5.5.3",
     "vite": "5.4.6"
   }
