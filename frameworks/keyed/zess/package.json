@@ -14,10 +14,11 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@zessjs/vite-plugin": "^1.0.8",
-    "vite": "^7.1.9"
+    "@zessjs/compiler": "^1.1.10",
+    "@zessjs/vite-plugin": "1.0.8",
+    "vite": "7.1.9"
   },
   "dependencies": {
-    "@zessjs/core": "^1.0.8"
+    "@zessjs/core": "1.0.8"
   }
 }
