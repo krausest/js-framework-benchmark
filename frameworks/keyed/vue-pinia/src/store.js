@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
 import { buildData } from './data'
 
-export const useStore = defineStore({
-  id: 'main',
+export const useStore = defineStore('main',{
   state: () => ({
     selected: undefined,
     rows: [],
