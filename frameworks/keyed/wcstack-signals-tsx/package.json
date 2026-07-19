@@ -1,0 +1,34 @@
+{
+  "name": "js-framework-benchmark-wcstack-signals-tsx",
+  "version": "1.21.7",
+  "description": "@wcstack/signals keyed benchmark (TSX / classic JSX runtime)",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@wcstack/signals",
+    "frameworkHomeURL": "https://wcstack.github.io",
+    "issues": [],
+    "language": "TypeScript"
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "esbuild src/main.tsx --bundle --minify --format=esm --legal-comments=none --jsx=transform --jsx-factory=h --jsx-fragment=Fragment --outfile=dist/main.js"
+  },
+  "keywords": [
+    "web-components",
+    "signals",
+    "reactive",
+    "jsx"
+  ],
+  "author": "mogera551",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@wcstack/signals": "1.21.7"
+  },
+  "devDependencies": {
+    "esbuild": "0.27.3"
+  }
+}
