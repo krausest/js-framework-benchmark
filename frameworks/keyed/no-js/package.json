@@ -1,0 +1,21 @@
+{
+  "name": "js-framework-benchmark-no-js-keyed",
+  "version": "1.0.0",
+  "description": "No.JS keyed implementation",
+  "js-framework-benchmark": {
+    "frameworkVersion": "1.20.0",
+    "frameworkHomeURL": "https://no-js.dev",
+    "language": "JavaScript",
+    "includeInBuild": "index.html:src"
+  },
+  "scripts": {
+    "build-prod": "exit 0",
+    "dev": "exit 0"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}
