@@ -1,4 +1,4 @@
-import { atom, clearStack, context, reatomLinkedList } from '@reatom/core'
+import { atom, reatomLinkedList } from '@reatom/core'
 import { mount, type JSX } from '@reatom/jsx'
 
 type RowParams = [id: number, label: string]
@@ -200,6 +200,4 @@ const Row = ({ row }: { row: RowNode }): JSX.Element => (
   </tr>
 )
 
-clearStack()
-context.start()
 mount(document.getElementById('main')!, <App />)
