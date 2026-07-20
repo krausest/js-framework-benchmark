@@ -1,7 +1,5 @@
-import { atom, clearStack, context, reatomLinkedList } from '@reatom/core'
+import { atom, reatomLinkedList } from '@reatom/core'
 import { mount, type JSX } from '@reatom/jsx'
-
-type RowParams = [id: number, label: string]
 
 const ADJECTIVES = [
   'pretty',
@@ -62,28 +60,27 @@ const NOUNS = [
 
 let nextId = 1
 
-const selectedId = atom<number | null>(null, 'selectedId')
-
 const rows = reatomLinkedList(
-  ([id, label]: RowParams) => ({
+  (id: number, label: string) => ({
     id,
     label: atom(label, `label-${id}`),
+    selected: atom(false, `selected-${id}`),
   }),
   'rows',
 )
 
 type RowNode = ReturnType<typeof rows.create>
 
+let selectedRow: RowNode | null = null
+
 const rowElements = rows.reatomMap((row) => <Row row={row} />, 'rowElements')
 
 const run = () => {
-  selectedId.set(null)
   rows.clear()
   rows.createMany(buildRowParams(1000))
 }
 
 const runLots = () => {
-  selectedId.set(null)
   rows.clear()
   rows.createMany(buildRowParams(10000))
 }
@@ -93,40 +90,44 @@ const add = () => {
 }
 
 const update = () => {
-  const list = rows.array()
-  for (let i = 0; i < list.length; i += 10) {
-    const row = list[i]
-    if (row) {
-      row.label.set(`${row.label()} !!!`)
+  let i = 0
+  rows.find((row) => {
+    if (i % 10 === 0) {
+      row.label.set((state) => `${state} !!!`)
     }
-  }
+    i += 1
+    return false
+  })
 }
 
 const clear = () => {
   rows.clear()
-  selectedId.set(null)
 }
 
 const swapRows = () => {
-  const list = rows.array()
-  const first = list[1]
-  const second = list[998]
+  const { head, tail, LL_NEXT, LL_PREV } = rows()
+  const first = head?.[LL_NEXT]
+  const second = tail?.[LL_PREV]
   if (first && second) {
     rows.swap(first, second)
   }
 }
 
 const removeRow = (row: RowNode) => {
+  if (selectedRow === row) {
+    selectedRow = null
+  }
   rows.remove(row)
-  selectedId.set((current) => (current === row.id ? null : current))
 }
 
-const selectRow = (id: number) => {
-  selectedId.set(id)
+const selectRow = (row: RowNode) => {
+  selectedRow?.selected.set(false)
+  selectedRow = row
+  row.selected.set(true)
 }
 
-const buildRowParams = (count: number): RowParams[] => {
-  const params: RowParams[] = []
+const buildRowParams = (count: number): Array<[number, string]> => {
+  const params: Array<[number, string]> = []
   for (let i = 0; i < count; i += 1) {
     params.push([nextId, buildLabel()])
     nextId += 1
@@ -186,10 +187,10 @@ const App = (): JSX.Element => (
 )
 
 const Row = ({ row }: { row: RowNode }): JSX.Element => (
-  <tr class={() => (selectedId() === row.id ? 'danger' : undefined)}>
+  <tr class={() => (row.selected() ? 'danger' : undefined)}>
     <td class="col-md-1">{row.id}</td>
     <td class="col-md-4">
-      <a on:click={() => selectRow(row.id)}>{row.label}</a>
+      <a on:click={() => selectRow(row)}>{row.label}</a>
     </td>
     <td class="col-md-1">
       <a on:click={() => removeRow(row)}>
@@ -200,6 +201,4 @@ const Row = ({ row }: { row: RowNode }): JSX.Element => (
   </tr>
 )
 
-clearStack()
-context.start()
 mount(document.getElementById('main')!, <App />)
