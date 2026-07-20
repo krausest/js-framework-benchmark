@@ -10,7 +10,10 @@
     "frameworkVersionFromPackage": "@builder.io/qwik",
     "frameworkHomeURL": "https://qwik.builder.io/",
     "customURL": "/dist",
-    "issues": [1139]
+    "issues": [
+      1139
+    ],
+    "language": "TypeScript"
   },
   "scripts": {
     "build-dev": "vite --mode ssr",

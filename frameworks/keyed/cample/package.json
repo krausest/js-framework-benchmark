@@ -6,7 +6,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "cample",
     "frameworkHomeURL": "https://camplejs.github.io",
-    "issues": [1139]
+    "issues": [
+      1139
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "build-prod": "webpack --mode=production",

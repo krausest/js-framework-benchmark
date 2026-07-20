@@ -1,0 +1,24 @@
+{
+  "name": "js-framework-benchmark-keyed-akashjs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@akashjs/runtime",
+    "customURL": "/dist/",
+    "frameworkHomeURL": "https://akash.js.org",
+    "language": "TypeScript"
+  },
+  "scripts": {
+    "build-prod": "vite build"
+  },
+  "dependencies": {
+    "@akashjs/compiler": "0.1.60",
+    "@akashjs/runtime": "0.2.9",
+    "@akashjs/vite-plugin": "0.2.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21"
+  }
+}

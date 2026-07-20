@@ -9,7 +9,8 @@
     "useShadowRoot": true,
     "issues": [
       801
-    ]
+    ],
+    "language": "TypeScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

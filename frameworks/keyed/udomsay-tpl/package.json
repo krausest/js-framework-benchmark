@@ -9,7 +9,8 @@
     "issues": [
       772,
       1139
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

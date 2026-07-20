@@ -6,7 +6,8 @@
   "sideEffects": false,
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:@legendapp/state",
-    "frameworkHomeURL": "https://github.com/LegendApp/legend-state"
+    "frameworkHomeURL": "https://github.com/LegendApp/legend-state",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --watch --mode=development",

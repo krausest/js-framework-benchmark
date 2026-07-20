@@ -5,7 +5,8 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mobx-jsx",
-    "frameworkHomeURL": "https://github.com/ryansolid/mobx-jsx"
+    "frameworkHomeURL": "https://github.com/ryansolid/mobx-jsx",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c",

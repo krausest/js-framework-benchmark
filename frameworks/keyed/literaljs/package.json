@@ -1,0 +1,29 @@
+{
+  "name": "js-framework-benchmark-keyed-literaljs",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Benchmark for LiteralJS framework",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "literaljs",
+    "frameworkHomeURL": "https://literaljs.com/",
+    "customURL": "/dist",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "build": "rollup -c && cp index.html dist/index.html && sed -i 's|dist/main.js|main.js|g' dist/index.html",
+    "build-prod": "rollup -c --environment NODE_ENV:production && cp index.html dist/index.html && sed -i 's|dist/main.js|main.js|g' dist/index.html"
+  },
+  "keywords": [
+    "literaljs"
+  ],
+  "author": "Michael Farrell",
+  "license": "MIT",
+  "dependencies": {
+    "literaljs": "8.1.8"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-terser": "^0.4.0",
+    "rollup": "^4.0.0"
+  }
+}

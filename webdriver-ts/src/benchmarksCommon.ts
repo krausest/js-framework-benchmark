@@ -82,7 +82,7 @@ export enum Benchmark {
   _21 = "21_ready-memory",
   _22 = "22_run-memory",
   _23 = "23_update5-memory",
-  // _24 = "24_run5-memory",
+  _24 = "24_run5-memory",
   _25 = "25_run-clear-memory",
   _26 = "26_run-10k-memory",
   _30 = "30_startup",
@@ -229,12 +229,12 @@ export const memBenchmarkInfosArray: Array<MemBenchmarkInfo> = [
     description: "Memory usage after adding 1,000 rows.",
     type: BenchmarkType.MEM,
   },
-  {
-    id: Benchmark._23,
-    label: "update every 10th row for 1k rows (5 cycles)",
-    description: "Memory usage after clicking update every 10th row 5 times",
-    type: BenchmarkType.MEM,
-  },
+  // {
+  //   id: Benchmark._23,
+  //   label: "update every 10th row for 1k rows (5 cycles)",
+  //   description: "Memory usage after clicking update every 10th row 5 times",
+  //   type: BenchmarkType.MEM,
+  // },
   // {
   //   id: Benchmark._24,
   //   label: "replace 1k rows (5 cycles)",
@@ -247,12 +247,12 @@ export const memBenchmarkInfosArray: Array<MemBenchmarkInfo> = [
     description: "Memory usage after creating and clearing 1000 rows 5 times",
     type: BenchmarkType.MEM,
   },
-  {
-    id: Benchmark._26,
-    label: "run memory 10k",
-    description: "Memory usage after adding 10,000 rows.",
-    type: BenchmarkType.MEM,
-  },
+  // {
+  //   id: Benchmark._26,
+  //   label: "run memory 10k",
+  //   description: "Memory usage after adding 10,000 rows.",
+  //   type: BenchmarkType.MEM,
+  // },
 ];
 
 export const startupBenchmarkInfosArray: Array<StartupMainBenchmarkInfo> = [

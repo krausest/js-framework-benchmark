@@ -5,7 +5,8 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react:@react-rxjs/core",
-    "frameworkHomeURL": "https://react-rxjs.org/"
+    "frameworkHomeURL": "https://react-rxjs.org/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --watch",

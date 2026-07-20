@@ -5,7 +5,11 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@skruv/liten",
     "frameworkHomeURL": "https://github.com/skruv/liten",
-    "issues": [1139]
+    "issues": [
+      1139
+    ],
+    "language": "JavaScript",
+    "includeInBuild": "index.html"
   },
   "scripts": {
     "build-prod": "cp -f index-clean.html index.html && (printf '<script>' && esbuild src/index.js --bundle --minify --format=esm | tr -d '\n\r' && printf '</script>') >> index.html"

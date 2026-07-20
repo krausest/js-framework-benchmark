@@ -1,5 +1,6 @@
 import BenchmarkSelector from "./BenchmarkSelector";
 import FrameworkSelector from "./FrameworkSelector";
+import IssueSelector from "./IssueSelector";
 import ModeSelectors from "./ModeSelectors";
 import CopyPasteControls from "./CopyPasteControls";
 import "./SelectionToolbar.css";
@@ -16,6 +17,7 @@ const SelectionToolbar = ({ showDurationSelection }: Props) => {
       <div className="select-toolbar__actions">
         <FrameworkSelector />
         <BenchmarkSelector />
+        <IssueSelector />
       </div>
       <CopyPasteControls />
       <div className="select-toolbar__actions">

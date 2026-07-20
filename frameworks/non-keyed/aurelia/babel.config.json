@@ -1,13 +1,14 @@
 {
+  "assumptions": {
+    "setPublicClassFields": true,
+    "privateFieldsAsProperties": true,
+    "noDocumentAll": true,
+    "pureGetters": true,
+    "iterableIsArray": true
+  },
   "presets": [
     [
-      "@babel/preset-env",
-      {
-        "loose": true,
-        "exclude": [
-          "@babel/plugin-proposal-dynamic-import"
-        ]
-      }
+      "@babel/preset-env"
     ]
   ],
   "plugins": [
@@ -17,13 +18,6 @@
         "version": "legacy"
       }
     ],
-    "@babel/plugin-transform-class-static-block",
-    [
-      "@babel/plugin-transform-class-properties",
-      {
-        "loose": true
-      }
-    ],
-    "@babel/plugin-syntax-dynamic-import"
+    "@babel/plugin-transform-class-static-block"
   ]
 }

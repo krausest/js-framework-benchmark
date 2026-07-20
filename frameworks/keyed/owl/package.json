@@ -5,7 +5,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@odoo/owl",
     "frameworkHomeURL": "https://odoo.github.io/owl/",
-    "issues": [1139]
+    "issues": [
+      1139
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --mode development --watch",

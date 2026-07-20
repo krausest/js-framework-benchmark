@@ -6,7 +6,10 @@
   "js-framework-benchmark": {
     "frameworkVersion": "0.14.0",
     "frameworkHomeURL": "https://saru-tora.github.io/anansi/",
-    "issues": [1139]
+    "issues": [
+      1139
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "exit 0",

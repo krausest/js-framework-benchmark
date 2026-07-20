@@ -6,7 +6,8 @@
   "js-framework-benchmark": {
     "frameworkVersion": "0.4",
     "frameworkHomeURL": "https://reflex-frp.org/",
-    "customURL": "/bundled-dist"
+    "customURL": "/bundled-dist",
+    "language": "Haskell"
   },
   "contributors": [
     "Ryan Trinkle <ryan.trinkle@gmail.com>"

@@ -5,14 +5,17 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersion": "7.0.0",
-    "frameworkHomeURL": "https://github.com/purescript-halogen/purescript-halogen"
+    "frameworkHomeURL": "https://github.com/purescript-halogen/purescript-halogen",
+    "includeInBuild": "output-es/bundle.js",
+    "language": "PureScript"
   },
   "scripts": {
     "postinstall": "spago install",
     "clean": "rm -rf output output-es .spago node_modules",
     "build": "spago build",
     "build-unoptimized": "spago build && spago bundle --outfile output/bundle.js",
-    "build-prod": "spago build && purs-backend-es bundle-app --to output-es/bundle.js"
+    "build-prod-force": "spago build && purs-backend-es bundle-app --to output-es/bundle.js",
+    "build-prod": "echo This is a no-op. && echo purs does not support building on linux-arm64 currently. && echo If you really want to build: && echo npm run build-prod-force"
   },
   "keywords": [
     "purescript",

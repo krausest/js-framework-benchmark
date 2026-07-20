@@ -4,7 +4,8 @@
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@dlightjs/dlight",
-    "frameworkHomeURL": "https://github.com/dlight-js/dlight"
+    "frameworkHomeURL": "https://github.com/dlight-js/dlight",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

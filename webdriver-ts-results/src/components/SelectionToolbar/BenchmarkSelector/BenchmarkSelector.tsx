@@ -17,7 +17,11 @@ const BenchmarkSelector = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    isModalOpen ? (document.body.style.overflow = "hidden") : document.body.style.removeProperty("overflow");
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.removeProperty("overflow");
+    }
   }, [isModalOpen]);
 
   const showModal = () => {

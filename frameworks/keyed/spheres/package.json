@@ -6,7 +6,8 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "spheres",
-    "frameworkHomeURL": "https://github.com/brian-watkins/spheres"
+    "frameworkHomeURL": "https://github.com/brian-watkins/spheres",
+    "language": "TypeScript"
   },
   "scripts": {
     "start": "vite --open /frameworks/keyed/spheres/local.html",
@@ -16,10 +17,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.7.2",
-    "vite": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vite": "^7.3.3"
   },
   "dependencies": {
-    "spheres": "0.24.0"
+    "spheres": "^0.27.2"
   }
 }

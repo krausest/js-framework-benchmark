@@ -4,7 +4,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "karyon",
     "frameworkHomeURL": "https://karyon.dev",
-    "issues": [801]
+    "issues": [
+      801
+    ],
+    "language": "JavaScript"
   },
   "dependencies": {
     "karyon": "latest"
@@ -13,7 +16,7 @@
     "esbuild": "latest"
   },
   "scripts": {
-    "dev":"esbuild src/app.js --outfile=dist/app.js --bundle --watch",
+    "dev": "esbuild src/app.js --outfile=dist/app.js --bundle --watch",
     "build-prod": "esbuild src/app.js --outfile=dist/app.js --bundle --minify"
   }
 }

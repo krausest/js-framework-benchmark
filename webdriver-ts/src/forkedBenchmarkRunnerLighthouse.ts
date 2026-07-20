@@ -101,7 +101,7 @@ async function runStartupBenchmark(
 ): Promise<ErrorAndWarning<StartupBenchmarkResult>> {
   console.log("benchmarking startup", framework, benchmark.benchmarkInfo.id);
 
-  let error: string = undefined;
+  let error: string | undefined = undefined;
   try {
     let result = await runLighthouse(framework, benchmark.subbenchmarks, benchmarkOptions);
     return { error, warnings: [], result };
@@ -144,12 +144,12 @@ process.on("message", (msg: any) => {
   } = msg;
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
-      process.send(result);
+      process.send!(result);
       process.exit(0);
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunnerLighthouse");
-      process.send({ error: convertError(error) });
+      process.send!({ error: convertError(error) });
       process.exit(0);
     });
 });

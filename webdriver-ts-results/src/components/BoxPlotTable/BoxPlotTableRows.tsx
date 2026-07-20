@@ -1,4 +1,5 @@
-import { Benchmark, Framework, ResultLookup, CpuDurationMode } from "@/Common";
+import { CpuDurationMode } from "@/Common";
+import type { Benchmark, Framework, ResultLookup } from "@/Common";
 import BoxPlotTableRow from "./BoxPlotTableRow";
 
 interface Props {

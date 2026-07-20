@@ -6,7 +6,8 @@
   "description": "Benchmark for Google's incremental-dom framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "incremental-dom",
-    "frameworkHomeURL": "http://google.github.io/incremental-dom/"
+    "frameworkHomeURL": "http://google.github.io/incremental-dom/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "esbuild src/main.ts --bundle --outfile=dist/main.js --watch",
@@ -24,6 +25,6 @@
     "incremental-dom": "0.7.0"
   },
   "devDependencies": {
-    "esbuild": "^0.18.15"
+    "esbuild": "^0.27.3"
   }
 }

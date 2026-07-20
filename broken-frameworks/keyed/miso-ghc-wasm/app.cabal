@@ -1,0 +1,31 @@
+cabal-version:       3.0
+name:                miso-benchmark-keyed-wasm
+version:             0.1.0.0
+synopsis:            Benchmark of miso with the GHC WASM backend 
+category:            Web
+build-type:          Simple
+
+common options
+  if arch(wasm32)
+    ghc-options:
+      -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start"
+    cpp-options:
+      -DWASM
+
+executable app
+  import:
+    options
+  main-is:
+    Main.hs
+  hs-source-dirs:
+    src
+  ghc-options:
+    -O2 -fspecialise-aggressively -fdicts-cheap -funbox-strict-fields
+  build-depends:
+    base < 5,
+    containers,
+    random,
+    miso,
+    vector
+  default-language:
+    Haskell2010

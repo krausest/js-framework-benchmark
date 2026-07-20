@@ -1,0 +1,43 @@
+{
+  "name": "miso-js-keyed-1.11.0.0",
+  "version": "3.0.0",
+  "description": "Benchmark for miso-1.11",
+  "author": "David Johnson",
+  "contributors": [
+    "Jens Krause",
+    "David Johnson"
+  ],
+  "js-framework-benchmark": {
+    "frameworkVersion": "1.11.0.0",
+    "frameworkHomeURL": "https://haskell-miso.org/",
+    "customURL": "/",
+    "issues": [
+      1139
+    ],
+    "language": "TypeScript"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "license": "Apache-2.0",
+  "scripts": {
+    "build-prod": "echo This is a no-op. The generated javascript is already provided.",
+    "build": "bun build --outfile=main.js main.ts --target=browser",
+    "watch": "tsc --project tsconfig.lib.json --watch"
+  },
+  "main": "main.js",
+  "module": "miso.ts",
+  "keywords": [
+    "miso",
+    "javascript"
+  ],
+  "dependencies": {
+    "haskell-miso": "^0.0.11",
+    "typescript": "^6.0.3"
+  },
+  "files": [
+    "main.ts"
+  ]
+}

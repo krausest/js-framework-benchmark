@@ -10,7 +10,8 @@
     "frameworkHomeURL": "https://marionettejs.com/",
     "issues": [
       772
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

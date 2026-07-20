@@ -6,7 +6,8 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@b9g/crank",
-    "frameworkHomeURL": "https://crank.js.org/"
+    "frameworkHomeURL": "https://crank.js.org/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "CRANK_ENV=development rollup -c -w",

@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-plastron-dom-keyed",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build-prod": "vite build"
+  },
+  "dependencies": {
+    "plastron": "^0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vite": "^5.4.10"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.1.0",
+    "frameworkHomeURL": "https://github.com/rheophile10/plastron",
+    "language": "typescript",
+    "issues": [1139]
+  }
+}

@@ -8,7 +8,8 @@
     "frameworkHomeURL": "https://github.com/ryansolid/ko-jsx",
     "issues": [
       1139
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",
@@ -27,11 +28,15 @@
     "ko-jsx": "0.17.1"
   },
   "devDependencies": {
+    "esbuild": "^0.28.1",
     "@babel/core": "7.25.2",
     "@rollup/plugin-babel": "6.0.4",
     "@rollup/plugin-commonjs": "26.0.1",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-terser": "0.4.4",
     "rollup": "4.21.2"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true
   }
 }

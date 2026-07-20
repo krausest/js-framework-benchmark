@@ -6,7 +6,8 @@
     "frameworkVersionFromPackage": "vanjs-core",
     "issues": [
       772
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "bash bundle.sh && cp dist/bundle.js dist/bundle.out.js",

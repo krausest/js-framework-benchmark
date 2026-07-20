@@ -1,0 +1,21 @@
+{
+  "name": "sigwork",
+  "version": "0.1.0",
+  "description": "A 1.7kb (gzipped) VDOM-less signal-based reactive framework.",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.1.0",
+    "frameworkHomeURL": "https://framework.thatjust.works/",
+    "language": "JavaScript"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "esbuild --bundle --watch --jsx-factory=h --outfile=dist/index.min.js src/main.js",
+    "build-prod": "esbuild --bundle --minify --jsx-factory=h --outfile=dist/index.min.js src/main.js"
+  },
+  "dependencies": {
+    "sigwork": "^0.1.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.4"
+  }
+}

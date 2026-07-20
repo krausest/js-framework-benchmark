@@ -1,17 +1,18 @@
 {
   "name": "js-framework-benchmark-lui",
-  "version": "2.2.0",
+  "version": "2.4.1",
   "description": "Benchmark for lui",
   "js-framework-benchmark": {
-    "frameworkVersion": "2.2.0",
+    "frameworkVersion": "2.4.1",
     "frameworkHomeURL": "https://github.com/L3P3/lui",
-    "issues": [1139]
+    "includeInBuild": "src",
+    "language": "JavaScript"
   },
   "devDependencies": {
     "bun": "latest"
   },
   "scripts": {
     "dev": "echo 0",
-    "build-prod": "bun build --minify --outfile=src/app.min.js src/app.js"
+    "build-prod": "cd node_modules/bun && node install.js && cd ../.. && bun build --minify --outfile=src/app.min.js src/app.js"
   }
 }

@@ -11,7 +11,8 @@
     "useShadowRoot": true,
     "issues": [
       1139
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "clean": "wc-dev clean",

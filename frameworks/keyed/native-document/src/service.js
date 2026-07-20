@@ -1,7 +1,6 @@
 import { buildData } from './data';
 import { Observable } from "native-document";
 
-
 const data = Observable.array([]);
 const selected = Observable(0);
 
@@ -25,8 +24,8 @@ const AppService = {
       data.$value[i].label.set((val) => val + ' !!!');
     }
   },
-  remove(id) {
-    const idx = data.$value.findIndex(d => d.id === id);
+  remove(item) {
+    const idx = data.$value.findIndex(d => d.id === item.id);
     data.remove(idx);
   },
   init(nb ) {
@@ -39,8 +38,8 @@ const AppService = {
   runLots() {
     AppService.init(10000);
   },
-  select(id) {
-    selected.set(id);
+  select(item) {
+    selected.set(item.id);
   },
   swapRows() {
     data.swap(1, 998);

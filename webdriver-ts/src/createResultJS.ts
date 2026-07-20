@@ -154,6 +154,7 @@ async function main() {
         dir: (f.keyed ? "keyed/" : "non-keyed/") + f.name,
         keyed: f.keyed,
         issues: f.issues && f.issues.length > 0 ? f.issues : undefined,
+        language: f.language || "",
         frameworkHomeURL: f.frameworkHomeURL ?? "",
       }))
     ) +

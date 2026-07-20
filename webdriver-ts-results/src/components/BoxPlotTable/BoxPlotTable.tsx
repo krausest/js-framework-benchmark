@@ -1,5 +1,6 @@
 import React from "react";
-import { SORT_BY_NAME, Benchmark, Framework, ResultLookup, CpuDurationMode } from "@/Common";
+import { SORT_BY_NAME, CpuDurationMode } from "@/Common";
+import type { Benchmark, Framework, ResultLookup } from "@/Common";
 import BoxPlotTableRows from "./BoxPlotTableRows";
 
 interface Props {

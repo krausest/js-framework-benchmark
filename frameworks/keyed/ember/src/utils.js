@@ -3,10 +3,12 @@ import { cell } from '#soon/cell.js';
 class TodoItem {
   label;
   id;
+  selected;
 
   constructor(id, label) {
     this.label = cell(label);
     this.id = id;
+    this.selected = cell(false);
   }
 }
 

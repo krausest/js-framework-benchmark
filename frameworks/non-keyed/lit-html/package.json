@@ -9,7 +9,8 @@
     "frameworkHomeURL": "https://lit.dev/docs/libraries/standalone-templates/",
     "issues": [
       800
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

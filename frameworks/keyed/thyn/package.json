@@ -5,17 +5,18 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@thyn/core",
-    "frameworkHomeURL": "https://github.com/thynjs/thyn",
-    "customURL": "/dist"
+    "frameworkHomeURL": "https://thyn.dev",
+    "customURL": "/dist",
+    "issues": [],
+    "language": "JavaScript"
   },
   "scripts": {
     "build-prod": "vite build"
   },
   "devDependencies": {
-    "vite": "6.3.5",
-    "@thyn/vite-plugin": "0.0.218"
+    "vite": "7.3.1"
   },
   "dependencies": {
-    "@thyn/core": "0.0.218"
+    "@thyn/core": "0.0.355"
   }
 }

@@ -4,7 +4,6 @@ import cspRouter from "./src/csp/cspRouter.js";
 import staticRouter from "./src/static/staticRouter.js";
 import ejs from "ejs";
 import fastifyView from "@fastify/view";
-import minifier from "html-minifier";
 import { Readable } from "node:stream";
 import zlib from "node:zlib";
 import { responseSizeRouter } from "./src/responseSize/responseSizeRouter.js";
@@ -20,9 +19,6 @@ function buildServer(options: FastifyServerOptions = {}) {
   fastify.register(fastifyView, {
     engine: {
       ejs,
-    },
-    options: {
-      useHtmlMinifier: minifier,
     },
   });
 

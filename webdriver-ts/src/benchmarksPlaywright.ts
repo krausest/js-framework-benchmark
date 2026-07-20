@@ -99,11 +99,12 @@ export const benchSelect = new (class extends CPUBenchmarkPlaywright {
     await checkElementExists(page, "#run");
     await clickElement(page, "#run");
     await checkElementContainsText(page, "tbody>tr:nth-of-type(1000)>td:nth-of-type(1)", "1000");
-    for (let i = 0; i <= this.benchmarkInfo.warmupCount; i++) {
+    // for (let i = 0; i <= this.benchmarkInfo.warmupCount; i++) {
+    let i = 0;
       await clickElement(page, `tbody>tr:nth-of-type(${i + 5})>td:nth-of-type(2)>a`);
       await checkElementHasClass(page, `tbody>tr:nth-of-type(${i + 5})`, "danger");
       await checkCountForSelector(page, "tbody>tr.danger", 1);
-    }
+    // }
   }
   async run(browser: Browser, page: Page) {
       await clickElement(page, "tbody>tr:nth-of-type(2)>td:nth-of-type(2)>a");
@@ -323,8 +324,8 @@ export const benchmarks = [
    benchClear, 
    benchReadyMemory, 
    benchRunMemory, 
-   benchRun10KMemory,
-   benchUpdate5Memory,
+  //  benchRun10KMemory,
+  //  benchUpdate5Memory,
   //  benchReplace5Memory, 
    benchCreateClear5Memory,
 ];

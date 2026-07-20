@@ -4,7 +4,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@openinula/next",
     "frameworkHomeURL": "https://www.openinula.net/",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "language": "JavaScript"
   },
   "type": "module",
   "scripts": {

@@ -5,7 +5,8 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "js-art",
-    "frameworkHomeURL": "https://github.com/sullay/Art-js"
+    "frameworkHomeURL": "https://github.com/sullay/Art-js",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "vite",

@@ -30,9 +30,6 @@ export default defineConfig({
       }),
 
   // Normal stuff
-  resolve: {
-    extensions,
-  },
   plugins: [
     ember(),
     babel({

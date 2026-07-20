@@ -1,6 +1,6 @@
-import { HTMLBuilder, HTMLView, renderToDOM } from "spheres/view";
-import { RowData, rows, selectRow } from "./state.js";
-import { createStore, State, StoreMessage, use, write } from "spheres/store";
+import { HTMLBuilder, HTMLView, renderToDOM, UseItem } from "spheres/view";
+import { removeRow, RowData, rows, selectRow } from "./state.js";
+import { createStore, StoreMessage, use, write } from "spheres/store";
 
 function app(root: HTMLBuilder) {
   root.div((el) => {
@@ -80,21 +80,26 @@ function app(root: HTMLBuilder) {
   });
 }
 
-function tableRow(row: State<RowData>): HTMLView {
+function tableRow(useRow: UseItem<RowData>): HTMLView {
+  const doRemove = use(useRow(removeRow))
+  const doSelect = use(useRow(selectRow))
+
   return (root) =>
     root.tr((el) => {
       el.config
-        .class((get) => (get(get(row).isSelected) ? "danger" : undefined));
+        .class(useRow((row, get) => get(row.data.isSelected) ? "danger" : undefined))
       el.children
         .td((el) => {
           el.config.class("col-md-1");
-          el.children.textNode((get) => `${get(row).id}`);
+          el.children.textNode(useRow(row => row.data.id))
         })
         .td((el) => {
           el.config.class("col-md-4");
           el.children.a((el) => {
-            el.config.class("lbl").on("click", () => use(selectRow(row)));
-            el.children.textNode((get) => get(get(row).label));
+            el.config
+              .class("lbl")
+              .on("click", () => doSelect)
+            el.children.textNode(useRow((row, get) => get(row.data.label)))
           });
         })
         .td((el) => {
@@ -102,7 +107,7 @@ function tableRow(row: State<RowData>): HTMLView {
           el.children.a((el) => {
             el.config
               .class("remove")
-              .on("click", () => use((get) => write(rows, { type: "remove", rowData: get(row) })));
+              .on("click", () => doRemove)
             el.children.span((el) => {
               el.config.class("remove glyphicon glyphicon-remove").aria("hidden", "true");
             });

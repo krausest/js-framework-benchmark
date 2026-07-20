@@ -3,12 +3,14 @@ cp webdriver-ts-results/dist/BoxPlotTable*.js ../krausest.github.io/js-framework
 cp webdriver-ts-results/dist/chartjs*.js ../krausest.github.io/js-framework-benchmark/
 cp webdriver-ts-results/dist/index*.css ../krausest.github.io/js-framework-benchmark/
 cp webdriver-ts-results/dist/index*.js ../krausest.github.io/js-framework-benchmark/
+cp webdriver-ts-results/dist/rolldown*.js ../krausest.github.io/js-framework-benchmark/
 cd ../krausest.github.io
 git add js-framework-benchmark/current.html
 git add js-framework-benchmark/BoxPlotTable*.js
 git add js-framework-benchmark/chartjs*.js
 git add js-framework-benchmark/index*.css
 git add js-framework-benchmark/index*.js
+git add js-framework-benchmark/rolldown*.js
 git commit -m "update results"
 git push
 cd ../js-framework-benchmark/webdriver-ts

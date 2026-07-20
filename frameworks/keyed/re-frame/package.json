@@ -3,7 +3,8 @@
   "private": true,
   "js-framework-benchmark": {
     "frameworkVersion": "1.4.3",
-    "frameworkHomeURL": "https://day8.github.io/re-frame/re-frame/"
+    "frameworkHomeURL": "https://day8.github.io/re-frame/re-frame/",
+    "language": "ClojureScript"
   },
   "scripts": {
     "dev": "LEIN_VERSION=2.9.3 lein cljsbuild auto",

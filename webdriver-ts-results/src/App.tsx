@@ -3,34 +3,30 @@ import { FrameworkType } from "@/Common";
 import { knownIssues } from "@/helpers/issues";
 import ResultTable from "@/components/ResultTable";
 import SelectionToolbar from "@/components/SelectionToolbar";
-import { List, Typography } from "antd";
+import { Card } from "antd";
 
 const KnownIssuesList = () => {
   const data = knownIssues;
 
   return (
-    <List
-      header={<h2>Known issues and notes</h2>}
-      bordered
-      className="known-issues"
-      dataSource={data}
-      renderItem={(issue) => (
-        <List.Item>
-          <Typography.Text className="known-issues__issue-code">
+    <Card title={<h2>Known issues and notes</h2>} className="known-issues">
+      <ul>
+        {data.map((issue) => (
+          <li key={issue.number}>
             <a id={issue.number.toFixed()} href={issue.link}>
               {issue.number}
-            </a>
-          </Typography.Text>{" "}
-          {issue.text}
-        </List.Item>
-      )}
-    />
+            </a>{" "}
+            {issue.text}
+          </li>
+        ))}
+      </ul>
+    </Card>
   );
 };
 
 const App = () => {
+  const version = "Chrome 150.0.7871.47"
   // eslint-disable-next-line no-constant-condition
-  const version = "Chrome 141.0.7390.55"
   const disclaimer = false ? (
     <div>
       <h2>js-framework-benchmark results for {version}</h2>
@@ -49,7 +45,7 @@ const App = () => {
 
   const testEnvironmentInfo = (
     <p>
-      The benchmark was run on a MacBook Pro 14 (48 GB RAM, M4 14/20 Cores, OSX 26.0.1), {version}
+      The benchmark was run on a MacBook Pro 14 (48 GB RAM, M4 14/20 Cores, OSX 26.5.2), {version}
       (arm64) using the puppeteer benchmark driver with reduced tracing.
     </p>
   );
@@ -70,7 +66,7 @@ const App = () => {
         to compute the overall result.
       </p>
       <p>
-        Starting with chrome 137 we're benchmarking the non-keyed implementations only for even chrome versions.
+        Starting with chrome 137 we&apos;re benchmarking the non-keyed implementations only for even chrome versions.
       </p>
       <main>
         <SelectionToolbar showDurationSelection={true} />

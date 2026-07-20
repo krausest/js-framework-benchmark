@@ -5,9 +5,11 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "s2-engine",
     "frameworkHomeURL": "https://gr0uch.github.io/s2",
+    "includeInBuild": "node_modules/s2-engine/dist",
     "issues": [
       800
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "echo 0",

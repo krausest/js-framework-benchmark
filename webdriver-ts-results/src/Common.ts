@@ -1,6 +1,5 @@
 import { jStat } from "jstat";
 import { formatEn } from "@/utils";
-import { knownIssues } from "@/helpers/issues";
 
 // Formatter for memory results with 2 decimal places
 const formatMemory = new Intl.NumberFormat("en-US", {
@@ -35,6 +34,7 @@ export interface Framework {
   dir: string;
   type: FrameworkType;
   issues: number[];
+  language: string;
   frameworkHomeURL: string;
   displayname: string;
 }
@@ -130,7 +130,6 @@ export class TableResultValueEntry {
     public bgColor: string,
     public textColor: string,
     public statisticResult: StatisticResult,
-    // eslint-disable-next-line unicorn/no-useless-undefined
     public statisticallySignificantFactor: string | number | undefined = undefined
   ) {}
 }
@@ -230,30 +229,15 @@ export class ResultTableData {
     sortKey: string,
     public displayMode: DisplayMode,
     public compareWith: Framework | undefined,
-    public selectedCategories: Set<number>,
     public cpuDurationMode: string
   ) {
-    const allowedIssues = new Set(knownIssues.map((issue) => issue.number));
-    const defaultFrameworks = ["vanillajs-keyed", "vanillajs-1-keyed", "vanillajs-non-keyed", "vanillajs-1-non-keyed"];
-
-    console.log("ResultTableData", allowedIssues, selectedCategories);
-
-    this.selectedFameworks = new Set<Framework>();
-
-    selectedFrameworksInDropdown.forEach((framework) => {
-      if (this.isFrameworkAllowed(framework, allowedIssues, defaultFrameworks)) {
-        this.selectedFameworks.add(framework);
-      }
-    });
+    this.selectedFameworks = new Set(selectedFrameworksInDropdown);
     this.frameworks = this.filterFrameworksByType(this.selectedFameworks, type);
     this.frameworksForFactors = this.allFrameworks.filter(
-      (framework) => framework.type === type && this.isFrameworkAllowed(framework, allowedIssues, defaultFrameworks)
+      (framework) => framework.type === type
     );
 
     this.update(sortKey);
-  }
-  private isFrameworkAllowed(framework: Framework, allowedIssues: Set<number>, defaultFrameworks: Array<string>) {
-    return framework.issues.every((i) => allowedIssues.has(i)) || defaultFrameworks.includes(framework.name);
   }
   private filterFrameworksByType(selectedFrameworks: Set<Framework>, type: FrameworkType) {
     return this.allFrameworks.filter((framework) => framework.type === type && selectedFrameworks.has(framework));

@@ -1,0 +1,22 @@
+{
+    "name": "js-framework-benchmark-qingkuai",
+    "private": true,
+    "type": "module",
+    "js-framework-benchmark": {
+        "frameworkVersionFromPackage": "qingkuai",
+        "frameworkHomeURL": "https://qingkuai.dev",
+        "language": "JavaScript"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build-prod": "vite build"
+    },
+    "dependencies": {
+        "qingkuai": "^1.0.61",
+        "vite": "^8.0.3",
+        "vite-plugin-qingkuai": "^1.0.14"
+    },
+    "devDependencies": {
+        "terser": "^5.46.1"
+    }
+}

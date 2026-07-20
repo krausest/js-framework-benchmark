@@ -55,7 +55,7 @@ async function shadowRoot(driver: WebDriver, selector: string): Promise<WebEleme
 }
 
 // Fake findByXPath for simple XPath expressions to allow usage with shadow dom
-export async function findByXPath(driver: WebDriver, path: string, isInButtonArea: boolean): Promise<WebElement> {
+export async function findByXPath(driver: WebDriver, path: string, isInButtonArea: boolean): Promise<WebElement | null> {
   let root = await mainRoot(driver, isInButtonArea);
   let paths = convertPath(path);
   let n = root;
@@ -111,12 +111,13 @@ export async function testTextContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && v.includes(text);
-      } catch (error) {
+        return !!(v && v.includes(text));
+      } catch (error: unknown) {
         console.log(
           "ignoring error in testTextContains for xpath = " + xpath + " text = " + text,
-          error.toString().split("\n")[0]
+          (error as Error).toString().split("\n")[0]
         );
+        return false;
       }
     },
     timeout
@@ -137,12 +138,13 @@ export function testTextNotContained(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getText();
-        return v && !v.includes(text);
-      } catch (error) {
+        return !!(v && !v.includes(text));
+      } catch (error: unknown) {
         console.log(
           "ignoring error in testTextNotContained for xpath = " + xpath + " text = " + text,
-          error.toString().split("\n")[0]
+          (error as Error).toString().split("\n")[0]
         );
+        return false;
       }
     },
     timeout
@@ -163,12 +165,13 @@ export function testClassContains(
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         if (elem == null) return false;
         let v = await elem.getAttribute("class");
-        return v && v.includes(text);
-      } catch (error) {
+        return !!(v && v.includes(text));
+      } catch (error: unknown) {
         console.log(
           "ignoring error in testClassContains for xpath = " + xpath + " text = " + text,
-          error.toString().split("\n")[0]
+          (error as Error).toString().split("\n")[0]
         );
+        return false;
       }
     },
     timeout
@@ -187,8 +190,9 @@ export function testElementLocatedByXpath(
       try {
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         return elem ? true : false;
-      } catch (error) {
-        console.log("ignoring error in testElementLocatedByXpath for xpath = " + xpath, error.toString());
+      } catch (error: unknown) {
+        console.log("ignoring error in testElementLocatedByXpath for xpath = " + xpath, (error as Error).toString());
+        return false;
       }
     },
     timeout
@@ -207,11 +211,12 @@ export function testElementNotLocatedByXPath(
       try {
         let elem = await findByXPath(driver, xpath, isInButtonArea);
         return elem ? false : true;
-      } catch (error) {
+      } catch (error: unknown) {
         console.log(
           "ignoring error in testElementNotLocatedByXPath for xpath = " + xpath,
-          error.toString().split("\n")[0]
+          (error as Error).toString().split("\n")[0]
         );
+        return false;
       }
     },
     timeout
@@ -231,8 +236,9 @@ export function testElementLocatedById(
         let elem = await mainRoot(driver, isInButtonArea);
         await elem.findElement(By.id(id));
         return true;
-      } catch (error) {
-        // console.log("ignoring error in testElementLocatedById for id = "+id,err.toString().split("\n")[0]);
+      } catch (error: unknown) {
+        // console.log("ignoring error in testElementLocatedById for id = "+id,(error as Error).toString().split("\n")[0]);
+        return false;
       }
     },
     timeout
@@ -244,14 +250,17 @@ async function retry<T>(
   driver: WebDriver,
   fun: (driver: WebDriver, retryCount: number) => Promise<T>
 ): Promise<T> {
+  let lastError: unknown;
   for (let i = 0; i < retryCount; i++) {
     try {
       return await fun(driver, i);
     } catch (error) {
+      lastError = error;
       console.log("comand failed. Retry #", i + 1);
       await driver.sleep(200);
     }
   }
+  throw lastError;
 }
 
 // Stale element prevention. For aurelia even after a testElementLocatedById clickElementById for the same id can fail
@@ -268,6 +277,7 @@ export function clickElementByXPath(driver: WebDriver, xpath: string, isInButton
   return retry(5, driver, async function (driver, count) {
     if (count > 1 && config.LOG_DETAILS) console.log("clickElementByXPath", xpath, "attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
+    if (!elem) throw new Error(`Element with xpath ${xpath} not found`);
     await elem.click();
   });
   // Stale element possible:
@@ -278,6 +288,7 @@ export async function getTextByXPath(driver: WebDriver, xpath: string, isInButto
   return await retry(5, driver, async function (driver, count) {
     if (count > 1 && config.LOG_DETAILS) console.log("getTextByXPath", xpath, "attempt #", count);
     let elem = await findByXPath(driver, xpath, isInButtonArea);
+    if (!elem) throw new Error(`Element with xpath ${xpath} not found`);
     return await elem.getText();
   });
 }

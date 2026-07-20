@@ -1,0 +1,27 @@
+{
+  "name": "js-framework-benchmark-astro",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Astro demo",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "astro",
+    "customURL": "/dist",
+    "frameworkHomeURL": "https://astro.build",
+    "issues": [
+      772,
+      801,
+      1139
+    ],
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "build-prod": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^6.3.3"
+  }
+}

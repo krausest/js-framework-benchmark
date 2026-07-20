@@ -9,7 +9,8 @@
     "issues": [
       800,
       1139
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "esbuild src/index.js --outfile=dist/main.js --bundle --watch",

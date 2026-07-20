@@ -10,6 +10,7 @@
     "lib": ["es2022", "dom"],
     "allowSyntheticDefaultImports": true,
     "noLib": false,
+    "skipLibCheck": true,
 
     "noImplicitAny": true,
     "noImplicitThis": true,

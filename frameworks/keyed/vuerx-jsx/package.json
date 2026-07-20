@@ -5,7 +5,8 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "vuerx-jsx",
-    "frameworkHomeURL": "https://github.com/ryansolid/vuerx-jsx"
+    "frameworkHomeURL": "https://github.com/ryansolid/vuerx-jsx",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

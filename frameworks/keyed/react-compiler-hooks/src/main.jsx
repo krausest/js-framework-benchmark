@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState } from "react";
 import { createRoot } from "react-dom/client";
 import { buildData } from "./utils";
 
@@ -12,7 +12,7 @@ const Button = ({ id, title, onClick }) => {
   );
 };
 
-const Row = memo(({ isSelected, item, select, remove }) => {
+const Row = ({ isSelected, item, select, remove }) => {
   return (
     <tr className={isSelected ? "danger" : ""}>
       <td className="col-md-1">{item.id}</td>
@@ -27,7 +27,7 @@ const Row = memo(({ isSelected, item, select, remove }) => {
       <td className="col-md-6" />
     </tr>
   );
-});
+}
 
 const emptyArr = [];
 

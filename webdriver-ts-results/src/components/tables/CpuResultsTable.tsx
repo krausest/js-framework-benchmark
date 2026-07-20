@@ -1,5 +1,6 @@
 import React from "react";
-import { ResultTableData, SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, BenchmarkType } from "@/Common";
+import { SORT_BY_NAME, SORT_BY_GEOMMEAN_CPU, BenchmarkType } from "@/Common";
+import type { ResultTableData } from "@/Common";
 import GeomMeanRow from "./GeomMeanRow";
 import CompareRow from "./CompareRow";
 import ValueResultRow from "./ValueResultRow";
@@ -20,15 +21,6 @@ const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
 
   return resultsCPU.results.length === 0 ? null : (
     <>
-      {/* Dummy row for fixed td width */}
-      <thead className="dummy">
-        <tr>
-          <th></th>
-          {data.frameworks.map((_f, idx) => (
-            <th key={idx}></th>
-          ))}
-        </tr>
-      </thead>
       <thead>
         <tr>
           <td className="description">
@@ -90,6 +82,14 @@ const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
                 code
               </a>
             </th>
+          ))}
+        </tr>
+      </thead>
+      <thead>
+        <tr>
+          <th>Language</th>
+          {data.frameworks.map((f) => (
+            <th key={f.name}>{f.language}</th>
           ))}
         </tr>
       </thead>

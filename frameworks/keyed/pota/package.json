@@ -6,7 +6,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "pota",
     "frameworkHomeURL": "https://pota.quack.uy/",
-    "issues": [801]
+    "issues": [
+      801
+    ],
+    "language": "TypeScript"
   },
   "scripts": {
     "build-dev": "rollup -c -w",
@@ -20,10 +23,12 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "pota": "^0.19.206"
+    "pota": "0.20.233"
   },
   "devDependencies": {
-    "@babel/core": "7.26.0",
+    "@babel/core": "7.29.0",
+    "@babel/helper-plugin-utils": "^7.29.7",
+    "@babel/plugin-syntax-jsx": "^7.29.7",
     "@rollup/plugin-babel": "6.0.4",
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-terser": "0.4.4",

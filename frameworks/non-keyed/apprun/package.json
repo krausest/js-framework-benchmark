@@ -8,7 +8,8 @@
     "frameworkHomeURL": "https://apprun.js.org/",
     "issues": [
       772
-    ]
+    ],
+    "language": "TypeScript"
   },
   "scripts": {
     "dev": "esbuild src/main.tsx --bundle --outfile=dist/main.js --serve=8080 --servedir=.",

@@ -4,11 +4,13 @@
   "description": "Benchmark for Dioxus",
   "license": "ISC",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.5.1",
+    "frameworkVersion": "0.7.2",
     "frameworkHomeURL": "https://dioxuslabs.com/",
+    "customURL": "/bundled-dist",
     "issues": [
       1139
-    ]
+    ],
+    "language": "Rust"
   },
   "scripts": {
     "build-prod": "echo This is a no-op. && echo Due to heavy dependencies, the generated javascript is already provided. && echo If you really want to rebuild from source use: && echo npm run build-prod-force",

@@ -29,6 +29,7 @@
   },
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@lifeart/gxt",
-    "frameworkHomeURL": "https://github.com/lifeart/glimmer-next/"
+    "frameworkHomeURL": "https://github.com/lifeart/glimmer-next/",
+    "language": "TypeScript"
   }
 }

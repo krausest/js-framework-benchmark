@@ -5,7 +5,8 @@
   "description": "Benchmark for mettle.js framework",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "mettle",
-    "frameworkHomeURL": "https://maomincoding.github.io/mettle-doc/"
+    "frameworkHomeURL": "https://maomincoding.github.io/mettle-doc/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --watch",

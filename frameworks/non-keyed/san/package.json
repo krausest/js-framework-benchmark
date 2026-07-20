@@ -5,7 +5,10 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "san",
     "frameworkHomeURL": "https://baidu.github.io/san/",
-    "issues": [800]
+    "issues": [
+      800
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --watch",
@@ -24,7 +27,7 @@
   "devDependencies": {
     "@babel/core": "7.21.0",
     "@babel/preset-env": "7.20.2",
-    "babel-loader": "9.1.2",    
+    "babel-loader": "9.1.2",
     "webpack": "5.76.1",
     "webpack-cli": "5.0.1"
   },

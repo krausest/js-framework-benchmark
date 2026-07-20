@@ -82,6 +82,15 @@ const ResultTable = ({ type }: Props) => {
           <div className="results">
             <div className="results__table-container">
               <table className="results__table">
+                {/* Dummy row for fixed td width */}
+                <thead className="dummy">
+                  <tr>
+                    <th></th>
+                    {data.frameworks.map((_f, idx) => (
+                      <th key={idx}></th>
+                    ))}
+                  </tr>
+                </thead>
                 <CpuResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
                 <MemResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
                 <SizeResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />

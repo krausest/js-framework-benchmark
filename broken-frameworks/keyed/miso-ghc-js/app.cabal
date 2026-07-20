@@ -1,0 +1,31 @@
+cabal-version:       3.0
+name:                miso-benchmark-keyed-js
+version:             0.1.0.0
+synopsis:            Benchmark of miso with the GHC JS backend 
+category:            Web
+build-type:          Simple
+
+common options
+  if arch(javascript)
+    ld-options:
+      -sEXPORTED_RUNTIME_METHODS=HEAP8
+    cpp-options:
+      -DGHCJS_BROWSER
+      -DJS
+
+executable app
+  import:
+    options
+  main-is:
+    Main.hs
+  hs-source-dirs:
+    src
+  ghc-options:
+    -O2 -fspecialise-aggressively -fdicts-cheap -funbox-strict-fields
+  build-depends:
+    base < 5,
+    containers,
+    miso,
+    vector
+  default-language:
+    Haskell2010

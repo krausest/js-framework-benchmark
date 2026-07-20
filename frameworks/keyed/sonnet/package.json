@@ -9,7 +9,8 @@
     "customURL": "/dist",
     "issues": [
       772
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "vite",

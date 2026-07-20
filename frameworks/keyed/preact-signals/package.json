@@ -5,7 +5,8 @@
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "preact:@preact/signals",
-    "frameworkHomeURL": "https://preactjs.com/guide/v10/signals"
+    "frameworkHomeURL": "https://preactjs.com/guide/v10/signals",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

@@ -57,22 +57,24 @@ async function runCPUBenchmark(
   benchmark: CPUBenchmarkWebdriver,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
-  let error: string = undefined;
+  let error: string | undefined = undefined;
   let warnings: string[] = [];
   let results: CPUBenchmarkResult[] = [];
 
   console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
-  let driver: WebDriver = null;
+  let driver: WebDriver | null = null;
   try {
     // let driver = buildDriver(benchmarkOptions);
-    let driver = await new Builder().forBrowser(benchmarkOptions.browser).build();
+    driver = await new Builder().forBrowser(benchmarkOptions.browser).build();
     console.log(`using afterframe measurement with ${benchmarkOptions.browser}`);
     await driver.manage().window().maximize();
 
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
       setUseShadowRoot(framework.useShadowRoot);
       setUseRowShadowRoot(framework.useRowShadowRoot);
-      setShadowRootName(framework.shadowRootName);
+      if (framework.shadowRootName) {
+        setShadowRootName(framework.shadowRootName);
+      }
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
       console.log("runCPUBenchmark: before loading page");
       // must be run with an IP adress otherwise Safari crashes with an error.
@@ -117,7 +119,7 @@ export async function executeBenchmark(
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult>;
+  let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult> = { error: "No benchmark executed" };
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }
@@ -140,12 +142,12 @@ process.on("message", (msg: any) => {
   } = msg;
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
-      process.send(result);
+      process.send!(result);
       process.exit(0);
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunner");
-      process.send({ error: convertError(error) });
+      process.send!({ error: convertError(error) });
       process.exit(0);
     });
 });

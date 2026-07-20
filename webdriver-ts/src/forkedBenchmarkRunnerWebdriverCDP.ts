@@ -76,19 +76,21 @@ async function runCPUBenchmark(
   benchmark: CPUBenchmarkWebdriverCDP,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
-  let error: string = undefined;
+  let error: string | undefined = undefined;
   let warnings: string[] = [];
   let results: CPUBenchmarkResult[] = [];
 
   console.log("benchmarking", framework, benchmark.benchmarkInfo.id, "with webdriver (tracing via CDP Connection)");
-  let driver: WebDriver = null;
+  let driver: WebDriver | null = null;
   try {
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
       driver = buildDriver(benchmarkOptions);
       let trace: any = { traceEvents: [] }; //await fs.open(fileNameTrace(framework, benchmark.benchmarkInfo, i), "w");
       setUseShadowRoot(framework.useShadowRoot);
       setUseRowShadowRoot(framework.useRowShadowRoot);
-      setShadowRootName(framework.shadowRootName);
+      if (framework.shadowRootName) {
+        setShadowRootName(framework.shadowRootName);
+      }
       setButtonsInShadowRoot(framework.buttonsInShadowRoot);
       await driver.get(`http://${benchmarkOptions.host}:${benchmarkOptions.port}/${framework.uri}/index.html`);
 
@@ -208,7 +210,7 @@ export async function executeBenchmark(
 
   let benchmark = runBenchmarks[0];
 
-  let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult>;
+  let errorAndWarnings: ErrorAndWarning<number | CPUBenchmarkResult> = { error: "No benchmark executed" };
   if (benchmark.benchmarkInfo.type == BenchmarkType.CPU) {
     errorAndWarnings = await runCPUBenchmark(framework, benchmark, benchmarkOptions);
   }
@@ -233,12 +235,12 @@ process.on("message", (msg: any) => {
   } = msg;
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
-      process.send(result);
+      process.send!(result);
       process.exit(0);
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunner");
-      process.send({ error: convertError(error) });
+      process.send!({ error: convertError(error) });
       process.exit(0);
     });
 });

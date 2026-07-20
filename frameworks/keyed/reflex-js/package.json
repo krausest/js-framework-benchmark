@@ -4,7 +4,8 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "reflex-dom",
-    "frameworkHomeURL": "https://github.com/zouloux/reflex"
+    "frameworkHomeURL": "https://github.com/zouloux/reflex",
+    "language": "TypeScript"
   },
   "description": "Benchmark for Reflex-DOM library",
   "scripts": {

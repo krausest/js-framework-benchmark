@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-sigment-keyed",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "sigment",
+    "frameworkHomeURL": "https://sigment.dev",
+    "issues": [1139, 772, 801]
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "author": "yaniv soussana",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.60.0"
+  },
+  "dependencies": {
+    "sigment": "^1.4.2"
+  }
+}

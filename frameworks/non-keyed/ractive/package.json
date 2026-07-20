@@ -4,7 +4,8 @@
   "description": "Boilerplate for Ractive.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "ractive",
-    "frameworkHomeURL": "https://ractive.js.org/"
+    "frameworkHomeURL": "https://ractive.js.org/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --watch",

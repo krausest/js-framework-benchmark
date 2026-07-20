@@ -71,7 +71,7 @@ export let config = {
   LOG_DETAILS: false,
   LOG_DEBUG: false,
   LOG_TIMELINE: false,
-  EXIT_ON_ERROR: null as boolean, // set from command line
+  EXIT_ON_ERROR: false, // set from command line
   STARTUP_DURATION_FROM_EVENTLOG: true,
   STARTUP_SLEEP_DURATION: 1000,
   WRITE_RESULTS: true,
@@ -92,6 +92,7 @@ export interface FrameworkData {
   buttonsInShadowRoot: boolean;
   startLogicEventName: string;
   issues: number[];
+  language: string;
   frameworkHomeURL: string;
 }
 
@@ -108,6 +109,7 @@ export interface FrameworkInformation {
   buttonsInShadowRoot?: boolean;
   versions?: { [key: string]: string };
   frameworkVersionString: string;
+  language: string;
   frameworkHomeURL: string;
   startLogicEventName: string;
 }
@@ -164,6 +166,7 @@ export async function initializeFrameworks(
         shadowRootName: frameworkVersionInformation.shadowRootName,
         buttonsInShadowRoot: !!frameworkVersionInformation.buttonsInShadowRoot,
         issues: (frameworkVersionInformation.issues ?? []).map(Number),
+        language: frameworkVersionInformation.language ?? "",
         frameworkHomeURL: frameworkVersionInformation.frameworkHomeURL ?? "",
         startLogicEventName: frameworkVersionInformation.startLogicEventName
       });

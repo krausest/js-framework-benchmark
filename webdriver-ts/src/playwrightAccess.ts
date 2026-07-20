@@ -96,9 +96,8 @@ function browserPath(benchmarkOptions: BenchmarkOptions) {
   if (process.platform == "darwin") {
     return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
   } else if (process.platform == "linux") {
-    return "/usr/bin/google-chrome";
+    return "/snap/bin/chromium";
   } else if (/^win/i.test(process.platform)) {
-    // eslint-disable-next-line unicorn/prefer-string-raw
     return "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
   } else {
     throw new Error("Path to Google Chrome executable must be specified");

@@ -5,9 +5,11 @@
     "frameworkVersionFromPackage": "@dojo/framework",
     "frameworkHomeURL": "https://dojo.io/",
     "customURL": "/output/dist",
+    "includeInBuild": "output/dist",
     "issues": [
       1139
-    ]
+    ],
+    "language": "TypeScript"
   },
   "scripts": {
     "build-prod": "NODE_OPTIONS=--openssl-legacy-provider dojo build"

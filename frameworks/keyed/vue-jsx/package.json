@@ -5,7 +5,8 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "vue",
-    "frameworkHomeURL": "https://vue.js.org/"
+    "frameworkHomeURL": "https://vue.js.org/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "vite",

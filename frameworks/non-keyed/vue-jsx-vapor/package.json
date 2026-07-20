@@ -5,7 +5,8 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "vue",
-    "frameworkHomeURL": "https://github.com/vuejs/vue-jsx-vapor"
+    "frameworkHomeURL": "https://github.com/vuejs/vue-jsx-vapor",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "vite --force",

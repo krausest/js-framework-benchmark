@@ -69,12 +69,12 @@ async function runCPUBenchmark(
   benchmark: CPUBenchmarkPlaywright,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<CPUBenchmarkResult>> {
-  let error: string = undefined;
+  let error: string | undefined = undefined;
   let warnings: string[] = [];
   let results: CPUBenchmarkResult[] = [];
 
   console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
-  let browser: Browser = null;
+  let browser: Browser | null = null;
   try {
     browser = await startBrowser(benchmarkOptions);
     for (let i = 0; i < benchmarkOptions.batchSize; i++) {
@@ -157,12 +157,12 @@ async function runMemBenchmark(
   benchmark: MemBenchmarkPlaywright,
   benchmarkOptions: BenchmarkOptions
 ): Promise<ErrorAndWarning<number>> {
-  let error: string = undefined;
+  let error: string | undefined = undefined;
   let warnings: string[] = [];
   let results: number[] = [];
 
   console.log("benchmarking", framework, benchmark.benchmarkInfo.id);
-  let browser: Browser = null;
+  let browser: Browser | null = null;
   try {
     browser = await startBrowser(benchmarkOptions);
     const page = await browser.newPage();
@@ -254,12 +254,12 @@ process.on("message", (msg: any) => {
   executeBenchmark(framework, benchmarkId, benchmarkOptions)
     .then((result) => {
       console.log("* success", result);
-      process.send(result);
+      process.send!(result);
       process.exit(0);
     })
     .catch((error) => {
       console.log("CATCH: Error in forkedBenchmarkRunner", error);
-      process.send({ error: convertError(error) });
+      process.send!({ error: convertError(error) });
       process.exit(0);
     });
 });

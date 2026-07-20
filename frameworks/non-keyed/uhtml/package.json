@@ -7,7 +7,8 @@
     "frameworkHomeURL": "https://github.com/WebReflection/uhtml",
     "issues": [
       772
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

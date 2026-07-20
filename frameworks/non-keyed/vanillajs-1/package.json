@@ -6,7 +6,10 @@
   "js-framework-benchmark": {
     "frameworkVersion": "",
     "frameworkHomeURL": "",
-    "issues": [772]
+    "issues": [
+      772
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "echo 0",

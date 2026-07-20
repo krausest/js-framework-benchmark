@@ -5,18 +5,16 @@
  */
 import { consumeTag, createUpdatableTag, dirtyTag } from '@glimmer/validator';
 
-export function cell(initial, options = { equals: Object.is }) {
-  return new Cell(initial, options);
+export function cell(initial) {
+  return new Cell(initial);
 }
 
 class Cell {
   #value;
-  #equals;
   #tag;
 
-  constructor(value, options) {
+  constructor(value) {
     this.#value = value;
-    this.#equals = options.equals;
     this.#tag = createUpdatableTag();
   }
 
@@ -33,7 +31,7 @@ class Cell {
   }
 
   set(value) {
-    if (this.#equals?.(this.#value, value)) {
+    if (this.#value === value) {
       return false;
     }
 

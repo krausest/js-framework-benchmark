@@ -489,7 +489,8 @@ Your package.json must include some information for the benchmark. Since you cop
   ...
   "js-framework-benchmark": {
     "frameworkVersion": "",
-    "frameworkHomeURL": ""
+    "frameworkHomeURL": "",
+    "language": ""
   },
   ...
 ```
@@ -501,7 +502,8 @@ package name like that:
 ```
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "react"
-    "frameworkHomeURL": "https://www.reactjs.org"
+    "frameworkHomeURL": "https://www.reactjs.org",
+    "language": "JavaScript"
   },
 ```
 
@@ -517,11 +519,25 @@ The other important, but optional properties for js-framework-benchmark are show
 
 You can set an optional different URL if needed or specify that your DOM uses a shadow root.
 
+When `npm run zip` creates the pre-built archive, it includes `dist/` and `package-lock.json` for each framework by default. If your build outputs to a different location, declare it with `includeInBuild`:
+
+```
+"includeInBuild": "public"
+```
+
+The value is a colon-separated list of file or directory paths relative to your framework directory. Examples:
+
+- `"public"` — for frameworks that build directly into a `public/` folder
+- `"build"` — for frameworks that use a `build/` output directory
+- `"output/dist"` — for nested output paths
+- `"output-es/bundle.js"` — for a single output file
+- `"node_modules/my-engine/dist"` — when a runtime dependency's dist must be bundled
+
 ## 4.4 Submitting your implementation
 
 Please take a look at https://github.com/krausest/js-framework-benchmark/wiki/Process-for-merging-a-pull-request for informations how pull requests are merged.
 
-
+**Github Copilot may review your PR. It's still experimental so feel free to ignore its comments.**
 
 Contributions are very welcome. Please use the following rules:
 
@@ -554,6 +570,7 @@ Helpful tips:
 - Do not start your implementation using vanillajs as the reference. It uses direct DOM manipulation (and thus has note [#772](https://github.com/krausest/js-framework-benchmark/issues/772)) and serves only as a performance baseline but not as a best practice implementation. Instead pick a framework which is similar to yours.
 - Do not forget to preload the glyphicon by adding this somewhere in your HTML: `<span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>` or you will get terrible performance.
 - Be careful not to leave gzipped files in your /dist directory. Unfortunately the web server prefers these when they exist and we cannot change that (meaning you could be observing an outdated build).
+- If (especially on linux) the browser isn't found or can't be started, consider adjusting browserPath() in both playwrightAccess.ts and puppeteerAccess.ts. I updated them in july 2026 to use /snap/bin/chromium.
 
 This work is derived from a benchmark that Richard Ayotte published on https://gist.github.com/RichAyotte/a7b8780341d5e75beca7 and adds more framework and more operations. Thanks for the great work.
 

@@ -5,7 +5,8 @@
   "main": "dist/main.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "solid-js",
-    "frameworkHomeURL": "https://www.solidjs.com/"
+    "frameworkHomeURL": "https://www.solidjs.com/",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "rollup -c -w",

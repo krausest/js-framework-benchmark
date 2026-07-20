@@ -1,4 +1,4 @@
-import { fnstate, fntemplate, h } from './fntags.min.js'
+import { fnstate, fntemplate, h } from '@srfnstack/fntags'
 
 let data = fnstate( [], d => d.id )
 
@@ -99,4 +99,3 @@ document.body.append(
         h( 'span', { class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
     )
 )
-

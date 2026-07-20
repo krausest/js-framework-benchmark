@@ -8,9 +8,11 @@
     "frameworkHomeURL": "https://github.com/tc39/proposal-signals",
     "useShadowRoot": false,
     "customURL": "/public",
+    "includeInBuild": "public",
     "issues": [
       772
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "exit 0",

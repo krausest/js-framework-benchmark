@@ -3,7 +3,8 @@
   "version": "20.4.0",
   "description": "Benchmark for Cycle.js framework",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@cycle/dom"
+    "frameworkVersionFromPackage": "@cycle/dom",
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --watch --mode=development",

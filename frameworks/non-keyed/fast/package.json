@@ -6,7 +6,8 @@
   "main": "index.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@microsoft/fast-element",
-    "frameworkHomeURL": "https://www.fast.design/"
+    "frameworkHomeURL": "https://www.fast.design/",
+    "language": "TypeScript"
   },
   "scripts": {
     "build-prod": "rimraf dist && webpack --config webpack.config.js --mode=production",

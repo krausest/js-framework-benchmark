@@ -4,14 +4,18 @@
   "type": "module",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "native-document",
-    "frameworkHomeURL": "https://github.com/afrocodeur/native-document"
+    "frameworkHomeURL": "https://github.com/afrocodeur/native-document",
+    "language": "JavaScript"
   },
   "scripts": {
     "build-prod": "vite build",
     "dev": "vite"
   },
   "dependencies": {
-    "native-document": "1.0.34",
-    "vite": "^7.0.4"
+    "native-document": "1.0.172",
+    "vite": "^8.0.5"
+  },
+  "devDependencies": {
+    "rollup-plugin-visualizer": "^7.0.1"
   }
 }

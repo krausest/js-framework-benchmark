@@ -8,7 +8,8 @@
     "frameworkHomeURL": "https://github.com/vaukalak/mlyn",
     "issues": [
       1139
-    ]
+    ],
+    "language": "JavaScript"
   },
   "scripts": {
     "dev": "webpack --watch",
