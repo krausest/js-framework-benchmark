@@ -1,5 +1,7 @@
 import { atom, reatomLinkedList } from '@reatom/core'
-import { mount, type JSX } from '@reatom/jsx'
+import { DEBUG, mount, type JSX } from '@reatom/jsx'
+
+DEBUG.set(false)
 
 const ADJECTIVES = [
   'pretty',
@@ -76,13 +78,17 @@ let selectedRow: RowNode | null = null
 const rowElements = rows.reatomMap((row) => <Row row={row} />, 'rowElements')
 
 const run = () => {
-  rows.clear()
-  rows.createMany(buildRowParams(1000))
+  rows.batch(() => {
+    rows.clear()
+    rows.createMany(buildRowParams(1000))
+  })
 }
 
 const runLots = () => {
-  rows.clear()
-  rows.createMany(buildRowParams(10000))
+  rows.batch(() => {
+    rows.clear()
+    rows.createMany(buildRowParams(10000))
+  })
 }
 
 const add = () => {
