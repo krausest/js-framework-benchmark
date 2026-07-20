@@ -1,8 +1,6 @@
 import { atom, reatomLinkedList } from '@reatom/core'
 import { mount, type JSX } from '@reatom/jsx'
 
-type RowParams = [id: number, label: string]
-
 const ADJECTIVES = [
   'pretty',
   'large',
@@ -65,7 +63,7 @@ let nextId = 1
 const selectedId = atom<number | null>(null, 'selectedId')
 
 const rows = reatomLinkedList(
-  ([id, label]: RowParams) => ({
+  (id: number, label: string) => ({
     id,
     label: atom(label, `label-${id}`),
   }),
@@ -125,8 +123,8 @@ const selectRow = (id: number) => {
   selectedId.set(id)
 }
 
-const buildRowParams = (count: number): RowParams[] => {
-  const params: RowParams[] = []
+const buildRowParams = (count: number): Array<[number, string]> => {
+  const params: Array<[number, string]> = []
   for (let i = 0; i < count; i += 1) {
     params.push([nextId, buildLabel()])
     nextId += 1
