@@ -65,8 +65,9 @@ let nextId = 1
 const rows = reatomLinkedList(
   (id: number, label: string) => ({
     id,
-    label: atom(label, `label-${id}`),
-    selected: atom(false, `selected-${id}`),
+    // Empty names skip defineProperty in createAtom (DEBUG off in this app).
+    label: atom(label, ''),
+    selected: atom(false, ''),
   }),
   'rows',
 )
