@@ -27,8 +27,8 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "@reatom/core": "https://pkg.pr.new/reatom/reatom/@reatom/core@3c482b1",
-    "@reatom/jsx": "https://pkg.pr.new/reatom/reatom/@reatom/jsx@3c482b1"
+    "@reatom/core": "^1001.3.0",
+    "@reatom/jsx": "^1001.3.0"
   },
   "devDependencies": {
     "typescript": "5.6.3",
