@@ -1,9 +1,8 @@
-import Service from '@ember/service';
 import { trackedArray } from '@ember/reactive/collections';
 
 import { run, runLots, add, update, swapRows, deleteRow } from '#utils';
 
-export default class State extends Service {
+export class State {
   data = trackedArray();
   id = 1;
   _selectedRow = null;
@@ -63,3 +62,5 @@ export default class State extends Service {
     }
   };
 }
+
+export const state = new State();

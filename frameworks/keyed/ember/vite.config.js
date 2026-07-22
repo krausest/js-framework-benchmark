@@ -27,9 +27,9 @@ if (VITE_NO_JSBF) {
       },
     },
   };
-}
 
-console.log(options);
+  console.log(`Visit /src/index.dev.html`);
+}
 
 export default defineConfig({
   // Not normal stuff
