@@ -1,5 +1,4 @@
 import Application from '@ember/application';
-import Resolver from 'ember-resolver';
 import EmberRouter from '@ember/routing/router';
 import config from '#config';
 import { TheTable } from './components/the-table.gjs';
@@ -16,11 +15,10 @@ Router.map(function () {
 });
 
 export default class App extends Application {
-  modulePrefix = 'results';
-  Resolver = Resolver.withModules({
-    'results/router': Router,
-    'results/services/state': State,
-    'results/templates/application': <template>
+  modules = {
+    './router': Router,
+    './services/state': State,
+    './templates/application': <template>
       <div id="main">
         <div class="container">
           <Jumbotron />
@@ -33,5 +31,5 @@ export default class App extends Application {
         </div>
       </div>
     </template>,
-  });
+  };
 }

@@ -1,5 +1,4 @@
 import Component from '@glimmer/component';
-import { fn } from '@ember/helper';
 import { getOwner } from '@ember/owner';
 
 export class TheTable extends Component {

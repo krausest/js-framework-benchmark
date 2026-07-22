@@ -1,4 +1,4 @@
-import { cell } from '#soon/cell.js';
+import { tracked } from '@glimmer/tracking';
 
 class TodoItem {
   label;
@@ -6,9 +6,9 @@ class TodoItem {
   selected;
 
   constructor(id, label) {
-    this.label = cell(label);
+    this.label = tracked(label);
     this.id = id;
-    this.selected = cell(false);
+    this.selected = tracked(false);
   }
 }
 
