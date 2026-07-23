@@ -1,27 +1,21 @@
-import Component from '@glimmer/component';
-import { fn } from '@ember/helper';
-import { getOwner } from '@ember/owner';
+import { state } from './state.js';
 
-export class TheTable extends Component {
-  state = getOwner(this).lookup('service:state');
-
-  <template>
-    <table class="table table-hover table-striped test-data">
-      <tbody>
-        {{#each this.state.data as |row|}}
-          <tr class={{if row.selected.current "danger"}}><td
-              class="col-md-1"
-            >{{row.id}}</td><td class="col-md-4"><a
-                onclick={{fn this.state.select row.id}}
-              >{{row.label.current}}</a></td><td class="col-md-1"><a
-                onclick={{fn this.state.remove row.id}}
-              ><span
-                  class="glyphicon glyphicon-remove"
-                  aria-hidden="true"
-                /></a></td><td class="col-md-6" />
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </template>
-}
+export const TheTable = <template>
+  <table class="table table-hover table-striped test-data">
+    <tbody>
+      {{#each state.data as |row|}}
+        <tr class={{if row.selected.value "danger"}}><td
+            class="col-md-1"
+          >{{row.id}}</td><td class="col-md-4"><a
+              onclick={{fn state.select row.id}}
+            >{{row.label.value}}</a></td><td class="col-md-1"><a
+              onclick={{fn state.remove row.id}}
+            ><span
+                class="glyphicon glyphicon-remove"
+                aria-hidden="true"
+              /></a></td><td class="col-md-6" />
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>;

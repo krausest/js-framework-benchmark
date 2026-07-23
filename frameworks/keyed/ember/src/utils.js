@@ -1,4 +1,4 @@
-import { cell } from '#soon/cell.js';
+import { tracked } from '@glimmer/tracking';
 
 class TodoItem {
   label;
@@ -6,9 +6,9 @@ class TodoItem {
   selected;
 
   constructor(id, label) {
-    this.label = cell(label);
+    this.label = tracked(label);
     this.id = id;
-    this.selected = cell(false);
+    this.selected = tracked(false);
   }
 }
 
@@ -18,7 +18,7 @@ const _random = (max) => {
 
 const updateData = (data, mod = 10) => {
   for (let i = 0; i < data.length; i += mod) {
-    data[i].label.set(data[i].label.read() + ' !!!');
+    data[i].label.set(data[i].label.get() + ' !!!');
   }
   return data;
 };
