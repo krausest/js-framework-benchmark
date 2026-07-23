@@ -4,11 +4,11 @@ export const TheTable = <template>
   <table class="table table-hover table-striped test-data">
     <tbody>
       {{#each state.data as |row|}}
-        <tr class={{if row.selected.current "danger"}}><td
+        <tr class={{if row.selected.value "danger"}}><td
             class="col-md-1"
           >{{row.id}}</td><td class="col-md-4"><a
               onclick={{fn state.select row.id}}
-            >{{row.label.current}}</a></td><td class="col-md-1"><a
+            >{{row.label.value}}</a></td><td class="col-md-1"><a
               onclick={{fn state.remove row.id}}
             ><span
                 class="glyphicon glyphicon-remove"

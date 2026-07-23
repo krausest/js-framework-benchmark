@@ -18,7 +18,7 @@ const _random = (max) => {
 
 const updateData = (data, mod = 10) => {
   for (let i = 0; i < data.length; i += mod) {
-    data[i].label.set(data[i].label.read() + ' !!!');
+    data[i].label.set(data[i].label.get() + ' !!!');
   }
   return data;
 };
