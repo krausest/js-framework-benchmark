@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-non-keyed-hydro-js",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "hydro-js demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
@@ -30,7 +30,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "hydro-js": "^1.9.1"
+    "hydro-js": "^1.9.2"
   },
   "allowScripts": {
     "esbuild@0.28.1": true
