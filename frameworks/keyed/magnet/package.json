@@ -1,0 +1,42 @@
+{
+  "name": "js-framework-benchmark-keyed-magnet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Magnet demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@magnet-js/ui",
+    "frameworkHomeURL": "https://gitlab.com/magnetjs/monorepo",
+    "useShadowRoot": false,
+    "customURL": "/public",
+    "includeInBuild": "public",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "node build.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "keywords": [
+    "magnet",
+    "signals"
+  ],
+  "author": "Fernando G. Vilar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme",
+  "dependencies": {
+    "@magnet-js/common": "0.2.0",
+    "@magnet-js/signal": "0.2.0",
+    "@magnet-js/ui": "0.1.5",
+    "@preact/signals-core": "1.14.4",
+    "alien-signals": "3.2.1",
+    "esbuild": "0.27.3",
+    "signal-polyfill": "0.1.2"
+  }
+}
