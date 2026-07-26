@@ -14,10 +14,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.6.0-alpha.2"
+    "vue": "^3.5.39"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue-jsx": "^5.0.1",
+    "@vitejs/plugin-vue-jsx": "^5.1.6",
     "vite": "^7.0.5"
   }
 }
