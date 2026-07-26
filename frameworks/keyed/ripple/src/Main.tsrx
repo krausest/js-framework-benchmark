@@ -167,9 +167,9 @@ export default function App() @{
           const id = row.id;
 
           <tr class={selected.value === id ? 'danger' : ''}>
-            <td class="col-md-1">{id}</td>
+            <td class="col-md-1">{id as string}</td>
             <td class="col-md-4">
-              <a onClick={() => { selected.value = id; }}>{row.label.value}</a>
+              <a onClick={() => { selected.value = id; }}>{row.label.value as string}</a>
             </td>
             <td class="col-md-1">
               <a onClick={() => remove(row)}>
