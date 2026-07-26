@@ -1,23 +1,24 @@
 {
   "name": "js-framework-benchmark-react-supergrain",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "build-prod": "vite build"
   },
   "dependencies": {
-    "@supergrain/core": "2.0.1",
-    "@supergrain/react": "2.0.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "@supergrain/kernel": "7.1.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "4.5.2",
-    "typescript": "5.8.3",
-    "vite": "6.3.5"
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
+    "@vitejs/plugin-react": "6.0.2",
+    "typescript": "5.9.2",
+    "vite": "8.0.16"
   },
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react:@supergrain/core",
+    "frameworkVersionFromPackage": "react:@supergrain/kernel",
     "frameworkHomeURL": "https://github.com/commoncurriculum/supergrain",
     "customURL": "/dist",
     "language": "TypeScript"

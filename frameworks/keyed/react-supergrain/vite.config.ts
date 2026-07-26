@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [react()],
 
   build: {
+    // The benchmark runner expects predictable, non-hashed file names.
     rollupOptions: {
       output: {
         entryFileNames: "assets/[name].js",
@@ -14,5 +15,6 @@ export default defineConfig({
     },
   },
 
+  // The base path must be relative for the benchmark server to find assets correctly.
   base: "",
 });
