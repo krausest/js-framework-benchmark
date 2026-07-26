@@ -65,7 +65,7 @@ interface Row {
   label: Tracked<string>;
 }
 
-export default component App() {
+export default function App() @{
   let rowId = 1;
   const items = track<Row[]>([]);
   const selected = track<number | undefined>(undefined);
@@ -123,38 +123,38 @@ export default component App() {
     <div class="jumbotron">
       <div class="row">
         <div class="col-md-6">
-          <h1>{"Ripple"}</h1>
+          <h1>Ripple</h1>
         </div>
         <div class="col-md-6">
           <div class="row">
             <div class="col-sm-6 smallpad">
               <button type="button" class="btn btn-primary btn-block" id="run" onClick={run}>
-                {"Create 1,000 rows"}
+                Create 1,000 rows
               </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button type="button" class="btn btn-primary btn-block" id="runlots" onClick={runLots}>
-                {"Create 10,000 rows"}
+                Create 10,000 rows
               </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button type="button" class="btn btn-primary btn-block" id="add" onClick={add}>
-                {"Append 1,000 rows"}
+                Append 1,000 rows
               </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button type="button" class="btn btn-primary btn-block" id="update" onClick={partialUpdate}>
-                {"Update every 10th row"}
+                Update every 10th row
               </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button type="button" class="btn btn-primary btn-block" id="clear" onClick={clear}>
-                {"Clear"}
+                Clear
               </button>
             </div>
             <div class="col-sm-6 smallpad">
               <button type="button" class="btn btn-primary btn-block" id="swaprows" onClick={swapRows}>
-                {"Swap Rows"}
+                Swap Rows
               </button>
             </div>
           </div>
@@ -163,13 +163,13 @@ export default component App() {
     </div>
     <table class="table table-hover table-striped test-data">
       <tbody>
-        for (const row of items.value) {
+        @for (const row of items.value) {
           const id = row.id;
 
           <tr class={selected.value === id ? 'danger' : ''}>
-            <td class="col-md-1">{text id}</td>
+            <td class="col-md-1">{id}</td>
             <td class="col-md-4">
-              <a onClick={() => { selected.value = id; }}>{text row.label.value}</a>
+              <a onClick={() => { selected.value = id; }}>{row.label.value}</a>
             </td>
             <td class="col-md-1">
               <a onClick={() => remove(row)}>
