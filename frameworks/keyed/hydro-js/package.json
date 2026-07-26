@@ -6,7 +6,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "hydro-js",
     "frameworkHomeURL": "https://github.com/Krutsch/hydro-js",
-    "language": "TypeScript"
+    "language": "TypeScript",
+    "includeInBuild": "build"
   },
   "scripts": {
     "dev": "html-bundle --hmr",
