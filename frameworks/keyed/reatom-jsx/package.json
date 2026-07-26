@@ -7,7 +7,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@reatom/jsx:@reatom/core",
     "frameworkHomeURL": "https://www.reatom.dev/",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "issues": [800]
   },
   "scripts": {
     "dev": "vite",
