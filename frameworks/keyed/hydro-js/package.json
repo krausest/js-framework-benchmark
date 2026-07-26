@@ -1,12 +1,13 @@
 {
   "name": "js-framework-benchmark-hydro-js",
-  "version": "1.9.2",
+  "version": "1.9.4",
   "description": "hydro-js demo",
   "main": "dist/app.min.js",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "hydro-js",
     "frameworkHomeURL": "https://github.com/Krutsch/hydro-js",
-    "language": "TypeScript"
+    "language": "TypeScript",
+    "includeInBuild": "build"
   },
   "scripts": {
     "dev": "html-bundle --hmr",
@@ -30,7 +31,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "hydro-js": "^1.9.2"
+    "hydro-js": "^1.9.4"
   },
   "allowScripts": {
     "esbuild@0.28.1": true
