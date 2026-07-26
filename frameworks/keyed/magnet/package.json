@@ -10,7 +10,8 @@
     "useShadowRoot": false,
     "customURL": "/public",
     "includeInBuild": "public",
-    "language": "JavaScript"
+    "language": "JavaScript",
+    "issues": [800, 1261]
   },
   "scripts": {
     "dev": "exit 0",
