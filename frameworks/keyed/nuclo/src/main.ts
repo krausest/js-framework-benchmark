@@ -95,48 +95,42 @@ const app = div(
           div(
             { className: "col-sm-6 smallpad" },
             button(
-              { type: "button", className: "btn btn-primary btn-block", id: "run" },
-              on("click", doRun),
+              { type: "button", className: "btn btn-primary btn-block", id: "run", onClick: doRun },
               "Create 1,000 rows",
             ),
           ),
           div(
             { className: "col-sm-6 smallpad" },
             button(
-              { type: "button", className: "btn btn-primary btn-block", id: "runlots" },
-              on("click", doRunLots),
+              { type: "button", className: "btn btn-primary btn-block", id: "runlots", onClick: doRunLots },
               "Create 10,000 rows",
             ),
           ),
           div(
             { className: "col-sm-6 smallpad" },
             button(
-              { type: "button", className: "btn btn-primary btn-block", id: "add" },
-              on("click", doAdd),
+              { type: "button", className: "btn btn-primary btn-block", id: "add", onClick: doAdd },
               "Append 1,000 rows",
             ),
           ),
           div(
             { className: "col-sm-6 smallpad" },
             button(
-              { type: "button", className: "btn btn-primary btn-block", id: "update" },
-              on("click", doUpdate),
+              { type: "button", className: "btn btn-primary btn-block", id: "update", onClick: doUpdate },
               "Update every 10th row",
             ),
           ),
           div(
             { className: "col-sm-6 smallpad" },
             button(
-              { type: "button", className: "btn btn-primary btn-block", id: "clear" },
-              on("click", doClear),
+              { type: "button", className: "btn btn-primary btn-block", id: "clear", onClick: doClear },
               "Clear",
             ),
           ),
           div(
             { className: "col-sm-6 smallpad" },
             button(
-              { type: "button", className: "btn btn-primary btn-block", id: "swaprows" },
-              on("click", doSwapRows),
+              { type: "button", className: "btn btn-primary btn-block", id: "swaprows", onClick: doSwapRows },
               "Swap Rows",
             ),
           ),
@@ -153,12 +147,11 @@ const app = div(
           tr(
             { className: () => (selectedId === row.id ? "danger" : "") },
             td({ className: "col-md-1" }, String(row.id)),
-            td({ className: "col-md-4" }, a(on("click", () => doSelect(row.id)), () => row.label)),
+            td({ className: "col-md-4" }, a({ onClick: () => doSelect(row.id) }, () => row.label)),
             td(
               { className: "col-md-1" },
               a(
-                { className: "remove" },
-                on("click", () => doDelete(row.id)),
+                { className: "remove", onClick: () => doDelete(row.id) },
                 span({ className: "glyphicon glyphicon-remove", "aria-hidden": "true" }),
               ),
             ),
