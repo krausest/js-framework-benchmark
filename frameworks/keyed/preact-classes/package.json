@@ -33,6 +33,6 @@
   },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "7.25.9",
-    "preact": "^10.27.1"
+    "preact": "^10.29.8"
   }
 }
