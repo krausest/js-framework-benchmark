@@ -7,6 +7,7 @@ export default defineConfig({
     "process.env.NODE_ENV": JSON.stringify("production"),
   },
   build: {
+    target: "esnext",
     modulePreload: {
       polyfill: false,
     },
@@ -17,6 +18,20 @@ export default defineConfig({
       fileName: () => "main.js",
     },
     minify: "terser",
+    // Match Octane's TSRX benchmark profile and preserve its V8-friendly code shape.
+    terserOptions: {
+      compress: {
+        passes: 5,
+        reduce_vars: false,
+        inline: 0,
+        booleans: false,
+        comparisons: false,
+        toplevel: true,
+      },
+      mangle: {
+        toplevel: true,
+      },
+    },
   },
   plugins: [octane()],
 });
