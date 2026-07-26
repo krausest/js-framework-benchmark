@@ -66,7 +66,10 @@ function buildData(count) {
 
 class JSFrameworkBenchmark extends Solarite {
 	data = [];
-	selectedId = null;
+
+	// The same primitive as Solid's createSelector: moving the highlight writes the two rows
+	// that change instead of re-rendering the list to discover which two those are.
+	selected = h.selector();
 
 	// quickly mimic what the js-framework-benchmark does.
 	// This is useful to see if performance changes after code modifications.
@@ -138,13 +141,13 @@ class JSFrameworkBenchmark extends Solarite {
 
 	runBench() {
 		this.data = buildData(1000);
-		this.selectedId = null;
+		this.selected.set(null);
 		this.render()
 	}
 
 	runLotsBench() {
 		this.data = buildData(10_000);
-		this.selectedId = null;
+		this.selected.set(null);
 		this.render()
 	}
 
@@ -173,31 +176,20 @@ class JSFrameworkBenchmark extends Solarite {
 
 	clearBench() {
 		this.data = [];
-		this.selectedId = null;
+		this.selected.set(null);
 		this.render()
 	}
 
 	removeBench(id) {
 		let index = this.data.findIndex(row=>row.id===id);
-		if (this.selectedId === id)
-			this.selectedId = null;
+		if (this.selected.key === id)
+			this.selected.set(null);
 		this.data.splice(index, 1);
 		this.render();
 	}
 
 	setSelectedBench(row) {
-		let data = this.data, old = this.selectedId;
-		this.selectedId = row.id;
-		// The `danger` class depends on selectedId, so replace the two affected rows to rebuild them.
-		let i = data.indexOf(row);
-		if (i >= 0)
-			data[i] = {...row};
-		if (old != null && old !== row.id) {
-			let pi = data.findIndex(r => r.id === old);
-			if (pi >= 0)
-				data[pi] = {...data[pi]};
-		}
-		this.render();
+		this.selected.set(row.id);
 	}
 
 	render() {
@@ -241,7 +233,7 @@ class JSFrameworkBenchmark extends Solarite {
 			</div>
 			<table class="table table-hover table-striped test-data"><tbody>
 				${h.map(this.data, row =>
-					h`<tr key=${row.id} class=${row.id === this.selectedId ? 'danger' : ''}><td class="col-md-1">${row.id}</td><td class="col-md-4"><a onclick=${[this.setSelectedBench, row]}>${row.label}</a></td><td class="col-md-1"><a onclick=${[this.removeBench, row.id]}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>`)
+					h`<tr key=${row.id} class=${this.selected.when(row.id, 'danger')}><td class="col-md-1">${row.id}</td><td class="col-md-4"><a onclick=${[this.setSelectedBench, row]}>${row.label}</a></td><td class="col-md-1"><a onclick=${[this.removeBench, row.id]}><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>`)
 				}
 			</tbody></table>
 		</div>`;
