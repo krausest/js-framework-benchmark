@@ -83,7 +83,7 @@ export default function App() @{
   const [selected, setSelected] = useState<number | undefined>(undefined);
 
   const add = () => {
-    setItems([...items, ...buildData(1000)]);
+    setItems((current) => current.concat(buildData(1000)));
   };
 
   const clear = () => {
@@ -91,21 +91,25 @@ export default function App() @{
   };
 
   const partialUpdate = () => {
-    const clone = items.slice();
-    for (let i = 0; i < clone.length; i += 10) {
-      const row = clone[i];
-      clone[i] = {
-        id: row.id,
-        label: row.label + ' !!!',
-      };
-    }
-    setItems(clone);
+    setItems((current) => {
+      const clone = current.slice();
+      for (let i = 0; i < clone.length; i += 10) {
+        const row = clone[i];
+        clone[i] = {
+          id: row.id,
+          label: row.label + ' !!!',
+        };
+      }
+      return clone;
+    });
   };
 
   const remove = (row: Row) => {
-    const clone = items.slice();
-    clone.splice(clone.indexOf(row), 1);
-    setItems(clone);
+    setItems((current) => {
+      const clone = current.slice();
+      clone.splice(clone.indexOf(row), 1);
+      return clone;
+    });
   };
 
   const run = () => {
@@ -117,13 +121,20 @@ export default function App() @{
   };
 
   const swapRows = () => {
-    if (items.length > 998) {
-      const clone = items.slice();
+    setItems((current) => {
+      if (current.length <= 998) {
+        return current;
+      }
+      const clone = current.slice();
       const tmp = clone[1];
       clone[1] = clone[998];
       clone[998] = tmp;
-      setItems(clone);
-    }
+      return clone;
+    });
+  };
+
+  const select = (id: number) => {
+    setSelected(id);
   };
 
   <div class="container">
@@ -176,7 +187,7 @@ export default function App() @{
           <tr class={selected === id ? 'danger' : ''}>
             <td class="col-md-1">{id as string}</td>
             <td class="col-md-4">
-              <a onClick={() => setSelected(id)}>{row.label as string}</a>
+              <a onClick={() => select(id)}>{row.label as string}</a>
             </td>
             <td class="col-md-1">
               <a onClick={() => remove(row)}>
