@@ -1,0 +1,13 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build
+dist
+dist-ssr
+coverage
+
+# System
+.git
+.DS_Store
+*.log

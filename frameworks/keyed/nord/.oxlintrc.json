@@ -1,0 +1,33 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "categories": { "correctness": "error" },
+    "rules": {
+        "array-callback-return": "off",
+        "no-template-curly-in-string": "off",
+        "no-unused-expressions": "off",
+        "typescript/no-this-alias": "off",
+        "unicorn/no-new-array": "off",
+        "unicorn/no-useless-spread": "off",
+        "unicorn/prefer-string-starts-ends-with": "off",
+        "no-restricted-imports": [
+            "error",
+            {
+                "patterns": [
+                    {
+                        "group": ["*/dist/*"],
+                        "message": "Do not import from dist/ within src/. Import from the source file directly."
+                    }
+                ]
+            }
+        ]
+    },
+    "overrides": [
+        {
+            "files": ["sites/playground.nordjs.dev/public/lessons/**/*.ts"],
+            "rules": {
+                "no-unused-vars": "off",
+                "typescript/no-unused-vars": "off"
+            }
+        }
+    ]
+}
