@@ -20,14 +20,5 @@
                 ]
             }
         ]
-    },
-    "overrides": [
-        {
-            "files": ["sites/playground.nordjs.dev/public/lessons/**/*.ts"],
-            "rules": {
-                "no-unused-vars": "off",
-                "typescript/no-unused-vars": "off"
-            }
-        }
-    ]
+    }
 }
