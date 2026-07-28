@@ -1,12 +1,12 @@
 {
   "name": "js-framework-benchmark-react-supergrain",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "build-prod": "vite build"
   },
   "dependencies": {
-    "@supergrain/kernel": "7.1.0",
+    "@supergrain/kernel": "7.3.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
