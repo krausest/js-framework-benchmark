@@ -19,6 +19,6 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "sprae": "13.7.1"
+    "sprae": "13.8.2"
   }
 }
