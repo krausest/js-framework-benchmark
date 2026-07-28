@@ -1,4 +1,4 @@
-import { track, type Tracked } from 'ripple';
+import { useState } from 'octane';
 
 const adjectives = [
   'pretty',
@@ -56,74 +56,92 @@ const nouns = [
   'keyboard'
 ];
 
-function _random(max: number) {
+function random(max: number) {
   return Math.round(Math.random() * 1000) % max;
 }
 
 interface Row {
   id: number;
-  label: Tracked<string>;
+  label: string;
+}
+
+let rowId = 1;
+
+function buildData(count = 1000): Row[] {
+  const data = new Array<Row>(count);
+  for (let i = 0; i < count; i++) {
+    data[i] = {
+      id: rowId++,
+      label: `${adjectives[random(adjectives.length)]} ${colours[random(colours.length)]} ${nouns[random(nouns.length)]}`,
+    };
+  }
+  return data;
 }
 
 export default function App() @{
-  let rowId = 1;
-  const items = track<Row[]>([]);
-  const selected = track<number | undefined>(undefined);
+  const [items, setItems] = useState<Row[]>([]);
+  const [selected, setSelected] = useState<number | undefined>(undefined);
 
-  const add = () => (items.value = [...items.value, ...buildData(1000)]);
+  const add = () => {
+    setItems((current) => current.concat(buildData(1000)));
+  };
+
   const clear = () => {
-    items.value = [];
+    setItems([]);
   };
 
   const partialUpdate = () => {
-    for (let i = 0; i < items.value.length; i += 10) {
-      const row = items.value[i];
-      row.label.value = row.label.value + ' !!!';
-    }
+    setItems((current) => {
+      const clone = current.slice();
+      for (let i = 0; i < clone.length; i += 10) {
+        const row = clone[i];
+        clone[i] = {
+          id: row.id,
+          label: row.label + ' !!!',
+        };
+      }
+      return clone;
+    });
   };
 
   const remove = (row: Row) => {
-    const clone = items.value.slice();
-    clone.splice(clone.indexOf(row), 1);
-    items.value = clone;
+    setItems((current) => {
+      const clone = current.slice();
+      clone.splice(clone.indexOf(row), 1);
+      return clone;
+    });
   };
 
   const run = () => {
-    items.value = buildData(1000);
+    setItems(buildData(1000));
   };
 
   const runLots = () => {
-    items.value = buildData(10000);
+    setItems(buildData(10000));
   };
 
   const swapRows = () => {
-    if (items.value.length > 998) {
-      const clone = items.value.slice();
+    setItems((current) => {
+      if (current.length <= 998) {
+        return current;
+      }
+      const clone = current.slice();
       const tmp = clone[1];
       clone[1] = clone[998];
       clone[998] = tmp;
-      items.value = clone;
-    }
+      return clone;
+    });
   };
 
-  function buildData(count = 1000): Row[] {
-    const data = new Array(count);
-    for (let i = 0; i < count; i++) {
-      const label = `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`;
+  const select = (id: number) => {
+    setSelected(id);
+  };
 
-      data[i] = {
-        id: rowId++,
-        label: track(label),
-      };
-    }
-    return data;
-  }
-
-  <div id="main" class="container">
+  <div class="container">
     <div class="jumbotron">
       <div class="row">
         <div class="col-md-6">
-          <h1>Ripple</h1>
+          <h1>Octane</h1>
         </div>
         <div class="col-md-6">
           <div class="row">
@@ -163,13 +181,13 @@ export default function App() @{
     </div>
     <table class="table table-hover table-striped test-data">
       <tbody>
-        @for (const row of items.value) {
+        @for (const row of items; key row.id) {
           const id = row.id;
 
-          <tr class={selected.value === id ? 'danger' : ''}>
+          <tr class={selected === id ? 'danger' : ''}>
             <td class="col-md-1">{id as string}</td>
             <td class="col-md-4">
-              <a onClick={() => { selected.value = id; }}>{row.label.value as string}</a>
+              <a onClick={() => select(id)}>{row.label as string}</a>
             </td>
             <td class="col-md-1">
               <a onClick={() => remove(row)}>

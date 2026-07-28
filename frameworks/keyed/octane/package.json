@@ -1,19 +1,19 @@
 {
-  "name": "js-framework-benchmark-ripple",
+  "name": "js-framework-benchmark-octane",
   "version": "1.0.0",
   "type": "module",
-  "description": "Boilerplate for Ripple",
+  "description": "Keyed benchmark for Octane",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "ripple",
-    "frameworkHomeURL": "https://ripple-ts.com/",
-    "language": "JavaScript"
+    "frameworkVersionFromPackage": "octane",
+    "frameworkHomeURL": "https://octanejs.dev/",
+    "language": "TypeScript"
   },
   "scripts": {
     "dev": "vite",
     "build-prod": "vite build"
   },
   "keywords": [
-    "ripple",
+    "octane",
     "tsrx"
   ],
   "author": "Stefan Krause",
@@ -24,11 +24,11 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "ripple": "0.3.112"
+    "octane": "0.1.16"
   },
   "devDependencies": {
-    "@ripple-ts/vite-plugin": "0.3.112",
-    "terser": "^5.46.1",
-    "vite": "^8.0.14"
+    "@octanejs/vite-plugin": "0.1.16",
+    "terser": "5.49.0",
+    "vite": "8.1.5"
   }
 }
