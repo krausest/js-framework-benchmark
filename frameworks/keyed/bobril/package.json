@@ -10,7 +10,8 @@
   },
   "scripts": {
     "dev": "bb",
-    "build-prod": "bb b --verbose"
+    "install-force": "bb b --verbose",
+    "build-prod": "echo This is a no-op. && echo bobril does not support building on linux-arm64 currently. && echo If you really want to build: && echo npm run install-force"
   },
   "keywords": [
     "bobril",

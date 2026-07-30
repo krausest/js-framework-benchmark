@@ -1,7 +1,7 @@
 #!/bin/sh -x
 set -x
 
-RELEASE_PATH="$(pwd)/dist/"
+RELEASE_PATH="$(pwd)/bundled-dist/"
 mkdir -p $RELEASE_PATH
 
 built=$(find . | grep .bc.js | grep src)

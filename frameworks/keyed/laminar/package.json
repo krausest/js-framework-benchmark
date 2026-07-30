@@ -28,6 +28,7 @@
     "@raquo/vite-plugin-glob-resolver": "^0.1.0",
     "@raquo/vite-plugin-import-side-effect": "^0.2.0",
     "@scala-js/vite-plugin-scalajs": "^1.0.0",
+    "esbuild": "^0.28.1",
     "glob": "^10.3.10",
     "http-proxy": "^1.18.1",
     "less": "^4.2.0",
@@ -37,9 +38,12 @@
     "typescript": "^5.2.2",
     "vite": "^4.1.0"
   },
-  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "esbuild@0.18.20": true
   }
 }

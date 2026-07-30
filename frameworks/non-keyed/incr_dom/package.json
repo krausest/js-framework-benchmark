@@ -20,12 +20,13 @@
     "incr_dom"
   ],
   "scripts": {
-    "prebuild-prod": "esy @esy install",
-    "build-prod": "esy @esy b dune build --root . -j 8 --verbose --profile release",
-    "postbuild-prod": "sh copy.sh",
+    "prebuild-prod-force": "esy @esy install",
+    "build-prod-force": "esy @esy b dune build --root . -j 8 --verbose --profile release",
+    "postbuild-prod-force": "sh copy.sh",
     "prebuild-dev": "esy @esy install",
     "dev": "esy @esy b dune build --root . -j 8 --verbose --profile dev",
-    "postbuild-dev": "sh copy.sh"
+    "postbuild-dev": "sh copy.sh",
+    "build-prod": "echo This is a no-op. && echo incr_dom does not support building without postinstall enabled. && echo If you really want to build: && echo npm run build-prod-force"
   },
   "dependencies": {
     "esy": "^0.6.12"

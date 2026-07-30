@@ -1,0 +1,33 @@
+{
+  "name": "js-framework-benchmark-wcstack-signals",
+  "version": "1.21.7",
+  "description": "@wcstack/signals keyed benchmark",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@wcstack/signals",
+    "frameworkHomeURL": "https://wcstack.github.io",
+    "issues": [],
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "esbuild src/main.js --bundle --minify --format=esm --legal-comments=none --outfile=dist/main.js"
+  },
+  "keywords": [
+    "web-components",
+    "signals",
+    "reactive"
+  ],
+  "author": "mogera551",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@wcstack/signals": "1.21.7"
+  },
+  "devDependencies": {
+    "esbuild": "0.27.3"
+  }
+}

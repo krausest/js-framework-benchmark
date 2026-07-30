@@ -1,0 +1,27 @@
+{
+    "name": "js-framework-benchmark-nord",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build-prod": "tsc && vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@grainular/grains": "2.0.0",
+        "@grainular/nord": "2.0.0"
+    },
+    "devDependencies": {
+        "typescript": "6.0.3",
+        "vite": "npm:rolldown-vite@7.2.5"
+    },
+    "overrides": {
+        "vite": "npm:rolldown-vite@7.2.5"
+    },
+    "js-framework-benchmark": {
+        "frameworkHomeURL": "https://docs.nordjs.dev",
+        "frameworkVersionFromPackage": "@grainular/nord:@grainular/grains",
+        "customURL": "/dist",
+        "language": "TypeScript"
+    }
+}

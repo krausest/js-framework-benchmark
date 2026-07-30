@@ -1,5 +1,5 @@
-import { createStore, startBatch, endBatch } from "@supergrain/core";
-import { tracked, For, provideStore, useComputed } from "@supergrain/react";
+import { batch, createReactive } from "@supergrain/kernel";
+import { For, tracked, useComputed } from "@supergrain/kernel/react";
 import { useCallback, useRef } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
@@ -7,11 +7,6 @@ import { createRoot } from "react-dom/client";
 // --- Data Generation ---
 
 let idCounter = 1;
-
-/** Reset the ID counter (for testing only). */
-export function resetIdCounter() {
-  idCounter = 1;
-}
 
 const adjectives = [
   "pretty",
@@ -40,7 +35,19 @@ const adjectives = [
   "expensive",
   "fancy",
 ];
-const colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"];
+const colours = [
+  "red",
+  "yellow",
+  "blue",
+  "green",
+  "pink",
+  "brown",
+  "purple",
+  "brown",
+  "white",
+  "black",
+  "orange",
+];
 const nouns = [
   "table",
   "chair",
@@ -57,11 +64,11 @@ const nouns = [
   "keyboard",
 ];
 
-export function _random(max: number): number {
+function _random(max: number): number {
   return Math.round(Math.random() * 1000) % max;
 }
 
-export function buildData(count: number): RowData[] {
+function buildData(count: number): RowData[] {
   const data: RowData[] = new Array(count);
   for (let i = 0; i < count; i++) {
     data[i] = {
@@ -76,75 +83,72 @@ export function buildData(count: number): RowData[] {
 
 // --- TypeScript Definitions ---
 
-export interface RowData {
+interface RowData {
   id: number;
   label: string;
 }
 
-export interface AppState {
+interface AppState {
   data: RowData[];
   selected: number | null;
 }
 
-export interface RowProps {
+interface RowProps {
   item: RowData;
-  store: AppState;
   onSelect: (id: number) => void;
   onRemove: (id: number) => void;
 }
 
-// --- Storable Implementation ---
+// --- Store ---
 
-const store = createStore<AppState>({
+const store = createReactive<AppState>({
   data: [],
   selected: null,
 });
 
-const Store = provideStore(store);
-
-export const run = (count: number) => {
+const run = (count: number) => {
   store.data = buildData(count);
   store.selected = null;
 };
 
-export const add = () => {
+const add = () => {
   store.data.push(...buildData(1000));
 };
 
-export const update = () => {
-  startBatch();
-  for (let i = 0; i < store.data.length; i += 10) {
-    store.data[i].label = store.data[i].label + " !!!";
-  }
-  endBatch();
+const update = () => {
+  batch(() => {
+    for (let i = 0; i < store.data.length; i += 10) {
+      store.data[i].label = store.data[i].label + " !!!";
+    }
+  });
 };
 
-export const clear = () => {
-  startBatch();
-  store.data = [];
-  store.selected = null;
-  endBatch();
+const clear = () => {
+  batch(() => {
+    store.data = [];
+    store.selected = null;
+  });
 };
 
-export const swapRows = () => {
+const swapRows = () => {
   if (store.data.length > 998) {
-    startBatch();
-    const row1 = store.data[1];
-    const row998 = store.data[998];
-    store.data[1] = row998;
-    store.data[998] = row1;
-    endBatch();
+    batch(() => {
+      const row1 = store.data[1];
+      const row998 = store.data[998];
+      store.data[1] = row998;
+      store.data[998] = row1;
+    });
   }
 };
 
-export const remove = (id: number) => {
+const remove = (id: number) => {
   const index = store.data.findIndex((item) => item.id === id);
   if (index !== -1) {
     store.data.splice(index, 1);
   }
 };
 
-export const select = (id: number) => {
+const select = (id: number) => {
   flushSync(() => {
     store.selected = id;
   });
@@ -160,7 +164,7 @@ const Button = ({ id, cb, title }: { id: string; cb: () => void; title: string }
   </div>
 );
 
-export const Row = tracked(({ item, store, onSelect, onRemove }: RowProps) => {
+const Row = tracked(({ item, onSelect, onRemove }: RowProps) => {
   const id = item.id;
   const isSelected = useComputed(() => store.selected === id);
   return (
@@ -179,7 +183,7 @@ export const Row = tracked(({ item, store, onSelect, onRemove }: RowProps) => {
   );
 });
 
-export const App = tracked(() => {
+const App = tracked(() => {
   const tbodyRef = useRef<HTMLTableSectionElement>(null);
   const handleSelect = useCallback((id: number) => select(id), []);
   const handleRemove = useCallback((id: number) => remove(id), []);
@@ -207,7 +211,7 @@ export const App = tracked(() => {
         <tbody ref={tbodyRef}>
           <For each={store.data} parent={tbodyRef}>
             {(item: RowData) => (
-              <Row key={item.id} item={item} store={store} onSelect={handleSelect} onRemove={handleRemove} />
+              <Row key={item.id} item={item} onSelect={handleSelect} onRemove={handleRemove} />
             )}
           </For>
         </tbody>
@@ -218,14 +222,9 @@ export const App = tracked(() => {
 });
 
 // --- React Rendering ---
-if (typeof window !== "undefined") {
-  const container = document.getElementById("main");
-  if (container) {
-    const root = createRoot(container);
-    root.render(
-      <Store.Provider>
-        <App />
-      </Store.Provider>
-    );
-  }
+
+const container = document.getElementById("main");
+if (container) {
+  const root = createRoot(container);
+  root.render(<App />);
 }
