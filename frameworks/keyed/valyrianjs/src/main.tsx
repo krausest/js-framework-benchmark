@@ -3,7 +3,7 @@ import { Store } from "./store";
 
 const store = new Store();
 
-function Button({ text, ...props }: any) {
+function Button(props: { id: string; onclick: () => void; "v-text": string }) {
   return (
     <div class="col-sm-6 smallpad">
       <button type="button" class="btn btn-primary btn-block" {...props} />
