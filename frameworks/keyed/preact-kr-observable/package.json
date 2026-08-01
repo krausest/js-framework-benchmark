@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "kr-observable": "3.0.8",
-    "preact": "^10.27.1"
+    "preact": "^10.29.8"
   },
   "devDependencies": {
     "@babel/core": "7.21.8",
