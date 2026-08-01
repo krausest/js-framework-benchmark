@@ -1,5 +1,6 @@
 import { magnet } from "@magnet-js/ui";
 import { alien, preact, tc39 } from "@magnet-js/signal";
+import { list } from "@magnet-js/list";
 
 // MAGNET_SIGNALS is a build-time define (see build.mjs); it selects the
 // signal implementation injected into Magnet. Defaults to preact.
@@ -25,95 +26,88 @@ const nouns = [
 
 const _random = (max) => Math.round(Math.random() * 1000) % max;
 
-let data = [];
 let idCounter = 1;
-let selectedRow;
-
-// The rows signal mirrors `data` as an array of <tr> elements. Magnet renders
-// it with a keyed diff (`updateList`) that reuses and moves existing nodes by
-// identity, so appends, removals and swaps touch only the affected rows.
-const rows = state([]);
-
-const sync = () => rows.set(data.map((row) => row.el));
-
-const select = (row) => {
-  if (selectedRow) selectedRow.selected.set(false);
-  selectedRow = row;
-  row.selected.set(true);
-};
-
-const remove = (row) => {
-  if (selectedRow === row) selectedRow = undefined;
-  data = data.filter((r) => r !== row);
-  sync();
-};
 
 const buildData = (count = 1000) => {
   const result = new Array(count);
   for (let i = 0; i < count; i++) {
-    const row = {
+    result[i] = {
       id: idCounter++,
       label: state(
         `${adjectives[_random(adjectives.length)]} ${colours[_random(colours.length)]} ${nouns[_random(nouns.length)]}`,
       ),
-      selected: state(false),
     };
-    row.el = html.tr(
-      { class: computed(() => (row.selected.get() ? "danger" : "")) },
-      [
-        html.td({ class: "col-md-1" }, [row.id]),
-        html.td({ class: "col-md-4" }, [
-          html.a({ onclick: () => select(row) }, [row.label]),
-        ]),
-        html.td({ class: "col-md-1" }, [
-          html.a({ onclick: () => remove(row) }, [
-            html.span({ class: "glyphicon glyphicon-remove", "aria-hidden": "true" }),
-          ]),
-        ]),
-        html.td({ class: "col-md-6" }),
-      ],
-    );
-    result[i] = row;
   }
   return result;
 };
 
+// The source of truth: a signal of data rows. Selection is a single
+// top-level state (the selected row id), never stored on the data objects.
+const data = state([]);
+const selected = state(null);
+
+const remove = (row) => {
+  if (selected.get() === row.id) selected.set(null);
+  data.set(data.get().filter((r) => r !== row));
+};
+
+// Rows are rendered through list(): each row's <tr> is created once per data
+// id and reused by the framework's cache, so swaps become moves, removals
+// dispose only the removed row, and appends create only the new rows.
+const rowEl = (row) =>
+  html.tr(
+    { class: computed(() => (selected.get() === row.id ? "danger" : "")) },
+    [
+      html.td({ class: "col-md-1" }, [row.id]),
+      html.td({ class: "col-md-4" }, [
+        html.a({ onclick: () => selected.set(row.id) }, [row.label]),
+      ]),
+      html.td({ class: "col-md-1" }, [
+        html.a({ onclick: () => remove(row) }, [
+          html.span({
+            class: "glyphicon glyphicon-remove",
+            "aria-hidden": "true",
+          }),
+        ]),
+      ]),
+      html.td({ class: "col-md-6" }),
+    ],
+  );
+
 const run = () => {
-  selectedRow = undefined;
-  data = buildData(1000);
-  sync();
+  selected.set(null);
+  data.set(buildData(1000));
 };
 
 const runLots = () => {
-  selectedRow = undefined;
-  data = buildData(10000);
-  sync();
+  selected.set(null);
+  data.set(buildData(10000));
 };
 
 const add = () => {
-  data = data.concat(buildData(1000));
-  sync();
+  data.set(data.get().concat(buildData(1000)));
 };
 
 const update = () => {
-  for (let i = 0; i < data.length; i += 10) {
-    const label = data[i].label;
+  const d = data.get();
+  for (let i = 0; i < d.length; i += 10) {
+    const label = d[i].label;
     label.set(label.get() + " !!!");
   }
 };
 
 const clear = () => {
-  selectedRow = undefined;
-  data = [];
-  sync();
+  selected.set(null);
+  data.set([]);
 };
 
 const swapRows = () => {
-  if (data.length > 998) {
-    const tmp = data[1];
-    data[1] = data[998];
-    data[998] = tmp;
-    sync();
+  const d = data.get().slice();
+  if (d.length > 998) {
+    const tmp = d[1];
+    d[1] = d[998];
+    d[998] = tmp;
+    data.set(d);
   }
 };
 
@@ -124,4 +118,6 @@ document.getElementById("update").onclick = update;
 document.getElementById("clear").onclick = clear;
 document.getElementById("swaprows").onclick = swapRows;
 
-m.render(document.getElementById("tbody"), [rows]);
+m.render(document.getElementById("tbody"), [
+  list(m)(data, rowEl, (row) => row.id),
+]);
