@@ -1,0 +1,16 @@
+{
+  "name": "js-framework-benchmark-wildflowerjs-pool",
+  "version": "1.0.0",
+  "description": "WildflowerJS (data-pool) keyed benchmark",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "1.3.0",
+    "frameworkHomeURL": "https://wildflowerjs.com",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "license": "MIT"
+}
