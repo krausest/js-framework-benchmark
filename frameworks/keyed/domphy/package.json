@@ -1,0 +1,29 @@
+{
+  "name": "js-framework-benchmark-domphy",
+  "version": "1.0.0",
+  "description": "Domphy keyed demo",
+  "type": "module",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@domphy/core",
+    "frameworkHomeURL": "https://domphy.com/",
+    "language": "TypeScript"
+  },
+  "scripts": {
+    "dev": "esbuild src/main.ts --bundle --format=iife --outfile=dist/main.js",
+    "build-prod": "esbuild src/main.ts --bundle --minify --format=iife --outfile=dist/main.js"
+  },
+  "author": "Huu Khanh Nguyen",
+  "license": "MIT",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@domphy/core": "^0.21.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
+  }
+}
