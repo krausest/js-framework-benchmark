@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    // enable latest features
+    "lib": ["esnext", "dom"],
+    "module": "NodeNext",
+    "target": "ESNext",
+
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "moduleDetection": "force",
+
+    "jsx": "react-jsx", // support JSX automatic runtime
+    "jsxImportSource": "valyrian.js",
+    "allowJs": true, // allow importing `.js` from `.ts`
+    "esModuleInterop": true, // allow default imports for CommonJS modules
+
+    // best practices
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "composite": true,
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+
+    "rootDir": "./",
+    "paths": {}
+  },
+  "include": ["src", "./node_modules/valyrian.js"],
+  "exclude": ["src/**/*.js"]
+}
