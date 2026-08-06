@@ -44,7 +44,7 @@ function App() {
                   </td>
                   <td v-keep={item.id} class="col-md-1">
                     <a onclick={() => store.delete(item.id)}>
-                      <span class="glyphicon glyphicon-remove" aria-hidden="true" />
+                      <span v-keep class="glyphicon glyphicon-remove" aria-hidden="true" />
                     </a>
                   </td>
                   <td v-keep class="col-md-6" />
