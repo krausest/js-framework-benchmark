@@ -3,7 +3,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 
 const plugins = [
-  resolve({ browser: true }),
+  // without the `production` condition, `esm-env` keeps the whole dev runtime in the bundle
+  resolve({ browser: true, exportConditions: ['production'] }),
   svelte({
     emitCss: false,
   }),
