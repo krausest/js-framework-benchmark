@@ -110,14 +110,7 @@ const store = createReactive<AppState>({
 // old, select new) instead of re-evaluating a derived value per row.
 let selectedRow: RowData | null = null;
 
-// Bumped on any wholesale rebuild (clear AND run) so the <tbody> remounts via
-// a key change: React detaches the old tbody with a single removeChild on
-// clear, and a freshly-mounted tbody receives its children through the
-// appendAllChildren fast path on create (instead of a per-row sibling scan).
-let tbodyEpoch = 0;
-
 const run = (count: number) => {
-  tbodyEpoch++;
   store.data = buildData(count);
   selectedRow = null;
 };
@@ -135,7 +128,6 @@ const update = () => {
 };
 
 const clear = () => {
-  tbodyEpoch++;
   batch(() => {
     store.data = [];
     selectedRow = null;
@@ -228,7 +220,7 @@ const App = tracked(() => {
         </div>
       </div>
       <table className="table table-hover table-striped test-data">
-        <tbody key={tbodyEpoch} ref={tbodyRef}>
+        <tbody ref={tbodyRef}>
           <For each={store.data} parent={tbodyRef}>
             {(item: RowData) => (
               <Row key={item.id} item={item} onSelect={handleSelect} onRemove={handleRemove} />
