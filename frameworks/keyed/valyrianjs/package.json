@@ -1,0 +1,27 @@
+{
+  "name": "js-framework-benchmark-keyed-valyrianjs",
+  "version": "9.1.15",
+  "description": "Valyrian.JS demo",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "valyrian.js",
+    "frameworkHomeURL": "https://github.com/Masquerade-Circus/valyrian.js",
+    "language": "TypeScript"
+  },
+  "scripts": {
+    "build-dev": "node build.js --dev",
+    "build-prod": "node build.js"
+  },
+  "keywords": [
+    "valyrianjs"
+  ],
+  "author": "Christian Robledo",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/Masquerade-Circus/valyrian.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Masquerade-Circus/valyrian.js.git"
+  },
+  "devDependencies": {
+    "valyrian.js": "9.1.15"
+  }
+}
