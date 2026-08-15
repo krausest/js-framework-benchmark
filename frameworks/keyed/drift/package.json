@@ -1,0 +1,22 @@
+{
+  "name": "js-framework-benchmark-drift",
+  "version": "1.0.0",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "driftjs-dom",
+    "frameworkHomeURL": "https://github.com/hrutavmodha/driftjs",
+    "customURL": "/dist",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "vite build"
+  },
+  "dependencies": {
+    "driftjs-dom": "^0.0.4"
+  },
+  "devDependencies": {
+    "driftjs-vite-plugin": "^0.0.4",
+    "vite": "^8.0.0"
+  }
+}
