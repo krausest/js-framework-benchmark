@@ -1,0 +1,4 @@
+node_modules/
+.ruff_cache/
+src.main.main.js
+src/__pycache__/
