@@ -1,0 +1,31 @@
+{
+  "name": "js-framework-benchmark-keyed-pyjs",
+  "version": "1.0.0",
+  "description": "PyJS benchmark implementation",
+  "license": "Apache-2.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@pyjsdev/cli",
+    "frameworkHomeURL": "https://github.com/pyjs/pyjs",
+    "customURL": "/bundled-dist",
+    "includeInBuild": "bundled-dist",
+    "issues": [
+      772,
+      801,
+      1261
+    ],
+    "language": "Python"
+  },
+  "scripts": {
+    "build-prod": "rimraf bundled-dist src.main.main.js src/__pycache__ && pyjs build src.main:main --only-js --include-main && esbuild src.main.main.js --outfile=bundled-dist/main.js --minify && rimraf src.main.main.js src/__pycache__ && cpr index.html bundled-dist/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "@pyjsdev/cli": "0.3.0",
+    "cpr": "3.0.1",
+    "esbuild": "0.28.1",
+    "rimraf": "6.1.3"
+  }
+}
