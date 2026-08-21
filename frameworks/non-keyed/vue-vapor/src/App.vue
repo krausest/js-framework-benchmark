@@ -95,14 +95,13 @@ function swapRows() {
       <tr
         v-for="row of rows"
         :class="{ danger: selected === row.id }"
-        :data-label="row.label.value"
       >
         <td class="col-md-1">{{ row.id }}</td>
         <td class="col-md-4">
-          <a @click="select(row.id)">{{ row.label.value }}</a>
+          <a @click.delegate="select(row.id)">{{ row.label.value }}</a>
         </td>
         <td class="col-md-1">
-          <a @click="remove(row.id)">
+          <a @click.delegate="remove(row.id)">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
           </a>
         </td>
