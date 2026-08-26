@@ -1,0 +1,36 @@
+{
+  "name": "js-framework-benchmark-nix-js",
+  "version": "1.0.0",
+  "description": "Nix.js keyed demo for js-framework-benchmark",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@deijose/nix-js",
+    "frameworkHomeURL": "https://nix-js.dev",
+    "customURL": "/dist",
+    "language": "TypeScript"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "vite build",
+    "preview": "vite preview --port 8080 --strictPort",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@deijose/nix-js": "^3.5.0"
+  },
+  "devDependencies": {
+    "@deijose/vite-plugin-nix-js": "^2.0.2",
+    "typescript": "^7.0.2",
+    "vite": "^7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "author": "DeijoseDevelop",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/krausest/js-framework-benchmark/issues"
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark#readme"
+}
