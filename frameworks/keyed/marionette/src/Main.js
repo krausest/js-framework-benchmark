@@ -1,17 +1,20 @@
 'use strict';
 
-import { View, CollectionView, MnObject } from 'marionette';
-import morphdomRenderer from './mn-morphdom-renderer';
+import { View, CollectionView, setDataApi, setDomApi } from 'marionette';
+import DomApi from '@mnjs/adapters/dom/morphdom';
+import { Collection, DataApi } from '@mnjs/data';
 import rowTemplate from './rowtemplate';
+
+setDataApi(DataApi);
+setDomApi(DomApi);
 
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
 }
 
-const Store = MnObject.extend({
+const Store = Collection.extend({
     initialize() {
-        this.cid = 1;
-        this.models = [];
+        this.nextId = 1;
         this.selectedId = null;
     },
     buildData(count = 1000) {
@@ -20,50 +23,45 @@ const Store = MnObject.extend({
         var nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"];
         var data = [];
         for (var i = 0; i < count; i++) {
-            const id = this.cid + '';
-            data.push({cid: id, attributes: { id, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)] }});
-            this.cid++;
+            data.push({id: this.nextId++, label: adjectives[_random(adjectives.length)] + " " + colours[_random(colours.length)] + " " + nouns[_random(nouns.length)]});
         }
         return data;
     },
     updateData(mod = 10) {
-        for (let i=0;i<this.models.length;i+=10) {
-            this.models[i].attributes.label += ' !!!';
-            this.trigger('change:label', this.models[i]);
+        for (let i=0;i<this.length;i+=mod) {
+            const model = this.at(i);
+            model.set('label', model.get('label') + ' !!!');
         }
     },
     run() {
-        this.reset(this.buildData());
+        this.resetData(this.buildData());
     },
     addData() {
         this.add(this.buildData(1000));
     },
     runLots() {
-        this.reset(this.buildData(10000));
+        this.resetData(this.buildData(10000));
+    },
+    resetData(models = []) {
+        this.selectedId = null;
+        this.reset(models);
     },
     select(id) {
-        const prevId = this.selectedId;
+        const previousId = this.selectedId;
         this.selectedId = id;
-        this.trigger('change:selected', id, prevId);
+        this.trigger('change:selected', id, previousId);
     },
-    add(models) {
-        this.models = this.models.concat(models);
-        this.trigger('update', this, { changes: { added: models, removed: [] }});
-    },
-    remove(id) {
-        const [removed] = this.models.splice(this.models.findIndex(model => model.cid === id), 1);
-        this.trigger('remove', removed);
-    },
-    reset(models = []) {
-        this.models = models;
-        this.trigger('reset', this);
+    removeRow(id) {
+        if (this.selectedId === id) this.selectedId = null;
+        this.remove(id);
     },
     swapRows() {
-        if (this.models.length > 998) {
-            const a = this.models[1];
-            this.models[1] = this.models[998];
-            this.models[998] = a;
-            this.trigger('swap', this.models[1], this.models[998]);
+        if (this.length > 998) {
+            const first = this.at(1);
+            const second = this.at(998);
+            this.move(first, 998, { silent: true });
+            this.move(second, 1, { silent: true });
+            this.trigger('swap:rows', first, second);
         }
     }
 });
@@ -71,27 +69,27 @@ const Store = MnObject.extend({
 const store = new Store();
 
 const ChildView = View.extend({
-    el: document.createElement('div'),
     monitorViewEvents: false,
-    template: rowTemplate,
-    templateContext() {
+    tagName: 'tr',
+    attributes() {
         return {
-            className: (store.selectedId === this.model.cid) ? 'danger': ''
+            'data-id': this.model.id
         };
-    }
+    },
+    className() {
+        return this.model.id === store.selectedId ? 'danger' : null;
+    },
+    template: rowTemplate
 });
-
-ChildView.setRenderer(morphdomRenderer);
 
 const MyCollectionView = CollectionView.extend({
     monitorViewEvents: false,
-    viewComparator: false,
+    sortWithCollection: false,
     el: document.querySelector('#tbody'),
     childView: ChildView,
     collectionEvents() {
         return {
-            'swap': this.onSwapRows,
-            'remove': this.onRemoveRow,
+            'swap:rows': this.onSwapRows,
             'change:label': this.onChangeLabel,
             'change:selected': this.onChangeSelected,
         };
@@ -102,43 +100,35 @@ const MyCollectionView = CollectionView.extend({
             'click .js-del': this.onDeleteRow
         };
     },
-    _getRowId(target) {
-        return target.parentNode.parentNode.dataset.id;
+    _getRowId(event) {
+        return Number(event.delegateTarget.closest('tr').dataset.id);
     },
-    onSelectRow(e) {
-        const rowId = this._getRowId(e.target);
-
-        this.collection.select(rowId);
+    onSelectRow(event) {
+        this.collection.select(this._getRowId(event));
     },
-    onDeleteRow(e) {
-        const rowId = this._getRowId(e.target.parentNode);
-
-        this.collection.remove(rowId);
+    onDeleteRow(event) {
+        this.collection.removeRow(this._getRowId(event));
     },
-    onRemoveRow(model) {
-        const view = this.children.findByModelCid(model.cid);
-        this.removeChildView(view);
-    },
-    onSwapRows(model1, model2) {
-        var view1 = this.children.findByModelCid(model1.cid);
-        var view2 = this.children.findByModelCid(model2.cid);
-
-        this.swapChildViews(view1, view2);
+    onSwapRows(first, second) {
+        this.swapChildViews(
+            this.children.findByModel(first),
+            this.children.findByModel(second)
+        );
     },
     onChangeLabel(model) {
-        const view = this.children.findByModelCid(model.cid);
+        const view = this.children.findByModel(model);
         view.render();
     },
-    onChangeSelected(id, prevId) {
-        if (prevId) {
-            const curSelected = this.children.findByModelCid(prevId);
-            curSelected && curSelected.render();
+    onChangeSelected(id, previousId) {
+        if (previousId) {
+            const previous = this.children.findByModel(this.collection.get(previousId));
+            previous?.renderAttributes();
         }
 
         if (!id) return;
 
-        const selected = this.children.findByModelCid(id);
-        selected.render();
+        const selected = this.children.findByModel(this.collection.get(id));
+        selected.renderAttributes();
     },
 });
 
@@ -155,7 +145,7 @@ const MainView = View.extend({
         'click #runlots'() { store.runLots(); },
         'click #add'() { store.addData(); },
         'click #update'() { store.updateData(); },
-        'click #clear'() { store.reset(); },
+        'click #clear'() { store.resetData(); },
         'click #swaprows'() { store.swapRows(); },
     }
 });
