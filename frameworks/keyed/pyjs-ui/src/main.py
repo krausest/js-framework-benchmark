@@ -259,7 +259,9 @@ class BenchmarkApp(CustomElement):
         self.rows[998] = first
 
     def handle_click(self, event: Event):
-        target: Element = event.target
+        target = event.target
+        if not isinstance(target, Element):
+            return
         button = target.closest("button")
         if button is not None:
             action = button.id

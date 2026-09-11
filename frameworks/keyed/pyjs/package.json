@@ -16,14 +16,14 @@
     "language": "Python"
   },
   "scripts": {
-    "build-prod": "rimraf bundled-dist src.main.main.js src/__pycache__ && pyjs build src.main:main --only-js --include-main && esbuild src.main.main.js --outfile=bundled-dist/main.js --minify && rimraf src.main.main.js src/__pycache__ && cpr index.html bundled-dist/index.html"
+    "build-prod": "rimraf bundled-dist src.main.main.js src.main.main.js.map src/__pycache__ && pyjs build src.main:main --only-js --include-main && esbuild src.main.main.js --outfile=bundled-dist/main.js --minify && rimraf src.main.main.js src.main.main.js.map src/__pycache__ && cpr index.html bundled-dist/index.html"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "devDependencies": {
-    "@pyjsdev/cli": "0.3.0",
+    "@pyjsdev/cli": "0.4.1",
     "cpr": "3.0.1",
     "esbuild": "0.28.1",
     "rimraf": "6.1.3"
