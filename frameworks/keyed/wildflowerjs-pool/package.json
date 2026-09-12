@@ -4,7 +4,7 @@
   "description": "WildflowerJS (data-pool) keyed benchmark",
   "main": "index.js",
   "js-framework-benchmark": {
-    "frameworkVersion": "1.4.0",
+    "frameworkVersion": "1.5.1",
     "frameworkHomeURL": "https://wildflowerjs.com",
     "language": "JavaScript",
     "repoURL": "https://github.com/wfjs-admin/WildflowerJS"

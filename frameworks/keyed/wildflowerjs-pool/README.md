@@ -16,6 +16,10 @@ dependency graph. It was built with high-frequency mutation workloads in mind
 directness also makes it a valid, often simpler choice for ordinary lists,
 independent of scale.
 
+As of 1.5.1 this entry loads the framework's `mini-pool` build, the tier that
+ships entity pools without the list renderer, which is the build an
+application choosing `data-pool` would use.
+
 The sibling entry, `wildflowerjs`, benchmarks WildflowerJS's general-purpose
 `data-list` reactivity instead. We felt the two approaches were different
 enough to warrant separate entries rather than folding them into one.
