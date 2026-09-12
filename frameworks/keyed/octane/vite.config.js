@@ -33,5 +33,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [octane()],
+  plugins: [octane({ strong: true })],
 });
