@@ -1,0 +1,29 @@
+{
+  "name": "js-framework-benchmark-keyed-places-js",
+  "version": "0.1.0",
+  "description": "Places.js demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.1.0",
+    "frameworkHomeURL": "https://createthirdplaces.org/tech/placesjs.html",
+		"issues" :[
+			1139
+		],	
+		"language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "echo 0",
+    "build-prod": "echo 0"
+  },
+  "keywords": [
+    "react",
+    "webpack"
+  ],
+  "author": "Stefan Krause",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}
