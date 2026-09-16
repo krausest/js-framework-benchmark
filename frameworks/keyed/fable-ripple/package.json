@@ -1,0 +1,35 @@
+{
+  "name": "js-framework-benchmark-fable-ripple",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Fable.Ripple keyed implementation",
+  "js-framework-benchmark": {
+    "frameworkVersion": "1.0.0-beta.1",
+    "frameworkHomeURL": "https://fable-hub.github.io/Fable.Ripple/",
+    "repoURL": "https://github.com/fable-hub/Fable.Ripple",
+    "language": "F#",
+    "includeInBuild": "bundeled-dist"
+  },
+  "scripts": {
+    "install": "echo This is a no-op. && echo Building needs the .NET SDK, so the generated javascript is already provided. && echo To rebuild from source use: && echo npm run build-prod-force",
+    "build-prod": "echo This is a no-op. && echo Building needs the .NET SDK, so the generated javascript is already provided. && echo To rebuild from source use: && echo npm run build-prod-force",
+    "build-prod-force": "rimraf bundeled-dist && node build.mjs",
+    "dev": "node build.mjs"
+  },
+  "keywords": [
+    "fable",
+    "fsharp",
+    "signals"
+  ],
+  "author": "Maxime Mangel",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10",
+    "rimraf": "6.0.1"
+  }
+}
