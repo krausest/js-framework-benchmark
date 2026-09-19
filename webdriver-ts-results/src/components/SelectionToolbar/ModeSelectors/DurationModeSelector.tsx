@@ -8,9 +8,9 @@ interface Props {
 
 const DurationModeSelector = ({ cpuDurationMode, onChange }: Props) => {
   return (
-    <div>
+    <div className="mode-selector mode-selector--duration">
       <label htmlFor="durationMode" className="mode-selector__label">
-        Duration measurement mode:
+        CPU duration
       </label>
       <Select
         id="durationMode"

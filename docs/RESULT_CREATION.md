@@ -83,6 +83,9 @@ export const benchmarks = [
 **App**: `webdriver-ts-results/` (React + Vite + Zustand + Ant Design)  
 **Command**: `npm run dev` (development) or `npm run build` (production)
 
+The same build also produces the static website homepage (`dist/overview.html`) and its discovery files.
+See [Website development and publishing](WEBSITE.md) for preview, archive maintenance, and GitHub Pages deployment.
+
 ### Data Loading (`store.ts`)
 
 1. Imports pre-compiled `results`, `frameworks`, and `benchmarks` from `results.ts`

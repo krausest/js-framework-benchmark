@@ -1,3 +1,39 @@
+.mode-selection-panel,
+.mode-selector {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mode-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
 .mode-selector__label {
-  margin-right: 0.5rem;
+  color: var(--muted, #53636a);
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.4;
+}
+
+.mode-selector .ant-select {
+  width: 158px;
+  max-width: 100%;
+  min-height: 36px;
+}
+
+.mode-selector--duration .ant-select {
+  width: 186px;
+}
+
+@media (max-width: 640px) {
+  .select-toolbar__modes > .mode-selection-panel,
+  .select-toolbar__modes > .mode-selector {
+    flex: 1 1 180px;
+  }
+
+  .mode-selector .ant-select {
+    width: 100%;
+  }
 }

@@ -1,5 +1,57 @@
 .selector-content-container {
   position: relative;
+  min-width: 0;
+}
+
+.selector-content-container + .selector-content-container {
+  border-top: 1px solid var(--border-color, #dfe4df);
+  margin-top: 20px;
+  padding-top: 16px;
+}
+
+.selector-content-container__heading {
+  gap: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.selector-content-container__heading h3 {
+  margin: 0;
+  color: var(--ink, #142b38);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.selector-content-container__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.selector-content-container__actions .ant-btn {
+  padding-inline: 10px;
+}
+
+.selector-content-container__content-wrapper {
+  column-gap: 24px;
+}
+
+.selector-content-container__content-wrapper > .ant-flex {
+  break-inside: avoid;
+}
+
+.selector-content-container .ant-checkbox-wrapper {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  padding: 5px 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  break-inside: avoid;
+}
+
+.selector-content-container .ant-checkbox {
+  flex-shrink: 0;
+  margin-top: 3px;
 }
 
 @media screen and (width>= 640px) {

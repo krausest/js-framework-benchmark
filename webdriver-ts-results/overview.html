@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JavaScript Framework Benchmark · Official Results</title>
+    <meta
+      name="description"
+      content="Compare JavaScript framework performance with official CPU, memory and startup benchmark results. Browse the latest release and the full results archive."
+    />
+    <link rel="canonical" href="https://krausest.github.io/js-framework-benchmark/" />
+    <link rel="describedby" href="./llms.txt" type="text/plain" />
+    <meta name="theme-color" content="#142b38" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="JavaScript Framework Benchmark" />
+    <meta property="og:title" content="JavaScript Framework Benchmark · Official Results" />
+    <meta
+      property="og:description"
+      content="Explore official JavaScript framework performance results, understand the measurements, and browse the complete release archive."
+    />
+    <meta property="og:url" content="https://krausest.github.io/js-framework-benchmark/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="JavaScript Framework Benchmark · Official Results" />
+    <meta
+      name="twitter:description"
+      content="Official JavaScript framework performance results: CPU, memory, startup, and a complete release archive."
+    />
+    <link rel="stylesheet" href="/src/overview.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://krausest.github.io/js-framework-benchmark/#website",
+            "url": "https://krausest.github.io/js-framework-benchmark/",
+            "name": "JavaScript Framework Benchmark",
+            "inLanguage": "en",
+            "sameAs": "https://github.com/krausest/js-framework-benchmark"
+          },
+          {
+            "@type": "CollectionPage",
+            "@id": "https://krausest.github.io/js-framework-benchmark/#webpage",
+            "url": "https://krausest.github.io/js-framework-benchmark/",
+            "name": "JavaScript Framework Benchmark · Official Results",
+            "description": "Compare JavaScript framework performance with official CPU, memory and startup benchmark results. Browse the latest release and the full results archive.",
+            "inLanguage": "en",
+            "isPartOf": { "@id": "https://krausest.github.io/js-framework-benchmark/#website" }
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="brand" href="#" aria-label="JavaScript Framework Benchmark home">
+        <span class="brand-mark" aria-hidden="true">js</span>
+        <span>framework<br />benchmark</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#archive">Results archive</a>
+        <a href="https://github.com/krausest/js-framework-benchmark">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="main" class="wrap" tabindex="-1">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Open source. Reproducible. Community driven.</p>
+          <h1 id="page-title">JavaScript framework performance,<br /><span>measured.</span></h1>
+          <p class="intro">
+            Explore how JavaScript frameworks handle common UI operations. Compare rendering speed, memory use, and
+            startup costs with the official benchmark results.
+          </p>
+          <a class="text-link" href="#reading-results"
+            >A guide to reading the results <span aria-hidden="true">↓</span></a
+          >
+        </div>
+        <aside class="latest-release" aria-labelledby="latest-title">
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>Latest official release</p>
+          <h2 id="latest-title">Chrome 152</h2>
+          <p>
+            The latest published comparison.<br />
+            A good place to start exploring.
+          </p>
+          <a class="primary-link" href="https://krausest.github.io/js-framework-benchmark/2026/chrome152.html"
+            >Explore results <span aria-hidden="true">↗</span></a
+          >
+          <div class="snapshot">
+            <a href="current.html">Development snapshot <span aria-hidden="true">→</span></a>
+            <p>Preview results may mix browser versions and run counts.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="reading-results" id="reading-results" aria-labelledby="reading-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Behind the numbers</p>
+            <h2 id="reading-title">Read the results in context.</h2>
+          </div>
+          <a class="text-link" href="https://github.com/krausest/js-framework-benchmark#about-the-benchmarks"
+            >Benchmark documentation <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <dl class="metrics">
+          <div>
+            <dt><span aria-hidden="true">01</span> CPU performance</dt>
+            <dd>
+              Time to create, update, select, and remove table rows, including the browser’s rendering work. Lower
+              durations mean faster operations.
+            </dd>
+          </div>
+          <div>
+            <dt><span aria-hidden="true">02</span> Memory usage</dt>
+            <dd>
+              Memory used after page load and repeated table operations. Lower values mean a smaller memory footprint
+              for the measured task.
+            </dd>
+          </div>
+          <div>
+            <dt><span aria-hidden="true">03</span> Startup &amp; size</dt>
+            <dd>
+              Loading and startup measurements vary by release. Check each report’s descriptions and units when
+              comparing time or transfer size.
+            </dd>
+          </div>
+        </dl>
+        <div class="method-note">
+          <p>
+            <strong>Compare within the same release.</strong> Browser versions, CPU throttling, and measurement methods
+            change over time. Since Chrome 118, the overall result uses a
+            <a href="https://github.com/krausest/js-framework-benchmark/wiki/Computation-of-the-weighted-geometric-mean"
+              >weighted geometric mean</a
+            >. See
+            <a href="https://github.com/krausest/js-framework-benchmark/wiki/How-the-duration-is-measured"
+              >how duration is measured</a
+            >.
+          </p>
+          <p>
+            <a href="https://github.com/krausest/js-framework-benchmark#keyed-vs-non-keyed-frameworks"
+              >Keyed and non-keyed implementations</a
+            >
+            handle DOM identity differently. Compare the mode that fits your application; these table operations are one
+            part of choosing a framework.
+          </p>
+        </div>
+      </section>
+
+      <section class="archive" id="archive" aria-labelledby="archive-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">The complete collection</p>
+            <h2 id="archive-title">Official results archive</h2>
+          </div>
+          <p class="section-caption">Every published release, in one place.</p>
+        </div>
+        <details class="archive-year" open>
+          <summary><span class="year">2026</span><span class="release-count">6 releases</span></summary>
+          <ul class="release-list">
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2026/chrome152.html"
+                ><span>Chrome 152</span><span class="release-meta latest-label">Latest official</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2026/chrome150.html"
+                ><span>Chrome 150</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2026/chrome148.html"
+                ><span>Chrome 148</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2026/chrome146_2.html"
+                ><span>Chrome 146</span><span class="release-meta">macOS · Updated to include thyn</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2026/chrome145.html"
+                ><span>Chrome 145</span><span class="release-meta">macOS · Keyed only</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2026/chrome144.html"
+                ><span>Chrome 144</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+          </ul>
+        </details>
+        <details class="archive-year">
+          <summary><span class="year">2025</span><span class="release-count">12 releases</span></summary>
+          <ul class="release-list">
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_143.0.7499.41.html"
+                ><span>Chrome 143</span><span class="release-meta">macOS · Keyed only</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_142.0.7444.60.html"
+                ><span>Chrome 142</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_141.0.7390.55.html"
+                ><span>Chrome 141</span><span class="release-meta">macOS · Keyed only</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_140.0.7339.81.html"
+                ><span>Chrome 140</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_139.0.7258.67.html"
+                ><span>Chrome 139</span><span class="release-meta">macOS · Keyed only</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_138.0.7204.50.html"
+                ><span>Chrome 138</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_137.0.7151.55.html"
+                ><span>Chrome 137</span><span class="release-meta">macOS · Keyed only</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_136.0.7103.93.html"
+                ><span>Chrome 136</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_135.0.7049.42.html"
+                ><span>Chrome 135</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_134.0.6998.45.html"
+                ><span>Chrome 134</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_133.0.6943.142.html"
+                ><span>Chrome 133</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2025/table_chrome_132.0.6834.83.html"
+                ><span>Chrome 132</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+          </ul>
+        </details>
+        <details class="archive-year">
+          <summary><span class="year">2024</span><span class="release-count">12 releases</span></summary>
+          <ul class="release-list">
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_131.0.6778.85.html"
+                ><span>Chrome 131</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_130.0.6723.58.html"
+                ><span>Chrome 130</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_129.0.6668.58.html"
+                ><span>Chrome 129</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_128.0.6613.86.html"
+                ><span>Chrome 128</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_127.0.6533.72.html"
+                ><span>Chrome 127</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_126.0.6478.55.html"
+                ><span>Chrome 126</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_125.0.6422.60.html"
+                ><span>Chrome 125</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_124.0.6367.91.html"
+                ><span>Chrome 124</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_123.0.6312.59.html"
+                ><span>Chrome 123</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_122.0.6261.69.html"
+                ><span>Chrome 122</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_121.0.6167.85.html"
+                ><span>Chrome 121</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2024/table_chrome_121.0.6167.86_win.html"
+                ><span>Chrome 121</span><span class="release-meta">Windows</span></a
+              >
+            </li>
+          </ul>
+        </details>
+        <details class="archive-year">
+          <summary><span class="year">2023</span><span class="release-count">12 releases</span></summary>
+          <ul class="release-list">
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_120.0.6099.62.html"
+                ><span>Chrome 120</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_119.0.6045.105.html"
+                ><span>Chrome 119</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_118.0.5993.70.html"
+                ><span>Chrome 118</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_117.0.5938.62.html"
+                ><span>Chrome 117</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_116.0.5845.82.html"
+                ><span>Chrome 116</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_115.0.5790.98.html"
+                ><span>Chrome 115</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_114.0.5735.90.html"
+                ><span>Chrome 114</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_113.0.5672.63.html"
+                ><span>Chrome 113</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_112.0.5615.49.html"
+                ><span>Chrome 112</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_111.0.5563.64.html"
+                ><span>Chrome 111</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_110.0.5481.77.html"
+                ><span>Chrome 110</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2023/table_chrome_109.0.5414.87.html"
+                ><span>Chrome 109</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+          </ul>
+        </details>
+        <details class="archive-year">
+          <summary><span class="year">2022</span><span class="release-count">13 releases</span></summary>
+          <ul class="release-list">
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_108.0.5359.71.html"
+                ><span>Chrome 108</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_107.0.5304.62.html"
+                ><span>Chrome 107</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_106.0.5249.61.html"
+                ><span>Chrome 106</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_105.0.5195.102.html"
+                ><span>Chrome 105</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_104.0.5112.79.html"
+                ><span>Chrome 104</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_104_windows.html"
+                ><span>Chrome 104</span><span class="release-meta">Windows</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_103.0.5060.53_osx.html"
+                ><span>Chrome 103</span><span class="release-meta">macOS</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_102.0.5005.61.html"
+                ><span>Chrome 102</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_101.0.4951.41.html"
+                ><span>Chrome 101</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_100.0.4896.127.html"
+                ><span>Chrome 100</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_99.0.4844.51.html"
+                ><span>Chrome 99</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_98.0.4758.80.html"
+                ><span>Chrome 98</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2022/table_chrome_97.0.4692.71.html"
+                ><span>Chrome 97</span></a
+              >
+            </li>
+          </ul>
+        </details>
+        <details class="archive-year">
+          <summary><span class="year">2021</span><span class="release-count">9 releases</span></summary>
+          <ul class="release-list">
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2021/table_chrome_96.0.4664.45.html"
+                ><span>Chrome 96</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2021/table_chrome_95.0.4638.54.html"
+                ><span>Chrome 95</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2021/table_chrome_94.0.4606.54.html"
+                ><span>Chrome 94</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2021/table_chrome_93.0.4577.63.html"
+                ><span>Chrome 93</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2021/table_chrome_92.0.4515.107.html"
+                ><span>Chrome 92</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2021/table_chrome_91.0.4472.77.html"
+                ><span>Chrome 91</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2021/table_chrome_90.0.4430.72.html"
+                ><span>Chrome 90</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2021/table_chrome_89.0.4389.72.html"
+                ><span>Chrome 89</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2021/table_chrome_88.0.4324.96.html"
+                ><span>Chrome 88</span></a
+              >
+            </li>
+          </ul>
+        </details>
+        <details class="archive-year">
+          <summary><span class="year">2020</span><span class="release-count">5 releases</span></summary>
+          <ul class="release-list">
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2020/table_chrome_87.0.4280.66.html"
+                ><span>Chrome 87</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2020/table_chrome_86.0.4240.75.html"
+                ><span>Chrome 86</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2020/table_chrome_85.0.4183.83.html"
+                ><span>Chrome 85</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2020/table_chrome_84.0.4147.89.html"
+                ><span>Chrome 84</span></a
+              >
+            </li>
+            <li>
+              <a href="https://krausest.github.io/js-framework-benchmark/2020/table_chrome_83.0.4103.106.html"
+                ><span>Chrome 83</span></a
+              >
+            </li>
+          </ul>
+        </details>
+        <details class="archive-year">
+          <summary><span class="year">Earlier results</span><span class="release-count">4 releases</span></summary>
+          <p class="legacy-note">These reports are hosted on Stefan Krause’s website.</p>
+          <ul class="release-list">
+            <li>
+              <a href="https://stefankrause.net/js-frameworks-benchmark8/table.html"
+                ><span>Chrome 69 <span aria-hidden="true">↗</span></span></a
+              >
+            </li>
+            <li>
+              <a href="https://www.stefankrause.net/js-frameworks-benchmark7/table.html"
+                ><span>Chrome 62 <span aria-hidden="true">↗</span></span></a
+              >
+            </li>
+            <li>
+              <a href="https://www.stefankrause.net/js-frameworks-benchmark6/webdriver-ts-results/table.html"
+                ><span>Chrome 58 <span aria-hidden="true">↗</span></span></a
+              >
+            </li>
+            <li>
+              <a href="https://www.stefankrause.net/js-frameworks-benchmark5/webdriver-ts/table.html"
+                ><span>Chrome 55 <span aria-hidden="true">↗</span></span></a
+              >
+            </li>
+          </ul>
+        </details>
+      </section>
+
+      <section class="contribute" aria-labelledby="contribute-title">
+        <div>
+          <h2 id="contribute-title">Built in the open.</h2>
+          <p>Explore the source, add a framework, or help improve the benchmark.</p>
+        </div>
+        <a
+          class="text-link"
+          href="https://github.com/krausest/js-framework-benchmark#4-contributing-a-new-implementation"
+          >Contribute on GitHub <span aria-hidden="true">↗</span></a
+        >
+      </section>
+    </main>
+    <footer class="site-footer wrap">
+      <p>JavaScript Framework Benchmark <span aria-hidden="true">·</span> By Stefan Krause and contributors</p>
+      <nav aria-label="Project resources">
+        <a href="https://github.com/krausest/js-framework-benchmark">Source code</a>
+        <a href="sitemap.xml">Sitemap</a>
+        <a href="llms.txt">llms.txt</a>
+      </nav>
+    </footer>
+  </body>
+</html>

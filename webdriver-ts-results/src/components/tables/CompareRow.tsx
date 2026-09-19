@@ -36,7 +36,7 @@ const CompareRow = ({ comparison, compareWith }: Props) => {
       >
         {label}
         <button
-          className="button button__text sortKey"
+          className="button comparison-button"
           onClick={handleToggleComparing}
           aria-label={isComparing ? "Stop comparing" : "Compare with other frameworks"}
         >
