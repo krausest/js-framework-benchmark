@@ -53,6 +53,11 @@ export interface BenchmarkOptions {
   HOST: 'localhost',
 */
 
+export function getPort(): number {
+  const envPort = Number(process.env.PORT);
+  return Number.isInteger(envPort) && envPort > 0 ? envPort : 8080;
+}
+
 export enum BenchmarkRunner {
   PUPPETEER = "puppeteer",
   PLAYWRIGHT = "playwright",

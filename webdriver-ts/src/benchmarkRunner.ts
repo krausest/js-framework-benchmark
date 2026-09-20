@@ -5,6 +5,7 @@ import {
   config,
   ErrorAndWarning,
   FrameworkData,
+  getPort,
   initializeFrameworks,
 } from "./common.js";
 import { fork } from "node:child_process";
@@ -324,7 +325,7 @@ async function main() {
   console.log("HEADLESS***", args.headless);
 
   let benchmarkOptions: BenchmarkOptions = {
-    port: 8080,
+    port: getPort(),
     host: "localhost",
     browser: args.browser,
     remoteDebuggingPort: 9999,

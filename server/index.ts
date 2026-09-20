@@ -1,6 +1,7 @@
 import { buildServer } from "./app.js";
 
-const PORT = 8080;
+const envPort = Number(process.env.PORT);
+const PORT = Number.isInteger(envPort) && envPort > 0 ? envPort : 8080;
 
 const server = buildServer();
 

@@ -1,5 +1,6 @@
 [Service]
 Type=simple
+Environment=PORT=9080
 ExecStart=/home/stefan/js-framework-benchmark/server/runserver.sh
 User=stefan
 Group=stefan

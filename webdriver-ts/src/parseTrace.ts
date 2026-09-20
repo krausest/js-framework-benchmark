@@ -1,5 +1,5 @@
 import { cpuBenchmarkInfos } from "./benchmarksCommon.js";
-import { BenchmarkOptions, config, initializeFrameworks } from "./common.js";
+import { BenchmarkOptions, config, getPort, initializeFrameworks } from "./common.js";
 import { stats } from "./stats.js";
 import { computeResultsCPU, computeResultsJS, computeResultsPaint, parseCPUTrace, PlausibilityCheck } from "./timeline.js";
 
@@ -30,7 +30,7 @@ async function debugSingle() {
 
 async function debugAll() {
   let benchmarkOptions: BenchmarkOptions = {
-    port: 8080,
+    port: getPort(),
     host: "localhost",
     browser: "chrome",
     remoteDebuggingPort: 9999,

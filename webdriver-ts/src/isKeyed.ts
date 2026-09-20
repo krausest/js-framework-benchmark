@@ -1,6 +1,6 @@
 import yargs from "yargs";
 import { checkElementContainsText, checkElementExists, clickElement, startBrowser } from "./playwrightAccess.js";
-import { config, FrameworkData, initializeFrameworks, BenchmarkOptions } from "./common.js";
+import { config, FrameworkData, getPort, initializeFrameworks, BenchmarkOptions } from "./common.js";
 
 import * as R from "ramda";
 import { ElementHandle, Page } from "playwright";
@@ -21,7 +21,7 @@ console.log("args", args);
 console.log("HEADLESS***", args.headless);
 
 let benchmarkOptions: BenchmarkOptions = {
-  port: 8080,
+  port: getPort(),
   host: "localhost",
   browser: args.browser,
   remoteDebuggingPort: 9999,

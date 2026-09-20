@@ -11,7 +11,7 @@ import {
 } from "./benchmarksCommon.js";
 import * as benchmarksLighthouse from "./benchmarksLighthouse.js";
 import * as benchmarksSize from "./benchmarksSize.js";
-import { BenchmarkOptions, config, initializeFrameworks, JsonResult } from "./common.js";
+import { BenchmarkOptions, config, getPort, initializeFrameworks, JsonResult } from "./common.js";
 
 let args: any = yargs(process.argv)
   .usage(
@@ -25,7 +25,7 @@ let args: any = yargs(process.argv)
 console.log("args", args);
 
 let benchmarkOptions: BenchmarkOptions = {
-  port: 8080,
+  port: getPort(),
   host: "localhost",
   browser: args.browser,
   remoteDebuggingPort: 9999,
