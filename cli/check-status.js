@@ -5,7 +5,7 @@ import { getFrameworks } from "./helpers/frameworks.js";
 
 /**
  * @typedef {Object} RepoIdentifier
- * @property {"github" | "gitlab" | "gitee"} provider
+ * @property {"github" | "gitlab" | "gitee" | "codeberg"} provider
  * @property {string} owner
  * @property {string} repo
  * @property {string} fullPath
@@ -28,6 +28,7 @@ function parseRepoIdentifier(urlStr) {
     if (parsed.hostname.includes("github.com")) provider = "github";
     else if (parsed.hostname.includes("gitlab.com")) provider = "gitlab";
     else if (parsed.hostname.includes("gitee.com")) provider = "gitee";
+    else if (parsed.hostname.includes("codeberg.org")) provider = "codeberg";
 
     if (!provider) return null;
 
@@ -36,22 +37,23 @@ function parseRepoIdentifier(urlStr) {
     const fullPath = parts.map((p) => p.replace(/\.git$/, "")).join("/");
 
     return {
-      provider: /** @type {"github" | "gitlab" | "gitee"} */ (provider),
+      provider: /** @type {"github" | "gitlab" | "gitee" | "codeberg"} */ (provider),
       owner,
       repo,
       fullPath,
     };
   } catch {
-    const match = trimmed.match(/(github\.com|gitlab\.com|gitee\.com)[/:]([^/]+)\/([^/#?]+)/);
+    const match = trimmed.match(/(github\.com|gitlab\.com|gitee\.com|codeberg\.org)[/:]([^/]+)\/([^/#?]+)/);
     if (match) {
       let provider = "github";
       if (match[1].includes("gitlab")) provider = "gitlab";
       else if (match[1].includes("gitee")) provider = "gitee";
+      else if (match[1].includes("codeberg")) provider = "codeberg";
 
       const owner = match[2];
       const repo = match[3].replace(/\.git$/, "");
       return {
-        provider: /** @type {"github" | "gitlab" | "gitee"} */ (provider),
+        provider: /** @type {"github" | "gitlab" | "gitee" | "codeberg"} */ (provider),
         owner,
         repo,
         fullPath: `${owner}/${repo}`,
@@ -74,7 +76,7 @@ function daysSince(isoDate) {
 }
 
 /**
- * Fetches repository metadata and latest issue across GitHub, GitLab, and Gitee with caching.
+ * Fetches repository metadata and latest issue across GitHub, GitLab, Gitee, and Codeberg with caching.
  */
 class RepoClient {
   constructor() {
@@ -114,6 +116,8 @@ class RepoClient {
       result = await this.getGitlabInfo(repoId.fullPath, key);
     } else if (repoId.provider === "gitee") {
       result = await this.getGiteeInfo(repoId.owner, repoId.repo, key);
+    } else if (repoId.provider === "codeberg") {
+      result = await this.getCodebergInfo(repoId.owner, repoId.repo, key);
     }
 
     this.repoCache.set(key, result);
@@ -260,6 +264,61 @@ class RepoClient {
       return { stars: "N/A", daysSinceCommit: "N/A", daysSinceIssue: "N/A", archived: "N/A" };
     }
   }
+
+  /**
+   * Codeberg runs Forgejo, whose API v1 is Gitea-compatible. It has no pushed_at, so the last commit is read from the commits endpoint.
+   * @param {string} owner
+   * @param {string} repo
+   * @param {string} key
+   */
+  async getCodebergInfo(owner, repo, key) {
+    try {
+      const baseUrl = `https://codeberg.org/api/v1/repos/${owner}/${repo}`;
+      const repoRes = await fetch(baseUrl, { headers: this.commonHeaders });
+
+      if (!repoRes.ok) {
+        console.warn(`[Codeberg API] Failed to fetch repo ${key}: HTTP ${repoRes.status}`);
+        return { stars: "N/A", daysSinceCommit: "N/A", daysSinceIssue: "N/A", archived: "N/A" };
+      }
+
+      const repoData = await repoRes.json();
+      const stars = repoData.stars_count ?? "N/A";
+      const archived = repoData.archived ?? "N/A";
+
+      let daysSinceCommit = "N/A";
+      const commitsRes = await fetch(`${baseUrl}/commits?limit=1&stat=false&verification=false&files=false`, {
+        headers: this.commonHeaders,
+      });
+      if (commitsRes.ok) {
+        const commitsData = await commitsRes.json();
+        const commitDate = Array.isArray(commitsData) && (commitsData[0]?.commit?.committer?.date ?? commitsData[0]?.created);
+        if (commitDate) {
+          daysSinceCommit = daysSince(commitDate);
+        }
+      }
+
+      let daysSinceIssue = "N/A";
+      if (repoData.has_issues === false) {
+        daysSinceIssue = "N/A";
+      } else {
+        const issuesRes = await fetch(`${baseUrl}/issues?state=all&limit=1`, { headers: this.commonHeaders });
+
+        if (issuesRes.ok) {
+          const issuesData = await issuesRes.json();
+          if (Array.isArray(issuesData) && issuesData.length > 0 && issuesData[0].created_at) {
+            daysSinceIssue = String(daysSince(issuesData[0].created_at));
+          } else {
+            daysSinceIssue = "N/A";
+          }
+        }
+      }
+
+      return { stars, daysSinceCommit, daysSinceIssue, archived };
+    } catch (error) {
+      console.warn(`[Codeberg API] Error fetching ${key}:`, error);
+      return { stars: "N/A", daysSinceCommit: "N/A", daysSinceIssue: "N/A", archived: "N/A" };
+    }
+  }
 }
 
 /**
@@ -373,7 +432,7 @@ export async function checkStatus(options = {}) {
     }
 
     const meta = pkg["js-framework-benchmark"] || {};
-    const repoUrl = meta.repoURL || meta.githubURL || meta.gitlabURL || meta.giteeURL;
+    const repoUrl = meta.repoURL || meta.githubURL || meta.gitlabURL || meta.giteeURL || meta.codebergURL;
 
     if (!repoUrl) {
       csvRows.push([escapeCsvValue(frameworkName), escapeCsvValue("no repo url"), "N/A", "N/A", "N/A", "N/A", ""].join(","));
