@@ -16,9 +16,10 @@
     "build-prod": "rollup -c --environment BUILD:production"
   },
   "dependencies": {
-    "marionette": "5.0.0-alpha.2",
-    "morphdom": "2.6.1",
-    "underscore": "1.11.0"
+    "@mnjs/adapters": "5.0.0-beta.1",
+    "@mnjs/data": "5.0.0-beta.1",
+    "marionette": "5.0.0-beta.1",
+    "morphdom": "2.7.8"
   },
   "devDependencies": {
     "@babel/core": "7.25.2",
