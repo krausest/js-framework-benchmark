@@ -9,7 +9,8 @@
 		"issues" :[
 			1139
 		],	
-		"language": "JavaScript"
+		"language": "JavaScript",
+    "repoURL": "https://codeberg.org/createthirdplaces/places-js"
   },
   "scripts": {
     "dev": "echo 0",
