@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "fable": {
+      "version": "5.17.2",
+      "commands": [
+        "fable"
+      ],
+      "rollForward": false
+    }
+  }
+}
