@@ -106,7 +106,7 @@ export default defineComponent({
 
         <table class="table table-hover table-striped test-data">
           <tbody>
-            <tr v-for={ctx in rows.value} class={{ danger: ctx.id === selected.value }} data-label={ctx.label.value}>
+            <tr v-for={ctx in rows.value} class={{ danger: ctx.id === selected.value }}>
               <td class="col-md-1" v-text={ctx.id} />
               <td class="col-md-4">
                 <a onClick={() => select(ctx.id)} v-text={ctx.label.value} />

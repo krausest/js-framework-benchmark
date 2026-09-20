@@ -138,7 +138,6 @@ function swapRows() {
         v-for="{ id, label } of rows"
         :key="id"
         :class="{ danger: id === selected }"
-        :data-label="label"
         v-memo="[label, id === selected]"
       >
         <td class="col-md-1">{{ id }}</td>
