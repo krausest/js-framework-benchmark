@@ -13,7 +13,8 @@
       801,
       1261
     ],
-    "language": "Python"
+    "language": "Python",
+    "repoURL": "https://github.com/pyjs/pyjs"
   },
   "scripts": {
     "build-prod": "rimraf bundled-dist src.main.main.js src.main.main.js.map src/__pycache__ && pyjs build src.main:main --only-js --include-main && esbuild src.main.main.js --outfile=bundled-dist/main.js --minify && rimraf src.main.main.js src.main.main.js.map src/__pycache__ && cpr index.html bundled-dist/index.html"
