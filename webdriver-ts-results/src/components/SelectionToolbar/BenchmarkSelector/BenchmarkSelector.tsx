@@ -39,9 +39,16 @@ const BenchmarkSelector = () => {
   return (
     <>
       <Button type="primary" onClick={showModal}>
-        Which benchmarks?
+        Benchmarks
       </Button>
-      <Modal title="Benchmarks selector" footer={null} onOk={handleOk} onCancel={handleCancel} open={isModalOpen}>
+      <Modal
+        className="selector-modal"
+        title="Benchmarks selector"
+        footer={null}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        open={isModalOpen}
+      >
         {content}
       </Modal>
     </>

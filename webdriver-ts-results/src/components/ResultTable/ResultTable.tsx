@@ -18,12 +18,12 @@ const ResultTable = ({ type }: Props) => {
     [FrameworkType.KEYED]: {
       label: "Keyed results",
       description:
-        "Keyed implementations create an association between the domain data and a dom element by assigning a 'key'. If data changes the dom element with that key will be updated. In consequence inserting or deleting an element in the data array causes a corresponding change to the dom.",
+        "Each data item keeps its own DOM element through a stable key. Inserting or removing an item creates or removes its corresponding element.",
     },
     [FrameworkType.NON_KEYED]: {
-      label: "Non keyed results",
+      label: "Non-keyed results",
       description:
-        "Non keyed implementations are allowed to reuse existing dom elements. In consequence inserting or deleting an element in the data array might append after or delete the last table row and update the contents of all elements after the inserting or deletion index. This can perform better, but can cause problems if dom state is modified externally.",
+        "DOM elements may be reused for different data items. This can reduce work, but may affect state changed outside the framework. Compare these implementations separately from keyed results.",
     },
   };
 
@@ -34,6 +34,8 @@ const ResultTable = ({ type }: Props) => {
   const sort = useRootStore((state) => state.sort);
 
   const sortBy = (sortKey: string) => sort(sortKey);
+  const headingId = `results-${type}`;
+  const hintId = `${headingId}-hint`;
 
   if (
     !data ||
@@ -46,29 +48,37 @@ const ResultTable = ({ type }: Props) => {
   }
 
   return (
-    <div className="mt-3">
+    <section className="result-group" aria-labelledby={headingId}>
       <div key={texts[type].label}>
-        <h1>{texts[type].label}</h1>
-        <p>{texts[type].description}</p>
+        <div className="result-group__heading">
+          <h2 id={headingId}>{texts[type].label}</h2>
+          <span className="implementation-count">{data.frameworks.length} implementations</span>
+        </div>
+        <p className="result-group__description">{texts[type].description}</p>
+        <p className="result-group__hint" id={hintId}>
+          <span>Click a benchmark name to sort. Scroll horizontally to explore all implementations.</span>
+          <span>Lower values are better. Compare measurements within the same release.</span>
+        </p>
 
         {cpuDurationMode === CpuDurationMode.SCRIPT && (
-          <h3>
+          <p className="experimental-notice">
             Warning: This is an experimental view that includes script duration only. Don&apos;t rely on those values
             yet and don&apos;t report them until they are official. Report bugs in issue{" "}
             <a href="https://github.com/krausest/js-framework-benchmark/issues/1233">1233</a>.
-          </h3>
+          </p>
         )}
         {cpuDurationMode === CpuDurationMode.RENDER && (
-          <h3>
+          <p className="experimental-notice">
             Warning: This is an experimental view that shows the difference between total duration and script duration.
             Don&apos;t rely on those values yet and don&apos;t report them until they are official. Report bugs in issue{" "}
             <a href="https://github.com/krausest/js-framework-benchmark/issues/1233">1233</a>.
-          </h3>
+          </p>
         )}
         {displayMode === DisplayMode.BOX_PLOT ? (
           benchmarks.length > 0 && (
             <React.Suspense fallback={<div>Loading...</div>}>
               <BoxPlotTable
+                label={texts[type].label}
                 results={data.results}
                 frameworks={data.frameworks}
                 benchmarks={data.getResult(BenchmarkType.CPU).benchmarks}
@@ -80,17 +90,22 @@ const ResultTable = ({ type }: Props) => {
           )
         ) : (
           <div className="results">
-            <div className="results__table-container">
-              <table className="results__table">
-                {/* Dummy row for fixed td width */}
-                <thead className="dummy">
-                  <tr>
-                    <th></th>
-                    {data.frameworks.map((_f, idx) => (
-                      <th key={idx}></th>
-                    ))}
-                  </tr>
-                </thead>
+            <div
+              className="results__table-container"
+              role="region"
+              aria-label={`${texts[type].label} table`}
+              aria-describedby={hintId}
+              tabIndex={0}
+            >
+              <table
+                className="results__table"
+                aria-labelledby={headingId}
+                style={{ width: `calc(var(--label-width) + ${data.frameworks.length * 84}px)` }}
+              >
+                <colgroup>
+                  <col className="bench-column" />
+                  <col className="framework-column" span={data.frameworks.length} />
+                </colgroup>
                 <CpuResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
                 <MemResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
                 <SizeResultsTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
@@ -99,7 +114,7 @@ const ResultTable = ({ type }: Props) => {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

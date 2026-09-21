@@ -13,17 +13,20 @@ const SelectionToolbar = ({ showDurationSelection }: Props) => {
   console.log("SelectionToolbar");
 
   return (
-    <div className="select-toolbar">
-      <div className="select-toolbar__actions">
-        <FrameworkSelector />
-        <BenchmarkSelector />
-        <IssueSelector />
+    <section className="select-toolbar" aria-label="Benchmark controls">
+      <div className="select-toolbar__filters">
+        <p className="select-toolbar__label">Filter results</p>
+        <div className="select-toolbar__actions">
+          <FrameworkSelector />
+          <BenchmarkSelector />
+          <IssueSelector />
+        </div>
       </div>
       <CopyPasteControls />
-      <div className="select-toolbar__actions">
+      <div className="select-toolbar__modes">
         <ModeSelectors showDurationSelection={showDurationSelection} />
       </div>
-    </div>
+    </section>
   );
 };
 

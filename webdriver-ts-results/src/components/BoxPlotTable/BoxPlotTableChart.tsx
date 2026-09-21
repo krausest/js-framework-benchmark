@@ -77,7 +77,7 @@ const BoxPlotTableChart = ({ traces }: Props) => {
   }, [traces]);
 
   return (
-    <div style={{ height: "250px" }}>
+    <div style={{ position: "relative", height: "250px" }}>
       <canvas style={{ maxHeight: "100%" }} ref={chartRef}></canvas>
     </div>
   );

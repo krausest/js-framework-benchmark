@@ -56,18 +56,22 @@ const CopyPasteControls = () => {
 
   return (
     <div className="copy-paste-panel">
-      <div>Copy/paste current selection</div>
+      <p className="select-toolbar__label">Share selection</p>
       <div className="copy-paste-panel__buttons">
         <Button
           onClick={copyStateToClipboard}
-          icon={<CopyIcon size={20} />}
+          icon={<CopyIcon size={15} aria-hidden="true" />}
           aria-label="Copy selected frameworks and benchmarks"
-        />
+        >
+          Copy
+        </Button>
         <Button
           onClick={handlePasteFromClipboard}
-          icon={<ClipboardPasteIcon size={20} />}
+          icon={<ClipboardPasteIcon size={15} aria-hidden="true" />}
           aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
-        />
+        >
+          Paste
+        </Button>
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ const SizeResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
     <>
       <thead>
         <tr>
-          <td className="description">
+          <td className="description" colSpan={data.frameworks.length + 1}>
             <h3>Transferred size (in kBs) and first paint</h3>
           </td>
         </tr>
