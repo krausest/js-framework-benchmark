@@ -1,0 +1,29 @@
+# JavaScript Framework Benchmark
+
+> Official results and source code for Stefan Krause's JavaScript framework benchmark. The benchmark compares browser table operations, memory use and startup behavior across framework implementations.
+
+Use a specific published report when citing results, including its Chrome version, operating system and keyed or non-keyed mode. Measurements include rendering work. Results from different Chrome versions are not always directly comparable because the browser, benchmark and measurement driver change. Since Chrome 118, the overall result uses a weighted geometric mean.
+
+Keyed implementations preserve the relationship between data items and DOM nodes. Non-keyed implementations may reuse a DOM node for different data. Compare the modes separately and review the implementation notes in each report.
+
+The current snapshot is separate from official releases: it may combine browser versions or different numbers of runs. This benchmark covers specific workloads and does not establish a universally fastest framework for every application.
+
+## Results
+
+- [Official results archive](https://krausest.github.io/js-framework-benchmark/): The maintained entry point for official reports, including older releases.
+- [Chrome 152 official results](https://krausest.github.io/js-framework-benchmark/2026/chrome152.html): The latest official report listed in the archive; consult the archive for subsequent releases.
+- [Current development snapshot](https://krausest.github.io/js-framework-benchmark/current.html): Work in progress with potentially mixed measurement conditions, separate from the official releases.
+
+## Methodology and source
+
+- [Project README](https://raw.githubusercontent.com/krausest/js-framework-benchmark/master/README.md): Benchmark operations, keyed and non-keyed behavior, setup and contribution instructions in Markdown.
+- [How duration is measured](https://github.com/krausest/js-framework-benchmark/wiki/How-the-duration-is-measured): Measurement boundaries and rendering timing.
+- [Weighted geometric mean](https://github.com/krausest/js-framework-benchmark/wiki/Computation-of-the-weighted-geometric-mean): How the overall result is computed.
+- [Source repository](https://github.com/krausest/js-framework-benchmark): Framework implementations, benchmark runner and results application.
+
+## Optional
+
+- [Release downloads](https://github.com/krausest/js-framework-benchmark/releases): Published versions and available prebuilt artifacts.
+- [Issues](https://github.com/krausest/js-framework-benchmark/issues): Known problems and project discussions about specific issues.
+- [License](https://github.com/krausest/js-framework-benchmark/blob/master/LICENSE): Repository license text.
+- [Sitemap](https://krausest.github.io/js-framework-benchmark/sitemap.xml): URLs for the homepage, current snapshot and official reports hosted on this site.

@@ -23,7 +23,7 @@ const CpuResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
     <>
       <thead>
         <tr>
-          <td className="description">
+          <td className="description" colSpan={data.frameworks.length + 1}>
             <h3>Duration in milliseconds ± 95% confidence interval (Slowdown = Duration / Fastest)</h3>
           </td>
         </tr>

@@ -42,6 +42,9 @@ For all benchmarks the duration is measured including rendering time. You can re
 ## Official results
 
 Official results are posted on the [official results page](https://krausest.github.io/js-framework-benchmark/index.html).
+
+To work on the results website, see [website development and publishing](docs/WEBSITE.md).
+
 My [blog](http://www.stefankrause.net/wp) has a few articles about the benchmark.
 Older results of this benchmark are outlined on my blog ([round 1](http://www.stefankrause.net/wp/?p=191), [round 2](http://www.stefankrause.net/wp/?p=283), [round 3](http://www.stefankrause.net/wp/?p=301), [round 4](http://www.stefankrause.net/wp/?p=316), [round 5](http://www.stefankrause.net/wp/?p=392), [round 6](http://www.stefankrause.net/wp/?p=431), [round 7](http://www.stefankrause.net/wp/?p=454) and [round 8](http://www.stefankrause.net/wp/?p=504)).
 

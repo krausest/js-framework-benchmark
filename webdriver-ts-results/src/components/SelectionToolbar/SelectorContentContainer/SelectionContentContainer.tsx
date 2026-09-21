@@ -39,7 +39,7 @@ const SelectorContentContainer = ({
 
   return (
     <div className="selector-content-container">
-      <Flex justify="space-between" align="center">
+      <Flex className="selector-content-container__heading" justify="space-between" align="center" wrap>
         <h3>{label}</h3>
         <div className="selector-content-container__actions">
           <Button type="text" onClick={handleSelectNone} disabled={isNoneSelected} aria-label="Select none">
@@ -48,10 +48,16 @@ const SelectorContentContainer = ({
           <Button type="text" onClick={handleSelectAll} disabled={areAllSelected} aria-label="Select all">
             All
           </Button>
-          {selectUnflagged &&
-          (<Button type="text" onClick={handleSelectUnflagged} disabled={isUnflaggedSelected} aria-label="Select unflagged">
-            Unflagged
-          </Button>)}
+          {selectUnflagged && (
+            <Button
+              type="text"
+              onClick={handleSelectUnflagged}
+              disabled={isUnflaggedSelected}
+              aria-label="Select unflagged"
+            >
+              Unflagged
+            </Button>
+          )}
         </div>
       </Flex>
       <div className={`selector-content-container__content ${grid ? "grid" : ""}`}>
