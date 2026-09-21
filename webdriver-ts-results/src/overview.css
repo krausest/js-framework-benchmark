@@ -82,8 +82,8 @@ h2 {
 .brand-mark {
   display: grid;
   place-items: center;
-  width: 43px;
-  height: 43px;
+  width: 52px;
+  height: 52px;
   border-radius: 8px;
   background: var(--ink);
   color: #fff;

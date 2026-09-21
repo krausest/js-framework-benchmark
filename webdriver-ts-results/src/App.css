@@ -23,8 +23,8 @@
 .results-brand__mark {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 48px;
+  height: 48px;
   border-radius: 7px;
   background: var(--ink);
   color: #fff;
