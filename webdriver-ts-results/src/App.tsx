@@ -38,9 +38,11 @@ const App = () => {
       <header className="results-header workspace">
         <a className="results-brand" href={archiveUrl} aria-label="JavaScript Framework Benchmark home">
           <span className="results-brand__mark" aria-hidden="true">
-            js
+            jsfb
           </span>
           <span>
+            js 
+            <br />
             framework
             <br />
             benchmark

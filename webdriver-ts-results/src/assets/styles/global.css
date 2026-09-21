@@ -40,7 +40,7 @@
 
 .results__table th,
 .results__table td {
-  padding: 8px 7px;
+  padding: 1px 4px;
   border: 1px solid var(--border-color);
   text-align: center;
   vertical-align: middle;
