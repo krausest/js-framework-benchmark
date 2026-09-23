@@ -1,0 +1,29 @@
+{
+  "name": "js-framework-benchmark-openelement",
+  "version": "1.0.0",
+  "private": true,
+  "description": "OpenElement keyed implementation of the js-framework-benchmark",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersion": "",
+    "frameworkHomeURL": "https://openelement.org",
+    "language": "TypeScript",
+    "repoURL": "https://github.com/open-element/openelement",
+    "issues": [800, 801]
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build-prod": "vite build",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@openelement/element": "1.0.0-alpha.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.17.0",
+    "eslint": "10.7.0",
+    "globals": "17.4.0",
+    "typescript-eslint": "8.57.2",
+    "vite": "8.0.16"
+  }
+}
