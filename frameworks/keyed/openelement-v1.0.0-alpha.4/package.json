@@ -5,11 +5,14 @@
   "description": "OpenElement keyed implementation of the js-framework-benchmark",
   "type": "module",
   "js-framework-benchmark": {
-    "frameworkVersion": "",
+    "frameworkVersion": "1.0.0-alpha.4",
     "frameworkHomeURL": "https://openelement.org",
     "language": "TypeScript",
     "repoURL": "https://github.com/open-element/openelement",
-    "issues": [800, 801]
+    "issues": [
+      800,
+      801
+    ]
   },
   "scripts": {
     "dev": "vite build --watch",
