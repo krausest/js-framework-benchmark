@@ -14,7 +14,7 @@
 //
 // Usage : node build.mjs [--watch]
 
-import { Bundler } from 'modularjs-compiler'
+import { Bundler } from 'modularjs-framework'
 import { join, resolve } from 'node:path'
 
 const here = resolve(new URL('.', import.meta.url).pathname)

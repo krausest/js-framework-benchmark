@@ -1,11 +1,11 @@
 {
   "name": "js-framework-benchmark-mjs",
-  "version": "2.0.0",
+  "version": "2.4.4",
   "description": "ModularJS V2 — js-framework-benchmark adapter (keyed)",
   "type": "module",
   "js-framework-benchmark": {
-    "frameworkVersion": "2.0.0",
-    "frameworkHomeURL": "https://github.com/",
+    "frameworkVersion": "2.4.4",
+    "frameworkHomeURL": "https://github.com/RaptureStudio42/modularjs-framework",
     "useShadowRoot": false,
     "buttonsInShadowRoot": false,
     "issues": [],
@@ -18,6 +18,6 @@
   "author": "MJS team",
   "license": "Apache-2.0",
   "dependencies": {
-    "modularjs-compiler": "file:../../../../ModularJS"
+    "modularjs-framework": "^2.4.4"
   }
 }
