@@ -1,0 +1,28 @@
+{
+  "name": "js-framework-benchmark-cortex-wasm",
+  "version": "1.0.0",
+  "description": "Cortex Research Labs High-Performance Native Rust WebAssembly Keyed Implementation",
+  "main": "app.js",
+  "js-framework-benchmark": {
+    "frameworkVersion": "2026.2",
+    "frameworkHomeURL": "https://github.com/cortexLab011/cortex-dom-arena",
+    "language": "Rust / WebAssembly"
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "keywords": [
+    "wasm",
+    "rust",
+    "high-performance",
+    "keyed"
+  ],
+  "author": "Cortex Research Labs <cortex.lab1@outlook.com>",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/cortexLab011/cortex-dom-arena",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}
