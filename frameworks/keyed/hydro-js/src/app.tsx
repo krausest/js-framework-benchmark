@@ -129,9 +129,7 @@ function update() {
   const d = getValue(data);
   let index = 0;
   while (index < d.length) {
-    data[index].setter((item: (typeof data)[number]) => {
-      item.label += " !!!";
-    });
+    data[index].label.setter((label: string) => label + " !!!");
     index += 10;
   }
 }
