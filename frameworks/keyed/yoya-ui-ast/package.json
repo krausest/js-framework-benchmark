@@ -1,0 +1,39 @@
+{
+  "name": "js-framework-benchmark-yoya-ui-ast",
+  "version": "0.7.0",
+  "type": "module",
+  "description": "yoya-ui core layer (keyed tables) — rows compiled at build time to fragments + positional DOM writes (element channel, unplugin + rollup)",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@yoyaflow/yoya-ui",
+    "frameworkHomeURL": "https://github.com/YoyaFlow/yoya-ui",
+    "repoURL": "https://github.com/YoyaFlow/yoya-ui",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "keywords": [
+    "yoya-ui",
+    "keyed"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/YoyaFlow/yoya-ui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YoyaFlow/yoya-ui.git"
+  },
+  "dependencies": {
+    "@yoyaflow/yoya-core": "0.7.4",
+    "@yoyaflow/yoya-ui": "0.7.4"
+  },
+  "devDependencies": {
+    "@babel/parser": "7.29.9",
+    "@rollup/plugin-node-resolve": "15.3.1",
+    "@rollup/plugin-terser": "0.4.4",
+    "@yoyaflow/yoya-compiler": "0.7.4",
+    "magic-string": "1.4.2",
+    "rollup": "4.63.4",
+    "unplugin": "3.4.0"
+  }
+}
