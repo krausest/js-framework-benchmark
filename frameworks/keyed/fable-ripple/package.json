@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Fable.Ripple keyed implementation",
   "js-framework-benchmark": {
-    "frameworkVersion": "1.0.0-beta.5",
+    "frameworkVersion": "1.0.0-beta.6",
     "frameworkHomeURL": "https://fable-hub.github.io/Fable.Ripple/",
     "repoURL": "https://github.com/fable-hub/Fable.Ripple",
     "language": "F#",
