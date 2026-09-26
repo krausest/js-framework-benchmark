@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-yoya-ui-runtime",
-  "version": "0.7.0",
+  "version": "0.7.6",
   "description": "yoya-ui core layer (keyed tables) — runtime build, no compile step",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@yoyaflow/yoya-ui",

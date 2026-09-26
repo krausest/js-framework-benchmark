@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-yoya-ui-ast",
-  "version": "0.7.0",
+  "version": "0.7.6",
   "type": "module",
   "description": "yoya-ui core layer (keyed tables) — rows compiled at build time to fragments + positional DOM writes (element channel, unplugin + rollup)",
   "js-framework-benchmark": {
