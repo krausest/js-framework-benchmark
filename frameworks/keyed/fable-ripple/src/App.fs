@@ -178,4 +178,4 @@ let app () =
                 ]
         ]
 
-Html.mount "main" (app ())
+Html.mount "main" app |> ignore
