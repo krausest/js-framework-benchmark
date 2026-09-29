@@ -11,10 +11,8 @@
   <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
   <div id="app"></div>
   <script type="module">
-    import { runApplication } from "elementary-ui-browser-runtime";
-    import appInit from "virtual:swift-wasm?init&product=App";
-
-    await runApplication(appInit);
+    import { init } from "virtual:swift-wasm?js";
+    await init();
   </script>
 </body>
 
