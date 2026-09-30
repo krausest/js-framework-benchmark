@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@preact/signals": "^2.3.1",
-    "preact": "^10.29.8"
+    "preact": "^11.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
