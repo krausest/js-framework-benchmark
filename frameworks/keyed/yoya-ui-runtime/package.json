@@ -6,7 +6,8 @@
     "frameworkVersionFromPackage": "@yoyaflow/yoya-ui",
     "frameworkHomeURL": "https://github.com/YoyaFlow/yoya-ui",
     "repoURL": "https://github.com/YoyaFlow/yoya-ui",
-    "language": "JavaScript"
+    "language": "JavaScript",
+    "issues": [800]
   },
   "scripts": {
     "dev": "esbuild src/main.js --bundle --format=esm --target=es2020 --outfile=dist/main.js --watch",
