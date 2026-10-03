@@ -1,0 +1,74 @@
+// The js-framework-benchmark app (github.com/krausest/js-framework-benchmark), keyed, in ArtScript.
+page Bench "/" {
+  state rows: Any[] = []
+  state selected = 0
+  state nextId = 1
+  fn build(count) {
+    let adjectives = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean", "elegant", "easy", "angry", "crazy", "helpful", "mushy", "odd", "unsightly", "adorable", "important", "inexpensive", "cheap", "expensive", "fancy"]
+    let colours = ["red", "yellow", "blue", "green", "pink", "brown", "purple", "brown", "white", "black", "orange"]
+    let nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie", "sandwich", "burger", "pizza", "mouse", "keyboard"]
+    let pick = list => list[Math.round(Math.random() * 1000) % list.length]
+    let first = nextId
+    nextId = nextId + count
+    return Array.from({ length: count }, (_, i) => ({ id: first + i, label: `${pick(adjectives)} ${pick(colours)} ${pick(nouns)}` }))
+  }
+  fn update() {
+    rows.forEach((r, i) => { if i % 10 == 0 { r.label = r.label + " !!!" } })
+  }
+  fn swap() {
+    if rows.length > 998 {
+      let a = rows[1]
+      rows[1] = rows[998]
+      rows[998] = a
+    }
+  }
+
+  column class="container" gap=0 {
+    column class="jumbotron" gap=0 {
+      row class="row" {
+        column class="col-md-6" {
+          title "ArtScript-keyed"
+        }
+        column class="col-md-6" {
+          row class="row" wrap {
+            column class="col-sm-6 smallpad" {
+              button "Create 1,000 rows" id="run" class="btn btn-primary btn-block" -> rows = build(1000)
+            }
+            column class="col-sm-6 smallpad" {
+              button "Create 10,000 rows" id="runlots" class="btn btn-primary btn-block" -> rows = build(10000)
+            }
+            column class="col-sm-6 smallpad" {
+              button "Append 1,000 rows" id="add" class="btn btn-primary btn-block" -> rows = rows.concat(build(1000))
+            }
+            column class="col-sm-6 smallpad" {
+              button "Update every 10th row" id="update" class="btn btn-primary btn-block" -> update()
+            }
+            column class="col-sm-6 smallpad" {
+              button "Clear" id="clear" class="btn btn-primary btn-block" -> rows = []
+            }
+            column class="col-sm-6 smallpad" {
+              button "Swap Rows" id="swaprows" class="btn btn-primary btn-block" -> swap()
+            }
+          }
+        }
+      }
+    }
+    table class="table table-hover table-striped test-data" {
+      for r in rows key r.id {
+        tr class=(r.id == selected ? "danger" : "") {
+          td r.id class="col-md-1"
+          td class="col-md-4" {
+            link r.label on:click=(selected = r.id)
+          }
+          td class="col-md-1" {
+            link on:click=(rows = rows.filter(x => x.id != r.id)) {
+              text "" class="glyphicon glyphicon-remove"
+            }
+          }
+          td class="col-md-6"
+        }
+      }
+    }
+    text "" class="preloadicon glyphicon glyphicon-remove"
+  }
+}

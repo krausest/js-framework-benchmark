@@ -1,0 +1,21 @@
+{
+  "name": "js-framework-benchmark-artscript",
+  "version": "1.0.0",
+  "description": "ArtScript implementation for js-framework-benchmark (keyed)",
+  "private": true,
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@artscript/core",
+    "frameworkHomeURL": "https://artscript.dev",
+    "repoURL": "https://github.com/leb90/ArtScript",
+    "language": "ArtScript"
+  },
+  "scripts": {
+    "dev": "art dev src",
+    "build-prod": "art build src --out dist"
+  },
+  "devDependencies": {
+    "@artscript/core": "0.2.4"
+  },
+  "license": "MIT"
+}
