@@ -501,8 +501,9 @@ package name like that:
 
 ```
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "react"
+    "frameworkVersionFromPackage": "react",
     "frameworkHomeURL": "https://www.reactjs.org",
+    "repoURL": "https://github.com/facebook/react",
     "language": "JavaScript"
   },
 ```
@@ -510,6 +511,7 @@ package name like that:
 Now the benchmark will fetch the installed react version from package-lock.json in the react directory and use that version number to compute the correct version string.
 If your library has multiple important packages like react + redux you can put them separated with a colon there like "react:redux".
 If you don't pull your framework from npm you can hardcode a version like `"frameworkVersion": "0.0.1"`.
+`repoURL` should point to the framework's source repository (`githubURL`/`gitlabURL`/`giteeURL`/`codebergURL` are also accepted); it's used to check repo activity for the archiving policy described under [History](#history) below.
 The other important, but optional properties for js-framework-benchmark are shown in the following example:
 
 ```
