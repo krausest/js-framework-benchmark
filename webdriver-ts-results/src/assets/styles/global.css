@@ -25,9 +25,9 @@
   width: 150px;
   table-layout: fixed;
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: 10px;
   font-variant-numeric: tabular-nums;
-  line-height: 1.5;
+  line-height: 1.2;
 }
 
 .results__table .bench-column {
@@ -35,7 +35,7 @@
 }
 
 .results__table .framework-column {
-  width: 84px;
+  width: 60px;
 }
 
 .results__table th,
@@ -47,9 +47,9 @@
 }
 
 .results__table th {
-  width: 84px;
+  width: 60px;
   background: #f7f9f6;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 400;
   overflow-wrap: anywhere;
 }
@@ -71,6 +71,9 @@
   width: var(--label-width);
   background-color: #fff;
   text-align: left;
+}
+.results__table a {
+  text-decoration: none;
 }
 
 .results__table th:first-child::before,
@@ -128,7 +131,7 @@
 .results__table .deviation {
   display: inline-block;
   padding-left: 4px;
-  font-size: 10px;
+  font-size: 8px;
 }
 
 .results__table .deviation::before {
@@ -136,7 +139,7 @@
 }
 
 .results__table .factor {
-  font-size: 10px;
+  font-size: 8px;
 }
 
 .results__table .mean {

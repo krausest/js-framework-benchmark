@@ -100,7 +100,7 @@ const ResultTable = ({ type }: Props) => {
               <table
                 className="results__table"
                 aria-labelledby={headingId}
-                style={{ width: `calc(var(--label-width) + ${data.frameworks.length * 84}px)` }}
+                style={{ width: `calc(var(--label-width) + ${data.frameworks.length * 70}px)` }}
               >
                 <colgroup>
                   <col className="bench-column" />
