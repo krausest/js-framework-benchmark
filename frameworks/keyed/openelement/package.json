@@ -5,7 +5,7 @@
   "description": "OpenElement keyed implementation of the js-framework-benchmark",
   "type": "module",
   "js-framework-benchmark": {
-    "frameworkVersion": "1.0.0-alpha.4",
+    "frameworkVersionFromPackage": "@openelement/element",
     "frameworkHomeURL": "https://openelement.org",
     "language": "TypeScript",
     "repoURL": "https://github.com/open-element/openelement",
