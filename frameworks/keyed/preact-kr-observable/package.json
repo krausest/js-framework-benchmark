@@ -7,7 +7,8 @@
     "frameworkVersionFromPackage": "kr-observable:preact",
     "frameworkHomeURL": "https://www.npmjs.com/package/kr-observable",
     "language": "JavaScript",
-    "repoURL": "https://github.com/nihil-pro/kr-observable"
+    "repoURL": "https://github.com/nihil-pro/kr-observable",
+    "issues": [800]
   },
   "scripts": {
     "dev": "rollup -c -w",
