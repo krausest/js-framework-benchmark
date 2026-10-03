@@ -32,9 +32,16 @@ const IssueSelector = () => {
   return (
     <>
       <Button type="primary" onClick={showModal}>
-        Which issues?
+        Issues
       </Button>
-      <Modal title="Issues selector" footer={null} onOk={handleOk} onCancel={handleCancel} open={isModalOpen}>
+      <Modal
+        className="selector-modal"
+        title="Issues selector"
+        footer={null}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        open={isModalOpen}
+      >
         {content}
       </Modal>
     </>

@@ -39,10 +39,11 @@ const FrameworkSelector = () => {
   return (
     <>
       <Button type="primary" onClick={showModal}>
-        Which frameworks?
+        Frameworks
       </Button>
       <Modal
-        width={"90%"}
+        className="selector-modal"
+        width="min(1200px, calc(100vw - 32px))"
         title="Frameworks selector"
         footer={null}
         open={isModalOpen}

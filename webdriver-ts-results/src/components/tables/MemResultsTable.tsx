@@ -22,7 +22,7 @@ const MemResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
     <>
       <thead>
         <tr>
-          <td className="description">
+          <td className="description" colSpan={data.frameworks.length + 1}>
             <h3>Memory allocation in MBs ± 95% confidence interval</h3>
           </td>
         </tr>

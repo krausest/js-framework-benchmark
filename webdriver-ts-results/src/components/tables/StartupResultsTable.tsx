@@ -22,7 +22,7 @@ const StartupResultsTable = ({ data, currentSortKey, sortBy }: Props) => {
     <>
       <thead>
         <tr>
-          <td className="description">
+          <td className="description" colSpan={data.frameworks.length + 1}>
             <h3>Startup metrics (lighthouse with mobile simulation)</h3>
           </td>
         </tr>

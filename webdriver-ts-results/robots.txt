@@ -1,0 +1,7 @@
+# Merge this template into https://krausest.github.io/robots.txt.
+# A robots.txt inside /js-framework-benchmark/ does not control crawlers.
+# Preserve existing site-wide rules and sitemap declarations when merging.
+User-agent: *
+Allow: /
+
+Sitemap: https://krausest.github.io/js-framework-benchmark/sitemap.xml

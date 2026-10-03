@@ -191,7 +191,7 @@ function extractClipboardState(state: ClipboardState): Partial<State> {
     newState.selectedFrameworks = newSelectedFramework;
   }
 
-  if (state.displayMode) {
+  if ([DisplayMode.DISPLAY_MEAN, DisplayMode.DISPLAY_MEDIAN, DisplayMode.BOX_PLOT].includes(state.displayMode)) {
     newState.displayMode = state.displayMode;
   }
 
