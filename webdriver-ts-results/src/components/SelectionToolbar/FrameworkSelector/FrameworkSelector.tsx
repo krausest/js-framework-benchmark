@@ -1,58 +1,15 @@
 import { FrameworkType } from "@/Common";
 import FrameworkSelectorCategory from "./FrameworkSelectorCategory";
-
-import { useState, useEffect } from "react";
-import { Button, Modal } from "antd";
-
-const content = (
-  <>
-    <FrameworkSelectorCategory frameworkType={FrameworkType.KEYED} label="Keyed frameworks:" />
-    <FrameworkSelectorCategory frameworkType={FrameworkType.NON_KEYED} label="Non-keyed frameworks:" />
-  </>
-);
+import SelectorDialog from "../SelectorDialog";
 
 const FrameworkSelector = () => {
   console.log("FrameworkSelector");
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.removeProperty("overflow");
-    }
-  }, [isModalOpen]);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
   return (
-    <>
-      <Button type="primary" onClick={showModal}>
-        Frameworks
-      </Button>
-      <Modal
-        className="selector-modal"
-        width="min(1200px, calc(100vw - 32px))"
-        title="Frameworks selector"
-        footer={null}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        {content}
-      </Modal>
-    </>
+    <SelectorDialog buttonLabel="Frameworks" title="Frameworks selector" wide>
+      <FrameworkSelectorCategory frameworkType={FrameworkType.KEYED} label="Keyed frameworks" />
+      <FrameworkSelectorCategory frameworkType={FrameworkType.NON_KEYED} label="Non-keyed frameworks" />
+    </SelectorDialog>
   );
 };
 

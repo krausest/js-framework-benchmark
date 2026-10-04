@@ -5,7 +5,6 @@
   "type": "module",
   "dependencies": {
     "@sgratzl/chartjs-chart-boxplot": "^4.4.5",
-    "antd": "^6.3.1",
     "chart.js": "^4.5.1",
     "jstat": "^1.9.6",
     "lucide-react": "^0.577.0",

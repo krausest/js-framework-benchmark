@@ -14,6 +14,8 @@ interface Props {
 }
 
 const BoxPlotTable = ({ label, frameworks, benchmarks, results, currentSortKey, sortBy, cpuDurationMode }: Props) => {
+  const chartWidth = frameworks.length * 70 + 100;
+
   const handleSortByName = (event: React.MouseEvent) => {
     event.preventDefault();
     sortBy(SORT_BY_NAME);
@@ -21,9 +23,17 @@ const BoxPlotTable = ({ label, frameworks, benchmarks, results, currentSortKey, 
 
   return (
     <div className="results">
-      <h3>Duration in milliseconds</h3>
+      <h3 className="results__caption">Duration in milliseconds</h3>
       <div className="results__table-container" role="region" aria-label={`${label}: box plots`} tabIndex={0}>
-        <table className="results__table" aria-label={`${label}: box plots`}>
+        <table
+          className="results__table"
+          aria-label={`${label}: box plots`}
+          style={{ width: `calc(var(--label-width) + ${chartWidth}px)` }}
+        >
+          <colgroup>
+            <col className="bench-column" />
+            <col style={{ width: chartWidth }} />
+          </colgroup>
           <thead>
             <tr>
               <th className="benchname">
@@ -35,7 +45,7 @@ const BoxPlotTable = ({ label, frameworks, benchmarks, results, currentSortKey, 
                   Name
                 </button>
               </th>
-              <th style={{ width: frameworks.length * 70 + 100 }}></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

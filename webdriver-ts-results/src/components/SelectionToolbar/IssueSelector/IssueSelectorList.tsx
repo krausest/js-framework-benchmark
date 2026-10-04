@@ -1,7 +1,6 @@
 import { knownIssues } from "@/helpers/issues";
 import { useRootStore } from "@/store";
 import SelectorContentContainer from "@/components/SelectionToolbar/SelectorContentContainer";
-import { Checkbox, Flex } from "antd";
 
 const IssueSelectorList = () => {
   console.log("IssueSelectorList");
@@ -20,17 +19,20 @@ const IssueSelectorList = () => {
       selectAll={() => selectAllIssues(true)}
       label="Issues"
     >
-      <Flex vertical>
+      <>
         {knownIssues.map((issue) => (
-          <Checkbox
-            key={issue.number}
-            onChange={(evt) => selectIssue(issue.number, evt.target.checked)}
-            checked={selectedIssues.has(issue.number)}
-          >
-            #{issue.number}: {issue.text.replace(/^\[(?:Note|Issue)\]:\s*/, "")}
-          </Checkbox>
+          <label key={issue.number} className="checkbox">
+            <input
+              type="checkbox"
+              onChange={(evt) => selectIssue(issue.number, evt.target.checked)}
+              checked={selectedIssues.has(issue.number)}
+            />
+            <span>
+              #{issue.number}: {issue.text.replace(/^\[(?:Note|Issue)\]:\s*/, "")}
+            </span>
+          </label>
         ))}
-      </Flex>
+      </>
     </SelectorContentContainer>
   );
 };

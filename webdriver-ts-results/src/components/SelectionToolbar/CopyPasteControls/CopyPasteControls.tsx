@@ -1,8 +1,6 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRootStore } from "@/store";
-import "./CopyPasteControls.css";
 import { CopyIcon, ClipboardPasteIcon } from "lucide-react";
-import { Button } from "antd";
 
 const CopyPasteControls = () => {
   console.log("CopyPasteControls");
@@ -10,21 +8,36 @@ const CopyPasteControls = () => {
   const setStateFromClipboard = useRootStore((state) => state.setStateFromClipboard);
   const copyStateToClipboard = useRootStore((state) => state.copyStateToClipboard);
 
-  const handlePasteError = (error: Error) => {
-    alert("Sorry - couldn't parse pasted selection");
-    console.error("Pasting state failed", error);
-  };
+  const [status, setStatus] = useState("");
+  const statusTimeout = useRef<number | undefined>(undefined);
+
+  const showStatus = useCallback((message: string) => {
+    setStatus(message);
+    window.clearTimeout(statusTimeout.current);
+    statusTimeout.current = window.setTimeout(() => setStatus(""), 3000);
+  }, []);
+
+  useEffect(() => () => window.clearTimeout(statusTimeout.current), []);
+
+  const handlePasteError = useCallback(
+    (error: Error) => {
+      showStatus("Couldn't read pasted selection");
+      console.error("Pasting state failed", error);
+    },
+    [showStatus]
+  );
 
   const pasteStateFromText = useCallback(
     (text: string) => {
       try {
         const parsedState = JSON.parse(text);
         setStateFromClipboard(parsedState);
+        showStatus("Selection pasted");
       } catch (error) {
         handlePasteError(error as Error);
       }
     },
-    [setStateFromClipboard]
+    [setStateFromClipboard, showStatus, handlePasteError]
   );
 
   const handleClipboardPaste = useCallback(
@@ -45,6 +58,11 @@ const CopyPasteControls = () => {
     };
   }, [handleClipboardPaste]);
 
+  const handleCopy = () => {
+    copyStateToClipboard();
+    showStatus("Selection copied");
+  };
+
   const handlePasteFromClipboard = useCallback(async () => {
     try {
       const text = await navigator.clipboard.readText();
@@ -52,26 +70,33 @@ const CopyPasteControls = () => {
     } catch (error) {
       handlePasteError(error as Error);
     }
-  }, [pasteStateFromText]);
+  }, [pasteStateFromText, handlePasteError]);
 
   return (
-    <div className="copy-paste-panel">
-      <p className="select-toolbar__label">Share selection</p>
-      <div className="copy-paste-panel__buttons">
-        <Button
-          onClick={copyStateToClipboard}
-          icon={<CopyIcon size={15} aria-hidden="true" />}
+    <div className="copy-paste">
+      <p className="toolbar-label">Share selection</p>
+      <div className="copy-paste__buttons">
+        <button
+          type="button"
+          className="btn"
+          onClick={handleCopy}
           aria-label="Copy selected frameworks and benchmarks"
         >
+          <CopyIcon size={15} aria-hidden="true" />
           Copy
-        </Button>
-        <Button
+        </button>
+        <button
+          type="button"
+          className="btn"
           onClick={handlePasteFromClipboard}
-          icon={<ClipboardPasteIcon size={15} aria-hidden="true" />}
           aria-label="Paste selected items (or use ctrl/cmd + v for firefox)"
         >
+          <ClipboardPasteIcon size={15} aria-hidden="true" />
           Paste
-        </Button>
+        </button>
+        <span className="copy-paste__status" role="status">
+          {status}
+        </span>
       </div>
     </div>
   );

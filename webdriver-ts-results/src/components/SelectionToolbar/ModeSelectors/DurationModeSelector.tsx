@@ -1,5 +1,4 @@
 import { CpuDurationMode } from "@/Common";
-import { Select } from "antd";
 
 interface Props {
   cpuDurationMode: CpuDurationMode;
@@ -8,21 +7,20 @@ interface Props {
 
 const DurationModeSelector = ({ cpuDurationMode, onChange }: Props) => {
   return (
-    <div className="mode-selector mode-selector--duration">
-      <label htmlFor="durationMode" className="mode-selector__label">
+    <div className="mode-selector">
+      <label htmlFor="durationMode" className="toolbar-label">
         CPU duration
       </label>
-      <Select
+      <select
         id="durationMode"
+        className="select"
         value={cpuDurationMode}
-        aria-label="Select CPU duration mode"
-        options={[
-          { value: CpuDurationMode.TOTAL, label: "total duration" },
-          { value: CpuDurationMode.SCRIPT, label: "only JS duration" },
-          { value: CpuDurationMode.RENDER, label: "only render duration" },
-        ]}
-        onChange={(value) => onChange(value as CpuDurationMode)}
-      />
+        onChange={(evt) => onChange(evt.target.value as CpuDurationMode)}
+      >
+        <option value={CpuDurationMode.TOTAL}>total duration</option>
+        <option value={CpuDurationMode.SCRIPT}>only JS duration</option>
+        <option value={CpuDurationMode.RENDER}>only render duration</option>
+      </select>
     </div>
   );
 };

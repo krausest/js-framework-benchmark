@@ -1,5 +1,4 @@
 import { DisplayMode } from "@/Common";
-import { Select } from "antd";
 
 interface Props {
   displayMode: DisplayMode;
@@ -9,20 +8,19 @@ interface Props {
 const DisplayModeSelector = ({ displayMode, onChange }: Props) => {
   return (
     <div className="mode-selector">
-      <label className="mode-selector__label" htmlFor="displayMode">
+      <label className="toolbar-label" htmlFor="displayMode">
         Display mode
       </label>
-      <Select
+      <select
         id="displayMode"
+        className="select"
         value={displayMode}
-        options={[
-          { value: DisplayMode.DISPLAY_MEAN, label: "mean results" },
-          { value: DisplayMode.DISPLAY_MEDIAN, label: "median results" },
-          { value: DisplayMode.BOX_PLOT, label: "box plot" },
-        ]}
-        aria-label="Select display mode"
-        onChange={(value) => onChange(value as DisplayMode)}
-      />
+        onChange={(evt) => onChange(Number(evt.target.value) as DisplayMode)}
+      >
+        <option value={DisplayMode.DISPLAY_MEAN}>mean results</option>
+        <option value={DisplayMode.DISPLAY_MEDIAN}>median results</option>
+        <option value={DisplayMode.BOX_PLOT}>box plot</option>
+      </select>
     </div>
   );
 };

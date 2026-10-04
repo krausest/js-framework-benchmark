@@ -1,7 +1,6 @@
 import { useRootStore } from "@/store";
 import DisplayModeSelector from "./DisplayModeSelector";
 import DurationModeSelector from "./DurationModeSelector";
-import "./ModeSelectors.css";
 
 interface Props {
   showDurationSelection: boolean;
@@ -17,9 +16,7 @@ const ModeSelectors = ({ showDurationSelection }: Props) => {
 
   return (
     <>
-      <div className="mode-selection-panel">
-        <DisplayModeSelector displayMode={displayMode} onChange={(value) => selectDisplayMode(value)} />
-      </div>
+      <DisplayModeSelector displayMode={displayMode} onChange={(value) => selectDisplayMode(value)} />
       {showDurationSelection ? (
         <DurationModeSelector cpuDurationMode={cpuDurationMode} onChange={(value) => selectCpuDurationMode(value)} />
       ) : null}

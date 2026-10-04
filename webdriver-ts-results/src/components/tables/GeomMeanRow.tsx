@@ -17,14 +17,16 @@ const GeomMeanRow = ({ weighted, geomMean, currentSortKey, sortBy, sortbyGeommea
 
   return (
     <tr>
-      <th>
+      <th className="benchname">
         <button
           className={`button button__text ${currentSortKey === sortbyGeommeanEnum ? "sort-key" : ""}`}
           onClick={handleSort(sortbyGeommeanEnum)}
         >
           {weighted ? "weighted " : ""} geometric mean
         </button>
-        of all factors in the table
+        <div className="rowCount">
+          of all factors in the table
+        </div>
       </th>
       {geomMean.map((result, idx) =>
         result == null ? (

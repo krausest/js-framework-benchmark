@@ -1,57 +1,16 @@
 import { BenchmarkType } from "@/Common";
 import BenchmarkSelectorCategory from "./BenchmarkSelectorCategory";
-import { Button, Modal } from "antd";
-import { useState, useEffect } from "react";
-
-const content = (
-  <>
-    <BenchmarkSelectorCategory benchmarkType={BenchmarkType.CPU} label="Duration" />
-    <BenchmarkSelectorCategory benchmarkType={BenchmarkType.SIZE} label="Transferred size" />
-    <BenchmarkSelectorCategory benchmarkType={BenchmarkType.MEM} label="Memory" />
-  </>
-);
+import SelectorDialog from "../SelectorDialog";
 
 const BenchmarkSelector = () => {
   console.log("BenchmarkSelector");
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.removeProperty("overflow");
-    }
-  }, [isModalOpen]);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
   return (
-    <>
-      <Button type="primary" onClick={showModal}>
-        Benchmarks
-      </Button>
-      <Modal
-        className="selector-modal"
-        title="Benchmarks selector"
-        footer={null}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        open={isModalOpen}
-      >
-        {content}
-      </Modal>
-    </>
+    <SelectorDialog buttonLabel="Benchmarks" title="Benchmarks selector">
+      <BenchmarkSelectorCategory benchmarkType={BenchmarkType.CPU} label="Duration" />
+      <BenchmarkSelectorCategory benchmarkType={BenchmarkType.SIZE} label="Transferred size" />
+      <BenchmarkSelectorCategory benchmarkType={BenchmarkType.MEM} label="Memory" />
+    </SelectorDialog>
   );
 };
 
