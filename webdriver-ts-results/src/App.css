@@ -797,7 +797,7 @@ main:focus {
 .comparison-button {
   display: block;
   margin: 6px auto 0;
-  padding: 3px 6px;
+  padding: 3px 5px;
   border: 1px solid var(--accent);
   border-radius: 4px;
   background: var(--surface);
