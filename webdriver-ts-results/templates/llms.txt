@@ -11,7 +11,7 @@ The current snapshot is separate from official releases: it may combine browser 
 ## Results
 
 - [Official results archive](https://krausest.github.io/js-framework-benchmark/): The maintained entry point for official reports, including older releases.
-- [Chrome 152 official results](https://krausest.github.io/js-framework-benchmark/2026/chrome152.html): The latest official report listed in the archive; consult the archive for subsequent releases.
+{{LATEST_LINE}}
 - [Current development snapshot](https://krausest.github.io/js-framework-benchmark/current.html): Work in progress with potentially mixed measurement conditions, separate from the official releases.
 
 ## Methodology and source

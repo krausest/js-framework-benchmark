@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "node:url";
+import { releasesPlugin } from "./releases.mjs";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,5 +30,5 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
-  plugins: [react()],
+  plugins: [react(), releasesPlugin()],
 });

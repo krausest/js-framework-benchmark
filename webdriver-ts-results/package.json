@@ -17,7 +17,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src/",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release": "node release.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",

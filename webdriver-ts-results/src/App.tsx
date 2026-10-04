@@ -26,7 +26,7 @@ const KnownIssuesList = () => {
 };
 
 const App = () => {
-  const version = "Chrome 152.0.7977.65";
+  const version = "Chrome 154.0.8037.98";
   const isOfficial = false;
   const archiveUrl = "https://krausest.github.io/js-framework-benchmark/";
 
