@@ -17,25 +17,39 @@ npm --prefix webdriver-ts-results run build
 npm --prefix webdriver-ts-results run preview
 ```
 
-The build produces both HTML entry points in `webdriver-ts-results/dist/`. Vite copies `public/sitemap.xml` and `public/llms.txt` into that directory. Preview `/overview.html` before preparing a website update. Building and previewing do not publish anything.
+The build produces both HTML entry points in `webdriver-ts-results/dist/`. The list of official releases lives in `webdriver-ts-results/releases.json` (newest first). The Vite plugin in `releases.mjs` renders it into the marked regions of `overview.html` and generates `dist/sitemap.xml` and `dist/llms.txt` from `webdriver-ts-results/templates/`. Preview `/overview.html` before preparing a website update. Building and previewing do not publish anything.
 
-## Publishing layout
+## Publishing
 
-The `push_results.sh` workflow uses a sibling checkout at `../krausest.github.io`. Its website files map as follows:
+Both workflows use a sibling checkout at `../krausest.github.io`. Historical report files stay in their existing year directories. Keep the relative asset URLs so the build works under `/js-framework-benchmark/`.
 
-| Build output                           | Pages repository destination          |
-| -------------------------------------- | ------------------------------------- |
-| `dist/overview.html`                   | `js-framework-benchmark/index.html`   |
-| `dist/index.html`                      | `js-framework-benchmark/current.html` |
-| Generated JavaScript and CSS           | `js-framework-benchmark/`             |
-| `dist/sitemap.xml` and `dist/llms.txt` | `js-framework-benchmark/`             |
+### Development snapshot
 
-`push_results.sh` copies these files, stages them, commits and pushes the Pages repository. Run it only when ready to publish. To prepare a review without publishing, copy the files according to the table and inspect the diff in the Pages checkout first. Historical report files stay in their existing year directories. Keep the relative asset URLs so the build works under `/js-framework-benchmark/`.
+`push_results.sh` publishes a snapshot of an existing build. It copies `dist/index.html` to `js-framework-benchmark/current.html` together with the generated JavaScript and CSS, then commits and pushes the Pages repository. It does not touch the homepage, sitemap or `llms.txt`.
+
+### Official release
+
+```sh
+npm --prefix webdriver-ts-results run release -- <chrome full version> [--year 2026] [--force] [--dry-run]
+```
+
+The release script sets the version and `isOfficial` in `src/App.tsx`, adds the release to `releases.json`, runs `npm run results` and publishes:
+
+| Build output                           | Pages repository destination                         |
+| -------------------------------------- | ---------------------------------------------------- |
+| `dist/index.html`                      | `js-framework-benchmark/<year>/chrome<major>.html`   |
+| Generated JavaScript and CSS           | `js-framework-benchmark/<year>/`                     |
+| `dist/overview.html`                   | `js-framework-benchmark/index.html`                  |
+| `dist/index.html`                      | `js-framework-benchmark/current.html`                |
+| Generated JavaScript and CSS           | `js-framework-benchmark/`                            |
+| `dist/sitemap.xml` and `dist/llms.txt` | `js-framework-benchmark/`                            |
+
+Afterwards it resets `isOfficial` to `false` and commits locally in the Pages repository and in this repository (tracked files under `webdriver-ts` and `webdriver-ts-results` only). It does not push. Use `--dry-run` to see the changes to `App.tsx`, `overview.html` and `releases.json` without building or publishing.
 
 ## Metadata and archive maintenance
 
 - Edit `webdriver-ts-results/overview.html` for homepage content, canonical URL, social previews and JSON-LD. The homepage canonical is `https://krausest.github.io/js-framework-benchmark/`.
-- When adding an official release, update its featured link and archive entry in `overview.html`, add its absolute URL to `public/sitemap.xml`, and update the featured report in `public/llms.txt` together.
+- Official releases are added by the release script. To correct an entry (e.g. add a note like `macOS · Keyed only`), edit `releases.json`; don't edit the generated regions of `overview.html` between the `latest:` and `archive:` markers.
 - Keep the current development snapshot separate from official releases. It may contain mixed browser versions or different numbers of runs.
 - The sitemap includes the homepage, current snapshot and official reports hosted under this site's path. Older reports hosted on `stefankrause.net` remain linked in the archive but are outside this sitemap. Do not invent modification dates.
 - `llms.txt` is a concise guide to results and methodology for agents. It does not replace the sitemap or control crawler access, and it does not guarantee search visibility.
@@ -46,7 +60,7 @@ Before publishing, check mobile and desktop layouts, keyboard focus, the page wi
 
 The effective robots file must be served at **`https://krausest.github.io/robots.txt`**, in the root of the Pages repository. A file at `/js-framework-benchmark/robots.txt` does not control crawler access to this project.
 
-Use `webdriver-ts-results/robots.txt` as a template. It is outside `public/` and is not copied by the build or publishing script. The maintainer of the Pages host must review and merge it with any existing root rules because that file applies to every project on `krausest.github.io`. Include this sitemap declaration in the root file:
+Use `webdriver-ts-results/robots.txt` as a template. It is not copied by the build or publishing scripts. The maintainer of the Pages host must review and merge it with any existing root rules because that file applies to every project on `krausest.github.io`. Include this sitemap declaration in the root file:
 
 ```text
 Sitemap: https://krausest.github.io/js-framework-benchmark/sitemap.xml

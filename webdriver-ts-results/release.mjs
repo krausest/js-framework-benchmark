@@ -109,14 +109,14 @@ try {
     fs.copyFileSync(path.join(DIST, file), file === "index.html" ? target : path.join(yearDir, file));
   }
 
-  // overview becomes the site root, with the local assets it references
-  const overview = fs.readFileSync(path.join(DIST, "overview.html"), "utf8");
-  const assets = [...overview.matchAll(/(?:href|src)="(?:\.\/)?([^":#?/]+)"/g)]
-    .map((m) => m[1])
-    .filter((file) => !file.endsWith(".html") && fs.existsSync(path.join(DIST, file)));
+  // site root: overview becomes index.html, the release also becomes the development snapshot.
+  // Both pages load their chunks from the root, so all generated JavaScript and CSS go there too.
   fs.copyFileSync(path.join(DIST, "overview.html"), path.join(SITE, "index.html"));
-  for (const file of new Set([...assets, "llms.txt", "sitemap.xml"])) {
-    fs.copyFileSync(path.join(DIST, file), path.join(SITE, file));
+  fs.copyFileSync(path.join(DIST, "index.html"), path.join(SITE, "current.html"));
+  for (const file of fs.readdirSync(DIST)) {
+    if (/\.(js|css)$/.test(file) || file === "llms.txt" || file === "sitemap.xml") {
+      fs.copyFileSync(path.join(DIST, file), path.join(SITE, file));
+    }
   }
   succeeded = true;
 } finally {
