@@ -18,6 +18,7 @@
     "postinstall": "cd server && npm install",
     "install-webdriver-ts": "cd webdriver-ts && npm ci && npm run compile",
     "install-server": "cd server && npm ci",
+    "release": "cd webdriver-ts-results && npm run release",
     "install-webdriver-ts-results": "cd webdriver-ts-results && npm ci",
     "install-local": "npm run install-webdriver-ts && npm run install-webdriver-ts-results && npm run install-server",
     "rebuild": "node cli.js rebuild-single -f",
