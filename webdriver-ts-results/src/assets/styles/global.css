@@ -12,7 +12,7 @@
   overflow-x: auto;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: #fff;
+  background: rgb(250, 250, 247);
   scrollbar-color: #b8c7bf transparent;
 }
 
@@ -71,6 +71,7 @@
   width: var(--label-width);
   background-color: #fff;
   text-align: left;
+  border-left:0px;
 }
 .results__table a {
   text-decoration: none;
@@ -105,6 +106,7 @@
   border-inline: 0;
   background: #fafaf7;
   text-align: left;
+  border:none;
 }
 
 .results__table td.description > h3 {
