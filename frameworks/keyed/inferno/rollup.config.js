@@ -54,7 +54,7 @@ if (isProduction) {
 plugins.unshift(
   alias({
     resolve: extensions,
-    'inferno': __dirname + '/node_modules/inferno/dist/' + (isProduction ? 'index.esm.js' : 'index.dev.esm.js')
+    'inferno': __dirname + '/node_modules/inferno/dist/' + (isProduction ? 'index.mjs' : 'index.dev.mjs')
   })
 );
 
