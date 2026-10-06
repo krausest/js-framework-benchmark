@@ -15,11 +15,11 @@
     "cydon"
   ],
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "15.2.3",
-    "@rollup/plugin-replace": "5.0.7",
-    "@rollup/plugin-terser": "0.4.4",
-    "cydon": "^0.1.9",
-    "rollup": "4.21.2"
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-replace": "6.0.3",
+    "@rollup/plugin-terser": "1.0.0",
+    "cydon": "^0.2.0",
+    "rollup": "4.63.4"
   },
   "scripts": {
     "dev": "rollup -c -w",
