@@ -15,7 +15,7 @@
     "build-prod": "art build src --out dist"
   },
   "devDependencies": {
-    "@artscript/core": "0.2.4"
+    "@artscript/core": "0.2.7"
   },
   "license": "MIT"
 }
