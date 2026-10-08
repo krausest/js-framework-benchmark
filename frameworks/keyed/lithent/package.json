@@ -1,0 +1,31 @@
+{
+  "name": "js-framework-benchmark-lithent",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Lithent keyed implementation for js-framework-benchmark",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "lithent",
+    "frameworkHomeURL": "https://superlucky84.github.io/lithent/",
+    "repoURL": "https://github.com/superlucky84/lithent",
+    "language": "TypeScript",
+    "customURL": "/dist"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "vite build"
+  },
+  "author": "superlucky84",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "lithent": "1.24.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vite": "5.4.21"
+  }
+}
