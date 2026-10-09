@@ -7,7 +7,7 @@
     "build-prod": "esbuild src/Main.js --bundle --minify --format=esm --outfile=dist/main.js"
   },
   "dependencies": {
-    "udodi": "1.1.3"
+    "udodi": "1.1.4"
   },
   "devDependencies": {
     "esbuild": "0.27.2"
