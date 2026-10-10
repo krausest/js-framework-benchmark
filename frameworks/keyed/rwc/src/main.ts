@@ -1,5 +1,4 @@
-// Реализация для js-framework-benchmark (keyed): https://github.com/krausest/js-framework-benchmark
-// Разметка и id кнопок фиксированы правилами бенчмарка, менять их нельзя.
+// rwc (https://github.com/tamazyanarsen/reactive-web-components): signals and typed tag factories.
 import {
   a,
   batch,
@@ -24,7 +23,7 @@ const nouns = ["table", "chair", "house", "bbq", "desk", "car", "pony", "cookie"
 
 const random = (max: number) => Math.round(Math.random() * 1000) % max;
 
-/** Строка таблицы: label — сигнал, чтобы «обновить каждую 10-ю» трогала только текст. */
+/** The label is a signal, so "update every 10th row" touches only that text node. */
 type Row = { id: number; label: ReactiveSignal<string> };
 
 let nextId = 1;
@@ -42,7 +41,7 @@ const buildData = (count: number): Row[] => {
 
 const rows = signal<Row[]>([]);
 const selected = signal<number | null>(null);
-/** Выбор строки будит только две строки, а не все. */
+/** Selecting a row wakes only the previously selected row and the new one. */
 const isSelected = createSelector(selected);
 
 const actions = {
