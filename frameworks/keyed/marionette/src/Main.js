@@ -59,8 +59,8 @@ const Store = Collection.extend({
         if (this.length > 998) {
             const first = this.at(1);
             const second = this.at(998);
-            this.move(first, 998, { silent: true });
-            this.move(second, 1, { silent: true });
+            this.move(first, 998);
+            this.move(second, 1);
             this.trigger('swap:rows', first, second);
         }
     }
