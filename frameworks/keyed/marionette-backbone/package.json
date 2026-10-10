@@ -19,8 +19,9 @@
     "build-prod": "rollup -c --environment BUILD:production"
   },
   "dependencies": {
+    "@mnjs/adapters": "5.0.0",
     "backbone": "1.4.0",
-    "marionette": "5.0.0-alpha.2",
+    "marionette": "5.0.0",
     "underscore": "1.11.0"
   },
   "devDependencies": {

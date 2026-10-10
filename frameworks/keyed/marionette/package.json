@@ -16,9 +16,9 @@
     "build-prod": "rollup -c --environment BUILD:production"
   },
   "dependencies": {
-    "@mnjs/adapters": "5.0.0-beta.1",
-    "@mnjs/data": "5.0.0-beta.1",
-    "marionette": "5.0.0-beta.1",
+    "@mnjs/adapters": "5.0.0",
+    "@mnjs/data": "5.0.0",
+    "marionette": "5.0.0",
     "morphdom": "2.7.8"
   },
   "devDependencies": {
