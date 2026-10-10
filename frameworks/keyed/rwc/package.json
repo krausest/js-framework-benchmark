@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-keyed-rwc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "rwc keyed implementation: reactive web components on signals",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@rwcjs/core",
+    "frameworkHomeURL": "https://github.com/tamazyanarsen/reactive-web-components",
+    "language": "TypeScript"
+  },
+  "scripts": {
+    "dev": "esbuild src/main.ts --bundle --format=iife --target=es2022 --outfile=dist/main.js --watch",
+    "build-prod": "esbuild src/main.ts --bundle --minify --legal-comments=none --format=iife --target=es2022 --outfile=dist/main.js"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@rwcjs/core": "3.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
+  }
+}
