@@ -1,0 +1,31 @@
+{
+  "name": "js-framework-benchmark-wcstack-state",
+  "version": "4.0.0",
+  "description": "@wcstack/state keyed benchmark",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@wcstack/state",
+    "frameworkHomeURL": "https://wcstack.github.io",
+    "issues": [],
+    "language": "JavaScript",
+    "includeInBuild": "node_modules/@wcstack/state/dist/split"
+  },
+  "scripts": {
+    "dev": "exit 0",
+    "build-prod": "exit 0"
+  },
+  "keywords": [
+    "web-components",
+    "state-management",
+    "data-binding"
+  ],
+  "author": "mogera551",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@wcstack/state": "4.0.0"
+  }
+}

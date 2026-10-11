@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>wcstack-state-"keyed"</title>
+    <link href="/css/currentStyle.css" rel="stylesheet" />
+    <script type="module" src="node_modules/@wcstack/state/dist/split/auto.js"></script>
+  </head>
+  <body>
+    <wcs-state src="src/state.js"></wcs-state>
+
+    <div id="main">
+      <div class="container">
+        <div class="jumbotron">
+          <div class="row">
+            <div class="col-md-6">
+              <h1>wcstack-state-"keyed"</h1>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="run" data-wcs="onclick: onRun">Create 1,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="runlots" data-wcs="onclick: onRunLots">Create 10,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="add" data-wcs="onclick: onAdd">Append 1,000 rows</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="update" data-wcs="onclick: onUpdate">Update every 10th row</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="clear" data-wcs="onclick: onClear">Clear</button>
+                </div>
+                <div class="col-sm-6 smallpad">
+                  <button type="button" class="btn btn-primary btn-block" id="swaprows" data-wcs="onclick: onSwapRows">Swap Rows</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <table class="table table-hover table-striped test-data">
+          <tbody>
+            <template data-wcs="for: data">
+              <tr data-wcs="class.danger: .selected">
+                <td class="col-md-1">{{ .id }}</td>
+                <td class="col-md-4"><a data-wcs="onclick: onSelect">{{ .label }}</a></td>
+                <td class="col-md-1"><a data-wcs="onclick: onRemove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                <td class="col-md-6"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+    </div>
+  </body>
+</html>
