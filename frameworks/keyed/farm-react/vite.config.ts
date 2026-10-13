@@ -8,12 +8,10 @@ export default defineConfig({
   },
   plugins: createFarmRendererPlugin({
     rendererOptions: {
-      experimental: {
-        compiler: {
-          mode: "infer",
-          onUnsupported: "error",
-          reactivity: "hybrid",
-        },
+      compiler: {
+        mode: "infer",
+        onUnsupported: "error",
+        reactivity: "hybrid",
       },
     },
   }),
