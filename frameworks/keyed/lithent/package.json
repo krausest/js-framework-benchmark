@@ -8,7 +8,8 @@
     "frameworkHomeURL": "https://superlucky84.github.io/lithent/",
     "repoURL": "https://github.com/superlucky84/lithent",
     "language": "TypeScript",
-    "customURL": "/dist"
+    "customURL": "/dist",
+    "issues": [1261]
   },
   "scripts": {
     "dev": "vite",
