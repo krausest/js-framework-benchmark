@@ -1,9 +1,12 @@
 'use strict';
 
 import _ from 'underscore';
-import { View, CollectionView } from 'marionette';
+import { View, CollectionView, setDataApi } from 'marionette';
+import BackboneApi from '@mnjs/adapters/backbone';
 import Bb from 'backbone';
 import rowTemplate from './row.tpl';
+
+setDataApi(BackboneApi);
 
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
@@ -99,16 +102,16 @@ const MyCollectionView = CollectionView.extend({
             'click .js-del': this.onDeleteRow
         };
     },
-    _getRowId(target) {
-        return target.parentNode.parentNode.dataset.id;
+    _getRowId(event) {
+        return event.delegateTarget.closest('tr').dataset.id;
     },
     onSelectRow(e) {
-        const rowId = this._getRowId(e.target);
+        const rowId = this._getRowId(e);
         // setSelected(rowId);  // moved to collection for measuring
         this.collection.select(rowId, this);
     },
     onDeleteRow(e) {
-        const rowId = this._getRowId(e.target.parentNode);
+        const rowId = this._getRowId(e);
         // this.removeRow(rowId);  // moved to collection for measuring
         this.collection.delete(rowId, this);
     },
@@ -116,22 +119,22 @@ const MyCollectionView = CollectionView.extend({
         this.clearSelected();
 
         const model = this.collection.get(id);
-        const view = this.children.findByModelCid(model.cid);
+        const view = this.children.findByModel(model);
         view.el.classList.add('danger');
     },
     removeRow(id) {
         const model = this.collection.get(id);
-        const view = this.children.findByModelCid(model.cid);
+        const view = this.children.findByModel(model);
         this.removeChildView(view);
     },
     onSwapRows(model1, model2) {
-        var view1 = this.children.findByModelCid(model1.cid);
-        var view2 = this.children.findByModelCid(model2.cid);
+        var view1 = this.children.findByModel(model1);
+        var view2 = this.children.findByModel(model2);
 
         this.swapChildViews(view1, view2);
     },
     onChangeLabel(model, label) {
-        const view = this.children.findByModelCid(model.cid);
+        const view = this.children.findByModel(model);
         view.el.querySelectorAll('.js-link')[0].textContent = label;
     },
     onRender() {
@@ -144,7 +147,7 @@ const MyCollectionView = CollectionView.extend({
         if (!selected) {
             return;
         }
-        const curSelected = this.children.findByModelCid(selected.cid);
+        const curSelected = this.children.findByModel(selected);
         curSelected.el.classList.remove('danger');
     }
 });
