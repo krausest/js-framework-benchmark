@@ -133,7 +133,7 @@ Validation mode: STATIC ONLY
 Limitations: list incomplete required static checks, or "none"
 ERRORS: list the error which lead to the stopping the process if applicable.
 Verdict: PASS / PASS WITH WARNINGS / CHANGES REQUIRED
-Next step: npm run rebuild list all relevant directories from the PR (e.g. keyed/framework1 non-keyed/framework2)
+Next step: `npm run rebuild` or `npm run rebuild-ci` list all relevant directories from the PR (e.g. keyed/framework1 non-keyed/framework2). use rebuild if the package-lock.json was not updated or points to some mirror and rebuild-ci otherwise.
 ```
 
 Use `CHANGES REQUIRED` for disallowed file scope, prohibited `preinstall` or `postinstall` scripts, suspected malicious dependencies, selective benchmark-operation RAF usage. Use `PASS WITH WARNINGS` for non-blocking provenance warnings, benchmark notes, all-operation RAF usage, or incomplete required static checks. Use `PASS` when every required static check passed and no warnings apply. Dynamic or runtime validation is outside this skill's scope and must not affect the verdict.
