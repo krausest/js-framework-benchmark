@@ -7,7 +7,8 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@rwcjs/core",
     "frameworkHomeURL": "https://github.com/tamazyanarsen/reactive-web-components",
-    "language": "TypeScript"
+    "language": "TypeScript",
+    "repoURL": "https://github.com/tamazyanarsen/reactive-web-components"
   },
   "scripts": {
     "dev": "esbuild src/main.ts --bundle --format=iife --target=es2022 --outfile=dist/main.js --watch",
