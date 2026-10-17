@@ -7,6 +7,7 @@
     "frameworkHomeURL": "https://wcstack.github.io",
     "issues": [],
     "language": "JavaScript",
+    "repoURL": "https://github.com/wcstack/wcstack",
     "includeInBuild": "node_modules/@wcstack/state/dist/split"
   },
   "scripts": {
