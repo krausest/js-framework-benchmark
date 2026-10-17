@@ -15,6 +15,7 @@
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "udodi",
     "frameworkHomeURL": "https://udodi.dev",
-    "language": "JavaScript"
+    "language": "JavaScript",
+    "repoURL": "https://github.com/udodi-js/udodi"
   }
 }
