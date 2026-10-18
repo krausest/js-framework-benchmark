@@ -763,6 +763,64 @@ main:focus {
   font-size: 8px;
 }
 
+/* Summary: one row per implementation */
+.summary__table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+}
+
+.summary__note {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.summary__table th,
+.summary__table td {
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.summary__table thead th {
+  background: var(--header-bg);
+  font-weight: 500;
+}
+
+.summary__table tbody th {
+  font-weight: 400;
+  text-align: left;
+}
+
+.summary__table td {
+  min-width: 90px;
+}
+
+.summary__table a {
+  text-decoration: none;
+}
+
+.summary__table .summary__rank {
+  min-width: 0;
+  color: var(--muted);
+  text-align: right;
+}
+
+.summary__mean {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.summary__issue {
+  margin-left: 6px;
+  font-size: 10px;
+}
+
 .button {
   cursor: pointer;
 }
