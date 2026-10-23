@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@farm.js/core": "0.1.9",
-    "@farm.js/react": "0.1.0-beta.24",
+    "@farm.js/react": "0.1.0-beta.29",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },
