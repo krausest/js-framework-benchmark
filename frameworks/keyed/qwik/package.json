@@ -11,7 +11,7 @@
     "frameworkHomeURL": "https://qwik.builder.io/",
     "customURL": "/dist",
     "issues": [
-      1139
+      1139, 800
     ],
     "language": "TypeScript",
     "repoURL": "https://github.com/QwikDev/qwik"
