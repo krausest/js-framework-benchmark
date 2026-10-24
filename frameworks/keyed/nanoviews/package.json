@@ -6,9 +6,9 @@
   "description": "Nanoviews Benchmark",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "nanoviews",
-    "frameworkHomeURL": "https://github.com/TrigenSoftware/nanoviews/tree/main/packages/nanoviews#readme",
+    "frameworkHomeURL": "https://nanoviews.js.org",
     "language": "JavaScript",
-    "repoURL": "https://github.com/TrigenSoftware/nano_kit"
+    "repoURL": "https://github.com/TrigenSoftware/nanoviews"
   },
   "scripts": {
     "dev": "rollup -c -w",
@@ -22,7 +22,7 @@
   "dependencies": {
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
-    "nanoviews": "1.0.0-alpha.2",
+    "nanoviews": "1.0.0",
     "rollup": "^4.57.1"
   }
 }

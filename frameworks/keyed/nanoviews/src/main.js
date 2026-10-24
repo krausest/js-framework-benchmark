@@ -1,13 +1,11 @@
 import {
   signal,
-  update,
-  record,
+  selector,
   deleteIndex,
-  updateList,
-  computed,
-  clearList,
+  updateArray,
   assignKey
 } from 'nanoviews/store'
+
 import {
   div,
   h1,
@@ -19,7 +17,7 @@ import {
   a,
   span,
   trackById,
-  for$,
+  for_,
   mount
 } from 'nanoviews'
 
@@ -105,14 +103,15 @@ function buildData(count = 1000) {
 export function App() {
   const $data = signal([])
   const $selected = signal()
+  const $isSelected = selector($selected)
   const add = () => {
-    update($data, data => [...data, ...buildData(1000)])
+    $data(data => [...data, ...buildData(1000)])
   }
   const clear = () => {
-    clearList($data)
+    $data([])
   }
   const partialUpdate = () => {
-    updateList($data, (data) => {
+    updateArray($data, (data) => {
       for (let i = 0, len = data.length; i < len; i += 10) {
         data[i] = assignKey(data[i], 'label', `${data[i].label} !!!`)
       }
@@ -129,7 +128,7 @@ export function App() {
   }
   const swapRows = () => {
     if ($data().length > 998) {
-      updateList($data, (data) => {
+      updateArray($data, (data) => {
         const tmp = data[1]
 
         data[1] = data[998]
@@ -214,37 +213,33 @@ export function App() {
       class: 'table table-hover table-striped test-data'
     })(
       tbody()(
-        for$($data, trackById)(
-          ($row, $index) => {
-            $row = record($row)
-
-            return tr({
-              class: computed(() => $selected() === $row.$id() ? 'danger' : '')
-            })(
-              td({ class: 'col-md-1' })(
-                $row.$id
-              ),
-              td({ class: 'col-md-4' })(
-                a({
-                  onClick() {
-                    $selected($row.$id())
-                  }
-                })(
-                  $row.$label
-                )
-              ),
-              td({ class: 'col-md-1' })(
-                a({
-                  onClick() {
-                    remove($index())
-                  }
-                })(
-                  span({ class: 'glyphicon glyphicon-remove', 'aria-hidden': true })
-                )
-              ),
-              td({ class: 'col-md-6' })
-            )
-          }
+        for_($data, trackById)(
+          ($row, $index, id) => tr({
+            class: () => $isSelected(id) ? 'danger' : ''
+          })(
+            td({ class: 'col-md-1' })(
+              id
+            ),
+            td({ class: 'col-md-4' })(
+              a({
+                onClick() {
+                  $selected(id)
+                }
+              })(
+                () => $row().label
+              )
+            ),
+            td({ class: 'col-md-1' })(
+              a({
+                onClick() {
+                  remove($index())
+                }
+              })(
+                span({ class: 'glyphicon glyphicon-remove', 'aria-hidden': true })
+              )
+            ),
+            td({ class: 'col-md-6' })
+          )
         )
       )
     ),
