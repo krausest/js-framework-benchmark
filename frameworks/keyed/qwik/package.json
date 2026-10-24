@@ -11,7 +11,7 @@
     "frameworkHomeURL": "https://qwik.builder.io/",
     "customURL": "/dist",
     "issues": [
-      1139
+      1139, 800
     ],
     "language": "TypeScript",
     "repoURL": "https://github.com/QwikDev/qwik"
@@ -29,8 +29,8 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "1.11.0",
-    "@builder.io/qwik-city": "1.11.0",
+    "@builder.io/qwik": "1.20.2",
+    "@builder.io/qwik-city": "1.20.2",
     "vite": "^5.0.6",
     "vite-tsconfig-paths": "^4.2.1"
   }
