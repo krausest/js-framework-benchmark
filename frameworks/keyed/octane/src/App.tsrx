@@ -83,7 +83,8 @@ export default function App() @{
   const [selected, setSelected] = useState<number | undefined>(undefined);
 
   const add = () => {
-    setItems((current) => current.concat(buildData(1000)));
+    const data = buildData(1000);
+    setItems((current) => current.concat(data));
   };
 
   const clear = () => {
