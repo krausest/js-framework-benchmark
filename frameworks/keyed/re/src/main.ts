@@ -1,16 +1,16 @@
 /**
- * @re — official js-framework-benchmark implementation (keyed)
+ * @zhenre — official js-framework-benchmark implementation (keyed)
  *
- * Uses only public @re/core API:
+ * Uses only public @zhenre/core API:
  *   - one signal holding the row list; one anchored keyed view per tbody
  *     (fast paths: detached append / replaceChildren clear+replace / O(1) swap+remove)
  *   - row content uses the compiled-template path: the `html`` template is
  *     compiled once, cloned per row, and each row keeps a direct reference to
  *     its label text node — the same direct text writes the reference
- *     implementation performs (this is exactly what @re/compiler emits)
+ *     implementation performs (this is exactly what @zhenre/compiler emits)
  *   - event delegation on tbody (2 listeners total, same as the reference)
  */
-import { signal, html, append, each } from '@re/core';
+import { signal, html, append, each } from '@zhenre/core';
 
 interface Row {
   id: number;
@@ -63,7 +63,7 @@ function buildData(count: number): Row[] {
 
 const rows = signal<Row[]>([]);
 
-// Compiled row template — the pattern @re/compiler emits for `html``
+// Compiled row template — the pattern @zhenre/compiler emits for `html``
 // call sites: the template compiles once into a prototype row (the html``
 // instantiation below), whose slot text nodes live at fixed paths. Each row
 // is then one cloneNode + direct text writes, exactly the DOM work the
