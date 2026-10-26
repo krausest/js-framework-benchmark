@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"/><link href="/css/currentStyle.css" rel="stylesheet"/></head>
+<body>
+<div id="main"><div class="container"><div class="jumbotron">
+<button type="button" id="run">Create 1,000 rows</button>
+<button type="button" id="runlots">Create 10,000 rows</button>
+<button type="button" id="add">Append</button>
+<button type="button" id="update">Update</button>
+<button type="button" id="clear">Clear</button>
+<button type="button" id="swaprows">Swap</button>
+</div></div>
+<table class="table table-hover table-striped test-data"><tbody id="tbody"></tbody></table>
+</div>
+<script src='dist/bundle.js'></script>
+<script>
+// micro-bench driver: measures per-op costs of the LOADED framework bundle
+// (works for both v1/v2 bundles since both register the same button ids)
+window.MICRO = { results: {} };
+const tbody = document.getElementById('tbody');
+function rows() { return tbody.querySelectorAll('tr').length; }
+function snap(label, t0) { window.MICRO.results[label] = (performance.now() - t0); }
+
+async function micro() {
+  const R = window.MICRO.results;
+  const click = (id) => document.getElementById(id).click();
+  // warm: build 1k
+  click('run');
+
+  // select: 500 alternating class toggles (bench-like)
+  {
+    const trs = tbody.children;
+    let t0 = performance.now();
+    for (let i = 0; i < 500; i++) {
+      const tr = trs[(i * 37) % 1000];
+      tr.className = i % 2 ? 'danger' : '';
+    }
+    R.select_500_classToggles = performance.now() - t0;
+  }
+  // select via real click delegation (100 clicks)
+  {
+    const trs = tbody.children;
+    let t0 = performance.now();
+    for (let i = 0; i < 100; i++) {
+      trs[(i * 97) % 1000].children[1].firstElementChild.click();
+    }
+    R.select_100_realClicks = performance.now() - t0;
+  }
+  // swap: 200 swaps via the swaprows button (each swaps rows 2/999 back and forth)
+  {
+    let t0 = performance.now();
+    for (let i = 0; i < 200; i++) click('swaprows');
+    R.swap_200_btn = performance.now() - t0;
+  }
+  // clear+rebuild: 20 cycles
+  {
+    let t0 = performance.now();
+    for (let i = 0; i < 20; i++) { click('clear'); click('run'); }
+    R.clear_run_20_cycles = performance.now() - t0;
+  }
+  // remove: 500 removals (build once, remove via real click on the X)
+  {
+    let t0 = performance.now();
+    let removed = 0;
+    while (rows() > 500) {
+      tbody.children[10].children[2].firstElementChild.firstElementChild.click();
+      removed++;
+      if (removed > 600) break;
+    }
+    R.remove_500_realClicks = performance.now() - t0;
+    R.removed_count = removed;
+  }
+  window.MICRO.done = true;
+}
+setTimeout(micro, 50);
+</script>
+</body>
+</html>
