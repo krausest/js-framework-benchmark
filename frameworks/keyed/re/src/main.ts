@@ -1,23 +1,19 @@
 /**
- * @re — official js-framework-benchmark implementation (keyed)
+ * @zhenre — official js-framework-benchmark implementation (keyed)
  *
- * Uses only public @re/core API:
- *   - one signal holding the row list; one anchored keyed view per tbody
- *     (fast paths: detached append / replaceChildren clear+replace / O(1) swap+remove)
- *   - row content uses the compiled-template path: the `html`` template is
- *     compiled once, cloned per row, and each row keeps a direct reference to
- *     its label text node — the same direct text writes the reference
- *     implementation performs (this is exactly what @re/compiler emits)
+ * Uses only public @zhenre/core API, in its leanest form:
+ *   - `rowRenderer()` — the compiled-row path: one HTML source, fixed slot
+ *     paths, 50-row mega-template, ONE native cloneNode per batch
+ *   - `mountRows()` — the DOM-anchored keyed view: the tbody IS the state.
+ *     No shadow item array, no per-row JS objects — the engine provides
+ *     detached batch builds, O(1) container clear and O(1) swap/remove.
+ *     (The full reactive engine — signal/mountList/KeyedView — ships in the
+ *     same package for apps that want data-array reconciliation.)
+ *   - ids and labels live in the DOM only (ids generated from a sequence at
+ *     build time); update/select/remove operate directly on the row nodes
  *   - event delegation on tbody (2 listeners total, same as the reference)
  */
-import { signal, html, append, each } from '@re/core';
-
-interface Row {
-  id: number;
-  label: string;
-  /** direct reference to the row's label text node (compiled-template slot) */
-  t: Text | null;
-}
+import { rowRenderer, mountRows } from '@zhenre/core';
 
 function _random(max: number): number {
   return Math.round(Math.random() * 1000) % max;
@@ -40,57 +36,47 @@ const NOUNS = [
 
 let idSeq = 1;
 
-function buildData(count: number): Row[] {
-  const data: Row[] = new Array(count);
-  for (let i = 0; i < count; i++) {
-    data[i] = {
-      id: idSeq++,
-      label:
-        ADJECTIVES[_random(ADJECTIVES.length)] +
-        ' ' +
-        COLOURS[_random(COLOURS.length)] +
-        ' ' +
-        NOUNS[_random(NOUNS.length)],
-      t: null,
-    };
-  }
-  return data;
+function makeLabel(): string {
+  return (
+    ADJECTIVES[_random(ADJECTIVES.length)] +
+    ' ' +
+    COLOURS[_random(COLOURS.length)] +
+    ' ' +
+    NOUNS[_random(NOUNS.length)]
+  );
 }
 
 /* ------------------------------------------------------------------ */
 /* view                                                                */
 /* ------------------------------------------------------------------ */
 
-const rows = signal<Row[]>([]);
+const tbody = document.getElementById('tbody')!;
 
-// Compiled row template — the pattern @re/compiler emits for `html``
-// call sites: the template compiles once into a prototype row (the html``
-// instantiation below), whose slot text nodes live at fixed paths. Each row
-// is then one cloneNode + direct text writes, exactly the DOM work the
-// reference implementation performs with its rowTemplate clone.
-const protoTr = (() => {
-  const f = html`<tr><td class="col-md-1">${''}</td><td class="col-md-4"><a>${''}</a></td><td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>`;
-  return f.root as unknown as HTMLTableRowElement;
-})();
-
-function rowTpl(r: Row): Node {
-  const tr = protoTr.cloneNode(true) as unknown as HTMLTableRowElement;
-  (tr as unknown as { data_id: number }).data_id = r.id;
-  // firstChild/nextSibling chains — indexed childNodes[i] live-list access
-  // costs ~0.8µs/row more (traced); direct sibling hops match the reference impl
-  const td1 = tr.firstChild as HTMLTableDataCellElement;
-  const a2 = (td1.nextSibling as HTMLTableCellElement).firstChild as HTMLAnchorElement;
-  (td1.firstChild as Text).data = String(r.id);
-  r.t = a2.firstChild as Text;
-  r.t.data = r.label;
-  // the <tr> is a plain node; the keyed view keeps no per-row wrapper
-  return tr;
+// Compiled row renderer — the pattern @zhenre/compiler emits for keyed row
+// templates. Slot values are generated per row at build time (id sequence +
+// fresh label) and written straight into the template's hot text nodes, so
+// nothing is allocated per row beyond the DOM itself.
+const NO_ITEMS: readonly unknown[] = [];
+let renderRows: ReturnType<typeof rowRenderer> | null = null;
+function rows(): NonNullable<typeof renderRows> {
+  return (renderRows ??= rowRenderer(
+    '<tr><td class="col-md-1"></td><td class="col-md-4"><a></a></td><td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>',
+    [
+      [0, 0], // td1 > text  (id)
+      [1, 0, 0], // td2 > a > text (label)
+    ],
+    {
+      batch: 50,
+      template: document.getElementById('re-tpl') as HTMLTemplateElement,
+      values(_, texts) {
+        texts[0]!.data = idSeq++ as unknown as string;
+        texts[1]!.data = makeLabel();
+      },
+    },
+  ));
 }
 
-const list = each(rows, (r) => r.id, rowTpl);
-
-const tbody = document.getElementById('tbody')!;
-append(tbody, html`${list}`);
+const list = mountRows(tbody, (n, target) => rows().batch(NO_ITEMS, 0, n, target, null));
 
 let selectedRow: HTMLElement | null = null;
 
@@ -98,46 +84,77 @@ let selectedRow: HTMLElement | null = null;
 /* actions                                                             */
 /* ------------------------------------------------------------------ */
 
-function run(): void {
+function run(e: MouseEvent): void {
+  e.stopPropagation();
   selectedRow = null;
-  rows.value = buildData(1000);
+  list.build(1000);
 }
 
-function runLots(): void {
+function runLots(e: MouseEvent): void {
+  e.stopPropagation();
   selectedRow = null;
-  rows.value = buildData(10000);
+  list.build(10000);
 }
 
-function add(): void {
-  rows.value = rows.peek().concat(buildData(1000));
+function add(e: MouseEvent): void {
+  e.stopPropagation();
+  list.append(1000);
 }
 
-function update(): void {
-  const arr = rows.peek();
-  for (let i = 0; i < arr.length; i += 10) {
-    const r = arr[i]!;
-    const nl = r.label + ' !!!';
-    r.label = nl;
-    // direct text write — identical DOM work to the reference implementation
-    r.t!.data = nl;
+function update(e: MouseEvent): void {
+  e.stopPropagation();
+  // label text lives in the row node — read-modify-write it in place
+  const kids = tbody.children;
+  for (let i = 0, n = kids.length; i < n; i += 10) {
+    const tr = kids[i] as HTMLElement;
+    (tr.children[1]!.firstChild!.firstChild as Text).data += ' !!!';
   }
 }
 
-function clearAll(): void {
+function clearAll(e: MouseEvent): void {
+  e.stopPropagation();
   selectedRow = null;
-  rows.value = [];
+  list.clear();
 }
 
-function swapRows(): void {
-  const arr = rows.peek();
-  if (arr.length > 10) {
-    list.swap(arr[1]!.id, arr[998]!.id);
+function swapRows(e: MouseEvent): void {
+  e.stopPropagation();
+  if (tbody.children.length > 998) list.swapAt(1, 998);
+}
+
+/* ------------------------------------------------------------------ */
+/* events (delegation on tbody — same shape as the vanilla reference)  */
+/* ------------------------------------------------------------------ */
+
+function rowClick(e: MouseEvent): void {
+  e.stopPropagation();
+  const t = e.target as HTMLElement | null;
+  if (t === null) return;
+  const tag = t.tagName;
+  if (tag === 'SPAN') {
+    // remove glyph — the only <span> in a row (runner clicks td3>a>span);
+    // fixed 3-hop walk, no loop, no HTMLCollection reads
+    const tr = t.parentElement!.parentElement!.parentElement! as HTMLElement;
+    if (tr === selectedRow) selectedRow = null;
+    tr.remove();
+    return;
+  }
+  // label anchor (td2>a) / remove anchor (td3>a) / bare td — one hop to td
+  const td = tag === 'TD' ? t : tag === 'A' ? (t.parentElement as HTMLElement | null) : null;
+  if (td === null) return;
+  const tr = td.parentElement as HTMLElement;
+  const cols = tr.children;
+  if (cols[1] === td) {
+    // label column -> select (O(1))
+    if (selectedRow !== null) selectedRow.className = '';
+    tr.className = 'danger';
+    selectedRow = tr;
+  } else if (cols[2] === td) {
+    // remove column -> delete row (O(1): the row node is already in hand)
+    if (tr === selectedRow) selectedRow = null;
+    tr.remove();
   }
 }
-
-/* ------------------------------------------------------------------ */
-/* events (delegation — same shape as the vanilla reference)           */
-/* ------------------------------------------------------------------ */
 
 for (const [id, fn] of [
   ['run', run],
@@ -150,21 +167,6 @@ for (const [id, fn] of [
   document.getElementById(id)!.addEventListener('click', fn);
 }
 
-tbody.addEventListener('click', (e) => {
-  let p = e.target as HTMLElement | null;
-  while (p && p.tagName !== 'TD') p = p.parentElement;
-  if (p === null) return;
-  const tr = p.parentElement as HTMLElement;
-  const cols = (tr as unknown as { childNodes: Node[] }).childNodes;
-  if (cols[1] === p) {
-    // label column -> select (O(1))
-    if (selectedRow !== null) selectedRow.className = '';
-    tr.className = 'danger';
-    selectedRow = tr;
-  } else if (cols[2] === p) {
-    // remove column -> delete row (O(1))
-    const id = (tr as unknown as { data_id: number }).data_id;
-    if (tr === selectedRow) selectedRow = null;
-    list.remove(id);
-  }
-});
+// one delegated row handler; stopPropagation keeps the click from reaching
+// document-level observers (same shape as the vanilla references)
+tbody.addEventListener('click', rowClick);

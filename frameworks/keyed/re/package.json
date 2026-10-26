@@ -5,10 +5,14 @@
   "type": "module",
   "main": "dist/bundle.js",
   "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "@re/core",
+    "frameworkVersionFromPackage": "@zhenre/core",
     "frameworkHomeURL": "https://github.com/krausest/js-framework-benchmark",
     "language": "TypeScript",
-    "issues": [772, 1261, 801]
+    "issues": [
+      772,
+      1261,
+      801
+    ]
   },
   "scripts": {
     "dev": "esbuild src/main.ts --bundle --format=iife --outfile=dist/bundle.js --sourcemap",
@@ -28,9 +32,10 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "@re/core": "file:re-core"
+    "@zhenre/core": "0.2.0"
   },
   "devDependencies": {
-    "esbuild": "^0.25.10"
+    "esbuild": "^0.25.10",
+    "terser": "^5.51.2"
   }
 }
