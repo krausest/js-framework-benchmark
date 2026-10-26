@@ -35,6 +35,7 @@
     "@zhenre/core": "0.1.0"
   },
   "devDependencies": {
-    "esbuild": "^0.25.10"
+    "esbuild": "^0.25.10",
+    "terser": "^5.51.2"
   }
 }
