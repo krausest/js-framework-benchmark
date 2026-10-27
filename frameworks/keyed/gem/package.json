@@ -1,0 +1,34 @@
+{
+  "name": "js-framework-benchmark-gem",
+  "version": "1.0.0",
+  "description": "Gem demo",
+  "main": "index.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@mantou/gem",
+    "frameworkHomeURL": "https://gemjs.org/",
+    "language": "TypeScript",
+    "repoURL": "https://github.com/mantou132/gem"
+  },
+  "scripts": {
+    "dev": "esbuild src/main.ts --bundle --format=esm --target=es2022 --outfile=dist/main.js --watch",
+    "build-prod": "esbuild src/main.ts --bundle --minify --format=esm --target=es2022 --outfile=dist/main.js"
+  },
+  "type": "module",
+  "keywords": [
+    "gem",
+    "web components"
+  ],
+  "author": "mantou132",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@mantou/gem": "2.3.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}
