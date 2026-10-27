@@ -5,7 +5,7 @@
   "license": "ISC",
   "type": "module",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.8.0",
+    "frameworkVersion": "0.8.1",
     "frameworkHomeURL": "https://elementary.codes",
     "customURL": "/bundled-dist",
     "language": "Swift",
