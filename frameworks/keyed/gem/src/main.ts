@@ -1,4 +1,4 @@
-import { createState, customElement, GemElement, html, repeat, template } from '@mantou/gem';
+import { createState, customElement, GemElement, html, repeat, template } from '@mantou/gem/lib/element';
 
 interface Row {
   id: number;
