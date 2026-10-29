@@ -79,6 +79,7 @@ glimmer-*/tmp
 .cargo/
 .rustup/
 Cargo.lock
+!frameworks/keyed/glory/Cargo.lock
 
 # emacs
 *~
