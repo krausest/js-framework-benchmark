@@ -1,0 +1,32 @@
+{
+  "name": "js-framework-benchmark-foldkit",
+  "version": "1.0.0",
+  "description": "Foldkit demo",
+  "private": true,
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "foldkit",
+    "frameworkHomeURL": "https://foldkit.dev/",
+    "language": "TypeScript",
+    "repoURL": "https://github.com/foldkit/foldkit"
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build-prod": "vite build"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@effect/platform-browser": "4.1.0",
+    "effect": "4.1.0",
+    "foldkit": "0.170.0"
+  },
+  "devDependencies": {
+    "@foldkit/vite-plugin": "0.29.0",
+    "vite": "8.3.5"
+  }
+}
