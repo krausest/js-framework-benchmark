@@ -31,6 +31,11 @@ Glory runtime packages come from the published 0.6.0 release. `WASM_BINDGEN` can
 select an existing matching executable; standard Cargo environment variables
 such as `CARGO_HOME` and `CARGO_TARGET_DIR` are respected.
 
+The release profile strips symbols and uses optimization level 3, LTO, one
+codegen unit, aborting panics and disabled incremental compilation, matching the
+Dioxus release settings. The checked-in assets still use the published Glory
+0.6.0 runtime; development runtime optimizations are measured separately.
+
 ## Run
 
 Start the benchmark server from the repository root with `npm start`, then open
