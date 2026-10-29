@@ -1,0 +1,6 @@
+{
+    "whitespace": "collapse",
+    "reactivityMode": "reactive",
+    "resolveImportExtension": true,
+    "preserveHtmlComments": "development"
+}
