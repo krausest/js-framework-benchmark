@@ -1,0 +1,30 @@
+{
+  "name": "js-framework-benchmark-silicium-v8",
+  "version": "1.0.0",
+  "description": "Silicium V8 keyed benchmark",
+  "license": "Apache-2.0",
+  "author": "Silicium Architecture Research Team <silicium369@gmail.com>",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node ./build-prod.mjs",
+    "build-prod": "node ./build-prod.mjs"
+  },
+  "dependencies": {
+    "silicium-dom": "1.0.0"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "silicium-dom",
+    "frameworkVersion": "1.0.0",
+    "frameworkHomeURL": "https://github.com/silicium369-spec/silicium-dom",
+    "repoURL": "https://github.com/silicium369-spec/silicium-dom",
+    "language": "JavaScript",
+    "issues": [],
+    "useShadowRoot": false
+  },
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  }
+}
