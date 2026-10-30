@@ -50,22 +50,23 @@ final class BenchmarkStore {
     @ReactiveIgnored private var rng = SimpleRandomNumberGenerator()
 
     func run() {
-        rows = buildData(1000)
+        rows = Array(capacity: 1000, initializingWith: fillRandomRows)
         selectedID = nil
     }
 
     func runLots() {
-        rows = buildData(10000)
+        rows = Array(capacity: 10000, initializingWith: fillRandomRows)
         selectedID = nil
     }
 
     func add() {
-        rows.append(contentsOf: buildData(1000))
+        rows.append(addingCapacity: 1000, initializingWith: fillRandomRows)
     }
 
     func update() {
-        for i in stride(from: 0, to: rows.count, by: 10) {
-            rows[i].label += " !!!"
+        var span = rows.mutableSpan
+        for i in stride(from: 0, to: span.count, by: 10) {
+            span[i].label += " !!!"
         }
     }
 
@@ -89,16 +90,11 @@ final class BenchmarkStore {
         }
     }
 
-    private func buildData(_ count: Int) -> [Row] {
-        var data: [Row] = []
-        data.reserveCapacity(count)
-
-        for _ in 0..<count {
-            data.append(Row(id: nextID, label: randomLabel(using: &rng)))
+    private func fillRandomRows(_ span: inout OutputSpan<Row>) {
+        while !span.isFull {
+            span.append(Row(id: nextID, label: randomLabel(using: &rng)))
             nextID += 1
         }
-
-        return data
     }
 }
 
@@ -155,11 +151,12 @@ struct DataTable {
     var body: some View {
         table(.class("table table-hover table-striped test-data")) {
             tbody(.id("tbody")) {
+                let selectedID = store.selectedID
                 ForEach(store.rows) { row in
                     RowView(
                         id: row.id,
                         label: row.label,
-                        isSelected: store.selectedID == row.id
+                        isSelected: selectedID == row.id
                     )
                 }
             }
