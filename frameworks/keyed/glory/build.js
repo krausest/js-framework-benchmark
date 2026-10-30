@@ -6,8 +6,8 @@ import { fileURLToPath } from "node:url";
 const cwd = dirname(fileURLToPath(import.meta.url));
 const bindgen = process.env.WASM_BINDGEN || "wasm-bindgen";
 const version = execFileSync(bindgen, ["--version"], { encoding: "utf8" }).trim();
-if (version !== "wasm-bindgen 0.2.129") {
-  throw new Error(`Expected wasm-bindgen 0.2.129, got ${version}`);
+if (version !== "wasm-bindgen 0.2.130") {
+  throw new Error(`Expected wasm-bindgen 0.2.130, got ${version}`);
 }
 
 const metadata = JSON.parse(
@@ -16,11 +16,13 @@ const metadata = JSON.parse(
     encoding: "utf8",
   })
 );
+const revision = "c988506d40938d50c210d2b8a27a708121449609";
+const expectedSource = `git+https://github.com/glory-rs/glory?rev=${revision}#${revision}`;
 const runtime = metadata.packages.filter((pkg) => pkg.name === "glory" || pkg.name.startsWith("glory-"));
 if (runtime.length === 0) throw new Error("Missing Glory runtime");
 for (const pkg of runtime) {
-  if (pkg.version !== "0.6.0" || pkg.source !== "registry+https://github.com/rust-lang/crates.io-index") {
-    throw new Error(`Expected published Glory 0.6.0, got ${pkg.id}`);
+  if (pkg.version !== "0.6.1" || pkg.source !== expectedSource) {
+    throw new Error(`Expected Glory 0.6.1 at ${revision}, got ${pkg.id}`);
   }
 }
 

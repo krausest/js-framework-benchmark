@@ -6,7 +6,7 @@
   "description": "Glory XML display API with framework-owned keyed collection and reconciliation",
   "license": "Apache-2.0",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.6.0",
+    "frameworkVersion": "0.6.1-c988506d",
     "frameworkHomeURL": "https://github.com/glory-rs/glory",
     "customURL": "/bundled-dist",
     "language": "Rust",

@@ -1,4 +1,4 @@
-//! Standard table workload using the published Glory runtime.
+//! Standard table workload using the pinned Glory GitHub runtime.
 mod data;
 mod model;
 use glory::display::*;

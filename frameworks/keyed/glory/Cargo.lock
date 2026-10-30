@@ -40,9 +40,8 @@ dependencies = [
 
 [[package]]
 name = "glory"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "38a36221d488861d0ff7bf4e49d6dc9a2ef86000500ea34739e380fc0c749edf"
+version = "0.6.1"
+source = "git+https://github.com/glory-rs/glory?rev=c988506d40938d50c210d2b8a27a708121449609#c988506d40938d50c210d2b8a27a708121449609"
 dependencies = [
  "glory-core",
  "glory-html",
@@ -55,18 +54,16 @@ dependencies = [
 
 [[package]]
 name = "glory-core"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b182f200c52c37c6be7b5cd84fc39b4af75e5ab77eef2937083f537c05163efb"
+version = "0.6.1"
+source = "git+https://github.com/glory-rs/glory?rev=c988506d40938d50c210d2b8a27a708121449609#c988506d40938d50c210d2b8a27a708121449609"
 dependencies = [
  "glory-render",
 ]
 
 [[package]]
 name = "glory-html"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1de080c1735fef53dfe55de20c9a0b62331ff5a6719889b7b3d1cee16f42b62a"
+version = "0.6.1"
+source = "git+https://github.com/glory-rs/glory?rev=c988506d40938d50c210d2b8a27a708121449609#c988506d40938d50c210d2b8a27a708121449609"
 dependencies = [
  "glory-render",
  "glory-style",
@@ -74,24 +71,21 @@ dependencies = [
 
 [[package]]
 name = "glory-render"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "700fc3c03a8821fe97183d33e7885c8ce7b0acc05a33d478764e57c8e2efebee"
+version = "0.6.1"
+source = "git+https://github.com/glory-rs/glory?rev=c988506d40938d50c210d2b8a27a708121449609#c988506d40938d50c210d2b8a27a708121449609"
 dependencies = [
  "glory-style",
 ]
 
 [[package]]
 name = "glory-style"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57644d3389c597017690618079d0d7096d777eb82ff2e83e27829d8812f82f33"
+version = "0.6.1"
+source = "git+https://github.com/glory-rs/glory?rev=c988506d40938d50c210d2b8a27a708121449609#c988506d40938d50c210d2b8a27a708121449609"
 
 [[package]]
 name = "glory-ui"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c2332e86e9a06ffcfc0b3910981b571a423504ae3f3234d950592c0c06d51777"
+version = "0.6.1"
+source = "git+https://github.com/glory-rs/glory?rev=c988506d40938d50c210d2b8a27a708121449609#c988506d40938d50c210d2b8a27a708121449609"
 dependencies = [
  "glory-core",
  "glory-render",
@@ -100,20 +94,18 @@ dependencies = [
 
 [[package]]
 name = "glory-view-macros"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c56dd1bac503a3406a016d261210225803ffda53c0538396972dfb03a325e2ed"
+version = "0.6.1"
+source = "git+https://github.com/glory-rs/glory?rev=c988506d40938d50c210d2b8a27a708121449609#c988506d40938d50c210d2b8a27a708121449609"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.119",
+ "syn",
 ]
 
 [[package]]
 name = "glory-web"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "82a847f99063d47bf2abf97b7187170caf3230c798561b9985266ae7161ae502"
+version = "0.6.1"
+source = "git+https://github.com/glory-rs/glory?rev=c988506d40938d50c210d2b8a27a708121449609#c988506d40938d50c210d2b8a27a708121449609"
 dependencies = [
  "futures-util",
  "glory-core",
@@ -137,20 +129,14 @@ dependencies = [
 
 [[package]]
 name = "js-sys"
-version = "0.3.106"
+version = "0.3.107"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7883d941dae510fb2d978fc3fe018c71c9e2892fd38854de3e8b92c2e5ad9cc5"
+checksum = "8dc09d2154098bbf4ef54eab6b117a3c24cbbffe94046b16ee6d6d4510584d3a"
 dependencies = [
  "cfg-if",
  "futures-util",
  "wasm-bindgen",
 ]
-
-[[package]]
-name = "once_cell"
-version = "1.21.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
 
 [[package]]
 name = "pin-project-lite"
@@ -190,17 +176,6 @@ checksum = "0c790de23124f9ab44544d7ac05d60440adc586479ce501c1d6d7da3cd8c9cf5"
 
 [[package]]
 name = "syn"
-version = "2.0.119"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "872831b642d1a07999a962a351ed35b955ea2cfc8f3862091e2a240a84f17297"
-dependencies = [
- "proc-macro2",
- "quote",
- "unicode-ident",
-]
-
-[[package]]
-name = "syn"
 version = "3.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d78c8dee4c7bf0e14673097256fed6142ce9d3b85a408189d07482442145823b"
@@ -227,12 +202,11 @@ checksum = "a2c754d6c33795a1c324727428e5a7dedb5b06195f9890bdbcba760d3e246563"
 
 [[package]]
 name = "wasm-bindgen"
-version = "0.2.129"
+version = "0.2.130"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9bb54f33acc68fd454578d9820b0bde1a1a3d17aa17bb7b6595806d02886d409"
+checksum = "a0181c14ddd6c7b8b0b0132a5f1ea2f32be0d893cd3ea97b6e3b28886b8a3d1c"
 dependencies = [
  "cfg-if",
- "once_cell",
  "rustversion",
  "wasm-bindgen-macro",
  "wasm-bindgen-shared",
@@ -240,9 +214,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-futures"
-version = "0.4.79"
+version = "0.4.80"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3cbab34de2d982e9b48e18d216d04c4a6f641066ff19ffb699980f591ee3610e"
+checksum = "5e14e0327cb5368ad60ccb22d04a9827a693c95a926d8d125e9fa39e0baec501"
 dependencies = [
  "js-sys",
  "tokio",
@@ -251,9 +225,9 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro"
-version = "0.2.129"
+version = "0.2.130"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e29d0c35b16e224a7eeb5cd2d25e3e1968fbd65604117b44d3b789d00ee8535"
+checksum = "6e931a02a39abdbf66966fc35902b5ed58344750a70885bed4ebb3d8eaf28ed9"
 dependencies = [
  "quote",
  "wasm-bindgen-macro-support",
@@ -261,31 +235,31 @@ dependencies = [
 
 [[package]]
 name = "wasm-bindgen-macro-support"
-version = "0.2.129"
+version = "0.2.130"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6f501a8bc3719dba86ef8ae4728879c08001bea749eb1333ac5b91e040e2a6b7"
+checksum = "2ca4b54280e455bd831e33a6b8e734baf432fe63fbc35c42ac14ce67a043a53a"
 dependencies = [
  "bumpalo",
  "proc-macro2",
  "quote",
- "syn 3.0.9",
+ "syn",
  "wasm-bindgen-shared",
 ]
 
 [[package]]
 name = "wasm-bindgen-shared"
-version = "0.2.129"
+version = "0.2.130"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23f0c9c52aa7cd7d77769a4cfe2a9adb1b331f489a41d912ce14513d5ab995c6"
+checksum = "3b1f9c3798725016c6ee5f2f57869ec0831e8bbc0ab0310a86e787e97f41389e"
 dependencies = [
  "unicode-ident",
 ]
 
 [[package]]
 name = "web-sys"
-version = "0.3.106"
+version = "0.3.107"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "88261b9deccee56594c11a3460c462c41f58d148598fe70ad77070126a68aba4"
+checksum = "d7d179596ff5ec0f6de4db64d54011bde6289cc49603d3a6e4ce3f329207ab88"
 dependencies = [
  "js-sys",
  "wasm-bindgen",

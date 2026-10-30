@@ -6,13 +6,17 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
     readonly memory: WebAssembly.Memory;
     readonly main: (a: number, b: number) => number;
-    readonly __wasm_bindgen_func_elem_712: (a: number, b: number, c: number, d: number) => void;
-    readonly __wasm_bindgen_func_elem_780: (a: number, b: number, c: number, d: number) => void;
+    readonly __wasm_bindgen_func_elem_444: (a: number, b: number, c: number, d: number) => void;
+    readonly __wasm_bindgen_func_elem_518: (a: number, b: number, c: number, d: any) => void;
     readonly __wbindgen_export: (a: number, b: number) => number;
     readonly __wbindgen_export2: (a: number, b: number, c: number, d: number) => number;
-    readonly __wbindgen_export3: (a: number) => void;
-    readonly __wbindgen_export4: (a: number, b: number) => void;
+    readonly __wbindgen_export3: (a: number, b: number, c: number) => void;
+    readonly __wbindgen_externrefs: WebAssembly.Table;
+    readonly __wbindgen_export4: (a: number) => void;
+    readonly __wbindgen_export5: () => number;
+    readonly __wbindgen_export6: (a: number, b: number) => void;
     readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
+    readonly __wbindgen_export7: (a: number) => void;
     readonly __wbindgen_start: () => void;
 }
 

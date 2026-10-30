@@ -1,0 +1,2 @@
+# Preserve the measured browser files and their SHA-256 on every platform.
+bundled-dist/** -text
