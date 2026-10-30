@@ -1,13 +1,9 @@
 import ElementaryUI
 import Reactivity
 
-struct Row: Equatable {
+struct Row: Identifiable {
     let id: Int
     var label: String
-
-    static func == (lhs: Row, rhs: Row) -> Bool {
-        lhs.id == rhs.id && lhs.label.utf8.elementsEqual(rhs.label.utf8)
-    }
 }
 
 private let adjectives = [
@@ -28,8 +24,20 @@ private let nouns = [
     "sandwich", "burger", "pizza", "mouse", "keyboard",
 ]
 
-private func randomLabel() -> String {
-    "\(adjectives.randomElement()!) \(colours.randomElement()!) \(nouns.randomElement()!)"
+private func randomLabel(using rng: inout some RandomNumberGenerator) -> String {
+    "\(adjectives.randomElement(using: &rng)!) \(colours.randomElement(using: &rng)!) \(nouns.randomElement(using: &rng)!)"
+}
+
+struct SimpleRandomNumberGenerator: RandomNumberGenerator {
+    private var state = UInt64.random(in: .min ... .max)
+
+    mutating func next() -> UInt64 {
+        state &+= 0x9E37_79B9_7F4A_7C15
+        var z = state
+        z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE4_E5B9
+        z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
+        return z ^ (z >> 31)
+    }
 }
 
 @Reactive
@@ -37,6 +45,9 @@ final class BenchmarkStore {
     var rows: [Row] = []
     var selectedID: Int? = nil
     private var nextID: Int = 1
+    // SystemRandomNumberGenerator calls crypto.getRandomValues (via WASI random_get) for every number
+    // which is quite expensive for bulk data generation.
+    @ReactiveIgnored private var rng = SimpleRandomNumberGenerator()
 
     func run() {
         rows = buildData(1000)
@@ -83,7 +94,7 @@ final class BenchmarkStore {
         data.reserveCapacity(count)
 
         for _ in 0..<count {
-            data.append(Row(id: nextID, label: randomLabel()))
+            data.append(Row(id: nextID, label: randomLabel(using: &rng)))
             nextID += 1
         }
 
@@ -110,27 +121,30 @@ struct ActionButton {
 @View
 struct RowView {
     @Environment(BenchmarkStore.self) var store: BenchmarkStore
-    var row: Row
+    var id: Int
+    var label: String
     var isSelected: Bool
 
     var body: some View {
-        tr(.class(isSelected ? "danger" : "")) {
+        tr {
             td(.class("col-md-1")) {
-                "\(row.id)"
+                "\(id)"
             }
             td(.class("col-md-4")) {
-                a { row.label }
-                    .onClick { store.select(row.id) }
+                a { label }
+                    .onClick { store.select(id) }
             }
             td(.class("col-md-1")) {
                 a {
-                    span(.class("glyphicon glyphicon-remove")) {}
-                        .attributes(.custom(name: "aria-hidden", value: "true"))
+                    span(
+                        .class("glyphicon glyphicon-remove"),
+                        .custom(name: "aria-hidden", value: "true")
+                    ) {}
                 }
-                .onClick { store.delete(row.id) }
+                .onClick { store.delete(id) }
             }
             td(.class("col-md-6")) {}
-        }
+        }.attributes(.class("danger"), when: isSelected)
     }
 }
 
@@ -141,8 +155,12 @@ struct DataTable {
     var body: some View {
         table(.class("table table-hover table-striped test-data")) {
             tbody(.id("tbody")) {
-                ForEach(store.rows, key: { $0.id }) { row in
-                    RowView(row: row, isSelected: store.selectedID == row.id)
+                ForEach(store.rows) { row in
+                    RowView(
+                        id: row.id,
+                        label: row.label,
+                        isSelected: store.selectedID == row.id
+                    )
                 }
             }
         }
