@@ -1,0 +1,88 @@
+{
+  "runtime": {
+    "repository": "https://github.com/glory-rs/glory",
+    "revision": "c988506d40938d50c210d2b8a27a708121449609",
+    "version": "0.6.1",
+    "status": "unreleased main snapshot"
+  },
+  "fixture_base_commit": "d95b024593341994188c62c81995e377a1b2e136",
+  "started_utc": "2026-10-30T15:57:02.199360+00:00",
+  "completed_utc": "2026-10-30T16:32:32.389190+00:00",
+  "environment": {
+    "cpu": "Intel(R) Core(TM) Ultra 9 285H",
+    "os": "Microsoft Windows 11 Pro",
+    "chrome": "155.0.8059.86",
+    "node": "v24.18.0",
+    "rust": "rustc 1.98.0 (88d9e12ae 2026-08-18)"
+  },
+  "sampling": "Unmodified upstream defaults: 15 CPU samples (selection adds 10), one per memory/size case; default CPU throttles; no slowest samples dropped",
+  "artifacts": {
+    "app.d.ts": {
+      "bytes": 1930,
+      "sha256": "91ea42304967c2d69a46389d5ca9c032c83f416c1e9350b9e343af95527395d7"
+    },
+    "app.js": {
+      "bytes": 18875,
+      "sha256": "f4decc9d44bb6c8851283e56ddffa05e780babca8dd17d4214174c2090fcc5ab"
+    },
+    "app_bg.wasm": {
+      "bytes": 417349,
+      "sha256": "15ae917e779182a3809eefd25a541bb0ce833a5de820807e590b2acbb2e6eaf9"
+    },
+    "app_bg.wasm.d.ts": {
+      "bytes": 945,
+      "sha256": "31693cc2784b522dfb0a3c1a2c53b0e80f0015bd074a23246236818446b3600b"
+    },
+    "index.html": {
+      "bytes": 251,
+      "sha256": "299c48bcf04c17068a9a72288bfeba013128c4dec5fca5dd13833cd4b3f6c8a9"
+    },
+    "snippets/glory-web-b6fc729524edcce7/inline0.js": {
+      "bytes": 6525,
+      "sha256": "3c2410aa6d4f0fc7f861051bfa7fedab3e8ce01d9fd60ccfed2c7f680e714c08"
+    },
+    "snippets/glory-web-b6fc729524edcce7/inline1.js": {
+      "bytes": 380,
+      "sha256": "45e8c3a81e54d0b00ea65a0969fbb335cc27e4397dec91c3630bd172a49b7280"
+    },
+    "snippets/glory-web-b88b28693b4ddca0/inline0.js": {
+      "bytes": 6525,
+      "sha256": "3c2410aa6d4f0fc7f861051bfa7fedab3e8ce01d9fd60ccfed2c7f680e714c08"
+    },
+    "snippets/glory-web-b88b28693b4ddca0/inline1.js": {
+      "bytes": 380,
+      "sha256": "45e8c3a81e54d0b00ea65a0969fbb335cc27e4397dec91c3630bd172a49b7280"
+    },
+    "snippets/glory-web-b88b28693b4ddca0/src/template_host.js": {
+      "bytes": 8769,
+      "sha256": "dc729b31be29c4e3acb194b828785e64476b0575d188b7b8fcc2da97994fbdfb"
+    },
+    "snippets/glory-web-b6fc729524edcce7/src/template_host.js": {
+      "bytes": 8769,
+      "sha256": "dc729b31be29c4e3acb194b828785e64476b0575d188b7b8fcc2da97994fbdfb"
+    }
+  },
+  "result_sha256": {
+    "glory-v0.6.1-keyed_01_run1k.json": "57ab5bb608623e77a56492c78fb51d8a3de130b4a26f7ed0c53b92cdcd0cba13",
+    "glory-v0.6.1-keyed_02_replace1k.json": "4b0e13d135eb7b493ca9aeb6e1ab3ec5c6a8ec74bedc7b1b3fb2301b5ecd7dc1",
+    "glory-v0.6.1-keyed_03_update10th1k_x16.json": "4d0cdf3b87b6411ce064d187ed69cf1c6d45ffbde9c2e51fd769168950a29288",
+    "glory-v0.6.1-keyed_04_select1k.json": "33633586296543163e2054b89da4e6ae7309f780efddd0163eebf510223faefa",
+    "glory-v0.6.1-keyed_05_swap1k.json": "1eac421ee3c2edcb8b66ab79e07e0c0404ee01051fd91d2a4acebf6a68305ddc",
+    "glory-v0.6.1-keyed_06_remove-one-1k.json": "60a275c3548bd5e147c62d13e4f4cfb3f47f5d115a811d6374f9956329da9453",
+    "glory-v0.6.1-keyed_07_create10k.json": "2f4ea962b6b07e8980701ec2c001691e6b2794f83b41079960b2b1c57cc10900",
+    "glory-v0.6.1-keyed_08_create1k-after1k_x2.json": "b46ec46a0de3f958a9c2f6b38bd7a654ad7441cf0c76c6e4ec091fbbec5f470a",
+    "glory-v0.6.1-keyed_09_clear1k_x8.json": "33d204aadc4431f13c1ff1aae400ee1a735b8d0f0c161fc7c274b323a65deb9c",
+    "glory-v0.6.1-keyed_21_ready-memory.json": "d9ae8f84e40d022afed318e47e319381e2e27c40c08d2b98021e1fb2f1c7a4da",
+    "glory-v0.6.1-keyed_22_run-memory.json": "f066519814609986cae08674d9789d5c8bef310bae739fae4e952709c02c2881",
+    "glory-v0.6.1-keyed_25_run-clear-memory.json": "17279be63d4157f1454c26303dab1b99d9fde6d4e2a26cf5354e90e4ede3a840",
+    "glory-v0.6.1-keyed_41_size-uncompressed.json": "651b08f07f83de9fe3c7b5ac96f178cf7fb6c2f77356939c60db2e123e88b506",
+    "glory-v0.6.1-keyed_42_size-compressed.json": "4e769c474f2d20d360fddb7602116f27f412684a8c6a3b1af6a0f004d6e786fb",
+    "glory-v0.6.1-keyed_43_first-paint.json": "0b7b6d8911ba3d461e29ba1fc6f4467772e03fcbd0a30ceecf64b50be4b119c6"
+  },
+  "note": "Measured assets were built from a frozen local checkout of the pinned GitHub revision. The PR build uses that exact Git revision rather than a machine-local path. Glory required no collection retry; one Vue selection case in the six-framework comparison was retried in full.",
+  "git_source_build_validation": {
+    "passed": true,
+    "wasm_sha256": "01a1f36a797fddd2513dfb1ced33e0e747370fd8acde9fc9ea57ce9938e1f3b2",
+    "note": "A clean build with the Git source succeeds. Its WASM bytes differ from the original path-source build because the Cargo source identity/build context changed. The submitted bundled-dist files are the original measured files, not substituted rebuild output. Runtime source matches the pinned revision; the sole textual checkout difference is CRLF/LF in crates/web/src/stream.js."
+  }
+}
