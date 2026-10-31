@@ -1,8 +1,8 @@
 <lang-js shallow>
-    import { buildData } from "../data"
+    import { buildData } from "./data"
 
-    let rows = []
     let selected
+    let rows = []
 
     const clear = () => {
         rows = []
