@@ -12,7 +12,8 @@
       772,
       1261,
       801
-    ]
+    ],
+    "repoURL": "https://github.com/epp11/re"
   },
   "scripts": {
     "dev": "esbuild src/main.ts --bundle --format=iife --outfile=dist/bundle.js --sourcemap",
