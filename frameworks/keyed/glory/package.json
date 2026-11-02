@@ -16,6 +16,7 @@
     "repoURL": "https://github.com/glory-rs/glory"
   },
   "scripts": {
-    "build-prod": "node build.js"
+    "build-force": "node build.js",
+    "build-prod": "echo 'this is a no-op. use build-force.'"
   }
 }
