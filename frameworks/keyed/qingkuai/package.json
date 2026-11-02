@@ -1,23 +1,25 @@
 {
-  "name": "js-framework-benchmark-qingkuai",
-  "private": true,
-  "type": "module",
-  "js-framework-benchmark": {
-    "frameworkVersionFromPackage": "qingkuai",
-    "frameworkHomeURL": "https://qingkuai.dev",
-    "language": "JavaScript",
-    "repoURL": "https://github.com/qingkuai-js/qingkuai"
-  },
-  "scripts": {
-    "dev": "vite",
-    "build-prod": "vite build"
-  },
-  "dependencies": {
-    "qingkuai": "^1.0.61",
-    "vite": "^8.0.3",
-    "vite-plugin-qingkuai": "^1.0.14"
-  },
-  "devDependencies": {
-    "terser": "^5.46.1"
-  }
+    "name": "js-framework-benchmark-qingkuai",
+    "private": true,
+    "type": "module",
+    "js-framework-benchmark": {
+        "frameworkVersionFromPackage": "qingkuai",
+        "frameworkHomeURL": "https://qingkuai.dev",
+        "language": "JavaScript",
+        "repoURL": "https://github.com/qingkuai-js/qingkuai"
+    },
+    "scripts": {
+        "dev": "qingkuai dev",
+        "check": "qingkuai check src",
+        "preview": "qingkuai preview",
+        "build-prod": "qingkuai build",
+        "format": "qingkuai format src --write"
+    },
+    "dependencies": {
+        "qingkuai": "1.0.104"
+    },
+    "devDependencies": {
+        "@qingkuai/cli": "1.0.5",
+        "terser": "5.51.2"
+    }
 }
