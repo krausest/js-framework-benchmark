@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8"/></head>
+<body>
+<button type="button" id="run"></button><button type="button" id="clear"></button>
+<table><tbody id="tbody"></tbody></table>
+<script src='dist/bundle.js'></script>
+<script>
+window.MICRO = { results: {} };
+const tbody = document.getElementById('tbody');
+async function go() {
+  const R = window.MICRO.results;
+  const N = 30;
+  // warm
+  document.getElementById('run').click();
+  document.getElementById('clear').click();
+  // A: pure clear sync cost (after fresh 1k build)
+  let builds = 0, clears = 0;
+  for (let i = 0; i < N; i++) {
+    let t0 = performance.now();
+    document.getElementById('run').click();
+    let t1 = performance.now();
+    document.getElementById('clear').click();
+    let t2 = performance.now();
+    builds += t1 - t0; clears += t2 - t1;
+  }
+  R.build_avg = builds / N;
+  R.clear_avg = clears / N;
+  window.MICRO.done = true;
+}
+setTimeout(go, 30);
+</script></body></html>
