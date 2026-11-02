@@ -23,7 +23,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "lithent": "1.25.4"
+    "lithent": "1.25.5"
   },
   "devDependencies": {
     "typescript": "5.9.3",
