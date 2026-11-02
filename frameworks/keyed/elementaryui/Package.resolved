@@ -1,13 +1,13 @@
 {
-  "originHash" : "124e718e3a074598bb829dc0936f31894a78765866c9af4eae0e5eb677d40522",
+  "originHash" : "b33f0d76cb9eea3400bebfdc41c401a6d3c255891fe825228fb91f7b70850772",
   "pins" : [
     {
       "identity" : "elementary",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/elementary-swift/elementary",
       "state" : {
-        "revision" : "9a66ebc5f8a2586f2a94893fc6e22d833c8e2ae5",
-        "version" : "0.8.2"
+        "revision" : "a565afcb8d70d9b54d06cedc4f4c61944501768f",
+        "version" : "0.8.4"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/elementary-swift/elementary-ui",
       "state" : {
-        "revision" : "f4f4d96cda9b76017baa457f77d07d52f9cf628d",
-        "version" : "0.8.0"
+        "revision" : "6e81fe0da6983824c5512c0b000f8c2d5bc13bd1",
+        "version" : "0.9.0"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftwasm/JavaScriptKit",
       "state" : {
-        "revision" : "991755e698a7516eac571e6f6a65c04c907ce5ed",
-        "version" : "0.59.0"
+        "revision" : "a0961dd40b503d8cbafff520e85c9c6b05614a88",
+        "version" : "0.62.0"
       }
     },
     {
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "a0cb0954ecb21e4e31b0070e6ed5674e8556685a",
-        "version" : "1.6.0"
+        "revision" : "f96b909e1a9e469620bc5037c1e24e00153f376f",
+        "version" : "1.7.5"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax",
       "state" : {
-        "revision" : "9de99a78f099e59caf2b2beec65a4c45d54b2081",
-        "version" : "603.0.1"
+        "revision" : "79e4b74a295b6eb74a8b585e3a39d29e70c1dbd1",
+        "version" : "603.0.2"
       }
     }
   ],
