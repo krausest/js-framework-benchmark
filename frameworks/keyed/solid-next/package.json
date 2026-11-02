@@ -1,0 +1,35 @@
+{
+  "name": "js-framework-benchmark-solid-next",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/main.js",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "solid-js",
+    "frameworkHomeURL": "https://www.solidjs.com/",
+    "language": "JavaScript",
+    "repoURL": "https://github.com/solidjs/solid"
+  },
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build-prod": "rollup -c --environment production"
+  },
+  "author": "Ryan Carniato",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {
+    "@solidjs/web": "2.0.0-rc.18",
+    "solid-js": "2.0.0-rc.18"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@solidjs/babel-plugin": "2.0.0-rc.18",
+    "rollup": "^4.24.3"
+  }
+}
