@@ -1,0 +1,18 @@
+[package]
+name = "js-framework-benchmark-glory"
+version = "0.0.0"
+edition = "2024"
+publish = false
+[dependencies]
+glory = { git = "https://github.com/glory-rs/glory", rev = "c988506d40938d50c210d2b8a27a708121449609", default-features = false, features = ["dsl"] }
+wasm-bindgen = { version = "=0.2.130", features = ["enable-interning"] }
+js-sys = "=0.3.107"
+[workspace]
+[profile.release]
+opt-level = 3
+debug = false
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+incremental = false
