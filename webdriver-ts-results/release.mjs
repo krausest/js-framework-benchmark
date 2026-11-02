@@ -49,6 +49,16 @@ function git(cwd, ...args) {
   execFileSync("git", args, { cwd, stdio: "inherit" });
 }
 
+// git commit fails when nothing is staged, e.g. when a release is rerun with identical output
+function commitIfStaged(cwd, message) {
+  try {
+    execFileSync("git", ["diff", "--cached", "--quiet"], { cwd });
+    console.log(`release: nothing to commit in ${cwd}`);
+  } catch {
+    git(cwd, "commit", "-m", message);
+  }
+}
+
 const args = parseArgs(process.argv.slice(2));
 const major = args.version.split(".")[0];
 const release = { year: args.year, label: `Chrome ${major}`, path: `${args.year}/chrome${major}.html`, note: "" };
@@ -133,9 +143,9 @@ try {
 
 const message = `Chrome ${major} results`;
 git(SITE_REPO, "add", "js-framework-benchmark");
-git(SITE_REPO, "commit", "-m", message);
+commitIfStaged(SITE_REPO, message);
 git(REPO, "add", "-u", "webdriver-ts", "webdriver-ts-results");
-git(REPO, "commit", "-m", message);
+commitIfStaged(REPO, message);
 
 console.log(`\nPublished ${BASE_URL}${release.path}`);
 console.log("Committed in both repositories, review with 'git show' and push when ready.");
