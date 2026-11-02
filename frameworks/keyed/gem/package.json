@@ -7,7 +7,8 @@
     "frameworkVersionFromPackage": "@mantou/gem",
     "frameworkHomeURL": "https://gemjs.org/",
     "language": "TypeScript",
-    "repoURL": "https://github.com/mantou132/gem"
+    "repoURL": "https://github.com/mantou132/gem",
+    "issues": [801]
   },
   "scripts": {
     "dev": "esbuild src/main.ts --bundle --format=esm --target=es2022 --outfile=dist/main.js --watch",
