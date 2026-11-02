@@ -19,7 +19,7 @@
     "frameworkHomeURL": "https://github.com/silicium369-spec/silicium-dom",
     "repoURL": "https://github.com/silicium369-spec/silicium-dom",
     "language": "JavaScript",
-    "issues": [],
+    "issues": [772, 801, 1261],
     "useShadowRoot": false
   },
   "homepage": "https://github.com/krausest/js-framework-benchmark",
