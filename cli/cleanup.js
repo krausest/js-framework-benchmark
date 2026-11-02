@@ -34,6 +34,7 @@ export function cleanFrameworkDirectories({ frameworksDirPath, frameworksTypes }
 
   for (const frameworkType of frameworksTypes) {
     const frameworkDir = path.resolve(frameworksDirPath, frameworkType);
+    if (!fs.existsSync(frameworkDir)) continue;
     const directories = fs.readdirSync(frameworkDir);
 
     for (const directory of directories) {

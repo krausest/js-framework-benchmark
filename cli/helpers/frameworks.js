@@ -15,12 +15,15 @@ import path from "node:path";
  * @returns {Framework[]}
  */
 export function getFrameworks(frameworksDirPath = "frameworks", frameworksTypes = ["keyed", "non-keyed"]) {
-  const frameworks = frameworksTypes.flatMap((type) =>
-    fs.readdirSync(path.join(frameworksDirPath, type)).map((framework) => ({
-      name: framework,
-      type,
-    }))
-  );
+  const frameworks = frameworksTypes
+    // non-keyed implementations are retired, so frameworks/non-keyed may not exist
+    .filter((type) => fs.existsSync(path.join(frameworksDirPath, type)))
+    .flatMap((type) =>
+      fs.readdirSync(path.join(frameworksDirPath, type)).map((framework) => ({
+        name: framework,
+        type,
+      }))
+    );
 
   return frameworks;
 }

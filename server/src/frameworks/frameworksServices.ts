@@ -110,7 +110,12 @@ export async function loadFrameworkVersions() {
   const resultsProm = [];
 
   for (const keyedType of keyedTypes) {
-    const directories = await fs.promises.readdir(path.resolve(frameworksDirectory, keyedType));
+    const keyedTypeDirectory = path.resolve(frameworksDirectory, keyedType);
+    // non-keyed implementations are retired, so frameworks/non-keyed may not exist
+    if (!fs.existsSync(keyedTypeDirectory)) {
+      continue;
+    }
+    const directories = await fs.promises.readdir(keyedTypeDirectory);
 
     for (const directory of directories) {
       if (!isFrameworkDir(keyedType, directory)) {

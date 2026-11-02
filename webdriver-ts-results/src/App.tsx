@@ -106,6 +106,9 @@ const App = () => {
                 </a>{" "}
                 before comparing releases.
               </p>
+              <p>
+                Since Chrome 156, all non-keyed implementations are retired.
+              </p>
             </div>
           </details>
         </section>

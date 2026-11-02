@@ -73,6 +73,7 @@ export function createFrameworkZipArchive() {
 
   for (const frameworkType of frameworksTypes) {
     const frameworkTypeDirPath = path.resolve("frameworks", frameworkType);
+    if (!fs.existsSync(frameworkTypeDirPath)) continue;
     const frameworkNames = fs.readdirSync(frameworkTypeDirPath);
 
     for (const frameworkName of frameworkNames) {
