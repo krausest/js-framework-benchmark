@@ -56,6 +56,8 @@ results might be for mixed browser versions, number of runs per benchmark may va
 
 ## Keyed vs non-keyed frameworks
 
+Important: As you can read below non-keyed was always a strange optimization, but never a correct way. We decided to allow only keyed implementations starting with the chrome 156 run.
+
 Some frameworks like React, Vue.js or Angular, allow you to create a 1:1 relationship between a data item and a DOM node by assigning a “key” attribute (or for Angular, specifying “trackBy” in *ngFor). If you use some identifier of the data as the key, you get the “keyed” mode. Any update to the data will update the associated DOM node. If you reorder the list, the DOM nodes will be reordered accordingly.
 
 The other mode is “non-keyed” and this is what e.g. vue.js uses by default for lists. In this mode, a change to the data items can modify DOM nodes that were associated with other data before. This can be more performant, since costly DOM operations can be avoided (e.g. first removing old nodes and then adding new nodes) and the existing DOM nodes are updated to display the new data. For React and Angular, using the item index as the key uses “non-keyed” mode for those frameworks.
@@ -493,6 +495,7 @@ Your package.json must include some information for the benchmark. Since you cop
   "js-framework-benchmark": {
     "frameworkVersion": "",
     "frameworkHomeURL": "",
+    "repoURL": "",
     "language": ""
   },
   ...
@@ -546,7 +549,7 @@ Please take a look at https://github.com/krausest/js-framework-benchmark/wiki/Pr
 
 Contributions are very welcome. Please use the following rules:
 
-- Name your directory frameworks/[keyed|non-keyed]/[FrameworkName]
+- Name your directory frameworks/keyed/[FrameworkName]
 - The package.json in your directory must contain some important information see section 4.2 above.
 - Each contribution must be buildable by `npm install` and `npm run build-prod` command in the directory. What build-prod does is up to you. Often there's an `npm run dev` that creates a development build
 - Every implementation must use bootstrap provided in the root css directory.
@@ -555,7 +558,7 @@ Contributions are very welcome. Please use the following rules:
 - Webdriver-ts must be able to run the perf tests for the contribution. This means that all buttons (like "Create 1,000 rows") must have the correct id e.g. like in vanillajs. Using shadow DOM is a real pain for webdriver. The closer you can get to polymer the higher the chances I can make that contribution work.
 - Don't change the ids in the index.html, since the automated benchmarking relies on those ids.
 - Please push only files in your framework folder (not index.html or results.json)
-- **Please make sure your implementation is validated by the test tool.** cd to the root directory and perform a check  `npm run rebuild-ci [keyed|non-keyed]/[FrameworkName]`. It'll print an error if your framework doesn't build, the benchmark can't be run or behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation. Some common errors include:
+- **Please make sure your implementation is validated by the test tool.** cd to the root directory and perform a check  `npm run rebuild-ci keyed/[FrameworkName]`. It'll print an error if your framework doesn't build, the benchmark can't be run or behaves other as specified. It'll print a big ERROR explaining if it isn't happy with the implementation. Some common errors include:
   - Your package.json is missing some required fields
   - Incorrect classification (Keyed/NonKeyed)
   - You have gzipped files in /dist (unfortunately the web server prefers these when they exist)
@@ -565,6 +568,7 @@ Contributions are very welcome. Please use the following rules:
 - **Please don't over-optimize.** This benchmark is most useful if you apply an idiomatic style for the framework you're using. We've sharpened the rules what kind of implementation is considered correct and will add errors or notes when an implementations handles things wrongly (errors) or in a way that looks like a shortcut (notes).
   - The html must be identical with the one created by the reference implementation vanillajs. It also must include all the aria-hidden attributes. Otherwise the implementation is considered erroneous and will be marked with issue [#634](https://github.com/krausest/js-framework-benchmark/issues/634).
   - Keyed implementations must pass the `npm run isKeyed` test in the test driver otherwise they are erroneous. Not that this test might not be sufficient, but just necessary to be keyed (from time to time we find new loop holes). There's error [#694](https://github.com/krausest/js-framework-benchmark/issues/694) for such cases.
+  - Non-keyed implementations are no longer accepted since the chrome 156 run.
   - Using request animation frame calls in client code, especially when applied only for some benchmark operations, is considered bad style and gets note [#796](https://github.com/krausest/js-framework-benchmark/issues/796) applied. Note that frameworks are free to choose whether they use RAF of not.
   - Manual DOM manipulation (like setting the danger class directly on the selected row) lead to some controversial debates. Depending on the framework you're using it might be idiomatic style or not. In any case it gets note [#772](https://github.com/krausest/js-framework-benchmark/issues/772) applied.
   - Implementations should keep the selected rows in the state (i.e. not a flag for each row, but one reference, id or index for the table) and use that information for rendering. Keeping a selection flag for each row might be faster, but it's considered bad style. Thus those implementations get note [#800](https://github.com/krausest/js-framework-benchmark/issues/800).
@@ -584,6 +588,9 @@ Thanks to Baptiste Augrain for making the benchmarks more sophisticated and addi
 # History
 
 Frameworks without significant activity on github or npm for more than a year will be removed (_automatic commits like dependabot and minor updates, like docs editions, are ignored_).
+
+## 2026-10-26
+Since chrome 156 all non-keyed implementations are dropped and stored in the folder "retired/non-keyed"
 
 ## 2026-09-04
 The following frameworks were archived after chrome 152. Their last results are included in [chrome 152 results](https://krausest.github.io/js-framework-benchmark/2026/chrome152.html)
