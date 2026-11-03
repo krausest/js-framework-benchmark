@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-wcstack-state",
-  "version": "4.0.0",
+  "version": "4.16.0",
   "description": "@wcstack/state keyed benchmark",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@wcstack/state",
@@ -27,6 +27,6 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "@wcstack/state": "4.0.0"
+    "@wcstack/state": "4.16.0"
   }
 }
