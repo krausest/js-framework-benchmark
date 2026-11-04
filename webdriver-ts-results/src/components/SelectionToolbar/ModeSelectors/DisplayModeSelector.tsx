@@ -20,6 +20,7 @@ const DisplayModeSelector = ({ displayMode, onChange }: Props) => {
         <option value={DisplayMode.DISPLAY_MEAN}>mean results</option>
         <option value={DisplayMode.DISPLAY_MEDIAN}>median results</option>
         <option value={DisplayMode.BOX_PLOT}>box plot</option>
+        <option value={DisplayMode.SUMMARY}>summary (median)</option>
       </select>
     </div>
   );

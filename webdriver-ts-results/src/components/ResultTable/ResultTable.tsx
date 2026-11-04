@@ -6,6 +6,7 @@ import MemResultsTable from "@/components/tables/MemResultsTable";
 import { benchmarks } from "@/results";
 import { useRootStore } from "@/store";
 import SizeResultsTable from "@/components/tables/SizeResultsTable";
+import SummaryTable from "@/components/tables/SummaryTable";
 
 const BoxPlotTable = React.lazy(() => import("@/components/BoxPlotTable/BoxPlotTable"));
 
@@ -56,7 +57,11 @@ const ResultTable = ({ type }: Props) => {
         </div>
         <p className="result-group__description">{texts[type].description}</p>
         <p className="result-group__hint" id={hintId}>
-          <span>Click a benchmark name to sort. Scroll horizontally to explore all implementations.</span>
+          {displayMode === DisplayMode.SUMMARY ? (
+            <span>Click a column name to sort.</span>
+          ) : (
+            <span>Click a benchmark name to sort. Scroll horizontally to explore all implementations.</span>
+          )}
           <span>Lower values are better. Compare measurements within the same release.</span>
         </p>
 
@@ -88,6 +93,22 @@ const ResultTable = ({ type }: Props) => {
               />
             </React.Suspense>
           )
+        ) : displayMode === DisplayMode.SUMMARY ? (
+          <div className="results">
+            <p className="summary__note">
+              Each column is the geometric mean row of the full table, for the benchmarks selected above: 1.00 is the
+              fastest or smallest. The columns are not combined in one score, they measure different things.
+            </p>
+            <div
+              className="results__table-container"
+              role="region"
+              aria-label={`${texts[type].label} summary`}
+              aria-describedby={hintId}
+              tabIndex={0}
+            >
+              <SummaryTable currentSortKey={currentSortKey} sortBy={sortBy} data={data} />
+            </div>
+          </div>
         ) : (
           <div className="results">
             <div
