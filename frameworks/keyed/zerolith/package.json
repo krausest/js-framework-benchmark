@@ -1,0 +1,23 @@
+{
+    "name": "js-framework-benchmark-zerolith",
+    "version": "1.0.0",
+    "private": true,
+    "description": "zerolith keyed implementation",
+    "type": "module",
+    "js-framework-benchmark": {
+        "frameworkVersionFromPackage": "zerolith",
+        "frameworkHomeURL": "https://zerolith.dev/",
+        "repoURL": "https://github.com/molexxxx/zerolith",
+        "customURL": "/dist",
+        "language": "JavaScript"
+    },
+    "scripts": {
+        "build-prod": "zerolith build --base /frameworks/keyed/zerolith/dist/"
+    },
+    "dependencies": {
+        "zerolith": "1.0.0"
+    },
+    "devDependencies": {
+        "@zerolith/cli": "1.0.0"
+    }
+}
