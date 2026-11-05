@@ -1,12 +1,12 @@
 'use strict';
 
 import { View, CollectionView, setDataApi, setDomApi } from 'marionette';
-import DomApi from '@mnjs/adapters/dom/morphdom';
+import LitDomApi from '@mnjs/adapters/dom/lit-html';
 import { Collection, DataApi } from '@mnjs/data';
 import rowTemplate from './rowtemplate';
 
 setDataApi(DataApi);
-setDomApi(DomApi);
+setDomApi(LitDomApi);
 
 function _random(max) {
     return Math.round(Math.random()*1000)%max;
