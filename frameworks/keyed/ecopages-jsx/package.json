@@ -1,0 +1,21 @@
+{
+  "name": "js-framework-benchmark-ecopages-jsx",
+  "version": "1.0.0",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@ecopages/jsx",
+    "frameworkHomeURL": "https://github.com/ecopages/radiant",
+    "repoURL": "https://github.com/ecopages/radiant",
+    "language": "JavaScript"
+  },
+  "scripts": {
+    "build-prod": "node build.mjs"
+  },
+  "dependencies": {
+    "@ecopages/jsx": "0.8.0",
+    "@ecopages/signals": "0.8.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
+  }
+}
