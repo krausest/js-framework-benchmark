@@ -1,17 +1,19 @@
-/** @jsxImportSource @ecopages/jsx */
 import { MapItems } from '@ecopages/jsx';
-import { buttons } from './model.js';
 
-/**
- * Renders once. MapItems renders each row once and reuses it while the row stays in the list; each row binds its
- * label text and its class to the row's own signals.
- */
-export function createView(model, title) {
+const Button = ({ id, 'on:click': onClick, children }) => (
+	<div class="col-sm-6 smallpad">
+		<button id={id} type="button" class="btn btn-primary btn-block" on:click={onClick}>
+			{children}
+		</button>
+	</div>
+);
+
+export function createView(model) {
 	const onRowClick = (event) => {
-		const row = event.target.closest('tr');
+		const row = event.target.closest('tr')?.row;
 		if (!row) return;
-		if (event.target.closest('.remove')) model.remove(row.rowId);
-		else if (event.target.closest('.lbl')) model.select(row.rowId);
+		if (event.target.closest('.remove')) model.remove(row);
+		else if (event.target.closest('.lbl')) model.select(row);
 	};
 
 	return (
@@ -19,17 +21,28 @@ export function createView(model, title) {
 			<div class="jumbotron">
 				<div class="row">
 					<div class="col-md-6">
-						<h1>{title}</h1>
+						<h1>Ecopages JSX</h1>
 					</div>
 					<div class="col-md-6">
 						<div class="row">
-							{buttons.map(([id, label]) => (
-								<div class="col-sm-6 smallpad">
-									<button id={id} type="button" class="btn btn-primary btn-block" on:click={() => model[id]()}>
-										{label}
-									</button>
-								</div>
-							))}
+							<Button id="run" on:click={model.run}>
+								Create 1,000 rows
+							</Button>
+							<Button id="runlots" on:click={model.runLots}>
+								Create 10,000 rows
+							</Button>
+							<Button id="add" on:click={model.add}>
+								Append 1,000 rows
+							</Button>
+							<Button id="update" on:click={model.update}>
+								Update every 10th row
+							</Button>
+							<Button id="clear" on:click={model.clear}>
+								Clear
+							</Button>
+							<Button id="swaprows" on:click={model.swapRows}>
+								Swap Rows
+							</Button>
 						</div>
 					</div>
 				</div>
@@ -38,7 +51,7 @@ export function createView(model, title) {
 				<tbody on:click={onRowClick}>
 					<MapItems each={model.rows}>
 						{(row) => (
-							<tr prop:rowId={row.id} class={row.cls}>
+							<tr prop:row={row} class={row.cls}>
 								<td class="col-md-1">{row.id}</td>
 								<td class="col-md-4">
 									<a class="lbl">{row.label}</a>

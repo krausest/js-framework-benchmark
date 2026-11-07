@@ -6,10 +6,10 @@
     "frameworkVersionFromPackage": "@ecopages/radiant",
     "frameworkHomeURL": "https://github.com/ecopages/radiant",
     "repoURL": "https://github.com/ecopages/radiant",
-    "language": "JavaScript"
+    "language": "TypeScript"
   },
   "scripts": {
-    "build-prod": "node build.mjs"
+    "build-prod": "tsc --noEmit && node build.mjs"
   },
   "dependencies": {
     "@ecopages/jsx": "0.8.0",
@@ -17,6 +17,7 @@
     "@ecopages/signals": "0.8.0"
   },
   "devDependencies": {
-    "esbuild": "0.25.12"
+    "esbuild": "0.25.12",
+    "typescript": "5.9.3"
   }
 }
