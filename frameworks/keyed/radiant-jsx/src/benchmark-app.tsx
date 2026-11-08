@@ -97,7 +97,7 @@ export class BenchmarkApp extends RadiantElement {
 					<tbody>
 						<MapItems each={this.rows}>
 							{(row) => (
-								<tr attr:class={computed(() => (this.selectedId.get() === row.id ? 'danger' : ''))}>
+								<tr classes={computed(() => (this.selectedId.get() === row.id ? 'danger' : ''))}>
 									<td class="col-md-1">{row.id}</td>
 									<td class="col-md-4">
 										<a on:click={() => this.selectRow(row)}>{row.label}</a>

@@ -45,7 +45,7 @@ export function createView(model) {
 				<tbody>
 					<MapItems each={model.rows}>
 						{(row) => (
-							<tr class={computed(() => (model.selectedId.get() === row.id ? 'danger' : ''))}>
+							<tr classes={computed(() => (model.selectedId.get() === row.id ? 'danger' : ''))}>
 								<td class="col-md-1">{row.id}</td>
 								<td class="col-md-4">
 									<a on:click={() => model.select(row)}>{row.label}</a>

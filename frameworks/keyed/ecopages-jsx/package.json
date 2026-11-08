@@ -12,8 +12,8 @@
     "build-prod": "node build.mjs"
   },
   "dependencies": {
-    "@ecopages/jsx": "0.8.1",
-    "@ecopages/signals": "0.8.1"
+    "@ecopages/jsx": "0.8.2",
+    "@ecopages/signals": "0.8.2"
   },
   "devDependencies": {
     "esbuild": "0.25.12"
