@@ -1,7 +1,7 @@
 import { RadiantController, controller, onEvent, query } from '@ecopages/radiant';
 import { buildRows, type Row } from './rows';
 
-type RowNode = HTMLTableRowElement & { row: Row };
+type RowNode = HTMLTableRowElement & { row: Row; label: Text };
 
 const rowTemplate = document.createElement('template');
 rowTemplate.innerHTML =
@@ -39,7 +39,7 @@ export class BenchmarkController extends RadiantController {
 		for (let index = 0; index < this.#rows.length; index += 10) {
 			const row = this.#rows[index];
 			row.label += ' !!!';
-			this.#labelOf(this.#nodes.get(row)!).data = row.label;
+			this.#nodes.get(row)!.label.data = row.label;
 		}
 	}
 
@@ -112,13 +112,10 @@ export class BenchmarkController extends RadiantController {
 		const node = rowTemplate.content.firstChild!.cloneNode(true) as RowNode;
 		node.row = row;
 		(node.firstChild!.firstChild as Text).data = String(row.id);
-		this.#labelOf(node).data = row.label;
+		node.label = node.firstChild!.nextSibling!.firstChild!.firstChild as Text;
+		node.label.data = row.label;
 		this.#nodes.set(row, node);
 		return node;
-	}
-
-	#labelOf(node: RowNode): Text {
-		return node.firstChild!.nextSibling!.firstChild!.firstChild as Text;
 	}
 }
 

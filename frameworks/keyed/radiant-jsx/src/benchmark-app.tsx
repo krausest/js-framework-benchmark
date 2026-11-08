@@ -1,13 +1,13 @@
 import { MapItems, type JsxRenderable } from '@ecopages/jsx';
-import { RadiantElement, customElement, onEvent, signal } from '@ecopages/radiant';
+import { RadiantElement, bound, customElement, signal } from '@ecopages/radiant';
 import { computed, type WritableSignal } from '@ecopages/signals';
 import { buildRows, type Row } from './rows';
 
-type ButtonProps = { id: string; children: JsxRenderable };
+type ButtonProps = { id: string; 'on:click': () => void; children: JsxRenderable };
 
-const Button = ({ id, children }: ButtonProps) => (
+const Button = ({ id, 'on:click': onClick, children }: ButtonProps) => (
 	<div class="col-sm-6 smallpad">
-		<button id={id} data-ref={id} type="button" class="btn btn-primary btn-block">
+		<button id={id} type="button" class="btn btn-primary btn-block" on:click={onClick}>
 			{children}
 		</button>
 	</div>
@@ -18,33 +18,33 @@ export class BenchmarkApp extends RadiantElement {
 	@signal({ initial: [] as Row[] }) rows!: WritableSignal<Row[]>;
 	@signal({ initial: 0 }) selectedId!: WritableSignal<number>;
 
-	@onEvent({ ref: 'run', type: 'click' })
+	@bound
 	createRows() {
 		this.rows.set(buildRows(1_000));
 	}
 
-	@onEvent({ ref: 'runlots', type: 'click' })
+	@bound
 	createManyRows() {
 		this.rows.set(buildRows(10_000));
 	}
 
-	@onEvent({ ref: 'add', type: 'click' })
+	@bound
 	appendRows() {
 		this.rows.set([...this.rows.get(), ...buildRows(1_000)]);
 	}
 
-	@onEvent({ ref: 'update', type: 'click' })
+	@bound
 	updateEveryTenthRow() {
 		const rows = this.rows.get();
 		for (let index = 0; index < rows.length; index += 10) rows[index].label.set(`${rows[index].label.get()} !!!`);
 	}
 
-	@onEvent({ ref: 'clear', type: 'click' })
+	@bound
 	clearRows() {
 		this.rows.set([]);
 	}
 
-	@onEvent({ ref: 'swaprows', type: 'click' })
+	@bound
 	swapRows() {
 		const rows = this.rows.get();
 		if (rows.length <= 998) return;
@@ -62,6 +62,15 @@ export class BenchmarkApp extends RadiantElement {
 	}
 
 	override render() {
+		const buttons = [
+			{ id: 'run', label: 'Create 1,000 rows', action: this.createRows },
+			{ id: 'runlots', label: 'Create 10,000 rows', action: this.createManyRows },
+			{ id: 'add', label: 'Append 1,000 rows', action: this.appendRows },
+			{ id: 'update', label: 'Update every 10th row', action: this.updateEveryTenthRow },
+			{ id: 'clear', label: 'Clear', action: this.clearRows },
+			{ id: 'swaprows', label: 'Swap Rows', action: this.swapRows },
+		];
+
 		return (
 			<div class="container">
 				<div class="jumbotron">
@@ -71,24 +80,11 @@ export class BenchmarkApp extends RadiantElement {
 						</div>
 						<div class="col-md-6">
 							<div class="row">
-								<Button id="run">
-									Create 1,000 rows
-								</Button>
-								<Button id="runlots">
-									Create 10,000 rows
-								</Button>
-								<Button id="add">
-									Append 1,000 rows
-								</Button>
-								<Button id="update">
-									Update every 10th row
-								</Button>
-								<Button id="clear">
-									Clear
-								</Button>
-								<Button id="swaprows">
-									Swap Rows
-								</Button>
+								{buttons.map(({ id, label, action }) => (
+									<Button id={id} on:click={action}>
+										{label}
+									</Button>
+								))}
 							</div>
 						</div>
 					</div>

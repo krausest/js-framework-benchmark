@@ -10,6 +10,15 @@ const Button = ({ id, 'on:click': onClick, children }) => (
 );
 
 export function createView(model) {
+	const buttons = [
+		{ id: 'run', label: 'Create 1,000 rows', action: model.run },
+		{ id: 'runlots', label: 'Create 10,000 rows', action: model.runLots },
+		{ id: 'add', label: 'Append 1,000 rows', action: model.add },
+		{ id: 'update', label: 'Update every 10th row', action: model.update },
+		{ id: 'clear', label: 'Clear', action: model.clear },
+		{ id: 'swaprows', label: 'Swap Rows', action: model.swapRows },
+	];
+
 	return (
 		<div class="container">
 			<div class="jumbotron">
@@ -19,24 +28,11 @@ export function createView(model) {
 					</div>
 					<div class="col-md-6">
 						<div class="row">
-							<Button id="run" on:click={model.run}>
-								Create 1,000 rows
-							</Button>
-							<Button id="runlots" on:click={model.runLots}>
-								Create 10,000 rows
-							</Button>
-							<Button id="add" on:click={model.add}>
-								Append 1,000 rows
-							</Button>
-							<Button id="update" on:click={model.update}>
-								Update every 10th row
-							</Button>
-							<Button id="clear" on:click={model.clear}>
-								Clear
-							</Button>
-							<Button id="swaprows" on:click={model.swapRows}>
-								Swap Rows
-							</Button>
+							{buttons.map(({ id, label, action }) => (
+								<Button id={id} on:click={action}>
+									{label}
+								</Button>
+							))}
 						</div>
 					</div>
 				</div>
