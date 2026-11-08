@@ -6,7 +6,8 @@
     "frameworkVersionFromPackage": "@ecopages/radiant",
     "frameworkHomeURL": "https://radiant.ecopages.app",
     "repoURL": "https://github.com/ecopages/radiant",
-    "language": "TypeScript"
+    "language": "TypeScript",
+    "issues": [772, 801]
   },
   "scripts": {
     "build-prod": "tsc --noEmit && node build.mjs"
