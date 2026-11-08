@@ -1,0 +1,23 @@
+{
+  "name": "js-framework-benchmark-radiant-jsx",
+  "version": "1.0.0",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@ecopages/radiant:@ecopages/jsx",
+    "frameworkHomeURL": "https://radiant.ecopages.app",
+    "repoURL": "https://github.com/ecopages/radiant",
+    "language": "TypeScript"
+  },
+  "scripts": {
+    "build-prod": "tsc --noEmit && node build.mjs"
+  },
+  "dependencies": {
+    "@ecopages/jsx": "0.8.2",
+    "@ecopages/radiant": "0.8.2",
+    "@ecopages/signals": "0.8.2"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "typescript": "5.9.3"
+  }
+}
