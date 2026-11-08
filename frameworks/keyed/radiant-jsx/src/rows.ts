@@ -3,7 +3,6 @@ import { state, type State } from '@ecopages/signals';
 export type Row = {
 	readonly id: number;
 	readonly label: State<string>;
-	readonly cls: State<string>;
 };
 
 const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
@@ -17,6 +16,5 @@ export function buildRows(count: number): Row[] {
 	return Array.from({ length: count }, () => ({
 		id: nextId++,
 		label: state(`${adjectives[random(adjectives.length)]} ${colors[random(colors.length)]} ${nouns[random(nouns.length)]}`),
-		cls: state(''),
 	}));
 }

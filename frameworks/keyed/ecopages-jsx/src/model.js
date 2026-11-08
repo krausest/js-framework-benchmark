@@ -10,20 +10,17 @@ const buildRows = (count) =>
 	Array.from({ length: count }, () => ({
 		id: nextId++,
 		label: state(`${adjectives[random(adjectives.length)]} ${colors[random(colors.length)]} ${nouns[random(nouns.length)]}`),
-		cls: state(''),
 	}));
 
 export class Model {
 	rows = state([]);
-	#selected;
+	selectedId = state(0);
 
 	run = () => {
-		this.#selected = undefined;
 		this.rows.set(buildRows(1000));
 	};
 
 	runLots = () => {
-		this.#selected = undefined;
 		this.rows.set(buildRows(10000));
 	};
 
@@ -37,7 +34,6 @@ export class Model {
 	};
 
 	clear = () => {
-		this.#selected = undefined;
 		this.rows.set([]);
 	};
 
@@ -50,14 +46,10 @@ export class Model {
 	};
 
 	select(row) {
-		if (row === this.#selected) return;
-		this.#selected?.cls.set('');
-		row.cls.set('danger');
-		this.#selected = row;
+		this.selectedId.set(row.id);
 	}
 
 	remove(row) {
-		if (row === this.#selected) this.#selected = undefined;
 		this.rows.set(this.rows.get().filter((candidate) => candidate !== row));
 	}
 }

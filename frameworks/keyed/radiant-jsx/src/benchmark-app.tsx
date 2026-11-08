@@ -1,6 +1,6 @@
 import { MapItems, type JsxRenderable } from '@ecopages/jsx';
 import { RadiantElement, customElement, onEvent, signal } from '@ecopages/radiant';
-import type { WritableSignal } from '@ecopages/signals';
+import { computed, type WritableSignal } from '@ecopages/signals';
 import { buildRows, type Row } from './rows';
 
 type ButtonProps = { id: string; children: JsxRenderable };
@@ -16,18 +16,15 @@ const Button = ({ id, children }: ButtonProps) => (
 @customElement('benchmark-app')
 export class BenchmarkApp extends RadiantElement {
 	@signal({ initial: [] as Row[] }) rows!: WritableSignal<Row[]>;
-
-	#selected: Row | undefined;
+	@signal({ initial: 0 }) selectedId!: WritableSignal<number>;
 
 	@onEvent({ ref: 'run', type: 'click' })
 	createRows() {
-		this.#selected = undefined;
 		this.rows.set(buildRows(1_000));
 	}
 
 	@onEvent({ ref: 'runlots', type: 'click' })
 	createManyRows() {
-		this.#selected = undefined;
 		this.rows.set(buildRows(10_000));
 	}
 
@@ -44,7 +41,6 @@ export class BenchmarkApp extends RadiantElement {
 
 	@onEvent({ ref: 'clear', type: 'click' })
 	clearRows() {
-		this.#selected = undefined;
 		this.rows.set([]);
 	}
 
@@ -57,24 +53,11 @@ export class BenchmarkApp extends RadiantElement {
 		this.rows.set(next);
 	}
 
-	@onEvent({ ref: 'rows', type: 'click' })
-	onRowClick(event: MouseEvent) {
-		const target = event.target as Element;
-		const row = (target.closest('tr') as (HTMLTableRowElement & { row?: Row }) | null)?.row;
-		if (!row) return;
-		if (target.closest('.remove')) this.removeRow(row);
-		else if (target.closest('.lbl')) this.selectRow(row);
-	}
-
 	selectRow(row: Row) {
-		if (row === this.#selected) return;
-		this.#selected?.cls.set('');
-		row.cls.set('danger');
-		this.#selected = row;
+		this.selectedId.set(row.id);
 	}
 
 	removeRow(row: Row) {
-		if (row === this.#selected) this.#selected = undefined;
 		this.rows.set(this.rows.get().filter((candidate) => candidate !== row));
 	}
 
@@ -111,16 +94,16 @@ export class BenchmarkApp extends RadiantElement {
 					</div>
 				</div>
 				<table class="table table-hover table-striped test-data">
-					<tbody data-ref="rows">
+					<tbody>
 						<MapItems each={this.rows}>
 							{(row) => (
-								<tr prop:row={row} attr:class={row.cls}>
+								<tr attr:class={computed(() => (this.selectedId.get() === row.id ? 'danger' : ''))}>
 									<td class="col-md-1">{row.id}</td>
 									<td class="col-md-4">
-										<a class="lbl">{row.label}</a>
+										<a on:click={() => this.selectRow(row)}>{row.label}</a>
 									</td>
 									<td class="col-md-1">
-										<a class="remove">
+										<a on:click={() => this.removeRow(row)}>
 											<span class="glyphicon glyphicon-remove" aria-hidden="true" />
 										</a>
 									</td>

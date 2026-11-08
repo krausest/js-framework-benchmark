@@ -1,14 +1,14 @@
-import { RadiantElement, customElement, onEvent, query } from '@ecopages/radiant';
+import { RadiantController, controller, onEvent, query } from '@ecopages/radiant';
 import { buildRows, type Row } from './rows';
 
 type RowNode = HTMLTableRowElement & { row: Row };
 
 const rowTemplate = document.createElement('template');
 rowTemplate.innerHTML =
-	'<tr><td class="col-md-1"> </td><td class="col-md-4"><a class="lbl"> </a></td><td class="col-md-1"><a class="remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>';
+	'<tr><td class="col-md-1"> </td><td class="col-md-4"><a> </a></td><td class="col-md-1"><a><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td><td class="col-md-6"></td></tr>';
 
-@customElement('benchmark-app')
-export class BenchmarkApp extends RadiantElement {
+@controller('benchmark')
+export class BenchmarkController extends RadiantController {
 	@query({ ref: 'rows', cache: true }) tbody!: HTMLTableSectionElement | null;
 
 	#rows: Row[] = [];
@@ -60,9 +60,10 @@ export class BenchmarkApp extends RadiantElement {
 	onRowClick(event: MouseEvent) {
 		const target = event.target as Element;
 		const node = target.closest('tr') as RowNode | null;
-		if (!node) return;
-		if (target.closest('.remove')) this.#removeRow(node);
-		else if (target.closest('.lbl')) this.#selectRow(node);
+		const cell = target.closest('a')?.parentElement as HTMLTableCellElement | null;
+		if (!node || !cell) return;
+		if (cell.cellIndex === 2) this.#removeRow(node);
+		else if (cell.cellIndex === 1) this.#selectRow(node);
 	}
 
 	#selectRow(node: RowNode) {

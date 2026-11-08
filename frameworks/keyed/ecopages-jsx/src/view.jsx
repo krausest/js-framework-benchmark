@@ -1,4 +1,5 @@
 import { MapItems } from '@ecopages/jsx';
+import { computed } from '@ecopages/signals';
 
 const Button = ({ id, 'on:click': onClick, children }) => (
 	<div class="col-sm-6 smallpad">
@@ -9,13 +10,6 @@ const Button = ({ id, 'on:click': onClick, children }) => (
 );
 
 export function createView(model) {
-	const onRowClick = (event) => {
-		const row = event.target.closest('tr')?.row;
-		if (!row) return;
-		if (event.target.closest('.remove')) model.remove(row);
-		else if (event.target.closest('.lbl')) model.select(row);
-	};
-
 	return (
 		<div class="container">
 			<div class="jumbotron">
@@ -48,16 +42,16 @@ export function createView(model) {
 				</div>
 			</div>
 			<table class="table table-hover table-striped test-data">
-				<tbody on:click={onRowClick}>
+				<tbody>
 					<MapItems each={model.rows}>
 						{(row) => (
-							<tr prop:row={row} class={row.cls}>
+							<tr class={computed(() => (model.selectedId.get() === row.id ? 'danger' : ''))}>
 								<td class="col-md-1">{row.id}</td>
 								<td class="col-md-4">
-									<a class="lbl">{row.label}</a>
+									<a on:click={() => model.select(row)}>{row.label}</a>
 								</td>
 								<td class="col-md-1">
-									<a class="remove">
+									<a on:click={() => model.remove(row)}>
 										<span class="glyphicon glyphicon-remove" aria-hidden="true" />
 									</a>
 								</td>
