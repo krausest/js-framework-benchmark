@@ -1,14 +1,6 @@
 import { MapItems } from '@ecopages/jsx';
 import { computed } from '@ecopages/signals';
 
-const Button = ({ id, 'on:click': onClick, children }) => (
-	<div class="col-sm-6 smallpad">
-		<button id={id} type="button" class="btn btn-primary btn-block" on:click={onClick}>
-			{children}
-		</button>
-	</div>
-);
-
 export function createView(model) {
 	const buttons = [
 		{ id: 'run', label: 'Create 1,000 rows', action: model.run },
@@ -29,9 +21,11 @@ export function createView(model) {
 					<div class="col-md-6">
 						<div class="row">
 							{buttons.map(({ id, label, action }) => (
-								<Button id={id} on:click={action}>
-									{label}
-								</Button>
+								<div class="col-sm-6 smallpad">
+									<button id={id} type="button" class="btn btn-primary btn-block" on:click={action}>
+										{label}
+									</button>
+								</div>
 							))}
 						</div>
 					</div>

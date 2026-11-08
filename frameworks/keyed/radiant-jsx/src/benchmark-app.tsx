@@ -1,17 +1,7 @@
-import { MapItems, type JsxRenderable } from '@ecopages/jsx';
+import { MapItems } from '@ecopages/jsx';
 import { RadiantElement, bound, customElement, signal } from '@ecopages/radiant';
 import { computed, type WritableSignal } from '@ecopages/signals';
 import { buildRows, type Row } from './rows';
-
-type ButtonProps = { id: string; 'on:click': () => void; children: JsxRenderable };
-
-const Button = ({ id, 'on:click': onClick, children }: ButtonProps) => (
-	<div class="col-sm-6 smallpad">
-		<button id={id} type="button" class="btn btn-primary btn-block" on:click={onClick}>
-			{children}
-		</button>
-	</div>
-);
 
 @customElement('benchmark-app')
 export class BenchmarkApp extends RadiantElement {
@@ -81,9 +71,11 @@ export class BenchmarkApp extends RadiantElement {
 						<div class="col-md-6">
 							<div class="row">
 								{buttons.map(({ id, label, action }) => (
-									<Button id={id} on:click={action}>
-										{label}
-									</Button>
+									<div class="col-sm-6 smallpad">
+										<button id={id} type="button" class="btn btn-primary btn-block" on:click={action}>
+											{label}
+										</button>
+									</div>
 								))}
 							</div>
 						</div>
