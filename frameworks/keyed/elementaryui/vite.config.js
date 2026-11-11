@@ -11,6 +11,7 @@ export default defineConfig({
     swiftWasm({
       useEmbeddedSDK: true,
       linkEmbeddedUnicodeDataTables: false,
+      js: { wasiRuntime: "uwasi" },
     }),
   ],
 });
