@@ -116,19 +116,18 @@ struct ActionButton {
 
 @View
 struct RowView {
-    @Environment(BenchmarkStore.self) var store: BenchmarkStore
     var id: Int
     var label: String
     var isSelected: Bool
+    @ViewEquatableIgnored var onSelect: (Int) -> Void
+    @ViewEquatableIgnored var onDelete: (Int) -> Void
 
     var body: some View {
         tr {
-            td(.class("col-md-1")) {
-                "\(id)"
-            }
+            td(.class("col-md-1")) { "\(id)" }
             td(.class("col-md-4")) {
                 a { label }
-                    .onClick { store.select(id) }
+                    .onClick { onSelect(id) }
             }
             td(.class("col-md-1")) {
                 a {
@@ -137,7 +136,7 @@ struct RowView {
                         .custom(name: "aria-hidden", value: "true")
                     ) {}
                 }
-                .onClick { store.delete(id) }
+                .onClick { onDelete(id) }
             }
             td(.class("col-md-6")) {}
         }.attributes(.class("danger"), when: isSelected)
@@ -146,17 +145,22 @@ struct RowView {
 
 @View
 struct DataTable {
-    @Environment(BenchmarkStore.self) var store: BenchmarkStore
+    @Environment(BenchmarkStore.self) var store
 
     var body: some View {
         table(.class("table table-hover table-striped test-data")) {
             tbody(.id("tbody")) {
                 let selectedID = store.selectedID
+                let onSelect = store.select
+                let onDelete = store.delete
+
                 ForEach(store.rows) { row in
                     RowView(
                         id: row.id,
                         label: row.label,
-                        isSelected: selectedID == row.id
+                        isSelected: selectedID == row.id,
+                        onSelect: onSelect,
+                        onDelete: onDelete
                     )
                 }
             }
@@ -166,7 +170,7 @@ struct DataTable {
 
 @View
 struct Jumbotron {
-    @Environment(BenchmarkStore.self) var store: BenchmarkStore
+    @Environment(BenchmarkStore.self) var store
 
     var body: some View {
         div(.class("jumbotron")) {
