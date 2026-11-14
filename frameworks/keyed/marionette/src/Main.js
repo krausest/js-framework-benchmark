@@ -1,7 +1,7 @@
 'use strict';
 
 import { View, CollectionView, setDataApi, setDomApi } from 'marionette';
-import DomApi from '@mnjs/adapters/dom/morphdom';
+import DomApi from '@mnjs/html/marionette';
 import { Collection, DataApi } from '@mnjs/data';
 import rowTemplate from './rowtemplate';
 
