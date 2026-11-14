@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"jsx": "react-jsx",
+		"jsxImportSource": "@ecopages/jsx",
+		"strict": true,
+		"noEmit": true,
+		"skipLibCheck": true,
+		"useDefineForClassFields": true,
+		"lib": ["ES2022", "DOM", "DOM.Iterable"]
+	},
+	"include": ["src"]
+}
