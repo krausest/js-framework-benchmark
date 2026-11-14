@@ -5,7 +5,7 @@
   "license": "ISC",
   "type": "module",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.9.0",
+    "frameworkVersion": "0.9.1",
     "frameworkHomeURL": "https://elementary.codes",
     "customURL": "/bundled-dist",
     "language": "Swift",
@@ -22,9 +22,11 @@
     "type": "git",
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
+  "dependencies": {
+    "uwasi": "1.6.0"
+  },
   "devDependencies": {
-    "@bjorn3/browser_wasi_shim": "0.4.2",
-    "@elementary-swift/vite-plugin-swift-wasm": "0.2.0",
-    "vite": "8.3.1"
+    "@elementary-swift/vite-plugin-swift-wasm": "0.3.0",
+    "vite": "8.3.7"
   }
 }
