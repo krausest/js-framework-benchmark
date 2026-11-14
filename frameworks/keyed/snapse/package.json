@@ -12,6 +12,7 @@
     "frameworkVersionFromPackage": "snapse",
     "language": "TypeScript",
     "frameworkHomeURL": "https://snapse.org",
+    "repoURL": "https://github.com/snapsejs/snapse",
     "customURL": "/dist"
   },
   "dependencies": {
