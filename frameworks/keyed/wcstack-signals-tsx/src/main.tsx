@@ -1,4 +1,4 @@
-import { h, For, signal, createRoot, render } from "@wcstack/signals/dom";
+import { h, For, signal, selector, delegateEvents, createRoot, render } from "@wcstack/signals/dom";
 import type { WriteSignal } from "@wcstack/signals/dom";
 
 const A = ["pretty", "large", "big", "small", "tall", "short", "long", "handsome", "plain", "quaint", "clean",
@@ -32,6 +32,9 @@ function buildData(count: number): RowData[] {
 
 const data = signal<RowData[]>([]);
 const selected = signal(0);
+// selector() (Solid's createSelector): a selection change re-runs only the two
+// rows whose state flips, instead of every row's class binding.
+let isSelected: (id: number) => boolean;
 
 const run = () => {
   data.set(buildData(1000));
@@ -85,7 +88,7 @@ const Button = ({ id, text, onClick }: ButtonProps) => (
 );
 
 const Row = (row: RowData) => (
-  <tr class={() => (selected.get() === row.id ? "danger" : "")}>
+  <tr class={() => (isSelected(row.id) ? "danger" : "")}>
     <td class="col-md-1">{String(row.id)}</td>
     <td class="col-md-4">
       <a onClick={() => select(row.id)}>{() => row.label.get()}</a>
@@ -125,6 +128,11 @@ const Main = () => (
   </div>
 );
 
+// One document-level listener for click instead of one per element; must be
+// called before the view is built.
+delegateEvents(["click"]);
+
 createRoot(() => {
+  isSelected = selector(selected);
   render(<Main />, document.getElementById("main")!);
 });

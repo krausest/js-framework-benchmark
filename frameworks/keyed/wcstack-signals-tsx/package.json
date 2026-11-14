@@ -1,6 +1,6 @@
 {
   "name": "js-framework-benchmark-wcstack-signals-tsx",
-  "version": "1.21.7",
+  "version": "4.19.0",
   "description": "@wcstack/signals keyed benchmark (TSX / classic JSX runtime)",
   "js-framework-benchmark": {
     "frameworkVersionFromPackage": "@wcstack/signals",
@@ -27,7 +27,7 @@
     "url": "https://github.com/krausest/js-framework-benchmark.git"
   },
   "dependencies": {
-    "@wcstack/signals": "1.21.7"
+    "@wcstack/signals": "4.19.0"
   },
   "devDependencies": {
     "esbuild": "0.27.3"
