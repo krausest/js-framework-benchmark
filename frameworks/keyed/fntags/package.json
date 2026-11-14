@@ -15,7 +15,7 @@
   },
   "author": "Robert Kempton",
   "dependencies": {
-    "@srfnstack/fntags": "1.1.0"
+    "@srfnstack/fntags": "1.4.0"
   },
   "devDependencies": {
     "fs-extra": "11.2.0",

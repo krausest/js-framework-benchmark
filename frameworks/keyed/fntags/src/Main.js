@@ -1,4 +1,7 @@
-import { fnstate, fntemplate, h } from '@srfnstack/fntags'
+import { delegateEvents, fnstate, fntemplate, h } from '@srfnstack/fntags'
+
+// One document listener for click instead of two listeners per row.
+delegateEvents( ['click'] )
 
 let data = fnstate( [], d => d.id )
 
@@ -32,12 +35,12 @@ const Button = ( id, title, onclick ) =>
     )
 
 const row = fntemplate( ctx =>
-    h( 'tr', { id: ctx( 'id' ), class: ctx( 'rowClass' ), onclick: ctx( 'rowClick' ) },
+    h( 'tr', { class: ctx( 'cls' ), onclick: ctx( 'select' ) },
         h( 'td', { class: 'col-md-1' }, ctx( 'id' ) ),
         h( 'td', { class: 'col-md-4' }, h( 'a', { class: 'lbl' }, ctx( 'label' ) ) ),
         h( 'td', { class: 'col-md-1' },
             h( 'a', h( 'span', {
-                    onclick: ctx( 'removeRow' ),
+                    onclick: ctx( 'remove' ),
                     class: 'glyphicon glyphicon-remove',
                     'aria-hidden': 'true'
                 } )
@@ -46,6 +49,12 @@ const row = fntemplate( ctx =>
         h( 'td', { class: 'col-md-6' } )
     )
 )
+
+const values = ( item, selected ) => ( {
+    id: item.id,
+    label: item.label,
+    cls: selected === item.id ? 'danger' : ''
+} )
 
 document.body.append(
     h( 'div', { class: 'container' },
@@ -60,17 +69,16 @@ document.body.append(
                         Button( 'runlots', 'Create 10,000 rows', () => data( buildData( 10000 ) ) ),
                         Button( 'add', 'Append 1,000 rows', () => data( data().concat( buildData( 1000 ) ) ) ),
                         Button( 'update', 'Update every 10th row', () => {
-                            let items = data()
+                            const items = data().slice()
                             for( let i = 0; i < items.length; i += 10 ) {
-                                let d = items[i]
-                                let it = d()
-                                it.label += ' !!!'
-                                d( it )
+                                const it = items[i]
+                                items[i] = { id: it.id, label: it.label + ' !!!' }
                             }
+                            data( items )
                         } ),
                         Button( 'clear', 'Clear', () => data( [] ) ),
                         Button( 'swaprows', 'Swap Rows', () => {
-                            const d = data()
+                            const d = data().slice()
                             if( d.length > 998 ) {
                                 const a = d[1]
                                 d[1] = d[998]
@@ -83,18 +91,16 @@ document.body.append(
             )
         ),
         h( 'table', { class: 'table table-hover table-striped test-data' },
-            data.bindChildren( h( 'tbody' ), item =>
-                row( {
-                    id: item().id,
-                    label: item.bindAs( () => item().label ),
-                    rowClass: item.bindSelectAttr( () => data.selected() === item().id ? 'danger' : '' ),
-                    rowClick: () => data.select( item().id ),
-                    removeRow: ( e ) => {
+            data.bindRows( h( 'tbody' ), row, {
+                values,
+                handlers: {
+                    select: ( e, item ) => data.select( item.id ),
+                    remove: ( e, item ) => {
                         e.stopPropagation()
-                        data( data().filter( d => d().id !== item().id ) )
+                        data( data().filter( d => d.id !== item.id ) )
                     }
-                } )
-            )
+                }
+            } )
         ),
         h( 'span', { class: 'preloadicon glyphicon glyphicon-remove', 'aria-hidden': 'true' } )
     )
