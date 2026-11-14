@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-stillflow.engine",
+  "private": true,
+  "version": "0.0.0",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "stillflow.engine",
+    "frameworkHomeURL": "https://github.com/SampleUserD/Stillflow.Engine.git",
+    "customURL": "/dist",
+    "language": "TypeScript",
+    "repoURL": "https://github.com/SampleUserD/Stillflow.Engine.git"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build-prod": "tsc --build && vite build",
+    "preview": "vite --preview"
+  },
+  "dependencies": {
+    "stillflow.engine": "0.4.9"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vite": "8.3.8"
+  }
+}
