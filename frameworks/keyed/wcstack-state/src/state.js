@@ -47,7 +47,7 @@ export default {
   },
   onUpdate() {
     for (let i = 0; i < this.data.length; i += 10) {
-      this[`data.${i}.label`] += " !!!";
+      this.$update("data.*.label", [i], (label) => label + " !!!");
     }
   },
   onClear() {
