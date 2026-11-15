@@ -5,7 +5,7 @@ import * as fs from "node:fs";
 import path from "node:path";
 import semver from 'semver'
 
-import { getFrameworks } from "./helpers/frameworks.js";
+import { getFrameworks, getVersionFromPackageLock } from "./helpers/frameworks.js";
 // import { rebuildSingleFramework } from "./rebuild-single-framework.js";
 // import { rebuildFramework } from "./rebuild-build-single.js";
 // import { rebuildCheckSingle } from "./rebuild-check-single.js";
@@ -60,24 +60,6 @@ function findDuplicateFrameworks(frameworks) {
 
 const duplicateFrameworks = findDuplicateFrameworks(frameworks);
 const frameworksCache = new Map();
-
-function getVersionFromPackageLock(packageJSONLockPath, packageNames) {
-  if (!fs.existsSync(packageJSONLockPath)) {
-    throw new Error(`package-lock.json not found at ${packageJSONLockPath}`);
-  }
-
-  let versions = {};
-
-  for (let packageName of packageNames) {
-    const packageLockJSON = JSON.parse(fs.readFileSync(packageJSONLockPath, "utf8"));
-    const packageVersion =
-    packageLockJSON.dependencies?.[packageName]?.version ||
-    packageLockJSON.packages?.[`node_modules/${packageName}`]?.version ||
-    "ERROR: Not found in package-lock";
-    versions[packageName] = packageVersion;
-  }
-  return versions;
-}
 
 function shouldUpdate(packageJSONLockPath, packageNames, DEBUG) {
   let versions = getVersionFromPackageLock(packageJSONLockPath, packageNames);

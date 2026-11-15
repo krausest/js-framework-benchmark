@@ -1,7 +1,12 @@
 // @ts-check
 import * as fs from "node:fs";
 import path from "node:path";
-import { getFrameworks } from "./helpers/frameworks.js";
+import { getFrameworks, getFrameworkVersionString } from "./helpers/frameworks.js";
+
+const RESULTS_FILE = path.join("webdriver-ts", "results.json");
+/** A benchmark counts as "good performance" if its factor compared to the best is at most this value */
+const GOOD_PERF_THRESHOLD = 1.03;
+const MISSING_RESULT = "missing result";
 
 /**
  * @typedef {Object} RepoIdentifier
@@ -388,6 +393,67 @@ function escapeCsvValue(val) {
 }
 
 /**
+ * Builds a CSV row from the given cells.
+ * @param {any[]} cells
+ * @returns {string}
+ */
+function toCsvRow(cells) {
+  return cells.map(escapeCsvValue).join(",");
+}
+
+/**
+ * @param {number[]} values
+ * @returns {number}
+ */
+function median(values) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+/**
+ * Determines for each framework the benchmarks where it performs within GOOD_PERF_THRESHOLD of the best
+ * framework of the same type (keyed / non-keyed). Like the results table it compares the medians,
+ * using the total duration for CPU benchmarks.
+ * @returns {Map<string, string[]>} benchmark ids per framework name as used in results.json
+ */
+function loadGoodPerformers() {
+  /** @type {Map<string, string[]>} */
+  const goodPerformers = new Map();
+  if (!fs.existsSync(RESULTS_FILE)) {
+    console.warn(`Notice: ${RESULTS_FILE} not found. The good-perf column will be empty.`);
+    return goodPerformers;
+  }
+
+  /** @type {{framework: string, benchmark: string, values: Record<string, number[]>}[]} */
+  const results = JSON.parse(fs.readFileSync(RESULTS_FILE, "utf-8"));
+
+  const entries = results.map(({ framework, benchmark, values }) => ({
+    framework,
+    benchmark,
+    group: `${framework.endsWith("-non-keyed") ? "non-keyed" : "keyed"}/${benchmark}`,
+    value: median(values.total ?? values.DEFAULT),
+  }));
+
+  /** @type {Map<string, number>} */
+  const bestPerGroup = new Map();
+  for (const { group, value } of entries) {
+    bestPerGroup.set(group, Math.min(bestPerGroup.get(group) ?? Number.POSITIVE_INFINITY, value));
+  }
+
+  for (const { framework, benchmark, group, value } of entries) {
+    const benchmarks = goodPerformers.get(framework) ?? [];
+    if (value / /** @type {number} */ (bestPerGroup.get(group)) <= GOOD_PERF_THRESHOLD) {
+      benchmarks.push(benchmark);
+    }
+    goodPerformers.set(framework, benchmarks);
+  }
+
+  for (const benchmarks of goodPerformers.values()) benchmarks.sort();
+  return goodPerformers;
+}
+
+/**
  * @param {Object} [options]
  * @param {string[]} [options.types]
  * @param {string} [options.output]
@@ -397,6 +463,7 @@ export async function checkStatus(options = {}) {
   const outputFile = options.output || "status.csv";
   const frameworks = getFrameworks("frameworks", types);
   const client = new RepoClient();
+  const goodPerformers = loadGoodPerformers();
 
   if (!process.env.GITHUB_TOKEN) {
     console.warn("Notice: GITHUB_TOKEN environment variable not set. Requests will be unauthenticated and subject to lower rate limits.");
@@ -405,7 +472,7 @@ export async function checkStatus(options = {}) {
   console.log(`Checking status for ${frameworks.length} frameworks...`);
 
   const csvRows = [
-    ["Framework-Name", "Repo URL", "Stars", "Days Since Last Commit", "Days Since Last Issue", "Archived", "Retire?"].join(","),
+    toCsvRow(["Framework-Name", "Repo URL", "Stars", "Days Since Last Commit", "Days Since Last Issue", "Archived", "Retire?", "good-perf"]),
   ];
 
   for (let i = 0; i < frameworks.length; i++) {
@@ -416,8 +483,16 @@ export async function checkStatus(options = {}) {
 
     process.stdout.write(`[${i + 1}/${frameworks.length}] Checking ${frameworkName}... `);
 
+    /**
+     * Adds a row for a framework whose repository couldn't be checked.
+     * @param {string} reason - shown in the Repo URL column
+     * @param {string} goodPerf
+     */
+    const pushUncheckedRow = (reason, goodPerf) =>
+      csvRows.push(toCsvRow([frameworkName, reason, "N/A", "N/A", "N/A", "N/A", "", goodPerf]));
+
     if (!fs.existsSync(pkgPath)) {
-      csvRows.push([escapeCsvValue(frameworkName), escapeCsvValue("no package.json"), "N/A", "N/A", "N/A", "N/A", ""].join(","));
+      pushUncheckedRow("no package.json", MISSING_RESULT);
       console.log("no package.json");
       continue;
     }
@@ -426,23 +501,26 @@ export async function checkStatus(options = {}) {
     try {
       pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
     } catch {
-      csvRows.push([escapeCsvValue(frameworkName), escapeCsvValue("invalid package.json"), "N/A", "N/A", "N/A", "N/A", ""].join(","));
+      pushUncheckedRow("invalid package.json", MISSING_RESULT);
       console.log("invalid package.json");
       continue;
     }
+
+    const resultName = getFrameworkVersionString(type, name, pkg);
+    const goodPerf = (resultName && goodPerformers.get(resultName)?.join(",")) ?? MISSING_RESULT;
 
     const meta = pkg["js-framework-benchmark"] || {};
     const repoUrl = meta.repoURL || meta.githubURL || meta.gitlabURL || meta.giteeURL || meta.codebergURL;
 
     if (!repoUrl) {
-      csvRows.push([escapeCsvValue(frameworkName), escapeCsvValue("no repo url"), "N/A", "N/A", "N/A", "N/A", ""].join(","));
+      pushUncheckedRow("no repo url", goodPerf);
       console.log("no repo url");
       continue;
     }
 
     const repoInfo = parseRepoIdentifier(repoUrl);
     if (!repoInfo) {
-      csvRows.push([escapeCsvValue(frameworkName), escapeCsvValue(repoUrl), "N/A", "N/A", "N/A", "N/A", ""].join(","));
+      pushUncheckedRow(repoUrl, goodPerf);
       console.log(`invalid repo url format (${repoUrl})`);
       continue;
     }
@@ -450,19 +528,10 @@ export async function checkStatus(options = {}) {
     const { stars, daysSinceCommit, daysSinceIssue, archived } = await client.getRepoInfo(repoInfo);
     const retire = calculateRetire({ stars, daysSinceCommit, daysSinceIssue, archived });
 
-    csvRows.push(
-      [
-        escapeCsvValue(frameworkName),
-        escapeCsvValue(repoUrl),
-        escapeCsvValue(stars),
-        escapeCsvValue(daysSinceCommit),
-        escapeCsvValue(daysSinceIssue),
-        escapeCsvValue(archived),
-        escapeCsvValue(retire),
-      ].join(",")
-    );
+    csvRows.push(toCsvRow([frameworkName, repoUrl, stars, daysSinceCommit, daysSinceIssue, archived, retire, goodPerf]));
     console.log(
-      `[${repoInfo.provider}] stars: ${stars}, commit: ${daysSinceCommit}d ago, issue: ${daysSinceIssue}d ago, archived: ${archived}, retire: ${retire || "-"}`
+      `[${repoInfo.provider}] stars: ${stars}, commit: ${daysSinceCommit}d ago, issue: ${daysSinceIssue}d ago, archived: ${archived}, retire: ${retire || "-"}` +
+        (goodPerf ? `, good-perf: ${goodPerf}` : "")
     );
   }
 
