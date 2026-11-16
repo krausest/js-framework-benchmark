@@ -93,13 +93,6 @@ export class MainElement extends Component {
     }
   };
 
-  handleClick = (e: Event): void => {
-    const { action, id } = (e.target as HTMLElement).dataset;
-    if (!action || !id) return;
-    if (action === 'select') this.select(Number(id));
-    else if (action === 'remove') this.removeRow(Number(id));
-  };
-
   template = (): Template => tpl`
     <link href="/css/currentStyle.css" rel="stylesheet" />
     <div class="container">
@@ -132,7 +125,7 @@ export class MainElement extends Component {
           </div>
         </div>
       </div>
-      <table class="table table-hover table-striped test-data" @click=${this.handleClick}>
+      <table class="table table-hover table-striped test-data">
         <tbody>
           ${repeat(
             this.state.data,
@@ -140,11 +133,11 @@ export class MainElement extends Component {
               <tr class=${item.selected ? 'danger' : ''}>
                 <td class="col-md-1">${item.id}</td>
                 <td class="col-md-4">
-                  <a data-action="select" data-id=${item.id}>${item.label}</a>
+                  <a @click=${() => this.select(item.id)}>${item.label}</a>
                 </td>
                 <td class="col-md-1">
-                  <a>
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true" data-action="remove" data-id=${item.id}></span>
+                  <a @click=${() => this.removeRow(item.id)}>
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                   </a>
                 </td>
                 <td class="col-md-6"></td>
