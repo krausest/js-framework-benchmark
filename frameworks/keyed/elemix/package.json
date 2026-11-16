@@ -1,0 +1,26 @@
+{
+  "name": "js-framework-benchmark-keyed-elemix",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Elemix keyed implementation of the js-framework-benchmark",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@neuralfog/elemix",
+    "customURL": "/dist/",
+    "frameworkHomeURL": "https://elemix.dev/",
+    "repoURL": "https://github.com/neuralfog/elemix",
+    "useShadowRoot": true,
+    "language": "TypeScript"
+  },
+  "scripts": {
+    "build-prod": "vite build"
+  },
+  "dependencies": {
+    "@neuralfog/elemix": "0.9.7"
+  },
+  "devDependencies": {
+    "@neuralfog/elemix-vite": "0.9.7",
+    "typescript": "7.0.2",
+    "vite": "8.3.8"
+  }
+}
