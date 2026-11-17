@@ -1,4 +1,4 @@
-import { delegateEvents, fnstate, fntemplate, h } from '@srfnstack/fntags'
+import { delegateEvents, fnstate, fntemplate, h } from '@srfnstack/fntags/src/fntags.mjs'
 
 // One document listener for click instead of two listeners per row.
 delegateEvents( ['click'] )
