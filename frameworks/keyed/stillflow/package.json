@@ -16,7 +16,7 @@
     "preview": "vite --preview"
   },
   "dependencies": {
-    "stillflow.engine": "^0.6.3"
+    "stillflow.engine": "^0.6.4"
   },
   "devDependencies": {
     "@babel/core": "8.1.2",
