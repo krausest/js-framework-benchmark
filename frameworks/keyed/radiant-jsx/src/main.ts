@@ -1,1 +1,0 @@
-import './benchmark-app';
