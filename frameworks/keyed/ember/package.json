@@ -35,7 +35,7 @@
   "packageManager": "npm@8",
   "dependencies": {
     "@glimmer/component": "2.0.0",
-    "ember-source": "7.3.0-alpha.5"
+    "ember-source": "7.4.1"
   },
   "devDependencies": {
     "@babel/core": "7.29.0",
