@@ -1,4 +1,4 @@
-import { RadiantElement, customElement, onEvent, query } from '@ecopages/radiant';
+import { RadiantElement, customElement, onEvent, ref } from '@ecopages/radiant';
 import { buildRows, type Row } from './rows';
 
 type RowNode = HTMLTableRowElement & { row: Row; label: Text };
@@ -9,7 +9,7 @@ rowTemplate.innerHTML =
 
 @customElement('benchmark-app')
 export class BenchmarkApp extends RadiantElement {
-	@query({ ref: 'rows', cache: true }) tbody!: HTMLTableSectionElement | null;
+	@ref('rows') tbody!: HTMLTableSectionElement | null;
 
 	#rows: Row[] = [];
 	#nodes = new Map<Row, RowNode>();
