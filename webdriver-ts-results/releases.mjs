@@ -28,7 +28,7 @@ const url = (release) => BASE_URL + release.path;
 
 function replaceRegion(text, name, content) {
   const re = new RegExp(`(<!-- ${name}:start[^>]*-->\\n)[\\s\\S]*?(\\n\\s*<!-- ${name}:end -->)`);
-  //if (!re.test(text)) throw new Error(`Marker region '${name}' not found`);
+  if (!re.test(text)) throw new Error(`Marker region '${name}' not found`);
   return text.replace(re, (_, start, end) => start + content + end);
 }
 

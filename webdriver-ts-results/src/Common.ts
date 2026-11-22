@@ -17,7 +17,6 @@ export enum DisplayMode {
   DISPLAY_MEAN,
   DISPLAY_MEDIAN,
   BOX_PLOT,
-  SUMMARY,
 }
 export enum CpuDurationMode {
   TOTAL = "total",
@@ -418,8 +417,7 @@ export class ResultTableData {
   private getBenchmarkStatistic(result: Result | null, resultsKey: string): number {
     if (result === null) return 0;
 
-    // the summary shows the median, like the default view
-    return this.displayMode === DisplayMode.DISPLAY_MEDIAN || this.displayMode === DisplayMode.SUMMARY
+    return this.displayMode === DisplayMode.DISPLAY_MEDIAN
       ? result.results[resultsKey].median
       : result.results[resultsKey].mean;
   }
