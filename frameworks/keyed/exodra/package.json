@@ -1,0 +1,25 @@
+{
+  "name": "js-framework-benchmark-exodra",
+  "version": "1.0.0",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@exodra/core",
+    "frameworkHomeURL": "https://exodra.org",
+    "language": "TypeScript",
+    "repoURL": "https://github.com/eceliax/exodra"
+  },
+  "scripts": {
+    "build-prod": "node build.mjs"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@exodra/core": "0.4.1",
+    "@exodra/dom": "0.4.1",
+    "@exodra/jsx": "0.4.0",
+    "@exodra/list-reconcile": "0.3.1"
+  },
+  "devDependencies": {
+    "esbuild-plugin-exodra": "0.2.0",
+    "esbuild": "0.28.2"
+  }
+}
