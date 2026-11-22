@@ -16,7 +16,7 @@
     "preview": "vite --preview"
   },
   "dependencies": {
-    "stillflow.engine": "^0.6.4"
+    "stillflow.engine": "file:../../../../stillflow.engine/stillflow.engine-0.7.0.tgz"
   },
   "devDependencies": {
     "@babel/core": "8.1.2",
