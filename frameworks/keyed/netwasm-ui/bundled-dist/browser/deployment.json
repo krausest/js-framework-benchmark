@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "semanticBuildId": "a5e79cee4792a3310dae184dca0f8a48fd5926a1b711c3534d0affcff8dc64e9",
+  "semanticBuildId": "793c50a31bcdda65009a6d61e98309624ec8b0e36c3535a9f6968e7f8923439b",
   "deploymentKind": "raw",
   "profile": "netwasm0.1",
   "target": "wasm32",
@@ -14,49 +14,49 @@
     "hosting": "0.15.2",
     "toolchain": "0.15.2"
   },
-  "buildFingerprint": "6d586040e53f358bf9d03bd7b15b7b7b81f3382b5476f10c26fd7607a83c7e30",
+  "buildFingerprint": "77acf765ec200ba2da94a71c868b4b537547d8e1344bf5a0d7ebfb64b4ce74fd",
   "runtimeFeatures": [],
   "artifacts": [
     {
       "relativePath": "NetWasmUiBench.raw-adapter.mjs",
       "role": "raw-adapter",
       "mediaType": "text/javascript",
-      "sha256": "352c84b807a713ac206a1595e4d7ce8769b25b5b5d3760f2789ca735633b56a8",
+      "sha256": "2d6825dd930abfb979874c3efa1200d98e1836860ac4d82ff7107d58a814e96b",
       "schemaVersion": null
     },
     {
       "relativePath": "NetWasmUiBench.wasm",
       "role": "application",
       "mediaType": "application/wasm",
-      "sha256": "664642d4111a78bbca3e25f9c1627ec862641b623d51a8d3b5004682751329ee",
+      "sha256": "7e35420781472dd37a4ea4afc82b8035aecce10aa5da4aef1b9108cf52e017e1",
       "schemaVersion": null
     },
     {
       "relativePath": "NetWasmUiBench.wasm.type-symbols",
       "role": "type-symbols",
       "mediaType": "application/vnd.netwasm.type-symbols;version=1",
-      "sha256": "af6131277951f407a1ab9a41e413d6fec442928e9fcc91a0c54b51b4d4f755c9",
+      "sha256": "6913488869454fa3d1e56f561e04dd472af1f7111f9f94e55b03f39cc5b8a31d",
       "schemaVersion": 1
     },
     {
       "relativePath": "interop.json",
       "role": "interop-manifest",
       "mediaType": "application/json",
-      "sha256": "b9b3d82e39f46c9d14477652dae54b6568dad43d7a4d4ab9582d2c750cc7148e",
+      "sha256": "2bb252e4f2769534ad9f2822739895c56c4a1b851c90cce2e3d220e93ab5763d",
       "schemaVersion": 1
     },
     {
       "relativePath": "netwasm.page.mjs",
       "role": "hosting-javascript",
       "mediaType": "text/javascript",
-      "sha256": "ed23142636bf954bcfc83b737f8d5432e28d7b254b23765f970943589b4517dd",
+      "sha256": "a0c5eaa7a27374ebe884ce966852318e549e13454f679d205fb3eea27c6665ad",
       "schemaVersion": null
     },
     {
       "relativePath": "runtime-layout.json",
       "role": "runtime-layout",
       "mediaType": "application/json",
-      "sha256": "31b3cc758f181a5b0a93cc24f34b43bed7977246a26026919943d0ed13b1324d",
+      "sha256": "1df0f726435e84fa772af9a7af461d4a1332e7c2e0ef973f85db2aa794023192",
       "schemaVersion": 1
     }
   ],
@@ -64,8 +64,6 @@
     "wasi:cli/environment@0.3.2",
     "wasi:cli/stderr@0.3.2",
     "wasi:clocks/monotonic-clock@0.3.2",
-    "wasi:filesystem/preopens@0.3.2",
-    "wasi:filesystem/types@0.3.2",
     "wasi:random/random@0.3.2"
   ],
   "requiredImports": [
@@ -93,39 +91,6 @@
       "parameters": [],
       "results": [
         "wasi:clocks/monotonic-clock@0.3.2#mark"
-      ]
-    },
-    {
-      "interface": "wasi:filesystem/preopens@0.3.2",
-      "name": "get-directories",
-      "parameters": [],
-      "results": [
-        "list\u003Ctuple\u003Cown\u003Cwasi:filesystem/types@0.3.2#descriptor\u003E,string\u003E\u003E"
-      ]
-    },
-    {
-      "interface": "wasi:filesystem/types@0.3.2",
-      "name": "[method]descriptor.open-at",
-      "parameters": [
-        "borrow\u003Cwasi:filesystem/types@0.3.2#descriptor\u003E",
-        "wasi:filesystem/types@0.3.2#path-flags",
-        "string",
-        "wasi:filesystem/types@0.3.2#open-flags",
-        "wasi:filesystem/types@0.3.2#descriptor-flags"
-      ],
-      "results": [
-        "result\u003Cown\u003Cwasi:filesystem/types@0.3.2#descriptor\u003E,wasi:filesystem/types@0.3.2#error-code\u003E"
-      ]
-    },
-    {
-      "interface": "wasi:filesystem/types@0.3.2",
-      "name": "[method]descriptor.read-via-stream",
-      "parameters": [
-        "borrow\u003Cwasi:filesystem/types@0.3.2#descriptor\u003E",
-        "wasi:filesystem/types@0.3.2#filesize"
-      ],
-      "results": [
-        "tuple\u003Cstream\u003Cu8\u003E,future\u003Cresult\u003Cunit,wasi:filesystem/types@0.3.2#error-code\u003E\u003E\u003E"
       ]
     },
     {

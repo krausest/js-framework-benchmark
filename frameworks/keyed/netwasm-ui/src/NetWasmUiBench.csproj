@@ -7,8 +7,9 @@
     <RootNamespace>NetWasmUiBench</RootNamespace>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <!-- Served from /frameworks/keyed/netwasm-ui/dist/, so preload links must be relative. -->
+    <!-- Served from /frameworks/keyed/netwasm-ui/bundled-dist/, so preload links must be relative. -->
     <NetWasmUIPreloadUrlPrefix>./</NetWasmUIPreloadUrlPrefix>
+    <NetWasmTypeNames>false</NetWasmTypeNames>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NwUi.Browser" Version="0.15.1" />
