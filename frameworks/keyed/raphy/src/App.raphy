@@ -1,0 +1,95 @@
+<script setup lang="ts">
+import type { Row } from './rows'
+import { selector, signal } from '@raphy-js/core'
+import { buildRows } from './rows'
+
+const rows = signal<readonly Row[]>([])
+const selected = signal<number | null>(null)
+const isSelected = selector(selected)
+
+function run(): void {
+  rows.set(buildRows(1_000))
+  selected.set(null)
+}
+
+function runLots(): void {
+  rows.set(buildRows(10_000))
+  selected.set(null)
+}
+
+function add(): void {
+  rows.set([...rows.get(), ...buildRows(1_000)])
+}
+
+function update(): void {
+  rows.set(rows.get().map((row, index) => index % 10 === 0
+    ? { id: row.id, label: `${row.label} !!!` }
+    : row))
+}
+
+function clear(): void {
+  rows.set([])
+  selected.set(null)
+}
+
+function swapRows(): void {
+  const current = rows.get()
+  if (current.length <= 998) {
+    return
+  }
+  const next = [...current]
+  ;[next[1], next[998]] = [next[998]!, next[1]!]
+  rows.set(next)
+}
+
+function select(id: number): void {
+  selected.set(id)
+}
+
+function remove(id: number): void {
+  rows.set(rows.get().filter(row => row.id !== id))
+}
+</script>
+
+<template #default>
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-6"><h1>Raphy keyed</h1></div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-sm-6 smallpad">
+              <button id="run" type="button" class="btn btn-primary btn-block" @click="run">Create 1,000 rows</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button id="runlots" type="button" class="btn btn-primary btn-block" @click="runLots">Create 10,000 rows</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button id="add" type="button" class="btn btn-primary btn-block" @click="add">Append 1,000 rows</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button id="update" type="button" class="btn btn-primary btn-block" @click="update">Update every 10th row</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button id="clear" type="button" class="btn btn-primary btn-block" @click="clear">Clear</button>
+            </div>
+            <div class="col-sm-6 smallpad">
+              <button id="swaprows" type="button" class="btn btn-primary btn-block" @click="swapRows">Swap Rows</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="table table-hover table-striped test-data">
+      <tbody>
+        <tr each="(_, row) of rows.get()" :key="row.id" :class="isSelected(row.id) ? 'danger' : ''">
+          <td class="col-md-1">{{ row.id }}</td>
+          <td class="col-md-4"><a @click.eventless="select(row.id)">{{ row.label }}</a></td>
+          <td class="col-md-1"><a @click.eventless="remove(row.id)"><span aria-hidden="true" class="glyphicon glyphicon-remove" /></a></td>
+          <td class="col-md-6" />
+        </tr>
+      </tbody>
+    </table>
+    <span aria-hidden="true" class="preloadicon glyphicon glyphicon-remove" />
+  </div>
+</template>

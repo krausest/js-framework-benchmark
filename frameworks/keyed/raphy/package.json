@@ -1,0 +1,28 @@
+{
+  "name": "js-framework-benchmark-raphy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build-prod": "vite build"
+  },
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "@raphy-js/dom",
+    "frameworkHomeURL": "https://www.npmjs.com/package/@raphy-js/dom",
+    "repoURL": "https://gitlab.com/raphyjs/raphy-js-dom",
+    "language": "TypeScript",
+    "customURL": "/dist",
+    "issues": [
+      1139
+    ]
+  },
+  "dependencies": {
+    "@raphy-js/core": "1.0.0-dev.78",
+    "@raphy-js/dom": "1.0.1-dev.89",
+    "@raphy-js/raph": "1.0.1-dev.55"
+  },
+  "devDependencies": {
+    "@raphy-js/vite": "1.0.0-dev.38",
+    "vite": "8.3.8"
+  }
+}
