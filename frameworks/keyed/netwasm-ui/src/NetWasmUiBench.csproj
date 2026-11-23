@@ -1,0 +1,20 @@
+<Project Sdk="NetWasm.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-netwasm</TargetFramework>
+    <OutputType>JsModule</OutputType>
+    <NetWasmJavaScriptHosts>page</NetWasmJavaScriptHosts>
+    <NetWasmGarbageCollector>NetWasm</NetWasmGarbageCollector>
+    <RootNamespace>NetWasmUiBench</RootNamespace>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <!-- Served from /frameworks/keyed/netwasm-ui/bundled-dist/, so preload links must be relative. -->
+    <NetWasmUIPreloadUrlPrefix>./</NetWasmUIPreloadUrlPrefix>
+    <NetWasmTypeNames>false</NetWasmTypeNames>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NwUi.Browser" Version="0.16.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\**" CopyToPublishDirectory="PreserveNewest" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

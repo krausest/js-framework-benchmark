@@ -1,0 +1,44 @@
+{
+  "name": "js-framework-benchmark-netwasm-ui",
+  "version": "1.0.0",
+  "description": "NetWasm.UI demo",
+  "js-framework-benchmark": {
+    "frameworkVersion": "0.16.0",
+    "frameworkHomeURL": "https://github.com/matengo/NetWasm.UI",
+    "repoURL": "https://github.com/matengo/NetWasm.UI",
+    "customURL": "/bundled-dist",
+    "includeInBuild": "bundled-dist",
+    "issues": [
+      1139
+    ],
+    "language": "c#"
+  },
+  "scripts": {
+    "install": "echo This is a no-op. && echo The compiled app is already provided in bundled-dist. && echo To rebuild from source use: npm run install-force, then npm run build-prod-force",
+    "build-prod": "echo This is a no-op. && echo The compiled app is already provided in bundled-dist. && echo To rebuild from source use: npm run build-prod-force",
+    "install-force": "run-script-os",
+    "install-force:win32": "dotnet-install.cmd",
+    "install-force:nix": "./dotnet-install.sh",
+    "build-prod-force": "rimraf bundled-dist && run-script-os",
+    "build-prod-force:win32": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=1 ./dotnet/dotnet.exe publish ./src/ -c Release -o ./bundled-dist",
+    "build-prod-force:nix": "cross-env DOTNET_CLI_TELEMETRY_OPTOUT=1 ./dotnet/dotnet publish ./src/ -c Release -o ./bundled-dist"
+  },
+  "keywords": [
+    "netwasm",
+    "webassembly",
+    "c#"
+  ],
+  "author": "matengo",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/krausest/js-framework-benchmark",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krausest/js-framework-benchmark.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "cross-env": "7.0.3",
+    "rimraf": "6.0.1",
+    "run-script-os": "1.1.6"
+  }
+}

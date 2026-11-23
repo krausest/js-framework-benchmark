@@ -1,0 +1,2 @@
+//# allFunctionsCalledOnLoad
+const e=`(?:0|[1-9][0-9]*)`,t=`[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*`,n=`${e}\\.${e}\\.${e}(?:-${t})?(?:\\+${t})?`,r=`[a-z0-9][a-z0-9-]*`,i=RegExp(`^(?:[a-z0-9][a-z0-9.-]*|${`\\[(?:method|static)\\]${r}\\.${r}`}|${`\\[(?:constructor|resource-drop|resource-dtor|export-resource-(?:new|rep|drop))\\]${r}`})$`,`u`);function a(e){return typeof e==`string`&&i.test(e)}export{n,a as t};

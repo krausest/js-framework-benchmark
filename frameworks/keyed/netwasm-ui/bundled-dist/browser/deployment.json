@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "semanticBuildId": "3be306e99376d7bb7e30221b6c2bb60854fbe377855c81829e62ac099a646b64",
+  "deploymentKind": "raw",
+  "profile": "netwasm0.1",
+  "target": "wasm32",
+  "featureSet": "none",
+  "executionContract": "netwasm:browser/jsexport@1.0.0",
+  "versions": {
+    "sdk": "0.15.2",
+    "compiler": "0.15.2",
+    "runtime": "0.15.2",
+    "runtimeAbi": "netwasm.runtime.v1",
+    "hosting": "0.15.2",
+    "toolchain": "0.15.2"
+  },
+  "buildFingerprint": "b88c9609e89434ccc93ee4ca32afe2221433f9bf0f6eebecdaed5bb64568c6c8",
+  "runtimeFeatures": [],
+  "artifacts": [
+    {
+      "relativePath": "NetWasmUiBench.raw-adapter.mjs",
+      "role": "raw-adapter",
+      "mediaType": "text/javascript",
+      "sha256": "2d6825dd930abfb979874c3efa1200d98e1836860ac4d82ff7107d58a814e96b",
+      "schemaVersion": null
+    },
+    {
+      "relativePath": "NetWasmUiBench.wasm",
+      "role": "application",
+      "mediaType": "application/wasm",
+      "sha256": "7e35420781472dd37a4ea4afc82b8035aecce10aa5da4aef1b9108cf52e017e1",
+      "schemaVersion": null
+    },
+    {
+      "relativePath": "NetWasmUiBench.wasm.type-symbols",
+      "role": "type-symbols",
+      "mediaType": "application/vnd.netwasm.type-symbols;version=1",
+      "sha256": "bccbcebb037efff7317ab0c1b9746d543d8eab6684e3236209bbdcca6b1cd958",
+      "schemaVersion": 1
+    },
+    {
+      "relativePath": "interop.json",
+      "role": "interop-manifest",
+      "mediaType": "application/json",
+      "sha256": "2bb252e4f2769534ad9f2822739895c56c4a1b851c90cce2e3d220e93ab5763d",
+      "schemaVersion": 1
+    },
+    {
+      "relativePath": "netwasm.page.mjs",
+      "role": "hosting-javascript",
+      "mediaType": "text/javascript",
+      "sha256": "a0c5eaa7a27374ebe884ce966852318e549e13454f679d205fb3eea27c6665ad",
+      "schemaVersion": null
+    },
+    {
+      "relativePath": "runtime-layout.json",
+      "role": "runtime-layout",
+      "mediaType": "application/json",
+      "sha256": "1df0f726435e84fa772af9a7af461d4a1332e7c2e0ef973f85db2aa794023192",
+      "schemaVersion": 1
+    }
+  ],
+  "requiredImportModules": [
+    "wasi:cli/environment@0.3.2",
+    "wasi:cli/stderr@0.3.2",
+    "wasi:clocks/monotonic-clock@0.3.2",
+    "wasi:random/random@0.3.2"
+  ],
+  "requiredImports": [
+    {
+      "interface": "wasi:cli/environment@0.3.2",
+      "name": "get-environment",
+      "parameters": [],
+      "results": [
+        "list\u003Ctuple\u003Cstring,string\u003E\u003E"
+      ]
+    },
+    {
+      "interface": "wasi:cli/stderr@0.3.2",
+      "name": "write-via-stream",
+      "parameters": [
+        "stream\u003Cu8\u003E"
+      ],
+      "results": [
+        "future\u003Cresult\u003Cunit,wasi:cli/stderr@0.3.2#error-code\u003E\u003E"
+      ]
+    },
+    {
+      "interface": "wasi:clocks/monotonic-clock@0.3.2",
+      "name": "now",
+      "parameters": [],
+      "results": [
+        "wasi:clocks/monotonic-clock@0.3.2#mark"
+      ]
+    },
+    {
+      "interface": "wasi:random/random@0.3.2",
+      "name": "get-random-u64",
+      "parameters": [],
+      "results": [
+        "u64"
+      ]
+    }
+  ],
+  "exports": []
+}
