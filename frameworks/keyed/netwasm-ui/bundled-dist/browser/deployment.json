@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "semanticBuildId": "793c50a31bcdda65009a6d61e98309624ec8b0e36c3535a9f6968e7f8923439b",
+  "semanticBuildId": "3be306e99376d7bb7e30221b6c2bb60854fbe377855c81829e62ac099a646b64",
   "deploymentKind": "raw",
   "profile": "netwasm0.1",
   "target": "wasm32",
@@ -14,7 +14,7 @@
     "hosting": "0.15.2",
     "toolchain": "0.15.2"
   },
-  "buildFingerprint": "77acf765ec200ba2da94a71c868b4b537547d8e1344bf5a0d7ebfb64b4ce74fd",
+  "buildFingerprint": "b88c9609e89434ccc93ee4ca32afe2221433f9bf0f6eebecdaed5bb64568c6c8",
   "runtimeFeatures": [],
   "artifacts": [
     {
@@ -35,7 +35,7 @@
       "relativePath": "NetWasmUiBench.wasm.type-symbols",
       "role": "type-symbols",
       "mediaType": "application/vnd.netwasm.type-symbols;version=1",
-      "sha256": "6913488869454fa3d1e56f561e04dd472af1f7111f9f94e55b03f39cc5b8a31d",
+      "sha256": "bccbcebb037efff7317ab0c1b9746d543d8eab6684e3236209bbdcca6b1cd958",
       "schemaVersion": 1
     },
     {

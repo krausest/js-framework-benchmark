@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "NetWasm.UI demo",
   "js-framework-benchmark": {
-    "frameworkVersion": "0.15.1",
+    "frameworkVersion": "0.16.0",
     "frameworkHomeURL": "https://github.com/matengo/NetWasm.UI",
     "repoURL": "https://github.com/matengo/NetWasm.UI",
     "customURL": "/bundled-dist",
