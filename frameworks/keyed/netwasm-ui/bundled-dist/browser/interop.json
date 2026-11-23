@@ -1,0 +1,140 @@
+{
+  "version": 2,
+  "target": "wasm32",
+  "statusAbi": {
+    "successStatus": 0,
+    "hostFailureStatus": 1,
+    "scalarResultOffset": 0
+  },
+  "targetLayout": {
+    "managedReferenceSize": 4,
+    "stringLengthOffset": 4,
+    "stringDataOffset": 8,
+    "arrayLengthOffset": 4,
+    "arrayDataPointerOffset": 8,
+    "spanReferenceOffset": 0,
+    "spanLengthOffset": 4
+  },
+  "imports": [
+    {
+      "module": "nwui.dom",
+      "name": "applyBatch",
+      "parameters": [
+        "u8-view"
+      ],
+      "result": "void",
+      "call": "status",
+      "asyncReturn": null,
+      "resolveExport": null,
+      "rejectExport": null,
+      "cancelExport": null
+    },
+    {
+      "module": "nwui.dom",
+      "name": "basePath",
+      "parameters": [],
+      "result": "string",
+      "call": "status",
+      "asyncReturn": null,
+      "resolveExport": null,
+      "rejectExport": null,
+      "cancelExport": null
+    },
+    {
+      "module": "nwui.dom",
+      "name": "currentPath",
+      "parameters": [],
+      "result": "string",
+      "call": "status",
+      "asyncReturn": null,
+      "resolveExport": null,
+      "rejectExport": null,
+      "cancelExport": null
+    },
+    {
+      "module": "nwui.dom",
+      "name": "onPopState",
+      "parameters": [
+        "callback"
+      ],
+      "result": "subscription",
+      "call": "status",
+      "asyncReturn": null,
+      "resolveExport": null,
+      "rejectExport": null,
+      "cancelExport": null
+    },
+    {
+      "module": "nwui.dom",
+      "name": "subscribe",
+      "parameters": [
+        "callback"
+      ],
+      "result": "subscription",
+      "call": "status",
+      "asyncReturn": null,
+      "resolveExport": null,
+      "rejectExport": null,
+      "cancelExport": null
+    }
+  ],
+  "exports": [
+    {
+      "name": "start",
+      "parameters": [],
+      "result": "void",
+      "parameterNames": [],
+      "nonNullableParameters": [],
+      "nonNullableResult": false,
+      "asyncReturn": null,
+      "statusExport": null,
+      "resultExport": null,
+      "completeExport": null,
+      "completionResult": null
+    }
+  ],
+  "callbacks": [
+    {
+      "module": "nwui.dom",
+      "importName": "subscribe",
+      "parameterIndex": 0,
+      "exportName": "netwasm.callback.06000007.0",
+      "parameters": [
+        "i32",
+        "bytes"
+      ],
+      "result": "void"
+    },
+    {
+      "module": "nwui.dom",
+      "importName": "onPopState",
+      "parameterIndex": 0,
+      "exportName": "netwasm.callback.06000016.0",
+      "parameters": [
+        "string"
+      ],
+      "result": "void"
+    }
+  ],
+  "witImports": [
+    {
+      "interface": "wasi:cli/stderr@0.3.2",
+      "function": "write-via-stream"
+    },
+    {
+      "interface": "wasi:clocks/monotonic-clock@0.3.2",
+      "function": "now"
+    },
+    {
+      "interface": "wasi:filesystem/preopens@0.3.2",
+      "function": "get-directories"
+    },
+    {
+      "interface": "wasi:filesystem/types@0.3.2",
+      "function": "[method]descriptor.read-via-stream"
+    }
+  ],
+  "importModules": [
+    "nwui.dom"
+  ]
+}

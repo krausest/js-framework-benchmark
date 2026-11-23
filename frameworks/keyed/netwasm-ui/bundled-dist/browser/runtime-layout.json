@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 3,
+  "target": "wasm32",
+  "applicationStaticDataEnd": 51088,
+  "managedExecutableEntryPoint": null,
+  "runtimeFeatures": [
+    "finalization",
+    "random-seed",
+    "uninitialized-arrays"
+  ],
+  "nativeImports": [],
+  "importModules": [
+    "nwui.dom"
+  ]
+}

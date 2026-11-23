@@ -1,0 +1,87 @@
+@namespace NetWasmUiBench
+@using System
+<div class="container">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>NetWasm.UI-"keyed"</h1>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="run" @onclick="() => data.Value = Data.Build(1000)">Create 1,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="runlots" @onclick="() => data.Value = Data.Build(10000)">Create 10,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="add" @onclick="Add">Append 1,000 rows</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="update" @onclick="Update">Update every 10th row</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="clear" @onclick="() => data.Value = Array.Empty<Row>()">Clear</button>
+                    </div>
+                    <div class="col-sm-6 smallpad">
+                        <button type="button" class="btn btn-primary btn-block" id="swaprows" @onclick="Swap">Swap Rows</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover table-striped test-data">
+        <tbody>
+            @foreach (var row in data) {
+                <tr @key="row.Id" class="@(isSelected.Is(row.Id) ? "danger" : null)">
+                    <td class="col-md-1">@row.Id</td>
+                    <td class="col-md-4"><a @onclick="() => selected.Value = row.Id">@row.Label</a></td>
+                    <td class="col-md-1"><a @onclick="() => Remove(row.Id)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+                    <td class="col-md-6"></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <span class="preloadicon glyphicon glyphicon-remove" aria-hidden="true"></span>
+</div>
+
+@code {
+    private readonly Signal<IReadOnlyList<Row>> data = new(Array.Empty<Row>());
+    private readonly Signal<int> selected = new(0);
+    private Selector<int> isSelected = null!;
+
+    partial void OnInit() => isSelected = new Selector<int>(selected);
+
+    private void Add()
+    {
+        var rows = new List<Row>(data.Value);
+        rows.AddRange(Data.Build(1000));
+        data.Value = rows;
+    }
+
+    private void Update() => Scheduler.Batch(() =>
+    {
+        var rows = data.Value;
+        for (var i = 0; i < rows.Count; i += 10)
+        {
+            rows[i].Label.Value += " !!!";
+        }
+    });
+
+    private void Swap()
+    {
+        if (data.Value.Count > 998)
+        {
+            var rows = new List<Row>(data.Value);
+            (rows[1], rows[998]) = (rows[998], rows[1]);
+            data.Value = rows;
+        }
+    }
+
+    private void Remove(int id)
+    {
+        var rows = new List<Row>(data.Value);
+        rows.RemoveAt(rows.FindIndex(r => r.Id == id));
+        data.Value = rows;
+    }
+}

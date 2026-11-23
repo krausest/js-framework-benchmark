@@ -1,0 +1,9 @@
+{
+  "sdk": {
+    "version": "11.0.100",
+    "rollForward": "latestFeature"
+  },
+  "msbuild-sdks": {
+    "NetWasm.Sdk": "0.15.2"
+  }
+}
