@@ -1,0 +1,20 @@
+{
+  "name": "js-framework-benchmark-goal",
+  "version": "0.1.0",
+  "type": "module",
+  "js-framework-benchmark": {
+    "frameworkVersionFromPackage": "goaljs",
+    "frameworkHomeURL": "https://goallabs.github.io/goal/",
+    "repoURL": "https://github.com/goallabs/goal",
+    "language": "JavaScript",
+    "includeInBuild": "dist:index.html"
+  },
+  "scripts": {
+    "dev": "node prerender.mjs",
+    "build-prod": "node prerender.mjs"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "goaljs": "0.1.0"
+  }
+}
