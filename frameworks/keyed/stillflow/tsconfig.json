@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "jsx": "preserve",
-    "allowImportingTsExtensions": true,
-    "noEmit": true
+    "jsxImportSource": "stillflow.engine"
   }
 }
